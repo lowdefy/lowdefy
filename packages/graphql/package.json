@@ -1,0 +1,28 @@
+{
+  "name": "@lowdefy/poc-graphql",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "yarn webpack",
+    "webpack": "webpack --config webpack.config.js"
+  },
+  "dependencies": {
+    "apollo-server-core": "2.18.1",
+    "graphql": "15.3.0",
+    "webpack": "v5.0.0-rc.3",
+    "webpack-cli": "v4.0.0-rc.0"
+  },
+  "devDependencies": {
+    "eslint": "7.10.0",
+    "eslint-config-airbnb": "18.2.0",
+    "eslint-config-prettier": "6.12.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.21.2",
+    "eslint-plugin-react-hooks": "4.1.2",
+    "prettier": "2.1.2"
+  }
+}
