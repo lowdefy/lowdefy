@@ -1,0 +1,17 @@
+{
+  "name": "@lowdefy/poc",
+  "version": "0.0.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "rm -rf **/**/node_modules && rm -rf ./node_modules",
+    "prepare": "lerna run prepare",
+    "prettier": "prettier --config .prettierrc --write **/*.js"
+  },
+  "devDependencies": {
+    "lerna": "3.22.1"
+  }
+}
