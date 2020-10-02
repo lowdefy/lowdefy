@@ -11,10 +11,16 @@
   "dependencies": {
     "apollo-server-core": "2.18.1",
     "graphql": "15.3.0",
+    "graphql-type-json": "0.3.2",
     "webpack": "v5.0.0-rc.3",
     "webpack-cli": "v4.0.0-rc.0"
   },
   "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/compat-data": "7.9.6",
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "babel-loader": "8.1.0",
     "eslint": "7.10.0",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "6.12.0",
