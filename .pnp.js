@@ -35,6 +35,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/express"
       },
       {
+        "name": "@lowdefy/get",
+        "reference": "workspace:packages/get"
+      },
+      {
         "name": "@lowdefy/graphql",
         "reference": "workspace:packages/graphql"
       },
@@ -47,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
       ["@lowdefy/engine", ["workspace:packages/engine"]],
+      ["@lowdefy/get", ["workspace:packages/get"]],
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
       ["@lowdefy/poc", ["workspace:."]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
@@ -4120,6 +4125,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:5.0.0-rc.3"],
             ["webpack-cli", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:3.3.12"],
             ["webpack-dev-server", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:3.11.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/get", [
+        ["workspace:packages/get", {
+          "packageLocation": "./packages/get/",
+          "packageDependencies": [
+            ["@lowdefy/get", "workspace:packages/get"],
+            ["@babel/cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:7.8.4"],
+            ["@babel/compat-data", "npm:7.9.6"],
+            ["@babel/core", "npm:7.9.6"],
+            ["@babel/preset-env", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:7.9.6"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:24.9.0"],
+            ["eslint", "npm:6.8.0"],
+            ["eslint-config-airbnb", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:18.2.0"],
+            ["eslint-config-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:6.12.0"],
+            ["eslint-plugin-import", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:2.22.1"],
+            ["eslint-plugin-jsx-a11y", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:6.3.1"],
+            ["eslint-plugin-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:3.1.4"],
+            ["eslint-plugin-react", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:7.21.2"],
+            ["eslint-plugin-react-hooks", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:4.1.2"],
+            ["jest", "npm:24.9.0"],
+            ["jest-diff", "npm:24.9.0"],
+            ["prettier", "npm:2.1.2"]
           ],
           "linkType": "SOFT",
         }]
