@@ -1,8 +1,7 @@
 {
-  "name": "@lowdefy/poc-graphql",
-  "version": "0.0.1",
-  "private": true,
-  "license": "UNLICENSED",
+  "name": "@lowdefy/graphql",
+  "version": "0.0.0-experimental.0",
+  "licence": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn webpack",

@@ -1,6 +1,6 @@
 {
-  "name": "nxjdkxbp",
-  "version": "0.0.1",
+  "name": "@lowdefy/engine",
+  "version": "0.0.0-experimental.1",
   "licence": "MIT",
   "browser": "dist/remoteEntry.js",
   "files": [
