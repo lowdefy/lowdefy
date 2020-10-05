@@ -1,5 +1,5 @@
 import React from 'react';
 
-const Button = () => <button>Remote Button</button>;
+const Button = () => <button>Button from npm 3</button>;
 
 export default Button;

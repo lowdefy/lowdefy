@@ -1,7 +1,11 @@
 {
-  "name": "button",
-  "version": "0.0.0",
-  "private": true,
+  "name": "izlrmfxlki",
+  "version": "0.0.3",
+  "licence": "MIT",
+  "browser": "dist/remoteEntry.js",
+  "files": [
+    "dist/*"
+  ],
   "devDependencies": {
     "@babel/core": "7.11.6",
     "@babel/preset-react": "7.10.4",
@@ -15,6 +19,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --mode production",
+    "prepublishOnly": "yarn build",
     "serve": "serve dist -p 3002",
     "clean": "rm -rf dist"
   },

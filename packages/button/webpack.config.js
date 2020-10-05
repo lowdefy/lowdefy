@@ -11,9 +11,6 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     port: 3002,
   },
-  output: {
-    publicPath: 'http://localhost:3002/',
-  },
   module: {
     rules: [
       {
@@ -28,8 +25,8 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'button',
-      library: { type: 'var', name: 'button' },
+      name: 'izlrmfxlki',
+      library: { type: 'var', name: 'izlrmfxlki' },
       filename: 'remoteEntry.js',
       exposes: {
         './Button': './src/Button',
