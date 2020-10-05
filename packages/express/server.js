@@ -4,5 +4,7 @@ const { typeDefs, resolvers, createContext } = require('@lowdefy/poc-graphql');
 const context = createContext();
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
+
 server.applyMiddleware({ app });
-app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000/graphql`));
+app.use(express.static('shell/dist'));
+app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000`));

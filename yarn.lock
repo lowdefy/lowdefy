@@ -2507,12 +2507,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/poc-graphql-local@workspace:packages/graphql-local":
+"@lowdefy/poc-express@workspace:packages/express":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/poc-graphql-local@workspace:packages/graphql-local"
+  resolution: "@lowdefy/poc-express@workspace:packages/express"
   dependencies:
+    "@babel/core": 7.11.6
+    "@babel/preset-react": 7.10.4
     "@lowdefy/poc-graphql": 0.0.1
     apollo-server-express: 2.18.1
+    babel-loader: 8.1.0
+    bundle-loader: 0.5.6
     eslint: 7.10.0
     eslint-config-airbnb: 18.2.0
     eslint-config-prettier: 6.12.0
@@ -2523,8 +2527,14 @@ __metadata:
     eslint-plugin-react-hooks: 4.1.2
     express: 4.17.1
     graphql: 15.3.0
+    html-webpack-plugin: 4.5.0
     nodemon: 2.0.4
     prettier: 2.1.2
+    react: 16.13.0
+    react-dom: 16.13.0
+    webpack: 5.0.0-rc.3
+    webpack-cli: 3.3.12
+    webpack-dev-server: 3.11.0
   languageName: unknown
   linkType: soft
 
