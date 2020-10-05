@@ -9,7 +9,7 @@ module.exports = {
   mode: 'development',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
-    port: 3001,
+    port: 3003,
   },
   module: {
     rules: [
@@ -30,14 +30,11 @@ module.exports = {
       },
     ],
   },
+  //http://localhost:3002/remoteEntry.js
   plugins: [
     new ModuleFederationPlugin({
-      name: 'nxjdkxbp',
-      library: { type: 'var', name: 'nxjdkxbp' },
-      filename: 'remoteEntry.js',
-      exposes: {
-        './Engine': './src/Engine',
-      },
+      name: 'web-shell',
+      library: { type: 'var', name: 'web-shell' },
       shared: {
         ...deps,
         react: {

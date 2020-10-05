@@ -1,7 +1,11 @@
 {
-  "name": "@basic-host-remote/app1",
-  "version": "0.0.0",
-  "private": true,
+  "name": "nxjdkxbp",
+  "version": "0.0.1",
+  "licence": "MIT",
+  "browser": "dist/remoteEntry.js",
+  "files": [
+    "dist/*"
+  ],
   "dependencies": {
     "@apollo/client": "3.2.1",
     "@apollo/link-context": "2.0.0-beta.3",
@@ -25,6 +29,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --mode production",
+    "prepublishOnly": "yarn build",
     "serve": "serve dist -p 3001",
     "clean": "rm -rf dist"
   }

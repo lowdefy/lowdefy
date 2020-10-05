@@ -17,8 +17,8 @@ const resolvers = {
         {
           id: 1,
           meta: {
-            url: 'http://localhost:3002/remoteEntry.js',
-            scope: 'button',
+            url: 'https://unpkg.com/izlrmfxlki/dist/remoteEntry.js',
+            scope: 'izlrmfxlki',
             module: 'Button',
           },
         },
