@@ -1,6 +1,7 @@
 {
   "name": "@lowdefy/color",
   "version": "1.0.0",
+  "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "bugs": {

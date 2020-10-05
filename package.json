@@ -1,6 +1,7 @@
 {
   "name": "@lowdefy/lowdefy",
   "version": "0.0.1",
+  "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
   "homepage": "https://lowdefy.com",
