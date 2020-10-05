@@ -1,7 +1,25 @@
 {
   "name": "@lowdefy/engine",
   "version": "0.0.0-experimental.1",
-  "licence": "MIT",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
   "browser": "dist/remoteEntry.js",
   "files": [
     "dist/*"
