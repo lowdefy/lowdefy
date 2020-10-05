@@ -47,6 +47,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/graphql"
       },
       {
+        "name": "@lowdefy/serializer",
+        "reference": "workspace:packages/serializer"
+      },
+      {
         "name": "@lowdefy/type",
         "reference": "workspace:packages/type"
       }
@@ -60,6 +64,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
       ["@lowdefy/poc", ["workspace:."]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
+      ["@lowdefy/serializer", ["workspace:packages/serializer"]],
       ["@lowdefy/type", ["workspace:packages/type"]],
       ["izlrmfxlki", ["workspace:packages/button"]]
     ],
@@ -4250,6 +4255,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:169dbf4f150c70e8e3c520c17e13f22c456554b80004ff2d30b111a6690248a25eccb9f152a6896cfffd934fd7b2869f1b936367a5a29078787bc35442cd3978#npm:5.0.0-rc.3"],
             ["webpack-cli", "virtual:169dbf4f150c70e8e3c520c17e13f22c456554b80004ff2d30b111a6690248a25eccb9f152a6896cfffd934fd7b2869f1b936367a5a29078787bc35442cd3978#npm:3.3.12"],
             ["webpack-dev-server", "virtual:169dbf4f150c70e8e3c520c17e13f22c456554b80004ff2d30b111a6690248a25eccb9f152a6896cfffd934fd7b2869f1b936367a5a29078787bc35442cd3978#npm:3.11.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/serializer", [
+        ["workspace:packages/serializer", {
+          "packageLocation": "./packages/serializer/",
+          "packageDependencies": [
+            ["@lowdefy/serializer", "workspace:packages/serializer"],
+            ["@babel/cli", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.8.4"],
+            ["@babel/compat-data", "npm:7.9.6"],
+            ["@babel/core", "npm:7.9.6"],
+            ["@babel/preset-env", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.9.6"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:24.9.0"],
+            ["eslint", "npm:6.8.0"],
+            ["eslint-config-airbnb", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:18.2.0"],
+            ["eslint-config-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:6.12.0"],
+            ["eslint-plugin-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:3.1.4"],
+            ["jest", "npm:24.9.0"],
+            ["jest-diff", "npm:24.9.0"],
+            ["prettier", "npm:2.1.2"]
           ],
           "linkType": "SOFT",
         }]

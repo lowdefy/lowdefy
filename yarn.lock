@@ -2820,6 +2820,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/serializer@workspace:packages/serializer":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/serializer@workspace:packages/serializer"
+  dependencies:
+    "@babel/cli": 7.8.4
+    "@babel/compat-data": 7.9.6
+    "@babel/core": 7.9.6
+    "@babel/preset-env": 7.9.6
+    "@lowdefy/type": 1.0.1
+    babel-jest: 24.9.0
+    eslint: 6.8.0
+    eslint-config-airbnb: 18.2.0
+    eslint-config-prettier: 6.12.0
+    eslint-plugin-prettier: 3.1.4
+    jest: 24.9.0
+    jest-diff: 24.9.0
+    prettier: 2.1.2
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/type@1.0.1, @lowdefy/type@workspace:packages/type":
   version: 0.0.0-use.local
   resolution: "@lowdefy/type@workspace:packages/type"
