@@ -2687,6 +2687,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lowdefy/color@workspace:packages/color":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/color@workspace:packages/color"
+  dependencies:
+    "@babel/cli": 7.8.4
+    "@babel/compat-data": 7.9.6
+    "@babel/core": 7.9.6
+    "@babel/preset-env": 7.9.6
+    "@lowdefy/type": 1.0.0
+    babel-jest: 24.9.0
+    eslint: 6.8.0
+    eslint-config-airbnb: 18.2.0
+    eslint-config-prettier: 6.11.0
+    eslint-plugin-prettier: 3.1.4
+    jest: 24.9.0
+    jest-diff: 24.9.0
+    prettier: 2.1.1
+    tinycolor2: 1.4.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
@@ -2820,6 +2841,13 @@ __metadata:
     prettier: 2.1.2
   languageName: unknown
   linkType: soft
+
+"@lowdefy/type@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@lowdefy/type@npm:1.0.0"
+  checksum: 06668d6f581f2c4f46f0c1752e7f946abc84ef4f9334780ef6534eeba554a075f78cf49212fb8c124672a1e16c4c3ffc0abb3e360ca0b67727fa7a164c69904f
+  languageName: node
+  linkType: hard
 
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
@@ -7251,6 +7279,19 @@ __metadata:
     eslint-plugin-react: ^7.20.0
     eslint-plugin-react-hooks: ^4 || ^3 || ^2.3.0 || ^1.7.0
   checksum: 9cd736cafc339a4c3f5eb59f5d77fb98e986f06b07ff4fe78149c08bf2d202b097879cddceb812a36aeda99a099e0f2f1efe7a896943d6b191190c41eeb52835
+  languageName: node
+  linkType: hard
+
+"eslint-config-prettier@npm:6.11.0":
+  version: 6.11.0
+  resolution: "eslint-config-prettier@npm:6.11.0"
+  dependencies:
+    get-stdin: ^6.0.0
+  peerDependencies:
+    eslint: ">=3.14.1"
+  bin:
+    eslint-config-prettier-check: bin/cli.js
+  checksum: 59efd906c78d47753a673c205ef515fdab19cd6ea0fd992c9cb2366804861746238244526ab565ccc7448569f5472ce7646a77d0c9998787192e4ebae95df71d
   languageName: node
   linkType: hard
 
@@ -13079,6 +13120,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"prettier@npm:2.1.1":
+  version: 2.1.1
+  resolution: "prettier@npm:2.1.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 420a807cda2d482388daa42379a7aaa1be629cb71f5792362a971a5ed1c6ff377d2e311818d24e9390a4a8a6eac3fda9ebe6975f2168efec893790c0497d8a93
+  languageName: node
+  linkType: hard
+
 "prettier@npm:2.1.2":
   version: 2.1.2
   resolution: "prettier@npm:2.1.2"
@@ -15543,6 +15593,13 @@ resolve@1.1.7:
   version: 4.0.1
   resolution: "timed-out@npm:4.0.1"
   checksum: e3046640806b0aca3ce65214f026277280f31df9aa6ff407d7ebb3cc7706d404ae02a3e024b47c06443c89e54e3823ef76b2d67ac54a12d338591938011d51e0
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:1.4.1":
+  version: 1.4.1
+  resolution: "tinycolor2@npm:1.4.1"
+  checksum: 7667d9b10cdf40b5af4b4d8c71d75fcf9ab1d89ad569b2d2213926929ac6666d2722320a5fe16d16d11ff77fca8aeb5974ef290161422b54700407e32113824a
   languageName: node
   linkType: hard
 
