@@ -1,0 +1,53 @@
+{
+  "name": "@lowdefy/delete",
+  "version": "1.0.1",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/delete.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "jest --coverage",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "@lowdefy/get": "1.0.1",
+    "@lowdefy/type": "1.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/compat-data": "7.9.6",
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "babel-jest": "24.9.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb": "18.2.0",
+    "eslint-config-prettier": "6.12.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.21.2",
+    "eslint-plugin-react-hooks": "4.1.2",
+    "jest": "24.9.0",
+    "jest-diff": "24.9.0",
+    "prettier": "2.1.2"
+  }
+}

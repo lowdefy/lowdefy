@@ -1,8 +1,27 @@
 {
-  "name": "@lowdefy/poc",
+  "name": "@lowdefy/lowdefy",
   "version": "0.0.1",
+  "license": "Apache-2.0",
   "private": true,
-  "license": "UNLICENSED",
+  "description": "Lowdefy monorepo",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
   "workspaces": [
     "packages/*"
   ],
