@@ -19,7 +19,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],
     "dependencyTreeRoots": [
       {
-        "name": "@lowdefy/poc",
+        "name": "@lowdefy/lowdefy",
         "reference": "workspace:."
       },
       {
@@ -72,7 +72,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/get", ["workspace:packages/get"]],
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
       ["@lowdefy/helpers", ["workspace:packages/helpers"]],
-      ["@lowdefy/poc", ["workspace:."]],
+      ["@lowdefy/lowdefy", ["workspace:."]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
       ["@lowdefy/serializer", ["workspace:packages/serializer"]],
       ["@lowdefy/type", ["workspace:packages/type"]],
@@ -4283,11 +4283,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@lowdefy/poc", [
+      ["@lowdefy/lowdefy", [
         ["workspace:.", {
           "packageLocation": "./",
           "packageDependencies": [
-            ["@lowdefy/poc", "workspace:."],
+            ["@lowdefy/lowdefy", "workspace:."],
             ["lerna", "npm:3.22.1"]
           ],
           "linkType": "SOFT",
