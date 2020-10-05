@@ -2708,7 +2708,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/delete@workspace:packages/delete":
+"@lowdefy/delete@1.0.1, @lowdefy/delete@workspace:packages/delete":
   version: 0.0.0-use.local
   resolution: "@lowdefy/delete@workspace:packages/delete"
   dependencies:
@@ -2806,6 +2806,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/helpers@workspace:packages/helpers":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/helpers@workspace:packages/helpers"
+  dependencies:
+    "@babel/cli": 7.8.4
+    "@babel/compat-data": 7.9.6
+    "@babel/core": 7.9.6
+    "@babel/preset-env": 7.9.6
+    "@lowdefy/delete": 1.0.1
+    "@lowdefy/serializer": 1.0.0
+    "@lowdefy/type": 1.0.1
+    babel-jest: 24.9.0
+    eslint: 6.8.0
+    eslint-config-airbnb: 18.2.0
+    eslint-config-prettier: 6.12.0
+    eslint-plugin-import: 2.22.1
+    eslint-plugin-jsx-a11y: 6.3.1
+    eslint-plugin-prettier: 3.1.4
+    eslint-plugin-react: 7.21.2
+    eslint-plugin-react-hooks: 4.1.2
+    jest: 24.9.0
+    jest-diff: 24.9.0
+    lodash.merge: 4.6.2
+    prettier: 2.1.2
+    query-string: 6.13.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/poc-express@workspace:packages/express":
   version: 0.0.0-use.local
   resolution: "@lowdefy/poc-express@workspace:packages/express"
@@ -2845,7 +2873,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/serializer@workspace:packages/serializer":
+"@lowdefy/serializer@1.0.0, @lowdefy/serializer@workspace:packages/serializer":
   version: 0.0.0-use.local
   resolution: "@lowdefy/serializer@workspace:packages/serializer"
   dependencies:
@@ -11115,6 +11143,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash.merge@npm:4.6.2":
+  version: 4.6.2
+  resolution: "lodash.merge@npm:4.6.2"
+  checksum: 4e2bb42a87a148991458d7c384bc197e96f7115e9536fc8e2c86ae9e99ce1c1f693ff15eb85761952535f48d72253aed8e673d9f32dde3e671cd91e3fde220a7
+  languageName: node
+  linkType: hard
+
 "lodash.set@npm:^4.3.2":
   version: 4.3.2
   resolution: "lodash.set@npm:4.3.2"
@@ -13428,6 +13463,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"query-string@npm:6.13.1":
+  version: 6.13.1
+  resolution: "query-string@npm:6.13.1"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 5e640f0cf6077f3fd4dcb6d8f3a88306bbb5d5638001450b15a244ca74f76e4a6a1d70baff114cef43ca15670d5d2523f92113f3567561b9dbd1fcb26489066a
+  languageName: node
+  linkType: hard
+
 "querystring@npm:0.2.0":
   version: 0.2.0
   resolution: "querystring@npm:0.2.0"
@@ -14938,6 +14984,13 @@ resolve@1.1.7:
   languageName: node
   linkType: hard
 
+"split-on-first@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "split-on-first@npm:1.1.0"
+  checksum: 2ef26fee62665be9547e8035734b856e658b08fd13e70271a2f258147f29d1f18e12b5cb7f7670d83e113c172a9c5fe3d87d9d7c02a1d3d57824818d75d942ab
+  languageName: node
+  linkType: hard
+
 "split-string@npm:^3.0.1, split-string@npm:^3.0.2":
   version: 3.1.0
   resolution: "split-string@npm:3.1.0"
@@ -15063,6 +15116,13 @@ resolve@1.1.7:
   version: 0.1.2
   resolution: "streamsearch@npm:0.1.2"
   checksum: f72befba95082d49be19cd4318112bc141f6cd7cbb201ee8079887f6f3cbcdf79c311977ce0eaa93d7d8c3e6b9727412f6177a87ced5b98d0fd4075723ad8eaf
+  languageName: node
+  linkType: hard
+
+"strict-uri-encode@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "strict-uri-encode@npm:2.0.0"
+  checksum: 775012e88b9d8dff939d514bf376d615a15e8228a5dd587a94ac3c71fce41aa3635cd808aa796e2c1cd33f3f2fe2fbf89b74ee18a504a1905efa1854311e04bb
   languageName: node
   linkType: hard
 

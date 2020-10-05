@@ -51,6 +51,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/graphql"
       },
       {
+        "name": "@lowdefy/helpers",
+        "reference": "workspace:packages/helpers"
+      },
+      {
         "name": "@lowdefy/serializer",
         "reference": "workspace:packages/serializer"
       },
@@ -67,6 +71,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/get", ["workspace:packages/get"]],
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
+      ["@lowdefy/helpers", ["workspace:packages/helpers"]],
       ["@lowdefy/poc", ["workspace:."]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
       ["@lowdefy/serializer", ["workspace:packages/serializer"]],
@@ -4244,6 +4249,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.1.2"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.0.0-rc.3"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.0.0-rc.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/helpers", [
+        ["workspace:packages/helpers", {
+          "packageLocation": "./packages/helpers/",
+          "packageDependencies": [
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@babel/cli", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.8.4"],
+            ["@babel/compat-data", "npm:7.9.6"],
+            ["@babel/core", "npm:7.9.6"],
+            ["@babel/preset-env", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.9.6"],
+            ["@lowdefy/delete", "workspace:packages/delete"],
+            ["@lowdefy/serializer", "workspace:packages/serializer"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:24.9.0"],
+            ["eslint", "npm:6.8.0"],
+            ["eslint-config-airbnb", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:18.2.0"],
+            ["eslint-config-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:6.12.0"],
+            ["eslint-plugin-import", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:2.22.1"],
+            ["eslint-plugin-jsx-a11y", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:6.3.1"],
+            ["eslint-plugin-prettier", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:3.1.4"],
+            ["eslint-plugin-react", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:7.21.2"],
+            ["eslint-plugin-react-hooks", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:4.1.2"],
+            ["jest", "npm:24.9.0"],
+            ["jest-diff", "npm:24.9.0"],
+            ["lodash.merge", "npm:4.6.2"],
+            ["prettier", "npm:2.1.2"],
+            ["query-string", "npm:6.13.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -13990,6 +14025,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lodash.merge", [
+        ["npm:4.6.2", {
+          "packageLocation": "./.yarn/cache/lodash.merge-npm-4.6.2-77cb4416bf-4e2bb42a87.zip/node_modules/lodash.merge/",
+          "packageDependencies": [
+            ["lodash.merge", "npm:4.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["lodash.set", [
         ["npm:4.3.2", {
           "packageLocation": "./.yarn/cache/lodash.set-npm-4.3.2-7586c942c2-4dfedacae1.zip/node_modules/lodash.set/",
@@ -16522,6 +16566,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["query-string", [
+        ["npm:6.13.1", {
+          "packageLocation": "./.yarn/cache/query-string-npm-6.13.1-9e8c5bfe09-5e640f0cf6.zip/node_modules/query-string/",
+          "packageDependencies": [
+            ["query-string", "npm:6.13.1"],
+            ["decode-uri-component", "npm:0.2.0"],
+            ["split-on-first", "npm:1.1.0"],
+            ["strict-uri-encode", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["querystring", [
         ["npm:0.2.0", {
           "packageLocation": "./.yarn/cache/querystring-npm-0.2.0-421b870c92-1e76c51462.zip/node_modules/querystring/",
@@ -18151,6 +18207,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["split-on-first", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/split-on-first-npm-1.1.0-e2f3ab5e4e-2ef26fee62.zip/node_modules/split-on-first/",
+          "packageDependencies": [
+            ["split-on-first", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["split-string", [
         ["npm:3.1.0", {
           "packageLocation": "./.yarn/cache/split-string-npm-3.1.0-df5d83450e-9b610d1509.zip/node_modules/split-string/",
@@ -18279,6 +18344,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/streamsearch-npm-0.1.2-813180eb1c-f72befba95.zip/node_modules/streamsearch/",
           "packageDependencies": [
             ["streamsearch", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["strict-uri-encode", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/strict-uri-encode-npm-2.0.0-1ec3189376-775012e88b.zip/node_modules/strict-uri-encode/",
+          "packageDependencies": [
+            ["strict-uri-encode", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]
