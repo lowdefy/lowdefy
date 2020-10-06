@@ -34,10 +34,10 @@
     "tinycolor2": "1.4.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.8.4",
-    "@babel/compat-data": "7.9.6",
-    "@babel/core": "7.9.6",
-    "@babel/preset-env": "7.9.6",
+    "@babel/cli": "7.11.6",
+    "@babel/compat-data": "7.11.0",
+    "@babel/core": "7.11.6",
+    "@babel/preset-env": "7.11.5",
     "babel-jest": "24.9.0",
     "jest": "24.9.0",
     "jest-diff": "24.9.0"
