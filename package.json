@@ -26,9 +26,11 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "lerna run build",
     "clean": "rm -rf **/**/node_modules && rm -rf ./node_modules",
     "prepare": "lerna run prepare",
-    "prettier": "prettier --config .prettierrc --write **/*.js"
+    "prettier": "prettier --config .prettierrc --write **/*.js",
+    "test": "lerna run test"
   },
   "devDependencies": {
     "lerna": "3.22.1"
