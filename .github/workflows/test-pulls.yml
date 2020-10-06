@@ -1,0 +1,23 @@
+name: Test
+
+on:
+  pull_request:
+  branches:
+    - main
+    - develop
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - uses: actions/checkout@v2
+      - name: Check yarn cache integrity
+        run: yarn install --check-cache
+      - name: Test packages
+        run: yarn test
+      - name: Build packages
+        run: yarn build
