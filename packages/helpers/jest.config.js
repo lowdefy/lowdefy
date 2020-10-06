@@ -6,7 +6,7 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
+  coveragePathIgnorePatterns: ['/dist/'],
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: ['text'],
@@ -15,5 +15,5 @@ module.exports = {
   testEnvironment: 'node',
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testPathIgnorePatterns: ['/dist/'],
 };
