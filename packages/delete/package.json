@@ -27,7 +27,7 @@
     "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "publish": "npm publish --access public"
+    "npm-publish": "npm publish --access public"
   },
   "dependencies": {
     "@lowdefy/get": "1.0.1",
