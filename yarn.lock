@@ -5,7 +5,38 @@ __metadata:
   version: 4
   cacheKey: 6
 
-"@apollo/client@npm:3.2.1, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.2.2":
+  version: 3.2.2
+  resolution: "@apollo/client@npm:3.2.2"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.2.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.12.1
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    terser: ^5.2.0
+    ts-invariant: ^0.4.4
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: d3c45228be64b9cf14d8fa2b24b774bf41798c4349b37eb97789c0ce31de9f787894ac9b2d881a3d9712af99c03a4d61990b83c43068fa1b8aeca0a58c6df062
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.1
   resolution: "@apollo/client@npm:3.2.1"
   dependencies:
@@ -2575,7 +2606,7 @@ __metadata:
     "@babel/compat-data": 7.9.6
     "@babel/core": 7.9.6
     "@babel/preset-env": 7.9.6
-    apollo-server-core: 2.18.1
+    apollo-server-core: 2.18.2
     babel-loader: 8.1.0
     graphql: 15.3.0
     graphql-type-json: 0.3.2
@@ -2627,7 +2658,7 @@ __metadata:
     "@babel/core": 7.11.6
     "@babel/preset-react": 7.10.4
     "@lowdefy/graphql": 0.0.0-experimental.0
-    apollo-server-express: 2.18.1
+    apollo-server-express: 2.18.2
     babel-loader: 8.1.0
     bundle-loader: 0.5.6
     express: 4.17.1
@@ -2646,7 +2677,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.1
+    "@apollo/client": 3.2.2
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -4384,9 +4415,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:2.18.1, apollo-server-core@npm:^2.18.1":
-  version: 2.18.1
-  resolution: "apollo-server-core@npm:2.18.1"
+"apollo-server-core@npm:2.18.2, apollo-server-core@npm:^2.18.2":
+  version: 2.18.2
+  resolution: "apollo-server-core@npm:2.18.2"
   dependencies:
     "@apollographql/apollo-tools": ^0.4.3
     "@apollographql/graphql-playground-html": 1.6.26
@@ -4409,13 +4440,14 @@ __metadata:
     graphql-tools: ^4.0.0
     graphql-upload: ^8.0.2
     loglevel: ^1.6.7
+    lru-cache: ^5.0.0
     sha.js: ^2.4.11
     subscriptions-transport-ws: ^0.9.11
     uuid: ^8.0.0
     ws: ^6.0.0
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 68b6565daed1182b06b2cf21e08506e9f5b6f0ef38b024d9262e61c65e2f24c101d2a27a7022491d35aa23985271c9ac6dda3a18a7d6ab57f054661009d46645
+  checksum: c4374b24ca46e8133533983fca7df5b6a3a324932d9b8dde46581138cb7947894b3f3d79c52da3e5224ccab931ab193e565ce460028a29ca8778b1339f28e7c7
   languageName: node
   linkType: hard
 
@@ -4438,9 +4470,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:2.18.1":
-  version: 2.18.1
-  resolution: "apollo-server-express@npm:2.18.1"
+"apollo-server-express@npm:2.18.2":
+  version: 2.18.2
+  resolution: "apollo-server-express@npm:2.18.2"
   dependencies:
     "@apollographql/graphql-playground-html": 1.6.26
     "@types/accepts": ^1.3.5
@@ -4449,7 +4481,7 @@ __metadata:
     "@types/express": 4.17.7
     "@types/express-serve-static-core": 4.17.9
     accepts: ^1.3.5
-    apollo-server-core: ^2.18.1
+    apollo-server-core: ^2.18.2
     apollo-server-types: ^0.6.0
     body-parser: ^1.18.3
     cors: ^2.8.4
@@ -4461,7 +4493,7 @@ __metadata:
     type-is: ^1.6.16
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 0991b3ab4da31847c347fc7d0c711e70f8f83d8bacbc833910e1371fd8919a54d3fabd4265503fcc45b05ff03c3748fb461b195a94034fdfede21f01b5283b48
+  checksum: ebcb732409973e6d04472d02fecc999174a07284992ac8044bda1b53b222308855da8a0d8b076010c706b785147a8a02ae61d66791509e921061cf2b3b286e21
   languageName: node
   linkType: hard
 
