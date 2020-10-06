@@ -6,7 +6,7 @@
     "browser": true
   },
   "extends": ["prettier"],
-  "plugins": ["prettier"],
+  "plugins": ["import", "jsx-a11y", "prettier", "react", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
     "import/no-cycle": "warn",
