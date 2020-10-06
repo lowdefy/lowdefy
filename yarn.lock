@@ -2699,11 +2699,11 @@ __metadata:
     babel-jest: 24.9.0
     eslint: 6.8.0
     eslint-config-airbnb: 18.2.0
-    eslint-config-prettier: 6.11.0
+    eslint-config-prettier: 6.12.0
     eslint-plugin-prettier: 3.1.4
     jest: 24.9.0
     jest-diff: 24.9.0
-    prettier: 2.1.1
+    prettier: 2.1.2
     tinycolor2: 1.4.1
   languageName: unknown
   linkType: soft
@@ -2834,6 +2834,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/lowdefy@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/lowdefy@workspace:."
+  dependencies:
+    lerna: 3.22.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/poc-express@workspace:packages/express":
   version: 0.0.0-use.local
   resolution: "@lowdefy/poc-express@workspace:packages/express"
@@ -2865,14 +2873,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/poc@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/poc@workspace:."
-  dependencies:
-    lerna: 3.22.1
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/serializer@1.0.0, @lowdefy/serializer@workspace:packages/serializer":
   version: 0.0.0-use.local
   resolution: "@lowdefy/serializer@workspace:packages/serializer"
@@ -2887,6 +2887,30 @@ __metadata:
     eslint-config-airbnb: 18.2.0
     eslint-config-prettier: 6.12.0
     eslint-plugin-prettier: 3.1.4
+    jest: 24.9.0
+    jest-diff: 24.9.0
+    prettier: 2.1.2
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/set@workspace:packages/set":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/set@workspace:packages/set"
+  dependencies:
+    "@babel/cli": 7.8.4
+    "@babel/compat-data": 7.9.6
+    "@babel/core": 7.9.6
+    "@babel/preset-env": 7.9.6
+    "@lowdefy/type": 1.0.1
+    babel-jest: 24.9.0
+    eslint: 6.8.0
+    eslint-config-airbnb: 18.2.0
+    eslint-config-prettier: 6.12.0
+    eslint-plugin-import: 2.22.1
+    eslint-plugin-jsx-a11y: 6.3.1
+    eslint-plugin-prettier: 3.1.4
+    eslint-plugin-react: 7.21.2
+    eslint-plugin-react-hooks: 4.1.2
     jest: 24.9.0
     jest-diff: 24.9.0
     prettier: 2.1.2
@@ -7352,19 +7376,6 @@ __metadata:
     eslint-plugin-react: ^7.20.0
     eslint-plugin-react-hooks: ^4 || ^3 || ^2.3.0 || ^1.7.0
   checksum: 9cd736cafc339a4c3f5eb59f5d77fb98e986f06b07ff4fe78149c08bf2d202b097879cddceb812a36aeda99a099e0f2f1efe7a896943d6b191190c41eeb52835
-  languageName: node
-  linkType: hard
-
-"eslint-config-prettier@npm:6.11.0":
-  version: 6.11.0
-  resolution: "eslint-config-prettier@npm:6.11.0"
-  dependencies:
-    get-stdin: ^6.0.0
-  peerDependencies:
-    eslint: ">=3.14.1"
-  bin:
-    eslint-config-prettier-check: bin/cli.js
-  checksum: 59efd906c78d47753a673c205ef515fdab19cd6ea0fd992c9cb2366804861746238244526ab565ccc7448569f5472ce7646a77d0c9998787192e4ebae95df71d
   languageName: node
   linkType: hard
 
@@ -13197,15 +13208,6 @@ fsevents@~2.1.2:
   bin:
     prettier: ./bin-prettier.js
   checksum: e5fcdfe5e159ef5c5480245353cf8fb5bbd1b8afff266f31f281641825238f8a645e58472f77cd75a09ccc45d44c335466e8d901ec138c2bda05e1bd6ea1077c
-  languageName: node
-  linkType: hard
-
-"prettier@npm:2.1.1":
-  version: 2.1.1
-  resolution: "prettier@npm:2.1.1"
-  bin:
-    prettier: bin-prettier.js
-  checksum: 420a807cda2d482388daa42379a7aaa1be629cb71f5792362a971a5ed1c6ff377d2e311818d24e9390a4a8a6eac3fda9ebe6975f2168efec893790c0497d8a93
   languageName: node
   linkType: hard
 
