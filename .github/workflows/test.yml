@@ -2,9 +2,10 @@ name: Test
 
 on:
   pull_request:
-  branches:
-    - main
-    - develop
+  push:
+    branches:
+      - main
+      - develop
 
 jobs:
   test-and-build:
@@ -17,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Check yarn cache integrity
         run: yarn install --check-cache
-      - name: Test packages
-        run: yarn test
       - name: Build packages
         run: yarn build
+      - name: Test packages
+        run: yarn test

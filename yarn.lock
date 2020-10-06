@@ -2575,29 +2575,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@workspace:packages/engine":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/engine@workspace:packages/engine"
-  dependencies:
-    "@apollo/client": 3.2.1
-    "@apollo/link-context": 2.0.0-beta.3
-    "@apollo/link-error": 2.0.0-beta.3
-    "@apollo/link-retry": 2.0.0-beta.3
-    "@babel/core": 7.11.6
-    "@babel/preset-react": 7.10.4
-    babel-loader: 8.1.0
-    bundle-loader: 0.5.6
-    graphql: 15.3.0
-    html-webpack-plugin: 4.5.0
-    react: 16.13.0
-    react-dom: 16.13.0
-    serve: 11.3.2
-    webpack: 5.0.0-rc.3
-    webpack-cli: 3.3.12
-    webpack-dev-server: 3.11.0
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/get@1.0.1, @lowdefy/get@workspace:packages/get":
   version: 0.0.0-use.local
   resolution: "@lowdefy/get@workspace:packages/get"
@@ -2709,6 +2686,29 @@ __metadata:
     prettier: 2.1.2
     react: 16.13.0
     react-dom: 16.13.0
+    webpack: 5.0.0-rc.3
+    webpack-cli: 3.3.12
+    webpack-dev-server: 3.11.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/renderer@workspace:packages/renderer":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/renderer@workspace:packages/renderer"
+  dependencies:
+    "@apollo/client": 3.2.1
+    "@apollo/link-context": 2.0.0-beta.3
+    "@apollo/link-error": 2.0.0-beta.3
+    "@apollo/link-retry": 2.0.0-beta.3
+    "@babel/core": 7.11.6
+    "@babel/preset-react": 7.10.4
+    babel-loader: 8.1.0
+    bundle-loader: 0.5.6
+    graphql: 15.3.0
+    html-webpack-plugin: 4.5.0
+    react: 16.13.0
+    react-dom: 16.13.0
+    serve: 11.3.2
     webpack: 5.0.0-rc.3
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
