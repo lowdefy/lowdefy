@@ -3,3 +3,5 @@
 .yarn/install-state.gz
 
 **/dist/*
+
+.DS_Store

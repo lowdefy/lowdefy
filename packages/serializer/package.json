@@ -26,7 +26,8 @@
     "build": "babel src --out-dir dist",
     "test": "jest --coverage",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public"
   },
   "dependencies": {
     "@lowdefy/type": "1.0.1"

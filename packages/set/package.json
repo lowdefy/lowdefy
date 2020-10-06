@@ -1,5 +1,5 @@
 {
-  "name": "@lowdefy/get",
+  "name": "@lowdefy/set",
   "version": "1.0.1",
   "license": "Apache-2.0",
   "description": "",
@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "main": "dist/get.js",
+  "main": "dist/set.js",
   "scripts": {
     "build": "babel src --out-dir dist",
     "test": "jest --coverage",
