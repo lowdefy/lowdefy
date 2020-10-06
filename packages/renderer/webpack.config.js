@@ -32,8 +32,8 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'lowdefy_engine',
-      library: { type: 'var', name: 'lowdefy_engine' },
+      name: 'lowdefy_renderer',
+      library: { type: 'var', name: 'lowdefy_renderer' },
       filename: 'remoteEntry.js',
       exposes: {
         './Engine': './src/Engine',
