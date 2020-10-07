@@ -59,6 +59,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/nunjucks"
       },
       {
+        "name": "@lowdefy/operators",
+        "reference": "workspace:packages/operators"
+      },
+      {
         "name": "@lowdefy/renderer",
         "reference": "workspace:packages/renderer"
       },
@@ -87,6 +91,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/layout", ["workspace:packages/layout"]],
       ["@lowdefy/lowdefy", ["workspace:."]],
       ["@lowdefy/nunjucks", ["workspace:packages/nunjucks"]],
+      ["@lowdefy/operators", ["workspace:packages/operators"]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
       ["@lowdefy/renderer", ["workspace:packages/renderer"]],
       ["@lowdefy/serializer", ["workspace:packages/serializer"]],
@@ -4873,6 +4878,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.5.2"],
             ["nunjucks", "npm:3.2.2"],
             ["nunjucks-date-filter", "npm:0.1.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/operators", [
+        ["workspace:packages/operators", {
+          "packageLocation": "./packages/operators/",
+          "packageDependencies": [
+            ["@lowdefy/operators", "workspace:packages/operators"],
+            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.8.4"],
+            ["@babel/core", "npm:7.9.6"],
+            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.9.6"],
+            ["@lowdefy/get", "workspace:packages/get"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
+            ["@lowdefy/serializer", "workspace:packages/serializer"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:24.9.0"],
+            ["jest", "npm:24.9.0"],
+            ["js-yaml", "npm:3.14.0"],
+            ["mingo", "npm:3.0.6"]
           ],
           "linkType": "SOFT",
         }]
@@ -16091,6 +16117,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/min-indent-npm-1.0.1-77031f50e1-c3aeea46bc.zip/node_modules/min-indent/",
           "packageDependencies": [
             ["min-indent", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["mingo", [
+        ["npm:3.0.6", {
+          "packageLocation": "./.yarn/cache/mingo-npm-3.0.6-1adb989d28-cbc1d5548a.zip/node_modules/mingo/",
+          "packageDependencies": [
+            ["mingo", "npm:3.0.6"]
           ],
           "linkType": "HARD",
         }]
