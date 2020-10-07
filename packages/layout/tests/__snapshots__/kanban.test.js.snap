@@ -3,7 +3,7 @@
 exports[`basic kanban 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-basic kanban"
+  id="bl-basic kanban23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -12,11 +12,11 @@ exports[`basic kanban 1`] = `
   }
 >
   <div
-    id="basic kanban"
+    id="basic kanban23456"
   >
     <div
       className="ant-row {\\"style\\":[null,{\\"flexWrap\\":\\"nowrap\\",\\"overflow\\":\\"scroll\\",\\"height\\":300}]}"
-      id="basic kanban-content"
+      id="basic kanban-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -28,7 +28,7 @@ exports[`basic kanban 1`] = `
     >
       <div
         className="ant-col {}"
-        id="bl-list_0"
+        id="bl-list_023456"
         style={
           Object {
             "alignSelf": undefined,
@@ -38,11 +38,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_0"
+          id="list_023456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_0-content"
+            id="list_0-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -54,7 +54,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_0_1"
+              id="bl-item_0_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -64,14 +64,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_0_1"
+                id="item_0_123456"
               >
-                item_0_1
+                item_0_123456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_0_2"
+              id="bl-item_0_223456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -81,14 +81,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_0_2"
+                id="item_0_223456"
               >
-                item_0_2
+                item_0_223456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_0_3"
+              id="bl-item_0_323456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -98,14 +98,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_0_3"
+                id="item_0_323456"
               >
-                item_0_3
+                item_0_323456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_0_4"
+              id="bl-item_0_423456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -115,9 +115,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_0_4"
+                id="item_0_423456"
               >
-                item_0_4
+                item_0_423456
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_1"
+        id="bl-list_123456"
         style={
           Object {
             "alignSelf": undefined,
@@ -135,11 +135,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_1"
+          id="list_123456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_1-content"
+            id="list_1-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -151,7 +151,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_1_1"
+              id="bl-item_1_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -161,14 +161,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_1_1"
+                id="item_1_123456"
               >
-                item_1_1
+                item_1_123456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_1_4"
+              id="bl-item_1_423456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -178,9 +178,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_1_4"
+                id="item_1_423456"
               >
-                item_1_4
+                item_1_423456
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_2"
+        id="bl-list_223456"
         style={
           Object {
             "alignSelf": undefined,
@@ -198,11 +198,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_2"
+          id="list_223456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_2-content"
+            id="list_2-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -214,7 +214,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_2_1"
+              id="bl-item_2_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -224,14 +224,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_2_1"
+                id="item_2_123456"
               >
-                item_2_1
+                item_2_123456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_2_2"
+              id="bl-item_2_223456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -241,14 +241,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_2_2"
+                id="item_2_223456"
               >
-                item_2_2
+                item_2_223456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_2_3"
+              id="bl-item_2_323456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -258,9 +258,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_2_3"
+                id="item_2_323456"
               >
-                item_2_3
+                item_2_323456
               </div>
             </div>
           </div>
@@ -268,7 +268,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_3"
+        id="bl-list_323456"
         style={
           Object {
             "alignSelf": undefined,
@@ -278,11 +278,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_3"
+          id="list_323456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_3-content"
+            id="list_3-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -294,7 +294,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":150}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_3_1"
+              id="bl-item_3_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -304,14 +304,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_3_1"
+                id="item_3_123456"
               >
-                item_3_1
+                item_3_123456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_3_2"
+              id="bl-item_3_223456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -321,14 +321,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_3_2"
+                id="item_3_223456"
               >
-                item_3_2
+                item_3_223456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":250}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_3_3"
+              id="bl-item_3_323456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -338,14 +338,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_3_3"
+                id="item_3_323456"
               >
-                item_3_3
+                item_3_323456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_3_4"
+              id="bl-item_3_423456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -355,9 +355,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_3_4"
+                id="item_3_423456"
               >
-                item_3_4
+                item_3_423456
               </div>
             </div>
           </div>
@@ -365,7 +365,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_4"
+        id="bl-list_423456"
         style={
           Object {
             "alignSelf": undefined,
@@ -375,11 +375,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_4"
+          id="list_423456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_4-content"
+            id="list_4-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -391,7 +391,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_4_1"
+              id="bl-item_4_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -401,9 +401,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_4_1"
+                id="item_4_123456"
               >
-                item_4_1
+                item_4_123456
               </div>
             </div>
           </div>
@@ -411,7 +411,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_5"
+        id="bl-list_523456"
         style={
           Object {
             "alignSelf": undefined,
@@ -421,11 +421,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_5"
+          id="list_523456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_5-content"
+            id="list_5-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -437,7 +437,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_5_0"
+              id="bl-item_5_023456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -447,14 +447,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_5_0"
+                id="item_5_023456"
               >
-                item_5_0
+                item_5_023456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_5_1"
+              id="bl-item_5_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -464,9 +464,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_5_1"
+                id="item_5_123456"
               >
-                item_5_1
+                item_5_123456
               </div>
             </div>
           </div>
@@ -474,7 +474,7 @@ exports[`basic kanban 1`] = `
       </div>
       <div
         className="ant-col {}"
-        id="bl-list_6"
+        id="bl-list_623456"
         style={
           Object {
             "alignSelf": undefined,
@@ -484,11 +484,11 @@ exports[`basic kanban 1`] = `
         }
       >
         <div
-          id="list_6"
+          id="list_623456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="list_6-content"
+            id="list_6-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -500,7 +500,7 @@ exports[`basic kanban 1`] = `
           >
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_6_0"
+              id="bl-item_6_023456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -510,14 +510,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_6_0"
+                id="item_6_023456"
               >
-                item_6_0
+                item_6_023456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_6_1"
+              id="bl-item_6_123456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -527,14 +527,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_6_1"
+                id="item_6_123456"
               >
-                item_6_1
+                item_6_123456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_6_2"
+              id="bl-item_6_223456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -544,14 +544,14 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_6_2"
+                id="item_6_223456"
               >
-                item_6_2
+                item_6_223456
               </div>
             </div>
             <div
               className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-              id="bl-item_6_3"
+              id="bl-item_6_323456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -561,9 +561,9 @@ exports[`basic kanban 1`] = `
             >
               <div
                 className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                id="item_6_3"
+                id="item_6_323456"
               >
-                item_6_3
+                item_6_323456
               </div>
             </div>
           </div>
