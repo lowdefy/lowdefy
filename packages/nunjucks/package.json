@@ -1,0 +1,44 @@
+{
+  "name": "@lowdefy/nunjucks",
+  "version": "1.0.0",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/nunjucks.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "jest --coverage",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public"
+  },
+  "dependencies": {
+    "@lowdefy/type": "1.0.1",
+    "nunjucks": "3.2.2",
+    "nunjucks-date-filter": "0.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.11.6",
+    "@babel/core": "7.11.6",
+    "@babel/preset-env": "7.11.5",
+    "babel-jest": "26.5.2",
+    "jest": "26.5.2"
+  }
+}

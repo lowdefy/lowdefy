@@ -2963,6 +2963,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/nunjucks@workspace:packages/nunjucks":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/nunjucks@workspace:packages/nunjucks"
+  dependencies:
+    "@babel/cli": 7.11.6
+    "@babel/core": 7.11.6
+    "@babel/preset-env": 7.11.5
+    "@lowdefy/type": 1.0.1
+    babel-jest: 26.5.2
+    jest: 26.5.2
+    nunjucks: 3.2.2
+    nunjucks-date-filter: 0.1.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/poc-express@workspace:packages/express":
   version: 0.0.0-use.local
   resolution: "@lowdefy/poc-express@workspace:packages/express"
@@ -4295,6 +4310,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"a-sync-waterfall@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "a-sync-waterfall@npm:1.0.1"
+  checksum: da11585ce7067691fa27ce2c4b731dfb632b090cfe32decb8a6f6e9b2cd6150353a5d78f1eb4555d4a9f8849eb66f443b34f3324dd0099badf208aea335be7f4
+  languageName: node
+  linkType: hard
+
 "abab@npm:^2.0.3":
   version: 2.0.5
   resolution: "abab@npm:2.0.5"
@@ -5034,7 +5056,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asap@npm:^2.0.0, asap@npm:~2.0.3":
+"asap@npm:^2.0.0, asap@npm:^2.0.3, asap@npm:~2.0.3":
   version: 2.0.6
   resolution: "asap@npm:2.0.6"
   checksum: 3d314f8c598b625a98347bacdba609d4c889c616ca5d8ea65acaae8050ab8b7aa6630df2cfe9856c20b260b432adf2ee7a65a1021f268ef70408c70f809e3a39
@@ -5991,7 +6013,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.2.2":
+"chokidar@npm:^3.2.2, chokidar@npm:^3.3.0":
   version: 3.4.2
   resolution: "chokidar@npm:3.4.2"
   dependencies:
@@ -6271,6 +6293,13 @@ __metadata:
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: 448585071bf8fb4c0bf9dd52abaee43dea086f801334caec2c8e8c9f456f8abc224c1614ccbbdbf7da5ac2524d230f13cf1fc86c233cf8a041ebecea7df106e9
+  languageName: node
+  linkType: hard
+
+"commander@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "commander@npm:5.1.0"
+  checksum: d16141ea7f580945156fb8a06de2834c4647c7d9d3732ebd4534ab8e0b7c64747db301e18f2b840f28ea8fef51f7a8d6178e674b45a21931f0b65ff1c7f476b3
   languageName: node
   linkType: hard
 
@@ -12247,7 +12276,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.24.0, moment@npm:^2.25.3":
+"moment@npm:^2.24.0, moment@npm:^2.25.3, moment@npm:^2.9.0":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
@@ -12723,6 +12752,32 @@ fsevents@^1.2.7:
   version: 1.0.1
   resolution: "number-is-nan@npm:1.0.1"
   checksum: 42251b2653a16f8b47639d93c3b646fff295a4582a6b3a2fc51a651d4511427c247629709063d19befbceb8a3db1a8e9f17016b3a207291e79e4bd1413032918
+  languageName: node
+  linkType: hard
+
+"nunjucks-date-filter@npm:0.1.1":
+  version: 0.1.1
+  resolution: "nunjucks-date-filter@npm:0.1.1"
+  dependencies:
+    moment: ^2.9.0
+  checksum: 45663784cf45758ac05bcd0e796e332b96601e934f95782cdf0a712e1ace14712b49dcbed750a986bd5706608d08edbad3588d66a9d436a036c7e0032ebb30e2
+  languageName: node
+  linkType: hard
+
+"nunjucks@npm:*, nunjucks@npm:3.2.2":
+  version: 3.2.2
+  resolution: "nunjucks@npm:3.2.2"
+  dependencies:
+    a-sync-waterfall: ^1.0.0
+    asap: ^2.0.3
+    chokidar: ^3.3.0
+    commander: ^5.1.0
+  dependenciesMeta:
+    chokidar:
+      optional: true
+  bin:
+    nunjucks-precompile: bin/precompile
+  checksum: ad7ac5ab621d30375ae8bd5e2f1fa4c87e652079179b63a8dc6d0fdb483ab283ba042f38675553a56db606a1accec19c1aade37b2e437520ab4e398b5f1dfbdd
   languageName: node
   linkType: hard
 
