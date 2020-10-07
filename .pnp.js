@@ -4725,7 +4725,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-airbnb", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:18.2.0"],
             ["eslint-config-prettier", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:6.12.0"],
             ["eslint-plugin-prettier", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:3.1.4"],
-            ["full-icu", "npm:1.3.1"],
             ["jest", "npm:24.9.0"],
             ["jest-diff", "npm:24.9.0"],
             ["moment", "npm:2.28.0"],
@@ -11843,15 +11842,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["fsevents", "patch:fsevents@npm%3A2.1.3#builtin<compat/fsevents>::version=2.1.3&hash=87eb42"],
             ["node-gyp", "npm:7.1.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["full-icu", [
-        ["npm:1.3.1", {
-          "packageLocation": "./.yarn/unplugged/full-icu-npm-1.3.1-e7a1988690/node_modules/full-icu/",
-          "packageDependencies": [
-            ["full-icu", "npm:1.3.1"]
           ],
           "linkType": "HARD",
         }]

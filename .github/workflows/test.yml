@@ -8,13 +8,30 @@ on:
       - develop
 
 jobs:
-  test-and-build:
+  # can't use matrix since tests are different between node 12 and 14
+  test-node-12:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - uses: actions/checkout@v2
+      - name: Check yarn cache integrity
+        run: yarn install --immutable --immutable-cache
+      - name: Build packages
+        run: yarn build
+      # format tests don't pass on node 12 since icu is missing
+      - name: Test packages
+        run: yarn test --ignore='@lowdefy/format'
+
+  test-node-14:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
       - uses: actions/checkout@v2
       - name: Check yarn cache integrity
         run: yarn install --immutable --immutable-cache

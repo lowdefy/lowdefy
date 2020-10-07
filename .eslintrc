@@ -9,7 +9,7 @@
   "plugins": ["import", "jsx-a11y", "prettier", "react", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
-    "import/no-cycle": "warn",
+    "import/no-cycle": "off",
     "no-underscore-dangle": "off",
     "no-param-reassign": "warn",
     "no-nested-ternary": "warn",
