@@ -17,7 +17,7 @@ jobs:
           node-version: '12.x'
       - uses: actions/checkout@v2
       - name: Check yarn cache integrity
-        run: yarn install --check-cache
+        run: yarn install --immutable --immutable-cache
       - name: Build packages
         run: yarn build
       - name: Test packages
