@@ -31,6 +31,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/delete"
       },
       {
+        "name": "@lowdefy/engine",
+        "reference": "workspace:packages/engine"
+      },
+      {
         "name": "@lowdefy/poc-express",
         "reference": "workspace:packages/express"
       },
@@ -84,6 +88,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackExclusionList": [
       ["@lowdefy/color", ["workspace:packages/color"]],
       ["@lowdefy/delete", ["workspace:packages/delete"]],
+      ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/format", ["workspace:packages/format"]],
       ["@lowdefy/get", ["workspace:packages/get"]],
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
@@ -208,7 +213,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@wry/equality", "npm:0.2.0"],
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.3.0"],
-            ["graphql-tag", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:2.11.0"],
+            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
             ["hoist-non-react-statics", "npm:3.3.2"],
             ["optimism", "npm:0.12.2"],
             ["prop-types", "npm:15.7.2"],
@@ -242,7 +247,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@wry/equality", "npm:0.2.0"],
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.3.0"],
-            ["graphql-tag", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:2.11.0"],
+            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
             ["hoist-non-react-statics", "npm:3.3.2"],
             ["optimism", "npm:0.12.2"],
             ["prop-types", "npm:15.7.2"],
@@ -4716,6 +4721,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/engine", [
+        ["workspace:packages/engine", {
+          "packageLocation": "./packages/engine/",
+          "packageDependencies": [
+            ["@lowdefy/engine", "workspace:packages/engine"],
+            ["@babel/cli", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.6"],
+            ["@babel/core", "npm:7.11.6"],
+            ["@babel/preset-env", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.5"],
+            ["@lowdefy/delete", "workspace:packages/delete"],
+            ["@lowdefy/get", "workspace:packages/get"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@lowdefy/operators", "workspace:packages/operators"],
+            ["@lowdefy/serializer", "workspace:packages/serializer"],
+            ["@lowdefy/set", "workspace:packages/set"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:dc086c2784eb23a46dc07fa9ec3a3b376e693ea14441b30b9d9ab2ee39c177169123288242a40e296e2dd681a1cce35ee32919388c9b6f1a58c0a512bc095c93#npm:26.5.2"],
+            ["graphql", "npm:15.3.0"],
+            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
+            ["jest", "npm:26.5.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/format", [
         ["workspace:packages/format", {
           "packageLocation": "./packages/format/",
@@ -4887,16 +4915,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/operators/",
           "packageDependencies": [
             ["@lowdefy/operators", "workspace:packages/operators"],
-            ["@babel/cli", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.8.4"],
-            ["@babel/core", "npm:7.9.6"],
-            ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.9.6"],
+            ["@babel/cli", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.6"],
+            ["@babel/core", "npm:7.11.6"],
+            ["@babel/preset-env", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.5"],
             ["@lowdefy/get", "workspace:packages/get"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["@lowdefy/serializer", "workspace:packages/serializer"],
             ["@lowdefy/type", "workspace:packages/type"],
-            ["babel-jest", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:24.9.0"],
-            ["jest", "npm:24.9.0"],
+            ["babel-jest", "virtual:dc086c2784eb23a46dc07fa9ec3a3b376e693ea14441b30b9d9ab2ee39c177169123288242a40e296e2dd681a1cce35ee32919388c9b6f1a58c0a512bc095c93#npm:26.5.2"],
+            ["jest", "npm:26.5.2"],
             ["js-yaml", "npm:3.14.0"],
             ["mingo", "npm:3.0.6"]
           ],
@@ -6975,7 +7003,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.3.0"],
             ["graphql-extensions", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:0.12.5"],
-            ["graphql-tag", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:2.11.0"],
+            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
             ["graphql-tools", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:4.0.8"],
             ["graphql-upload", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:8.1.0"],
             ["loglevel", "npm:1.7.0"],
@@ -12358,10 +12386,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["graphql-tag", [
-        ["virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:2.11.0", {
-          "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-5f5c9363a0/0/cache/graphql-tag-npm-2.11.0-d505ecf590-4003555901.zip/node_modules/graphql-tag/",
+        ["virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0", {
+          "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-a9b97c87e6/0/cache/graphql-tag-npm-2.11.0-d505ecf590-4003555901.zip/node_modules/graphql-tag/",
           "packageDependencies": [
-            ["graphql-tag", "virtual:bdd6a5c3642afb75bf2f1a25f63c4d3f135f613f1f0dc626dd3ce10291ac1ac0b0ce29109d815c76049839f1134a8c0c679fb56b4cc4e32f9e947e08a1132192#npm:2.11.0"],
+            ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
             ["@types/graphql", null],
             ["graphql", "npm:15.3.0"]
           ],
