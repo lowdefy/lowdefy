@@ -1,5 +1,6 @@
 import momentFormat from '../src/momentFormat';
 
+// FIXME: Fails if run in a different timezone/locale
 test('no options', () => {
   expect(momentFormat()(new Date(1560414023345))).toEqual('2019-06-13T10:20:23+02:00');
   expect(momentFormat({})(new Date(1560414023345))).toEqual('2019-06-13T10:20:23+02:00');
