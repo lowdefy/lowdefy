@@ -30,7 +30,8 @@
     "build": "babel src --out-dir dist",
     "test": "jest --coverage --config jest.config.json --no-cache",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public"
   },
   "dependencies": {
     "@emotion/core": "10.0.35",
@@ -41,7 +42,6 @@
     "@lowdefy/set": "1.0.0",
     "@lowdefy/type": "1.0.0",
     "antd": "4.4.2",
-    "classnames": "2.2.6",
     "create-emotion": "10.0.27"
   },
   "devDependencies": {
