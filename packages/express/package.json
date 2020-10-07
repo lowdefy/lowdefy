@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@lowdefy/graphql": "0.0.0-experimental.0",
-    "apollo-server-express": "2.18.1",
+    "apollo-server-express": "2.18.2",
     "express": "4.17.1",
     "graphql": "15.3.0",
     "nodemon": "2.0.4",
