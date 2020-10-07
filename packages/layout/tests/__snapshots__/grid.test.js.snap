@@ -1,0 +1,733 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`2 column stacking 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-2 column stacking"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="2 column stacking"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="2 column stacking-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-6"
+        id="bl-b1"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="b1"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="b1-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-tile_one"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="tile_one"
+              >
+                tile_one
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-18"
+        id="bl-b2"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="b2"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="b2-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":40}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-tile_two"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="tile_two"
+              >
+                tile_two
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":20}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+              id="bl-tile_three"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="tile_three"
+              >
+                tile_three
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+              id="bl-tile_four"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="tile_four"
+              >
+                tile_four
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`4 block grid 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-4 block grid"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="4 block grid"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="4 block grid-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_one"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_one"
+        >
+          tile_one
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_two"
+        >
+          tile_two
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_three"
+        >
+          tile_three
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_four"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_four"
+        >
+          tile_four
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`4 block grid with gutter 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-4 block grid with gutter"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="4 block grid with gutter"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="4 block grid with gutter-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "marginBottom": 25,
+          "marginLeft": -25,
+          "marginRight": -25,
+          "marginTop": -25,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_one"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 25,
+            "paddingLeft": 25,
+            "paddingRight": 25,
+            "paddingTop": 25,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_one"
+        >
+          tile_one
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 25,
+            "paddingLeft": 25,
+            "paddingRight": 25,
+            "paddingTop": 25,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_two"
+        >
+          tile_two
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 25,
+            "paddingLeft": 25,
+            "paddingRight": 25,
+            "paddingTop": 25,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_three"
+        >
+          tile_three
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_four"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 25,
+            "paddingLeft": 25,
+            "paddingRight": 25,
+            "paddingTop": 25,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_four"
+        >
+          tile_four
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`4 block grid with various heights 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-4 block grid with various heights"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="4 block grid with various heights"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="4 block grid with various heights-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_one"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_one"
+        >
+          tile_one
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":40}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_two"
+        >
+          tile_two
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":20}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_three"
+        >
+          tile_three
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_four"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_four"
+        >
+          tile_four
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`4 sequential blocks 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-4 sequential blocks"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="4 sequential blocks"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="4 sequential blocks-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tile_one"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_one"
+        >
+          tile_one
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tile_two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_two"
+        >
+          tile_two
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tile_three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_three"
+        >
+          tile_three
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tile_four"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_four"
+        >
+          tile_four
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`typical dashboard 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-typical dashboard"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="typical dashboard"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="typical dashboard-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "marginBottom": 5,
+          "marginLeft": -5,
+          "marginRight": -5,
+          "marginTop": -5,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+        id="bl-tile_one"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_one"
+        >
+          tile_one
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+        id="bl-tile_two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_two"
+        >
+          tile_two
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+        id="bl-tile_three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_three"
+        >
+          tile_three
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_four"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_four"
+        >
+          tile_four
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+        id="bl-tile_five"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_five"
+        >
+          tile_five
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"height\\":80}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tile_six"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "paddingBottom": 5,
+            "paddingLeft": 5,
+            "paddingRight": 5,
+            "paddingTop": 5,
+          }
+        }
+      >
+        <div
+          className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+          id="tile_six"
+        >
+          tile_six
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

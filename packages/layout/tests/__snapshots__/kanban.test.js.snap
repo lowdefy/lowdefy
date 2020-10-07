@@ -1,0 +1,575 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic kanban 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-basic kanban"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="basic kanban"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,{\\"flexWrap\\":\\"nowrap\\",\\"overflow\\":\\"scroll\\",\\"height\\":300}]}"
+      id="basic kanban-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {}"
+        id="bl-list_0"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_0"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_0-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_0_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_0_1"
+              >
+                item_0_1
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_0_2"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_0_2"
+              >
+                item_0_2
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_0_3"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_0_3"
+              >
+                item_0_3
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_0_4"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_0_4"
+              >
+                item_0_4
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_1"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 200px",
+          }
+        }
+      >
+        <div
+          id="list_1"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_1-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_1_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_1_1"
+              >
+                item_1_1
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_1_4"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_1_4"
+              >
+                item_1_4
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_2"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_2"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_2-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_2_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_2_1"
+              >
+                item_2_1
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_2_2"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_2_2"
+              >
+                item_2_2
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_2_3"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_2_3"
+              >
+                item_2_3
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_3"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_3"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_3-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":150}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_3_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_3_1"
+              >
+                item_3_1
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_3_2"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_3_2"
+              >
+                item_3_2
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":250}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_3_3"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_3_3"
+              >
+                item_3_3
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_3_4"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_3_4"
+              >
+                item_3_4
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_4"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_4"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_4-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_4_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_4_1"
+              >
+                item_4_1
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_5"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_5"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_5-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_5_0"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_5_0"
+              >
+                item_5_0
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_5_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_5_1"
+              >
+                item_5_1
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {}"
+        id="bl-list_6"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 0 400px",
+          }
+        }
+      >
+        <div
+          id="list_6"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="list_6-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_6_0"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_6_0"
+              >
+                item_6_0
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_6_1"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_6_1"
+              >
+                item_6_1
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_6_2"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_6_2"
+              >
+                item_6_2
+              </div>
+            </div>
+            <div
+              className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+              id="bl-item_6_3"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                }
+              }
+            >
+              <div
+                className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                id="item_6_3"
+              >
+                item_6_3
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

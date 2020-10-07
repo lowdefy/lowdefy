@@ -1,0 +1,9 @@
+{
+  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "node", "yaml", "css"],
+  "transform": {
+    "\\.yaml$": "yaml-jest",
+    "\\.js?$": "babel-jest",
+    "\\.css$": "<rootDir>/tests/proxy.js"
+  },
+  "collectCoverageFrom": ["src/**/*.{js,jsx}", "!demo/*"]
+}

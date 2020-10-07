@@ -3,5 +3,6 @@
 .yarn/install-state.gz
 
 **/dist/*
+**/coverage/*
 
 .DS_Store

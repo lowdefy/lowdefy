@@ -1,0 +1,3165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Complex Example 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-Complex Example"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="Complex Example"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="Complex Example-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-header"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="header"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="header-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-heading"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 0 auto",
+                }
+              }
+            >
+              <div
+                id="heading"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <h1>
+                    Issues
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-feedback"
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <div
+                id="feedback"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <p>
+                    Give Feedback
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tools"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="tools"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="tools-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-search"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 0 auto",
+                }
+              }
+            >
+              <input
+                blockId="search"
+                className="ant-input"
+                makeCss={
+                  [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                    ],
+                  }
+                }
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Assign"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 0 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Assign"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Assign
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Reporter"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 0 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Reporter"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Reporter
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Status"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 0 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Status"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Status
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Type"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 0 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Type"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Type
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-advanced"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 0 auto",
+                }
+              }
+            >
+              <div
+                id="advanced"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <p>
+                    Advanced Search
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-main"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="main"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="main-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-list_main"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 300px",
+                }
+              }
+            >
+              <div
+                id="list_main"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="list_main-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-list_tools"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="list_tools"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="list_tools-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {}"
+                          id="bl-Created"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "1 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Created"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Created
+                            </span>
+                          </button>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-Fil"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Fil"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Fil
+                            </span>
+                          </button>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-Ref"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Ref"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Ref
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-list"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="list"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="list-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_1"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_1"
+                          >
+                            item_0_1
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_2"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_2"
+                          >
+                            item_0_2
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_3"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_3"
+                          >
+                            item_0_3
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_4"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_4"
+                          >
+                            item_0_4
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-main_content"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 1 200px",
+                }
+              }
+            >
+              <div
+                id="main_content"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="main_content-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h2>
+                          Validate still a heading
+                        </h2>
+                        <p>
+                          The below config will fail for both the field on root and the field in the object when the context is validated.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-comment"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="comment"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="comment-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {}"
+                          id="bl-avatar"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 80px",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="avatar"
+                          >
+                            avatar
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-input_comment"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "1 1 80px",
+                            }
+                          }
+                        >
+                          <input
+                            blockId="input_comment"
+                            className="ant-input"
+                            makeCss={
+                              [MockFunction] {
+                                "calls": Array [
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                ],
+                                "results": Array [
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                ],
+                              }
+                            }
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onKeyDown={[Function]}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-sider"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 200px",
+                }
+              }
+            >
+              <div
+                id="sider"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="sider-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h3>
+                          One
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <p>
+                          Two
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h3>
+                          three
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <p>
+                          Four
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Complex No Flex Field Example 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-Complex No Flex Field Example"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="Complex No Flex Field Example"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="Complex No Flex Field Example-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-header"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="header"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="header-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-heading"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 1 auto",
+                }
+              }
+            >
+              <div
+                id="heading"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <h1>
+                    Issues
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-feedback"
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <div
+                id="feedback"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <p>
+                    Give Feedback
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-tools"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="tools"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="tools-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-search"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <input
+                blockId="search"
+                className="ant-input"
+                makeCss={
+                  [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        Object {
+                          "height": 50,
+                        },
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "background": "#269",
+                            "border": "2px solid #00aaee",
+                            "color": "#fff",
+                            "fontSize": 12,
+                            "textAlign": "center",
+                          },
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        undefined,
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":{\\"height\\":50}}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                    ],
+                  }
+                }
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Assign"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Assign"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Assign
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Reporter"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Reporter"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Reporter
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Status"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Status"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Status
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-Type"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 1 auto",
+                }
+              }
+            >
+              <button
+                className="ant-btn"
+                id="Type"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Type
+                </span>
+              </button>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-advanced"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 auto",
+                }
+              }
+            >
+              <div
+                id="advanced"
+              >
+                <div
+                  className="markdown-body"
+                >
+                  <p>
+                    Advanced Search
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+        id="bl-main"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="main"
+        >
+          <div
+            className="ant-row {\\"style\\":[null,null]}"
+            id="main-content"
+            style={
+              Object {
+                "border": "1px dashed red",
+                "flexDirection": undefined,
+                "flexWrap": undefined,
+                "overflow": undefined,
+              }
+            }
+          >
+            <div
+              className="ant-col {}"
+              id="bl-list_main"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 300px",
+                }
+              }
+            >
+              <div
+                id="list_main"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="list_main-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-list_tools"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="list_tools"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="list_tools-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {}"
+                          id="bl-Created"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "1 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Created"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Created
+                            </span>
+                          </button>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-Fil"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Fil"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Fil
+                            </span>
+                          </button>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-Ref"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 auto",
+                            }
+                          }
+                        >
+                          <button
+                            className="ant-btn"
+                            id="Ref"
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <span>
+                              Ref
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-list"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="list"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="list-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_1"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_1"
+                          >
+                            item_0_1
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_2"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_2"
+                          >
+                            item_0_2
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_3"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_3"
+                          >
+                            item_0_3
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                          id="bl-item_0_4"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="item_0_4"
+                          >
+                            item_0_4
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-main_content"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "1 1 200px",
+                }
+              }
+            >
+              <div
+                id="main_content"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="main_content-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h2>
+                          Validate still a heading
+                        </h2>
+                        <p>
+                          The below config will fail for both the field on root and the field in the object when the context is validated.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-comment"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="comment"
+                    >
+                      <div
+                        className="ant-row {\\"style\\":[null,null]}"
+                        id="comment-content"
+                        style={
+                          Object {
+                            "border": "1px dashed red",
+                            "flexDirection": undefined,
+                            "flexWrap": undefined,
+                            "overflow": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-col {}"
+                          id="bl-avatar"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "0 1 auto",
+                            }
+                          }
+                        >
+                          <div
+                            className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
+                            id="avatar"
+                          >
+                            avatar
+                          </div>
+                        </div>
+                        <div
+                          className="ant-col {}"
+                          id="bl-inputs_comment"
+                          style={
+                            Object {
+                              "alignSelf": undefined,
+                              "border": "1px dashed #8eccf5",
+                              "flex": "1 1 auto",
+                            }
+                          }
+                        >
+                          <input
+                            blockId="inputs_comment"
+                            className="ant-input"
+                            makeCss={
+                              [MockFunction] {
+                                "calls": Array [
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    Object {
+                                      "height": 50,
+                                    },
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      Object {
+                                        "background": "#269",
+                                        "border": "2px solid #00aaee",
+                                        "color": "#fff",
+                                        "fontSize": 12,
+                                        "textAlign": "center",
+                                      },
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                    ],
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                  Array [
+                                    undefined,
+                                  ],
+                                ],
+                                "results": Array [
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":{\\"height\\":50}}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{\\"style\\":[null,null]}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                  Object {
+                                    "type": "return",
+                                    "value": "{}",
+                                  },
+                                ],
+                              }
+                            }
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onKeyDown={[Function]}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="ant-col {}"
+              id="bl-sider"
+              style={
+                Object {
+                  "alignSelf": undefined,
+                  "border": "1px dashed #8eccf5",
+                  "flex": "0 1 200px",
+                }
+              }
+            >
+              <div
+                id="sider"
+              >
+                <div
+                  className="ant-row {\\"style\\":[null,null]}"
+                  id="sider-content"
+                  style={
+                    Object {
+                      "border": "1px dashed red",
+                      "flexDirection": undefined,
+                      "flexWrap": undefined,
+                      "overflow": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h3>
+                          One
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <p>
+                          Two
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <h3>
+                          three
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+                    id="bl-content"
+                    style={
+                      Object {
+                        "alignSelf": undefined,
+                        "border": "1px dashed #8eccf5",
+                      }
+                    }
+                  >
+                    <div
+                      id="content"
+                    >
+                      <div
+                        className="markdown-body"
+                      >
+                        <p>
+                          Four
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

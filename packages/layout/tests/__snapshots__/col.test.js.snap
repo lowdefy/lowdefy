@@ -1,0 +1,1939 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`align 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-align"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="align"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
+      id="align-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": "flex-start",
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="One"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            One
+          </span>
+        </button>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": "center",
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="Two"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            Two
+          </span>
+        </button>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-Three"
+        style={
+          Object {
+            "alignSelf": "flex-end",
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="Three"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            Three
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`align 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-align"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="align"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
+      id="align-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": "flex-start",
+            "border": false,
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="One"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            One
+          </span>
+        </button>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": "center",
+            "border": false,
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="Two"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            Two
+          </span>
+        </button>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-Three"
+        style={
+          Object {
+            "alignSelf": "flex-end",
+            "border": false,
+          }
+        }
+      >
+        <button
+          className="ant-btn"
+          id="Three"
+          onClick={[Function]}
+          type="button"
+        >
+          <span>
+            Three
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`center content 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-center content"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="center content"
+  >
+    <div
+      className="ant-row ant-row-center {\\"style\\":[null,null]}"
+      id="center content-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 800px",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`center content 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-center content"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="center content"
+  >
+    <div
+      className="ant-row ant-row-center {\\"style\\":[null,null]}"
+      id="center content-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 800px",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 0 0 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 0 0"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="grow 0 0"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 0 0-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 0 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 0 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 0 0 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 0 0"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="grow 0 0"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 0 0-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 0 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 0 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 0 1 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 0 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="grow 0 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 0 1-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 0 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 0 1 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 0 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="grow 0 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 0 1-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 0 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 1 0 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 1 0"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="grow 1 0"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 1 0-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 0 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 1 0 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 1 0"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="grow 1 0"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 1 0-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 0 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 1 1 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 1 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="grow 1 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 1 1-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`grow 1 1 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-grow 1 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="grow 1 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="grow 1 1-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          grow: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "1 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          grow: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`offset 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-offset"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="offset"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="offset-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`offset 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-offset"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="offset"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="offset-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`offset push pull span 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-offset push pull span"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="offset push pull span"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="offset push pull span-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`offset push pull span 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-offset push pull span"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="offset push pull span"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="offset push pull span-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`order 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-order"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="order"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="order-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`order 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-order"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="order"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="order-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pull 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-pull"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="pull"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="pull-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pull 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-pull"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="pull"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="pull-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`push 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-push"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="push"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="push-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`push 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-push"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="push"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="push-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`shrink 1 1 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-shrink 1 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="shrink 1 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="shrink 1 1-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          shrink: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          shrink: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`shrink 1 1 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-shrink 1 1"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="shrink 1 1"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="shrink 1 1-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          shrink: 1 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 auto",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          shrink: 1 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`size 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-size"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="size"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="size-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 200px",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          size: 200 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+            "flex": "0 1 400px",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          size: 400 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`size 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-size"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="size"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="size-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 200px",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          size: 200 - ONE Lorem ipsum dolor
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+            "flex": "0 1 400px",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          size: 400 - TWO Lorem ipsum dolor
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`span 1`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-span"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": "1px dashed #8eccf5",
+    }
+  }
+>
+  <div
+    id="span"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="span-content"
+      style={
+        Object {
+          "border": "1px dashed red",
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+        id="bl-Three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": "1px dashed #8eccf5",
+          }
+        }
+      >
+        <div
+          id="Three"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`span 2`] = `
+<div
+  className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
+  id="bl-span"
+  style={
+    Object {
+      "alignSelf": undefined,
+      "border": false,
+    }
+  }
+>
+  <div
+    id="span"
+  >
+    <div
+      className="ant-row {\\"style\\":[null,null]}"
+      id="span-content"
+      style={
+        Object {
+          "border": false,
+          "flexDirection": undefined,
+          "flexWrap": undefined,
+          "overflow": undefined,
+        }
+      }
+    >
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+        id="bl-One"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="One"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+      <div
+        className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
+        id="bl-Two"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Two"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+      <div
+        className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
+        id="bl-Three"
+        style={
+          Object {
+            "alignSelf": undefined,
+            "border": false,
+          }
+        }
+      >
+        <div
+          id="Three"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
