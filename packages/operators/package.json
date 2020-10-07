@@ -1,0 +1,49 @@
+{
+  "name": "@lowdefy/operators",
+  "version": "1.0.0",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public"
+  },
+  "dependencies": {
+    "@lowdefy/get": "1.0.1",
+    "@lowdefy/helpers": "1.0.0",
+    "@lowdefy/nunjucks": "1.0.0",
+    "@lowdefy/serializer": "1.0.0",
+    "@lowdefy/type": "1.0.1",
+    "js-yaml": "3.14.0",
+    "mingo": "3.0.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "babel-jest": "24.9.0",
+    "jest": "24.9.0"
+  }
+}

@@ -3282,7 +3282,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/nunjucks@workspace:packages/nunjucks":
+"@lowdefy/nunjucks@1.0.0, @lowdefy/nunjucks@workspace:packages/nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/nunjucks"
   dependencies:
@@ -3294,6 +3294,25 @@ __metadata:
     jest: 26.5.2
     nunjucks: 3.2.2
     nunjucks-date-filter: 0.1.1
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/operators@workspace:packages/operators":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators@workspace:packages/operators"
+  dependencies:
+    "@babel/cli": 7.8.4
+    "@babel/core": 7.9.6
+    "@babel/preset-env": 7.9.6
+    "@lowdefy/get": 1.0.1
+    "@lowdefy/helpers": 1.0.0
+    "@lowdefy/nunjucks": 1.0.0
+    "@lowdefy/serializer": 1.0.0
+    "@lowdefy/type": 1.0.1
+    babel-jest: 24.9.0
+    jest: 24.9.0
+    js-yaml: 3.14.0
+    mingo: 3.0.6
   languageName: unknown
   linkType: soft
 
@@ -13257,6 +13276,13 @@ fsevents@^1.2.7:
   version: 1.0.1
   resolution: "min-indent@npm:1.0.1"
   checksum: c3aeea46bc432e6ce69b86717e98fbb544e338abb5e3c93cfa196c427e3d5a4a6ee4f76e6931a9e424fb53e83451b90fc417ce7db04440a92d68369704ad11d1
+  languageName: node
+  linkType: hard
+
+"mingo@npm:3.0.6":
+  version: 3.0.6
+  resolution: "mingo@npm:3.0.6"
+  checksum: cbc1d5548ac59aed7ec025e647bbf9dfeffb101f0b37ee9f8cbd4c82154060a621d0e70c34288504303582bfbb31c2594627d0bf051a07e743a584b997c82f61
   languageName: node
   linkType: hard
 
