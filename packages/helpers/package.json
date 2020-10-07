@@ -41,8 +41,8 @@
     "@babel/compat-data": "7.9.6",
     "@babel/core": "7.9.6",
     "@babel/preset-env": "7.9.6",
-    "babel-jest": "24.9.0",
-    "jest": "24.9.0",
-    "jest-diff": "24.9.0"
+    "babel-jest": "26.5.2",
+    "jest": "26.5.2",
+    "jest-diff": "26.5.2"
   }
 }
