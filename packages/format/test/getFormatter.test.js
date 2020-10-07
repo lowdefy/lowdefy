@@ -1,0 +1,57 @@
+import getFormatter from '../src/index';
+
+test('Invalid formatter name', () => {
+  expect(() => {
+    getFormatter('invalid', {});
+  }).toThrow('Invalid Formatter: "invalid" does not exist');
+});
+
+test('intlDateTimeFormat', () => {
+  const formatter = getFormatter('intlDateTimeFormat', {
+    locale: 'de',
+    options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
+  });
+  expect(formatter(new Date(1560414023345))).toEqual('Donnerstag, 13. Juni 2019');
+});
+
+test('intlListFormat', () => {
+  const formatter = getFormatter('intlListFormat', {
+    locale: 'de',
+    options: { style: 'short', type: 'disjunction' },
+  });
+  expect(formatter(['Motorcycle', 'Bus', 'Car'])).toEqual('Motorcycle, Bus oder Car');
+});
+
+test('intlNumberFormat', () => {
+  const formatter = getFormatter('intlNumberFormat', {
+    locale: 'de',
+    options: { style: 'currency', currency: 'EUR' },
+  });
+  expect(formatter(12364374.6)).toEqual('12.364.374,60 €');
+});
+
+test('intlRelativeTimeFormat', () => {
+  const formatter = getFormatter('intlRelativeTimeFormat', {
+    locale: 'de',
+    unit: 'days',
+    options: { numeric: 'auto' },
+  });
+  expect(formatter(1)).toEqual('morgen');
+});
+
+test('momentFormat', () => {
+  const formatter = getFormatter('momentFormat', {
+    locale: 'de',
+    format: 'd MMM YYYY',
+  });
+  expect(formatter(new Date(1560414023345))).toEqual('4 Juni 2019');
+});
+
+test('momentHumanizeDuration', () => {
+  const formatter = getFormatter('momentHumanizeDuration', {
+    locale: 'fr',
+    withSuffix: true,
+    thresholds: { d: 7, w: 4 },
+  });
+  expect(formatter(604800000)).toEqual('dans a week');
+});
