@@ -214,10 +214,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.1", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-472b73936d/0/cache/@apollo-client-npm-3.2.1-69cfa6ab0c-c0032610b9.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.2", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-56457dd5c3/0/cache/@apollo-client-npm-3.2.2-312de4cd96-d3c45228be.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.1"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.2"],
             ["@graphql-typed-document-node/core", "virtual:98dffad496594eedda4be8b7bfd0e384a8afe4121d50813a3b29eb675f861b58b637d9666b87f01c81eb4b691adf15399c768a64831172c56fb50c0a99b03b0b#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -3770,7 +3770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.1"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.2"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],

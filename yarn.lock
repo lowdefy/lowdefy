@@ -60,7 +60,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.1, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.2.2":
+  version: 3.2.2
+  resolution: "@apollo/client@npm:3.2.2"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.2.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.12.1
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    terser: ^5.2.0
+    ts-invariant: ^0.4.4
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: d3c45228be64b9cf14d8fa2b24b774bf41798c4349b37eb97789c0ce31de9f787894ac9b2d881a3d9712af99c03a4d61990b83c43068fa1b8aeca0a58c6df062
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.1
   resolution: "@apollo/client@npm:3.2.1"
   dependencies:
@@ -2949,7 +2980,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.1
+    "@apollo/client": 3.2.2
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
