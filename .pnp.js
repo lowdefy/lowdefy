@@ -51,6 +51,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/layout"
       },
       {
+        "name": "@lowdefy/nunjucks",
+        "reference": "workspace:packages/nunjucks"
+      },
+      {
         "name": "@lowdefy/renderer",
         "reference": "workspace:packages/renderer"
       },
@@ -77,6 +81,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/helpers", ["workspace:packages/helpers"]],
       ["@lowdefy/layout", ["workspace:packages/layout"]],
       ["@lowdefy/lowdefy", ["workspace:."]],
+      ["@lowdefy/nunjucks", ["workspace:packages/nunjucks"]],
       ["@lowdefy/poc-express", ["workspace:packages/express"]],
       ["@lowdefy/renderer", ["workspace:packages/renderer"]],
       ["@lowdefy/serializer", ["workspace:packages/serializer"]],
@@ -3751,6 +3756,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/nunjucks", [
+        ["workspace:packages/nunjucks", {
+          "packageLocation": "./packages/nunjucks/",
+          "packageDependencies": [
+            ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
+            ["@babel/cli", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.6"],
+            ["@babel/core", "npm:7.11.6"],
+            ["@babel/preset-env", "virtual:10c70c57b8c041994c932fbc6065790a1801b95ea6f8bb47c7334c5a9a57ca5035df7a515298306323a03d95e4c0d72d9488454f45837690b0620ca3a249c7f5#npm:7.11.5"],
+            ["@lowdefy/type", "workspace:packages/type"],
+            ["babel-jest", "virtual:dc086c2784eb23a46dc07fa9ec3a3b376e693ea14441b30b9d9ab2ee39c177169123288242a40e296e2dd681a1cce35ee32919388c9b6f1a58c0a512bc095c93#npm:26.5.2"],
+            ["jest", "npm:26.5.2"],
+            ["nunjucks", "npm:3.2.2"],
+            ["nunjucks-date-filter", "npm:0.1.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/poc-express", [
         ["workspace:packages/express", {
           "packageLocation": "./packages/express/",
@@ -5253,6 +5275,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["JSONStream", "npm:1.3.5"],
             ["jsonparse", "npm:1.3.1"],
             ["through", "npm:2.3.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["a-sync-waterfall", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/a-sync-waterfall-npm-1.0.1-f6b6b49568-da11585ce7.zip/node_modules/a-sync-waterfall/",
+          "packageDependencies": [
+            ["a-sync-waterfall", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -7595,6 +7626,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/commander-npm-4.1.1-22a0fe921b-448585071b.zip/node_modules/commander/",
           "packageDependencies": [
             ["commander", "npm:4.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:5.1.0", {
+          "packageLocation": "./.yarn/cache/commander-npm-5.1.0-7e939e7832-d16141ea7f.zip/node_modules/commander/",
+          "packageDependencies": [
+            ["commander", "npm:5.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -14769,6 +14807,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/number-is-nan-npm-1.0.1-845325a0fe-42251b2653.zip/node_modules/number-is-nan/",
           "packageDependencies": [
             ["number-is-nan", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["nunjucks", [
+        ["npm:3.2.2", {
+          "packageLocation": "./.yarn/cache/nunjucks-npm-3.2.2-810aaf7ac6-ad7ac5ab62.zip/node_modules/nunjucks/",
+          "packageDependencies": [
+            ["nunjucks", "npm:3.2.2"],
+            ["a-sync-waterfall", "npm:1.0.1"],
+            ["asap", "npm:2.0.6"],
+            ["chokidar", "npm:3.4.2"],
+            ["commander", "npm:5.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["nunjucks-date-filter", [
+        ["npm:0.1.1", {
+          "packageLocation": "./.yarn/cache/nunjucks-date-filter-npm-0.1.1-434e2afa95-45663784cf.zip/node_modules/nunjucks-date-filter/",
+          "packageDependencies": [
+            ["nunjucks-date-filter", "npm:0.1.1"],
+            ["moment", "npm:2.29.1"],
+            ["nunjucks", "npm:3.2.2"]
           ],
           "linkType": "HARD",
         }]
