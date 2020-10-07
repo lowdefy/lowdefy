@@ -2579,7 +2579,7 @@ __metadata:
     babel-loader: 8.1.0
     graphql: 15.3.0
     graphql-type-json: 0.3.2
-    webpack: v5.0.0-rc.3
+    webpack: 5.0.0-rc.4
     webpack-cli: v4.0.0-rc.0
   languageName: unknown
   linkType: soft
@@ -2636,7 +2636,7 @@ __metadata:
     nodemon: 2.0.4
     react: 16.13.0
     react-dom: 16.13.0
-    webpack: 5.0.0-rc.3
+    webpack: 5.0.0-rc.4
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
   languageName: unknown
@@ -2659,7 +2659,7 @@ __metadata:
     react: 16.13.0
     react-dom: 16.13.0
     serve: 11.3.2
-    webpack: 5.0.0-rc.3
+    webpack: 5.0.0-rc.4
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
   languageName: unknown
@@ -3271,7 +3271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.5":
+"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.6":
   version: 7.0.6
   resolution: "@types/json-schema@npm:7.0.6"
   checksum: 820cabe35ac915b93e38b0c01957e5c49d7d9f69251dddfbf39af0ff4fe24f6e08b39e55603e0d212dea7bcaa383b1218b58a738d1c02013dc22df06547ff238
@@ -4088,12 +4088,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^7.1.1, acorn@npm:^7.4.0":
+"acorn@npm:^7.1.1":
   version: 7.4.1
   resolution: "acorn@npm:7.4.1"
   bin:
     acorn: bin/acorn
   checksum: 2bde98c28c1be9a08e41e581179b776b43396c9486ce52b2b9848d73c53df38c516b7edba4bacdc84cabc9d7a3299f3b46ef240ae261c38dbf8ddd89f635bd32
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.0.3":
+  version: 8.0.4
+  resolution: "acorn@npm:8.0.4"
+  bin:
+    acorn: bin/acorn
+  checksum: d23a2df6c64845afd521f0df1f8f93f611c3647e01b8770b8ad2972c59246529fa42756bfd3ad6abf2d0cacb8e5203f5470c96637778ec583460f1637e1f6eb7
   languageName: node
   linkType: hard
 
@@ -4164,7 +4173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.3, ajv@npm:^6.12.4":
+"ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.3, ajv@npm:^6.12.4, ajv@npm:^6.12.5":
   version: 6.12.5
   resolution: "ajv@npm:6.12.5"
   dependencies:
@@ -14519,7 +14528,7 @@ resolve@1.1.7:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.0, schema-utils@npm:^2.7.1":
+"schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.1":
   version: 2.7.1
   resolution: "schema-utils@npm:2.7.1"
   dependencies:
@@ -14527,6 +14536,17 @@ resolve@1.1.7:
     ajv: ^6.12.4
     ajv-keywords: ^3.5.2
   checksum: 3851bcc7e44a3f35d3ca96e460c598aa24cec9fe395b196395316a043dc111d25735a9a49b1a115e4b52d5ed0d8bbcfb9fe1bfd077610f192b613e020d3f3ef2
+  languageName: node
+  linkType: hard
+
+"schema-utils@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "schema-utils@npm:3.0.0"
+  dependencies:
+    "@types/json-schema": ^7.0.6
+    ajv: ^6.12.5
+    ajv-keywords: ^3.5.2
+  checksum: a084f593f222560c412a4d8f40c92386c01c1c709f27c0672c2f02927a4d4d475f57f8b8e91198d0defb452add160476a03f07a05b26200a64b5124fa874e158
   languageName: node
   linkType: hard
 
@@ -16715,9 +16735,9 @@ resolve@1.1.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.0.0-rc.3, webpack@npm:v5.0.0-rc.3":
-  version: 5.0.0-rc.3
-  resolution: "webpack@npm:5.0.0-rc.3"
+"webpack@npm:5.0.0-rc.4":
+  version: 5.0.0-rc.4
+  resolution: "webpack@npm:5.0.0-rc.4"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.45
@@ -16725,7 +16745,7 @@ resolve@1.1.7:
     "@webassemblyjs/helper-module-context": 1.9.0
     "@webassemblyjs/wasm-edit": 1.9.0
     "@webassemblyjs/wasm-parser": 1.9.0
-    acorn: ^7.4.0
+    acorn: ^8.0.3
     browserslist: ^4.14.3
     chrome-trace-event: ^1.0.2
     enhanced-resolve: ^5.2.0
@@ -16738,7 +16758,7 @@ resolve@1.1.7:
     mime-types: ^2.1.27
     neo-async: ^2.6.2
     pkg-dir: ^4.2.0
-    schema-utils: ^2.7.0
+    schema-utils: ^3.0.0
     tapable: ^2.0.0
     terser-webpack-plugin: ^4.1.0
     watchpack: ^2.0.0
@@ -16748,7 +16768,7 @@ resolve@1.1.7:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 27e133f451edb2338be8147765ed66d82c654daa80bc1a6d83b10ac7366d461cbd2e17b3668b7522302f77b441b1815528201cd570e0a9a02073b72fe2bd56ea
+  checksum: 185e3b1eecbae3ab04d83ec0c471a564a1b21cb44bca8da4a8a2e5fda910da55295d6dbf8dc378f65db7044ef2c0e7bc57da90d8ecee986840fcdca314ba64be
   languageName: node
   linkType: hard
 

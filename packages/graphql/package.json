@@ -30,7 +30,7 @@
     "apollo-server-core": "2.18.1",
     "graphql": "15.3.0",
     "graphql-type-json": "0.3.2",
-    "webpack": "v5.0.0-rc.3",
+    "webpack": "5.0.0-rc.4",
     "webpack-cli": "v4.0.0-rc.0"
   },
   "devDependencies": {
