@@ -19,11 +19,13 @@
 import type from '@lowdefy/type';
 import get from '@lowdefy/get';
 import set from '@lowdefy/set';
-import { applyArrayIndices, swap, getFieldValues } from '@lowdefy/helpers';
+import { applyArrayIndices } from '@lowdefy/helpers';
 import serializer from '@lowdefy/serializer';
 import gql from 'graphql-tag';
 
 import BlockActions from './BlockActions';
+import getFieldValues from './getFieldValues';
+import swap from './swap';
 
 const SET_BLOCK = gql`
   fragment BlockClassFragment on BlockClass @client {

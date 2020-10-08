@@ -15,10 +15,8 @@
 */
 
 import applyArrayIndices from './applyArrayIndices';
-import getFieldValues from './getFieldValues';
 import mergeObjects from './mergeObjects';
 import omit from './omit';
-import swap from './swap';
 import urlQuery from './urlQuery';
 
-export { applyArrayIndices, getFieldValues, mergeObjects, omit, swap, urlQuery };
+export { applyArrayIndices, mergeObjects, omit, urlQuery };
