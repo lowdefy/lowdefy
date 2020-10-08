@@ -14,17 +14,9 @@
   limitations under the License.
 */
 
-import createEmotion from 'create-emotion';
-import { mergeObjects } from '@lowdefy/helpers';
+import makeCss from './makeCss.js';
 import mediaToCssObject from './mediaToCssObject.js';
+import emotion from './emotion';
+import ErrorBoundary from './ErrorBoundary';
 
-export const { css, injectGlobal } = createEmotion({
-  container: document.getElementById('emotion'),
-});
-
-const makeCss = (styles, options = {}) =>
-  options.styleObjectOnly
-    ? mediaToCssObject(mergeObjects(styles), options)
-    : css(mediaToCssObject(mergeObjects(styles), options));
-
-export default makeCss;
+export { ErrorBoundary, emotion, makeCss, mediaToCssObject };

@@ -35,7 +35,7 @@ class ErrorBoundary extends Component {
     if (hasError) {
       return (
         <div>
-          ERROR: {renderError ? 'Error: ' : message} <br />
+          {renderError ? 'Error: ' : message}
           {renderError ? `${error.message}` : description} <br />
         </div>
       );

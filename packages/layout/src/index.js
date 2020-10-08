@@ -17,7 +17,5 @@
 import Area from './Area.js';
 import BlockLayout from './BlockLayout.js';
 import layoutParamsToArea from './layoutParamsToArea.js';
-import makeCss from './makeCss.js';
-import mediaToCssObject from './mediaToCssObject.js';
 
-export { Area, BlockLayout, layoutParamsToArea, makeCss, mediaToCssObject };
+export { Area, BlockLayout, layoutParamsToArea };

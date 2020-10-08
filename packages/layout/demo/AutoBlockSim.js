@@ -16,6 +16,7 @@
 
 import React from 'react';
 import type from '@lowdefy/type';
+import { ErrorBoundary } from '@lowdefy/block-tools';
 import { Area, BlockLayout, layoutParamsToArea } from '../src';
 
 import Block from './blocks/Block';
@@ -26,7 +27,6 @@ import Page from './blocks/Page';
 import Paragraph from './blocks/Paragraph';
 import List from './blocks/List';
 import Markdown from './blocks/Markdown';
-import ErrorBoundary from './ErrorBoundary';
 
 const Blocks = {
   Block,

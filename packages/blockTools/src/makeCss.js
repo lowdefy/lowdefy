@@ -14,21 +14,13 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { mergeObjects } from '@lowdefy/helpers';
+import mediaToCssObject from './mediaToCssObject';
+import emotion from './emotion';
 
-const getUniqueValues = (arr, key = 'value') => {
-  const arr2 = arr.map((o) => {
-    if (type.isPrimitive(o)) {
-      return JSON.stringify(o);
-    }
-    return JSON.stringify(o[key]);
-  });
-  return arr.filter((opt, i) => {
-    if (type.isPrimitive(opt)) {
-      return arr2.indexOf(JSON.stringify(opt)) === i;
-    }
-    return arr2.indexOf(JSON.stringify(opt[key])) === i;
-  });
-};
+const makeCss = (styles, options = {}) =>
+  options.styleObjectOnly
+    ? mediaToCssObject(mergeObjects(styles), options)
+    : emotion.css(mediaToCssObject(mergeObjects(styles), options));
 
-export default getUniqueValues;
+export default makeCss;
