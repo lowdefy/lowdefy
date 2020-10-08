@@ -30,15 +30,19 @@ class ErrorBoundary extends Component {
   }
 
   render() {
-    const { description, message, renderError, children } = this.props;
+    const { description, message, renderError, fallback, children } = this.props;
     const { hasError, error } = this.state;
     if (hasError) {
-      return (
+      if (fallback) {
+        return fallback;
+      }
+      if (renderError) {
         <div>
-          {renderError ? 'Error: ' : message}
-          {renderError ? `${error.message}` : description} <br />
-        </div>
-      );
+          {'Error: ' + (message || error.message) + (description && '<br />' + description)}
+        </div>;
+      }
+      // Throw to console but fail silently to user?
+      return '';
     }
 
     return children;

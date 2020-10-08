@@ -14,11 +14,19 @@
   limitations under the License.
 */
 
-import connectBlock from './connectBlock';
-import emotion from './emotion';
-import ErrorBoundary from './ErrorBoundary';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
-import useRunAfterUpdate from './useRunAfterUpdate';
+import React from 'react';
 
-export { connectBlock, emotion, ErrorBoundary, makeCssClass, mediaToCssObject, useRunAfterUpdate };
+const useRunAfterUpdate = () => {
+  const afterPaintRef = React.useRef(null);
+  React.useLayoutEffect(() => {
+    if (afterPaintRef.current) {
+      afterPaintRef.current();
+      afterPaintRef.current = null;
+    }
+  });
+  return (fn) => {
+    afterPaintRef.current = fn;
+  };
+};
+
+export default useRunAfterUpdate;

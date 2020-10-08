@@ -18,9 +18,9 @@ import { mergeObjects } from '@lowdefy/helpers';
 import mediaToCssObject from './mediaToCssObject';
 import emotion from './emotion';
 
-const makeCss = (styles, options = {}) =>
+const makeCssClass = (styles, options = {}) =>
   options.styleObjectOnly
     ? mediaToCssObject(mergeObjects(styles), options)
     : emotion.css(mediaToCssObject(mergeObjects(styles), options));
 
-export default makeCss;
+export default makeCssClass;

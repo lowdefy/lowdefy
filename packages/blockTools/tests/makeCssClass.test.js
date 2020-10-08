@@ -1,4 +1,20 @@
-import makeCss from '../src/makeCss';
+/*
+  Copyright 2020 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import makeCssClass from '../src/makeCssClass';
 
 const mockCss = jest.fn();
 const mockCssImp = (obj) => ({
@@ -20,7 +36,7 @@ test('object with no media', () => {
     b: 1,
     c: { a: 'b' },
   };
-  expect(makeCss(obj)).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj)).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "a": "a",
@@ -42,7 +58,7 @@ test('objects with no media', () => {
   const obj2 = {
     c: { a: 'c' },
   };
-  expect(makeCss([obj1, obj2])).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2])).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "a": "a",
@@ -64,7 +80,7 @@ test('objects with media', () => {
     lg: { a: 'lg' },
     xl: { a: 'xl' },
   };
-  expect(makeCss(obj)).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj)).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "@media screen and (max-width: 576px)": Object {
@@ -102,7 +118,7 @@ test('objects with media', () => {
     lg: { a: 'lg', c: { sm: { a: '1' } } },
     xl: { a: 'xl' },
   };
-  expect(makeCss([obj1, obj2])).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2])).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "@media screen and (max-width: 576px)": Object {
@@ -136,7 +152,7 @@ test('object with no media, react', () => {
     b: 1,
     c: { a: 'b' },
   };
-  expect(makeCss(obj, { react: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj, { react: true })).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "a": "a",
@@ -158,7 +174,7 @@ test('objects with no media, react', () => {
   const obj2 = {
     c: { a: 'c' },
   };
-  expect(makeCss([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "a": "a",
@@ -180,7 +196,7 @@ test('objects with media, react', () => {
     lg: { a: 'lg' },
     xl: { a: 'xl' },
   };
-  expect(makeCss(obj, { react: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj, { react: true })).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "@media screen and (maxWidth: 576px)": Object {
@@ -218,7 +234,7 @@ test('objects with media, react', () => {
     lg: { a: 'lg', c: { sm: { a: '1' } } },
     xl: { a: 'xl' },
   };
-  expect(makeCss([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2], { react: true })).toMatchInlineSnapshot(`
     Object {
       "emotionClassFor": Object {
         "@media screen and (maxWidth: 576px)": Object {
@@ -252,7 +268,7 @@ test('object with no media, styleObjectOnly', () => {
     b: 1,
     c: { a: 'b' },
   };
-  expect(makeCss(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
       "a": "a",
       "b": 1,
@@ -272,7 +288,7 @@ test('objects with no media, styleObjectOnly', () => {
   const obj2 = {
     c: { a: 'c' },
   };
-  expect(makeCss([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
       "a": "a",
       "c": Object {
@@ -292,7 +308,7 @@ test('objects with media, styleObjectOnly', () => {
     lg: { a: 'lg' },
     xl: { a: 'xl' },
   };
-  expect(makeCss(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass(obj, { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
       "@media screen and (max-width: 576px)": Object {
         "a": "sm",
@@ -328,7 +344,7 @@ test('objects with media, styleObjectOnly', () => {
     lg: { a: 'lg', c: { sm: { a: '1' } } },
     xl: { a: 'xl' },
   };
-  expect(makeCss([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
+  expect(makeCssClass([obj1, obj2], { styleObjectOnly: true })).toMatchInlineSnapshot(`
     Object {
       "@media screen and (max-width: 576px)": Object {
         "a": "smsm",
