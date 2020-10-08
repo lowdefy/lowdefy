@@ -14,8 +14,13 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+import { gql } from 'apollo-server-core';
 
-export { typeDefs, resolvers, createContext };
+const typeDefs = gql`
+  scalar JSON
+  type Query {
+    page(pageId: ID!): JSON
+  }
+`;
+
+export default typeDefs;

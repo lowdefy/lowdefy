@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+async function page(_, { pageId }, { getController }) {
+  return getController('page').getPage({ pageId });
+}
 
-export { typeDefs, resolvers, createContext };
+export default page;

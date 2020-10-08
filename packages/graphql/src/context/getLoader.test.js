@@ -14,8 +14,19 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+import Dataloader from 'dataloader';
+import createGetLoader from './getLoader';
+import { ctx } from '../tests/testContext';
 
-export { typeDefs, resolvers, createContext };
+test('get page loader', () => {
+  const getLoader = createGetLoader(ctx);
+  const pageLoader = getLoader('page');
+  expect(pageLoader).toBeInstanceOf(Dataloader);
+});
+
+test('memoise loader', () => {
+  const getLoader = createGetLoader(ctx);
+  const loader1 = getLoader('page');
+  const loader2 = getLoader('page');
+  expect(loader1).toBe(loader2);
+});

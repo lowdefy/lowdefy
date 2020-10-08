@@ -14,8 +14,16 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+const bootstrapContext = {
+  DEPLOYMENT_ID: 'test',
+  DEPLOYMENT_NAME: 'Test App',
+  DOMAIN_NAME: 'test.com',
+  ORIGIN: 'test.com',
+  HOST: 'test.com',
+  getLoader: () => {},
+  getController: () => {},
+  getConnectionSecrets: () => {},
+  logger: { log: () => {} },
+};
 
-export { typeDefs, resolvers, createContext };
+export { bootstrapContext };
