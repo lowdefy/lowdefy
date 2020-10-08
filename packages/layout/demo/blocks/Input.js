@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import Area from './Area.js';
-import BlockLayout from './BlockLayout.js';
-import layoutParamsToArea from './layoutParamsToArea.js';
-import makeCss from './makeCss.js';
-import mediaToCssObject from './mediaToCssObject.js';
+import React from 'react';
+import { Input } from 'antd';
 
-export { Area, BlockLayout, layoutParamsToArea, makeCss, mediaToCssObject };
+const Blank = ({ blockId, properties }) => <Input id={blockId} {...properties} />;
+
+export default Blank;
