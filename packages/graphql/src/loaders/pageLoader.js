@@ -14,8 +14,17 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+import Dataloader from 'dataloader';
 
-export { typeDefs, resolvers, createContext };
+function createComponentBatchLoader() {
+  async function loader(keys) {
+    return keys.map((id) => ({ id: `page:${id}` }));
+  }
+  return loader;
+}
+
+function createComponentLoader() {
+  return new Dataloader(createComponentBatchLoader());
+}
+
+export default createComponentLoader;

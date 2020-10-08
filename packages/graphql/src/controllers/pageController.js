@@ -14,8 +14,20 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+class PageController {
+  constructor({ getLoader }) {
+    this.pageLoader = getLoader('page');
+  }
 
-export { typeDefs, resolvers, createContext };
+  async getPage({ pageId }) {
+    return this.pageLoader.load(pageId);
+  }
+}
+
+function createPageController(context) {
+  return new PageController(context);
+}
+
+export { PageController };
+
+export default createPageController;
