@@ -3143,6 +3143,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lowdefy/engine@workspace:packages/engine":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/engine@workspace:packages/engine"
+  dependencies:
+    "@babel/cli": 7.11.6
+    "@babel/core": 7.11.6
+    "@babel/preset-env": 7.11.5
+    "@lowdefy/delete": 1.0.1
+    "@lowdefy/get": 1.0.1
+    "@lowdefy/helpers": 1.0.0
+    "@lowdefy/operators": 1.0.0
+    "@lowdefy/serializer": 1.0.0
+    "@lowdefy/set": 1.0.1
+    "@lowdefy/type": 1.0.1
+    babel-jest: 26.5.2
+    graphql: 15.3.0
+    graphql-tag: 2.11.0
+    jest: 26.5.2
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
@@ -3296,20 +3317,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@workspace:packages/operators":
+"@lowdefy/operators@1.0.0, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
-    "@babel/cli": 7.8.4
-    "@babel/core": 7.9.6
-    "@babel/preset-env": 7.9.6
+    "@babel/cli": 7.11.6
+    "@babel/core": 7.11.6
+    "@babel/preset-env": 7.11.5
     "@lowdefy/get": 1.0.1
     "@lowdefy/helpers": 1.0.0
     "@lowdefy/nunjucks": 1.0.0
     "@lowdefy/serializer": 1.0.0
     "@lowdefy/type": 1.0.1
-    babel-jest: 24.9.0
-    jest: 24.9.0
+    babel-jest: 26.5.2
+    jest: 26.5.2
     js-yaml: 3.14.0
     mingo: 3.0.6
   languageName: unknown
@@ -3374,16 +3395,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/set@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@lowdefy/set@npm:1.0.0"
-  dependencies:
-    "@lowdefy/type": 1.0.0
-  checksum: 55ad614b907b398523ba04b6072559d4d957229afa58a4fb02aa43dbc2be7135857da09f1f7ac0ccb84819bd4f3146bf8bb8983bc06a81b0cc21946a3723387f
-  languageName: node
-  linkType: hard
-
-"@lowdefy/set@workspace:packages/set":
+"@lowdefy/set@1.0.1, @lowdefy/set@workspace:packages/set":
   version: 0.0.0-use.local
   resolution: "@lowdefy/set@workspace:packages/set"
   dependencies:
@@ -3396,6 +3408,15 @@ __metadata:
     jest-diff: 26.5.2
   languageName: unknown
   linkType: soft
+
+"@lowdefy/set@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@lowdefy/set@npm:1.0.0"
+  dependencies:
+    "@lowdefy/type": 1.0.0
+  checksum: 55ad614b907b398523ba04b6072559d4d957229afa58a4fb02aa43dbc2be7135857da09f1f7ac0ccb84819bd4f3146bf8bb8983bc06a81b0cc21946a3723387f
+  languageName: node
+  linkType: hard
 
 "@lowdefy/type@1.0.1, @lowdefy/type@workspace:packages/type":
   version: 0.0.0-use.local
@@ -9819,7 +9840,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.9.2":
+"graphql-tag@npm:2.11.0, graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.9.2":
   version: 2.11.0
   resolution: "graphql-tag@npm:2.11.0"
   peerDependencies:

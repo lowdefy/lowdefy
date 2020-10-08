@@ -1,6 +1,6 @@
 {
-  "name": "@lowdefy/operators",
-  "version": "1.0.0",
+  "name": "@lowdefy/engine",
+  "version": "0.0.0-experimental.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -24,20 +24,22 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
+    "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "npm-publish": "npm publish --access public"
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
   },
   "dependencies": {
+    "@lowdefy/delete": "1.0.1",
     "@lowdefy/get": "1.0.1",
     "@lowdefy/helpers": "1.0.0",
-    "@lowdefy/nunjucks": "1.0.0",
+    "@lowdefy/operators": "1.0.0",
     "@lowdefy/serializer": "1.0.0",
+    "@lowdefy/set": "1.0.1",
     "@lowdefy/type": "1.0.1",
-    "js-yaml": "3.14.0",
-    "mingo": "3.0.6"
+    "graphql": "15.3.0",
+    "graphql-tag": "2.11.0"
   },
   "devDependencies": {
     "@babel/cli": "7.11.6",
