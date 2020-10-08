@@ -28,6 +28,7 @@
     "jsx-a11y/no-static-element-interactions": "off"
   },
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 9
   }
 }
