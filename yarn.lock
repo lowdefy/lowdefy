@@ -3127,6 +3127,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/express@workspace:packages/express":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/express@workspace:packages/express"
+  dependencies:
+    "@babel/core": 7.11.6
+    "@babel/preset-react": 7.10.4
+    "@lowdefy/graphql": 0.0.0-experimental.0
+    apollo-server-express: 2.18.2
+    babel-loader: 8.1.0
+    bundle-loader: 0.5.6
+    express: 4.17.1
+    graphql: 15.3.0
+    html-webpack-plugin: 4.5.0
+    nodemon: 2.0.4
+    react: 17.0.0-rc.2
+    react-dom: 17.0.0-rc.2
+    webpack: 5.0.0-rc.4
+    webpack-cli: 3.3.12
+    webpack-dev-server: 3.11.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
@@ -3168,10 +3190,16 @@ __metadata:
     "@babel/cli": 7.11.6
     "@babel/core": 7.11.6
     "@babel/preset-env": 7.11.5
+    "@lowdefy/get": 1.0.1
+    "@lowdefy/type": 1.0.1
     apollo-server-core: 2.18.2
+    apollo-server-testing: 2.18.2
+    babel-jest: 24.9.0
     babel-loader: 8.1.0
+    dataloader: 2.0.0
     graphql: 15.3.0
     graphql-type-json: 0.3.2
+    jest: 24.9.0
     webpack: 5.0.0-rc.4
     webpack-cli: 3.3.12
   languageName: unknown
@@ -3281,28 +3309,6 @@ __metadata:
     jest: 26.5.2
     js-yaml: 3.14.0
     mingo: 3.0.6
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/poc-express@workspace:packages/express":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/poc-express@workspace:packages/express"
-  dependencies:
-    "@babel/core": 7.11.6
-    "@babel/preset-react": 7.10.4
-    "@lowdefy/graphql": 0.0.0-experimental.0
-    apollo-server-express: 2.18.2
-    babel-loader: 8.1.0
-    bundle-loader: 0.5.6
-    express: 4.17.1
-    graphql: 15.3.0
-    html-webpack-plugin: 4.5.0
-    nodemon: 2.0.4
-    react: 17.0.0-rc.2
-    react-dom: 17.0.0-rc.2
-    webpack: 5.0.0-rc.4
-    webpack-cli: 3.3.12
-    webpack-dev-server: 3.11.0
   languageName: unknown
   linkType: soft
 
@@ -5176,6 +5182,17 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 7518c4c287a0394164ec093c4f4c38ca4608efe1429fbb6b46df0d839aee71eb1ccc07439bb4f3c4744c40e650ece27db48212d3c92a7a9feef30b5008a6914f
+  languageName: node
+  linkType: hard
+
+"apollo-server-testing@npm:2.18.2":
+  version: 2.18.2
+  resolution: "apollo-server-testing@npm:2.18.2"
+  dependencies:
+    apollo-server-core: ^2.18.2
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 8785148d75a0e0d2378ee514401c3dc83a6610679429231c01194cccc777bc50e8d01ea5b1600e999dfe767c9b56bb96a56e2c7d6ffea9da0178a63658a21d88
   languageName: node
   linkType: hard
 
@@ -7307,6 +7324,13 @@ __metadata:
     whatwg-mimetype: ^2.3.0
     whatwg-url: ^8.0.0
   checksum: 42239927c6a202e2d02b7f41c94ca53e3cea036898b97b8bf6120ed1b25e0dd11c48ec7aa5c84cf807c2cb9f3a637df9fb50f3ca25a52863186a4ac46254726b
+  languageName: node
+  linkType: hard
+
+"dataloader@npm:2.0.0":
+  version: 2.0.0
+  resolution: "dataloader@npm:2.0.0"
+  checksum: 0165c2e80751d269c33d2a14b0078a4f3853cb010e2531e7aa99523aba8d0cdc922b9ad67e4c2bb9074c90e0ee0a41b6e7f5f63c40d31224a71c8a0b703f4be3
   languageName: node
   linkType: hard
 

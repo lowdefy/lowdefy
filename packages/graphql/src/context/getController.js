@@ -14,8 +14,26 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+import type from '@lowdefy/type';
 
-export { typeDefs, resolvers, createContext };
+import createPageController from '../controllers/pageController';
+
+function creatGetController(context) {
+  const constructors = {
+    page: createPageController,
+  };
+  const memoized = {};
+
+  function getController(name) {
+    if (!type.isUndefined(memoized[name])) {
+      return memoized[name];
+    }
+    const controller = constructors[name](context);
+    memoized[name] = controller;
+    return controller;
+  }
+
+  return getController;
+}
+
+export default creatGetController;

@@ -6,7 +6,7 @@ const deps = require('./package.json').dependencies;
 
 module.exports = {
   entry: './shell/src/index',
-  mode: 'development',
+  mode: 'production',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     port: 3003,

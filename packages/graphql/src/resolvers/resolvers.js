@@ -14,8 +14,14 @@
    limitations under the License.
 */
 
-import typeDefs from './schema';
-import resolvers from './resolvers/resolvers';
-import createContext from './context/context';
+import GraphQLJSON from 'graphql-type-json';
+import page from './queries/page/page';
 
-export { typeDefs, resolvers, createContext };
+const resolvers = {
+  JSON: GraphQLJSON,
+  Query: {
+    page,
+  },
+};
+
+export default resolvers;
