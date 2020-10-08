@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getFieldValues } from '@lowdefy/helpers';
+import { getFieldVales } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions';
@@ -22,6 +22,7 @@ import Blocks from './Blocks';
 import Mutations from './Mutations';
 import Requests from './Requests';
 import State from './State';
+import getFieldValues from './getFieldValues';
 
 const blockData = ({
   actions,

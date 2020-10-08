@@ -18,11 +18,11 @@ import React from 'react';
 import { Row } from 'antd';
 import gutterSetup from './gutterSetup.js';
 
-const Area = ({ area, areaStyle, children, highlightBorders, id, makeCss }) => (
+const Area = ({ area, areaStyle, children, highlightBorders, id, makeCssClass }) => (
   <Row
     id={id}
     align={area.align}
-    className={makeCss(areaStyle)}
+    className={makeCssClass(areaStyle)}
     gutter={gutterSetup(area.gutter)}
     justify={area.justify}
     style={{

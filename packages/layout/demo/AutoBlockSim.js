@@ -16,6 +16,7 @@
 
 import React from 'react';
 import type from '@lowdefy/type';
+import { ErrorBoundary } from '@lowdefy/block-tools';
 import { Area, BlockLayout, layoutParamsToArea } from '../src';
 
 import Block from './blocks/Block';
@@ -26,7 +27,6 @@ import Page from './blocks/Page';
 import Paragraph from './blocks/Paragraph';
 import List from './blocks/List';
 import Markdown from './blocks/Markdown';
-import ErrorBoundary from './ErrorBoundary';
 
 const Blocks = {
   Block,
@@ -48,7 +48,7 @@ const randomId = () => Math.random().toString().slice(3, 8);
 const Loading = ({ loading, children, showLoading = true }) =>
   loading && showLoading ? <span>Loading</span> : <>{children}</>;
 
-const AutoBlock = ({ block, makeCss, highlightBorders }) => {
+const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
   const content = {};
   let areas;
   let Comp = Blocks[block.type];
@@ -82,13 +82,13 @@ const AutoBlock = ({ block, makeCss, highlightBorders }) => {
             highlightBorders={highlightBorders}
             id={`${block.id}-${areaKey}` + randomId()}
             key={`${block.id}-${areaKey}`}
-            makeCss={makeCss}
+            makeCssClass={makeCssClass}
           >
             {(areas[areaKey].blocks || []).map((bl, i) => (
               <BindAutoBlock
                 key={`${bl.id}-${i}`}
                 block={bl}
-                makeCss={makeCss}
+                makeCssClass={makeCssClass}
                 highlightBorders={highlightBorders}
               />
             ))}
@@ -100,7 +100,7 @@ const AutoBlock = ({ block, makeCss, highlightBorders }) => {
           blockId={block.id + randomId()}
           content={content}
           loading={block.loading}
-          makeCss={makeCss}
+          makeCssClass={makeCssClass}
           properties={block.properties}
         />
       );
@@ -109,14 +109,14 @@ const AutoBlock = ({ block, makeCss, highlightBorders }) => {
         <Comp
           blockId={block.id + randomId()}
           loading={block.loading}
-          makeCss={makeCss}
+          makeCssClass={makeCssClass}
           properties={block.properties}
         />
       );
   }
 };
 
-const BindAutoBlock = ({ block, state, makeCss, highlightBorders }) => {
+const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
   return (
     <ErrorBoundary>
       <Loading id={`${block.id}-loading`} loading={block.loading} showLoading>
@@ -125,12 +125,12 @@ const BindAutoBlock = ({ block, state, makeCss, highlightBorders }) => {
           highlightBorders={highlightBorders}
           layout={block.layout || {}}
           blockStyle={block.style}
-          makeCss={makeCss}
+          makeCssClass={makeCssClass}
         >
           <AutoBlock
             block={block}
             state={state}
-            makeCss={makeCss}
+            makeCssClass={makeCssClass}
             highlightBorders={highlightBorders}
           />
         </BlockLayout>

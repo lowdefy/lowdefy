@@ -18,8 +18,8 @@ import type from '@lowdefy/type';
 import get from '@lowdefy/get';
 import set from '@lowdefy/set';
 import del from '@lowdefy/delete';
-import { swap } from '@lowdefy/helpers';
 import serializer from '@lowdefy/serializer';
+import swap from './swap';
 
 class State {
   constructor(context) {
