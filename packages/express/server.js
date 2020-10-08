@@ -16,8 +16,20 @@
 
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const { typeDefs, resolvers, createContext } = require('@lowdefy/poc-graphql');
-const context = createContext();
+const { typeDefs, resolvers, createContext } = require('@lowdefy/graphql');
+
+const contextOptions = {
+  DEPLOYMENT_ID: 'DEPLOYMENT_ID',
+  DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
+  DOMAIN_NAME: 'DOMAIN_NAME',
+  logger: console,
+  getHeadersFromInput: ({ req }) => req.headers,
+  getSecrets: () => ({
+    CONNECTION_SECRETS: {},
+  }),
+};
+
+const context = createContext(contextOptions);
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
 
