@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { makeCss } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-tools';
 
 import AutoBlockSim from './AutoBlockSim';
 import examples from './examples';
@@ -37,7 +37,7 @@ const Demo = () => (
       block={examples}
       state={state}
       areaKey="content"
-      makeCss={makeCss}
+      makeCssClass={makeCssClass}
       highlightBorders
     />
   </div>
