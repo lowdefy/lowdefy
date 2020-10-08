@@ -13,23 +13,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-import path from 'path';
-import Dataloader from 'dataloader';
-import readJsonFile from './readJsonFile';
 
-function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
-  async function readPage(id) {
-    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `pages/${id}.json`);
-    return readJsonFile({ filePath });
-  }
-  async function loader(keys) {
-    return keys.map((id) => readPage(id));
-  }
-  return loader;
-}
+const bootstrapContext = {
+  DEPLOYMENT_ID: 'test',
+  DEPLOYMENT_NAME: 'Test App',
+  DOMAIN_NAME: 'test.com',
+  CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
+  ORIGIN: 'test.com',
+  HOST: 'test.com',
+  getLoader: () => {},
+  getController: () => {},
+  getConnectionSecrets: () => {},
+  logger: { log: () => {} },
+};
 
-function createPageLoader({ CONFIGURATION_BASE_PATH }) {
-  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
-}
-
-export default createPageLoader;
+export { bootstrapContext };

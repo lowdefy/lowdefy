@@ -20,17 +20,18 @@ import get from '@lowdefy/get';
 import createGetController from './getController';
 import createGetLoader from './getLoader';
 
-const createContext = (contextOptions) => {
+function createContext(config) {
   const bootstrapContext = {
-    DEPLOYMENT_ID: contextOptions.DEPLOYMENT_ID,
-    DEPLOYMENT_NAME: contextOptions.DEPLOYMENT_NAME,
-    DOMAIN_NAME: contextOptions.DOMAIN_NAME,
-    logger: contextOptions.logger,
+    DEPLOYMENT_ID: config.DEPLOYMENT_ID,
+    DEPLOYMENT_NAME: config.DEPLOYMENT_NAME,
+    DOMAIN_NAME: config.DOMAIN_NAME,
+    CONFIGURATION_BASE_PATH: config.CONFIGURATION_BASE_PATH,
+    logger: config.logger,
   };
 
-  const context = async (input) => {
-    const headers = contextOptions.getHeadersFromInput(input);
-    const secrets = await contextOptions.getSecrets();
+  async function context(input) {
+    const headers = config.getHeadersFromInput(input);
+    const secrets = await config.getSecrets();
 
     bootstrapContext.ORIGIN = get(headers, 'Origin') || get(headers, 'origin');
     bootstrapContext.HOST = get(headers, 'Host') || get(headers, 'host');
@@ -44,8 +45,8 @@ const createContext = (contextOptions) => {
       getController: bootstrapContext.getController,
       logger: bootstrapContext.logger,
     };
-  };
+  }
   return context;
-};
+}
 
 export default createContext;

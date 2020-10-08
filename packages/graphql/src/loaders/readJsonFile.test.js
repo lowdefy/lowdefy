@@ -13,17 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+import path from 'path';
+import readJsonFile from './readJsonFile';
 
-const bootstrapContext = {
-  DEPLOYMENT_ID: 'test',
-  DEPLOYMENT_NAME: 'Test App',
-  DOMAIN_NAME: 'test.com',
-  ORIGIN: 'test.com',
-  HOST: 'test.com',
-  getLoader: () => {},
-  getController: () => {},
-  getConnectionSecrets: () => {},
-  logger: { log: () => {} },
-};
-
-export { bootstrapContext };
+test('readFile', async () => {
+  const filePath = path.resolve(process.cwd(), 'src/test/readJsonFile.json');
+  const res = await readJsonFile({ filePath });
+  expect(res).toEqual({
+    test: 'value',
+  });
+});
