@@ -1,8 +1,26 @@
 {
   "name": "@lowdefy/format",
   "version": "1.0.0",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
