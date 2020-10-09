@@ -14,13 +14,16 @@
    limitations under the License.
 */
 
-import fs from 'fs/promises';
+import fs from 'fs';
+import { promisify } from 'util';
 import { ConfigurationError } from '../context/errors';
+
+const readFile = promisify(fs.readFile);
 
 async function readJsonFile({ filePath }) {
   let file;
   try {
-    file = await fs.readFile(filePath);
+    file = await readFile(filePath);
   } catch (error) {
     return null;
   }
