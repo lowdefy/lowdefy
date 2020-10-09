@@ -13,23 +13,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-import path from 'path';
-import Dataloader from 'dataloader';
-import readJsonFile from './readJsonFile';
 
-function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
-  async function readPage(id) {
-    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `pages/${id}.json`);
-    return readJsonFile({ filePath });
+import fs from 'fs';
+import { promisify } from 'util';
+import { ConfigurationError } from '../context/errors';
+
+const readFile = promisify(fs.readFile);
+
+async function readJsonFile({ filePath }) {
+  let file;
+  try {
+    file = await readFile(filePath);
+  } catch (error) {
+    return null;
   }
-  async function loader(keys) {
-    return keys.map((id) => readPage(id));
+  try {
+    return JSON.parse(file);
+  } catch (error) {
+    throw new ConfigurationError(error);
   }
-  return loader;
 }
 
-function createPageLoader({ CONFIGURATION_BASE_PATH }) {
-  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
-}
-
-export default createPageLoader;
+export default readJsonFile;

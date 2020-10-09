@@ -15,7 +15,7 @@
 */
 
 import createGetController from './getController';
-import { bootstrapContext } from '../tests/testContext';
+import { bootstrapContext } from '../test/testContext';
 import { PageController } from '../controllers/pageController';
 
 test('get page controller', () => {

@@ -42,7 +42,7 @@
     "apollo-server-testing": "2.18.2",
     "babel-jest": "24.9.0",
     "babel-loader": "8.1.0",
-    "jest": "24.9.0",
+    "jest": "26.5.2",
     "webpack": "5.0.0-rc.4",
     "webpack-cli": "3.3.12"
   }

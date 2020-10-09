@@ -16,16 +16,16 @@
 
 import Dataloader from 'dataloader';
 import createGetLoader from './getLoader';
-import { ctx } from '../tests/testContext';
+import { bootstrapContext } from '../test/testContext';
 
 test('get page loader', () => {
-  const getLoader = createGetLoader(ctx);
+  const getLoader = createGetLoader(bootstrapContext);
   const pageLoader = getLoader('page');
   expect(pageLoader).toBeInstanceOf(Dataloader);
 });
 
 test('memoise loader', () => {
-  const getLoader = createGetLoader(ctx);
+  const getLoader = createGetLoader(bootstrapContext);
   const loader1 = getLoader('page');
   const loader2 = getLoader('page');
   expect(loader1).toBe(loader2);

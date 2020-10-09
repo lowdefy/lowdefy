@@ -14,16 +14,4 @@
    limitations under the License.
 */
 
-const bootstrapContext = {
-  DEPLOYMENT_ID: 'test',
-  DEPLOYMENT_NAME: 'Test App',
-  DOMAIN_NAME: 'test.com',
-  ORIGIN: 'test.com',
-  HOST: 'test.com',
-  getLoader: () => {},
-  getController: () => {},
-  getConnectionSecrets: () => {},
-  logger: { log: () => {} },
-};
-
-export { bootstrapContext };
+Not JSON
