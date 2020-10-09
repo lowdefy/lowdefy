@@ -69,5 +69,5 @@ test('momentHumanizeDuration', () => {
     withSuffix: true,
     thresholds: { d: 7, w: 4 },
   });
-  expect(formatter(604800000)).toEqual('dans a week');
+  expect(formatter(604800000)).toEqual('dans une semaine');
 });
