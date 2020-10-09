@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-import { ApolloError } from 'apollo-server-lambda';
+import { ApolloError } from 'apollo-server-core';
 
 class AuthenticationError extends ApolloError {
   constructor(message, additionalProperties) {
