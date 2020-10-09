@@ -20,6 +20,47 @@ const typeDefs = gql`
   scalar JSON
   type Query {
     page(pageId: ID!): JSON
+    lowdefyGlobal: JSON
+    menu: MenuResponse
+  }
+
+  type MenuResponse {
+    menus: [Menu]
+    homePageId: String
+  }
+
+  type Menu {
+    id: ID!
+    menuId: String
+    properties: JSON
+    links: [MenuItem]
+  }
+
+  union MenuItem = MenuGroup | MenuLink
+
+  type MenuGroup {
+    id: ID
+    type: String
+    properties: JSON
+    links: [MenuItem]
+  }
+
+  type MenuLink {
+    id: ID
+    type: String
+    properties: JSON
+    pageId: String
+    url: String
+    page(branch: String!): PageDescription
+  }
+
+  type PageDescription {
+    id: ID!
+    type: String
+    pageId: String
+    branch: String
+    public: Boolean
+    properties: JSON
   }
 `;
 

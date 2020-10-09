@@ -17,10 +17,12 @@
 import type from '@lowdefy/type';
 
 import createPageLoader from '../loaders/pageLoader';
+import createComponentLoader from '../loaders/componentLoader';
 
 function creatGetLoader(context) {
   const constructors = {
     page: createPageLoader,
+    component: createComponentLoader,
   };
   const memoized = {};
 

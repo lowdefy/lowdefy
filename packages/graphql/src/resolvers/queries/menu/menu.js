@@ -14,28 +14,8 @@
    limitations under the License.
 */
 
-import GraphQLJSON from 'graphql-type-json';
-import lowdefyGlobal from './queries/lowdefyGlobal/lowdefyGlobal';
-import menu from './queries/menu/menu';
-import page from './queries/page/page';
-
-function resolveMenuItem(menuItem) {
-  if (menuItem.type === 'MenuLink') {
-    return 'MenuLink';
-  }
-  return 'MenuGroup';
+async function menu(_, __, { getController }) {
+  return getController('component').getMenus();
 }
 
-const resolvers = {
-  JSON: GraphQLJSON,
-  Query: {
-    lowdefyGlobal,
-    menu,
-    page,
-  },
-  MenuItem: {
-    __resolveType: resolveMenuItem,
-  },
-};
-
-export default resolvers;
+export default menu;
