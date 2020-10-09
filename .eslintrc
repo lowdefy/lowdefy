@@ -5,7 +5,7 @@
     "jest": true,
     "browser": true
   },
-  "extends": ["prettier"],
+  "extends": ["prettier", "eslint:recommended", "plugin:react/recommended"],
   "plugins": ["import", "jsx-a11y", "prettier", "react", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
@@ -13,6 +13,7 @@
     "no-underscore-dangle": "off",
     "no-param-reassign": "warn",
     "no-nested-ternary": "warn",
+    "react/display-name": "off",
     "react/jsx-filename-extension": "off",
     "react/prop-types": "off",
     "react/jsx-curly-newline": "off",
@@ -27,6 +28,7 @@
     "jsx-a11y/no-static-element-interactions": "off"
   },
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 9
   }
 }

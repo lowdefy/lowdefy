@@ -1,6 +1,6 @@
 {
-  "name": "@lowdefy/poc-express",
-  "version": "0.0.1",
+  "name": "@lowdefy/express",
+  "version": "0.0.0-experimental.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -22,7 +22,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "webpack",
     "clean": "rm -rf shell/dist",
     "prepublishOnly": "yarn build",
     "start": "nodemon server.js"

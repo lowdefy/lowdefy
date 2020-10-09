@@ -2,13 +2,17 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import AutoBlockSim from '../demo/AutoBlockSim';
 
+const mockMath = Object.create(global.Math);
+mockMath.random = () => 0.123456789;
+global.Math = mockMath;
+
 const runExampleTests = (examples, options = { highlightBorders: true }) => {
-  const makeCss = jest.fn();
+  const makeCssClass = jest.fn();
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
 
   beforeEach(() => {
-    makeCss.mockReset();
-    makeCss.mockImplementation(makeCssImp);
+    makeCssClass.mockReset();
+    makeCssClass.mockImplementation(makeCssImp);
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation((query) => ({
@@ -31,7 +35,7 @@ const runExampleTests = (examples, options = { highlightBorders: true }) => {
           block={ex}
           state={{}}
           areaKey="content"
-          makeCss={makeCss}
+          makeCssClass={makeCssClass}
           highlightBorders={options.highlightBorders}
         />
       );

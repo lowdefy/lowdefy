@@ -30,25 +30,21 @@
     "build": "babel src --out-dir dist",
     "test": "jest --coverage --config jest.config.json --no-cache",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "@emotion/core": "10.0.35",
-    "@emotion/styled": "10.0.27",
-    "@lowdefy/delete": "1.0.0",
-    "@lowdefy/get": "1.0.0",
-    "@lowdefy/helpers": "1.0.0",
-    "@lowdefy/set": "1.0.0",
-    "@lowdefy/type": "1.0.0",
+    "@lowdefy/type": "1.0.1",
     "antd": "4.4.2",
-    "classnames": "2.2.6",
-    "create-emotion": "10.0.27"
+    "react": "17.0.0-rc.2",
+    "react-dom": "17.0.0-rc.2"
   },
   "devDependencies": {
     "@babel/cli": "7.11.6",
     "@babel/core": "7.11.6",
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
+    "@lowdefy/block-tools": "1.0.0",
     "babel-jest": "26.5.2",
     "babel-loader": "8.1.0",
     "babel-plugin-import": "1.13.0",
@@ -61,8 +57,7 @@
     "less": "3.12.2",
     "less-loader": "7.0.1",
     "path-browserify": "1.0.1",
-    "react": "17.0.0-rc.3",
-    "react-dom": "17.0.0-rc.3",
+    "process": "0.11.10",
     "react-markdown": "4.3.1",
     "react-syntax-highlight": "15.3.1",
     "react-test-renderer": "17.0.0-rc.3",

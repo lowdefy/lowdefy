@@ -3,7 +3,7 @@
 exports[`Complex Example 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-Complex Example"
+  id="bl-Complex Example23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -12,11 +12,11 @@ exports[`Complex Example 1`] = `
   }
 >
   <div
-    id="Complex Example"
+    id="Complex Example23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="Complex Example-content"
+      id="Complex Example-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -28,7 +28,7 @@ exports[`Complex Example 1`] = `
     >
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-header"
+        id="bl-header23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -37,11 +37,11 @@ exports[`Complex Example 1`] = `
         }
       >
         <div
-          id="header"
+          id="header23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="header-content"
+            id="header-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -53,7 +53,7 @@ exports[`Complex Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-heading"
+              id="bl-heading23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -63,7 +63,7 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="heading"
+                id="heading23456"
               >
                 <div
                   className="markdown-body"
@@ -76,7 +76,7 @@ exports[`Complex Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-feedback"
+              id="bl-feedback23456"
               style={
                 Object {
                   "alignSelf": "center",
@@ -86,7 +86,7 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="feedback"
+                id="feedback23456"
               >
                 <div
                   className="markdown-body"
@@ -102,7 +102,7 @@ exports[`Complex Example 1`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-tools"
+        id="bl-tools23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -111,11 +111,11 @@ exports[`Complex Example 1`] = `
         }
       >
         <div
-          id="tools"
+          id="tools23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="tools-content"
+            id="tools-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -127,7 +127,7 @@ exports[`Complex Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-search"
+              id="bl-search23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -137,423 +137,8 @@ exports[`Complex Example 1`] = `
               }
             >
               <input
-                blockId="search"
                 className="ant-input"
-                makeCss={
-                  [MockFunction] {
-                    "calls": Array [
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                    ],
-                  }
-                }
+                id="search23456"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -564,7 +149,7 @@ exports[`Complex Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-Assign"
+              id="bl-Assign23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -575,18 +160,18 @@ exports[`Complex Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Assign"
+                id="Assign23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Assign
+                  Assign23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Reporter"
+              id="bl-Reporter23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -597,18 +182,18 @@ exports[`Complex Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Reporter"
+                id="Reporter23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Reporter
+                  Reporter23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Status"
+              id="bl-Status23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -619,18 +204,18 @@ exports[`Complex Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Status"
+                id="Status23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Status
+                  Status23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Type"
+              id="bl-Type23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -641,18 +226,18 @@ exports[`Complex Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Type"
+                id="Type23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Type
+                  Type23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-advanced"
+              id="bl-advanced23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -662,7 +247,7 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="advanced"
+                id="advanced23456"
               >
                 <div
                   className="markdown-body"
@@ -678,7 +263,7 @@ exports[`Complex Example 1`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-main"
+        id="bl-main23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -687,11 +272,11 @@ exports[`Complex Example 1`] = `
         }
       >
         <div
-          id="main"
+          id="main23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="main-content"
+            id="main-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -703,7 +288,7 @@ exports[`Complex Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-list_main"
+              id="bl-list_main23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -713,11 +298,11 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="list_main"
+                id="list_main23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="list_main-content"
+                  id="list_main-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -729,7 +314,7 @@ exports[`Complex Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-list_tools"
+                    id="bl-list_tools23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -738,11 +323,11 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="list_tools"
+                      id="list_tools23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="list_tools-content"
+                        id="list_tools-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -754,7 +339,7 @@ exports[`Complex Example 1`] = `
                       >
                         <div
                           className="ant-col {}"
-                          id="bl-Created"
+                          id="bl-Created23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -765,18 +350,18 @@ exports[`Complex Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Created"
+                            id="Created23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Created
+                              Created23456
                             </span>
                           </button>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-Fil"
+                          id="bl-Fil23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -787,18 +372,18 @@ exports[`Complex Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Fil"
+                            id="Fil23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Fil
+                              Fil23456
                             </span>
                           </button>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-Ref"
+                          id="bl-Ref23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -809,12 +394,12 @@ exports[`Complex Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Ref"
+                            id="Ref23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Ref
+                              Ref23456
                             </span>
                           </button>
                         </div>
@@ -823,7 +408,7 @@ exports[`Complex Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-list"
+                    id="bl-list23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -832,11 +417,11 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="list"
+                      id="list23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="list-content"
+                        id="list-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -848,7 +433,7 @@ exports[`Complex Example 1`] = `
                       >
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_1"
+                          id="bl-item_0_123456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -858,14 +443,14 @@ exports[`Complex Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_1"
+                            id="item_0_123456"
                           >
-                            item_0_1
+                            item_0_123456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_2"
+                          id="bl-item_0_223456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -875,14 +460,14 @@ exports[`Complex Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_2"
+                            id="item_0_223456"
                           >
-                            item_0_2
+                            item_0_223456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_3"
+                          id="bl-item_0_323456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -892,14 +477,14 @@ exports[`Complex Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_3"
+                            id="item_0_323456"
                           >
-                            item_0_3
+                            item_0_323456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_4"
+                          id="bl-item_0_423456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -909,9 +494,9 @@ exports[`Complex Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_4"
+                            id="item_0_423456"
                           >
-                            item_0_4
+                            item_0_423456
                           </div>
                         </div>
                       </div>
@@ -922,7 +507,7 @@ exports[`Complex Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-main_content"
+              id="bl-main_content23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -932,11 +517,11 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="main_content"
+                id="main_content23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="main_content-content"
+                  id="main_content-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -948,7 +533,7 @@ exports[`Complex Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -957,7 +542,7 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -973,7 +558,7 @@ exports[`Complex Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-comment"
+                    id="bl-comment23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -982,11 +567,11 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="comment"
+                      id="comment23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="comment-content"
+                        id="comment-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -998,7 +583,7 @@ exports[`Complex Example 1`] = `
                       >
                         <div
                           className="ant-col {}"
-                          id="bl-avatar"
+                          id="bl-avatar23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -1009,14 +594,14 @@ exports[`Complex Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="avatar"
+                            id="avatar23456"
                           >
-                            avatar
+                            avatar23456
                           </div>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-input_comment"
+                          id="bl-input_comment23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -1026,423 +611,8 @@ exports[`Complex Example 1`] = `
                           }
                         >
                           <input
-                            blockId="input_comment"
                             className="ant-input"
-                            makeCss={
-                              [MockFunction] {
-                                "calls": Array [
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                ],
-                                "results": Array [
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                ],
-                              }
-                            }
+                            id="input_comment23456"
                             onBlur={[Function]}
                             onChange={[Function]}
                             onFocus={[Function]}
@@ -1459,7 +629,7 @@ exports[`Complex Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-sider"
+              id="bl-sider23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -1469,11 +639,11 @@ exports[`Complex Example 1`] = `
               }
             >
               <div
-                id="sider"
+                id="sider23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="sider-content"
+                  id="sider-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -1485,7 +655,7 @@ exports[`Complex Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -1494,7 +664,7 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -1507,7 +677,7 @@ exports[`Complex Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -1516,7 +686,7 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -1529,7 +699,7 @@ exports[`Complex Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -1538,7 +708,7 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -1551,7 +721,7 @@ exports[`Complex Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -1560,7 +730,7 @@ exports[`Complex Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -1585,7 +755,7 @@ exports[`Complex Example 1`] = `
 exports[`Complex No Flex Field Example 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-Complex No Flex Field Example"
+  id="bl-Complex No Flex Field Example23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1594,11 +764,11 @@ exports[`Complex No Flex Field Example 1`] = `
   }
 >
   <div
-    id="Complex No Flex Field Example"
+    id="Complex No Flex Field Example23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="Complex No Flex Field Example-content"
+      id="Complex No Flex Field Example-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1610,7 +780,7 @@ exports[`Complex No Flex Field Example 1`] = `
     >
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-header"
+        id="bl-header23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1619,11 +789,11 @@ exports[`Complex No Flex Field Example 1`] = `
         }
       >
         <div
-          id="header"
+          id="header23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="header-content"
+            id="header-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -1635,7 +805,7 @@ exports[`Complex No Flex Field Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-heading"
+              id="bl-heading23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -1645,7 +815,7 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="heading"
+                id="heading23456"
               >
                 <div
                   className="markdown-body"
@@ -1658,7 +828,7 @@ exports[`Complex No Flex Field Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-feedback"
+              id="bl-feedback23456"
               style={
                 Object {
                   "alignSelf": "center",
@@ -1668,7 +838,7 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="feedback"
+                id="feedback23456"
               >
                 <div
                   className="markdown-body"
@@ -1684,7 +854,7 @@ exports[`Complex No Flex Field Example 1`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-tools"
+        id="bl-tools23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1693,11 +863,11 @@ exports[`Complex No Flex Field Example 1`] = `
         }
       >
         <div
-          id="tools"
+          id="tools23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="tools-content"
+            id="tools-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -1709,7 +879,7 @@ exports[`Complex No Flex Field Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-search"
+              id="bl-search23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -1719,423 +889,8 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <input
-                blockId="search"
                 className="ant-input"
-                makeCss={
-                  [MockFunction] {
-                    "calls": Array [
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        Object {
-                          "height": 50,
-                        },
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          Object {
-                            "background": "#269",
-                            "border": "2px solid #00aaee",
-                            "color": "#fff",
-                            "fontSize": 12,
-                            "textAlign": "center",
-                          },
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        Array [
-                          undefined,
-                          undefined,
-                        ],
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                      Array [
-                        undefined,
-                      ],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":{\\"height\\":50}}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{\\"style\\":[null,null]}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                      Object {
-                        "type": "return",
-                        "value": "{}",
-                      },
-                    ],
-                  }
-                }
+                id="search23456"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -2146,7 +901,7 @@ exports[`Complex No Flex Field Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-Assign"
+              id="bl-Assign23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2157,18 +912,18 @@ exports[`Complex No Flex Field Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Assign"
+                id="Assign23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Assign
+                  Assign23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Reporter"
+              id="bl-Reporter23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2179,18 +934,18 @@ exports[`Complex No Flex Field Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Reporter"
+                id="Reporter23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Reporter
+                  Reporter23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Status"
+              id="bl-Status23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2201,18 +956,18 @@ exports[`Complex No Flex Field Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Status"
+                id="Status23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Status
+                  Status23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-Type"
+              id="bl-Type23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2223,18 +978,18 @@ exports[`Complex No Flex Field Example 1`] = `
             >
               <button
                 className="ant-btn"
-                id="Type"
+                id="Type23456"
                 onClick={[Function]}
                 type="button"
               >
                 <span>
-                  Type
+                  Type23456
                 </span>
               </button>
             </div>
             <div
               className="ant-col {}"
-              id="bl-advanced"
+              id="bl-advanced23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2244,7 +999,7 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="advanced"
+                id="advanced23456"
               >
                 <div
                   className="markdown-body"
@@ -2260,7 +1015,7 @@ exports[`Complex No Flex Field Example 1`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-        id="bl-main"
+        id="bl-main23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -2269,11 +1024,11 @@ exports[`Complex No Flex Field Example 1`] = `
         }
       >
         <div
-          id="main"
+          id="main23456"
         >
           <div
             className="ant-row {\\"style\\":[null,null]}"
-            id="main-content"
+            id="main-content23456"
             style={
               Object {
                 "border": "1px dashed red",
@@ -2285,7 +1040,7 @@ exports[`Complex No Flex Field Example 1`] = `
           >
             <div
               className="ant-col {}"
-              id="bl-list_main"
+              id="bl-list_main23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2295,11 +1050,11 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="list_main"
+                id="list_main23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="list_main-content"
+                  id="list_main-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -2311,7 +1066,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-list_tools"
+                    id="bl-list_tools23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -2320,11 +1075,11 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="list_tools"
+                      id="list_tools23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="list_tools-content"
+                        id="list_tools-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -2336,7 +1091,7 @@ exports[`Complex No Flex Field Example 1`] = `
                       >
                         <div
                           className="ant-col {}"
-                          id="bl-Created"
+                          id="bl-Created23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2347,18 +1102,18 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Created"
+                            id="Created23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Created
+                              Created23456
                             </span>
                           </button>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-Fil"
+                          id="bl-Fil23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2369,18 +1124,18 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Fil"
+                            id="Fil23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Fil
+                              Fil23456
                             </span>
                           </button>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-Ref"
+                          id="bl-Ref23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2391,12 +1146,12 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <button
                             className="ant-btn"
-                            id="Ref"
+                            id="Ref23456"
                             onClick={[Function]}
                             type="button"
                           >
                             <span>
-                              Ref
+                              Ref23456
                             </span>
                           </button>
                         </div>
@@ -2405,7 +1160,7 @@ exports[`Complex No Flex Field Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-list"
+                    id="bl-list23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -2414,11 +1169,11 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="list"
+                      id="list23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="list-content"
+                        id="list-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -2430,7 +1185,7 @@ exports[`Complex No Flex Field Example 1`] = `
                       >
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_1"
+                          id="bl-item_0_123456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2440,14 +1195,14 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_1"
+                            id="item_0_123456"
                           >
-                            item_0_1
+                            item_0_123456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_2"
+                          id="bl-item_0_223456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2457,14 +1212,14 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_2"
+                            id="item_0_223456"
                           >
-                            item_0_2
+                            item_0_223456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_3"
+                          id="bl-item_0_323456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2474,14 +1229,14 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_3"
+                            id="item_0_323456"
                           >
-                            item_0_3
+                            item_0_323456
                           </div>
                         </div>
                         <div
                           className="ant-col {\\"style\\":{\\"height\\":50}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                          id="bl-item_0_4"
+                          id="bl-item_0_423456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2491,9 +1246,9 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="item_0_4"
+                            id="item_0_423456"
                           >
-                            item_0_4
+                            item_0_423456
                           </div>
                         </div>
                       </div>
@@ -2504,7 +1259,7 @@ exports[`Complex No Flex Field Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-main_content"
+              id="bl-main_content23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -2514,11 +1269,11 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="main_content"
+                id="main_content23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="main_content-content"
+                  id="main_content-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -2530,7 +1285,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -2539,7 +1294,7 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -2555,7 +1310,7 @@ exports[`Complex No Flex Field Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-comment"
+                    id="bl-comment23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -2564,11 +1319,11 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="comment"
+                      id="comment23456"
                     >
                       <div
                         className="ant-row {\\"style\\":[null,null]}"
-                        id="comment-content"
+                        id="comment-content23456"
                         style={
                           Object {
                             "border": "1px dashed red",
@@ -2580,7 +1335,7 @@ exports[`Complex No Flex Field Example 1`] = `
                       >
                         <div
                           className="ant-col {}"
-                          id="bl-avatar"
+                          id="bl-avatar23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2591,14 +1346,14 @@ exports[`Complex No Flex Field Example 1`] = `
                         >
                           <div
                             className="{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}"
-                            id="avatar"
+                            id="avatar23456"
                           >
-                            avatar
+                            avatar23456
                           </div>
                         </div>
                         <div
                           className="ant-col {}"
-                          id="bl-inputs_comment"
+                          id="bl-inputs_comment23456"
                           style={
                             Object {
                               "alignSelf": undefined,
@@ -2608,423 +1363,8 @@ exports[`Complex No Flex Field Example 1`] = `
                           }
                         >
                           <input
-                            blockId="inputs_comment"
                             className="ant-input"
-                            makeCss={
-                              [MockFunction] {
-                                "calls": Array [
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    Object {
-                                      "height": 50,
-                                    },
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      Object {
-                                        "background": "#269",
-                                        "border": "2px solid #00aaee",
-                                        "color": "#fff",
-                                        "fontSize": 12,
-                                        "textAlign": "center",
-                                      },
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    Array [
-                                      undefined,
-                                      undefined,
-                                    ],
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                  Array [
-                                    undefined,
-                                  ],
-                                ],
-                                "results": Array [
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":{\\"height\\":50}}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[{\\"background\\":\\"#269\\",\\"border\\":\\"2px solid #00aaee\\",\\"textAlign\\":\\"center\\",\\"fontSize\\":12,\\"color\\":\\"#fff\\"}]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{\\"style\\":[null,null]}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                  Object {
-                                    "type": "return",
-                                    "value": "{}",
-                                  },
-                                ],
-                              }
-                            }
+                            id="inputs_comment23456"
                             onBlur={[Function]}
                             onChange={[Function]}
                             onFocus={[Function]}
@@ -3041,7 +1381,7 @@ exports[`Complex No Flex Field Example 1`] = `
             </div>
             <div
               className="ant-col {}"
-              id="bl-sider"
+              id="bl-sider23456"
               style={
                 Object {
                   "alignSelf": undefined,
@@ -3051,11 +1391,11 @@ exports[`Complex No Flex Field Example 1`] = `
               }
             >
               <div
-                id="sider"
+                id="sider23456"
               >
                 <div
                   className="ant-row {\\"style\\":[null,null]}"
-                  id="sider-content"
+                  id="sider-content23456"
                   style={
                     Object {
                       "border": "1px dashed red",
@@ -3067,7 +1407,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 >
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -3076,7 +1416,7 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -3089,7 +1429,7 @@ exports[`Complex No Flex Field Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -3098,7 +1438,7 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -3111,7 +1451,7 @@ exports[`Complex No Flex Field Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -3120,7 +1460,7 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"
@@ -3133,7 +1473,7 @@ exports[`Complex No Flex Field Example 1`] = `
                   </div>
                   <div
                     className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-                    id="bl-content"
+                    id="bl-content23456"
                     style={
                       Object {
                         "alignSelf": undefined,
@@ -3142,7 +1482,7 @@ exports[`Complex No Flex Field Example 1`] = `
                     }
                   >
                     <div
-                      id="content"
+                      id="content23456"
                     >
                       <div
                         className="markdown-body"

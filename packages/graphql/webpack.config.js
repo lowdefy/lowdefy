@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'commonjs',
   },
+  mode: 'production',
   target: 'node',
   node: false,
   externals: Object.keys({ ...dependencies, ...devDependencies }),

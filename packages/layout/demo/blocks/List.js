@@ -16,10 +16,10 @@
 
 import React from 'react';
 
-const Blank = ({ blockId, makeCss, children }) => (
+const Blank = ({ blockId, makeCssClass, children }) => (
   <div
     id={blockId}
-    className={makeCss([
+    className={makeCssClass([
       {
         background: '#900000',
         border: '2px solid #f00',

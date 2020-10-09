@@ -3,7 +3,7 @@
 exports[`align 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align"
+  id="bl-align23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -12,11 +12,11 @@ exports[`align 1`] = `
   }
 >
   <div
-    id="align"
+    id="align23456"
   >
     <div
       className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
-      id="align-content"
+      id="align-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -28,7 +28,7 @@ exports[`align 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": "flex-start",
@@ -38,18 +38,18 @@ exports[`align 1`] = `
       >
         <button
           className="ant-btn"
-          id="One"
+          id="One23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            One
+            One23456
           </span>
         </button>
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": "center",
@@ -59,18 +59,18 @@ exports[`align 1`] = `
       >
         <button
           className="ant-btn"
-          id="Two"
+          id="Two23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            Two
+            Two23456
           </span>
         </button>
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three"
+        id="bl-Three23456"
         style={
           Object {
             "alignSelf": "flex-end",
@@ -80,12 +80,12 @@ exports[`align 1`] = `
       >
         <button
           className="ant-btn"
-          id="Three"
+          id="Three23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            Three
+            Three23456
           </span>
         </button>
       </div>
@@ -97,7 +97,7 @@ exports[`align 1`] = `
 exports[`align 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-align"
+  id="bl-align23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -106,11 +106,11 @@ exports[`align 2`] = `
   }
 >
   <div
-    id="align"
+    id="align23456"
   >
     <div
       className="ant-row {\\"style\\":[null,{\\"height\\":100}]}"
-      id="align-content"
+      id="align-content23456"
       style={
         Object {
           "border": false,
@@ -122,7 +122,7 @@ exports[`align 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": "flex-start",
@@ -132,18 +132,18 @@ exports[`align 2`] = `
       >
         <button
           className="ant-btn"
-          id="One"
+          id="One23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            One
+            One23456
           </span>
         </button>
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": "center",
@@ -153,18 +153,18 @@ exports[`align 2`] = `
       >
         <button
           className="ant-btn"
-          id="Two"
+          id="Two23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            Two
+            Two23456
           </span>
         </button>
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-Three"
+        id="bl-Three23456"
         style={
           Object {
             "alignSelf": "flex-end",
@@ -174,12 +174,12 @@ exports[`align 2`] = `
       >
         <button
           className="ant-btn"
-          id="Three"
+          id="Three23456"
           onClick={[Function]}
           type="button"
         >
           <span>
-            Three
+            Three23456
           </span>
         </button>
       </div>
@@ -191,7 +191,7 @@ exports[`align 2`] = `
 exports[`center content 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-center content"
+  id="bl-center content23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -200,11 +200,11 @@ exports[`center content 1`] = `
   }
 >
   <div
-    id="center content"
+    id="center content23456"
   >
     <div
       className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="center content-content"
+      id="center content-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -216,7 +216,7 @@ exports[`center content 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -226,7 +226,7 @@ exports[`center content 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -240,7 +240,7 @@ exports[`center content 1`] = `
 exports[`center content 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-center content"
+  id="bl-center content23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -249,11 +249,11 @@ exports[`center content 2`] = `
   }
 >
   <div
-    id="center content"
+    id="center content23456"
   >
     <div
       className="ant-row ant-row-center {\\"style\\":[null,null]}"
-      id="center content-content"
+      id="center content-content23456"
       style={
         Object {
           "border": false,
@@ -265,7 +265,7 @@ exports[`center content 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -275,7 +275,7 @@ exports[`center content 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -289,7 +289,7 @@ exports[`center content 2`] = `
 exports[`grow 0 0 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 0"
+  id="bl-grow 0 023456"
   style={
     Object {
       "alignSelf": undefined,
@@ -298,11 +298,11 @@ exports[`grow 0 0 1`] = `
   }
 >
   <div
-    id="grow 0 0"
+    id="grow 0 023456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 0-content"
+      id="grow 0 0-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -314,7 +314,7 @@ exports[`grow 0 0 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -324,7 +324,7 @@ exports[`grow 0 0 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 0 - ONE Lorem ipsum dolor
 
@@ -332,7 +332,7 @@ exports[`grow 0 0 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -342,7 +342,7 @@ exports[`grow 0 0 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 0 - TWO Lorem ipsum dolor
 
@@ -356,7 +356,7 @@ exports[`grow 0 0 1`] = `
 exports[`grow 0 0 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 0"
+  id="bl-grow 0 023456"
   style={
     Object {
       "alignSelf": undefined,
@@ -365,11 +365,11 @@ exports[`grow 0 0 2`] = `
   }
 >
   <div
-    id="grow 0 0"
+    id="grow 0 023456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 0-content"
+      id="grow 0 0-content23456"
       style={
         Object {
           "border": false,
@@ -381,7 +381,7 @@ exports[`grow 0 0 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -391,7 +391,7 @@ exports[`grow 0 0 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 0 - ONE Lorem ipsum dolor
 
@@ -399,7 +399,7 @@ exports[`grow 0 0 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -409,7 +409,7 @@ exports[`grow 0 0 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 0 - TWO Lorem ipsum dolor
 
@@ -423,7 +423,7 @@ exports[`grow 0 0 2`] = `
 exports[`grow 0 1 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 1"
+  id="bl-grow 0 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -432,11 +432,11 @@ exports[`grow 0 1 1`] = `
   }
 >
   <div
-    id="grow 0 1"
+    id="grow 0 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 1-content"
+      id="grow 0 1-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -448,7 +448,7 @@ exports[`grow 0 1 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -458,7 +458,7 @@ exports[`grow 0 1 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 0 - ONE Lorem ipsum dolor
 
@@ -466,7 +466,7 @@ exports[`grow 0 1 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -476,7 +476,7 @@ exports[`grow 0 1 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 1 - TWO Lorem ipsum dolor
 
@@ -490,7 +490,7 @@ exports[`grow 0 1 1`] = `
 exports[`grow 0 1 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 0 1"
+  id="bl-grow 0 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -499,11 +499,11 @@ exports[`grow 0 1 2`] = `
   }
 >
   <div
-    id="grow 0 1"
+    id="grow 0 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 0 1-content"
+      id="grow 0 1-content23456"
       style={
         Object {
           "border": false,
@@ -515,7 +515,7 @@ exports[`grow 0 1 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -525,7 +525,7 @@ exports[`grow 0 1 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 0 - ONE Lorem ipsum dolor
 
@@ -533,7 +533,7 @@ exports[`grow 0 1 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -543,7 +543,7 @@ exports[`grow 0 1 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 1 - TWO Lorem ipsum dolor
 
@@ -557,7 +557,7 @@ exports[`grow 0 1 2`] = `
 exports[`grow 1 0 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 0"
+  id="bl-grow 1 023456"
   style={
     Object {
       "alignSelf": undefined,
@@ -566,11 +566,11 @@ exports[`grow 1 0 1`] = `
   }
 >
   <div
-    id="grow 1 0"
+    id="grow 1 023456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 0-content"
+      id="grow 1 0-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -582,7 +582,7 @@ exports[`grow 1 0 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -592,7 +592,7 @@ exports[`grow 1 0 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 1 - ONE Lorem ipsum dolor
 
@@ -600,7 +600,7 @@ exports[`grow 1 0 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -610,7 +610,7 @@ exports[`grow 1 0 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 0 - TWO Lorem ipsum dolor
 
@@ -624,7 +624,7 @@ exports[`grow 1 0 1`] = `
 exports[`grow 1 0 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 0"
+  id="bl-grow 1 023456"
   style={
     Object {
       "alignSelf": undefined,
@@ -633,11 +633,11 @@ exports[`grow 1 0 2`] = `
   }
 >
   <div
-    id="grow 1 0"
+    id="grow 1 023456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 0-content"
+      id="grow 1 0-content23456"
       style={
         Object {
           "border": false,
@@ -649,7 +649,7 @@ exports[`grow 1 0 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -659,7 +659,7 @@ exports[`grow 1 0 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 1 - ONE Lorem ipsum dolor
 
@@ -667,7 +667,7 @@ exports[`grow 1 0 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -677,7 +677,7 @@ exports[`grow 1 0 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 0 - TWO Lorem ipsum dolor
 
@@ -691,7 +691,7 @@ exports[`grow 1 0 2`] = `
 exports[`grow 1 1 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 1"
+  id="bl-grow 1 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -700,11 +700,11 @@ exports[`grow 1 1 1`] = `
   }
 >
   <div
-    id="grow 1 1"
+    id="grow 1 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 1-content"
+      id="grow 1 1-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -716,7 +716,7 @@ exports[`grow 1 1 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -726,7 +726,7 @@ exports[`grow 1 1 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 1 - ONE Lorem ipsum dolor
 
@@ -734,7 +734,7 @@ exports[`grow 1 1 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -744,7 +744,7 @@ exports[`grow 1 1 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 1 - TWO Lorem ipsum dolor
 
@@ -758,7 +758,7 @@ exports[`grow 1 1 1`] = `
 exports[`grow 1 1 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-grow 1 1"
+  id="bl-grow 1 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -767,11 +767,11 @@ exports[`grow 1 1 2`] = `
   }
 >
   <div
-    id="grow 1 1"
+    id="grow 1 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="grow 1 1-content"
+      id="grow 1 1-content23456"
       style={
         Object {
           "border": false,
@@ -783,7 +783,7 @@ exports[`grow 1 1 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -793,7 +793,7 @@ exports[`grow 1 1 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           grow: 1 - ONE Lorem ipsum dolor
 
@@ -801,7 +801,7 @@ exports[`grow 1 1 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -811,7 +811,7 @@ exports[`grow 1 1 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           grow: 1 - TWO Lorem ipsum dolor
 
@@ -825,7 +825,7 @@ exports[`grow 1 1 2`] = `
 exports[`offset 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset"
+  id="bl-offset23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -834,11 +834,11 @@ exports[`offset 1`] = `
   }
 >
   <div
-    id="offset"
+    id="offset23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="offset-content"
+      id="offset-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -850,7 +850,7 @@ exports[`offset 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -859,7 +859,7 @@ exports[`offset 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -867,7 +867,7 @@ exports[`offset 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -876,7 +876,7 @@ exports[`offset 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -890,7 +890,7 @@ exports[`offset 1`] = `
 exports[`offset 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset"
+  id="bl-offset23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -899,11 +899,11 @@ exports[`offset 2`] = `
   }
 >
   <div
-    id="offset"
+    id="offset23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="offset-content"
+      id="offset-content23456"
       style={
         Object {
           "border": false,
@@ -915,7 +915,7 @@ exports[`offset 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -924,7 +924,7 @@ exports[`offset 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -932,7 +932,7 @@ exports[`offset 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -941,7 +941,7 @@ exports[`offset 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -955,7 +955,7 @@ exports[`offset 2`] = `
 exports[`offset push pull span 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset push pull span"
+  id="bl-offset push pull span23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -964,11 +964,11 @@ exports[`offset push pull span 1`] = `
   }
 >
   <div
-    id="offset push pull span"
+    id="offset push pull span23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="offset push pull span-content"
+      id="offset push pull span-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -980,7 +980,7 @@ exports[`offset push pull span 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -989,7 +989,7 @@ exports[`offset push pull span 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -997,7 +997,7 @@ exports[`offset push pull span 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1006,7 +1006,7 @@ exports[`offset push pull span 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -1014,7 +1014,7 @@ exports[`offset push pull span 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1023,7 +1023,7 @@ exports[`offset push pull span 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -1037,7 +1037,7 @@ exports[`offset push pull span 1`] = `
 exports[`offset push pull span 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-offset push pull span"
+  id="bl-offset push pull span23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1046,11 +1046,11 @@ exports[`offset push pull span 2`] = `
   }
 >
   <div
-    id="offset push pull span"
+    id="offset push pull span23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="offset push pull span-content"
+      id="offset push pull span-content23456"
       style={
         Object {
           "border": false,
@@ -1062,7 +1062,7 @@ exports[`offset push pull span 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40AA55\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1071,7 +1071,7 @@ exports[`offset push pull span 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -1079,7 +1079,7 @@ exports[`offset push pull span 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1088,7 +1088,7 @@ exports[`offset push pull span 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -1096,7 +1096,7 @@ exports[`offset push pull span 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1105,7 +1105,7 @@ exports[`offset push pull span 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 
@@ -1119,7 +1119,7 @@ exports[`offset push pull span 2`] = `
 exports[`order 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-order"
+  id="bl-order23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1128,11 +1128,11 @@ exports[`order 1`] = `
   }
 >
   <div
-    id="order"
+    id="order23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="order-content"
+      id="order-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1144,7 +1144,7 @@ exports[`order 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1153,7 +1153,7 @@ exports[`order 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1161,7 +1161,7 @@ exports[`order 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1170,7 +1170,7 @@ exports[`order 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1184,7 +1184,7 @@ exports[`order 1`] = `
 exports[`order 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-order"
+  id="bl-order23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1193,11 +1193,11 @@ exports[`order 2`] = `
   }
 >
   <div
-    id="order"
+    id="order23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="order-content"
+      id="order-content23456"
       style={
         Object {
           "border": false,
@@ -1209,7 +1209,7 @@ exports[`order 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1218,7 +1218,7 @@ exports[`order 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1226,7 +1226,7 @@ exports[`order 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1235,7 +1235,7 @@ exports[`order 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1249,7 +1249,7 @@ exports[`order 2`] = `
 exports[`pull 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-pull"
+  id="bl-pull23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1258,11 +1258,11 @@ exports[`pull 1`] = `
   }
 >
   <div
-    id="pull"
+    id="pull23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="pull-content"
+      id="pull-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1274,7 +1274,7 @@ exports[`pull 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1283,7 +1283,7 @@ exports[`pull 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1291,7 +1291,7 @@ exports[`pull 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1300,7 +1300,7 @@ exports[`pull 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1314,7 +1314,7 @@ exports[`pull 1`] = `
 exports[`pull 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-pull"
+  id="bl-pull23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1323,11 +1323,11 @@ exports[`pull 2`] = `
   }
 >
   <div
-    id="pull"
+    id="pull23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="pull-content"
+      id="pull-content23456"
       style={
         Object {
           "border": false,
@@ -1339,7 +1339,7 @@ exports[`pull 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1348,7 +1348,7 @@ exports[`pull 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1356,7 +1356,7 @@ exports[`pull 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1365,7 +1365,7 @@ exports[`pull 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1379,7 +1379,7 @@ exports[`pull 2`] = `
 exports[`push 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-push"
+  id="bl-push23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1388,11 +1388,11 @@ exports[`push 1`] = `
   }
 >
   <div
-    id="push"
+    id="push23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="push-content"
+      id="push-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1404,7 +1404,7 @@ exports[`push 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1413,7 +1413,7 @@ exports[`push 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1421,7 +1421,7 @@ exports[`push 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1430,7 +1430,7 @@ exports[`push 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1444,7 +1444,7 @@ exports[`push 1`] = `
 exports[`push 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-push"
+  id="bl-push23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1453,11 +1453,11 @@ exports[`push 2`] = `
   }
 >
   <div
-    id="push"
+    id="push23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="push-content"
+      id="push-content23456"
       style={
         Object {
           "border": false,
@@ -1469,7 +1469,7 @@ exports[`push 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1478,7 +1478,7 @@ exports[`push 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1486,7 +1486,7 @@ exports[`push 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\",\\"opacity\\":0.5}} ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1495,7 +1495,7 @@ exports[`push 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 
@@ -1509,7 +1509,7 @@ exports[`push 2`] = `
 exports[`shrink 1 1 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-shrink 1 1"
+  id="bl-shrink 1 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1518,11 +1518,11 @@ exports[`shrink 1 1 1`] = `
   }
 >
   <div
-    id="shrink 1 1"
+    id="shrink 1 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="shrink 1 1-content"
+      id="shrink 1 1-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1534,7 +1534,7 @@ exports[`shrink 1 1 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1544,7 +1544,7 @@ exports[`shrink 1 1 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           shrink: 1 - ONE Lorem ipsum dolor
 
@@ -1552,7 +1552,7 @@ exports[`shrink 1 1 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1562,7 +1562,7 @@ exports[`shrink 1 1 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           shrink: 1 - TWO Lorem ipsum dolor
 
@@ -1576,7 +1576,7 @@ exports[`shrink 1 1 1`] = `
 exports[`shrink 1 1 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-shrink 1 1"
+  id="bl-shrink 1 123456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1585,11 +1585,11 @@ exports[`shrink 1 1 2`] = `
   }
 >
   <div
-    id="shrink 1 1"
+    id="shrink 1 123456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="shrink 1 1-content"
+      id="shrink 1 1-content23456"
       style={
         Object {
           "border": false,
@@ -1601,7 +1601,7 @@ exports[`shrink 1 1 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1611,7 +1611,7 @@ exports[`shrink 1 1 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           shrink: 1 - ONE Lorem ipsum dolor
 
@@ -1619,7 +1619,7 @@ exports[`shrink 1 1 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1629,7 +1629,7 @@ exports[`shrink 1 1 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           shrink: 1 - TWO Lorem ipsum dolor
 
@@ -1643,7 +1643,7 @@ exports[`shrink 1 1 2`] = `
 exports[`size 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-size"
+  id="bl-size23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1652,11 +1652,11 @@ exports[`size 1`] = `
   }
 >
   <div
-    id="size"
+    id="size23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="size-content"
+      id="size-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1668,7 +1668,7 @@ exports[`size 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1678,7 +1678,7 @@ exports[`size 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           size: 200 - ONE Lorem ipsum dolor
 
@@ -1686,7 +1686,7 @@ exports[`size 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1696,7 +1696,7 @@ exports[`size 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           size: 400 - TWO Lorem ipsum dolor
 
@@ -1710,7 +1710,7 @@ exports[`size 1`] = `
 exports[`size 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-size"
+  id="bl-size23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1719,11 +1719,11 @@ exports[`size 2`] = `
   }
 >
   <div
-    id="size"
+    id="size23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="size-content"
+      id="size-content23456"
       style={
         Object {
           "border": false,
@@ -1735,7 +1735,7 @@ exports[`size 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}}"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1745,7 +1745,7 @@ exports[`size 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           size: 200 - ONE Lorem ipsum dolor
 
@@ -1753,7 +1753,7 @@ exports[`size 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}}"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1763,7 +1763,7 @@ exports[`size 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           size: 400 - TWO Lorem ipsum dolor
 
@@ -1777,7 +1777,7 @@ exports[`size 2`] = `
 exports[`span 1`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-span"
+  id="bl-span23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1786,11 +1786,11 @@ exports[`span 1`] = `
   }
 >
   <div
-    id="span"
+    id="span23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="span-content"
+      id="span-content23456"
       style={
         Object {
           "border": "1px dashed red",
@@ -1802,7 +1802,7 @@ exports[`span 1`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1811,7 +1811,7 @@ exports[`span 1`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -1819,7 +1819,7 @@ exports[`span 1`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1828,7 +1828,7 @@ exports[`span 1`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -1836,7 +1836,7 @@ exports[`span 1`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three"
+        id="bl-Three23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1845,7 +1845,7 @@ exports[`span 1`] = `
         }
       >
         <div
-          id="Three"
+          id="Three23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -1859,7 +1859,7 @@ exports[`span 1`] = `
 exports[`span 2`] = `
 <div
   className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-  id="bl-span"
+  id="bl-span23456"
   style={
     Object {
       "alignSelf": undefined,
@@ -1868,11 +1868,11 @@ exports[`span 2`] = `
   }
 >
   <div
-    id="span"
+    id="span23456"
   >
     <div
       className="ant-row {\\"style\\":[null,null]}"
-      id="span-content"
+      id="span-content23456"
       style={
         Object {
           "border": false,
@@ -1884,7 +1884,7 @@ exports[`span 2`] = `
     >
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#40a0FF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-        id="bl-One"
+        id="bl-One23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1893,7 +1893,7 @@ exports[`span 2`] = `
         }
       >
         <div
-          id="One"
+          id="One23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -1901,7 +1901,7 @@ exports[`span 2`] = `
       </div>
       <div
         className="ant-col {\\"style\\":{\\"background\\":\\"#FF4FaF\\"}} ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-        id="bl-Two"
+        id="bl-Two23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1910,7 +1910,7 @@ exports[`span 2`] = `
         }
       >
         <div
-          id="Two"
+          id="Two23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 
@@ -1918,7 +1918,7 @@ exports[`span 2`] = `
       </div>
       <div
         className="ant-col {} ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-        id="bl-Three"
+        id="bl-Three23456"
         style={
           Object {
             "alignSelf": undefined,
@@ -1927,7 +1927,7 @@ exports[`span 2`] = `
         }
       >
         <div
-          id="Three"
+          id="Three23456"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 

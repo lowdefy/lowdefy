@@ -14,34 +14,8 @@
    limitations under the License.
 */
 
-import { gql } from 'apollo-server-core';
-import GraphQLJSON from 'graphql-type-json';
-
-const typeDefs = gql`
-  scalar JSON
-  type Query {
-    hello: String
-    page: JSON
-  }
-`;
-const resolvers = {
-  JSON: GraphQLJSON,
-  Query: {
-    hello: () => 'Hello',
-    page: () => ({
-      blocks: [
-        {
-          id: 1,
-          meta: {
-            url: 'https://unpkg.com/izlrmfxlki/dist/remoteEntry.js',
-            scope: 'izlrmfxlki',
-            module: 'Button',
-          },
-        },
-      ],
-    }),
-  },
-};
-const createContext = () => ({});
+import typeDefs from './schema';
+import resolvers from './resolvers/resolvers';
+import createContext from './context/context';
 
 export { typeDefs, resolvers, createContext };
