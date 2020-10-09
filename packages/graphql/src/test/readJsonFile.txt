@@ -14,21 +14,4 @@
    limitations under the License.
 */
 
-import fs from 'fs/promises';
-import { ConfigurationError } from '../context/errors';
-
-async function readJsonFile({ filePath }) {
-  let file;
-  try {
-    file = await fs.readFile(filePath);
-  } catch (error) {
-    return null;
-  }
-  try {
-    return JSON.parse(file);
-  } catch (error) {
-    throw new ConfigurationError(error);
-  }
-}
-
-export default readJsonFile;
+Not JSON
