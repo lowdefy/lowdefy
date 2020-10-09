@@ -20,7 +20,7 @@ import useDynamicScript from './utils/useDynamicScript';
 
 function Engine() {
   const { ready, failed } = useDynamicScript({
-    url: 'https://unpkg.com/nxjdkxbp/dist/remoteEntry.js',
+    url: 'http://localhost:3001/remoteEntry.js',
   });
 
   if (!ready) {
@@ -31,7 +31,7 @@ function Engine() {
     return <h2>Failed to load dynamic script</h2>;
   }
 
-  const Component = React.lazy(loadComponent('nxjdkxbp', 'Engine'));
+  const Component = React.lazy(loadComponent('lowdefy_renderer', 'Engine'));
 
   return (
     <React.Suspense fallback="Loading Engine">

@@ -24,7 +24,7 @@ import { RetryLink } from '@apollo/link-retry';
 const cache = new InMemoryCache();
 const retryLink = new RetryLink();
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: '/graphql',
 });
 const errorHandler = ({ graphQLErrors, networkError }) => {
   console.log('graphQLErrors', graphQLErrors);
