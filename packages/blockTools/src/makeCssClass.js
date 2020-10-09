@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { mergeObjects } from '@lowdefy/helpers';
+import mediaToCssObject from './mediaToCssObject';
+import emotion from './emotion';
 
-const swap = (arr, from, to) => {
-  if (!type.isArray(arr) || from < 0 || to < 0 || from >= arr.length || to >= arr.length) {
-    return;
-  }
-  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
-};
+const makeCssClass = (styles, options = {}) =>
+  options.styleObjectOnly
+    ? mediaToCssObject(mergeObjects(styles), options)
+    : emotion.css(mediaToCssObject(mergeObjects(styles), options));
 
-export default swap;
+export default makeCssClass;

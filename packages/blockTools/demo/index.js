@@ -16,30 +16,26 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { makeCssClass } from '@lowdefy/block-tools';
 
-import AutoBlockSim from './AutoBlockSim';
-import examples from './examples';
-
-// eslint-disable-next-line camelcase
-const state = {
-  a: null,
-  b: null,
-};
+import { makeCss, ErrorBoundary } from '../src';
 
 // eslint-disable-next-line no-undef
 const documentCtx = document;
 
+const ErrorComp = () => <div>{this.unknown}</div>;
 const Demo = () => (
   <div id="page">
+    <h4>ErrorBoundary with renderError=true :</h4>
+    <ErrorBoundary renderError={true}>
+      <ErrorComp />
+    </ErrorBoundary>
+    <h4>ErrorBoundary with renderError=false :</h4>
+    <ErrorBoundary>
+      <ErrorComp />
+    </ErrorBoundary>
     <div id="emotion" />
-    <AutoBlockSim
-      block={examples}
-      state={state}
-      areaKey="content"
-      makeCssClass={makeCssClass}
-      highlightBorders
-    />
+    <h4>{"makeCss({ color: 'red' })"} :</h4>
+    <div className={makeCss({ color: 'red' })}>Red text</div>
   </div>
 );
 

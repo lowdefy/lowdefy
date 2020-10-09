@@ -14,8 +14,19 @@
   limitations under the License.
 */
 
-const intersect = (arrOne, arrTwo) => {
-  return arrOne.some((item) => arrTwo.includes(item));
-};
+import createEmotion from 'create-emotion';
 
-export default intersect;
+const windowContext = window || {};
+let emotion;
+
+// memoize emotion
+if (!windowContext.emotion) {
+  const { css, injectGlobal } = createEmotion({
+    container: document.getElementById('emotion'),
+  });
+  emotion = { css, injectGlobal };
+} else {
+  emotion = windowContext.emotion;
+}
+
+export default emotion;

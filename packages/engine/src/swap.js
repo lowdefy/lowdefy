@@ -14,20 +14,15 @@
   limitations under the License.
 */
 
-import serializer from '@lowdefy/serializer';
+// engine
 
-function getFieldValues(operatorName, ...args) {
-  const result = new Set();
-  function reviver(key, value) {
-    if (key === operatorName) {
-      result.add(value);
-    }
-    return value;
+import type from '@lowdefy/type';
+
+const swap = (arr, from, to) => {
+  if (!type.isArray(arr) || from < 0 || to < 0 || from >= arr.length || to >= arr.length) {
+    return;
   }
-  [...args].forEach((element) => {
-    serializer.deserializeFromString(serializer.serializeToString(element), { reviver });
-  });
-  return [...result];
-}
+  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
+};
 
-export default getFieldValues;
+export default swap;

@@ -14,21 +14,19 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import React from 'react';
 
-const getUniqueValues = (arr, key = 'value') => {
-  const arr2 = arr.map((o) => {
-    if (type.isPrimitive(o)) {
-      return JSON.stringify(o);
+const useRunAfterUpdate = () => {
+  const afterPaintRef = React.useRef(null);
+  React.useLayoutEffect(() => {
+    if (afterPaintRef.current) {
+      afterPaintRef.current();
+      afterPaintRef.current = null;
     }
-    return JSON.stringify(o[key]);
   });
-  return arr.filter((opt, i) => {
-    if (type.isPrimitive(opt)) {
-      return arr2.indexOf(JSON.stringify(opt)) === i;
-    }
-    return arr2.indexOf(JSON.stringify(opt[key])) === i;
-  });
+  return (fn) => {
+    afterPaintRef.current = fn;
+  };
 };
 
-export default getUniqueValues;
+export default useRunAfterUpdate;
