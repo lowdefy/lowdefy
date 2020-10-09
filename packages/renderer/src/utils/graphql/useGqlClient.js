@@ -20,12 +20,19 @@ import { ApolloClient } from '@apollo/client/core';
 import { InMemoryCache } from '@apollo/client/cache';
 import { onError } from '@apollo/link-error';
 import { RetryLink } from '@apollo/link-retry';
+import { typeDefs, resolvers } from './schema';
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  possibleTypes: {
+    MenuItem: ['MenuLink', 'MenuGroup'],
+  },
+});
 const retryLink = new RetryLink();
 const httpLink = new HttpLink({
   uri: '/graphql',
 });
+
+// TODO: Handle errors
 const errorHandler = ({ graphQLErrors, networkError }) => {
   console.log('graphQLErrors', graphQLErrors);
   console.log('networkError', networkError);
@@ -37,6 +44,8 @@ const useGqlClient = () => {
     const clt = new ApolloClient({
       link: ApolloLink.from([retryLink, onError(errorHandler), httpLink]),
       cache,
+      resolvers,
+      typeDefs,
     });
     setClient(clt);
   }

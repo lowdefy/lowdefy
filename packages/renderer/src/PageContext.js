@@ -15,22 +15,29 @@
 */
 
 import React from 'react';
-import { ApolloProvider } from '@apollo/client';
-import { initEmotion } from '@lowdefy/block-tools';
-import useGqlClient from './utils/useGqlClient';
-import Page from './Page';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import AutoBlock from './AutoBlock';
 
-// const RemoteButton = React.lazy(() => import('block/Button'));
+const GET_PAGE = gql`
+  query page($pageId: ID!) {
+    page(pageId: $pageId)
+  }
+`;
 
-const Engine = () => {
-  initEmotion();
-  const client = useGqlClient();
-  return (
-    <ApolloProvider client={client}>
-      <h2>App</h2>
-      <Page />
-    </ApolloProvider>
-  );
+const Page = () => {
+  const { loading, error, data } = useQuery(GET_PAGE, {
+    variables: {
+      pageId: 'page1',
+    },
+  });
+  if (loading) return <h2>Loading</h2>;
+  if (error) {
+    console.log(error);
+    return <h2>Error</h2>;
+  }
+  console.log('data', data);
+  return <AutoBlock page={data.page} />;
 };
 
-export default Engine;
+export default Page;
