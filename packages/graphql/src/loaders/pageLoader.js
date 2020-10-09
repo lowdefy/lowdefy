@@ -13,18 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+import path from 'path';
 import Dataloader from 'dataloader';
+import readJsonFile from './readJsonFile';
 
-function createComponentBatchLoader() {
+function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
+  async function readPage(id) {
+    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `pages/${id}.json`);
+    return readJsonFile({ filePath });
+  }
   async function loader(keys) {
-    return keys.map((id) => ({ id: `page:${id}` }));
+    return keys.map((id) => readPage(id));
   }
   return loader;
 }
 
-function createComponentLoader() {
-  return new Dataloader(createComponentBatchLoader());
+function createPageLoader({ CONFIGURATION_BASE_PATH }) {
+  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
 }
 
-export default createComponentLoader;
+export default createPageLoader;

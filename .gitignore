@@ -6,3 +6,5 @@
 **/coverage/*
 
 .DS_Store
+
+packages/express/config/**

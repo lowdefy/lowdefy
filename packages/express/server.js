@@ -14,14 +14,16 @@
    limitations under the License.
 */
 
+const path = require('path');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers, createContext } = require('@lowdefy/graphql');
 
-const contextOptions = {
+const config = {
   DEPLOYMENT_ID: 'DEPLOYMENT_ID',
   DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
   DOMAIN_NAME: 'DOMAIN_NAME',
+  CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), 'config'),
   logger: console,
   getHeadersFromInput: ({ req }) => req.headers,
   getSecrets: () => ({
@@ -29,7 +31,7 @@ const contextOptions = {
   }),
 };
 
-const context = createContext(contextOptions);
+const context = createContext(config);
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
 
