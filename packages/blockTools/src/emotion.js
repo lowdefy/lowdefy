@@ -17,16 +17,16 @@
 import createEmotion from 'create-emotion';
 
 const windowContext = window || {};
-let emotion;
 
-// memoize emotion
-if (!windowContext.emotion) {
+const initEmotion = () => {
   const { css, injectGlobal } = createEmotion({
     container: document.getElementById('emotion'),
   });
-  emotion = { css, injectGlobal };
-} else {
-  emotion = windowContext.emotion;
-}
+  windowContext.emotion = { css, injectGlobal };
+};
 
-export default emotion;
+const getEmotionCss = () => {
+  return windowContext.emotion.css;
+};
+
+export { initEmotion, getEmotionCss };
