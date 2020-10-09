@@ -15,6 +15,7 @@
 */
 
 import makeCssClass from '../src/makeCssClass';
+import { initEmotion } from '../src/emotion';
 
 const mockCss = jest.fn();
 const mockCssImp = (obj) => ({
@@ -28,6 +29,7 @@ jest.mock('create-emotion', () => () => ({
 beforeEach(() => {
   mockCss.mockReset();
   mockCss.mockImplementation(mockCssImp);
+  initEmotion();
 });
 
 test('object with no media', () => {

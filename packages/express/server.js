@@ -37,4 +37,4 @@ const app = express();
 
 server.applyMiddleware({ app });
 app.use(express.static('shell/dist'));
-app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000`));
+app.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));
