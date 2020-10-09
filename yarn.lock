@@ -3105,7 +3105,7 @@ __metadata:
     "@babel/preset-env": 7.9.6
     babel-jest: 24.9.0
     jest: 26.5.2
-    moment: 2.28.0
+    moment: 2.29.1
   languageName: unknown
   linkType: soft
 
@@ -12755,14 +12755,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"moment@npm:2.28.0":
-  version: 2.28.0
-  resolution: "moment@npm:2.28.0"
-  checksum: f239dd93cec0560eb75467d987b6117cc074cfbef086c8e0e01aa93f4aff198ee1a3d13166bb01397542dced6b1b608f2bff95b7ded209c46b0593afacb2d916
-  languageName: node
-  linkType: hard
-
-"moment@npm:^2.24.0, moment@npm:^2.25.3, moment@npm:^2.9.0":
+"moment@npm:2.29.1, moment@npm:^2.24.0, moment@npm:^2.25.3, moment@npm:^2.9.0":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0

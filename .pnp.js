@@ -4692,7 +4692,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:7.9.6"],
             ["babel-jest", "virtual:b6fa685df68481df8aea241d69a5d4ac044afe9a6d5347abc450d1a9a0b048b47a068daa4b51891dcc21a6f39ddd0469d8cb1b5ac2b845697d880ad1457b4396#npm:24.9.0"],
             ["jest", "npm:26.5.2"],
-            ["moment", "npm:2.28.0"]
+            ["moment", "npm:2.29.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -15607,13 +15607,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["moment", [
-        ["npm:2.28.0", {
-          "packageLocation": "./.yarn/cache/moment-npm-2.28.0-9672b927b4-f239dd93ce.zip/node_modules/moment/",
-          "packageDependencies": [
-            ["moment", "npm:2.28.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:2.29.1", {
           "packageLocation": "./.yarn/cache/moment-npm-2.29.1-787d9fdafd-86729013fe.zip/node_modules/moment/",
           "packageDependencies": [
