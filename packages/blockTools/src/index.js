@@ -15,8 +15,9 @@
 */
 
 import connectBlock from './connectBlock';
-import getEmotionCss from './getEmotionCss';
 import ErrorBoundary from './ErrorBoundary';
+import getEmotionCss from './getEmotionCss';
+import Loading from './Loading';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import useRunAfterUpdate from './useRunAfterUpdate';
@@ -25,6 +26,7 @@ export {
   connectBlock,
   ErrorBoundary,
   getEmotionCss,
+  Loading,
   makeCssClass,
   mediaToCssObject,
   useRunAfterUpdate,
