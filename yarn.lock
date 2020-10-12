@@ -2849,7 +2849,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 1.3.0
-    webpack: 5.0.0-rc.4
+    webpack: 5.0.0
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -2922,7 +2922,7 @@ __metadata:
     nodemon: 2.0.4
     react: 17.0.0-rc.3
     react-dom: 17.0.0-rc.3
-    webpack: 5.0.0-rc.4
+    webpack: 5.0.0
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
   languageName: unknown
@@ -2972,7 +2972,7 @@ __metadata:
     graphql: 15.3.0
     graphql-type-json: 0.3.2
     jest: 26.5.3
-    webpack: 5.0.0-rc.4
+    webpack: 5.0.0
     webpack-cli: 3.3.12
   languageName: unknown
   linkType: soft
@@ -3024,7 +3024,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 1.3.0
-    webpack: 5.0.0-rc.4
+    webpack: 5.0.0
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3101,7 +3101,7 @@ __metadata:
     react: 17.0.0-rc.3
     react-dom: 17.0.0-rc.3
     serve: 11.3.2
-    webpack: 5.0.0-rc.4
+    webpack: 5.0.0
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
   languageName: unknown
@@ -18161,9 +18161,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.0.0-rc.4":
-  version: 5.0.0-rc.4
-  resolution: "webpack@npm:5.0.0-rc.4"
+"webpack@npm:5.0.0":
+  version: 5.0.0
+  resolution: "webpack@npm:5.0.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.45
@@ -18194,7 +18194,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 185e3b1eecbae3ab04d83ec0c471a564a1b21cb44bca8da4a8a2e5fda910da55295d6dbf8dc378f65db7044ef2c0e7bc57da90d8ecee986840fcdca314ba64be
+  checksum: bbd9df6389cc9ddb24c20ee9749e41adee64cff5ea7a30a0ee762a78d5f880f363a55cbb6ad66e62aa276608dd507d311ebcf8e7b2e1061aaf231aa6fa1bac84
   languageName: node
   linkType: hard
 
