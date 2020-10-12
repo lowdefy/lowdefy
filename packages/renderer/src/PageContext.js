@@ -20,13 +20,17 @@ import { useQuery } from '@apollo/client';
 import AutoBlock from './AutoBlock';
 
 const GET_PAGE = gql`
-  query page {
-    page
+  query page($pageId: ID!) {
+    page(pageId: $pageId)
   }
 `;
 
 const Page = () => {
-  const { loading, error, data } = useQuery(GET_PAGE);
+  const { loading, error, data } = useQuery(GET_PAGE, {
+    variables: {
+      pageId: 'page1',
+    },
+  });
   if (loading) return <h2>Loading</h2>;
   if (error) {
     console.log(error);

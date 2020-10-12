@@ -13,29 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+import path from 'path';
+import Dataloader from 'dataloader';
+import readJsonFile from './readJsonFile';
 
-import GraphQLJSON from 'graphql-type-json';
-import lowdefyGlobal from './queries/lowdefyGlobal/lowdefyGlobal';
-import menu from './queries/menu/menu';
-import page from './queries/page/page';
-
-function resolveMenuItem(menuItem) {
-  if (menuItem.type === 'MenuLink') {
-    return 'MenuLink';
+function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
+  async function readPage(id) {
+    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `${id}.json`);
+    return readJsonFile({ filePath });
   }
-  return 'MenuGroup';
+  async function loader(keys) {
+    return keys.map((id) => readPage(id));
+  }
+  return loader;
 }
 
-const resolvers = {
-  JSON: GraphQLJSON,
-  Query: {
-    lowdefyGlobal,
-    menu,
-    page,
-  },
-  MenuItem: {
-    __resolveType: resolveMenuItem,
-  },
-};
+function createPageLoader({ CONFIGURATION_BASE_PATH }) {
+  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
+}
 
-export default resolvers;
+export default createPageLoader;

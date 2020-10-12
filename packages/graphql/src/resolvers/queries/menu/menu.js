@@ -14,23 +14,8 @@
    limitations under the License.
 */
 
-import React from 'react';
-import { ApolloProvider } from '@apollo/client';
-import { initEmotion } from '@lowdefy/block-tools';
-import useGqlClient from './utils/useGqlClient';
-import Page from './Page';
+async function menu(_, __, { getController }) {
+  return getController('component').getMenus();
+}
 
-// const RemoteButton = React.lazy(() => import('block/Button'));
-
-const Engine = () => {
-  initEmotion();
-  const client = useGqlClient();
-  return (
-    <ApolloProvider client={client}>
-      <h2>App</h2>
-      <Page />
-    </ApolloProvider>
-  );
-};
-
-export default Engine;
+export default menu;

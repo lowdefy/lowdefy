@@ -31,7 +31,7 @@ function Engine() {
     return <h2>Failed to load dynamic script</h2>;
   }
 
-  const Component = React.lazy(loadComponent('lowdefy_renderer', 'Engine'));
+  const Component = React.lazy(loadComponent('lowdefy_renderer', 'Renderer'));
 
   return (
     <React.Suspense fallback="Loading Engine">
