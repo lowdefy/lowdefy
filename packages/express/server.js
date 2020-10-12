@@ -35,7 +35,7 @@ const context = createContext(config);
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, path: '/api/graphql' });
 
 // Serve Webpack shell files from './shell/dist'
 app.use(express.static('shell/dist'));
