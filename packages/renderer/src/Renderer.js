@@ -22,7 +22,7 @@ import { ErrorBoundary } from '@lowdefy/block-tools';
 import get from '@lowdefy/get';
 
 import useGqlClient from './utils/graphql/useGqlClient';
-import PageContext from './PageContext';
+import PageContext from './page/PageContext';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;

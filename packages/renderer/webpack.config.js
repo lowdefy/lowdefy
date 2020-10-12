@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
+const webpack = require('webpack');
 const path = require('path');
 
 const deps = require('./package.json').dependencies;
@@ -14,6 +15,13 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
+  // webpack 5 support polyfills
+  resolve: {
+    alias: {
+      buffer: require.resolve('buffer'),
+    },
+    fallback: { buffer: false },
+  },
   module: {
     rules: [
       {
@@ -21,6 +29,15 @@ module.exports = {
         loader: 'bundle-loader',
         options: {
           lazy: true,
+        },
+      },
+      // TODO: FIXME: do NOT webpack 5 support with this
+      // x-ref: https://github.com/webpack/webpack/issues/11467
+      // waiting for babel fix: https://github.com/vercel/next.js/pull/17095#issuecomment-692435147
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
         },
       },
       {
@@ -65,6 +82,7 @@ module.exports = {
         },
       },
     }),
+    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),

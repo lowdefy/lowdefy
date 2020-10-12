@@ -1,0 +1,48 @@
+/*
+  Copyright 2020 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import React from 'react';
+import { Loading, makeCssClass } from '@lowdefy/block-tools';
+
+import useContext from './useContext';
+import Container from './Container';
+
+const Context = ({ block, Component, pageId, rootContext, contextId }) => {
+  const { context, loading, error } = useContext({ block, pageId, rootContext, contextId });
+  if (loading) {
+    return (
+      <Loading
+        meta={block.meta}
+        methods={{ makeCssClass }}
+        blockStyle={(block.eval && block.eval.style) || block.style}
+      />
+    );
+  }
+
+  if (error) throw error;
+  return (
+    <Container
+      block={context.RootBlocks.areas.root.blocks[0]}
+      Blocks={context.RootBlocks}
+      Component={Component}
+      context={context}
+      pageId={pageId}
+      rootContext={rootContext}
+    />
+  );
+};
+
+export default Context;
