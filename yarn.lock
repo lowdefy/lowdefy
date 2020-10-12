@@ -3042,7 +3042,7 @@ __metadata:
     eslint-plugin-import: 2.22.1
     eslint-plugin-jsx-a11y: 6.3.1
     eslint-plugin-prettier: 3.1.4
-    eslint-plugin-react: 7.21.3
+    eslint-plugin-react: 7.21.4
     eslint-plugin-react-hooks: 4.1.2
     lerna: 3.22.1
     prettier: 2.1.2
@@ -7975,15 +7975,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:7.21.3":
-  version: 7.21.3
-  resolution: "eslint-plugin-react@npm:7.21.3"
+"eslint-plugin-react@npm:7.21.4":
+  version: 7.21.4
+  resolution: "eslint-plugin-react@npm:7.21.4"
   dependencies:
     array-includes: ^3.1.1
     array.prototype.flatmap: ^1.2.3
     doctrine: ^2.1.0
     has: ^1.0.3
-    jsx-ast-utils: ^2.4.1
+    jsx-ast-utils: ^2.4.1 || ^3.0.0
     object.entries: ^1.1.2
     object.fromentries: ^2.0.2
     object.values: ^1.1.1
@@ -7992,7 +7992,7 @@ __metadata:
     string.prototype.matchall: ^4.0.2
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7
-  checksum: 8a126d405448534821126dd636a1aee8df3a4f49b3fcec8944ac8500cdb5119bccaf9e209512f20e73879ddce08f657deb32fdae2f92e6393614de61fed1cca8
+  checksum: 5335f0e7d6edffc261bb4d47d276bb59955d33895c36ffbb4c68781ecb1863dbca5ecf6087814d0fc76b4857c69d7bc3df62d7d7f480456e75b52abed15a7858
   languageName: node
   linkType: hard
 
@@ -11458,6 +11458,16 @@ fsevents@^1.2.7:
     array-includes: ^3.1.1
     object.assign: ^4.1.0
   checksum: 36471d635b7e52aacaa8e926edcec2f6fdf5cfb4ccb945e87209b2bd0e4feac586293b465170b8287afbdff138ce4ff9cfc7ca2bd23900f6f3740423c29f49f5
+  languageName: node
+  linkType: hard
+
+"jsx-ast-utils@npm:^2.4.1 || ^3.0.0":
+  version: 3.0.0
+  resolution: "jsx-ast-utils@npm:3.0.0"
+  dependencies:
+    array-includes: ^3.1.1
+    object.assign: ^4.1.1
+  checksum: ccc9408797b1c099433a94420670b0681e516fe78aeb5f6009e9b192ebd02d8471611d6fe1d863876385656a7cb2dcddce62b1bf822f05a5d35e09ac0ca75f9b
   languageName: node
   linkType: hard
 
