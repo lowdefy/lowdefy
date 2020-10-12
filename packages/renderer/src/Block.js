@@ -15,8 +15,14 @@
 */
 
 import React from 'react';
+import { connectBlock } from '@lowdefy/block-tools';
 import useDynamicScript from './utils/useDynamicScript';
 import loadComponent from './utils/loadComponent';
+
+const Comp = ({ bl }) => {
+  const CBlock = connectBlock(bl);
+  return <CBlock />;
+};
 
 function Block({ meta }) {
   const { ready, failed } = useDynamicScript({
@@ -39,7 +45,7 @@ function Block({ meta }) {
 
   return (
     <React.Suspense fallback="Loading Block">
-      <Component />
+      <Comp bl={Component} />
     </React.Suspense>
   );
 }

@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
+import makeCssClass from './makeCssClass';
 
 const defaultMethods = (methods) => ({
+  makeCssClass,
   callAction: methods.callAction || (() => undefined),
-  makeCss: methods.makeCss || (() => undefined),
   registerAction: methods.registerAction || (() => undefined),
   registerMethod: methods.registerMethod || (() => undefined),
   ...methods,

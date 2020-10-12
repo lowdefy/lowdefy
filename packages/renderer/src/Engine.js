@@ -16,12 +16,14 @@
 
 import React from 'react';
 import { ApolloProvider } from '@apollo/client';
+import { initEmotion } from '@lowdefy/block-tools';
 import useGqlClient from './utils/useGqlClient';
 import Page from './Page';
 
 // const RemoteButton = React.lazy(() => import('block/Button'));
 
 const Engine = () => {
+  initEmotion();
   const client = useGqlClient();
   return (
     <ApolloProvider client={client}>

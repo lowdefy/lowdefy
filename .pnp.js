@@ -3892,6 +3892,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
             ["@babel/core", "npm:7.11.6"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.10.4"],
+            ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["babel-loader", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:8.1.0"],
             ["bundle-loader", "npm:0.5.6"],
             ["graphql", "npm:15.3.0"],
