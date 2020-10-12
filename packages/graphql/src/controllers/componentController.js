@@ -17,12 +17,16 @@
 import get from '@lowdefy/get';
 
 class ComponentController {
-  constructor({ getLoader }) {
+  constructor({ getLoader, DEPLOYMENT_ID, DEPLOYMENT_NAME, DOMAIN_NAME }) {
     this.componentLoader = getLoader('component');
+    this.DEPLOYMENT_ID = DEPLOYMENT_ID;
+    this.DEPLOYMENT_NAME = DEPLOYMENT_NAME;
+    this.DOMAIN_NAME = DOMAIN_NAME;
   }
 
   async getLowdefyGlobal() {
-    const lowdefyGlobal = await this.componentLoader.load('global');
+    const loadedLowdefyGlobal = await this.componentLoader.load('global');
+    const lowdefyGlobal = loadedLowdefyGlobal || {};
     lowdefyGlobal.deploymentId = this.DEPLOYMENT_ID;
     lowdefyGlobal.deploymentName = this.DEPLOYMENT_NAME;
     lowdefyGlobal.domainName = this.DOMAIN_NAME;
@@ -30,7 +34,8 @@ class ComponentController {
   }
 
   async getMenus() {
-    const menus = await this.componentLoader.load('menus');
+    const loadedMenus = await this.componentLoader.load('menus');
+    const menus = loadedMenus || [];
     const homePageId = await this.getHomePageId({ menus });
     return {
       menus,
@@ -40,8 +45,8 @@ class ComponentController {
 
   async getHomePageId({ menus }) {
     const configData = await this.componentLoader.load('config');
-    if (configData && get(configData, 'content.homePageId')) {
-      return get(configData, 'content.homePageId');
+    if (configData && get(configData, 'homePageId')) {
+      return get(configData, 'homePageId');
     }
     let defaultMenu = menus.find((menu) => menu.menuId === 'default');
     if (!defaultMenu) {
