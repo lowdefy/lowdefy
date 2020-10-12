@@ -24,8 +24,6 @@ import get from '@lowdefy/get';
 import useGqlClient from './utils/graphql/useGqlClient';
 import PageContext from './PageContext';
 
-import { initEmotion } from '@lowdefy/block-tools';
-
 // eslint-disable-next-line no-undef
 const windowContext = window;
 // eslint-disable-next-line no-undef
@@ -34,8 +32,6 @@ const documentContext = document;
 const Components = {};
 const contexts = {};
 const input = {};
-
-initEmotion();
 
 const GET_ROOT = gql`
   fragment MenuLinkFragment on MenuLink {

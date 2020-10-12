@@ -17,25 +17,38 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { makeCss, ErrorBoundary } from '../src';
+import { makeCssClass, ErrorBoundary } from '../src';
 
 // eslint-disable-next-line no-undef
 const documentCtx = document;
 
 const ErrorComp = () => <div>{this.unknown}</div>;
+const FallbackComp = ({ name, error }) => (
+  <div>
+    {name} {error.message}
+  </div>
+);
+
 const Demo = () => (
   <div id="page">
     <h4>ErrorBoundary with renderError=true :</h4>
-    <ErrorBoundary renderError={true}>
+    <ErrorBoundary renderError>
       <ErrorComp />
     </ErrorBoundary>
     <h4>ErrorBoundary with renderError=false :</h4>
     <ErrorBoundary>
       <ErrorComp />
     </ErrorBoundary>
+    <h4>ErrorBoundary with fallback :</h4>
+    <ErrorBoundary fallback={(error) => <FallbackComp name="Fallback test" error={error} />}>
+      <ErrorComp />
+    </ErrorBoundary>
+
     <div id="emotion" />
-    <h4>{"makeCss({ color: 'red' })"} :</h4>
-    <div className={makeCss({ color: 'red' })}>Red text</div>
+    <h4>{"makeCssClass({ color: 'red' })"} :</h4>
+    <div className={makeCssClass({ color: 'red' })}>Red text</div>
+
+    <h4>Loading component :</h4>
   </div>
 );
 
