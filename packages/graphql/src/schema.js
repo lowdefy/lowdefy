@@ -51,16 +51,6 @@ const typeDefs = gql`
     properties: JSON
     pageId: String
     url: String
-    page(branch: String!): PageDescription
-  }
-
-  type PageDescription {
-    id: ID!
-    type: String
-    pageId: String
-    branch: String
-    public: Boolean
-    properties: JSON
   }
 `;
 
