@@ -16,11 +16,11 @@
 
 import React from 'react';
 import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
-import { connectBlock, makeCssClass } from '@lowdefy/block-tools';
+import { blockDefaults, makeCssClass } from '@lowdefy/block-tools';
 
-import BindAutoBlock from './BindAutoBlock';
+import Block from './Block';
 
-const ConnectedArea = connectBlock(Area);
+const ConnectedArea = blockDefaults(Area);
 
 const Container = ({ block, Blocks, Component, context, pageId, rootContext }) => {
   const content = {};
@@ -41,7 +41,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
         makeCssClass={makeCssClass}
       >
         {areas[areaKey].blocks.map((bl) => (
-          <BindAutoBlock
+          <Block
             key={`co-${bl.blockId}`}
             Blocks={Blocks.subBlocks[block.id][0]}
             block={bl}

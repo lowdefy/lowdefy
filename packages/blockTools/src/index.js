@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import connectBlock from './connectBlock';
+import blockDefaults from './blockDefaults';
 import ErrorBoundary from './ErrorBoundary';
 import getEmotionCss from './getEmotionCss';
 import Loading from './Loading';
@@ -23,7 +23,7 @@ import mediaToCssObject from './mediaToCssObject.js';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
-  connectBlock,
+  blockDefaults,
   ErrorBoundary,
   getEmotionCss,
   Loading,

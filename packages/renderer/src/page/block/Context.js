@@ -18,11 +18,11 @@ import React from 'react';
 import { Loading, makeCssClass } from '@lowdefy/block-tools';
 
 import useContext from './useContext';
-import Container from './Container';
 
-const Context = ({ block, Component, pageId, rootContext, contextId }) => {
+const Context = ({ block, contextId, pageId, render, rootContext }) => {
   const { context, loading, error } = useContext({ block, pageId, rootContext, contextId });
   if (loading) {
+    // TODO
     return (
       <Loading
         meta={block.meta}
@@ -33,16 +33,7 @@ const Context = ({ block, Component, pageId, rootContext, contextId }) => {
   }
 
   if (error) throw error;
-  return (
-    <Container
-      block={context.RootBlocks.areas.root.blocks[0]}
-      Blocks={context.RootBlocks}
-      Component={Component}
-      context={context}
-      pageId={pageId}
-      rootContext={rootContext}
-    />
-  );
+  return render(context);
 };
 
 export default Context;

@@ -22,10 +22,11 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --config webpack.prod.js",
     "clean": "rm -rf shell/dist",
     "prepublishOnly": "yarn build",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "dev": "webpack-dev-server --open --config webpack.dev.js"
   },
   "dependencies": {
     "@lowdefy/graphql": "0.0.0-experimental.0",
@@ -44,6 +45,7 @@
     "html-webpack-plugin": "4.5.0",
     "webpack": "5.0.0",
     "webpack-cli": "3.3.12",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "3.11.0",
+    "webpack-merge": "5.2.0"
   }
 }

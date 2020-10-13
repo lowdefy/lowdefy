@@ -22,7 +22,7 @@ import { ErrorBoundary } from '@lowdefy/block-tools';
 import get from '@lowdefy/get';
 
 import useGqlClient from './utils/graphql/useGqlClient';
-import PageContext from './page/PageContext';
+import Page from './page/Page';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
@@ -118,7 +118,7 @@ const Root = () => {
                   </Route>
                   <Route exact path="/:pageId">
                     <ErrorBoundary>
-                      <PageContext rootContext={rootContext} />
+                      <Page rootContext={rootContext} />
                     </ErrorBoundary>
                   </Route>
                 </Switch>

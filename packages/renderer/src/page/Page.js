@@ -16,17 +16,17 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { useParams, useHistory, useLocation, Redirect } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
-import { Loading, connectBlock } from '@lowdefy/block-tools';
+import { Loading } from '@lowdefy/block-tools';
 import get from '@lowdefy/get';
 import { urlQuery } from '@lowdefy/helpers';
 
-import AutoBlock from './AutoBlock';
 import Helmet from './Helmet';
-import prepareBlock from './prepareBlock';
+import Block from './block/Block';
+import Context from './block/Context';
 
 const GET_PAGE = gql`
   query getPage($id: ID!) {
@@ -40,42 +40,52 @@ const PageContext = ({ rootContext }) => {
   const { search } = useLocation();
   rootContext.urlQuery = urlQuery.parse(search || '');
   const { loading, error, data } = useQuery(GET_PAGE, {
-    variables: { id: pageId, branch: rootContext.branch },
+    variables: { id: pageId },
   });
   if (loading) {
     console.log('loading');
-    return Loading;
+    return <Loading />;
   }
   // if (error) throw error;
   if (error) {
     console.log(error);
     return <div>Error</div>;
   }
-  console.log('finished loading');
   // redirect 404
   if (!data.page) return <Redirect to="/404" />;
-
-  console.log('data', data.page);
-  const Component = prepareBlock({
-    block: data.page,
-    Components: rootContext.Components,
-  });
 
   return (
     <>
       <Helmet pageProperties={get(data.page, 'properties', { default: {} })} />
       <div>Hello</div>
       <div id={pageId}>
-        <Suspense fallback={<Loading />}>
-          <AutoBlock
-            block={data.page}
-            Blocks={null}
-            Component={connectBlock(Component)}
-            context={null}
-            pageId={pageId}
-            rootContext={rootContext}
-          />
-        </Suspense>
+        <Context
+          block={{
+            id: `root:${pageId}`,
+            blockId: `root:${pageId}`,
+            type: 'Context',
+            meta: {
+              category: 'context',
+            },
+            areas: { root: { blocks: [data.page] } },
+          }}
+          context={null}
+          contextId={`root:${pageId}`}
+          pageId={pageId}
+          rootContext={rootContext}
+          render={(context) => {
+            console.log('Page', context);
+            return (
+              <Block
+                block={context.RootBlocks.map[data.page.blockId]}
+                Blocks={context.RootBlocks}
+                context={context}
+                pageId={pageId}
+                rootContext={rootContext}
+              />
+            );
+          }}
+        />
       </div>
     </>
   );

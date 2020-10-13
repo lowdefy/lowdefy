@@ -16,7 +16,7 @@
 
 import React, { Suspense } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { Loading, makeCssClass, connectBlock, ErrorBoundary } from '@lowdefy/block-tools';
+import { Loading, makeCssClass, blockDefaults, ErrorBoundary } from '@lowdefy/block-tools';
 
 import AutoBlock from './AutoBlock';
 import prepareBlock from './prepareBlock';
@@ -72,7 +72,7 @@ const BindAutoBlock = ({ block, Blocks, context, pageId, rootContext }) => {
         <AutoBlock
           block={block}
           Blocks={Blocks}
-          Component={connectBlock(Component)}
+          Component={blockDefaults(Component)}
           context={context}
           pageId={pageId}
           rootContext={rootContext}
