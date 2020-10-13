@@ -43,7 +43,7 @@
     "babel-jest": "24.9.0",
     "babel-loader": "8.1.0",
     "jest": "26.5.3",
-    "webpack": "5.0.0-rc.4",
+    "webpack": "5.0.0",
     "webpack-cli": "3.3.12"
   }
 }
