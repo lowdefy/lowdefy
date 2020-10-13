@@ -17,10 +17,12 @@
 import type from '@lowdefy/type';
 
 import createPageController from '../controllers/pageController';
+import createComponentController from '../controllers/componentController';
 
 function creatGetController(context) {
   const constructors = {
     page: createPageController,
+    component: createComponentController,
   };
   const memoized = {};
 

@@ -18,15 +18,18 @@ import createEmotion from 'create-emotion';
 
 const windowContext = window || {};
 
-const initEmotion = () => {
-  const { css, injectGlobal } = createEmotion({
-    container: document.getElementById('emotion'),
-  });
-  windowContext.emotion = { css, injectGlobal };
-};
-
 const getEmotionCss = () => {
-  return windowContext.emotion.css;
+  try {
+    if (!windowContext.emotion) {
+      const { css } = createEmotion({
+        container: document.getElementById('emotion'),
+      });
+      windowContext.emotion = { css };
+    }
+    return windowContext.emotion.css;
+  } catch (error) {
+    throw new Error('Emotion failed to initilize: ' + error.message);
+  }
 };
 
-export { initEmotion, getEmotionCss };
+export default getEmotionCss;
