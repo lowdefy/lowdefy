@@ -16,23 +16,25 @@
 
 import createPageController from './pageController';
 
-const mockLoadComponent = jest.fn();
+const mockLoadPage = jest.fn();
 const loaders = {
   page: {
-    load: mockLoadComponent,
+    load: mockLoadPage,
   },
 };
-const controllers = {};
 
 const getLoader = jest.fn((loader) => loaders[loader]);
-const getController = jest.fn((controller) => controllers[controller]);
+
+const context = {
+  getLoader,
+};
 
 beforeEach(() => {
-  mockLoadComponent.mockReset();
+  mockLoadPage.mockReset();
 });
 
 test('getPage', async () => {
-  mockLoadComponent.mockImplementation((id) => {
+  mockLoadPage.mockImplementation((id) => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
@@ -40,12 +42,23 @@ test('getPage', async () => {
     }
     return null;
   });
-  const controller = createPageController({
-    getLoader,
-    getController,
-  });
+  const controller = createPageController(context);
   const res = await controller.getPage({ pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
   });
+});
+
+test('getPage, page does not exist', async () => {
+  mockLoadPage.mockImplementation((id) => {
+    if (id === 'pageId') {
+      return {
+        id: 'page:pageId',
+      };
+    }
+    return null;
+  });
+  const controller = createPageController(context);
+  const res = await controller.getPage({ pageId: 'doesNotExist' });
+  expect(res).toEqual(null);
 });

@@ -11,6 +11,9 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     port: 3001,
   },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+  },
   module: {
     rules: [
       {
@@ -28,6 +31,17 @@ module.exports = {
           presets: ['@babel/preset-react'],
         },
       },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -36,7 +50,7 @@ module.exports = {
       library: { type: 'var', name: 'lowdefy_renderer' },
       filename: 'remoteEntry.js',
       exposes: {
-        './Engine': './src/Engine',
+        './Renderer': './src/Renderer',
       },
       shared: {
         ...deps,

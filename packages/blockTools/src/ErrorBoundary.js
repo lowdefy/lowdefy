@@ -34,12 +34,14 @@ class ErrorBoundary extends Component {
     const { hasError, error } = this.state;
     if (hasError) {
       if (fallback) {
-        return fallback;
+        return fallback(error);
       }
       if (renderError) {
-        <div>
-          {'Error: ' + (message || error.message) + (description && '<br />' + description)}
-        </div>;
+        return (
+          <div>
+            {`Error:  ${(message || error.message) + (description && `<br /> ${description}`)}`}
+          </div>
+        );
       }
       // Throw to console but fail silently to user?
       return '';
