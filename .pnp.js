@@ -3531,7 +3531,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["babel-jest", "virtual:60db6f885fdb292d52f611575208c6b51b9a272733d90fe8edc7853309da56cfe1d45553d3d82ff571709e87d3dd377b35bef19a5ed1bf366956f0c695b30f9d#npm:26.5.2"],
             ["babel-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:8.1.0"],
-            ["babel-plugin-import", "npm:1.13.0"],
+            ["babel-plugin-import", "npm:1.13.1"],
             ["buffer", "npm:5.6.0"],
             ["create-emotion", "npm:10.0.27"],
             ["css-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:4.3.0"],
@@ -3725,7 +3725,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["antd", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:4.4.2"],
             ["babel-jest", "virtual:60db6f885fdb292d52f611575208c6b51b9a272733d90fe8edc7853309da56cfe1d45553d3d82ff571709e87d3dd377b35bef19a5ed1bf366956f0c695b30f9d#npm:26.5.2"],
             ["babel-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.1.0"],
-            ["babel-plugin-import", "npm:1.13.0"],
+            ["babel-plugin-import", "npm:1.13.1"],
             ["buffer", "npm:5.6.0"],
             ["css-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:4.3.0"],
             ["html-webpack-plugin", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:4.5.0"],
@@ -6488,10 +6488,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["babel-plugin-import", [
-        ["npm:1.13.0", {
-          "packageLocation": "./.yarn/cache/babel-plugin-import-npm-1.13.0-d19e034e60-b056c9be60.zip/node_modules/babel-plugin-import/",
+        ["npm:1.13.1", {
+          "packageLocation": "./.yarn/cache/babel-plugin-import-npm-1.13.1-8bb8103eed-3420f0d46c.zip/node_modules/babel-plugin-import/",
           "packageDependencies": [
-            ["babel-plugin-import", "npm:1.13.0"],
+            ["babel-plugin-import", "npm:1.13.1"],
             ["@babel/helper-module-imports", "npm:7.10.4"],
             ["@babel/runtime", "npm:7.11.2"]
           ],
