@@ -55,7 +55,7 @@
     "jest": "26.5.3",
     "js-yaml": "3.14.0",
     "less": "3.12.2",
-    "less-loader": "7.0.1",
+    "less-loader": "7.0.2",
     "path-browserify": "1.0.1",
     "process": "0.11.10",
     "react-markdown": "4.3.1",
