@@ -23,3 +23,5 @@ jobs:
       # format tests don't pass on node 12 since icu is missing and tests don't work with locals
       - name: Test packages
         run: yarn test --ignore='@lowdefy/format'
+      - name: Upload coverage to codecov
+        run: bash <(curl -s https://codecov.io/bash)

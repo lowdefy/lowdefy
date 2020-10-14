@@ -19,7 +19,6 @@ const rootContext = {
   client,
   // appGraphql,
   message,
-  document,
   openidLogoutUrl,
   user,
 };

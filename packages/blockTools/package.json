@@ -28,7 +28,7 @@
   "scripts": {
     "start": "webpack serve",
     "build": "babel src --out-dir dist",
-    "test": "jest --coverage --config jest.config.json --no-cache",
+    "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "npm-publish": "npm publish --access public"

@@ -56,7 +56,6 @@ const rootContext = {
   document,
   openidLogoutUrl,
   user,
-  window,
 };
 
 beforeEach(() => {
