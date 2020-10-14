@@ -30,7 +30,7 @@
   "dependencies": {
     "@lowdefy/get": "1.0.1",
     "@lowdefy/type": "1.0.1",
-    "apollo-server-core": "2.18.2",
+    "apollo-server": "2.18.2",
     "dataloader": "2.0.0",
     "graphql": "15.3.0",
     "graphql-type-json": "0.3.2"

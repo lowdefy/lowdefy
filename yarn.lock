@@ -2885,7 +2885,7 @@ __metadata:
     "@babel/preset-env": 7.11.5
     "@lowdefy/get": 1.0.1
     "@lowdefy/type": 1.0.1
-    apollo-server-core: 2.18.2
+    apollo-server: 2.18.2
     apollo-server-testing: 2.18.2
     babel-jest: 26.5.2
     babel-loader: 8.1.0
@@ -4732,7 +4732,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:2.18.2, apollo-server-core@npm:^2.18.2":
+"apollo-server-core@npm:^2.18.2":
   version: 2.18.2
   resolution: "apollo-server-core@npm:2.18.2"
   dependencies:
@@ -4787,7 +4787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:2.18.2":
+"apollo-server-express@npm:2.18.2, apollo-server-express@npm:^2.18.2":
   version: 2.18.2
   resolution: "apollo-server-express@npm:2.18.2"
   dependencies:
@@ -4846,6 +4846,21 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 1ac6ded7bfa7dac369fd57e163e0b98f09fbb674fe139b2ccff359931112ac5176686615039909beabc8bb79a4e0f04b4406712fca4cadd7a23e3546beb275f0
+  languageName: node
+  linkType: hard
+
+"apollo-server@npm:2.18.2":
+  version: 2.18.2
+  resolution: "apollo-server@npm:2.18.2"
+  dependencies:
+    apollo-server-core: ^2.18.2
+    apollo-server-express: ^2.18.2
+    express: ^4.0.0
+    graphql-subscriptions: ^1.0.0
+    graphql-tools: ^4.0.0
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: bab696b73e6c48a08d2dec903ce49132babf96d3f35b94e6bfe297cd3d9225d89ab48d373bf6563524dec5256ff7ebd246fb94d3ab6d7c399eb4dcb781a30d66
   languageName: node
   linkType: hard
 
@@ -8142,7 +8157,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:4.17.1, express@npm:^4.17.1":
+"express@npm:4.17.1, express@npm:^4.0.0, express@npm:^4.17.1":
   version: 4.17.1
   resolution: "express@npm:4.17.1"
   dependencies:
