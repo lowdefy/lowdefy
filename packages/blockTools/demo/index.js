@@ -17,7 +17,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { makeCssClass, ErrorBoundary } from '../src';
+import { makeCssClass, ErrorBoundary, Loading } from '../src';
 
 // eslint-disable-next-line no-undef
 const documentCtx = document;
@@ -49,6 +49,9 @@ const Demo = () => (
     <div className={makeCssClass({ color: 'red' })}>Red text</div>
 
     <h4>Loading component :</h4>
+    <div style={{ height: 200 }}>
+      <Loading />
+    </div>
   </div>
 );
 

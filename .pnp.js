@@ -3549,6 +3549,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-syntax-highlight", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:15.3.1"],
             ["react-test-renderer", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.0-rc.3"],
             ["style-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:1.3.0"],
+            ["svg-inline-loader", "npm:0.8.2"],
             ["webpack", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.1.0"],
             ["webpack-cli", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.3.12"],
             ["webpack-dev-server", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:3.11.0"],
@@ -18796,6 +18797,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["simple-html-tokenizer", [
+        ["npm:0.1.1", {
+          "packageLocation": "./.yarn/cache/simple-html-tokenizer-npm-0.1.1-f6bfb99d29-46969af412.zip/node_modules/simple-html-tokenizer/",
+          "packageDependencies": [
+            ["simple-html-tokenizer", "npm:0.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["sisteransi", [
         ["npm:1.0.5", {
           "packageLocation": "./.yarn/cache/sisteransi-npm-1.0.5-af60cc0cfa-6554debe10.zip/node_modules/sisteransi/",
@@ -19630,6 +19640,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["supports-hyperlinks", "npm:2.1.0"],
             ["has-flag", "npm:4.0.0"],
             ["supports-color", "npm:7.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["svg-inline-loader", [
+        ["npm:0.8.2", {
+          "packageLocation": "./.yarn/cache/svg-inline-loader-npm-0.8.2-8c6a22c261-8ead7f04e3.zip/node_modules/svg-inline-loader/",
+          "packageDependencies": [
+            ["svg-inline-loader", "npm:0.8.2"],
+            ["loader-utils", "npm:1.4.0"],
+            ["object-assign", "npm:4.1.1"],
+            ["simple-html-tokenizer", "npm:0.1.1"]
           ],
           "linkType": "HARD",
         }]

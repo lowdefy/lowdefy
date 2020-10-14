@@ -2770,6 +2770,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 1.3.0
+    svg-inline-loader: ^0.8.2
     webpack: 5.1.0
     webpack-cli: 3.3.12
     webpack-dev-server: 3.11.0
@@ -15993,6 +15994,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"simple-html-tokenizer@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "simple-html-tokenizer@npm:0.1.1"
+  checksum: 46969af412ee26ae4b549888ce67b868059607855ad2696f8c81e11fde37301c7d9b4346071d12136b8b8c2038f384cba5ff242bfc943119b05e72ea24203cc2
+  languageName: node
+  linkType: hard
+
 "sisteransi@npm:^1.0.4":
   version: 1.0.5
   resolution: "sisteransi@npm:1.0.5"
@@ -16738,6 +16746,17 @@ fsevents@^1.2.7:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: 8b3b6d71ee298d7f9a3ff4bfb928bd037c0b691b01bdfebb77deb3384976cd78c180d564dc3689ce5fe254d323252f7064efa1364bf24ab81efa6b080e51eddb
+  languageName: node
+  linkType: hard
+
+"svg-inline-loader@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "svg-inline-loader@npm:0.8.2"
+  dependencies:
+    loader-utils: ^1.1.0
+    object-assign: ^4.0.1
+    simple-html-tokenizer: ^0.1.1
+  checksum: 8ead7f04e354c02aab7563ebeeecc4cfa2fea0c4efd04475f2b1731a5a576f46c7d596e2cb3f456ce01d9739ed537d779baba0045c96c1213027a68d5ce58e0e
   languageName: node
   linkType: hard
 
