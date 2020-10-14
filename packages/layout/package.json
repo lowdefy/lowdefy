@@ -26,7 +26,7 @@
     "dist/*"
   ],
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack serve",
     "build": "babel src --out-dir dist",
     "test": "jest --coverage --config jest.config.json --no-cache",
     "prepare": "yarn build",

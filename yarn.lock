@@ -19039,7 +19039,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:3.11.0":
+"webpack-dev-server@npm:*, webpack-dev-server@npm:3.11.0":
   version: 3.11.0
   resolution: "webpack-dev-server@npm:3.11.0"
   dependencies:
@@ -19126,7 +19126,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.1.0":
+"webpack@npm:*, webpack@npm:5.1.0":
   version: 5.1.0
   resolution: "webpack@npm:5.1.0"
   dependencies:
