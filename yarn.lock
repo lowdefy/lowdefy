@@ -2824,7 +2824,7 @@ __metadata:
     react-markdown: 4.3.1
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
-    style-loader: 1.3.0
+    style-loader: 2.0.0
     webpack: 5.1.0
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
@@ -2999,7 +2999,7 @@ __metadata:
     react-markdown: 4.3.1
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
-    style-loader: 1.3.0
+    style-loader: 2.0.0
     webpack: 5.1.0
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
@@ -16608,7 +16608,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.0, schema-utils@npm:^2.7.1":
+"schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.1":
   version: 2.7.1
   resolution: "schema-utils@npm:2.7.1"
   dependencies:
@@ -17640,18 +17640,6 @@ fsevents@^1.2.7:
   bin:
     sl-log-transformer: bin/sl-log-transformer.js
   checksum: 46e84ece91a275cff500755cb10a730af3bdf64ebe559d85b2041d4c6b40a02f14a6f78c1af01c9aa280661110403e4de27a560e5281410fdaf8a37b1cbe647b
-  languageName: node
-  linkType: hard
-
-"style-loader@npm:1.3.0":
-  version: 1.3.0
-  resolution: "style-loader@npm:1.3.0"
-  dependencies:
-    loader-utils: ^2.0.0
-    schema-utils: ^2.7.0
-  peerDependencies:
-    webpack: ^4.0.0 || ^5.0.0
-  checksum: 4654b5178cb2c32f8d35363938b8bbb2b435fcfd2f81865185e3899183a3ad1390a24da467890463a6c9d07f6785d568a269805b706c8d56086c942530d77d95
   languageName: node
   linkType: hard
 
