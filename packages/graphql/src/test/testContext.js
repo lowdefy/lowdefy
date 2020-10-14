@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+import createGetController from '../context/getController';
+
 const bootstrapContext = {
   DEPLOYMENT_ID: 'test',
   DEPLOYMENT_NAME: 'Test App',
@@ -27,4 +29,25 @@ const bootstrapContext = {
   logger: { log: () => {} },
 };
 
+function testContext({ loaders, setters }) {
+  const bootstrapContext = {
+    DEPLOYMENT_ID: 'test',
+    DEPLOYMENT_NAME: 'Test App',
+    DOMAIN_NAME: 'test.com',
+    ORIGIN: 'test.com',
+    HOST: 'test.com',
+    getLoader: (name) => loaders[name],
+    getSetter: (name) => setters[name],
+    getConnectionSecrets: () => {},
+    logger: { log: () => {} },
+  };
+  bootstrapContext.getController = createGetController(bootstrapContext);
+  return {
+    getController: bootstrapContext.getController,
+    logger: bootstrapContext.logger,
+  };
+}
+
 export { bootstrapContext };
+
+export default testContext;
