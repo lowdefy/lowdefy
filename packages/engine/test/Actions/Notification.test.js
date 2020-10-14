@@ -18,13 +18,11 @@ const notification = {
   success: mockNotificationSuccess,
 };
 
-const branch = 'master';
 const openidLogoutUrl = 'logout';
 const pageId = 'one';
 const user = { firstName: 'ABC' };
 
 const rootContext = {
-  branch,
   client,
   // appGraphql,
   message,

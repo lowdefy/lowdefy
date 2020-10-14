@@ -1,6 +1,5 @@
 import testContext from '../testContext';
 
-const branch = 'master';
 const openidLogoutUrl = 'logout';
 const pageId = 'one';
 const user = { firstName: 'ABC' };
@@ -15,7 +14,6 @@ const mockMessageError = jest.fn();
 const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
 
 const rootContext = {
-  branch,
   client,
   message,
   openidLogoutUrl,

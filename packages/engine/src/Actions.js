@@ -420,7 +420,6 @@ class Actions {
         // set input for page before changing
         if (!type.isNone(parsedParams.input)) {
           const nextContextId = makeContextId({
-            branch: this.context.branch,
             pageId,
             search: parsedParams.urlQuery,
             blockId: pageId,
@@ -457,7 +456,7 @@ class Actions {
 
   logout(_, successMessage, errorMessage) {
     try {
-      this.context.localStore.setItem(`token:${this.context.branch}`, '');
+      this.context.localStore.setItem(`token`, '');
       if (this.context.openidLogoutUrl) {
         this.context.window.location.href = this.context.openidLogoutUrl;
       } else {

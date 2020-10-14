@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { getFieldVales } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions';
@@ -29,7 +28,6 @@ const blockData = ({
   areas,
   blockId,
   blocks,
-  branch,
   defaultValue,
   field,
   id,
@@ -49,7 +47,6 @@ const blockData = ({
   areas,
   blockId,
   blocks,
-  branch,
   defaultValue,
   field,
   id,
@@ -87,7 +84,6 @@ const getContext = async ({ block, contextId, pageId, rootContext, message, noti
     actionLog: [],
     appGraphql: rootContext.appGraphql,
     blockId: block.blockId,
-    branch: rootContext.branch,
     client: rootContext.client,
     Components: rootContext.Components,
     config: rootContext.config,

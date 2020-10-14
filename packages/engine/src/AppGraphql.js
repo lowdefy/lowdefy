@@ -23,8 +23,7 @@ const GET_CLI_TOKEN = gql`
 `;
 
 class AppGraphql {
-  constructor({ branch, client }) {
-    this.branch = branch;
+  constructor({ client }) {
     this.client = client;
   }
 
