@@ -22,38 +22,8 @@ import type from '@lowdefy/type';
 import get from '@lowdefy/get';
 import set from '@lowdefy/set';
 import serializer from '@lowdefy/serializer';
-import gql from 'graphql-tag';
 
 import makeContextId from './makeContextId';
-
-const UPDATE_USER_PROFILE = gql`
-  mutation updateUserProfile($updateUserProfileInput: UpdateUserProfileInput!) {
-    updateUserProfile(updateUserProfileInput: $updateUserProfileInput) {
-      success
-    }
-  }
-`;
-
-const REFRESH_USER = gql`
-  query refreshUser {
-    user {
-      id
-      email
-      phone_number
-      given_name
-      family_name
-      name
-      nickname
-      picture
-      preferred_username
-      attributes
-      groupIds
-      roles
-      adminGroupIds
-      allPageIds
-    }
-  }
-`;
 
 class Actions {
   constructor(context) {
@@ -62,35 +32,25 @@ class Actions {
     this.build = this.build.bind(this);
     this.callMethod = this.callMethod.bind(this);
     this.fetch = this.fetch.bind(this);
-    this.getCliToken = this.getCliToken.bind(this);
     this.link = this.link.bind(this);
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
     this.message = this.message.bind(this);
     this.mutate = this.mutate.bind(this);
-    this.notification = this.notification.bind(this);
     this.reset = this.reset.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.setGlobal = this.setGlobal.bind(this);
     this.setState = this.setState.bind(this);
-    this.updateProfile = this.updateProfile.bind(this);
     this.validate = this.validate.bind(this);
 
     this.actions = {
       CallMethod: this.callMethod,
       Fetch: this.fetch,
-      GetCliToken: this.getCliToken,
       Link: this.link,
-      Login: this.login,
-      Logout: this.logout,
       Message: this.message,
       Mutate: this.mutate,
-      Notification: this.notification,
       Reset: this.reset,
       ScrollTo: this.scrollTo,
       SetGlobal: this.setGlobal,
       SetState: this.setState,
-      UpdateProfile: this.updateProfile,
       Validate: this.validate,
     };
   }
@@ -178,23 +138,6 @@ class Actions {
     }
   }
 
-  async getCliToken(_, successMessage, errorMessage) {
-    try {
-      const response = await this.context.appGraphql.getCliToken();
-      console.log('CLI TOKEN:');
-      console.log(response);
-      try {
-        navigator.clipboard.writeText(response);
-      } catch (error) {
-        console.error(error);
-      }
-      return { successMessage, response };
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to get cli token.', error });
-    }
-  }
-
   fetch(params, successMessage, errorMessage) {
     if (type.isNone(params)) {
       return this.context.Requests.callRequests()
@@ -248,37 +191,6 @@ class Actions {
       errorMessage: errorMessage || `Failed to fetch.`,
       error: new Error(`Invalid _request params: ${params}`),
     });
-  }
-
-  notification(params = {}, successMessage, errorMessage, args, arrayIndices, blockId) {
-    try {
-      const { output: parsed, errors: parseErrors } = this.context.parser.parse({
-        args,
-        arrayIndices,
-        input: params,
-        location: blockId,
-      });
-      if (parseErrors.length > 0) {
-        return Promise.reject({
-          errorMessage: errorMessage || `Notification failed.`,
-          error: parseErrors,
-        });
-      }
-      this.context.displayNotification[parsed.status || 'success']({
-        bottom: parsed.bottom,
-        description: parsed.description || '',
-        duration: type.isNone(parsed.duration) ? 5 : parsed.duration,
-        message: parsed.message || 'Success',
-        placement: parsed.placement,
-        top: parsed.top,
-      });
-      return Promise.resolve({ successMessage });
-    } catch (error) {
-      return Promise.reject({
-        errorMessage: errorMessage || `Notification failed.`,
-        error,
-      });
-    }
   }
 
   message(params = {}, successMessage, errorMessage, args, arrayIndices, blockId) {
@@ -452,97 +364,6 @@ class Actions {
       return Promise.reject({ errorMessage: errorMessage || 'Failed to follow link.', error });
     }
     return Promise.resolve({ successMessage });
-  }
-
-  logout(_, successMessage, errorMessage) {
-    try {
-      this.context.localStore.setItem(`token`, '');
-      if (this.context.openidLogoutUrl) {
-        this.context.window.location.href = this.context.openidLogoutUrl;
-      } else {
-        this.context.window.location.href = this.context.window.location.origin;
-      }
-    } catch (error) {
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to logout.', error });
-    }
-    return Promise.resolve({ successMessage });
-  }
-
-  login(_, successMessage, errorMessage) {
-    try {
-      this.context.routeHistory.push(`/login`);
-    } catch (error) {
-      return Promise.reject({ errorMessage: errorMessage || 'Failed login redirect.', error });
-    }
-    return Promise.resolve({ successMessage });
-  }
-
-  updateProfile(userUpdate, successMessage, errorMessage, args, arrayIndices, blockId) {
-    try {
-      const { output: parsedUserUpdate, errors: userParseErrors } = this.context.parser.parse({
-        args,
-        arrayIndices,
-        input: userUpdate,
-        location: blockId,
-      });
-      if (userParseErrors.length > 0) {
-        return Promise.reject({
-          errorMessage: errorMessage || 'Failed to update profile due to parser error.',
-          error: userParseErrors,
-        });
-      }
-      const {
-        id,
-        phone_number,
-        name,
-        family_name,
-        given_name,
-        nickname,
-        picture,
-        preferred_username,
-        attributes,
-      } = parsedUserUpdate;
-      return this.context.client
-        .mutate({
-          mutation: UPDATE_USER_PROFILE,
-          variables: {
-            updateUserProfileInput: {
-              userId: id,
-              phone_number,
-              name,
-              family_name,
-              given_name,
-              nickname,
-              picture,
-              preferred_username,
-              attributes,
-            },
-          },
-          // refetch user query
-          // TODO: Apollo cache does not update if user is returned by mutation
-          // Maybe Apollo client V3 will fix this?
-          refetchQueries: [{ query: REFRESH_USER }],
-          awaitRefetchQueries: true,
-        })
-        .then(() => {
-          return { successMessage };
-        })
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to update profile.', error });
-    }
   }
 
   validate(blockId, successMessage, errorMessage) {
