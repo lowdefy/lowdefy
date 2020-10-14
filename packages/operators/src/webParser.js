@@ -114,10 +114,6 @@ function _args({ args, arrayIndices, location, params }) {
   return getFromObject(params, args, arrayIndices, '_args', location);
 }
 
-function _config({ arrayIndices, config, location, params }) {
-  return getFromObject(params, config, arrayIndices, '_config', location);
-}
-
 function _global({ arrayIndices, location, lowdefyGlobal, params }) {
   return getFromObject(params, lowdefyGlobal, arrayIndices, '_global', location);
 }
@@ -190,10 +186,6 @@ function _url_query({ arrayIndices, context, contexts, location, params, urlQuer
     });
   }
   return getFromObject(params, urlQuery, arrayIndices, '_url_query', location);
-}
-
-function _user({ params, user, arrayIndices, location }) {
-  return getFromObject(params, user, arrayIndices, '_user', location);
 }
 
 function _action_log({ params, actionLog, context, contexts, arrayIndices, location }) {
@@ -309,7 +301,6 @@ class WebParser {
       _action_log,
       _and,
       _args,
-      _config,
       _date,
       _dump_yaml,
       _eq,
@@ -337,7 +328,6 @@ class WebParser {
       _stringify,
       _type,
       _url_query,
-      _user,
     };
     this.operationList = Object.keys(this.operations);
   }
@@ -376,7 +366,6 @@ class WebParser {
                 params: value[op],
                 state: this.context.state,
                 urlQuery: this.context.urlQuery,
-                user: this.context.user,
               });
               return res;
             }

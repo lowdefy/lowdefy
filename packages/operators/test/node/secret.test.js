@@ -6,12 +6,11 @@ const secrets = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const args = {};
 
 test('_secret in object', () => {
   const input = { a: { _secret: 'string' } };
-  const parser = new NodeParser({ secrets, user });
+  const parser = new NodeParser({ secrets });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'Some String',
@@ -21,7 +20,7 @@ test('_secret in object', () => {
 
 test('_secret full secrets', () => {
   const input = { _secret: true };
-  const parser = new NodeParser({ secrets, user });
+  const parser = new NodeParser({ secrets });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(secrets);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -29,7 +28,7 @@ test('_secret full secrets', () => {
 
 test('_secret null', () => {
   const input = { _secret: null };
-  const parser = new NodeParser({ secrets, user });
+  const parser = new NodeParser({ secrets });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -47,7 +46,6 @@ test('_secret param object key', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('Some String');
@@ -62,7 +60,6 @@ test('_secret param object all', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(secrets);
@@ -78,7 +75,6 @@ test('_secret param object all and key', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(secrets);
@@ -93,7 +89,6 @@ test('_secret param object invalid', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -110,7 +105,6 @@ test('_secret param array', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -130,7 +124,6 @@ test('_secret param object with string default', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('defaultValue');
@@ -146,7 +139,6 @@ test('_secret param object with zero default', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(0);
@@ -162,7 +154,6 @@ test('_secret param object with false default', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(false);
@@ -177,7 +168,6 @@ test('_secret param object with no default', () => {
   };
   const parser = new NodeParser({
     secrets,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
