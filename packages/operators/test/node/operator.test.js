@@ -7,6 +7,16 @@ const state = {
 };
 const args = {};
 
+test('_operator, _state', () => {
+  const input = { a: { _operator: { name: '_state', params: 'string' } } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'Some String',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
 test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new NodeParser({ state });
@@ -50,7 +60,7 @@ test('_operator cannot be set to _operator', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [TypeError: Cannot read property 'name' of undefined],
+      [Error: Operator Error: _operator.name cannot be set to _operator to infinite avoid loop reference. Received: {"name":"_operator"} at locationId.],
     ]
   `);
 });

@@ -294,7 +294,7 @@ function _list_contexts({ contexts }) {
 }
 
 class WebParser {
-  constructor({ context, contexts } = {}) {
+  constructor({ context, contexts }) {
     this.context = context;
     this.contexts = contexts;
     this.operations = {
