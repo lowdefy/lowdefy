@@ -239,10 +239,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.3", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-2a079e8e0c/0/cache/@apollo-client-npm-3.2.3-91c8d42400-b610055677.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.4", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-3b7446b35c/0/cache/@apollo-client-npm-3.2.4-640a084312-e2f2971152.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.3"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.4"],
             ["@graphql-typed-document-node/core", "virtual:4a31236d6678acad10aab010f7684cb78a4bb6ca34e7d943d7ec3403081334a1a10fbb8b0b7747b7d271b18bf4c9ded3939f98230127bae79d178189411c196a#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -254,7 +254,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.3.0"],
             ["graphql-tag", "virtual:90d4a72924f341713b457eb175224e1ec0cb1cc17fae57e4425352a06b7bd1badc2992c0aaf430411c746462d51ce4afd9da56feea73b62dad7f9bec3f6bc226#npm:2.11.0"],
             ["hoist-non-react-statics", "npm:3.3.2"],
-            ["optimism", "npm:0.12.2"],
+            ["optimism", "npm:0.13.0"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.0-rc.3"],
             ["subscriptions-transport-ws", null],
@@ -3934,7 +3934,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.3"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.4"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -16793,6 +16793,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/optimism-npm-0.12.2-fc362d0a51-17f1af2ada.zip/node_modules/optimism/",
           "packageDependencies": [
             ["optimism", "npm:0.12.2"],
+            ["@wry/context", "npm:0.5.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.13.0", {
+          "packageLocation": "./.yarn/cache/optimism-npm-0.13.0-6be6efc6fd-ca8946d389.zip/node_modules/optimism/",
+          "packageDependencies": [
+            ["optimism", "npm:0.13.0"],
             ["@wry/context", "npm:0.5.2"]
           ],
           "linkType": "HARD",
