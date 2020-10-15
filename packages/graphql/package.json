@@ -30,7 +30,7 @@
   "dependencies": {
     "@lowdefy/get": "1.0.1",
     "@lowdefy/type": "1.0.1",
-    "apollo-server-core": "2.18.2",
+    "apollo-server": "2.18.2",
     "dataloader": "2.0.0",
     "graphql": "15.3.0",
     "graphql-type-json": "0.3.2"
@@ -44,6 +44,6 @@
     "babel-loader": "8.1.0",
     "jest": "26.5.3",
     "webpack": "5.1.0",
-    "webpack-cli": "3.3.12"
+    "webpack-cli": "4.0.0"
   }
 }

@@ -6,7 +6,6 @@ const state = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const input = {
   string: 'input String',
   number: 500,
@@ -15,7 +14,7 @@ const input = {
 
 test('_input in object', () => {
   const obj = { a: { _input: 'string' } };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'input String',
@@ -25,7 +24,7 @@ test('_input in object', () => {
 
 test('_input full input', () => {
   const obj = { _input: true };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(input);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -33,7 +32,7 @@ test('_input full input', () => {
 
 test('_input array', () => {
   const obj = { _input: 'arr' };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(input.arr);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -41,7 +40,7 @@ test('_input array', () => {
 
 test('_input null', () => {
   const obj = { _input: null };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -57,7 +56,7 @@ test('_input param object key', () => {
       key: 'string',
     },
   };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual('input String');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -69,7 +68,7 @@ test('_input param object all', () => {
       all: true,
     },
   };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(input);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -82,7 +81,7 @@ test('_input param object all and key', () => {
       key: 'string',
     },
   };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(input);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -94,7 +93,7 @@ test('_input param object invalid', () => {
       other: true,
     },
   };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -108,7 +107,7 @@ test('_input param array', () => {
   const obj = {
     _state: ['string'],
   };
-  const parser = new NodeParser({ state, user, input });
+  const parser = new NodeParser({ state, input });
   const res = parser.parse({ input: obj, location: 'locationId' });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`

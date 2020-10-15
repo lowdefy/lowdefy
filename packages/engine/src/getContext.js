@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { getFieldVales } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions';
@@ -29,7 +28,6 @@ const blockData = ({
   areas,
   blockId,
   blocks,
-  branch,
   defaultValue,
   field,
   id,
@@ -49,7 +47,6 @@ const blockData = ({
   areas,
   blockId,
   blocks,
-  branch,
   defaultValue,
   field,
   id,
@@ -73,7 +70,6 @@ const getContext = async ({ block, contextId, pageId, rootContext, message, noti
     rootContext.contexts[contextId].lowdefyGlobal = rootContext.lowdefyGlobal;
     rootContext.contexts[contextId].menus = rootContext.menus;
     rootContext.contexts[contextId].config = rootContext.config;
-    rootContext.contexts[contextId].user = rootContext.user;
     rootContext.contexts[contextId].update();
     return rootContext.contexts[contextId];
   }
@@ -85,22 +81,16 @@ const getContext = async ({ block, contextId, pageId, rootContext, message, noti
     id: contextId,
     pageId,
     actionLog: [],
-    appGraphql: rootContext.appGraphql,
     blockId: block.blockId,
-    branch: rootContext.branch,
     client: rootContext.client,
-    Components: rootContext.Components,
     config: rootContext.config,
     displayMessage: message,
-    displayNotification: notification,
     document: rootContext.document,
     input: rootContext.input[contextId] || {},
     allInputs: rootContext.input,
-    localStore: rootContext.localStore,
     lowdefyGlobal: rootContext.lowdefyGlobal,
     menus: rootContext.menus,
     mutations: {},
-    openidLogoutUrl: rootContext.openidLogoutUrl,
     requests: {},
     rootBlock: blockData(block), // filter block to prevent circular loop structure
     routeHistory: rootContext.routeHistory,
@@ -108,7 +98,6 @@ const getContext = async ({ block, contextId, pageId, rootContext, message, noti
     state: {},
     update: () => {}, // Initialize update since Requests/Mutations might call it during context creation
     urlQuery: rootContext.urlQuery,
-    user: rootContext.user,
     window: rootContext.window,
     updateListeners: new Set(),
   };

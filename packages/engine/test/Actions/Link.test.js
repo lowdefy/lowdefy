@@ -19,13 +19,11 @@ const window = {
   scrollTo: mockWindowScrollTo,
 };
 
-const branch = 'master';
 const openidLogoutUrl = 'logout';
 const pageId = 'one';
 const user = { firstName: 'ABC' };
 
 const rootContext = {
-  branch,
   client,
   // appGraphql,
   message,
@@ -300,7 +298,7 @@ test('Link with pageId and input', async () => {
   const { button } = context.RootBlocks.map;
   button.callAction({ action: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1']);
-  expect(context.allInputs['branch:page1:page1:{}']).toEqual({ data: 1 });
+  expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
 });
 
 test('Link with pageId and input and newWindow', async () => {
@@ -341,5 +339,5 @@ test('Link with pageId and input and newWindow', async () => {
   const { button } = context.RootBlocks.map;
   button.callAction({ action: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1', '_blank']]);
-  expect(context.allInputs['branch:page1:page1:{}']).toEqual({ data: 1 });
+  expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
 });

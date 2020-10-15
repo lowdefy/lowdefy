@@ -72,7 +72,6 @@ class Mutations {
             mutationId,
             args: serializer.serialize(args) || {},
             blockId: this.context.blockId,
-            branch: this.context.branch,
             input: serializer.serialize(this.context.input),
             lowdefyGlobal: serializer.serialize(this.context.lowdefyGlobal),
             pageId: this.context.pageId,

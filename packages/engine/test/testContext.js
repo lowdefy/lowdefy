@@ -13,7 +13,6 @@ const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlo
     actionLog: [],
     appGraphql: rootContext.appGraphql,
     blockId: rootBlock.blockId,
-    branch: 'branch',
     client: rootContext.client,
     Components: rootContext.Components || {},
     config: rootContext.config || {},

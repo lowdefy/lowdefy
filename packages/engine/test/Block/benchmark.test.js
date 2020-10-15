@@ -2,14 +2,11 @@
 import testContext from '../testContext';
 
 const NUM_TIMES = 10;
-const branch = 'master';
 const pageId = 'one';
 const client = { writeFragment: jest.fn() };
 
 const rootContext = {
-  branch,
   client,
-  window,
 };
 
 // eslint-disable-next-line consistent-return

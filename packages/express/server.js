@@ -35,6 +35,15 @@ const context = createContext(config);
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
 
-server.applyMiddleware({ app });
+server.applyMiddleware({ app, path: '/api/graphql' });
+
+// Serve Webpack shell files from './shell/dist'
 app.use(express.static('shell/dist'));
+
+// Redirect all 404 to index.html with status 200
+// This should always be the last route
+app.use((req, res) => {
+  res.sendFile(path.resolve(process.cwd(), 'shell/dist/index.html'));
+});
+
 app.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));

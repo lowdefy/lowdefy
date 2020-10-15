@@ -17,11 +17,18 @@
 import createGetController from './getController';
 import { bootstrapContext } from '../test/testContext';
 import { PageController } from '../controllers/pageController';
+import { ComponentController } from '../controllers/componentController';
 
 test('get page controller', () => {
   const getController = createGetController(bootstrapContext);
   const pageController = getController('page');
   expect(pageController).toBeInstanceOf(PageController);
+});
+
+test('get component controller', () => {
+  const getController = createGetController(bootstrapContext);
+  const componentController = getController('component');
+  expect(componentController).toBeInstanceOf(ComponentController);
 });
 
 test('memoise controller', () => {
