@@ -2926,7 +2926,7 @@ __metadata:
     express: 4.17.1
     graphql: 15.3.0
     html-webpack-plugin: 4.5.0
-    nodemon: 2.0.4
+    nodemon: 2.0.5
     react: 17.0.0-rc.3
     react-dom: 17.0.0-rc.3
     webpack: 5.1.0
@@ -13390,9 +13390,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nodemon@npm:2.0.4":
-  version: 2.0.4
-  resolution: "nodemon@npm:2.0.4"
+"nodemon@npm:2.0.5":
+  version: 2.0.5
+  resolution: "nodemon@npm:2.0.5"
   dependencies:
     chokidar: ^3.2.2
     debug: ^3.2.6
@@ -13402,11 +13402,11 @@ fsevents@^1.2.7:
     semver: ^5.7.1
     supports-color: ^5.5.0
     touch: ^3.1.0
-    undefsafe: ^2.0.2
-    update-notifier: ^4.0.0
+    undefsafe: ^2.0.3
+    update-notifier: ^4.1.0
   bin:
     nodemon: bin/nodemon.js
-  checksum: b5f32e7feea11cc2e3ae6603f2ed9229f3d13d01e0d7d54aab47d0dac3b5759b07a0f00d0a46de7379a8ca8e5705940508dee6d06e4a22b3f31c57ce52faa936
+  checksum: ffc5a1163b0ad993bacb15a2372f18d7c0287fc9a66ccc704a56fe4656911ca48609861a0403bd4aad5780eb4442954fc5b323cd438e654f70057f06e43baec3
   languageName: node
   linkType: hard
 
@@ -18441,7 +18441,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"undefsafe@npm:^2.0.2":
+"undefsafe@npm:^2.0.3":
   version: 2.0.3
   resolution: "undefsafe@npm:2.0.3"
   dependencies:
@@ -18677,7 +18677,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"update-notifier@npm:^4.0.0":
+"update-notifier@npm:^4.1.0":
   version: 4.1.3
   resolution: "update-notifier@npm:4.1.3"
   dependencies:
