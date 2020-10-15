@@ -31,7 +31,7 @@ const retryLink = new RetryLink();
 
 // TODO: make uri configurable
 const httpLink = new HttpLink({
-  uri: '/api/graphql',
+  uri: process.env.GRAPHQL_URI,
 });
 
 // TODO: Handle errors

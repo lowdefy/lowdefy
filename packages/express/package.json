@@ -34,7 +34,7 @@
     "apollo-server-express": "2.18.2",
     "express": "4.17.1",
     "graphql": "15.3.0",
-    "nodemon": "2.0.4",
+    "nodemon": "2.0.5",
     "react": "17.0.0-rc.3",
     "react-dom": "17.0.0-rc.3"
   },

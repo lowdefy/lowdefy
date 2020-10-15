@@ -3751,7 +3751,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.3.0"],
             ["html-webpack-plugin", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.5.0"],
-            ["nodemon", "npm:2.0.4"],
+            ["nodemon", "npm:2.0.5"],
             ["react", "npm:17.0.0-rc.3"],
             ["react-dom", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:17.0.0-rc.3"],
             ["style-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:2.0.0"],
@@ -9517,24 +9517,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0", {
-          "packageLocation": "./.yarn/$$virtual/debug-virtual-77b911398e/0/cache/debug-npm-3.1.0-9f0accb99b-1295acd5e0.zip/node_modules/debug/",
+        ["virtual:6270a546157caed63d8b56e4ed9791229a856613db952ee40c891e8f3ff27123192631c8ba52fb5e23b769858a587af9f365a84ad416052ef8b3d512477eaf57#npm:3.2.6", {
+          "packageLocation": "./.yarn/$$virtual/debug-virtual-a1981b7d13/0/cache/debug-npm-3.2.6-6214e40f12-619feb53b1.zip/node_modules/debug/",
           "packageDependencies": [
-            ["debug", "virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0"],
-            ["ms", "npm:2.0.0"],
-            ["supports-color", null]
+            ["debug", "virtual:6270a546157caed63d8b56e4ed9791229a856613db952ee40c891e8f3ff27123192631c8ba52fb5e23b769858a587af9f365a84ad416052ef8b3d512477eaf57#npm:3.2.6"],
+            ["ms", "npm:2.1.2"],
+            ["supports-color", "npm:5.5.0"]
           ],
           "packagePeers": [
             "supports-color"
           ],
           "linkType": "HARD",
         }],
-        ["virtual:6cfc557b1b3ed98544cad13ffd74462797496fe01d0dd9649602e1c1359d7df7fba294f2ac2939dc40ca1a1f18a3b7641601422c7b242c5785fec1a2e013a42b#npm:3.2.6", {
-          "packageLocation": "./.yarn/$$virtual/debug-virtual-041eb3a673/0/cache/debug-npm-3.2.6-6214e40f12-619feb53b1.zip/node_modules/debug/",
+        ["virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0", {
+          "packageLocation": "./.yarn/$$virtual/debug-virtual-77b911398e/0/cache/debug-npm-3.1.0-9f0accb99b-1295acd5e0.zip/node_modules/debug/",
           "packageDependencies": [
-            ["debug", "virtual:6cfc557b1b3ed98544cad13ffd74462797496fe01d0dd9649602e1c1359d7df7fba294f2ac2939dc40ca1a1f18a3b7641601422c7b242c5785fec1a2e013a42b#npm:3.2.6"],
-            ["ms", "npm:2.1.2"],
-            ["supports-color", "npm:5.5.0"]
+            ["debug", "virtual:6618ab6046111bda0b9a733e34fec5329265b155b4408a2345f36333ccbe1a86dfc9efc447e5134e4156dde98ed737f5efbe42b5378f22c09197bf46e2cdab17#npm:3.1.0"],
+            ["ms", "npm:2.0.0"],
+            ["supports-color", null]
           ],
           "packagePeers": [
             "supports-color"
@@ -16323,12 +16323,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["nodemon", [
-        ["npm:2.0.4", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.4-6cfc557b1b/node_modules/nodemon/",
+        ["npm:2.0.5", {
+          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.5-6270a54615/node_modules/nodemon/",
           "packageDependencies": [
-            ["nodemon", "npm:2.0.4"],
+            ["nodemon", "npm:2.0.5"],
             ["chokidar", "npm:3.4.3"],
-            ["debug", "virtual:6cfc557b1b3ed98544cad13ffd74462797496fe01d0dd9649602e1c1359d7df7fba294f2ac2939dc40ca1a1f18a3b7641601422c7b242c5785fec1a2e013a42b#npm:3.2.6"],
+            ["debug", "virtual:6270a546157caed63d8b56e4ed9791229a856613db952ee40c891e8f3ff27123192631c8ba52fb5e23b769858a587af9f365a84ad416052ef8b3d512477eaf57#npm:3.2.6"],
             ["ignore-by-default", "npm:1.0.1"],
             ["minimatch", "npm:3.0.4"],
             ["pstree.remy", "npm:1.1.8"],
