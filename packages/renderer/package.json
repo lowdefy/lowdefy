@@ -29,8 +29,8 @@
     "build": "webpack --config webpack.prod.js",
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn build",
-    "serve": "serve dist -p 3001",
-    "start": "webpack serve"
+    "start": "serve dist -p 3001",
+    "dev": "webpack serve --config webpack.dev.js"
   },
   "dependencies": {
     "@apollo/client": "3.2.4",
