@@ -30,6 +30,7 @@ const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlo
     showValidationErrors: false,
     state: initState || {},
     urlQuery: rootContext.urlQuery || {},
+    updateBlock: rootContext.updateBlock || (() => {}),
     window: rootContext.window,
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });

@@ -23,6 +23,7 @@ import get from '@lowdefy/get';
 
 import useGqlClient from './utils/graphql/useGqlClient';
 import Page from './page/Page';
+import createUpdateBlock from './page/block/updateBlock';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
@@ -99,6 +100,7 @@ const RootContext = ({ children, client }) => {
           error: (message) => console.log(message),
           success: (message) => console.log(message),
         },
+        updateBlock: createUpdateBlock(client),
         window: windowContext,
       })}
     </>

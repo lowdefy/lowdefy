@@ -97,6 +97,7 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests/Mutations might call it during context creation
+    updateBlock: rootContext.updateBlock,
     urlQuery: rootContext.urlQuery,
     window: rootContext.window,
     updateListeners: new Set(),
