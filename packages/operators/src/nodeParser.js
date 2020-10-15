@@ -67,10 +67,6 @@ function _args({ params, args, location }) {
   return getFromObject(params, args, '_args', location);
 }
 
-function _config({ params, config, location }) {
-  return getFromObject(params, config, '_config', location);
-}
-
 function _global({ params, lowdefyGlobal, location }) {
   return getFromObject(params, lowdefyGlobal, '_global', location);
 }
@@ -89,10 +85,6 @@ function _state({ params, state, location }) {
 
 function _url_query({ params, urlQuery, location }) {
   return getFromObject(params, urlQuery, '_url_query', location);
-}
-
-function _user({ params, user, location }) {
-  return getFromObject(params, user, '_user', location);
 }
 
 function _get({ params, location }) {
@@ -116,18 +108,16 @@ function _get({ params, location }) {
 }
 
 class NodeParser {
-  constructor({ config, input, lowdefyGlobal, secrets, state, urlQuery, user } = {}) {
+  constructor({ config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
     this.config = config;
     this.input = input;
     this.lowdefyGlobal = lowdefyGlobal;
     this.secrets = secrets;
     this.state = state;
     this.urlQuery = urlQuery;
-    this.user = user;
     this.operations = {
       _and,
       _args,
-      _config,
       _date,
       _dump_yaml,
       _eq,
@@ -150,7 +140,6 @@ class NodeParser {
       _stringify,
       _type,
       _url_query,
-      _user,
     };
     this.operationList = Object.keys(this.operations);
   }
@@ -184,7 +173,6 @@ class NodeParser {
                 secrets: this.secrets,
                 state: this.state,
                 urlQuery: this.urlQuery,
-                user: this.user,
               });
               return res;
             }

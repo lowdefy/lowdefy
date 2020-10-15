@@ -16,6 +16,11 @@
 
 import getFormatter from '../src/index';
 
+test('default formatter', () => {
+  const formatter = getFormatter();
+  expect(formatter('string')).toEqual('string');
+});
+
 test('Invalid formatter name', () => {
   expect(() => {
     getFormatter('invalid', {});

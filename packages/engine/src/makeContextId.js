@@ -17,17 +17,14 @@
 import type from '@lowdefy/type';
 import serializer from '@lowdefy/serializer';
 
-function makeContextId({ blockId, branch, pageId, urlQuery = {} }) {
+function makeContextId({ blockId, pageId, urlQuery = {} }) {
   if (!type.isString(blockId)) {
     throw new Error(`Expected string for parameter blockId, received ${blockId}`);
-  }
-  if (!type.isString(branch)) {
-    throw new Error(`Expected string for parameter branch, received ${branch}`);
   }
   if (!type.isString(pageId)) {
     throw new Error(`Expected string for parameter pageId, received ${pageId}`);
   }
-  return `${branch}:${pageId}:${blockId}:${serializer.serializeToString(urlQuery)}`;
+  return `${pageId}:${blockId}:${serializer.serializeToString(urlQuery)}`;
 }
 
 export default makeContextId;

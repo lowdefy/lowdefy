@@ -2,7 +2,6 @@
 import testContext from './testContext';
 
 const pageId = 'one';
-const branch = 'master';
 
 const mockLoadingCallback = jest.fn();
 const mockLoading = jest.fn(() => mockLoadingCallback);
@@ -35,7 +34,6 @@ const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
 const rootContext = {
-  branch,
   client,
   message,
 };

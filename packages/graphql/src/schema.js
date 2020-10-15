@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-import { gql } from 'apollo-server-core';
+import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   scalar JSON
