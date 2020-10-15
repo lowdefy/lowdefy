@@ -60,7 +60,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.3, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.2.4":
+  version: 3.2.4
+  resolution: "@apollo/client@npm:3.2.4"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.2.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.13.0
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    terser: ^5.2.0
+    ts-invariant: ^0.4.4
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: e2f29711525e7e20d29416866c3a91b0bd6b92afaae6e86fad929a9ab3ad30d915fcf2b561110e39294bef90146b26a3f72852fb4f404abf9d02a13bd9240c4f
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.3
   resolution: "@apollo/client@npm:3.2.3"
   dependencies:
@@ -3063,7 +3094,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.3
+    "@apollo/client": 3.2.4
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -13820,6 +13851,15 @@ fsevents@^1.2.7:
   dependencies:
     "@wry/context": ^0.5.2
   checksum: 17f1af2ada9b4848524cf05624766dbd2fd5bd8ad60ec0578a9d7f7137425b9f9adf9a524eab9a80da56da5a9fe4ca46659ebacd296e6c8ae58dba2fa9e98802
+  languageName: node
+  linkType: hard
+
+"optimism@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "optimism@npm:0.13.0"
+  dependencies:
+    "@wry/context": ^0.5.2
+  checksum: ca8946d38954b87bca7654f2ce132162e1941a19056be3c2871067498e0f9e65a1fcad600e5b04af3cce0841fbb3eaa160917d7c40d19f1234d6d7e4e58cb8f2
   languageName: node
   linkType: hard
 
