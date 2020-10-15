@@ -26,7 +26,7 @@ const Examples = () => (
     <Wrapper title="Spinner properties.height: 100 :">
       <Spinner properties={{ height: 100 }} />
     </Wrapper>
-    <Wrapper title="Spinner container style= height: 200 :" style={{ height: 200 }}>
+    <Wrapper title="Spinner container style= height: 500 :" style={{ height: 500 }}>
       <Spinner />
     </Wrapper>
     <Wrapper title="Spinner properties.message = loading">
