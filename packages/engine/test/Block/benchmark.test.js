@@ -7,7 +7,6 @@ const client = { writeFragment: jest.fn() };
 
 const rootContext = {
   client,
-  window,
 };
 
 // eslint-disable-next-line consistent-return

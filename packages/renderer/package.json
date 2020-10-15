@@ -25,6 +25,13 @@
   "files": [
     "dist/*"
   ],
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack --mode production",
+    "prepublishOnly": "yarn build",
+    "serve": "serve dist -p 3001",
+    "clean": "rm -rf dist"
+  },
   "dependencies": {
     "@apollo/client": "3.2.3",
     "@apollo/link-context": "2.0.0-beta.3",
@@ -53,14 +60,7 @@
     "serve": "11.3.2",
     "style-loader": "2.0.0",
     "webpack": "5.1.0",
-    "webpack-cli": "3.3.12",
+    "webpack-cli": "4.0.0",
     "webpack-dev-server": "3.11.0"
-  },
-  "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack --mode production",
-    "prepublishOnly": "yarn build",
-    "serve": "serve dist -p 3001",
-    "clean": "rm -rf dist"
   }
 }
