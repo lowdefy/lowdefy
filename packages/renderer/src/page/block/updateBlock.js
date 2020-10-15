@@ -14,24 +14,29 @@
    limitations under the License.
 */
 
-import swap from '../src/swap';
+import { gql } from '@apollo/client';
 
-test('swap', () => {
-  const arr = [0, 1, 2, 3, 4];
-  swap(arr, 2, 3);
-  expect(arr).toEqual([0, 1, 3, 2, 4]);
-});
+const SET_BLOCK_UPDATE_CACHE = gql`
+  fragment BlockClassFragment on BlockClass @client {
+    id
+    t
+  }
+`;
 
-test('swap out of bounds', () => {
-  const arr = [0, 1, 2, 3, 4];
-  swap(arr, -1, 3);
-  expect(arr).toEqual(arr);
-  swap(arr, 2, 8);
-  expect(arr).toEqual(arr);
-});
+const createUpdateBlock = (client) => {
+  const updateBlock = (blockId) => {
+    client.writeFragment({
+      id: `BlockClass:${blockId}`,
+      fragment: SET_BLOCK_UPDATE_CACHE,
+      data: {
+        id: blockId,
+        t: Date.now(),
+        __typename: 'BlockClass',
+      },
+    });
+  };
 
-test('not an array', () => {
-  const arr = 1;
-  swap(arr, 2, 3);
-  expect(arr).toEqual(1);
-});
+  return updateBlock;
+};
+
+export default createUpdateBlock;

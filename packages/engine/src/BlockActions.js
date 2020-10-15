@@ -15,15 +15,6 @@
 */
 
 import type from '@lowdefy/type';
-import gql from 'graphql-tag';
-
-const SET_BLOCK = gql`
-  fragment BlockClassActionsFragment on BlockClass @client {
-    id
-    actions
-    t
-  }
-`;
 
 class BlockActions {
   constructor({ arrayIndices, block, context }) {
@@ -36,7 +27,6 @@ class BlockActions {
     this.callAction = this.callAction.bind(this);
     this.createCall = this.createCall.bind(this);
     this.callRec = this.callRec.bind(this);
-    this.setBlockActionsCache = this.setBlockActionsCache.bind(this);
     this.registerAction = this.registerAction.bind(this);
 
     this.init();
@@ -114,7 +104,7 @@ class BlockActions {
       return Promise.resolve();
     }
     this.actions[actionName].loading = true;
-    this.setBlockActionsCache();
+    this.context.update(this.block.id);
     let loader = () => true;
     if (!hideLoading) {
       loader = this.context.displayMessage.loading('Loading...', 0);
@@ -142,6 +132,7 @@ class BlockActions {
         this.actions[actionName].loading = false;
         this.block.update = true;
         this.context.update();
+
         loader();
         return results;
       })
@@ -186,19 +177,6 @@ class BlockActions {
       call: this.createCall(actionDefinition),
       actionName,
     };
-  }
-
-  setBlockActionsCache() {
-    this.context.client.writeFragment({
-      id: `BlockClass:${this.block.id}`,
-      fragment: SET_BLOCK,
-      data: {
-        id: this.block.id,
-        actions: this.actions,
-        t: Date.now(),
-        __typename: 'BlockClass',
-      },
-    });
   }
 }
 

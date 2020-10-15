@@ -1,3 +1,19 @@
+/*
+   Copyright 2020 Lowdefy, Inc
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from '../src/Actions';
@@ -11,28 +27,26 @@ const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlo
     // id: contextId,
     pageId,
     actionLog: [],
-    appGraphql: rootContext.appGraphql,
     blockId: rootBlock.blockId,
-    client: rootContext.client,
-    Components: rootContext.Components || {},
-    config: rootContext.config || {},
-    displayMessage: rootContext.message,
-    displayNotification: rootContext.notification,
+    client: rootContext.client || {},
+    displayMessage: rootContext.displayMessage || {
+      loading: () => () => {},
+      error: () => {},
+      success: () => {},
+    },
     document: rootContext.document,
     input: rootContext.input || {},
     allInputs: {},
-    localStore: rootContext.localStore,
     lowdefyGlobal: initLowdefyGlobal || rootContext.lowdefyGlobal || {},
     menus: rootContext.menus,
     mutations: {},
-    openidLogoutUrl: rootContext.openidLogoutUrl,
     requests: {},
     rootBlock,
     routeHistory: [], // init new rootHistory for each test
     showValidationErrors: false,
     state: initState || {},
     urlQuery: rootContext.urlQuery || {},
-    user: rootContext.user || {},
+    updateBlock: rootContext.updateBlock || (() => {}),
     window: rootContext.window,
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });

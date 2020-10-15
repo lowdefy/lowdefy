@@ -28,6 +28,8 @@ const cache = new InMemoryCache({
   },
 });
 const retryLink = new RetryLink();
+
+// TODO: make uri configurable
 const httpLink = new HttpLink({
   uri: '/api/graphql',
 });

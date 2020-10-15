@@ -15,30 +15,7 @@
 */
 
 import { useEffect, useState } from 'react';
-// import { message, notification } from 'antd';
 import getContext from '@lowdefy/engine';
-
-// message.config({
-//   duration: 4,
-//   maxCount: 12,
-// });
-// notification.config({
-//   placement: 'bottomRight',
-//   bottom: 50,
-//   duration: 5,
-// });
-
-const message = {
-  loading: (message) => console.log(message),
-  error: (message) => console.log(message),
-  success: (message) => console.log(message),
-};
-
-const notification = {
-  loading: (message) => console.log(message),
-  error: (message) => console.log(message),
-  success: (message) => console.log(message),
-};
 
 const onEnter = (context) => {
   return context.RootBlocks.areas.root.blocks[0].callAction({
@@ -66,8 +43,6 @@ const useContext = ({ block, pageId, rootContext, contextId }) => {
           contextId,
           pageId,
           rootContext,
-          message,
-          notification,
         });
         if (mounted) await onEnter(ctx);
         if (mounted) {
