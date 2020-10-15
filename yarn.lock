@@ -3151,7 +3151,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.0
+    webpack: 5.1.1
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3227,7 +3227,7 @@ __metadata:
     react: 17.0.0-rc.3
     react-dom: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.0
+    webpack: 5.1.1
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.2.0
@@ -3278,7 +3278,7 @@ __metadata:
     graphql: 15.3.0
     graphql-type-json: 0.3.2
     jest: 26.5.3
-    webpack: 5.1.0
+    webpack: 5.1.1
     webpack-cli: 4.0.0
   languageName: unknown
   linkType: soft
@@ -3330,7 +3330,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.0
+    webpack: 5.1.1
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3417,7 +3417,7 @@ __metadata:
     react-router-dom: 5.2.0
     serve: 11.3.2
     style-loader: 2.0.0
-    webpack: 5.1.0
+    webpack: 5.1.1
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.2.0
@@ -18246,6 +18246,22 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"terser-webpack-plugin@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "terser-webpack-plugin@npm:5.0.0"
+  dependencies:
+    jest-worker: ^26.5.0
+    p-limit: ^3.0.2
+    schema-utils: ^3.0.0
+    serialize-javascript: ^5.0.1
+    source-map: ^0.6.1
+    terser: ^5.3.5
+  peerDependencies:
+    webpack: ^5.1.0
+  checksum: 806b5b9651ebb7893b093ca199b291350d1528fae5c3e7671a3b685810d6c3c6607d9bb0cb5950cb4dfdf013f5675a3849861fd352c653cc7644909a67f27c4b
+  languageName: node
+  linkType: hard
+
 "terser@npm:^4.6.3":
   version: 4.8.0
   resolution: "terser@npm:4.8.0"
@@ -18259,7 +18275,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"terser@npm:^5.2.0, terser@npm:^5.3.4":
+"terser@npm:^5.2.0, terser@npm:^5.3.4, terser@npm:^5.3.5":
   version: 5.3.5
   resolution: "terser@npm:5.3.5"
   dependencies:
@@ -19487,7 +19503,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:5.1.0":
+"webpack@npm:*":
   version: 5.1.0
   resolution: "webpack@npm:5.1.0"
   dependencies:
@@ -19521,6 +19537,43 @@ fsevents@^1.2.7:
   bin:
     webpack: bin/webpack.js
   checksum: dc7e609a542b5963e8b18b4627d1ef488bfda24bcaced74e8b3f305dce7864c840c01176fd6ef02f156f246fa6a39efdae147cbbd1e9af6bdd7ac7bfb03e9f70
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.1.1":
+  version: 5.1.1
+  resolution: "webpack@npm:5.1.1"
+  dependencies:
+    "@types/eslint-scope": ^3.7.0
+    "@types/estree": ^0.0.45
+    "@webassemblyjs/ast": 1.9.0
+    "@webassemblyjs/helper-module-context": 1.9.0
+    "@webassemblyjs/wasm-edit": 1.9.0
+    "@webassemblyjs/wasm-parser": 1.9.0
+    acorn: ^8.0.3
+    browserslist: ^4.14.3
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.2.0
+    eslint-scope: ^5.1.0
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.4
+    json-parse-better-errors: ^1.0.2
+    loader-runner: ^4.1.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    pkg-dir: ^4.2.0
+    schema-utils: ^3.0.0
+    tapable: ^2.0.0
+    terser-webpack-plugin: ^5.0.0
+    watchpack: ^2.0.0
+    webpack-sources: ^2.0.1
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: ./bin/webpack.js
+  checksum: 3c1b02fd990496be7e497b19399d2ba1ecbf7317709225d099dc3fde3cbac57c12946464c89fdb5c78656d03623405daedd4cf7aba49b6a53cc9c93aa0600710
   languageName: node
   linkType: hard
 
