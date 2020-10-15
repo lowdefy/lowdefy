@@ -49,15 +49,21 @@ const context = {
     string: 'urlQuery',
     arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
-  user: {
-    string: 'user',
-    arr: [{ a: 'user1' }, { a: 'user2' }],
-  },
 };
 
 const contexts = {};
 
 const arrayIndices = [1];
+
+test('_operator, _state', () => {
+  const input = { a: { _operator: { name: '_state', params: 'string' } } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({
+    a: 'state',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
 
 test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
@@ -102,7 +108,7 @@ test('_operator cannot be set to _operator', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [TypeError: Cannot read property 'name' of undefined],
+      [Error: Operator Error: _operator.name cannot be set to _operator to infinite avoid loop reference. Received: {"name":"_operator"} at locationId.],
     ]
   `);
 });

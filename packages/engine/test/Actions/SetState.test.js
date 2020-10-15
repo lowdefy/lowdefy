@@ -9,13 +9,11 @@ const mockMessageSuccess = jest.fn();
 const mockMessageError = jest.fn();
 const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
 
-const branch = 'master';
 const openidLogoutUrl = 'logout';
 const pageId = 'one';
 const user = { firstName: 'ABC' };
 
 const rootContext = {
-  branch,
   client,
   // appGraphql,
   message,

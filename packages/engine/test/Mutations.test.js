@@ -38,7 +38,6 @@ const rootBlock = {
 };
 
 const blockId = 'one';
-const branch = 'master';
 const input = {};
 const lowdefyGlobal = {};
 const pageId = 'one';
@@ -53,7 +52,6 @@ beforeEach(() => {
 test('callMutation', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -78,7 +76,6 @@ test('callMutation', async () => {
 test('callMutation error', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -111,7 +108,6 @@ test('callMutation error', async () => {
 test('callMutation that is not on root block', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -140,7 +136,6 @@ test('callMutation that is not on root block', async () => {
 test('callMutation on root block with no mutations', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -170,7 +165,6 @@ test('update function should be called', async () => {
   const updateFunction = jest.fn();
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,

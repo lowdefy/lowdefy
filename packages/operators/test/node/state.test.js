@@ -6,12 +6,11 @@ const state = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const args = {};
 
 test('_state in object', () => {
   const input = { a: { _state: 'string' } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'Some String',
@@ -21,7 +20,7 @@ test('_state in object', () => {
 
 test('_state full state', () => {
   const input = { _state: true };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(state);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -29,7 +28,7 @@ test('_state full state', () => {
 
 test('_state null', () => {
   const input = { _state: null };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -47,7 +46,6 @@ test('_state param object key', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('Some String');
@@ -62,7 +60,6 @@ test('_state param object all', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(state);
@@ -78,7 +75,6 @@ test('_state param object all and key', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(state);
@@ -93,7 +89,6 @@ test('_state param object invalid', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -110,7 +105,6 @@ test('_state param array', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -130,7 +124,6 @@ test('_state param object with string default', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('defaultValue');
@@ -146,7 +139,6 @@ test('_state param object with zero default', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(0);
@@ -162,7 +154,6 @@ test('_state param object with false default', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(false);
@@ -177,7 +168,6 @@ test('_state param object with no default', () => {
   };
   const parser = new NodeParser({
     state,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);

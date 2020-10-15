@@ -6,7 +6,6 @@ const state = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const args = {};
 
 test('_mql_aggregate sort', () => {
@@ -29,7 +28,7 @@ test('_mql_aggregate sort', () => {
       ],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual([
     {
@@ -57,7 +56,7 @@ test('_mql_aggregate on is object', () => {
       },
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual([
     {
@@ -88,7 +87,7 @@ test('_mql_aggregate group', () => {
       ],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual([
     {
@@ -113,7 +112,7 @@ test('_mql_aggregate empty pipeline', () => {
       ],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual([
     {
@@ -139,7 +138,7 @@ test('_mql_aggregate empty collection', () => {
       on: [],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual([]);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -158,7 +157,7 @@ test('_mql_aggregate on is string', () => {
       on: 'invalid',
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -188,7 +187,7 @@ test('_mql_aggregate invalid', () => {
       ],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -212,7 +211,7 @@ test('_mql_aggregate pipeline not an array', () => {
       ],
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -232,7 +231,7 @@ test('_mql_aggregate params not object', () => {
       },
     ],
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

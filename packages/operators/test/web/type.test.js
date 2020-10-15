@@ -51,10 +51,6 @@ const context = {
     string: 'urlQuery',
     arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
-  user: {
-    string: 'user',
-    arr: [{ a: 'user1' }, { a: 'user2' }],
-  },
 };
 
 const contexts = {};

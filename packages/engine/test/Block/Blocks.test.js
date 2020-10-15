@@ -7,12 +7,10 @@ import State from '../../src/State';
 
 import testContext from '../testContext';
 
-const branch = 'master';
 const pageId = 'one';
 const client = { writeFragment: jest.fn() };
 
 const rootContext = {
-  branch,
   client,
 };
 
@@ -53,7 +51,6 @@ test('set block to init', () => {
 // can't use testContext
 test('Blocks to init with no blocks passed', () => {
   const context = {
-    branch,
     client,
     pageId,
     state: { a: 'a' },
@@ -73,7 +70,6 @@ test('Blocks to init with no blocks passed', () => {
 // can't use testContext
 test('Blocks to init with arrayIndices not an array', () => {
   const context = {
-    branch,
     client,
     pageId,
     state: { textInput: 'a' },
@@ -116,7 +112,6 @@ test('Blocks to init with arrayIndices not an array', () => {
 
 test('Blocks to init with undefined arrayIndices', () => {
   const context = {
-    branch,
     client,
     pageId,
     state: { textInput: 'a' },

@@ -50,10 +50,6 @@ const context = {
     string: 'urlQuery',
     arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
-  user: {
-    string: 'user',
-    arr: [{ a: 'user1' }, { a: 'user2' }],
-  },
 };
 
 const contexts = {};
@@ -159,5 +155,13 @@ test('parse js dates, do not modify input', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(input).toEqual({ a: new Date(1) });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse location not specified', () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, arrayIndices });
+  expect(res.output).toEqual('state');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

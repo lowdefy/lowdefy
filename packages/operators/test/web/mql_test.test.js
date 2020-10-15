@@ -50,10 +50,6 @@ const context = {
     string: 'urlQuery',
     arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
-  user: {
-    string: 'user',
-    arr: [{ a: 'user1' }, { a: 'user2' }],
-  },
 };
 
 const contexts = {};
@@ -123,8 +119,8 @@ test('_mql_test null', () => {
 test('_mql_test object params', () => {
   const input = {
     _mql_test: {
-      test: { string: 'user' },
-      on: { _user: true },
+      test: { test: 'value' },
+      on: { test: 'value' },
     },
   };
   const parser = new WebParser({ context, contexts });
@@ -136,8 +132,7 @@ test('_mql_test object params', () => {
 test('_mql_test invalid params', () => {
   const input = {
     _mql_test: {
-      other: { string: 'user' },
-      on: { _user: true },
+      other: { test: 'value' },
     },
   };
   const parser = new WebParser({ context, contexts });
