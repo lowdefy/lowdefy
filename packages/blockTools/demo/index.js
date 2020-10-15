@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-import React from 'react';
 import { render } from 'react-dom';
+import IconSpinner from './IconSpinner';
+import React from 'react';
+import Skeleton from './Skeleton';
+import SkeletonAvatar from './SkeletonAvatar';
+import SkeletonButton from './SkeletonButton';
+import SkeletonInput from './SkeletonInput';
+import SkeletonParagraph from './SkeletonParagraph';
+import Spinner from './Spinner';
 
 import { makeCssClass, ErrorBoundary } from '../src';
-
-// eslint-disable-next-line no-undef
-const documentCtx = document;
 
 const ErrorComp = () => <div>{this.unknown}</div>;
 const FallbackComp = ({ name, error }) => (
@@ -43,15 +47,19 @@ const Demo = () => (
     <ErrorBoundary fallback={(error) => <FallbackComp name="Fallback test" error={error} />}>
       <ErrorComp />
     </ErrorBoundary>
-
     <div id="emotion" />
     <h4>{"makeCssClass({ color: 'red' })"} :</h4>
     <div className={makeCssClass({ color: 'red' })}>Red text</div>
-
-    <h4>Loading component :</h4>
+    <IconSpinner />
+    <Spinner />
+    <Skeleton />
+    <SkeletonAvatar />
+    <SkeletonButton />
+    <SkeletonInput />
+    <SkeletonParagraph />
   </div>
 );
 
 export default Demo;
 
-render(<Demo />, documentCtx.querySelector('#root'));
+render(<Demo />, document.querySelector('#root'));
