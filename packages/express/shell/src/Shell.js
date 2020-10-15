@@ -34,7 +34,7 @@ function Engine() {
   const Component = React.lazy(loadComponent('lowdefy_renderer', 'Renderer'));
 
   return (
-    <React.Suspense fallback="Loading Engine">
+    <React.Suspense fallback="Loading Renderer">
       <Component />
     </React.Suspense>
   );

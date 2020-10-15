@@ -29,7 +29,7 @@ const cache = new InMemoryCache({
 });
 const retryLink = new RetryLink();
 const httpLink = new HttpLink({
-  uri: '/graphql',
+  uri: '/api/graphql',
 });
 
 // TODO: Handle errors

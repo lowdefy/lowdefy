@@ -14,20 +14,9 @@
   limitations under the License.
 */
 
-import blockDefaults from './blockDefaults';
-import ErrorBoundary from './ErrorBoundary';
-import getEmotionCss from './getEmotionCss';
-import Loading from './Loading';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
-import useRunAfterUpdate from './useRunAfterUpdate';
+import React from 'react';
+import { blockDefaults } from '@lowdefy/block-tools';
 
-export {
-  blockDefaults,
-  ErrorBoundary,
-  getEmotionCss,
-  Loading,
-  makeCssClass,
-  mediaToCssObject,
-  useRunAfterUpdate,
-};
+const Defaults = ({ Component, render }) => render(blockDefaults(Component));
+
+export default Defaults;

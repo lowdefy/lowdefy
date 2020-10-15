@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import blockDefaults from './blockDefaults';
-import ErrorBoundary from './ErrorBoundary';
-import getEmotionCss from './getEmotionCss';
-import Loading from './Loading';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
-import useRunAfterUpdate from './useRunAfterUpdate';
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
-export {
-  blockDefaults,
-  ErrorBoundary,
-  getEmotionCss,
-  Loading,
-  makeCssClass,
-  mediaToCssObject,
-  useRunAfterUpdate,
+const BindHelmet = ({ pageProperties }) => {
+  return (
+    <Helmet>
+      <meta charSet="utf-8" />
+      <title>{pageProperties.title}</title>
+      <link
+        rel="shortcut icon"
+        href={
+          pageProperties.faviconPath
+            ? `%PUBLIC_URL%/${pageProperties.faviconPath}`
+            : '%PUBLIC_URL%/favicon.ico'
+        }
+      />
+    </Helmet>
+  );
 };
+
+export default BindHelmet;

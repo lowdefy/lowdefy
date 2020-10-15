@@ -6,11 +6,6 @@ const deps = require('./package.json').dependencies;
 
 module.exports = {
   entry: './shell/src/index',
-  mode: 'production',
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    port: 3003,
-  },
   output: {
     path: path.resolve(__dirname, 'shell/dist'),
   },

@@ -14,20 +14,26 @@
   limitations under the License.
 */
 
-import blockDefaults from './blockDefaults';
-import ErrorBoundary from './ErrorBoundary';
-import getEmotionCss from './getEmotionCss';
-import Loading from './Loading';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
-import useRunAfterUpdate from './useRunAfterUpdate';
+import React from 'react';
+import { Loading, makeCssClass } from '@lowdefy/block-tools';
 
-export {
-  blockDefaults,
-  ErrorBoundary,
-  getEmotionCss,
-  Loading,
-  makeCssClass,
-  mediaToCssObject,
-  useRunAfterUpdate,
+import useContext from './useContext';
+
+const Context = ({ block, contextId, pageId, render, rootContext }) => {
+  const { context, loading, error } = useContext({ block, pageId, rootContext, contextId });
+  if (loading) {
+    // TODO
+    return (
+      <Loading
+        meta={block.meta}
+        methods={{ makeCssClass }}
+        blockStyle={(block.eval && block.eval.style) || block.style}
+      />
+    );
+  }
+
+  if (error) throw error;
+  return render(context);
 };
+
+export default Context;

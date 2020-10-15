@@ -25,7 +25,7 @@ const defaultMethods = (methods) => ({
   ...methods,
 });
 
-const connectBlock = (Comp) => {
+const blockDefaults = (Comp) => {
   return ({
     actions,
     blockId,
@@ -53,4 +53,4 @@ const connectBlock = (Comp) => {
   );
 };
 
-export default connectBlock;
+export default blockDefaults;
