@@ -18,7 +18,10 @@
             "url": "http://localhost:3002/remoteEntry.js",
             "scope": "lowdefy_blocks_antd",
             "module": "Button",
-            "category": "display"
+            "category": "display",
+            "loading": {
+              "type": "SkeletonButton"
+            }
           },
           "type": "Button"
         }

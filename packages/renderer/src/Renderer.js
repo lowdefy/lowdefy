@@ -18,7 +18,7 @@ import React from 'react';
 import { BrowserRouter, Route, Redirect, Switch, useLocation } from 'react-router-dom';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 
-import { ErrorBoundary } from '@lowdefy/block-tools';
+import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import get from '@lowdefy/get';
 
 import useGqlClient from './utils/graphql/useGqlClient';
@@ -76,8 +76,8 @@ const GET_ROOT = gql`
 
 const RootContext = ({ children, client }) => {
   const { data, loading, error } = useQuery(GET_ROOT);
+  if (loading) return <Loading type="Spinner" properties={{ height: '100vh' }} />;
   if (error) return <h1>Error</h1>;
-  if (loading) return <h1>Loading Root Context</h1>;
 
   return (
     <>

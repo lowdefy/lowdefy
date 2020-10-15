@@ -15,6 +15,9 @@
 */
 
 import React, { lazy } from 'react';
+import { Loading } from '@lowdefy/block-tools';
+import get from '@lowdefy/get';
+
 import useDynamicScript from '../../utils/useDynamicScript';
 import loadComponent from '../../utils/loadComponent';
 
@@ -22,15 +25,17 @@ const Components = {};
 
 const LoadBlock = ({ meta, render }) => {
   const typeId = `${meta.scope}:${meta.module}`;
-  console.log('LoadBlock', meta);
   const { ready, failed } = useDynamicScript({
     url: meta.url,
   });
   if (!Components[typeId]) {
     if (!ready) {
-      return <h2>Loading dynamic script: {meta.url}</h2>;
+      return (
+        <Loading properties={get(meta, 'loading.properties')} type={get(meta, 'loading.type')} />
+      );
     }
     if (failed) {
+      // TODO
       return <h2>Failed to load dynamic script: {meta.url}</h2>;
     }
     Components[typeId] = lazy(loadComponent(meta.scope, meta.module));

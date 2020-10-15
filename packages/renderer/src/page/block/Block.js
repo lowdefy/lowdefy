@@ -17,6 +17,7 @@
 import React, { Suspense } from 'react';
 
 import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
+import get from '@lowdefy/get';
 
 import LoadBlock from './LoadBlock';
 import Defaults from './Defaults';
@@ -26,31 +27,35 @@ import WatchCache from './WatchCache';
 const Block = ({ block, Blocks, context, pageId, rootContext }) => {
   return (
     <ErrorBoundary>
-      <Suspense fallback={<Loading />}>
+      <Suspense
+        fallback={
+          <Loading
+            properties={get(block, 'meta.loading.properties')}
+            type={get(block, 'meta.loading.type')}
+          />
+        }
+      >
         <LoadBlock
           meta={block.meta}
           render={(Comp) => (
             <Defaults
               Component={Comp}
-              render={(CompWithDefaults) => {
-                console.log('block', context);
-                return (
-                  <WatchCache
-                    block={block}
-                    rootContext={rootContext}
-                    render={() => (
-                      <CategorySwitch
-                        Component={CompWithDefaults}
-                        block={block}
-                        Blocks={Blocks}
-                        context={context}
-                        pageId={pageId}
-                        rootContext={rootContext}
-                      />
-                    )}
-                  />
-                );
-              }}
+              render={(CompWithDefaults) => (
+                <WatchCache
+                  block={block}
+                  rootContext={rootContext}
+                  render={() => (
+                    <CategorySwitch
+                      Component={CompWithDefaults}
+                      block={block}
+                      Blocks={Blocks}
+                      context={context}
+                      pageId={pageId}
+                      rootContext={rootContext}
+                    />
+                  )}
+                />
+              )}
             />
           )}
         />

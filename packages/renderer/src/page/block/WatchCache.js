@@ -15,7 +15,9 @@
 */
 
 import React from 'react';
+import get from '@lowdefy/get';
 import { useQuery, gql } from '@apollo/client';
+import { Loading } from '@lowdefy/block-tools';
 
 const getBlock = gql`
   query getBlock($id: String!) {
@@ -27,7 +29,6 @@ const getBlock = gql`
 `;
 
 const WatchCache = ({ block, render, rootContext }) => {
-  console.log('watch', block);
   const { loading, error, data } = useQuery(getBlock, {
     variables: {
       id: `BlockClass:${block.id}`,
@@ -35,17 +36,15 @@ const WatchCache = ({ block, render, rootContext }) => {
     client: rootContext.client,
   });
 
-  if (loading) return 'Loading cache';
+  if (loading || get(data, 'block.loading'))
+    return (
+      <Loading
+        properties={get(block, 'meta.loading.properties')}
+        type={get(block, 'meta.loading.type')}
+      />
+    );
   if (error) throw error;
 
-  // // TODO: move to switch
-  // if (block.eval.visible === false)
-  //   return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
-  console.log(block.id, data);
-  if (data.block.loading) {
-    return 'Loading data.block.loading';
-  }
-  console.log('PASS');
   return render();
 };
 

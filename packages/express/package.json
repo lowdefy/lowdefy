@@ -26,9 +26,10 @@
     "clean": "rm -rf shell/dist",
     "prepublishOnly": "yarn build",
     "start": "nodemon server.js",
-    "dev": "webpack-dev-server --open --config webpack.dev.js"
+    "dev": "webpack serve --config webpack.dev.js"
   },
   "dependencies": {
+    "@lowdefy/block-tools": "1.0.1-experimental.1",
     "@lowdefy/graphql": "0.0.0-experimental.0",
     "apollo-server-express": "2.18.2",
     "express": "4.17.1",
@@ -42,7 +43,9 @@
     "@babel/preset-react": "7.10.4",
     "babel-loader": "8.1.0",
     "bundle-loader": "0.5.6",
+    "css-loader": "4.3.0",
     "html-webpack-plugin": "4.5.0",
+    "style-loader": "2.0.0",
     "webpack": "5.1.0",
     "webpack-cli": "4.0.0",
     "webpack-dev-server": "3.11.0",

@@ -43,8 +43,7 @@ const PageContext = ({ rootContext }) => {
     variables: { id: pageId },
   });
   if (loading) {
-    console.log('loading');
-    return <Loading />;
+    return <Loading type="Spinner" properties={{ height: '100vh' }} />;
   }
   // if (error) throw error;
   if (error) {
@@ -53,11 +52,9 @@ const PageContext = ({ rootContext }) => {
   }
   // redirect 404
   if (!data.page) return <Redirect to="/404" />;
-
   return (
     <>
       <Helmet pageProperties={get(data.page, 'properties', { default: {} })} />
-      <div>Hello</div>
       <div id={pageId}>
         <Context
           block={{
@@ -73,18 +70,15 @@ const PageContext = ({ rootContext }) => {
           contextId={`root:${pageId}`}
           pageId={pageId}
           rootContext={rootContext}
-          render={(context) => {
-            console.log('Page', context);
-            return (
-              <Block
-                block={context.RootBlocks.map[data.page.blockId]}
-                Blocks={context.RootBlocks}
-                context={context}
-                pageId={pageId}
-                rootContext={rootContext}
-              />
-            );
-          }}
+          render={(context) => (
+            <Block
+              block={context.RootBlocks.map[data.page.blockId]}
+              Blocks={context.RootBlocks}
+              context={context}
+              pageId={pageId}
+              rootContext={rootContext}
+            />
+          )}
         />
       </div>
     </>
