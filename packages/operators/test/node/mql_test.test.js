@@ -5,12 +5,11 @@ const state = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const args = {};
 
 test('_mql_test string equal', () => {
   const input = { _mql_test: { string: { $eq: 'Some String' } } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -18,7 +17,7 @@ test('_mql_test string equal', () => {
 
 test('_mql_test string equal shorthand', () => {
   const input = { _mql_test: { string: 'Some String' } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -26,7 +25,7 @@ test('_mql_test string equal shorthand', () => {
 
 test('_mql_test string not equal', () => {
   const input = { _mql_test: { string: 'Some Other String' } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -34,7 +33,7 @@ test('_mql_test string not equal', () => {
 
 test('_mql_test number equal', () => {
   const input = { _mql_test: { number: { $eq: 42 } } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -42,7 +41,7 @@ test('_mql_test number equal', () => {
 
 test('_mql_test number not equal', () => {
   const input = { _mql_test: { number: 'Some Other String' } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -50,7 +49,7 @@ test('_mql_test number not equal', () => {
 
 test('_mql_test number greater than', () => {
   const input = { _mql_test: { number: { $gt: 1 } } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -58,7 +57,7 @@ test('_mql_test number greater than', () => {
 
 test('_mql_test null', () => {
   const input = { _mql_test: null };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -71,11 +70,11 @@ test('_mql_test null', () => {
 test('_mql_test object params', () => {
   const input = {
     _mql_test: {
-      test: { firstName: 'Name' },
-      on: { _user: true },
+      test: { value: 'test' },
+      on: { value: 'test' },
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -84,11 +83,10 @@ test('_mql_test object params', () => {
 test('_mql_test invalid params', () => {
   const input = {
     _mql_test: {
-      other: { firstName: 'Name' },
-      on: { _user: true },
+      test: { value: 'test' },
     },
   };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -96,7 +94,7 @@ test('_mql_test invalid params', () => {
 
 test('_mql_test invalid test', () => {
   const input = { _mql_test: { string: { $badOp: 'Some String' } } };
-  const parser = new NodeParser({ state, user });
+  const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

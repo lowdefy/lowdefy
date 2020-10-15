@@ -1,12 +1,10 @@
 /* eslint-disable dot-notation */
 import testContext from '../testContext';
 
-const branch = 'master';
 const pageId = 'one';
 const client = { writeFragment: jest.fn() };
 
 const rootContext = {
-  branch,
   client,
 };
 
