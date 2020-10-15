@@ -8,11 +8,7 @@ import State from '../../src/State';
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('set block to init', () => {
   const rootBlock = {
@@ -51,10 +47,10 @@ test('set block to init', () => {
 // can't use testContext
 test('Blocks to init with no blocks passed', () => {
   const context = {
-    client,
     pageId,
     state: { a: 'a' },
     update: jest.fn(),
+    updateBlock: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });
@@ -70,10 +66,10 @@ test('Blocks to init with no blocks passed', () => {
 // can't use testContext
 test('Blocks to init with arrayIndices not an array', () => {
   const context = {
-    client,
     pageId,
     state: { textInput: 'a' },
     update: jest.fn(),
+    updateBlock: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });
@@ -110,12 +106,13 @@ test('Blocks to init with arrayIndices not an array', () => {
   expect(context.state).toEqual({ textInput: 'a' });
 });
 
+// can't use testContext
 test('Blocks to init with undefined arrayIndices', () => {
   const context = {
-    client,
     pageId,
     state: { textInput: 'a' },
     update: jest.fn(),
+    updateBlock: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });

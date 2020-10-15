@@ -2,11 +2,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('parse block visible', () => {
   const rootBlock = {

@@ -63,7 +63,7 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ block, contextId, pageId, rootContext, message, notification }) => {
+const getContext = async ({ block, contextId, pageId, rootContext }) => {
   if (rootContext.contexts[contextId]) {
     rootContext.contexts[contextId].input = rootContext.input[contextId] || {};
     rootContext.contexts[contextId].urlQuery = rootContext.urlQuery;
@@ -84,7 +84,7 @@ const getContext = async ({ block, contextId, pageId, rootContext, message, noti
     blockId: block.blockId,
     client: rootContext.client,
     config: rootContext.config,
-    displayMessage: message,
+    displayMessage: rootContext.displayMessage,
     document: rootContext.document,
     input: rootContext.input[contextId] || {},
     allInputs: rootContext.input,

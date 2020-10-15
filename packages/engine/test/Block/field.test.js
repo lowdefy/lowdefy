@@ -1,11 +1,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('set value to block field', () => {
   const rootBlock = {

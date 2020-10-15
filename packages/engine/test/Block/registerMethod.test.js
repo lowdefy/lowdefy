@@ -1,11 +1,8 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
 
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('registerMethod adds a method to RootBlocks.methods', () => {
   const rootBlock = {

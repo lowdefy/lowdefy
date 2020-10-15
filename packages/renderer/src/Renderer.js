@@ -84,11 +84,21 @@ const RootContext = ({ children, client }) => {
         client,
         Components,
         contexts,
+        document: documentContext,
+        homePageId: get(data, 'menu.homePageId'),
         input,
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
-        homePageId: get(data, 'menu.homePageId'),
-        document: documentContext,
+        displayMessage: {
+          loading: (message) => {
+            console.log('Start loading', message);
+            return () => {
+              console.log('End loading');
+            };
+          },
+          error: (message) => console.log(message),
+          success: (message) => console.log(message),
+        },
         window: windowContext,
       })}
     </>

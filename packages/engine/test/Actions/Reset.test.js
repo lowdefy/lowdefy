@@ -36,24 +36,12 @@ const mockQueryImp = ({ variables }) => {
 
 const client = {
   query: mockQuery,
-  writeFragment: jest.fn(),
 };
 
-// Mock message
-const mockMessageSuccess = jest.fn();
-const mockMessageError = jest.fn();
-const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
-
-const openidLogoutUrl = 'logout';
 const pageId = 'one';
-const user = { firstName: 'ABC' };
 
 const rootContext = {
   client,
-  message,
-  document,
-  openidLogoutUrl,
-  user,
 };
 
 beforeEach(() => {

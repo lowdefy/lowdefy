@@ -1,11 +1,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('list block no init', () => {
   const rootBlock = {

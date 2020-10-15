@@ -8,7 +8,7 @@ const mockLoading = jest.fn(() => mockLoadingCallback);
 const mockSuccess = jest.fn();
 const mockError = jest.fn();
 
-const message = {
+const displayMessage = {
   loading: mockLoading,
   error: mockError,
   success: mockSuccess,
@@ -25,7 +25,6 @@ const mockMutateImp = ({ mutationId }) => {
 const mockMutate = jest.fn();
 
 const client = {
-  writeFragment: jest.fn(),
   mutate: mockMutate,
 };
 
@@ -35,7 +34,7 @@ mockDate.now = jest.fn(() => 0);
 
 const rootContext = {
   client,
-  message,
+  displayMessage,
 };
 
 beforeEach(() => {

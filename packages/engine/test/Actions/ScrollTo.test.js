@@ -1,9 +1,5 @@
 import testContext from '../testContext';
 
-const client = {
-  writeFragment: jest.fn(),
-};
-
 // Mock document
 const mockDocGetElementById = jest.fn();
 const mockElemScrollIntoView = jest.fn();
@@ -14,11 +10,6 @@ const mockDocGetElementByIdImp = (id) => {
   return { id, scrollIntoView: mockElemScrollIntoView };
 };
 
-// Mock message
-const mockMessageSuccess = jest.fn();
-const mockMessageError = jest.fn();
-const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
-
 // Mock window
 const mockWindowFocus = jest.fn();
 const mockWindowOpen = jest.fn(() => ({ focus: mockWindowFocus }));
@@ -28,18 +19,10 @@ const window = {
   open: mockWindowOpen,
   scrollTo: mockWindowScrollTo,
 };
-
-const openidLogoutUrl = 'logout';
 const pageId = 'one';
-const user = { firstName: 'ABC' };
 
 const rootContext = {
-  client,
-  // appGraphql,
-  message,
   document,
-  openidLogoutUrl,
-  user,
   window,
 };
 

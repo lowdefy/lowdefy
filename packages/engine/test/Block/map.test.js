@@ -2,11 +2,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 test('all nested blocks present in map', () => {
   const rootBlock = {

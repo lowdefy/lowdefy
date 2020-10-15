@@ -3,11 +3,7 @@ import testContext from '../testContext';
 
 const NUM_TIMES = 10;
 const pageId = 'one';
-const client = { writeFragment: jest.fn() };
-
-const rootContext = {
-  client,
-};
+const rootContext = {};
 
 // eslint-disable-next-line consistent-return
 const runTests = ({ times, results = [], fn }) => {
