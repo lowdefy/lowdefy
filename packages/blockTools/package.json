@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "start": "webpack serve",
-    "build": "babel src --out-dir dist",
+    "build": "babel src --copy-files --out-dir dist",
     "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
