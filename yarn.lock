@@ -2907,8 +2907,6 @@ __metadata:
     "@lowdefy/set": 1.0.1
     "@lowdefy/type": 1.0.1
     babel-jest: 26.5.2
-    graphql: 15.3.0
-    graphql-tag: 2.11.0
     jest: 26.5.3
   languageName: unknown
   linkType: soft
@@ -9720,7 +9718,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:2.11.0, graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.9.2":
+"graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.9.2":
   version: 2.11.0
   resolution: "graphql-tag@npm:2.11.0"
   peerDependencies:
