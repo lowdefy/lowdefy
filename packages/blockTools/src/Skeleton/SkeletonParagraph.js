@@ -16,15 +16,25 @@
 
 import React from 'react';
 import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+import Skeleton from './Skeleton';
 
-const Skeleton = ({ properties, methods }) => {
+const SkeletonParagraph = ({ properties, methods }) => {
+  const lines = [...Array(properties.lines || 4).keys()];
   return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
+    <div style={{ width: properties.width || '100%' }}>
+      {lines.map((key) => (
+        <Skeleton
+          key={key}
+          methods={methods}
+          properties={{
+            height: '1.25rem',
+            width: key === lines.length - 1 && key !== 0 ? '40%' : '100%',
+            style: { marginBottom: '1rem' },
+          }}
+        />
+      ))}
+    </div>
   );
 };
 
-export default blockDefaults(Skeleton);
+export default blockDefaults(SkeletonParagraph);

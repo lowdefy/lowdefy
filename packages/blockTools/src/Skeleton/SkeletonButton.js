@@ -16,15 +16,30 @@
 
 import React from 'react';
 import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+import Skeleton from './Skeleton';
 
-const Skeleton = ({ properties, methods }) => {
+const SkeletonButton = ({ properties, methods }) => {
+  let height = properties.height || 32;
+  switch (properties.size) {
+    case 'small':
+      height = 24;
+      break;
+    case 'large':
+      height = 40;
+      break;
+    default:
+      height = 32;
+  }
   return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
+    <Skeleton
+      methods={methods}
+      properties={{
+        style: { borderRadius: properties.shape === 'round' && height / 2 },
+        width: properties.width || '100%',
+        height: height,
+      }}
+    />
   );
 };
 
-export default blockDefaults(Skeleton);
+export default blockDefaults(SkeletonButton);

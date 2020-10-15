@@ -15,16 +15,21 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+import Wrapper from './Wrapper';
+import { Skeleton } from '../src';
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
-};
+const Examples = () => (
+  <>
+    <Wrapper title={'Skeleton'}>
+      <Skeleton />
+    </Wrapper>
+    <Wrapper title={'Skeleton container height=20'} style={{ height: 20 }}>
+      <Skeleton />
+    </Wrapper>
+    <Wrapper title={'Skeleton container height=40 width=100'} style={{ height: 40, width: 100 }}>
+      <Skeleton />
+    </Wrapper>
+  </>
+);
 
-export default blockDefaults(Skeleton);
+export default Examples;

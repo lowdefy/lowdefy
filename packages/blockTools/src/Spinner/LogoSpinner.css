@@ -14,17 +14,30 @@
   limitations under the License.
 */
 
-import React from 'react';
-import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+.loading-bar {
+  animation: loading-bar-morph 0.5s linear alternate 0s infinite;
+  transform-origin: bottom;
+}
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
-};
+@keyframes loading-bar-morph {
+  0% {
+    transform: scaleY(0.6);
+  }
+  100% {
+    transform: scaleY(0.95) translateY(5%);
+  }
+}
 
-export default blockDefaults(Skeleton);
+.loading-bar-sm {
+  animation: loading-bar-morph-sm 0.5s linear alternate 0s infinite;
+  transform-origin: bottom;
+}
+
+@keyframes loading-bar-morph-sm {
+  0% {
+    transform: scaleY(1.4) translateY(5%);
+  }
+  100% {
+    transform: scaleY(0.9);
+  }
+}

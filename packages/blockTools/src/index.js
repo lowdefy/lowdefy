@@ -16,9 +16,28 @@
 
 import blockDefaults from './blockDefaults';
 import ErrorBoundary from './ErrorBoundary';
-import Loading from './Loading/Loading';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
+import IconSpinner from './Spinner/IconSpinner';
+import Skeleton from './Skeleton/Skeleton';
+import SkeletonAvatar from './Skeleton/SkeletonAvatar';
+import SkeletonButton from './Skeleton/SkeletonButton';
+import SkeletonInput from './Skeleton/SkeletonInput';
+import SkeletonParagraph from './Skeleton/SkeletonParagraph';
+import Spinner from './Spinner/Spinner';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
-export { blockDefaults, ErrorBoundary, Loading, makeCssClass, mediaToCssObject, useRunAfterUpdate };
+export {
+  blockDefaults,
+  ErrorBoundary,
+  IconSpinner,
+  makeCssClass,
+  mediaToCssObject,
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+  SkeletonParagraph,
+  Spinner,
+  useRunAfterUpdate,
+};

@@ -15,16 +15,24 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+import { IconSpinner } from '../src';
+import Wrapper from './Wrapper';
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
-};
+const Examples = () => (
+  <>
+    <Wrapper title="IconSpinner :">
+      <IconSpinner />
+    </Wrapper>
+    <Wrapper title="IconSpinner size default:">
+      <IconSpinner properties={{ size: 'default' }} />
+    </Wrapper>
+    <Wrapper title="IconSpinner size small:">
+      <IconSpinner properties={{ size: 'small' }} />
+    </Wrapper>
+    <Wrapper title="IconSpinner size large:">
+      <IconSpinner properties={{ size: 'large' }} />
+    </Wrapper>
+  </>
+);
 
-export default blockDefaults(Skeleton);
+export default Examples;

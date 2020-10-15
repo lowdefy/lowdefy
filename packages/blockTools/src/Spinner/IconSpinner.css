@@ -14,17 +14,16 @@
   limitations under the License.
 */
 
-import React from 'react';
-import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+.icon-spinner {
+  animation: spin-animation 1s infinite linear;
+  display: inline-block;
+}
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
-};
-
-export default blockDefaults(Skeleton);
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}

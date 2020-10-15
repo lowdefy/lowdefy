@@ -15,16 +15,34 @@
 */
 
 import React from 'react';
+import type from '@lowdefy/type';
 import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+import Skeleton from './Skeleton';
 
-const Skeleton = ({ properties, methods }) => {
+const SkeletonAvatar = ({ properties, methods }) => {
+  let size = properties.size || 32;
+  if (type.isString(size)) {
+    switch (properties.size) {
+      case 'small':
+        size = 24;
+        break;
+      case 'large':
+        size = 40;
+        break;
+      default:
+        size = 32;
+    }
+  }
   return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
+    <Skeleton
+      methods={methods}
+      properties={{
+        style: { borderRadius: properties.shape === 'square' ? '0' : size / 2 },
+        width: size,
+        height: size,
+      }}
+    />
   );
 };
 
-export default blockDefaults(Skeleton);
+export default blockDefaults(SkeletonAvatar);

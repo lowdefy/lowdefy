@@ -3650,6 +3650,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:73f25cc0d3f57943fa9b1d737e4809af7a52a784e0ac5fed74b4e1e083308ab7ae2fd45a5424a8bc7ff7caab067690c9357630d657cbd636d6037acc1557fdc2#npm:7.11.5"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.10.4"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@lowdefy/type", "workspace:packages/type"],
             ["babel-jest", "virtual:60db6f885fdb292d52f611575208c6b51b9a272733d90fe8edc7853309da56cfe1d45553d3d82ff571709e87d3dd377b35bef19a5ed1bf366956f0c695b30f9d#npm:26.5.2"],
             ["babel-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:8.1.0"],
             ["babel-plugin-import", "npm:1.13.1"],

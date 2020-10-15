@@ -14,17 +14,31 @@
   limitations under the License.
 */
 
-import React from 'react';
-import blockDefaults from '../blockDefaults';
-import './Skeleton.css';
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #f1f1f1;
+}
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
-};
+.skeleton::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -100%;
+  max-width: 600px;
+  top: 0;
+  height: 200%;
+  width: 100%;
+  background: linear-gradient(to right, transparent 0%, #eaeaea 50%, transparent 100%);
+  animation: load 1.8s infinite;
+  /* transform: rotate(45deg); */
+}
 
-export default blockDefaults(Skeleton);
+@keyframes load {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 100%;
+  }
+}
