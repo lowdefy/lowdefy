@@ -15,22 +15,20 @@
 */
 
 import React from 'react';
-import { Loading, makeCssClass } from '@lowdefy/block-tools';
+import { Loading } from '@lowdefy/block-tools';
+import get from '@lowdefy/get';
 
 import useContext from './useContext';
 
 const Context = ({ block, contextId, pageId, render, rootContext }) => {
   const { context, loading, error } = useContext({ block, pageId, rootContext, contextId });
-  if (loading) {
-    // TODO
+  if (loading)
     return (
       <Loading
-        meta={block.meta}
-        methods={{ makeCssClass }}
-        blockStyle={(block.eval && block.eval.style) || block.style}
+        properties={get(block, 'meta.loading.properties')}
+        type={get(block, 'meta.loading.type')}
       />
     );
-  }
 
   if (error) throw error;
   return render(context);

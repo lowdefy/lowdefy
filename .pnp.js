@@ -5006,16 +5006,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/express", "workspace:packages/express"],
             ["@babel/core", "npm:7.12.0"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.10.4"],
+            ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["@lowdefy/graphql", "workspace:packages/graphql"],
             ["apollo-server-express", "virtual:b48bfc75325537b9d641f357739049b25dac71eb86a05d5744ecd259c67ce3d1110d501b0f5cd21b669aa2cda1c9f77cfe9c3e49e1202cba9683bd40f09e88bb#npm:2.18.2"],
             ["babel-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:8.1.0"],
             ["bundle-loader", "npm:0.5.6"],
+            ["css-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.3.0"],
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.3.0"],
             ["html-webpack-plugin", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.5.0"],
             ["nodemon", "npm:2.0.5"],
             ["react", "npm:17.0.0-rc.3"],
             ["react-dom", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:17.0.0-rc.3"],
+            ["style-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:2.0.0"],
             ["webpack", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:5.1.0"],
             ["webpack-cli", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.0.0"],
             ["webpack-dev-server", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:3.11.0"],
@@ -10614,6 +10617,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["schema-utils", "npm:2.7.1"],
             ["semver", "npm:7.3.2"],
             ["webpack", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.1.0"]
+          ],
+          "packagePeers": [
+            "@types/webpack",
+            "webpack"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.3.0", {
+          "packageLocation": "./.yarn/$$virtual/css-loader-virtual-ba715e2171/0/cache/css-loader-npm-4.3.0-33464197c9-1f441ac567.zip/node_modules/css-loader/",
+          "packageDependencies": [
+            ["css-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:4.3.0"],
+            ["@types/webpack", null],
+            ["camelcase", "npm:6.1.0"],
+            ["cssesc", "npm:3.0.0"],
+            ["icss-utils", "npm:4.1.1"],
+            ["loader-utils", "npm:2.0.0"],
+            ["postcss", "npm:7.0.35"],
+            ["postcss-modules-extract-imports", "npm:2.0.0"],
+            ["postcss-modules-local-by-default", "npm:3.0.3"],
+            ["postcss-modules-scope", "npm:2.2.0"],
+            ["postcss-modules-values", "npm:3.0.0"],
+            ["postcss-value-parser", "npm:4.1.0"],
+            ["schema-utils", "npm:2.7.1"],
+            ["semver", "npm:7.3.2"],
+            ["webpack", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:5.1.0"]
           ],
           "packagePeers": [
             "@types/webpack",
@@ -22657,6 +22685,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["loader-utils", "npm:2.0.0"],
             ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.1.0"]
+          ],
+          "packagePeers": [
+            "@types/webpack",
+            "webpack"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:2.0.0", {
+          "packageLocation": "./.yarn/$$virtual/style-loader-virtual-868b905861/0/cache/style-loader-npm-2.0.0-b9a5c4a2aa-ffc3054882.zip/node_modules/style-loader/",
+          "packageDependencies": [
+            ["style-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:2.0.0"],
+            ["@types/webpack", null],
+            ["loader-utils", "npm:2.0.0"],
+            ["schema-utils", "npm:3.0.0"],
+            ["webpack", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:5.1.0"]
           ],
           "packagePeers": [
             "@types/webpack",

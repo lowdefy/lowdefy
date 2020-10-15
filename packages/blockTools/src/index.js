@@ -19,6 +19,7 @@ import ErrorBoundary from './ErrorBoundary';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import IconSpinner from './Spinner/IconSpinner';
+import Loading from './Loading';
 import Skeleton from './Skeleton/Skeleton';
 import SkeletonAvatar from './Skeleton/SkeletonAvatar';
 import SkeletonButton from './Skeleton/SkeletonButton';
@@ -31,6 +32,7 @@ export {
   blockDefaults,
   ErrorBoundary,
   IconSpinner,
+  Loading,
   makeCssClass,
   mediaToCssObject,
   Skeleton,

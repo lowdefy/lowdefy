@@ -24,6 +24,9 @@ import Context from './Context';
 import List from './List';
 
 const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext }) => {
+  if (block.eval.visible === false)
+    return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
+
   switch (block.meta.category) {
     case 'context':
       return (

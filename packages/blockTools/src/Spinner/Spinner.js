@@ -34,9 +34,11 @@ const Loading = ({ properties, methods }) => {
           color={properties.color}
           barColor={properties.barColor || (properties.shaded === true ? '#f1f1f1' : '#fff')}
         />
-        <div className={methods.makeCssClass([{ textAlign: 'center' }, properties.style])}>
-          {properties.message}
-        </div>
+        {properties.message && (
+          <div className={methods.makeCssClass([{ textAlign: 'center' }, properties.style])}>
+            {properties.message}
+          </div>
+        )}
       </div>
     </div>
   );
