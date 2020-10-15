@@ -26,12 +26,13 @@
     "dist/*"
   ],
   "scripts": {
-    "start": "webpack serve",
     "build": "babel src --copy-files --out-dir dist",
-    "test": "jest --coverage",
+    "dev": "webpack serve",
+    "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "npm-publish": "npm publish --access public"
+    "start": "webpack serve",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.0.0",
