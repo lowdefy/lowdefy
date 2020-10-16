@@ -41,10 +41,10 @@
     "react-dom": "17.0.0-rc.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.0",
-    "@babel/core": "7.12.0",
-    "@babel/preset-env": "7.12.0",
-    "@babel/preset-react": "7.10.4",
+    "@babel/cli": "7.12.1",
+    "@babel/core": "7.12.1",
+    "@babel/preset-env": "7.12.1",
+    "@babel/preset-react": "7.12.1",
     "@lowdefy/block-tools": "1.0.1-experimental.1",
     "babel-jest": "26.5.2",
     "babel-loader": "8.1.0",
