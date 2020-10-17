@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-import serializer from '@lowdefy/serializer';
+import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Blocks from '../../src/Blocks';

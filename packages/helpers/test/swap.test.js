@@ -14,15 +14,24 @@
   limitations under the License.
 */
 
-// engine
+import swap from '../src/swap';
 
-import type from '@lowdefy/type';
+test('swap', () => {
+  const arr = [0, 1, 2, 3, 4];
+  swap(arr, 2, 3);
+  expect(arr).toEqual([0, 1, 3, 2, 4]);
+});
 
-const swap = (arr, from, to) => {
-  if (!type.isArray(arr) || from < 0 || to < 0 || from >= arr.length || to >= arr.length) {
-    return;
-  }
-  arr.splice(from, 1, arr.splice(to, 1, arr[from])[0]);
-};
+test('swap out of bounds', () => {
+  const arr = [0, 1, 2, 3, 4];
+  swap(arr, -1, 3);
+  expect(arr).toEqual(arr);
+  swap(arr, 2, 8);
+  expect(arr).toEqual(arr);
+});
 
-export default swap;
+test('not an array', () => {
+  const arr = 1;
+  swap(arr, 2, 3);
+  expect(arr).toEqual(1);
+});

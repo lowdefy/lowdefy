@@ -21,8 +21,7 @@ import { useParams, useHistory, useLocation, Redirect } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
 import { Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
-import { urlQuery } from '@lowdefy/helpers';
+import { get, urlQuery } from '@lowdefy/helpers';
 
 import Helmet from './Helmet';
 import Block from './block/Block';

@@ -16,9 +16,7 @@
   limitations under the License.
 */
 
-import get from '@lowdefy/get';
-import serializer from '@lowdefy/serializer';
-import type from '@lowdefy/type';
+import { get, serializer, type } from '@lowdefy/helpers';
 
 import {
   _and,

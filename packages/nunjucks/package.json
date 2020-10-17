@@ -30,7 +30,7 @@
     "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "@lowdefy/type": "1.0.1",
+    "@lowdefy/helpers": "1.1.0",
     "nunjucks": "3.2.2",
     "nunjucks-date-filter": "0.1.1"
   },

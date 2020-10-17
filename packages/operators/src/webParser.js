@@ -16,10 +16,7 @@
   limitations under the License.
 */
 
-import get from '@lowdefy/get';
-import { applyArrayIndices } from '@lowdefy/helpers';
-import serializer from '@lowdefy/serializer';
-import type from '@lowdefy/type';
+import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 import {
   _and,

@@ -16,7 +16,7 @@
 
 import React, { lazy } from 'react';
 import { Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
+import { get } from '@lowdefy/helpers';
 
 import useDynamicScript from '../../utils/useDynamicScript';
 import loadComponent from '../../utils/loadComponent';

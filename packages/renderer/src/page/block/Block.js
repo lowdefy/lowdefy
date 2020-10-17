@@ -17,7 +17,7 @@
 import React, { Suspense } from 'react';
 
 import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
+import { get } from '@lowdefy/helpers';
 
 import LoadBlock from './LoadBlock';
 import Defaults from './Defaults';
