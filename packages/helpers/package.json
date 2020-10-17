@@ -30,9 +30,6 @@
     "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "@lowdefy/delete": "1.0.1",
-    "@lowdefy/serializer": "1.0.0",
-    "@lowdefy/type": "1.0.1",
     "lodash.merge": "4.6.2",
     "query-string": "6.13.5"
   },
@@ -41,6 +38,7 @@
     "@babel/core": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "babel-jest": "26.5.2",
-    "jest": "26.5.3"
+    "jest": "26.5.3",
+    "jest-diff": "26.5.2"
   }
 }

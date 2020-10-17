@@ -19,6 +19,7 @@
   limitations under the License.
 */
 
+// Derived from source:
 // https://github.com/substack/json-stable-stringify
 // https://github.com/substack/json-stable-stringify/LICENCE
 
@@ -41,7 +42,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import type from '@lowdefy/type';
+import type from './type';
 
 function stableStringify(obj, opts) {
   if (!opts) opts = {};

@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
 import queryString from 'query-string';
-import serializer from '@lowdefy/serializer';
+
+import serializer from './serializer';
+import type from './type';
 
 const parse = (str) => {
   const parsed = queryString.parse(str);

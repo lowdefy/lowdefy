@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+// Derived from source:
 // https://github.com/jonschlinkert/unset-value/blob/master/index.js
 // https://github.com/jonschlinkert/unset-value/issues/3
 // The MIT License (MIT)
@@ -39,8 +40,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import type from '@lowdefy/type';
-import get from '@lowdefy/get';
+import type from './type';
+import get from './get';
 
 const hasValues = (val) => {
   switch (type.typeOf(val)) {

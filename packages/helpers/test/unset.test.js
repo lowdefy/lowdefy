@@ -14,118 +14,118 @@
   limitations under the License.
 */
 
-import del from '../src/delete';
+import unset from '../src/unset';
 
-test('delete a.1.b', () => {
+test('unset a.1.b', () => {
   const obj = {
     a: [{ b: 2 }, { b: 5 }],
   };
-  del(obj, 'a.1.b');
+  unset(obj, 'a.1.b');
   expect(obj).toEqual({ a: [{ b: 2 }, {}] });
 });
 
-test('delete a.b', () => {
+test('unset a.b', () => {
   const obj = {
     a: { b: [] },
   };
-  del(obj, 'a.b');
+  unset(obj, 'a.b');
   expect(obj).toEqual({ a: {} });
 });
 
-test('should update the given object when a property is deleted:', () => {
+test('should update the given object when a property is unsetd:', () => {
   const obj = { a: 'b' };
-  del(obj, 'a');
+  unset(obj, 'a');
   expect(obj).toEqual({});
 });
 
-test('should delete nested values:', () => {
+test('should unset nested values:', () => {
   const one = { a: { b: { c: 'd' } } };
-  del(one, 'a.b');
+  unset(one, 'a.b');
   expect(one).toEqual({ a: {} });
 
   const two = { a: { b: { c: 'd' } } };
-  del(two, 'a.b.c');
+  unset(two, 'a.b.c');
   expect(two).toEqual({ a: { b: {} } });
 
   const three = { a: { b: { c: 'd', e: 'f' } } };
-  del(three, 'a.b.c');
+  unset(three, 'a.b.c');
   expect(three).toEqual({ a: { b: { e: 'f' } } });
 });
 
-test('should delete...:', () => {
+test('should unset...:', () => {
   const three = { 'a.b': 'c', d: 'e' };
-  del(three, 'a.b');
+  unset(three, 'a.b');
   expect(three).toEqual({ d: 'e' });
 });
 
-test('should delete nested escaped values:', () => {
+test('should unset nested escaped values:', () => {
   const one = { a: { 'b.c': 'd' } };
-  del(one, 'a.b\\.c');
+  unset(one, 'a.b\\.c');
   expect(one).toEqual({ a: {} });
 
   const two = { 'a.b.c': 'd' };
-  del(two, 'a\\.b\\.c');
+  unset(two, 'a\\.b\\.c');
   expect(two).toEqual({});
 
   const three = { 'a.b': 'c', d: 'e' };
-  del(three, 'a\\.b');
+  unset(three, 'a\\.b');
   expect(three).toEqual({ d: 'e' });
 });
 
-describe('del', () => {
-  test('should update the given object when a property is deleted:', () => {
+describe('unset', () => {
+  test('should update the given object when a property is unsetd:', () => {
     const obj = { a: 'b' };
-    del(obj, 'a');
+    unset(obj, 'a');
     expect(obj).toEqual({});
   });
 
-  test('should return true when a property is deleted:', () => {
-    const res = del({ a: 'b' }, 'a');
+  test('should return true when a property is unsetd:', () => {
+    const res = unset({ a: 'b' }, 'a');
     expect(res).toEqual(true);
   });
 
   test('should return true when the given property does not exist:', () => {
-    const res = del({ a: 'b' }, 'z');
+    const res = unset({ a: 'b' }, 'z');
     expect(res).toEqual(true);
   });
 
-  test('should delete nested values:', () => {
+  test('should unset nested values:', () => {
     const one = { a: { b: { c: 'd' } } };
-    del(one, 'a.b');
+    unset(one, 'a.b');
     expect(one).toEqual({ a: {} });
 
     const two = { a: { b: { c: 'd' } } };
-    del(two, 'a.b.c');
+    unset(two, 'a.b.c');
     expect(two).toEqual({ a: { b: {} } });
 
     const three = { a: { b: { c: 'd', e: 'f' } } };
-    del(three, 'a.b.c');
+    unset(three, 'a.b.c');
     expect(three).toEqual({ a: { b: { e: 'f' } } });
   });
 
-  test('should delete...:', () => {
+  test('should unset...:', () => {
     const three = { 'a.b': 'c', d: 'e' };
-    del(three, 'a.b');
+    unset(three, 'a.b');
     expect(three).toEqual({ d: 'e' });
   });
 
-  test('should delete nested escaped values:', () => {
+  test('should unset nested escaped values:', () => {
     const one = { a: { 'b.c': 'd' } };
-    del(one, 'a.b\\.c');
+    unset(one, 'a.b\\.c');
     expect(one).toEqual({ a: {} });
 
     const two = { 'a.b.c': 'd' };
-    del(two, 'a\\.b\\.c');
+    unset(two, 'a\\.b\\.c');
     expect(two).toEqual({});
 
     const three = { 'a.b': 'c', d: 'e' };
-    del(three, 'a\\.b');
+    unset(three, 'a\\.b');
     expect(three).toEqual({ d: 'e' });
   });
 
   test('should throw an error when invalid args are passed:', () => {
     expect(() => {
-      del();
+      unset();
     }).toThrow('expected an object.');
   });
 });

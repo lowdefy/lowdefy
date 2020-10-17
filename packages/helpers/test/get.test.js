@@ -19,9 +19,8 @@
 // Copyright (c) 2014-2018, Jon Schlinkert.
 // https://www.npmjs.com/package/get-value
 
+import diff from 'jest-diff';
 import get from '../src/get';
-
-const diff = require('jest-diff');
 
 const expectToEqual = (result, value) => {
   expect(result).toEqual(value);

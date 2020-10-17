@@ -3730,19 +3730,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/delete@1.0.1, @lowdefy/delete@workspace:packages/delete":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/delete@workspace:packages/delete"
+"@lowdefy/delete@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/delete@npm:1.0.1"
   dependencies:
-    "@babel/cli": 7.12.1
-    "@babel/core": 7.12.1
-    "@babel/preset-env": 7.12.1
     "@lowdefy/get": 1.0.1
     "@lowdefy/type": 1.0.1
-    babel-jest: 26.5.2
-    jest: 26.5.3
-  languageName: unknown
-  linkType: soft
+  checksum: fee9d86f52643b4d2a8f68d732fec64f1805628fe6d1b42ff1bfea515b767ff8fb6198ee3fce49033f9edcb943676d0993ef537048e3118b6e7855dee4535c6e
+  languageName: node
+  linkType: hard
 
 "@lowdefy/engine@0.0.0-experimental.0, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
@@ -3804,19 +3800,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/get@1.0.1, @lowdefy/get@workspace:packages/get":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/get@workspace:packages/get"
+"@lowdefy/get@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/get@npm:1.0.1"
   dependencies:
-    "@babel/cli": 7.12.1
-    "@babel/core": 7.12.1
-    "@babel/preset-env": 7.12.1
     "@lowdefy/type": 1.0.1
-    babel-jest: 26.5.2
-    jest: 26.5.3
-    jest-diff: 26.5.2
-  languageName: unknown
-  linkType: soft
+  checksum: 6f66955a79f693620309ceb98684b7e612bef7d7e787fb7c4791498653b4911c7d8131e205bee781bf66c1c536b94db605fdca498d86699c7e13bac82d2a84f3
+  languageName: node
+  linkType: hard
 
 "@lowdefy/graphql@0.0.0-experimental.0, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
@@ -3847,11 +3838,9 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.1
     "@babel/preset-env": 7.12.1
-    "@lowdefy/delete": 1.0.1
-    "@lowdefy/serializer": 1.0.0
-    "@lowdefy/type": 1.0.1
     babel-jest: 26.5.2
     jest: 26.5.3
+    jest-diff: 26.5.2
     lodash.merge: 4.6.2
     query-string: 6.13.5
   languageName: unknown
@@ -3981,48 +3970,35 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/serializer@1.0.0, @lowdefy/serializer@workspace:packages/serializer":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/serializer@workspace:packages/serializer"
+"@lowdefy/serializer@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@lowdefy/serializer@npm:1.0.0"
   dependencies:
-    "@babel/cli": 7.12.1
-    "@babel/core": 7.12.1
-    "@babel/preset-env": 7.12.1
     "@lowdefy/type": 1.0.1
-    babel-jest: 26.5.2
-    jest: 26.5.3
-  languageName: unknown
-  linkType: soft
+  checksum: 8880af5555339624160884adf32d611457d316779af312ea90ebfb64c555fe6021aa034b86bd76656c823db0a98fd0006f1e5cc80b94fb0bd92789bf8d8aa79c
+  languageName: node
+  linkType: hard
 
-"@lowdefy/set@1.0.1, @lowdefy/set@workspace:packages/set":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/set@workspace:packages/set"
+"@lowdefy/set@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/set@npm:1.0.1"
   dependencies:
-    "@babel/cli": 7.12.1
-    "@babel/core": 7.12.1
-    "@babel/preset-env": 7.12.1
     "@lowdefy/type": 1.0.1
-    babel-jest: 26.5.2
-    jest: 26.5.3
-  languageName: unknown
-  linkType: soft
-
-"@lowdefy/type@1.0.1, @lowdefy/type@workspace:packages/type":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/type@workspace:packages/type"
-  dependencies:
-    "@babel/cli": 7.12.1
-    "@babel/core": 7.12.1
-    "@babel/preset-env": 7.12.1
-    babel-jest: 26.5.2
-    jest: 26.5.3
-  languageName: unknown
-  linkType: soft
+  checksum: 80ef56f1873edd085bb72be4eb9f0241e9eb6709dc57c3387769b571f5c423157ab601234c32a24485c79789f04b9d4018686f5d44118ba02acff04d3d0d4351
+  languageName: node
+  linkType: hard
 
 "@lowdefy/type@npm:1.0.0":
   version: 1.0.0
   resolution: "@lowdefy/type@npm:1.0.0"
   checksum: 06668d6f581f2c4f46f0c1752e7f946abc84ef4f9334780ef6534eeba554a075f78cf49212fb8c124672a1e16c4c3ffc0abb3e360ca0b67727fa7a164c69904f
+  languageName: node
+  linkType: hard
+
+"@lowdefy/type@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/type@npm:1.0.1"
+  checksum: 42778b9f54ac984cc14f29e600d0e3cb794b9b944c66bc9098154c1c7cb50a3113161e4a9afc07815bd0f330014185aff0eabe34f3ebe07a02b4df4063ba8f5d
   languageName: node
   linkType: hard
 

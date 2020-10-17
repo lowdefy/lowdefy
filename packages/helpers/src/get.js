@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-// Source:
+// Derived from source:
 // https://github.com/jonschlinkert/get-value/blob/master/index.js
 // https://www.npmjs.com/package/get-value
 
@@ -42,7 +42,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import typeTest from '@lowdefy/type';
+import typeTest from './type';
 
 function join(segs, joinChar, options) {
   if (typeof options.join === 'function') {

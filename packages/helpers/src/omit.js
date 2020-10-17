@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import del from '@lowdefy/delete';
+import unset from './unset';
 
 const omit = (obj, list) => {
   list.forEach((item) => {
-    del(obj, item);
+    unset(obj, item);
   });
   return obj;
 };

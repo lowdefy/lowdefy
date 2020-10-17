@@ -18,7 +18,7 @@
   limitations under the License.
 */
 
-// Source:
+// Derived from source:
 // https://github.com/jonschlinkert/set-value/blob/master/index.js
 // https://www.npmjs.com/package/set-value
 
@@ -44,7 +44,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import type from '@lowdefy/type';
+import type from './type';
 
 function isValidKey(key) {
   return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
