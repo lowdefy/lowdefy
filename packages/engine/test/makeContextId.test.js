@@ -1,41 +1,53 @@
+/*
+   Copyright 2020 Lowdefy, Inc
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 import makeContextId from '../src/makeContextId';
 
 test('makeContextId, empty urlQuery', () => {
   expect(
     makeContextId({
       blockId: 'blockId',
-      branch: 'branch',
       pageId: 'pageId',
       search: {},
     })
-  ).toEqual('branch:pageId:blockId:{}');
+  ).toEqual('pageId:blockId:{}');
 });
 
 test('makeContextId, search', () => {
   expect(
     makeContextId({
       blockId: 'blockId',
-      branch: 'branch',
       pageId: 'pageId',
       urlQuery: { a: 1 },
     })
-  ).toEqual('branch:pageId:blockId:{"a":1}');
+  ).toEqual('pageId:blockId:{"a":1}');
 });
 
 test('makeContextId, undefined urlQuery', () => {
   expect(
     makeContextId({
       blockId: 'blockId',
-      branch: 'branch',
       pageId: 'pageId',
     })
-  ).toEqual('branch:pageId:blockId:{}');
+  ).toEqual('pageId:blockId:{}');
 });
 
 test('makeContextId, undefined blockId', () => {
   expect(() =>
     makeContextId({
-      branch: 'branch',
       pageId: 'pageId',
       search: {},
     })
@@ -46,7 +58,6 @@ test('makeContextId, blockId not a string', () => {
   expect(() =>
     makeContextId({
       blockId: 1,
-      branch: 'branch',
       pageId: 'pageId',
       search: {},
     })
@@ -56,7 +67,6 @@ test('makeContextId, blockId not a string', () => {
 test('makeContextId, undefined pageId', () => {
   expect(() =>
     makeContextId({
-      branch: 'branch',
       blockId: 'blockId',
       search: {},
     })
@@ -67,30 +77,8 @@ test('makeContextId, pageId not a string', () => {
   expect(() =>
     makeContextId({
       pageId: 1,
-      branch: 'branch',
       blockId: 'blockId',
       search: {},
     })
   ).toThrow('Expected string for parameter pageId, received 1');
-});
-
-test('makeContextId, undefined branch', () => {
-  expect(() =>
-    makeContextId({
-      blockId: 'blockId',
-      pageId: 'pageId',
-      search: {},
-    })
-  ).toThrow('Expected string for parameter branch, received undefined');
-});
-
-test('makeContextId, branch not a string', () => {
-  expect(() =>
-    makeContextId({
-      branch: 1,
-      blockId: 'blockId',
-      pageId: 'pageId',
-      search: {},
-    })
-  ).toThrow('Expected string for parameter branch, received 1');
 });

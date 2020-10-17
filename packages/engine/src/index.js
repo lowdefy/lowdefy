@@ -15,7 +15,6 @@
 */
 
 import Actions from './Actions';
-import AppGraphql from './AppGraphql';
 import BlockActions from './BlockActions';
 import Blocks from './Blocks';
 import makeContextId from './makeContextId';
@@ -25,6 +24,6 @@ import State from './State';
 
 import getContext from './getContext';
 
-export { Actions, AppGraphql, BlockActions, Blocks, makeContextId, Mutations, Requests, State };
+export { Actions, BlockActions, Blocks, makeContextId, Mutations, Requests, State };
 
 export default getContext;

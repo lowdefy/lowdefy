@@ -33,7 +33,7 @@
     "test": "lerna run test"
   },
   "devDependencies": {
-    "@yarnpkg/pnpify": "2.3.2",
+    "@yarnpkg/pnpify": "2.3.3",
     "eslint": "7.11.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-plugin-import": "2.22.1",

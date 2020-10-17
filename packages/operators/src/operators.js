@@ -387,9 +387,6 @@ function _dump_yaml({ params }) {
 
 function _operator(options) {
   const { operations, params, location } = options;
-  if (Object.prototype.hasOwnProperty.call(operations, params.name)) {
-    return operations[params.name]({ ...options, location, params: params && params.params });
-  }
   if (!type.isString(params.name)) {
     throw new Error(
       `Operator Error: _operator.name must be a valid operator name as string. Received: ${JSON.stringify(
@@ -403,6 +400,9 @@ function _operator(options) {
         params
       )} at ${location}.`
     );
+  }
+  if (Object.prototype.hasOwnProperty.call(operations, params.name)) {
+    return operations[params.name]({ ...options, location, params: params && params.params });
   }
   throw new Error(
     `Operator Error: _operator - Invalid operator name. Received: ${JSON.stringify(

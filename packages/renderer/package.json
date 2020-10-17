@@ -25,8 +25,15 @@
   "files": [
     "dist/*"
   ],
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "yarn build",
+    "start": "serve dist -p 3001",
+    "dev": "webpack serve --config webpack.dev.js"
+  },
   "dependencies": {
-    "@apollo/client": "3.2.3",
+    "@apollo/client": "3.2.4",
     "@apollo/link-context": "2.0.0-beta.3",
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
@@ -44,23 +51,17 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.11.6",
-    "@babel/preset-react": "7.10.4",
+    "@babel/core": "7.12.1",
+    "@babel/preset-react": "7.12.1",
     "babel-loader": "8.1.0",
     "bundle-loader": "0.5.6",
     "css-loader": "4.3.0",
     "html-webpack-plugin": "4.5.0",
     "serve": "11.3.2",
     "style-loader": "2.0.0",
-    "webpack": "5.1.0",
-    "webpack-cli": "3.3.12",
-    "webpack-dev-server": "3.11.0"
-  },
-  "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack --mode production",
-    "prepublishOnly": "yarn build",
-    "serve": "serve dist -p 3001",
-    "clean": "rm -rf dist"
+    "webpack": "5.1.2",
+    "webpack-cli": "4.0.0",
+    "webpack-dev-server": "3.11.0",
+    "webpack-merge": "5.2.0"
   }
 }

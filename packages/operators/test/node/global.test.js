@@ -6,12 +6,11 @@ const lowdefyGlobal = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const user = { firstName: 'Name' };
 const args = {};
 
 test('_global in object', () => {
   const input = { a: { _global: 'string' } };
-  const parser = new NodeParser({ lowdefyGlobal, user });
+  const parser = new NodeParser({ lowdefyGlobal });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'Some String',
@@ -21,7 +20,7 @@ test('_global in object', () => {
 
 test('_global full lowdefyGlobal', () => {
   const input = { _global: true };
-  const parser = new NodeParser({ lowdefyGlobal, user });
+  const parser = new NodeParser({ lowdefyGlobal });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(lowdefyGlobal);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -29,7 +28,7 @@ test('_global full lowdefyGlobal', () => {
 
 test('_global null', () => {
   const input = { _global: null };
-  const parser = new NodeParser({ lowdefyGlobal, user });
+  const parser = new NodeParser({ lowdefyGlobal });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -39,20 +38,6 @@ test('_global null', () => {
   `);
 });
 
-// test('_global replace key arrayIndices', () => {
-//   const input = { a: { _global: 'arr.$.a' } };
-//   const parser = new NodeParser({
-//     lowdefyGlobal,
-//     user,
-//     arrayIndices: [1],
-//   });
-//   const res = parser.parse({ input, args, location: 'locationId' });
-//   expect(res.output).toEqual({
-//     a: 'a2',
-//   });
-//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
-// });
-
 test('_global param object key', () => {
   const input = {
     _global: {
@@ -61,7 +46,6 @@ test('_global param object key', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('Some String');
@@ -76,7 +60,6 @@ test('_global param object all', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(lowdefyGlobal);
@@ -92,7 +75,6 @@ test('_global param object all and key', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(lowdefyGlobal);
@@ -107,7 +89,6 @@ test('_global param object invalid', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -124,7 +105,6 @@ test('_global param array', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);
@@ -144,7 +124,6 @@ test('_global param object with string default', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual('defaultValue');
@@ -160,7 +139,6 @@ test('_global param object with zero default', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(0);
@@ -176,7 +154,6 @@ test('_global param object with false default', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(false);
@@ -191,7 +168,6 @@ test('_global param object with no default', () => {
   };
   const parser = new NodeParser({
     lowdefyGlobal,
-    user,
   });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(null);

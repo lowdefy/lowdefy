@@ -1,3 +1,19 @@
+/*
+   Copyright 2020 Lowdefy, Inc
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 import RequestsClass from '../src/Requests';
 
 const mockReqResponses = {
@@ -50,7 +66,6 @@ const rootBlock = {
 };
 
 const blockId = 'one';
-const branch = 'master';
 const input = {};
 const lowdefyGlobal = {};
 const pageId = 'one';
@@ -65,7 +80,6 @@ beforeEach(() => {
 test('callRequest', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -90,7 +104,6 @@ test('callRequest', async () => {
 test('callRequests all requests', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -148,7 +161,6 @@ test('callRequests all requests', async () => {
 test('callRequests', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -182,7 +194,6 @@ test('callRequests', async () => {
 test('callRequest error', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -215,7 +226,6 @@ test('callRequest error', async () => {
 test('callRequest that is not on root block', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -235,7 +245,6 @@ test('callRequest that is not on root block', async () => {
 test('callRequest on root block with no requests', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -255,7 +264,6 @@ test('callRequest on root block with no requests', async () => {
 test('callRequest request does not exist', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -282,7 +290,6 @@ test('callRequest request does not exist', async () => {
 test('callRequest not called the same request twice with onlyNew true', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -310,7 +317,6 @@ test('update unction should be called', async () => {
   const updateFunction = jest.fn();
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,
@@ -329,7 +335,6 @@ test('update unction should be called', async () => {
 test('fetch should set blocks loading and call query every time it is called', async () => {
   const context = {
     blockId,
-    branch,
     client,
     input,
     lowdefyGlobal,

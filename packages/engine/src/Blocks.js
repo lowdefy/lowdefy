@@ -21,18 +21,10 @@ import get from '@lowdefy/get';
 import set from '@lowdefy/set';
 import { applyArrayIndices } from '@lowdefy/helpers';
 import serializer from '@lowdefy/serializer';
-import gql from 'graphql-tag';
 
 import BlockActions from './BlockActions';
 import getFieldValues from './getFieldValues';
 import swap from './swap';
-
-const SET_BLOCK = gql`
-  fragment BlockClassFragment on BlockClass @client {
-    id
-    t
-  }
-`;
 
 class Blocks {
   constructor({ arrayIndices, areas, context }) {
@@ -59,7 +51,7 @@ class Blocks {
     this.newBlocks = this.newBlocks.bind(this);
     this.getValidateRec = this.getValidateRec.bind(this);
     this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
-    this.generateCacheId = this.generateCacheId.bind(this);
+    this.generateBlockId = this.generateBlockId.bind(this);
     this.update = this.update.bind(this);
     this.validate = this.validate.bind(this);
     this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
@@ -78,7 +70,7 @@ class Blocks {
   init(initState) {
     this.loopBlocks((block) => {
       block.blockIdPattern = block.blockId;
-      block.id = this.generateCacheId(block.blockIdPattern);
+      block.id = this.generateBlockId(block.blockIdPattern);
       block.fieldPattern = block.field;
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
       this.context.RootBlocks.map[block.blockId] = block;
@@ -567,15 +559,7 @@ class Blocks {
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };
-        this.context.client.writeFragment({
-          id: `BlockClass:${block.id}`,
-          fragment: SET_BLOCK,
-          data: {
-            id: block.id,
-            t: Date.now(),
-            __typename: 'BlockClass',
-          },
-        });
+        this.context.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -594,15 +578,7 @@ class Blocks {
         false
       );
       if (block.loading_prev !== block.loading) {
-        this.context.client.writeFragment({
-          id: `BlockClass:${block.id}`,
-          fragment: SET_BLOCK,
-          data: {
-            id: block.id,
-            t: Date.now(),
-            __typename: 'BlockClass',
-          },
-        });
+        this.context.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -612,8 +588,8 @@ class Blocks {
     });
   }
 
-  generateCacheId(blockIdPattern) {
-    return `${this.context.branch}:${this.context.pageId}:${blockIdPattern}:${Math.random()
+  generateBlockId(blockIdPattern) {
+    return `${this.context.pageId}:${blockIdPattern}:${Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5)}`;

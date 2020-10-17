@@ -1,3 +1,19 @@
+/*
+   Copyright 2020 Lowdefy, Inc
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 import testContext from '../testContext';
 
 // Mock apollo client
@@ -36,27 +52,12 @@ const mockQueryImp = ({ variables }) => {
 
 const client = {
   query: mockQuery,
-  writeFragment: jest.fn(),
 };
 
-// Mock message
-const mockMessageSuccess = jest.fn();
-const mockMessageError = jest.fn();
-const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
-
-const branch = 'master';
-const openidLogoutUrl = 'logout';
 const pageId = 'one';
-const user = { firstName: 'ABC' };
 
 const rootContext = {
-  branch,
   client,
-  message,
-  document,
-  openidLogoutUrl,
-  user,
-  window,
 };
 
 beforeEach(() => {

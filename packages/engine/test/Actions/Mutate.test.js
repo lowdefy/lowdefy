@@ -1,27 +1,22 @@
+/*
+   Copyright 2020 Lowdefy, Inc
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 import testContext from '../testContext';
 
 // Mock apollo client
-const mockReqResponses = {
-  req_one: {
-    data: {
-      request: {
-        id: 'req_one',
-        success: true,
-        response: 1,
-      },
-    },
-  },
-  req_two: {
-    data: {
-      request: {
-        id: 'req_two',
-        success: true,
-        response: 2,
-      },
-    },
-  },
-};
-
 const mockMutationResponses = {
   mut_one: {
     data: {
@@ -34,17 +29,6 @@ const mockMutationResponses = {
   },
 };
 
-const mockQuery = jest.fn();
-const mockQueryImp = ({ variables }) => {
-  const { requestInput } = variables;
-  const { requestId } = requestInput;
-  return new Promise((resolve, reject) => {
-    if (requestId === 'req_error') {
-      reject(mockReqResponses[requestId]);
-    }
-    resolve(mockReqResponses[requestId]);
-  });
-};
 const mockMutate = jest.fn();
 const mockMutateImp = ({ variables }) => {
   const { requestMutationInput } = variables;
@@ -54,73 +38,18 @@ const mockMutateImp = ({ variables }) => {
   });
 };
 const client = {
-  query: mockQuery,
   mutate: mockMutate,
-  writeFragment: jest.fn(),
 };
 
-// Mock document
-const mockDocGetElementById = jest.fn();
-const mockElemScrollIntoView = jest.fn();
-const document = {
-  getElementById: mockDocGetElementById,
-};
-const mockDocGetElementByIdImp = (id) => {
-  return { id, scrollIntoView: mockElemScrollIntoView };
-};
-
-// Mock message
-const mockMessageSuccess = jest.fn();
-const mockMessageError = jest.fn();
-const message = { loading: () => jest.fn(), error: mockMessageError, success: mockMessageSuccess };
-
-// Mock Notification
-const mockNotificationSuccess = jest.fn();
-const mockNotificationError = jest.fn();
-const notification = {
-  loading: () => jest.fn(),
-  error: mockNotificationError,
-  success: mockNotificationSuccess,
-};
-
-// Mock window
-const mockWindowFocus = jest.fn();
-const mockWindowOpen = jest.fn(() => ({ focus: mockWindowFocus }));
-const mockWindowScrollTo = jest.fn();
-const window = {
-  location: { href: '', origin: 'http://lowdefy.com' },
-  open: mockWindowOpen,
-  scrollTo: mockWindowScrollTo,
-};
-
-const branch = 'master';
-const openidLogoutUrl = 'logout';
 const pageId = 'one';
-const user = { firstName: 'ABC' };
 
 const rootContext = {
-  branch,
   client,
-  // appGraphql,
-  message,
-  notification,
-  document,
-  openidLogoutUrl,
-  user,
-  window,
 };
 
 beforeEach(() => {
-  mockQuery.mockReset();
-  mockQuery.mockImplementation(mockQueryImp);
   mockMutate.mockReset();
   mockMutate.mockImplementation(mockMutateImp);
-  mockWindowOpen.mockReset();
-  mockWindowFocus.mockReset();
-  mockWindowScrollTo.mockReset();
-  mockDocGetElementById.mockReset();
-  mockDocGetElementById.mockImplementation(mockDocGetElementByIdImp);
-  mockElemScrollIntoView.mockReset();
 });
 
 test('Mutate', async () => {

@@ -1,28 +1,29 @@
 /*
-   Copyright 2020 Lowdefy, Inc
+  Copyright 2020 Lowdefy, Inc
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 import React from 'react';
 import { BrowserRouter, Route, Redirect, Switch, useLocation } from 'react-router-dom';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 
-import { ErrorBoundary } from '@lowdefy/block-tools';
+import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import get from '@lowdefy/get';
 
 import useGqlClient from './utils/graphql/useGqlClient';
-import PageContext from './PageContext';
+import Page from './page/Page';
+import createUpdateBlock from './page/block/updateBlock';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
@@ -75,8 +76,8 @@ const GET_ROOT = gql`
 
 const RootContext = ({ children, client }) => {
   const { data, loading, error } = useQuery(GET_ROOT);
+  if (loading) return <Loading type="Spinner" properties={{ height: '100vh' }} />;
   if (error) return <h1>Error</h1>;
-  if (loading) return <h1>Loading Root Context</h1>;
 
   return (
     <>
@@ -84,11 +85,22 @@ const RootContext = ({ children, client }) => {
         client,
         Components,
         contexts,
+        document: documentContext,
+        homePageId: get(data, 'menu.homePageId'),
         input,
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
-        homePageId: get(data, 'menu.homePageId'),
-        document: documentContext,
+        displayMessage: {
+          loading: (message) => {
+            console.log('Start loading', message);
+            return () => {
+              console.log('End loading');
+            };
+          },
+          error: (message) => console.log(message),
+          success: (message) => console.log(message),
+        },
+        updateBlock: createUpdateBlock(client),
         window: windowContext,
       })}
     </>
@@ -118,7 +130,7 @@ const Root = () => {
                   </Route>
                   <Route exact path="/:pageId">
                     <ErrorBoundary>
-                      <PageContext rootContext={rootContext} />
+                      <Page rootContext={rootContext} />
                     </ErrorBoundary>
                   </Route>
                 </Switch>

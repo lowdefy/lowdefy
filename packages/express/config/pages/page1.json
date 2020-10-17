@@ -1,4 +1,31 @@
 {
-  "id": "page:page1",
-  "type": "PageSiderMenu"
+  "id": "block:page1:page1",
+  "blockId": "page1",
+  "type": "Context",
+  "meta": {
+    "url": "http://localhost:3002/remoteEntry.js",
+    "scope": "lowdefy_blocks_antd",
+    "module": "Context",
+    "category": "context"
+  },
+  "areas": {
+    "content": {
+      "blocks": [
+        {
+          "id": "block:page1:btn",
+          "blockId": "btn",
+          "meta": {
+            "url": "http://localhost:3002/remoteEntry.js",
+            "scope": "lowdefy_blocks_antd",
+            "module": "Button",
+            "category": "display",
+            "loading": {
+              "type": "SkeletonButton"
+            }
+          },
+          "type": "Button"
+        }
+      ]
+    }
+  }
 }

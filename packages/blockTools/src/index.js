@@ -14,18 +14,32 @@
   limitations under the License.
 */
 
-import connectBlock from './connectBlock';
-import getEmotionCss from './getEmotionCss';
+import blockDefaults from './blockDefaults';
 import ErrorBoundary from './ErrorBoundary';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
+import IconSpinner from './Spinner/IconSpinner';
+import Loading from './Loading';
+import Skeleton from './Skeleton/Skeleton';
+import SkeletonAvatar from './Skeleton/SkeletonAvatar';
+import SkeletonButton from './Skeleton/SkeletonButton';
+import SkeletonInput from './Skeleton/SkeletonInput';
+import SkeletonParagraph from './Skeleton/SkeletonParagraph';
+import Spinner from './Spinner/Spinner';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
-  connectBlock,
+  blockDefaults,
   ErrorBoundary,
-  getEmotionCss,
+  IconSpinner,
+  Loading,
   makeCssClass,
   mediaToCssObject,
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+  SkeletonParagraph,
+  Spinner,
   useRunAfterUpdate,
 };

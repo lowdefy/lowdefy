@@ -16,17 +16,17 @@
 
 import createEmotion from 'create-emotion';
 
-const windowContext = window || {};
+let emotionCss = null;
 
 const getEmotionCss = () => {
   try {
-    if (!windowContext.emotion) {
+    if (!emotionCss) {
       const { css } = createEmotion({
         container: document.getElementById('emotion'),
       });
-      windowContext.emotion = { css };
+      emotionCss = css;
     }
-    return windowContext.emotion.css;
+    return emotionCss;
   } catch (error) {
     throw new Error('Emotion failed to initilize: ' + error.message);
   }
