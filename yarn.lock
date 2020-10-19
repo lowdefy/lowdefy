@@ -3863,7 +3863,7 @@ __metadata:
   dependencies:
     "@yarnpkg/pnpify": 2.3.3
     eslint: 7.11.0
-    eslint-config-prettier: 6.12.0
+    eslint-config-prettier: 6.13.0
     eslint-plugin-import: 2.22.1
     eslint-plugin-jsx-a11y: 6.3.1
     eslint-plugin-prettier: 3.1.4
@@ -8975,16 +8975,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:6.12.0":
-  version: 6.12.0
-  resolution: "eslint-config-prettier@npm:6.12.0"
+"eslint-config-prettier@npm:6.13.0":
+  version: 6.13.0
+  resolution: "eslint-config-prettier@npm:6.13.0"
   dependencies:
     get-stdin: ^6.0.0
   peerDependencies:
     eslint: ">=3.14.1"
   bin:
     eslint-config-prettier-check: bin/cli.js
-  checksum: 9371c0a8d05df36f3698247e703118a8eb95fa887aabc4b1e189c21e248ab9c49c3b8e5621f42826b89bbfd05aa52493ffddf0c41219db9b6e4df20e46e21da0
+  checksum: fe88da82a493da579fe57cc7b0be0cac5c84bfb5148d5e35abda99a73e6a0ab1125aa24ceae52144c9382c958f1f33efaadb4b86455cd28fef72172d9046a683
   languageName: node
   linkType: hard
 
