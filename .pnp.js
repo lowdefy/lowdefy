@@ -5113,7 +5113,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.5.3"],
             ["jest-diff", "npm:26.5.2"],
             ["lodash.merge", "npm:4.6.2"],
-            ["query-string", "npm:6.13.5"]
+            ["query-string", "npm:6.13.6"]
           ],
           "linkType": "SOFT",
         }]
@@ -19324,10 +19324,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["query-string", [
-        ["npm:6.13.5", {
-          "packageLocation": "./.yarn/cache/query-string-npm-6.13.5-9cf41f78b4-a60b70e261.zip/node_modules/query-string/",
+        ["npm:6.13.6", {
+          "packageLocation": "./.yarn/cache/query-string-npm-6.13.6-1f06a3ca1c-0f773349bf.zip/node_modules/query-string/",
           "packageDependencies": [
-            ["query-string", "npm:6.13.5"],
+            ["query-string", "npm:6.13.6"],
             ["decode-uri-component", "npm:0.2.0"],
             ["split-on-first", "npm:1.1.0"],
             ["strict-uri-encode", "npm:2.0.0"]
