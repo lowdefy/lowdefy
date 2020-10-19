@@ -14,13 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
+import examples from '../demo/examples/Skeleton.yaml';
+import runExampleTests from './runExampleTests';
+import { Skeleton } from '../src';
 
-const Wrapper = ({ children, title, style }) => (
-  <>
-    <h4>{title}</h4>
-    <div style={{ ...{ padding: 20 }, ...style }}>{children}</div>
-  </>
-);
-
-export default Wrapper;
+runExampleTests(examples, Skeleton);

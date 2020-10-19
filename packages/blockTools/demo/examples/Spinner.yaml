@@ -1,0 +1,28 @@
+- id: default
+  type: Spinner
+  description: Default
+- id: height100
+  type: Spinner
+  description: |
+    height: 100
+  properties:
+    height: 100
+- id: styleheight
+  type: Spinner
+  style:
+    height: 500
+  description: |
+    style height: 500
+- id: message
+  type: Spinner
+  description: |
+    message: loading
+  properties:
+    message: loading
+- id: shaded
+  type: Spinner
+  description: |
+    shaded: true
+  properties:
+    shaded: true
+
