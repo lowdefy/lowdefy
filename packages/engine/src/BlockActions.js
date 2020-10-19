@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { type } from '@lowdefy/helpers';
 
 class BlockActions {
   constructor({ arrayIndices, block, context }) {
@@ -34,6 +34,7 @@ class BlockActions {
 
   callRec(args, actions, results, resolve, reject) {
     if (actions.length > 0) {
+      // eslint-disable-next-line no-unused-vars
       const { fn, success, error, ...action } = actions[0];
       try {
         const skip = this.context.parser.parse({

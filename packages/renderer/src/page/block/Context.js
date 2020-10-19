@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
+import { get } from '@lowdefy/helpers';
 
 import useContext from './useContext';
 

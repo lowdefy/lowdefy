@@ -28,8 +28,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/get": "1.0.1",
-    "@lowdefy/type": "1.0.1",
+    "@lowdefy/helpers": "1.1.0",
     "apollo-server": "2.18.2",
     "dataloader": "2.0.0",
     "graphql": "15.3.0",

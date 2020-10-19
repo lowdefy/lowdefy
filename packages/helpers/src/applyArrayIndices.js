@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import type from './type';
 
 const applyArrayIndices = (arrayIndices, name) => {
   if (!type.isArray(arrayIndices)) return name;

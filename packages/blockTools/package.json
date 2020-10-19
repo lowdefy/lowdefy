@@ -35,8 +35,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "1.0.0",
-    "@lowdefy/type": "1.0.1",
+    "@lowdefy/helpers": "1.1.0",
     "create-emotion": "10.0.27",
     "react": "17.0.0-rc.2",
     "react-dom": "17.0.0-rc.2"

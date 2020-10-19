@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import get from '@lowdefy/get';
-import serializer from '@lowdefy/serializer';
 import gql from 'graphql-tag';
+import { get, serializer } from '@lowdefy/helpers';
 
 const CALL_REQUEST = gql`
   query callRequest($requestInput: RequestInput!) {

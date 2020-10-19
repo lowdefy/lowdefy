@@ -14,9 +14,7 @@
   limitations under the License.
 */
 
-// engine
-
-import serializer from '@lowdefy/serializer';
+import { serializer } from '@lowdefy/helpers';
 
 function getFieldValues(operatorName, ...args) {
   const result = new Set();

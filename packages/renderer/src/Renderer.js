@@ -19,7 +19,7 @@ import { BrowserRouter, Route, Redirect, Switch, useLocation } from 'react-route
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 
 import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
+import { get } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
 import Page from './page/Page';

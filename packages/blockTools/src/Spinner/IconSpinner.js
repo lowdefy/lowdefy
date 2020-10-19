@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import type from '@lowdefy/type';
+import { type } from '@lowdefy/helpers';
 import blockDefaults from '../blockDefaults';
 import './IconSpinner.css';
 

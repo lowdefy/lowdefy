@@ -31,11 +31,8 @@
     "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "@lowdefy/get": "1.0.1",
-    "@lowdefy/helpers": "1.0.0",
+    "@lowdefy/helpers": "1.1.0",
     "@lowdefy/nunjucks": "1.0.0",
-    "@lowdefy/serializer": "1.0.0",
-    "@lowdefy/type": "1.0.1",
     "js-yaml": "3.14.0",
     "mingo": "3.0.6"
   },

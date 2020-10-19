@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import typeTest from '@lowdefy/type';
-
+import typeTest from '../src/type';
 import set, { split } from '../src/set';
 
 test('setNestedValue - set a nested value in array object', () => {

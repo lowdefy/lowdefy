@@ -15,8 +15,27 @@
 */
 
 import applyArrayIndices from './applyArrayIndices';
+import get from './get';
 import mergeObjects from './mergeObjects';
 import omit from './omit';
+import serializer from './serializer';
+import set from './set';
+import stableStringify from './stableStringify';
+import swap from './swap';
+import type from './type';
+import unset from './unset';
 import urlQuery from './urlQuery';
 
-export { applyArrayIndices, mergeObjects, omit, urlQuery };
+export {
+  applyArrayIndices,
+  get,
+  mergeObjects,
+  omit,
+  serializer,
+  set,
+  stableStringify,
+  swap,
+  type,
+  unset,
+  urlQuery,
+};

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { type } from '@lowdefy/helpers';
 
 const layoutParamsToArea = ({ areaKey, area, layout }) => {
   if (areaKey !== 'content') {

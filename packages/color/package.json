@@ -30,7 +30,6 @@
     "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "@lowdefy/type": "1.0.0",
     "tinycolor2": "1.4.2"
   },
   "devDependencies": {

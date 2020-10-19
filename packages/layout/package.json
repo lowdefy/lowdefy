@@ -35,7 +35,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/type": "1.0.1",
+    "@lowdefy/helpers": "1.1.0",
     "antd": "4.4.2",
     "react": "17.0.0-rc.2",
     "react-dom": "17.0.0-rc.2"

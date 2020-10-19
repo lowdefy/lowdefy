@@ -17,11 +17,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, urlQuery } from '@lowdefy/helpers';
-import type from '@lowdefy/type';
-import get from '@lowdefy/get';
-import set from '@lowdefy/set';
-import serializer from '@lowdefy/serializer';
+import { applyArrayIndices, get, serializer, set, type, urlQuery } from '@lowdefy/helpers';
 
 import makeContextId from './makeContextId';
 

@@ -17,8 +17,10 @@
   limitations under the License.
 */
 
+// Derived from source:
 // because both js typeof and instance of sucks! use this.
 // https://ultimatecourses.com/blog/understanding-javascript-types-and-reliable-type-checking
+
 const { toString } = Object.prototype;
 
 function ctorName(val) {

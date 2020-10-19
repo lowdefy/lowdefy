@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import type from './type';
 import stableStringify from './stableStringify';
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {

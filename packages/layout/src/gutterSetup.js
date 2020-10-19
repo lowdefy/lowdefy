@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { type } from '@lowdefy/helpers';
 
 const gutterSetup = (gutter) => {
   if (type.isInt(gutter) || type.isObject(gutter)) {
