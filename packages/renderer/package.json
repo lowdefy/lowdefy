@@ -57,7 +57,7 @@
     "html-webpack-plugin": "4.5.0",
     "serve": "11.3.2",
     "style-loader": "2.0.0",
-    "webpack": "5.1.2",
+    "webpack": "5.1.3",
     "webpack-cli": "4.0.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.2.0"
