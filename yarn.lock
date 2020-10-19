@@ -3716,7 +3716,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.2
+    webpack: 5.1.3
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3772,7 +3772,7 @@ __metadata:
     react: 17.0.0-rc.3
     react-dom: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.2
+    webpack: 5.1.3
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.2.0
@@ -3808,7 +3808,7 @@ __metadata:
     graphql: 15.3.0
     graphql-type-json: 0.3.2
     jest: 26.5.3
-    webpack: 5.1.2
+    webpack: 5.1.3
     webpack-cli: 4.0.0
   languageName: unknown
   linkType: soft
@@ -3858,7 +3858,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 2.0.0
-    webpack: 5.1.2
+    webpack: 5.1.3
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3940,7 +3940,7 @@ __metadata:
     react-router-dom: 5.2.0
     serve: 11.3.2
     style-loader: 2.0.0
-    webpack: 5.1.2
+    webpack: 5.1.3
     webpack-cli: 4.0.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.2.0
@@ -20004,9 +20004,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.1.2":
-  version: 5.1.2
-  resolution: "webpack@npm:5.1.2"
+"webpack@npm:5.1.3":
+  version: 5.1.3
+  resolution: "webpack@npm:5.1.3"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.45
@@ -20036,8 +20036,8 @@ fsevents@^1.2.7:
     webpack-cli:
       optional: true
   bin:
-    webpack: ./bin/webpack.js
-  checksum: 4d7d7a2511df2892db3010b0cb74f869d05acd7920ea90b391d19bf7fceeb75451dc345005b48c20bedf7c0370396066a10e7895447d76eb60190d848cb8b743
+    webpack: bin/webpack.js
+  checksum: 4c741af3831bb216b8a51a3a5586f134318a0106fd38b6bbafdd609b65cb1e594d7ae58daa794b8de5bb5b1dcbf0b98b3f8e9fde848f95d5f2971657d57d581e
   languageName: node
   linkType: hard
 
