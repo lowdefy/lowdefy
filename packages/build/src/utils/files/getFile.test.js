@@ -55,12 +55,16 @@ test('getFile ymlFile.yml', async () => {
 
 test('getFile doesNotExist.txt', async () => {
   const filePath = path.resolve(process.cwd(), 'src/test/doesNotExist.txt');
-  await expect(getFile(filePath)).rejects.toThrow('ENOENT: no such file or directory');
+  // Since error message contains exact file path, test if parts of error message are present
+  await expect(getFile(filePath)).rejects.toThrow('Tried to read file with file path');
+  await expect(getFile(filePath)).rejects.toThrow(
+    'src/test/doesNotExist.txt", but file does not exist'
+  );
 });
 
 test('getFile null', async () => {
   await expect(getFile(null)).rejects.toThrow(
-    'Tried to get file with file path null, but file path should be a string'
+    'Tried to read file with file path null, but file path should be a string'
   );
 });
 

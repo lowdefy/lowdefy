@@ -14,24 +14,18 @@
   limitations under the License.
 */
 
-import fs from 'fs';
-import { promisify } from 'util';
+import formatErrorMessage from '../utils/formatErrorMessage';
+import testAppSchema from '../utils/testAppSchema';
 
-const readFilePromise = promisify(fs.readFile);
-
-async function readFile(filePath) {
-  try {
-    // By specifying encoding, readFile returns a string instead of a buffer.
-    const file = await readFilePromise(filePath, 'utf8');
-    return file;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      throw new Error(
-        `Tried to read file with file path ${JSON.stringify(filePath)}, but file does not exist`
-      );
-    }
-    throw error;
+async function testSchema({ components, context }) {
+  const { valid, errors } = testAppSchema(components);
+  if (!valid) {
+    await context.logger.warn('Schema not valid.');
+    const promises = errors.map((err) => context.logger.warn(formatErrorMessage(err, components)));
+    await promises;
+  } else {
+    await context.logger.success('Schema valid.');
   }
 }
 
-export default readFile;
+export default testSchema;

@@ -40,5 +40,16 @@ Test File`);
 
 test('readFile file not found throws', async () => {
   const filePath = path.resolve(process.cwd(), 'src/test/doesNotExist.txt');
-  await expect(readFile(filePath)).rejects.toThrow('ENOENT: no such file or directory');
+  // Since error message contains exact file path, test if parts of error message are present
+  await expect(readFile(filePath)).rejects.toThrow('Tried to read file with file path');
+  await expect(readFile(filePath)).rejects.toThrow(
+    'src/test/doesNotExist.txt", but file does not exist'
+  );
+});
+
+test('readFile error', async () => {
+  const filePath = path.resolve(process.cwd(), 'src/test/');
+  await expect(readFile(filePath)).rejects.toThrow(
+    'EISDIR: illegal operation on a directory, read'
+  );
 });

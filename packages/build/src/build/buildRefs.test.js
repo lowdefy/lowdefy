@@ -15,23 +15,29 @@
 */
 
 import buildRefs from './buildRefs';
+import testContext from '../test/testContext';
 
+// TODO mock loader should throw if file not found
 const configLoaderMockImplementation = (files) => {
-  const mockImp = (key) => {
-    const file = files.find((file) => file.path === key);
-    if (!file) return null;
+  const mockImp = (filePath) => {
+    const file = files.find((file) => file.path === filePath);
+    if (!file) {
+      throw new Error(
+        `Tried to read file with file path ${JSON.stringify(filePath)}, but file does not exist`
+      );
+    }
     return file.content;
   };
   return mockImp;
 };
 
 const mockConfigLoader = jest.fn();
-const context = {
-  logger: { log: () => {}, info: () => {} },
+
+const context = testContext({
   configLoader: {
     load: mockConfigLoader,
   },
-};
+});
 
 test('buildRefs file not found', async () => {
   const files = [

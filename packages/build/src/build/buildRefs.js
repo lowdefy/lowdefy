@@ -101,16 +101,13 @@ class RefBuilder {
   constructor({ context }) {
     this.rootPath = 'lowdefy.yaml';
     this.configLoader = context.configLoader;
+    this.logger = context.logger;
     this.refContent = {};
     this.MAX_RECURSION_DEPTH = context.MAX_RECURSION_DEPTH || 20;
   }
 
   async getFileContent(path) {
-    const file = await this.configLoader.load(path);
-    if (!file) {
-      throw new Error(`File "${path}" not found.`);
-    }
-    return file;
+    return this.configLoader.load(path);
   }
 
   async build() {
@@ -161,7 +158,7 @@ class RefBuilder {
 async function buildRefs({ context }) {
   const builder = new RefBuilder({ context });
   const components = await builder.build();
-  await context.logger.info('Built References');
+  await context.logger.debug('Built references');
   return components;
 }
 
