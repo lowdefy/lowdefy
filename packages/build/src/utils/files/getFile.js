@@ -18,14 +18,7 @@ import JSON5 from 'json5';
 import YAML from 'js-yaml';
 import { type } from '@lowdefy/helpers';
 import readFile from './readFile';
-
-function getExt(filePath) {
-  const arr = filePath.split('.');
-  if (arr.length === 1) {
-    return null;
-  }
-  return arr[arr.length - 1];
-}
+import getFileExtension from './getFileExtension';
 
 async function getJsonFile(filePath) {
   const file = await readFile(filePath);
@@ -52,7 +45,7 @@ async function getTextFile(filePath) {
 }
 
 async function handleFileType(filePath) {
-  const ext = getExt(filePath);
+  const ext = getFileExtension(filePath);
   switch (ext) {
     case 'yaml':
     case 'yml':
@@ -72,7 +65,5 @@ async function getFile(filePath) {
     `Tried to get file with file path ${JSON.stringify(filePath)}, but file path should be a string`
   );
 }
-
-export { getExt };
 
 export default getFile;
