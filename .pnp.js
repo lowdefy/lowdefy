@@ -5031,6 +5031,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.5.3"],
             ["js-yaml", "npm:3.14.0"],
             ["json5", "npm:2.1.3"],
+            ["rimraf", "npm:3.0.2"],
             ["uuid", "npm:8.3.1"],
             ["webpack", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:5.1.3"],
             ["webpack-cli", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:4.0.0"]
