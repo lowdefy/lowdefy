@@ -29,10 +29,7 @@ const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
-});
-
-beforeEach(() => {
-  mockLogWarn.mockReset();
+  mockLogSuccess.mockReset();
 });
 
 test('empty components', async () => {

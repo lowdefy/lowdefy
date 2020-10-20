@@ -1,4 +1,4 @@
-function testContext({ logger = {}, configLoader, artifactSetter } = {}) {
+function testContext({ artifactSetter, configLoader, logger = {}, metaLoader } = {}) {
   const defaultLogger = {
     success: () => {},
     warn: () => {},
@@ -7,11 +7,14 @@ function testContext({ logger = {}, configLoader, artifactSetter } = {}) {
   };
 
   const context = {
+    artifactSetter: {
+      set: () => [],
+    },
     configLoader: {
       load: () => {},
     },
-    artifactSetter: {
-      set: () => [],
+    metaLoader: {
+      load: () => {},
     },
   };
 
@@ -20,11 +23,14 @@ function testContext({ logger = {}, configLoader, artifactSetter } = {}) {
     ...logger,
   };
 
+  if (artifactSetter) {
+    context.artifactSetter = artifactSetter;
+  }
   if (configLoader) {
     context.configLoader = configLoader;
   }
-  if (artifactSetter) {
-    context.artifactSetter = artifactSetter;
+  if (metaLoader) {
+    context.metaLoader = metaLoader;
   }
 
   return context;
