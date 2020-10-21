@@ -62,9 +62,7 @@ async function getFile(filePath) {
     return handleFileType(filePath);
   }
   throw new Error(
-    `Tried to read file with file path ${JSON.stringify(
-      filePath
-    )}, but file path should be a string`
+    `Tried to get file with file path ${JSON.stringify(filePath)}, but file path should be a string`
   );
 }
 

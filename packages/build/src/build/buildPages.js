@@ -36,36 +36,34 @@ Blocks:
 
 function buildRequests(block, context) {
   if (!type.isNone(block.requests)) {
-    if (type.isArray(block.requests)) {
-      block.requests.forEach((request) => {
-        request.requestId = request.id;
-        request.id = `request:${context.pageId}:${context.contextId}:${request.id}`;
-        context.requests.push(request);
-      });
-      delete block.requests;
-    } else {
+    if (!type.isArray(block.requests)) {
       throw new Error(
         `Requests is not an array at ${block.blockId} on page ${
           context.pageId
         }. Received ${JSON.stringify(block.requests)}`
       );
     }
+    block.requests.forEach((request) => {
+      request.requestId = request.id;
+      request.id = `request:${context.pageId}:${context.contextId}:${request.id}`;
+      context.requests.push(request);
+    });
+    delete block.requests;
   }
   if (!type.isNone(block.mutations)) {
-    if (type.isArray(block.mutations)) {
-      block.mutations.forEach((mutation) => {
-        mutation.mutationId = mutation.id;
-        mutation.id = `mutation:${context.pageId}:${context.contextId}:${mutation.id}`;
-        context.mutations.push(mutation);
-      });
-      delete block.mutations;
-    } else {
+    if (!type.isArray(block.mutations)) {
       throw new Error(
         `Mutations is not an array at ${block.blockId} on page ${
           context.pageId
         }. Received ${JSON.stringify(block.mutations)}`
       );
     }
+    block.mutations.forEach((mutation) => {
+      mutation.mutationId = mutation.id;
+      mutation.id = `mutation:${context.pageId}:${context.contextId}:${mutation.id}`;
+      context.mutations.push(mutation);
+    });
+    delete block.mutations;
   }
 }
 
@@ -145,32 +143,33 @@ async function buildBlock(block, context) {
     block.mutations = context.mutations;
   }
   if (!type.isNone(block.blocks)) {
-    if (type.isArray(block.blocks)) {
-      set(block, 'areas.content.blocks', block.blocks);
-      delete block.blocks;
-    } else {
+    if (!type.isArray(block.blocks)) {
       throw new Error(
         `Blocks at ${block.blockId} on page ${
           context.pageId
         } is not an array. Received ${JSON.stringify(block.blocks)}`
       );
     }
+    set(block, 'areas.content.blocks', block.blocks);
+    delete block.blocks;
   }
   if (type.isObject(block.areas)) {
     let promises = [];
     Object.keys(block.areas).forEach((key) => {
-      if (type.isArray(block.areas[key].blocks)) {
-        const blockPromises = block.areas[key].blocks.map(async (blk) => {
-          await buildBlock(blk, context);
-        });
-        promises = promises.concat(blockPromises);
-      } else {
+      if (type.isNone(block.areas[key].blocks)) {
+        block.areas[key].blocks = [];
+      }
+      if (!type.isArray(block.areas[key].blocks)) {
         throw new Error(
           `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
             context.pageId
           }. Received ${JSON.stringify(block.areas[key].blocks)}`
         );
       }
+      const blockPromises = block.areas[key].blocks.map(async (blk) => {
+        await buildBlock(blk, context);
+      });
+      promises = promises.concat(blockPromises);
     });
     await Promise.all(promises);
   }

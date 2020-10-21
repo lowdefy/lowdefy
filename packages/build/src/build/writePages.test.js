@@ -136,3 +136,12 @@ test('writePages pages not an array', async () => {
   };
   await expect(writePages({ components, context })).rejects.toThrow('Pages is not an array.');
 });
+
+test('writePages page is not an object', async () => {
+  const components = {
+    pages: ['page'],
+  };
+  await expect(writePages({ components, context })).rejects.toThrow(
+    'Page is not an object. Received "page"'
+  );
+});

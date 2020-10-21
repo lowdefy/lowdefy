@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 async function writePage({ page, context }) {
   if (!type.isObject(page)) {
-    throw new Error(`Page is not an object.`);
+    throw new Error(`Page is not an object. Received ${JSON.stringify(page)}`);
   }
   await context.artifactSetter.set({
     filePath: `pages/${page.pageId}/${page.pageId}.json`,

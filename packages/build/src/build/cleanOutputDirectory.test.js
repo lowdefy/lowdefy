@@ -14,5 +14,5 @@ test('cleanOutputDirectory calls cleanDirectory', async () => {
     outputBaseDir: 'outputBaseDir',
   };
   await cleanOutputDirectory({ context });
-  expect(cleanDirectory.mock.calls).toMatchInlineSnapshot([['outputBaseDir']]);
+  expect(cleanDirectory.mock.calls).toEqual([['outputBaseDir']]);
 });

@@ -21,16 +21,13 @@ const baseDir = path.resolve(process.cwd(), 'src/test/readFile');
 test('readFile', async () => {
   const filePath = path.resolve(baseDir, 'readFile.txt');
   const res = await readFile(filePath);
-  expect(res).toEqual(`Test Read File`);
+  expect(res).toEqual('Test Read File');
 });
 
 test('readFile file not found throws', async () => {
   const filePath = path.resolve(baseDir, 'doesNotExist.txt');
-  // Since error message contains exact file path, test if parts of error message are present
-  await expect(readFile(filePath)).rejects.toThrow('Tried to read file with file path');
-  await expect(readFile(filePath)).rejects.toThrow(
-    'src/test/readFile/doesNotExist.txt", but file does not exist'
-  );
+  const res = await readFile(filePath);
+  expect(res).toEqual(null);
 });
 
 test('readFile error', async () => {

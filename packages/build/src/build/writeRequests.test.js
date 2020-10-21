@@ -282,6 +282,26 @@ test('writeRequests to throw when blocks is not a array', async () => {
   );
 });
 
+test('writeRequests to throw when block is not an object', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page:page1',
+        pageId: 'page1',
+        blockId: 'page1',
+        areas: {
+          content: {
+            blocks: ['block'],
+          },
+        },
+      },
+    ],
+  };
+  await expect(writeRequests({ components, context })).rejects.toThrow(
+    'Block is not an object on page "page1".'
+  );
+});
+
 test('writeRequests deletes request properties', async () => {
   const components = {
     pages: [

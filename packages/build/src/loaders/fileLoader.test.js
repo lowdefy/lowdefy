@@ -25,6 +25,12 @@ test('load file', async () => {
   expect(res).toEqual('File loader text file 1.');
 });
 
+test('load file, file does not exist', async () => {
+  const fileLoader = createFileLoader({ baseDir });
+  const res = await fileLoader.load('doesNotExist.txt');
+  expect(res).toEqual(null);
+});
+
 test('load two files', async () => {
   const fileLoader = createFileLoader({ baseDir });
   const files = ['fileLoader1.txt', 'fileLoader2.txt'];
@@ -35,17 +41,6 @@ test('load two files', async () => {
 test('load two files, one file errors', async () => {
   const fileLoader = createFileLoader({ baseDir });
   const files = ['fileLoader1.txt', 'doesNotExist.txt'];
-  await expect(Promise.all(files.map((file) => fileLoader.load(file)))).rejects.toThrow(
-    'src/test/fileLoader/doesNotExist.txt", but file does not exist'
-  );
-});
-
-test('load file, file does not exist', async () => {
-  const filePath = path.resolve(baseDir, 'doesNotExist.txt');
-  const fileLoader = createFileLoader({ baseDir });
-  // Since error message contains exact file path, test if parts of error message are present
-  await expect(fileLoader.load(filePath)).rejects.toThrow('Tried to read file with file path');
-  await expect(fileLoader.load(filePath)).rejects.toThrow(
-    'src/test/fileLoader/doesNotExist.txt", but file does not exist'
-  );
+  const res = await Promise.all(files.map((file) => fileLoader.load(file)));
+  expect(res).toEqual(['File loader text file 1.', null]);
 });

@@ -26,9 +26,7 @@ async function readFile(filePath) {
     return file;
   } catch (error) {
     if (error.code === 'ENOENT') {
-      throw new Error(
-        `Tried to read file with file path ${JSON.stringify(filePath)}, but file does not exist`
-      );
+      return null;
     }
     throw error;
   }

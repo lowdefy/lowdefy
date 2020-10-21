@@ -40,7 +40,6 @@ function getRequestsAndMutationsOnBlock({ block, requests, mutations, pageId }) 
   }
   if (type.isObject(block.areas)) {
     Object.keys(block.areas).forEach((key) => {
-      if (type.isNone(block.areas[key].blocks)) return;
       if (!type.isArray(block.areas[key].blocks)) {
         throw new Error(
           `Blocks is not an array on page "${pageId}", block "${block.blockId}", area "${key}".`

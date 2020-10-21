@@ -522,6 +522,39 @@ describe('block areas', () => {
     );
   });
 
+  test('Add array if area blocks is undefined', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page1',
+          type: 'Context',
+          areas: {
+            content: {},
+          },
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      pages: [
+        {
+          id: 'page:page1',
+          blockId: 'page1',
+          pageId: 'page1',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [],
+          mutations: [],
+          areas: {
+            content: {
+              blocks: [],
+            },
+          },
+        },
+      ],
+    });
+  });
+
   test('content area on page ', async () => {
     const components = {
       pages: [

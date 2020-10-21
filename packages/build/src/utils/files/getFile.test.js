@@ -89,15 +89,15 @@ test('getFile text.txt', async () => {
 
 test('getFile doesNotExist.txt', async () => {
   const filePath = path.resolve(baseDir, 'doesNotExist.txt');
-  // Since error message contains exact file path, test if parts of error message are present
-  await expect(getFile(filePath)).rejects.toThrow('Tried to read file with file path');
-  await expect(getFile(filePath)).rejects.toThrow(
-    'src/test/getFile/doesNotExist.txt", but file does not exist'
-  );
+  const file = await getFile(filePath);
+  expect(file).toEqual({
+    filePath,
+    content: null,
+  });
 });
 
 test('getFile null', async () => {
   await expect(getFile(null)).rejects.toThrow(
-    'Tried to read file with file path null, but file path should be a string'
+    'Tried to get file with file path null, but file path should be a string'
   );
 });

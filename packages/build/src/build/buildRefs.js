@@ -107,7 +107,11 @@ class RefBuilder {
   }
 
   async getFileContent(path) {
-    return this.configLoader.load(path);
+    const content = await this.configLoader.load(path);
+    if (!content) {
+      throw new Error(`Tried to reference file with path "${path}", but file does not exist.`);
+    }
+    return content;
   }
 
   async build() {
