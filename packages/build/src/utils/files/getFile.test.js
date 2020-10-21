@@ -17,8 +17,10 @@
 import path from 'path';
 import getFile from './getFile';
 
+const baseDir = path.resolve(process.cwd(), 'src/test/getFile');
+
 test('getFile jsonFile.json', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/jsonFile.json');
+  const filePath = path.resolve(baseDir, 'jsonFile.json');
   const file = await getFile(filePath);
   expect(file).toEqual({
     filePath,
@@ -30,7 +32,7 @@ test('getFile jsonFile.json', async () => {
 });
 
 test('getFile yamlFile.yaml', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/yamlFile.yaml');
+  const filePath = path.resolve(baseDir, 'yamlFile.yaml');
   const file = await getFile(filePath);
   expect(file).toEqual({
     filePath,
@@ -42,7 +44,7 @@ test('getFile yamlFile.yaml', async () => {
 });
 
 test('getFile ymlFile.yml', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/ymlFile.yml');
+  const filePath = path.resolve(baseDir, 'ymlFile.yml');
   const file = await getFile(filePath);
   expect(file).toEqual({
     filePath,
@@ -53,12 +55,44 @@ test('getFile ymlFile.yml', async () => {
   });
 });
 
+test('getFile markdown.md', async () => {
+  const filePath = path.resolve(baseDir, 'markdown.md');
+  const file = await getFile(filePath);
+  expect(file).toEqual({
+    filePath,
+    content: `### Markdown title
+
+Markdown body
+`,
+  });
+});
+
+test('getFile html.html', async () => {
+  const filePath = path.resolve(baseDir, 'html.html');
+  const file = await getFile(filePath);
+  expect(file).toEqual({
+    filePath,
+    content: `<h1>HTML Heading</h1>
+<p>Paragraph</p>
+`,
+  });
+});
+
+test('getFile text.txt', async () => {
+  const filePath = path.resolve(baseDir, 'text.txt');
+  const file = await getFile(filePath);
+  expect(file).toEqual({
+    filePath,
+    content: `This is a txt file.`,
+  });
+});
+
 test('getFile doesNotExist.txt', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/doesNotExist.txt');
+  const filePath = path.resolve(baseDir, 'doesNotExist.txt');
   // Since error message contains exact file path, test if parts of error message are present
   await expect(getFile(filePath)).rejects.toThrow('Tried to read file with file path');
   await expect(getFile(filePath)).rejects.toThrow(
-    'src/test/doesNotExist.txt", but file does not exist'
+    'src/test/getFile/doesNotExist.txt", but file does not exist'
   );
 });
 
@@ -66,38 +100,4 @@ test('getFile null', async () => {
   await expect(getFile(null)).rejects.toThrow(
     'Tried to read file with file path null, but file path should be a string'
   );
-});
-
-test('getFile markdown.md', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/markdown.md');
-  const file = await getFile(filePath);
-  expect(file).toEqual({
-    filePath,
-    content: `### Title
-
-Hello there
-`,
-  });
-});
-
-test('getFile html.html', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/html.html');
-  const file = await getFile(filePath);
-  expect(file).toEqual({
-    filePath,
-    content: `<h1>Heading</h1>
-<p>Hello there</p>
-`,
-  });
-});
-
-test('getFile text.txt', async () => {
-  const filePath = path.resolve(process.cwd(), 'src/test/text.txt');
-  const file = await getFile(filePath);
-  expect(file).toEqual({
-    filePath,
-    content: `Hello
-
-This is a txt file.`,
-  });
 });

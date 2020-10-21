@@ -41,7 +41,6 @@ data:
 
 test('page id missing', async () => {
   const app = {
-    config: 'config',
     pages: [
       {
         type: 'PageHeaderMenu',
@@ -86,7 +85,6 @@ data:
 
 test('page type missing', async () => {
   const app = {
-    config: 'config',
     pages: [
       {
         id: 'page1',
@@ -121,7 +119,6 @@ data:
 
 test('id incorrect type', async () => {
   const app = {
-    config: 'config',
     pages: [
       {
         id: 1,
@@ -201,5 +198,27 @@ data:
     "Footer": [...]
   }
 }
+--------------------------------`);
+});
+
+// Not sure if this will ever happen, but testing for coverage
+test('dataPath not found in app', async () => {
+  const app = {};
+  const error = {
+    keyword: 'type',
+    dataPath: '.global',
+    schemaPath: '#/properties/global/type',
+    params: {
+      type: 'object',
+    },
+    message: 'should be object',
+    data: 'global',
+  };
+  const res = formatErrorMessage(error, app);
+  expect(res).toEqual(`--------- Schema Error ---------
+message: should be object
+path: global
+data:
+
 --------------------------------`);
 });
