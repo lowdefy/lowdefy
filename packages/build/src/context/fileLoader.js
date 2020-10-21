@@ -21,13 +21,14 @@ import getFile from '../utils/files/getFile';
 
 function createFileBatchLoader({ baseDir }) {
   async function loader(keys) {
+    const filePaths = keys.map((key) => path.resolve(baseDir, key));
     const fetched = [];
-    const promises = keys.map(async (filePath) => {
-      const item = await getFile(path.resolve(baseDir, filePath));
+    const promises = filePaths.map(async (filePath) => {
+      const item = await getFile(filePath);
       fetched.push(item);
     });
     await Promise.all(promises);
-    const returned = keys
+    const returned = filePaths
       .map((filePath) =>
         fetched.find((item) => {
           return get(item, 'filePath') === filePath;

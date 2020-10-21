@@ -9,3 +9,4 @@
 
 packages/express/config/**
 packages/build/src/test/writeFile.txt
+packages/build/src/utils/files/writeFile.test.js

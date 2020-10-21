@@ -16,9 +16,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import writeFile from './writeFile';
+import createFileSetter from './fileSetter';
 
-const baseDir = path.resolve(process.cwd(), 'src/test/getFile');
+const baseDir = path.resolve(process.cwd(), 'src/test/fileSetter');
 
 test('writeFile', async () => {
   const filePath = path.resolve(baseDir, 'writeFile.txt');
@@ -28,12 +28,13 @@ test('writeFile', async () => {
     //pass
   }
   expect(fs.existsSync(filePath)).toBe(false);
-  await writeFile({
-    filePath,
-    content: `Test Write File`,
+  const fileSetter = createFileSetter({ baseDir });
+  await fileSetter.set({
+    filePath: 'writeFile.txt',
+    content: 'Test fileSetter file',
   });
   const res = fs.readFileSync(filePath, 'utf8');
-  expect(res).toEqual(`Test Write File`);
+  expect(res).toEqual('Test fileSetter file');
   try {
     fs.unlinkSync(filePath);
   } catch (error) {
