@@ -35,7 +35,7 @@ beforeEach(() => {
   mockSet.mockReset();
 });
 
-test('writeConnections add connection', async () => {
+test('writeConnections write connection', async () => {
   const components = {
     connections: [
       {
@@ -62,7 +62,7 @@ test('writeConnections add connection', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated connection: connection1']]);
+  expect(mockLogInfo.mock.calls).toEqual([['Updated connection connection1']]);
 });
 
 test('writeConnections multiple connection', async () => {
@@ -100,8 +100,8 @@ test('writeConnections multiple connection', async () => {
     ],
   ]);
   expect(mockLogInfo.mock.calls).toEqual([
-    ['Updated connection: connection1'],
-    ['Updated connection: connection2'],
+    ['Updated connection connection1'],
+    ['Updated connection connection2'],
   ]);
 });
 
@@ -125,7 +125,7 @@ test('writeConnections connections not an array', async () => {
   const components = {
     connections: 'connections',
   };
-  await writeConnections({ components, context });
-  expect(mockSet.mock.calls).toEqual([]);
-  expect(mockLogInfo.mock.calls).toEqual([]);
+  await expect(writeConnections({ components, context })).rejects.toThrow(
+    'Connections is not an array.'
+  );
 });

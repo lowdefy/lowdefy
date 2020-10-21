@@ -16,19 +16,24 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function writeConnections({ components, context }) {
-  if (type.isNone(components.connections)) return;
-  if (!type.isArray(components.connections)) {
-    throw new Error(`Connections is not an array.`);
+async function writePage({ page, context }) {
+  if (!type.isObject(page)) {
+    throw new Error(`Page is not an object.`);
   }
-  const writePromises = components.connections.map(async (connection) => {
-    await context.artifactSetter.set({
-      filePath: `connections/${connection.connectionId}.json`,
-      content: JSON.stringify(connection, null, 2),
-    });
-    await context.logger.info(`Updated connection ${connection.connectionId}`);
+  await context.artifactSetter.set({
+    filePath: `pages/${page.pageId}/${page.pageId}.json`,
+    content: JSON.stringify(page, null, 2),
   });
+  await context.logger.info(`Updated page ${page.pageId}`);
+}
+
+async function writePages({ components, context }) {
+  if (type.isNone(components.pages)) return;
+  if (!type.isArray(components.pages)) {
+    throw new Error(`Pages is not an array.`);
+  }
+  const writePromises = components.pages.map((page) => writePage({ page, context }));
   return Promise.all(writePromises);
 }
 
-export default writeConnections;
+export default writePages;
