@@ -1,0 +1,176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 32,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`inputHeight80 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 80,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`labelHeight40 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 40,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 32,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`labelWidth80 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": 80,
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 32,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`labelfalse 1`] = `
+<div>
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 32,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`sizedefault 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 32,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`sizelarge 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 40,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`sizesmall 1`] = `
+<div>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
+    style={
+      Object {
+        "height": 20,
+        "width": "30%",
+      }
+    }
+  />
+  <div
+    className="skeleton {}"
+    style={
+      Object {
+        "height": 24,
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;

@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default 1`] = `
+<div
+  style={
+    Object {
+      "width": "100%",
+    }
+  }
+>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "40%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`lines1 1`] = `
+<div
+  style={
+    Object {
+      "width": "100%",
+    }
+  }
+>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`lines7 1`] = `
+<div
+  style={
+    Object {
+      "width": "100%",
+    }
+  }
+>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "40%",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`width200 1`] = `
+<div
+  style={
+    Object {
+      "width": 200,
+    }
+  }
+>
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="skeleton {\\"style\\":{\\"marginBottom\\":\\"1rem\\"}}"
+    style={
+      Object {
+        "height": "1.25rem",
+        "width": "40%",
+      }
+    }
+  />
+</div>
+`;
