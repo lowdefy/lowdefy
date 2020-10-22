@@ -14,21 +14,7 @@
   limitations under the License.
 */
 
-import path from 'path';
-import writeFile from '../utils/files/writeFile';
+const defaultMetaLocations = {
+};
 
-class FileSetter {
-  constructor({ baseDirectory }) {
-    this.baseDirectory = baseDirectory;
-  }
-
-  async set({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(this.baseDirectory, filePath), content });
-  }
-}
-
-function createFileSetter(options) {
-  return new FileSetter(options);
-}
-
-export default createFileSetter;
+export default defaultMetaLocations;

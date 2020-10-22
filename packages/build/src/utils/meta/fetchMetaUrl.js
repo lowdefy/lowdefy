@@ -14,21 +14,18 @@
   limitations under the License.
 */
 
-import path from 'path';
-import writeFile from '../utils/files/writeFile';
+import axios from 'axios';
+import { type } from '@lowdefy/helpers';
 
-class FileSetter {
-  constructor({ baseDirectory }) {
-    this.baseDirectory = baseDirectory;
+async function fetchMetaUrl(location) {
+  if (type.isNone(location)) {
+    throw new Error('Failed to fetch meta, location is undefined.');
   }
-
-  async set({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(this.baseDirectory, filePath), content });
+  if (!type.isString(location.url)) {
+    throw new Error('Location url definition should be a string.');
   }
+  const res = await axios.get(location.url);
+  return res.data;
 }
 
-function createFileSetter(options) {
-  return new FileSetter(options);
-}
-
-export default createFileSetter;
+export default fetchMetaUrl;

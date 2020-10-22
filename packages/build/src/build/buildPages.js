@@ -17,7 +17,6 @@
 */
 
 import { set, type } from '@lowdefy/helpers';
-const blockTypes = {};
 
 /* Page and block build steps
 
@@ -108,8 +107,8 @@ async function setBlockMeta(block, context) {
       )}`
     );
   }
-  const { category, loading, module, scope, url, valueType } = meta;
-  block.meta = { category, loading, module, scope, url };
+  const { category, loading, moduleFederation, valueType } = meta;
+  block.meta = { category, loading, moduleFederation };
   if (category === 'input') {
     block.meta.valueType = valueType;
   }

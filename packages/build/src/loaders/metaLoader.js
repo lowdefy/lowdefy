@@ -15,33 +15,34 @@
 */
 
 import { get } from '@lowdefy/helpers';
-import path from 'path';
 import Dataloader from 'dataloader';
-import getFile from '../utils/files/getFile';
+import createGetMeta from '../utils/meta/getMeta';
 
-function createFileBatchLoader({ baseDirectory }) {
+function createMetaBatchLoader({ components, context }) {
+  const { cacheDirectory } = context;
+  const { types } = components;
+  const getMeta = createGetMeta({ cacheDirectory, types });
   async function loader(keys) {
-    const filePaths = keys.map((key) => path.resolve(baseDirectory, key));
     const fetched = [];
-    const promises = filePaths.map(async (filePath) => {
-      const item = await getFile(filePath);
+    const promises = keys.map(async (key) => {
+      const item = await getMeta(key);
       fetched.push(item);
     });
     await Promise.all(promises);
-    const returned = filePaths
-      .map((filePath) =>
+    const returned = keys
+      .map((key) =>
         fetched.find((item) => {
-          return get(item, 'filePath') === filePath;
+          return get(item, 'type') === key;
         })
       )
-      .map((obj) => obj.content);
+      .map((obj) => obj.meta);
     return returned;
   }
   return loader;
 }
 
-function createFileLoader(options) {
-  return new Dataloader(createFileBatchLoader(options));
+function createMetaLoader(options) {
+  return new Dataloader(createMetaBatchLoader(options));
 }
 
-export default createFileLoader;
+export default createMetaLoader;

@@ -28,11 +28,13 @@ const logger = {
 const blockMetas = {
   Context: {
     category: 'context',
-    scope: 'blocks',
-    module: 'Context',
-    url: 'https://example.com/remoteEntry.js',
     loading: {
       type: 'Spinner',
+    },
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Context',
+      url: 'https://example.com/remoteEntry.js',
     },
     schema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -41,11 +43,13 @@ const blockMetas = {
   },
   Container: {
     category: 'container',
-    scope: 'blocks',
-    module: 'Container',
-    url: 'https://example.com/remoteEntry.js',
     loading: {
       type: 'Spinner',
+    },
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Container',
+      url: 'https://example.com/remoteEntry.js',
     },
     schema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -54,11 +58,13 @@ const blockMetas = {
   },
   List: {
     category: 'list',
-    scope: 'blocks',
-    module: 'List',
-    url: 'https://example.com/remoteEntry.js',
     loading: {
       type: 'Spinner',
+    },
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'List',
+      url: 'https://example.com/remoteEntry.js',
     },
     schema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -67,12 +73,14 @@ const blockMetas = {
   },
   Input: {
     category: 'input',
-    scope: 'blocks',
-    module: 'Input',
-    url: 'https://example.com/remoteEntry.js',
     valueType: 'string',
     loading: {
       type: 'SkeletonInput',
+    },
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Input',
+      url: 'https://example.com/remoteEntry.js',
     },
     schema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -81,11 +89,13 @@ const blockMetas = {
   },
   Display: {
     category: 'display',
-    scope: 'blocks',
-    module: 'Display',
-    url: 'https://example.com/remoteEntry.js',
     loading: {
       type: 'Spinner',
+    },
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Display',
+      url: 'https://example.com/remoteEntry.js',
     },
     schema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -97,27 +107,33 @@ const blockMetas = {
 const outputMetas = {
   Context: {
     category: 'context',
-    scope: 'blocks',
-    module: 'Context',
-    url: 'https://example.com/remoteEntry.js',
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Context',
+      url: 'https://example.com/remoteEntry.js',
+    },
     loading: {
       type: 'Spinner',
     },
   },
   Container: {
     category: 'container',
-    scope: 'blocks',
-    module: 'Container',
-    url: 'https://example.com/remoteEntry.js',
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Container',
+      url: 'https://example.com/remoteEntry.js',
+    },
     loading: {
       type: 'Spinner',
     },
   },
   List: {
     category: 'list',
-    scope: 'blocks',
-    module: 'List',
-    url: 'https://example.com/remoteEntry.js',
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'List',
+      url: 'https://example.com/remoteEntry.js',
+    },
     loading: {
       type: 'Spinner',
     },
@@ -125,9 +141,11 @@ const outputMetas = {
   },
   Input: {
     category: 'input',
-    scope: 'blocks',
-    module: 'Input',
-    url: 'https://example.com/remoteEntry.js',
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Input',
+      url: 'https://example.com/remoteEntry.js',
+    },
     valueType: 'string',
     loading: {
       type: 'SkeletonInput',
@@ -135,9 +153,11 @@ const outputMetas = {
   },
   Display: {
     category: 'display',
-    scope: 'blocks',
-    module: 'Display',
-    url: 'https://example.com/remoteEntry.js',
+    moduleFederation: {
+      scope: 'blocks',
+      module: 'Display',
+      url: 'https://example.com/remoteEntry.js',
+    },
     loading: {
       type: 'Spinner',
     },

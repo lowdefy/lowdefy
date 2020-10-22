@@ -15,20 +15,18 @@
 */
 
 import path from 'path';
-import writeFile from '../utils/files/writeFile';
+import createCacheKey from './createCacheKey';
+import writeFile from '../files/writeFile';
 
-class FileSetter {
-  constructor({ baseDirectory }) {
-    this.baseDirectory = baseDirectory;
+function createWriteMetaCache({ cacheDirectory }) {
+  async function writeMetaCache({ location, meta }) {
+    const cacheKey = createCacheKey(location);
+    return writeFile({
+      filePath: path.resolve(cacheDirectory, cacheKey),
+      content: JSON.stringify(meta, null, 2),
+    });
   }
-
-  async set({ filePath, content }) {
-    return writeFile({ filePath: path.resolve(this.baseDirectory, filePath), content });
-  }
+  return writeMetaCache;
 }
 
-function createFileSetter(options) {
-  return new FileSetter(options);
-}
-
-export default createFileSetter;
+export default createWriteMetaCache;

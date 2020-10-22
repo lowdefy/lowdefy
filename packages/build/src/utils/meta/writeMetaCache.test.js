@@ -16,25 +16,29 @@
 
 import fs from 'fs';
 import path from 'path';
-import createFileSetter from './fileSetter';
+import createWriteMetaCache from './writeMetaCache';
 
-const baseDirectory = path.resolve(process.cwd(), 'src/test/fileSetter');
+const cacheDirectory = path.resolve(process.cwd(), 'src/test/fetchMetaCache');
+const writeMetaCache = createWriteMetaCache({ cacheDirectory });
 
-test('writeFile', async () => {
-  const filePath = path.resolve(baseDirectory, 'writeFile.txt');
+test('writeMetaCache writes to cache', async () => {
+  const filePath = path.resolve(cacheDirectory, 'writemetacache.json');
   try {
     fs.unlinkSync(filePath);
   } catch (error) {
     //pass
   }
   expect(fs.existsSync(filePath)).toBe(false);
-  const fileSetter = createFileSetter({ baseDirectory });
-  await fileSetter.set({
-    filePath: 'writeFile.txt',
-    content: 'Test fileSetter file',
+  await writeMetaCache({
+    location: { url: 'writemetacache.json' },
+    meta: {
+      key: 'value',
+    },
   });
-  const res = fs.readFileSync(filePath, 'utf8');
-  expect(res).toEqual('Test fileSetter file');
+  const content = fs.readFileSync(filePath, 'utf8');
+  expect(content).toEqual(`{
+  "key": "value"
+}`);
   try {
     fs.unlinkSync(filePath);
   } catch (error) {
