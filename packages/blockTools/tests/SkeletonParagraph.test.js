@@ -14,25 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
+import examples from '../demo/examples/SkeletonParagraph.yaml';
+import runExampleTests from './runExampleTests';
 import { SkeletonParagraph } from '../src';
-import Wrapper from './Wrapper';
 
-const Examples = () => (
-  <>
-    <Wrapper title="SkeletonParagraph">
-      <SkeletonParagraph />
-    </Wrapper>
-    <Wrapper title="SkeletonParagraph properties.lines = 1 :">
-      <SkeletonParagraph properties={{ lines: 1 }} />
-    </Wrapper>
-    <Wrapper title="SkeletonParagraph properties.lines = 7 :">
-      <SkeletonParagraph properties={{ lines: 7 }} />
-    </Wrapper>
-    <Wrapper title="SkeletonParagraph properties.width = 200 :">
-      <SkeletonParagraph properties={{ width: 200 }} />
-    </Wrapper>
-  </>
-);
-
-export default Examples;
+runExampleTests(examples, SkeletonParagraph);

@@ -14,22 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
-import Wrapper from './Wrapper';
-import { Skeleton } from '../src';
+import examples from '../demo/examples/Spinner.yaml';
+import runExampleTests from './runExampleTests';
+import { Spinner } from '../src';
 
-const Examples = () => (
-  <>
-    <Wrapper title={'Skeleton'}>
-      <Skeleton />
-    </Wrapper>
-    <Wrapper title={'Skeleton container height=20'} style={{ height: 20 }}>
-      <Skeleton />
-    </Wrapper>
-    <Wrapper title={'Skeleton container height=40 width=100'} style={{ height: 40, width: 100 }}>
-      <Skeleton />
-    </Wrapper>
-  </>
-);
-
-export default Examples;
+runExampleTests(examples, Spinner);
