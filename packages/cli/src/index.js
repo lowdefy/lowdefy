@@ -14,18 +14,22 @@
   limitations under the License.
 */
 
-import formatErrorMessage from '../utils/formatErrorMessage';
-import testAppSchema from '../utils/testAppSchema';
+import program from 'commander';
+import packageJson from '../package.json';
+import build from './commands/build';
 
-async function testSchema({ components, context }) {
-  const { valid, errors } = testAppSchema(components);
-  if (!valid) {
-    await context.logger.warn('Schema not valid.');
-    const promises = errors.map((err) => context.logger.warn(formatErrorMessage(err, components)));
-    await promises;
-  } else {
-    await context.logger.log('Schema valid.');
-  }
-}
+const { description, version } = packageJson;
 
-export default testSchema;
+program.description(description).version(version, '-v, --version');
+
+program
+  .command('build')
+  .description('Build a Lowdefy deployment.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .action(build);
+
+program.parse(process.argv);

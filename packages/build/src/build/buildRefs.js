@@ -161,7 +161,6 @@ class RefBuilder {
 async function buildRefs({ context }) {
   const builder = new RefBuilder({ context });
   const components = await builder.build();
-  await context.logger.debug('Built references');
   return components;
 }
 

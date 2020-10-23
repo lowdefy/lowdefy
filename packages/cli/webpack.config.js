@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const { dependencies, devDependencies } = require('./package.json');
 
 module.exports = {
@@ -35,4 +36,5 @@ module.exports = {
       },
     ],
   },
+  plugins: [new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })],
 };

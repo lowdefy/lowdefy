@@ -14,18 +14,12 @@
   limitations under the License.
 */
 
-import formatErrorMessage from '../utils/formatErrorMessage';
-import testAppSchema from '../utils/testAppSchema';
+const path = require('path');
+const build = require('./dist/index.js').default;
 
-async function testSchema({ components, context }) {
-  const { valid, errors } = testAppSchema(components);
-  if (!valid) {
-    await context.logger.warn('Schema not valid.');
-    const promises = errors.map((err) => context.logger.warn(formatErrorMessage(err, components)));
-    await promises;
-  } else {
-    await context.logger.log('Schema valid.');
-  }
-}
-
-export default testSchema;
+build({
+  logger: console,
+  cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
+  configDirectory: process.cwd(),
+  outputDirectory: path.resolve(process.cwd(), '.lowdefy/build'),
+});

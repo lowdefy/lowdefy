@@ -16,10 +16,9 @@
 
 function testContext({ artifactSetter, configLoader, logger = {}, metaLoader } = {}) {
   const defaultLogger = {
-    success: () => {},
+    log: () => {},
     warn: () => {},
     error: () => {},
-    debug: () => {},
   };
 
   const context = {
