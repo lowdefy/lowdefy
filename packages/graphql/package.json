@@ -24,6 +24,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn webpack",
+    "clean": "rm -rf dist",
     "webpack": "webpack --config webpack.config.js",
     "test": "jest --coverage"
   },

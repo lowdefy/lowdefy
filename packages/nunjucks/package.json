@@ -24,6 +24,7 @@
   "main": "dist/nunjucks.js",
   "scripts": {
     "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
     "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",

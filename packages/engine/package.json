@@ -24,6 +24,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
     "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
