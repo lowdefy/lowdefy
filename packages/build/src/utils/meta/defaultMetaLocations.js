@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-const defaultMetaLocations = {
-};
+const defaultMetaLocations = {};
 
 export default defaultMetaLocations;
