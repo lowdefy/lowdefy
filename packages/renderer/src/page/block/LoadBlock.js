@@ -24,9 +24,9 @@ import loadComponent from '../../utils/loadComponent';
 const Components = {};
 
 const LoadBlock = ({ meta, render }) => {
-  const typeId = `${meta.scope}:${meta.module}`;
+  const typeId = `${meta.moduleFederation.scope}:${meta.moduleFederation.module}`;
   const { ready, failed } = useDynamicScript({
-    url: meta.url,
+    url: meta.moduleFederation.remoteEntryUrl,
   });
   if (!Components[typeId]) {
     if (!ready) {
@@ -36,9 +36,11 @@ const LoadBlock = ({ meta, render }) => {
     }
     if (failed) {
       // TODO
-      return <h2>Failed to load dynamic script: {meta.url}</h2>;
+      return <h2>Failed to load dynamic script: {meta.moduleFederation.remoteEntryUrl}</h2>;
     }
-    Components[typeId] = lazy(loadComponent(meta.scope, meta.module));
+    Components[typeId] = lazy(
+      loadComponent(meta.moduleFederation.scope, meta.moduleFederation.module)
+    );
   }
   return render(Components[typeId]);
 };
