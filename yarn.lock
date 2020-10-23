@@ -3019,7 +3019,7 @@ __metadata:
     babel-jest: 26.5.2
     jest: 26.5.3
     js-yaml: 3.14.0
-    mingo: 3.0.6
+    mingo: 3.1.0
   languageName: unknown
   linkType: soft
 
@@ -12947,10 +12947,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mingo@npm:3.0.6":
-  version: 3.0.6
-  resolution: "mingo@npm:3.0.6"
-  checksum: cbc1d5548ac59aed7ec025e647bbf9dfeffb101f0b37ee9f8cbd4c82154060a621d0e70c34288504303582bfbb31c2594627d0bf051a07e743a584b997c82f61
+"mingo@npm:3.1.0":
+  version: 3.1.0
+  resolution: "mingo@npm:3.1.0"
+  checksum: 34eb1d66a1cccda29f8fd360bd11268a212ab1cd72dd81a06d7168f037cd9793b75820b34a67043a3f9d8e7f88bebfb4ee7a912715c534690802377a6862e3bc
   languageName: node
   linkType: hard
 
