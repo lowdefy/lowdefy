@@ -2850,7 +2850,6 @@ __metadata:
     jest: 26.5.3
     js-yaml: 3.14.0
     json5: 2.1.3
-    rimraf: 3.0.2
     uuid: 8.3.1
     webpack: 5.1.3
     webpack-cli: 4.0.0
@@ -2958,6 +2957,7 @@ __metadata:
     jest-diff: 26.5.2
     lodash.merge: 4.6.2
     query-string: 6.13.6
+    rimraf: 3.0.2
   languageName: unknown
   linkType: soft
 

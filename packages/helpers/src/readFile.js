@@ -15,17 +15,29 @@
 */
 
 import fs from 'fs';
+import path from 'path';
 import { promisify } from 'util';
+import type from './type';
 
 const readFilePromise = promisify(fs.readFile);
 
 async function readFile(filePath) {
+  if (!type.isString(filePath)) {
+    throw new Error(
+      `Could not read file, file path should be a string, received ${JSON.stringify(filePath)}.`
+    );
+  }
+  if (filePath !== path.resolve(filePath)) {
+    throw new Error(
+      `Could not read file, file path was not resolved, received ${JSON.stringify(filePath)}.`
+    );
+  }
   try {
     // By specifying encoding, readFile returns a string instead of a buffer.
     const file = await readFilePromise(filePath, 'utf8');
     return file;
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (error.code === 'ENOENT' || error.code === 'EISDIR') {
       return null;
     }
     throw error;

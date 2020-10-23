@@ -15,9 +15,12 @@
 */
 
 import applyArrayIndices from './applyArrayIndices';
+import cleanDirectory from './cleanDirectory';
 import get from './get';
+import getFileExtension, { getFileSubExtension } from './getFileExtension';
 import mergeObjects from './mergeObjects';
 import omit from './omit';
+import readFile from './readFile';
 import serializer from './serializer';
 import set from './set';
 import stableStringify from './stableStringify';
@@ -25,12 +28,17 @@ import swap from './swap';
 import type from './type';
 import unset from './unset';
 import urlQuery from './urlQuery';
+import writeFile from './writeFile';
 
 export {
   applyArrayIndices,
+  cleanDirectory,
   get,
+  getFileExtension,
+  getFileSubExtension,
   mergeObjects,
   omit,
+  readFile,
   serializer,
   set,
   stableStringify,
@@ -38,4 +46,5 @@ export {
   type,
   unset,
   urlQuery,
+  writeFile,
 };

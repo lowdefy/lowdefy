@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, getFileExtension, getFileSubExtension, type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 import JSON5 from 'json5';
 import YAML from 'js-yaml';
 import { v1 as uuid } from 'uuid';
-
-import getFileExtension, { getFileSubExtension } from '../utils/files/getFileExtension';
 
 function getRefPath(refDefinition) {
   if (type.isObject(refDefinition) && refDefinition.path) {

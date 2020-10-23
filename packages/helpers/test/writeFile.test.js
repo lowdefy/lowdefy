@@ -17,9 +17,9 @@
 import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
-import writeFile from './writeFile';
+import writeFile from '../src/writeFile';
 
-const baseDir = path.resolve(process.cwd(), 'src/test/getFile');
+const baseDir = path.resolve(process.cwd(), 'test/writeFile');
 
 test('writeFile', async () => {
   const filePath = path.resolve(baseDir, 'writeFile.txt');

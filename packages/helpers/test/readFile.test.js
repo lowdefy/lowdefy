@@ -14,9 +14,9 @@
   limitations under the License.
 */
 import path from 'path';
-import readFile from './readFile';
+import readFile from '../src/readFile';
 
-const baseDir = path.resolve(process.cwd(), 'src/test/readFile');
+const baseDir = path.resolve(process.cwd(), 'test/readFile');
 
 test('readFile', async () => {
   const filePath = path.resolve(baseDir, 'readFile.txt');
@@ -30,9 +30,14 @@ test('readFile file not found throws', async () => {
   expect(res).toEqual(null);
 });
 
-test('readFile error', async () => {
-  const filePath = baseDir;
-  await expect(readFile(filePath)).rejects.toThrow(
-    'EISDIR: illegal operation on a directory, read'
+test('readFile error id filepath is not a string', async () => {
+  await expect(readFile({})).rejects.toThrow(
+    'Could not read file, file path should be a string, received {}.'
+  );
+});
+
+test('readFile errors if path is not already resolved', async () => {
+  await expect(readFile('./omit.test.js')).rejects.toThrow(
+    'Could not read file, file path was not resolved, received "./omit.test.js".'
   );
 });

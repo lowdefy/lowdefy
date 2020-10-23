@@ -14,6 +14,13 @@
   limitations under the License.
 */
 
-const defaultMetaLocations = {};
+const defaultMetaLocations = {
+  Button: {
+    url: 'https://unpkg.com/@lowdefy/blocks-antd@^1.0.0-experimental.1/dist/meta/Button.json',
+  },
+  Context: {
+    url: 'https://unpkg.com/@lowdefy/blocks-antd@^1.0.0-experimental.1/dist/meta/Button.json',
+  },
+};
 
 export default defaultMetaLocations;

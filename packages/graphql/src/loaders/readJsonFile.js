@@ -14,19 +14,11 @@
   limitations under the License.
 */
 
-import fs from 'fs';
-import { promisify } from 'util';
+import { readFile } from '@lowdefy/helpers';
 import { ConfigurationError } from '../context/errors';
 
-const readFile = promisify(fs.readFile);
-
 async function readJsonFile({ filePath }) {
-  let file;
-  try {
-    file = await readFile(filePath);
-  } catch (error) {
-    return null;
-  }
+  const file = await readFile(filePath);
   try {
     return JSON.parse(file);
   } catch (error) {

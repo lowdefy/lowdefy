@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import { cleanDirectory } from '@lowdefy/helpers';
 import cleanOutputDirectory from './cleanOutputDirectory';
-import cleanDirectory from '../utils/files/cleanDirectory';
 
-jest.mock('../utils/files/cleanDirectory', () => {
-  return jest.fn();
+jest.mock('@lowdefy/helpers', () => {
+  return {
+    cleanDirectory: jest.fn(),
+  };
 });
 
 beforeEach(() => {

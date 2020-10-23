@@ -16,10 +16,10 @@
 
 import fs from 'fs';
 import path from 'path';
-import cleanDirectory from './cleanDirectory';
+import cleanDirectory from '../src/cleanDirectory';
 
 test('cleanDirectory', async () => {
-  const dirPath = path.resolve(process.cwd(), 'src/test/cleanDirectory/');
+  const dirPath = path.resolve(process.cwd(), 'test/cleanDirectory/');
   const filePath1 = path.resolve(dirPath, 'cleanDirectory.txt');
   const filePath2 = path.resolve(dirPath, 'subdirectory/cleanDirectory.txt');
 
