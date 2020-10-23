@@ -63,21 +63,21 @@ function getRefsFromFile(fileContent) {
     }
     return value;
   };
-  const fileContentBuiltRefs = JSON.stringify(JSON.parse(fileContent, reviver));
+  const fileContentBuiltRefs = JSON.parse(JSON.stringify(fileContent), reviver);
   return { foundRefs, fileContentBuiltRefs };
 }
 
 function parseNunjucks(fileContent, vars, path) {
-  const template = nunjucksFunction(JSON.parse(fileContent));
+  const template = nunjucksFunction(fileContent);
   const templated = template(vars);
   const subExt = getFileSubExtension(path);
   if (subExt === 'yaml' || subExt === 'yml') {
-    return JSON.stringify(YAML.safeLoad(templated));
+    return YAML.safeLoad(templated);
   }
   if (subExt === 'json') {
-    return JSON.stringify(JSON5.parse(templated));
+    return JSON5.parse(templated);
   }
-  return JSON.stringify(templated);
+  return templated;
 }
 
 function refReviver(key, value) {
@@ -155,7 +155,7 @@ class RefBuilder {
         count: count + 1,
       });
     }
-    return JSON.parse(fileContentBuiltRefs, refReviver.bind({ parsedFiles, vars }));
+    return JSON.parse(JSON.stringify(fileContentBuiltRefs), refReviver.bind({ parsedFiles, vars }));
   }
 }
 

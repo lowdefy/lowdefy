@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import rimraf from 'rimraf';
 import writeFile from './writeFile';
 
 const baseDir = path.resolve(process.cwd(), 'src/test/getFile');
@@ -34,6 +35,45 @@ test('writeFile', async () => {
   });
   const res = fs.readFileSync(filePath, 'utf8');
   expect(res).toEqual(`Test Write File`);
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    //pass
+  }
+});
+
+test('writeFile should create directories if they do not exist', async () => {
+  const filePath = path.resolve(baseDir, 'sub/dir/test/writeFile.txt');
+  const testBaseDir = path.resolve(baseDir, 'sub');
+
+  await new Promise((resolve) => rimraf(testBaseDir, resolve));
+
+  expect(fs.existsSync(filePath)).toBe(false);
+  await writeFile({
+    filePath,
+    content: `Test Write File`,
+  });
+  const res = fs.readFileSync(filePath, 'utf8');
+  expect(res).toEqual(`Test Write File`);
+  await new Promise((resolve) => rimraf(testBaseDir, resolve));
+});
+
+test('writeFile error', async () => {
+  const filePath = path.resolve(baseDir, 'writeFileError.txt');
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    //pass
+  }
+  expect(fs.existsSync(filePath)).toBe(false);
+  await expect(
+    writeFile({
+      filePath,
+      content: { key: 'value' },
+    })
+  ).rejects.toThrow(
+    'The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received an instance of Object'
+  );
   try {
     fs.unlinkSync(filePath);
   } catch (error) {

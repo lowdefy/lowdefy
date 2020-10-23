@@ -4,6 +4,7 @@
 
 **/dist/*
 **/coverage/*
+**/.lowdefy/*
 
 .DS_Store
 

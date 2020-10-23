@@ -53,9 +53,9 @@ function createContext(bootstrapContext) {
 async function build() {
   const bootstrapContext = {
     logger: console,
-    cacheDirectory: path.resolve(process.cwd(), '/.lowdefy/.cache'),
+    cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
     configDirectory: process.cwd(),
-    outputDirectory: path.resolve(process.cwd(), '/.lowdefy/build'),
+    outputDirectory: path.resolve(process.cwd(), '.lowdefy/build'),
   };
   const context = createContext(bootstrapContext);
   try {

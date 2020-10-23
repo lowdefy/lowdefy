@@ -15,12 +15,23 @@
 */
 
 import fs from 'fs';
+import path from 'path';
 import { promisify } from 'util';
 
+const mkdirPromise = promisify(fs.mkdir);
 const writeFilePromise = promisify(fs.writeFile);
 
 async function writeFile({ filePath, content }) {
-  return writeFilePromise(filePath, content);
+  try {
+    await writeFilePromise(filePath, content);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      await mkdirPromise(path.dirname(filePath), { recursive: true });
+      await writeFilePromise(filePath, content);
+      return;
+    }
+    throw error;
+  }
 }
 
 export default writeFile;

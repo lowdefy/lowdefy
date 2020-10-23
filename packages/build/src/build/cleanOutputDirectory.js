@@ -1,7 +1,7 @@
 import cleanDirectory from '../utils/files/cleanDirectory';
 
 async function cleanOutputDirectory({ context }) {
-  return cleanDirectory(context.outputBaseDir);
+  return cleanDirectory(context.outputDirectory);
 }
 
 export default cleanOutputDirectory;

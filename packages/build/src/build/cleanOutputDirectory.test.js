@@ -11,8 +11,8 @@ beforeEach(() => {
 
 test('cleanOutputDirectory calls cleanDirectory', async () => {
   const context = {
-    outputBaseDir: 'outputBaseDir',
+    outputDirectory: 'outputDirectory',
   };
   await cleanOutputDirectory({ context });
-  expect(cleanDirectory.mock.calls).toEqual([['outputBaseDir']]);
+  expect(cleanDirectory.mock.calls).toEqual([['outputDirectory']]);
 });
