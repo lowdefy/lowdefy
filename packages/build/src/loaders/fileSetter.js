@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { writeFile } from '@lowdefy/helpers';
+import { writeFile } from '@lowdefy/node-utils';
 
 class FileSetter {
   constructor({ baseDirectory }) {

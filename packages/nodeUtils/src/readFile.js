@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
-import type from './type';
+import { type } from '@lowdefy/helpers';
 
 const readFilePromise = promisify(fs.readFile);
 

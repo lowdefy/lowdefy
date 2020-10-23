@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/helpers';
+import { cleanDirectory } from '@lowdefy/node-utils';
 
 async function cleanOutputDirectory({ context }) {
   return cleanDirectory(context.outputDirectory);

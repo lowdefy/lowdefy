@@ -1,6 +1,6 @@
 {
-  "name": "@lowdefy/helpers",
-  "version": "1.1.0",
+  "name": "@lowdefy/node-utils",
+  "version": "1.0.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -30,8 +30,8 @@
     "npm-publish": "npm publish --access public"
   },
   "dependencies": {
-    "lodash.merge": "4.6.2",
-    "query-string": "6.13.6"
+    "@lowdefy/helpers": "1.1.0",
+    "rimraf": "3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",

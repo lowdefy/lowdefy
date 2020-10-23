@@ -2841,6 +2841,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
+    "@lowdefy/node-utils": 1.0.0
     "@lowdefy/nunjucks": 1.0.0
     ajv: 6.12.6
     axios: 0.20.0
@@ -2932,6 +2933,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
+    "@lowdefy/node-utils": 1.0.0
     apollo-server: 2.18.2
     apollo-server-testing: 2.18.2
     babel-jest: 26.5.2
@@ -2957,7 +2959,6 @@ __metadata:
     jest-diff: 26.5.2
     lodash.merge: 4.6.2
     query-string: 6.13.6
-    rimraf: 3.0.2
   languageName: unknown
   linkType: soft
 
@@ -3014,6 +3015,21 @@ __metadata:
     eslint-plugin-react-hooks: 4.1.2
     lerna: 3.22.1
     prettier: 2.1.2
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/node-utils@1.0.0, @lowdefy/node-utils@workspace:packages/nodeUtils":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
+  dependencies:
+    "@babel/cli": 7.12.1
+    "@babel/core": 7.12.3
+    "@babel/preset-env": 7.12.1
+    "@lowdefy/helpers": 1.1.0
+    babel-jest: 26.5.2
+    jest: 26.5.3
+    jest-diff: 26.5.2
+    rimraf: 3.0.2
   languageName: unknown
   linkType: soft
 

@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { readFile } from '@lowdefy/helpers';
+import { readFile } from '@lowdefy/node-utils';
 import createCacheKey from './createCacheKey';
 
 function createFetchMetaCache({ cacheDirectory }) {

@@ -16,7 +16,8 @@
 
 import JSON5 from 'json5';
 import YAML from 'js-yaml';
-import { getFileExtension, readFile, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+import { getFileExtension, readFile } from '@lowdefy/node-utils';
 
 async function getJsonFile(filePath) {
   const file = await readFile(filePath);

@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { get, getFileExtension, getFileSubExtension, type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
+import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 import JSON5 from 'json5';
 import YAML from 'js-yaml';

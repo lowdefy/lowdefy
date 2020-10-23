@@ -14,16 +14,9 @@
   limitations under the License.
 */
 
-import { readFile } from '@lowdefy/node-utils';
-import { ConfigurationError } from '../context/errors';
+import cleanDirectory from './cleanDirectory';
+import getFileExtension, { getFileSubExtension } from './getFileExtension';
+import readFile from './readFile';
+import writeFile from './writeFile';
 
-async function readJsonFile({ filePath }) {
-  const file = await readFile(filePath);
-  try {
-    return JSON.parse(file);
-  } catch (error) {
-    throw new ConfigurationError(error);
-  }
-}
-
-export default readJsonFile;
+export { cleanDirectory, getFileExtension, getFileSubExtension, readFile, writeFile };

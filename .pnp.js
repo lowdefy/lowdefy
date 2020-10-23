@@ -59,6 +59,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/layout"
       },
       {
+        "name": "@lowdefy/node-utils",
+        "reference": "workspace:packages/nodeUtils"
+      },
+      {
         "name": "@lowdefy/nunjucks",
         "reference": "workspace:packages/nunjucks"
       },
@@ -84,6 +88,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/helpers", ["workspace:packages/helpers"]],
       ["@lowdefy/layout", ["workspace:packages/layout"]],
       ["@lowdefy/lowdefy", ["workspace:."]],
+      ["@lowdefy/node-utils", ["workspace:packages/nodeUtils"]],
       ["@lowdefy/nunjucks", ["workspace:packages/nunjucks"]],
       ["@lowdefy/operators", ["workspace:packages/operators"]],
       ["@lowdefy/renderer", ["workspace:packages/renderer"]]
@@ -3670,6 +3675,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.12.3"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.1"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["ajv", "npm:6.12.6"],
             ["axios", "npm:0.20.0"],
@@ -3771,6 +3777,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.12.3"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.1"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.18.2"],
             ["apollo-server-testing", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.18.2"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.5.2"],
@@ -3797,8 +3804,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.5.3"],
             ["jest-diff", "npm:26.5.2"],
             ["lodash.merge", "npm:4.6.2"],
-            ["query-string", "npm:6.13.6"],
-            ["rimraf", "npm:3.0.2"]
+            ["query-string", "npm:6.13.6"]
           ],
           "linkType": "SOFT",
         }]
@@ -3859,6 +3865,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react-hooks", "virtual:14dc3c5c29c93a240ee9920d64fd6833645f8d8a02afe23178a1bf927002b564a4b08cf8ebf9743280710b14fd76f4d49a30c662180d631d2b7265cbb3f04552#npm:4.1.2"],
             ["lerna", "npm:3.22.1"],
             ["prettier", "npm:2.1.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/node-utils", [
+        ["workspace:packages/nodeUtils", {
+          "packageLocation": "./packages/nodeUtils/",
+          "packageDependencies": [
+            ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.1"],
+            ["@babel/core", "npm:7.12.3"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.1"],
+            ["@lowdefy/helpers", "workspace:packages/helpers"],
+            ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.5.2"],
+            ["jest", "npm:26.5.3"],
+            ["jest-diff", "npm:26.5.2"],
+            ["rimraf", "npm:3.0.2"]
           ],
           "linkType": "SOFT",
         }]
