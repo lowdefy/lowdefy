@@ -58,25 +58,16 @@ test('writeFile should create directories if they do not exist', async () => {
   await new Promise((resolve) => rimraf(testBaseDir, resolve));
 });
 
-test('writeFile error', async () => {
-  const filePath = path.resolve(baseDir, 'writeFileError.txt');
-  try {
-    fs.unlinkSync(filePath);
-  } catch (error) {
-    //pass
-  }
-  expect(fs.existsSync(filePath)).toBe(false);
-  await expect(
-    writeFile({
-      filePath,
-      content: { key: 'value' },
-    })
-  ).rejects.toThrow(
-    'The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received an instance of Object'
+test('readFile error id filepath is not a string', async () => {
+  await expect(writeFile({ filePath: true, content: `Test Write File` })).rejects.toThrow(
+    'Could not write file, file path should be a string, received true.'
   );
-  try {
-    fs.unlinkSync(filePath);
-  } catch (error) {
-    //pass
-  }
+});
+
+test('readFile errors if path is not already resolved', async () => {
+  await expect(
+    writeFile({ filePath: './writeFile/writeFile.txt', content: `Test Write File` })
+  ).rejects.toThrow(
+    'Could not write file, file path was not resolved, received "./writeFile/writeFile.txt".'
+  );
 });
