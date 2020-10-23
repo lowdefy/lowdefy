@@ -10,4 +10,3 @@
 
 packages/express/config/**
 packages/build/src/test/writeFile.txt
-packages/build/src/test/fetchMetaCache/cachekey.json
