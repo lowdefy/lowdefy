@@ -24,11 +24,13 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn webpack",
+    "clean": "rm -rf dist",
     "webpack": "webpack --config webpack.config.js",
     "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
+    "@lowdefy/node-utils": "1.0.0",
     "apollo-server": "2.18.2",
     "dataloader": "2.0.0",
     "graphql": "15.3.0",
