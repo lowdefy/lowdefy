@@ -4,7 +4,9 @@
 
 **/dist/*
 **/coverage/*
+**/.lowdefy/*
 
 .DS_Store
 
 packages/express/config/**
+packages/build/src/test/writeFile.txt

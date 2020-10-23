@@ -2833,6 +2833,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/build@workspace:packages/build":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/build@workspace:packages/build"
+  dependencies:
+    "@babel/cli": 7.12.1
+    "@babel/core": 7.12.3
+    "@babel/preset-env": 7.12.1
+    "@lowdefy/helpers": 1.1.0
+    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/nunjucks": 1.0.0
+    ajv: 6.12.6
+    axios: 0.20.0
+    babel-jest: 26.5.2
+    babel-loader: 8.1.0
+    dataloader: 2.0.0
+    jest: 26.5.3
+    js-yaml: 3.14.0
+    json5: 2.1.3
+    uuid: 8.3.1
+    webpack: 5.1.3
+    webpack-cli: 4.0.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
@@ -2909,6 +2933,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
+    "@lowdefy/node-utils": 1.0.0
     apollo-server: 2.18.2
     apollo-server-testing: 2.18.2
     babel-jest: 26.5.2
@@ -2982,6 +3007,7 @@ __metadata:
     "@yarnpkg/pnpify": 2.3.3
     eslint: 7.11.0
     eslint-config-prettier: 6.13.0
+    eslint-import-resolver-node: 0.3.4
     eslint-plugin-import: 2.22.1
     eslint-plugin-jsx-a11y: 6.3.1
     eslint-plugin-prettier: 3.1.4
@@ -2989,6 +3015,21 @@ __metadata:
     eslint-plugin-react-hooks: 4.1.2
     lerna: 3.22.1
     prettier: 2.1.2
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/node-utils@1.0.0, @lowdefy/node-utils@workspace:packages/nodeUtils":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
+  dependencies:
+    "@babel/cli": 7.12.1
+    "@babel/core": 7.12.3
+    "@babel/preset-env": 7.12.1
+    "@lowdefy/helpers": 1.1.0
+    babel-jest: 26.5.2
+    jest: 26.5.3
+    jest-diff: 26.5.2
+    rimraf: 3.0.2
   languageName: unknown
   linkType: soft
 
@@ -4538,6 +4579,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ajv@npm:6.12.6, ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.3, ajv@npm:^6.12.4, ajv@npm:^6.12.5":
+  version: 6.12.6
+  resolution: "ajv@npm:6.12.6"
+  dependencies:
+    fast-deep-equal: ^3.1.1
+    fast-json-stable-stringify: ^2.0.0
+    json-schema-traverse: ^0.4.1
+    uri-js: ^4.2.2
+  checksum: 19a8f3b0a06001eb68e6268f4f9f04424b32baadd5df6ba8292cd473e22e5f4019ed9ab17c3e3510394178ed8bef9b42ad0bdb5c675d65f042421a774780ce1a
+  languageName: node
+  linkType: hard
+
 "ajv@npm:6.5.3":
   version: 6.5.3
   resolution: "ajv@npm:6.5.3"
@@ -4547,18 +4600,6 @@ __metadata:
     json-schema-traverse: ^0.4.1
     uri-js: ^4.2.2
   checksum: 8ea3290d534eb2b82cb59f98caef9cb267d3e05e6eb5e7ca9f81d50d490ea427ca8d2b55ba92e0425a2a9e7f61342d48964ba044c3829d3d25b30415132c93cc
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.3, ajv@npm:^6.12.4, ajv@npm:^6.12.5":
-  version: 6.12.6
-  resolution: "ajv@npm:6.12.6"
-  dependencies:
-    fast-deep-equal: ^3.1.1
-    fast-json-stable-stringify: ^2.0.0
-    json-schema-traverse: ^0.4.1
-    uri-js: ^4.2.2
-  checksum: 19a8f3b0a06001eb68e6268f4f9f04424b32baadd5df6ba8292cd473e22e5f4019ed9ab17c3e3510394178ed8bef9b42ad0bdb5c675d65f042421a774780ce1a
   languageName: node
   linkType: hard
 
@@ -5347,6 +5388,15 @@ __metadata:
   version: 3.5.5
   resolution: "axe-core@npm:3.5.5"
   checksum: 3d42ed3f0a24ae08081f878a6e1c629a60e4556ab0be896463ff800274b78bf3f1ce62a20396b4e892dc17e682df631ee06fd0daaf2928a49e46e8c0c4dfdcd0
+  languageName: node
+  linkType: hard
+
+"axios@npm:0.20.0":
+  version: 0.20.0
+  resolution: "axios@npm:0.20.0"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: 6cf2e963176a0d18fc457d7cb71cb6cf552193619b161fc61070d9a4db3a26a87ecfe760ba36e7af174c05a6a9898dc52cfeb5c0e62e19fddd9788739553ad73
   languageName: node
   linkType: hard
 
@@ -8207,7 +8257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-node@npm:^0.3.4":
+"eslint-import-resolver-node@npm:0.3.4, eslint-import-resolver-node@npm:^0.3.4":
   version: 0.3.4
   resolution: "eslint-import-resolver-node@npm:0.3.4"
   dependencies:
@@ -9010,7 +9060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.10.0":
   version: 1.13.0
   resolution: "follow-redirects@npm:1.13.0"
   checksum: f220828d3f153da30ea616fdbe9f6676e74e4e68c51d336a751037c1d556e2de34aa5918f58951fa19bb6517c9c88b4403a0a8bdfc40d3e779d37def2ac0f2c4
@@ -11929,6 +11979,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"json5@npm:2.1.3, json5@npm:^2.1.2":
+  version: 2.1.3
+  resolution: "json5@npm:2.1.3"
+  dependencies:
+    minimist: ^1.2.5
+  bin:
+    json5: lib/cli.js
+  checksum: 957e4937106cf59975aa0281e68911534d65c8a25be5b4d3559aa55eba351ccab516a943a60ba33e461e4b8af749939986e311de910cbcfd197410b57d971741
+  languageName: node
+  linkType: hard
+
 "json5@npm:^1.0.1":
   version: 1.0.1
   resolution: "json5@npm:1.0.1"
@@ -11937,17 +11998,6 @@ fsevents@^1.2.7:
   bin:
     json5: lib/cli.js
   checksum: df41624f9f40bfacc546f779eef6d161a3312fbb6ec1dbd69f8c4388e9807af653b753371ab19b6d2bab22af2ca7dde62fe03c791596acf76915e1fc4ee6fd88
-  languageName: node
-  linkType: hard
-
-"json5@npm:^2.1.2":
-  version: 2.1.3
-  resolution: "json5@npm:2.1.3"
-  dependencies:
-    minimist: ^1.2.5
-  bin:
-    json5: lib/cli.js
-  checksum: 957e4937106cf59975aa0281e68911534d65c8a25be5b4d3559aa55eba351ccab516a943a60ba33e461e4b8af749939986e311de910cbcfd197410b57d971741
   languageName: node
   linkType: hard
 
@@ -16560,6 +16610,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"rimraf@npm:3.0.2, rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "rimraf@npm:3.0.2"
+  dependencies:
+    glob: ^7.1.3
+  bin:
+    rimraf: bin.js
+  checksum: f0de3e445581e64a8a077af476cc30708e659f5779ec2ca2a161556d0792aa318a685923798ae22055b4ecd02b9aff444ef619578f7af53cf8e0e248031e3dee
+  languageName: node
+  linkType: hard
+
 "rimraf@npm:^2.5.4, rimraf@npm:^2.6.2, rimraf@npm:^2.6.3":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"
@@ -16568,17 +16629,6 @@ fsevents@^1.2.7:
   bin:
     rimraf: ./bin.js
   checksum: 059efac2838ef917d4d1da1d80e724ad28c120cdf14ca6ed27ca72db2dc70be3e25421cba5947c6ec3d804c1d2bb9a247254653816ee0722bf943ffdd1ae19ef
-  languageName: node
-  linkType: hard
-
-"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "rimraf@npm:3.0.2"
-  dependencies:
-    glob: ^7.1.3
-  bin:
-    rimraf: bin.js
-  checksum: f0de3e445581e64a8a077af476cc30708e659f5779ec2ca2a161556d0792aa318a685923798ae22055b4ecd02b9aff444ef619578f7af53cf8e0e248031e3dee
   languageName: node
   linkType: hard
 
@@ -18852,21 +18902,21 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"uuid@npm:8.3.1, uuid@npm:^8.0.0, uuid@npm:^8.3.0":
+  version: 8.3.1
+  resolution: "uuid@npm:8.3.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
+  languageName: node
+  linkType: hard
+
 "uuid@npm:^3.0.1, uuid@npm:^3.1.0, uuid@npm:^3.3.2, uuid@npm:^3.4.0":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
     uuid: ./bin/uuid
   checksum: 1ce3f37e214d6d0dc94a6a9663a0365013ace66bc3fd5b203e6f5d2eeb978aaee1192367222386345d30b4c6a447928c501121aa84c637724bf105ef57284949
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^8.0.0, uuid@npm:^8.3.0":
-  version: 8.3.1
-  resolution: "uuid@npm:8.3.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
   languageName: node
   linkType: hard
 
