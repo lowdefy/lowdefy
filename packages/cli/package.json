@@ -46,7 +46,8 @@
     "chalk": "4.1.0",
     "chokidar": "3.4.2",
     "commander": "6.1.0",
-    "inquirer": "7.3.3"
+    "inquirer": "7.3.3",
+    "js-yaml": "3.14.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",

@@ -16,13 +16,18 @@
 
 import path from 'path';
 import buildScript from '@lowdefy/build';
-import createPrint from '../print';
+import createPrint from '../../utils/print';
+import getLowdefyVersion from '../../utils/getLowdefyVersion';
+import errorBoundary from '../../utils/errorBoundary';
 
-function build(program) {
+async function build(program) {
   let baseDirectory = process.cwd();
   if (program.baseDirectory) {
     baseDirectory = path.resolve(program.baseDirectory);
   }
+  const version = await getLowdefyVersion(program.baseDirectory);
+  console.log(version);
+
   buildScript({
     logger: createPrint({ timestamp: true }),
     cacheDirectory: path.resolve(baseDirectory, '.lowdefy/.cache'),
@@ -31,4 +36,4 @@ function build(program) {
   });
 }
 
-export default build;
+export default errorBoundary(build);

@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
-import program from 'commander';
-import packageJson from '../package.json';
-import build from './commands/build/build.js';
+import createPrint from './print';
 
-const { description, version } = packageJson;
+function errorBoundary(fn, options = {}) {
+  async function run(...args) {
+    try {
+      const res = await fn(...args);
+      return res;
+    } catch (error) {
+      const print = createPrint();
+      print.error(error.message);
+      if (!options.stayAlive) {
+        process.exit();
+      }
+    }
+  }
+  return run;
+}
 
-program.description(description).version(version, '-v, --version');
-
-program
-  .command('build')
-  .description('Build a Lowdefy deployment.')
-  .usage(`[options]`)
-  .option(
-    '--base-directory <base-directory>',
-    'Change base directory. Default is the current working directory.'
-  )
-  .action(build);
-
-program.parse(process.argv);
+export default errorBoundary;

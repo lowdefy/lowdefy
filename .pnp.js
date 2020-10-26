@@ -3713,6 +3713,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["commander", "npm:6.1.0"],
             ["inquirer", "npm:7.3.3"],
             ["jest", "npm:26.5.3"],
+            ["js-yaml", "npm:3.14.0"],
             ["webpack", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:5.1.3"],
             ["webpack-cli", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:4.0.0"]
           ],
