@@ -2988,7 +2988,7 @@ __metadata:
     process: 0.11.10
     react: 17.0.0-rc.2
     react-dom: 17.0.0-rc.2
-    react-markdown: 5.0.0
+    react-markdown: 5.0.2
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.0-rc.3
     style-loader: 2.0.0
@@ -15773,9 +15773,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-markdown@npm:5.0.0":
-  version: 5.0.0
-  resolution: "react-markdown@npm:5.0.0"
+"react-markdown@npm:5.0.2":
+  version: 5.0.2
+  resolution: "react-markdown@npm:5.0.2"
   dependencies:
     "@types/mdast": ^3.0.3
     "@types/unist": ^2.0.3
@@ -15790,7 +15790,7 @@ fsevents@^1.2.7:
   peerDependencies:
     "@types/react": ^15.0.0 || ^16.0.0
     react: ^15.0.0 || ^16.0.0
-  checksum: 7a3b78c5b4f816865562e6a1c9dd6907eabee423ce8b2580ff36614b60b66611a4fa44ed2bf13cdeffd9bdff8a2114f6eb13b10d28f32271319ccfcaf9c656d7
+  checksum: c3e8aec12f3c99b5dc45eefc28cf30a060a419ff18aadb90e39d2ebb413c4054791b383250c827bebd2a8b9157c331f6b39fd0651c411d37839b27fa40961c2d
   languageName: node
   linkType: hard
 

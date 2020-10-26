@@ -3836,7 +3836,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["process", "npm:0.11.10"],
             ["react", "npm:17.0.0-rc.2"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.0-rc.2"],
-            ["react-markdown", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.0"],
+            ["react-markdown", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.2"],
             ["react-syntax-highlight", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:15.3.1"],
             ["react-test-renderer", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.0-rc.3"],
             ["style-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:2.0.0"],
@@ -12600,13 +12600,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["html-to-react", [
-        ["virtual:2e16346e11c05452a5d104d6abe0b91933599bf8d558d4def966a8bd8778326aaa9fa458f32df59091fcd9a43cc533df8bcb4ff352c97d67ca41ff162b9ce313#npm:1.4.4", {
-          "packageLocation": "./.yarn/$$virtual/html-to-react-virtual-b8377b0f12/0/cache/html-to-react-npm-1.4.4-e3456fe7d3-c8d927b2d9.zip/node_modules/html-to-react/",
+        ["virtual:9f0275afd499c236a026338bf5bf7b257b442d520fab3737805b3fcda48e3a9d7367584c391627662f4a6406120937d81478e8eda9db739e408478cb7da3137e#npm:1.4.4", {
+          "packageLocation": "./.yarn/$$virtual/html-to-react-virtual-433d8b5fef/0/cache/html-to-react-npm-1.4.4-e3456fe7d3-c8d927b2d9.zip/node_modules/html-to-react/",
           "packageDependencies": [
-            ["html-to-react", "virtual:2e16346e11c05452a5d104d6abe0b91933599bf8d558d4def966a8bd8778326aaa9fa458f32df59091fcd9a43cc533df8bcb4ff352c97d67ca41ff162b9ce313#npm:1.4.4"],
+            ["html-to-react", "virtual:9f0275afd499c236a026338bf5bf7b257b442d520fab3737805b3fcda48e3a9d7367584c391627662f4a6406120937d81478e8eda9db739e408478cb7da3137e#npm:1.4.4"],
             ["@types/react", null],
             ["domhandler", "npm:3.3.0"],
-            ["htmlparser2", "virtual:b8377b0f124b4ced9d2d27b870a07e679e20152cc7dd9b0a786eae9fe0b2788bb527e0ef14e8c4d47b406aec4d0754210f8034849d69252bc988492e6ad3183c#npm:5.0.0"],
+            ["htmlparser2", "virtual:433d8b5fef85ce51579041a5989f8aa2fa3404f14cecae092c09d9e21082db8537d77e2a3b48f8f5d526e77e442885195068db08bb972b1a82cddb2531e7956d#npm:5.0.0"],
             ["lodash.camelcase", "npm:4.3.0"],
             ["ramda", "npm:0.27.1"],
             ["react", "npm:17.0.0-rc.2"]
@@ -12714,10 +12714,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:b8377b0f124b4ced9d2d27b870a07e679e20152cc7dd9b0a786eae9fe0b2788bb527e0ef14e8c4d47b406aec4d0754210f8034849d69252bc988492e6ad3183c#npm:5.0.0", {
-          "packageLocation": "./.yarn/$$virtual/htmlparser2-virtual-608ef73ee1/0/cache/htmlparser2-npm-5.0.0-6443880157-b01077f921.zip/node_modules/htmlparser2/",
+        ["virtual:433d8b5fef85ce51579041a5989f8aa2fa3404f14cecae092c09d9e21082db8537d77e2a3b48f8f5d526e77e442885195068db08bb972b1a82cddb2531e7956d#npm:5.0.0", {
+          "packageLocation": "./.yarn/$$virtual/htmlparser2-virtual-1f6d500ef3/0/cache/htmlparser2-npm-5.0.0-6443880157-b01077f921.zip/node_modules/htmlparser2/",
           "packageDependencies": [
-            ["htmlparser2", "virtual:b8377b0f124b4ced9d2d27b870a07e679e20152cc7dd9b0a786eae9fe0b2788bb527e0ef14e8c4d47b406aec4d0754210f8034849d69252bc988492e6ad3183c#npm:5.0.0"],
+            ["htmlparser2", "virtual:433d8b5fef85ce51579041a5989f8aa2fa3404f14cecae092c09d9e21082db8537d77e2a3b48f8f5d526e77e442885195068db08bb972b1a82cddb2531e7956d#npm:5.0.0"],
             ["@types/node", null],
             ["@types/types__node", null],
             ["domelementtype", "npm:2.0.2"],
@@ -19197,15 +19197,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-markdown", [
-        ["virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.0", {
-          "packageLocation": "./.yarn/$$virtual/react-markdown-virtual-2e16346e11/0/cache/react-markdown-npm-5.0.0-0822b480f8-7a3b78c5b4.zip/node_modules/react-markdown/",
+        ["virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.2", {
+          "packageLocation": "./.yarn/$$virtual/react-markdown-virtual-9f0275afd4/0/cache/react-markdown-npm-5.0.2-ab63a47742-c3e8aec12f.zip/node_modules/react-markdown/",
           "packageDependencies": [
-            ["react-markdown", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.0"],
+            ["react-markdown", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.2"],
             ["@types/mdast", "npm:3.0.3"],
             ["@types/react", null],
             ["@types/types__react", null],
             ["@types/unist", "npm:2.0.3"],
-            ["html-to-react", "virtual:2e16346e11c05452a5d104d6abe0b91933599bf8d558d4def966a8bd8778326aaa9fa458f32df59091fcd9a43cc533df8bcb4ff352c97d67ca41ff162b9ce313#npm:1.4.4"],
+            ["html-to-react", "virtual:9f0275afd499c236a026338bf5bf7b257b442d520fab3737805b3fcda48e3a9d7367584c391627662f4a6406120937d81478e8eda9db739e408478cb7da3137e#npm:1.4.4"],
             ["mdast-add-list-metadata", "npm:1.0.1"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.0-rc.2"],
