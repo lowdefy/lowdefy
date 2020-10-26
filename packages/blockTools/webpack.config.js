@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './demo/index',
+  entry: './demo/index.js',
   mode: 'development',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
