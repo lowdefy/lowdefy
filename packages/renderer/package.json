@@ -41,7 +41,7 @@
     "@lowdefy/engine": "0.0.0-experimental.0",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/layout": "1.0.0",
-    "graphql": "15.3.0",
+    "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
