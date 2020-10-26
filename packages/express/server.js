@@ -23,7 +23,7 @@ const config = {
   DEPLOYMENT_ID: 'DEPLOYMENT_ID',
   DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
   DOMAIN_NAME: 'DOMAIN_NAME',
-  CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), 'config'),
+  CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   logger: console,
   getHeadersFromInput: ({ req }) => req.headers,
   getSecrets: () => ({

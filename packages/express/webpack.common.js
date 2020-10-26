@@ -12,13 +12,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /bootstrap\.js$/,
-        loader: 'bundle-loader',
-        options: {
-          lazy: true,
-        },
-      },
-      {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
@@ -41,18 +34,18 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'web-shell',
-      library: { type: 'var', name: 'web-shell' },
+      name: 'lowdefy_web_shell',
       shared: {
         ...deps,
         react: {
-          import: 'react', // the "react" package will be used a provided and fallback module
-          shareKey: 'react', // under this name the shared module will be placed in the share scope
-          shareScope: 'default', // share scope with this name will be used
           singleton: true, // only a single version of the shared module is allowed
+          requiredVersion: '~17.0.0',
+          version: deps.react,
         },
         'react-dom': {
           singleton: true, // only a single version of the shared module is allowed
+          requiredVersion: '~17.0.0',
+          version: deps['react-dom'],
         },
       },
     }),
