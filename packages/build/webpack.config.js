@@ -1,5 +1,6 @@
 const path = require('path');
-const { dependencies, devDependencies } = require('./package.json');
+const { ModuleFederationPlugin } = require('webpack').container;
+const { dependencies } = require('./package.json');
 
 module.exports = {
   entry: './src/index.js',
@@ -11,7 +12,7 @@ module.exports = {
   mode: 'production',
   target: 'node',
   node: false,
-  externals: Object.keys({ ...dependencies, ...devDependencies }),
+  externals: ['fs', 'path', 'fsevents'],
   module: {
     rules: [
       {
@@ -35,4 +36,15 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'build',
+      library: { type: 'commonjs' },
+      filename: 'remoteEntry.js',
+      exposes: {
+        './build': './src/index.js',
+      },
+      shared: dependencies,
+    }),
+  ],
 };

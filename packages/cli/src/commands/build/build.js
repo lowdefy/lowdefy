@@ -15,10 +15,10 @@
 */
 
 import path from 'path';
-import buildScript from '@lowdefy/build';
-import createPrint from '../../utils/print';
+import getBuildScript from './getBuildScript';
 import getLowdefyVersion from '../../utils/getLowdefyVersion';
 import errorBoundary from '../../utils/errorBoundary';
+import createPrint from '../../utils/print';
 
 async function build(program) {
   let baseDirectory = process.cwd();
@@ -26,7 +26,7 @@ async function build(program) {
     baseDirectory = path.resolve(program.baseDirectory);
   }
   const version = await getLowdefyVersion(program.baseDirectory);
-  console.log(version);
+  const buildScript = await getBuildScript(version);
 
   buildScript({
     logger: createPrint({ timestamp: true }),

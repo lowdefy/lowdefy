@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { ModuleFederationPlugin } = require('webpack').container;
 const { dependencies, devDependencies } = require('./package.json');
 
 module.exports = {
@@ -36,5 +37,14 @@ module.exports = {
       },
     ],
   },
-  plugins: [new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })],
+  plugins: [
+    new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
+    new ModuleFederationPlugin({
+      name: 'cli',
+      filename: 'remoteEntry.js',
+      remotes: {},
+      exposes: {},
+      shared: dependencies,
+    }),
+  ],
 };
