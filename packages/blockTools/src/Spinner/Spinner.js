@@ -34,11 +34,18 @@ const Loading = ({ properties, methods }) => {
           color={properties.color}
           barColor={properties.barColor || (properties.shaded === true ? '#f1f1f1' : '#fff')}
         />
-        {properties.message && (
-          <div className={methods.makeCssClass([{ textAlign: 'center' }, properties.style])}>
-            {properties.message}
-          </div>
-        )}
+        <div
+          className={methods.makeCssClass({
+            textAlign: 'center',
+            color: '#bfbfbf',
+            fontSize: 12,
+            paddingTop: 2,
+            fontFamily:
+              '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"',
+          })}
+        >
+          Lowdefy
+        </div>
       </div>
     </div>
   );
