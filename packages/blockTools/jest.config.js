@@ -3,7 +3,12 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx}', '!demo/*'],
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/tests/'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/dist/',
+    '<rootDir>/tests/',
+    'runRenderTests',
+    'mockBlock',
+  ],
   coverageReporters: ['lcov', 'text', 'clover'],
   errorOnDeprecated: true,
   testPathIgnorePatterns: ['<rootDir>/dist/'],

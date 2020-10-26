@@ -3687,7 +3687,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/block-tools@1.0.1-experimental.1, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@1.0.1-experimental.3, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
   dependencies:
@@ -3726,6 +3726,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/block-tools@npm:1.0.1-experimental.1":
+  version: 1.0.1-experimental.1
+  resolution: "@lowdefy/block-tools@npm:1.0.1-experimental.1"
+  dependencies:
+    "@lowdefy/helpers": 1.0.0
+    create-emotion: 10.0.27
+    react: 17.0.0-rc.2
+    react-dom: 17.0.0-rc.2
+  checksum: f08d07dec833189eaf264db5de7a09aea872f05b501d7e3d80d94598cf19d72a525536af2454f386bded4f67eecd9a4eba1d894e7961cd7e47da58ec6cf02333
+  languageName: node
+  linkType: hard
+
 "@lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
@@ -3738,6 +3750,16 @@ __metadata:
     tinycolor2: 1.4.2
   languageName: unknown
   linkType: soft
+
+"@lowdefy/delete@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/delete@npm:1.0.1"
+  dependencies:
+    "@lowdefy/get": 1.0.1
+    "@lowdefy/type": 1.0.1
+  checksum: fee9d86f52643b4d2a8f68d732fec64f1805628fe6d1b42ff1bfea515b767ff8fb6198ee3fce49033f9edcb943676d0993ef537048e3118b6e7855dee4535c6e
+  languageName: node
+  linkType: hard
 
 "@lowdefy/engine@0.0.0-experimental.0, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
@@ -3761,7 +3783,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-experimental.1
+    "@lowdefy/block-tools": 1.0.1-experimental.3
     "@lowdefy/graphql": 0.0.0-experimental.0
     apollo-server-express: 2.18.2
     babel-loader: 8.1.0
@@ -3793,6 +3815,15 @@ __metadata:
     moment: 2.29.1
   languageName: unknown
   linkType: soft
+
+"@lowdefy/get@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/get@npm:1.0.1"
+  dependencies:
+    "@lowdefy/type": 1.0.1
+  checksum: 6f66955a79f693620309ceb98684b7e612bef7d7e787fb7c4791498653b4911c7d8131e205bee781bf66c1c536b94db605fdca498d86699c7e13bac82d2a84f3
+  languageName: node
+  linkType: hard
 
 "@lowdefy/graphql@0.0.0-experimental.0, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
@@ -3829,6 +3860,19 @@ __metadata:
     query-string: 6.13.6
   languageName: unknown
   linkType: soft
+
+"@lowdefy/helpers@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@lowdefy/helpers@npm:1.0.0"
+  dependencies:
+    "@lowdefy/delete": 1.0.1
+    "@lowdefy/serializer": 1.0.0
+    "@lowdefy/type": 1.0.1
+    lodash.merge: 4.6.2
+    query-string: 6.13.1
+  checksum: 3f3a15df441caf88d1fdbc92b3942b2251426b8023462584c1909f3b1de65df2f8b534f4f2c7fe8cddf883c646bfc7d642973d2ded6ba662e528d3fd6cae532c
+  languageName: node
+  linkType: hard
 
 "@lowdefy/layout@1.0.0, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
@@ -3948,6 +3992,22 @@ __metadata:
     webpack-merge: 5.2.0
   languageName: unknown
   linkType: soft
+
+"@lowdefy/serializer@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@lowdefy/serializer@npm:1.0.0"
+  dependencies:
+    "@lowdefy/type": 1.0.1
+  checksum: 8880af5555339624160884adf32d611457d316779af312ea90ebfb64c555fe6021aa034b86bd76656c823db0a98fd0006f1e5cc80b94fb0bd92789bf8d8aa79c
+  languageName: node
+  linkType: hard
+
+"@lowdefy/type@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@lowdefy/type@npm:1.0.1"
+  checksum: 42778b9f54ac984cc14f29e600d0e3cb794b9b944c66bc9098154c1c7cb50a3113161e4a9afc07815bd0f330014185aff0eabe34f3ebe07a02b4df4063ba8f5d
+  languageName: node
+  linkType: hard
 
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
@@ -15961,6 +16021,17 @@ fsevents@^1.2.7:
   version: 6.5.2
   resolution: "qs@npm:6.5.2"
   checksum: fa0410eff2c05ce3328e11f82db4015e7819c986ee056d6b62b06ae112f4929af09ea3b879ca168ff9f0338f50972bba487ad0e46c879e42bfaf63c3c2ea7f09
+  languageName: node
+  linkType: hard
+
+"query-string@npm:6.13.1":
+  version: 6.13.1
+  resolution: "query-string@npm:6.13.1"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 5e640f0cf6077f3fd4dcb6d8f3a88306bbb5d5638001450b15a244ca74f76e4a6a1d70baff114cef43ca15670d5d2523f92113f3567561b9dbd1fcb26489066a
   languageName: node
   linkType: hard
 
