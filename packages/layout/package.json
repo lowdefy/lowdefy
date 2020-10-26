@@ -60,7 +60,7 @@
     "less-loader": "7.0.2",
     "path-browserify": "1.0.1",
     "process": "0.11.10",
-    "react-markdown": "5.0.0",
+    "react-markdown": "5.0.2",
     "react-syntax-highlight": "15.3.1",
     "react-test-renderer": "17.0.0-rc.3",
     "style-loader": "2.0.0",
