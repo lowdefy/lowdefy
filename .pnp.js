@@ -3678,7 +3678,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["ajv", "npm:6.12.6"],
-            ["axios", "npm:0.20.0"],
+            ["axios", "npm:0.21.0"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.5.2"],
             ["babel-loader", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:8.1.0"],
             ["dataloader", "npm:2.0.0"],
@@ -7139,10 +7139,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:0.20.0", {
-          "packageLocation": "./.yarn/cache/axios-npm-0.20.0-535d9e0086-6cf2e96317.zip/node_modules/axios/",
+        ["npm:0.21.0", {
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.0-9223cb0552-4b08ecab39.zip/node_modules/axios/",
           "packageDependencies": [
-            ["axios", "npm:0.20.0"],
+            ["axios", "npm:0.21.0"],
             ["follow-redirects", "npm:1.13.0"]
           ],
           "linkType": "HARD",

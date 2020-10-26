@@ -2844,7 +2844,7 @@ __metadata:
     "@lowdefy/node-utils": 1.0.0
     "@lowdefy/nunjucks": 1.0.0
     ajv: 6.12.6
-    axios: 0.20.0
+    axios: 0.21.0
     babel-jest: 26.5.2
     babel-loader: 8.1.0
     dataloader: 2.0.0
@@ -5391,12 +5391,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.20.0":
-  version: 0.20.0
-  resolution: "axios@npm:0.20.0"
+"axios@npm:0.21.0":
+  version: 0.21.0
+  resolution: "axios@npm:0.21.0"
   dependencies:
     follow-redirects: ^1.10.0
-  checksum: 6cf2e963176a0d18fc457d7cb71cb6cf552193619b161fc61070d9a4db3a26a87ecfe760ba36e7af174c05a6a9898dc52cfeb5c0e62e19fddd9788739553ad73
+  checksum: 4b08ecab39040948c03cae5fa726fdcf8bc299679818179c146e779a922ce887fad9261d82ad57ad1a3aa1fcba3612f14b490fdfa2cd28fa23c190fd48517f5f
   languageName: node
   linkType: hard
 
