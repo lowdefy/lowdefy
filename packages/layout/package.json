@@ -38,8 +38,8 @@
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
     "antd": "4.4.2",
-    "react": "17.0.0-rc.2",
-    "react-dom": "17.0.0-rc.2"
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",
@@ -62,7 +62,7 @@
     "process": "0.11.10",
     "react-markdown": "5.0.2",
     "react-syntax-highlight": "15.3.1",
-    "react-test-renderer": "17.0.0-rc.3",
+    "react-test-renderer": "17.0.1",
     "style-loader": "2.0.0",
     "webpack": "5.2.0",
     "webpack-cli": "4.1.0",

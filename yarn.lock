@@ -2764,10 +2764,10 @@ __metadata:
     less-loader: 7.0.2
     path-browserify: 1.0.1
     process: 0.11.10
-    react: 17.0.0-rc.2
-    react-dom: 17.0.0-rc.2
+    react: 17.0.1
+    react-dom: 17.0.1
     react-syntax-highlight: 15.3.1
-    react-test-renderer: 17.0.0-rc.3
+    react-test-renderer: 17.0.1
     style-loader: 2.0.0
     webpack: 5.2.0
     webpack-cli: 4.1.0
@@ -2846,8 +2846,8 @@ __metadata:
     graphql: 15.3.0
     html-webpack-plugin: 4.5.0
     nodemon: 2.0.6
-    react: 17.0.0-rc.3
-    react-dom: 17.0.0-rc.3
+    react: 17.0.1
+    react-dom: 17.0.1
     style-loader: 2.0.0
     webpack: 5.2.0
     webpack-cli: 4.1.0
@@ -2930,11 +2930,11 @@ __metadata:
     less-loader: 7.0.2
     path-browserify: 1.0.1
     process: 0.11.10
-    react: 17.0.0-rc.2
-    react-dom: 17.0.0-rc.2
+    react: 17.0.1
+    react-dom: 17.0.1
     react-markdown: 5.0.2
     react-syntax-highlight: 15.3.1
-    react-test-renderer: 17.0.0-rc.3
+    react-test-renderer: 17.0.1
     style-loader: 2.0.0
     webpack: 5.2.0
     webpack-cli: 4.1.0
@@ -2956,7 +2956,7 @@ __metadata:
     eslint-plugin-jsx-a11y: 6.4.0
     eslint-plugin-prettier: 3.1.4
     eslint-plugin-react: 7.21.5
-    eslint-plugin-react-hooks: 4.1.2
+    eslint-plugin-react-hooks: 4.2.0
     lerna: 3.22.1
     prettier: 2.1.2
   languageName: unknown
@@ -3028,8 +3028,8 @@ __metadata:
     graphql: 15.3.0
     graphql-type-json: 0.3.2
     html-webpack-plugin: 4.5.0
-    react: 17.0.0-rc.3
-    react-dom: 17.0.0-rc.3
+    react: 17.0.1
+    react-dom: 17.0.1
     react-helmet: 6.1.0
     react-router-dom: 5.2.0
     serve: 11.3.2
@@ -7969,12 +7969,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:4.1.2":
-  version: 4.1.2
-  resolution: "eslint-plugin-react-hooks@npm:4.1.2"
+"eslint-plugin-react-hooks@npm:4.2.0":
+  version: 4.2.0
+  resolution: "eslint-plugin-react-hooks@npm:4.2.0"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 252496dbaaafa6812fbd3aeaafac1192a1e35238172d8271eb370025b43604e10f04cecec3583da395358a3e6be3ace6958ec938102fe3c1b77caf30f1393c91
+  checksum: 5378d16b5a56431a7a77b56d61464dbbfa343e8607da87b851a6caee44b96e08847147321f5f38de30d20668418691d859f69d9c5262dfb5308856382252096c
   languageName: node
   linkType: hard
 
@@ -14857,29 +14857,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.0-rc.2":
-  version: 17.0.0-rc.2
-  resolution: "react-dom@npm:17.0.0-rc.2"
+"react-dom@npm:17.0.1":
+  version: 17.0.1
+  resolution: "react-dom@npm:17.0.1"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: 0.20.0-rc.2
+    scheduler: ^0.20.1
   peerDependencies:
-    react: 17.0.0-rc.2
-  checksum: 46e1d1f403a399a61a3f9d6976f23818d99018ef797091b20beba14e69ca8ad50d4931aacd68c36a88e2a7b54cf08b36a81b29cae41fc3165c36840441e6d764
-  languageName: node
-  linkType: hard
-
-"react-dom@npm:17.0.0-rc.3":
-  version: 17.0.0-rc.3
-  resolution: "react-dom@npm:17.0.0-rc.3"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: 0.20.0-rc.3
-  peerDependencies:
-    react: 17.0.0-rc.3
-  checksum: 093f1829cbf9030e1562498765bd35e6b0507401245d7936007bc4db7c17cfba3fb0809cf3012076cba9215b988d4a282e0ec1c753ba302f1fb40a98d9da8d18
+    react: 17.0.1
+  checksum: 6a70028fbe3c95e0056c5e8ce065b4a9b8d4ff3bffde9b016454072bde5e4b012af7668ca45b7235ace428267d5be5237b68ea87ce8c296e54e81a8d678a4355
   languageName: node
   linkType: hard
 
@@ -14901,13 +14888,6 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ">=16.3.0"
   checksum: 56fd795b0aecc89bac8d2733268751f0ef463bf6764090f8a801778741d4a6eaf135234cdaa50188bbda29c8e2d3ec43e9a42d1ec06b60092645c8754c7bad81
-  languageName: node
-  linkType: hard
-
-"react-is@npm:17.0.0-rc.3":
-  version: 17.0.0-rc.3
-  resolution: "react-is@npm:17.0.0-rc.3"
-  checksum: 1004ecc010e74bb77a4d1523dfbe01c615caefb0f538963cdf5387213afbe3e470488224f9c238149c79d3b0ec655a90f677678bf354fe6d36e9404b381a0a9f
   languageName: node
   linkType: hard
 
@@ -15024,17 +15004,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:17.0.0-rc.3":
-  version: 17.0.0-rc.3
-  resolution: "react-test-renderer@npm:17.0.0-rc.3"
+"react-test-renderer@npm:17.0.1":
+  version: 17.0.1
+  resolution: "react-test-renderer@npm:17.0.1"
   dependencies:
     object-assign: ^4.1.1
-    react-is: 17.0.0-rc.3
+    react-is: ^17.0.1
     react-shallow-renderer: ^16.13.1
-    scheduler: 0.20.0-rc.3
+    scheduler: ^0.20.1
   peerDependencies:
-    react: 17.0.0-rc.3a
-  checksum: 3d4a14acb2c710d3c448a7100e19e87715acb31b1e47e816cb88dfa3fb9decc8fa844f389183682df5d40454b153e4c7d0a18fafc48af9033cde9c6c8017dc35
+    react: 17.0.1
+  checksum: 6ec269430beea4356180d90868a9959399781a03ae8de6a29f2edc29d6ca41432653d4103991467ebcc47be5bd2d9197789411e913da66369c2aa2f13311105f
   languageName: node
   linkType: hard
 
@@ -15062,23 +15042,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react@npm:17.0.0-rc.2":
-  version: 17.0.0-rc.2
-  resolution: "react@npm:17.0.0-rc.2"
+"react@npm:17.0.1":
+  version: 17.0.1
+  resolution: "react@npm:17.0.1"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 57784112c78026887b7ac4baf23a9828e72480f47b9238660bb618404da38c41d9ba8153a3b5f673ca7ea1ae018a3cbb50915f5ea89c298aab25f2f0dd2201ec
-  languageName: node
-  linkType: hard
-
-"react@npm:17.0.0-rc.3":
-  version: 17.0.0-rc.3
-  resolution: "react@npm:17.0.0-rc.3"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 007c1595f685a89711d3a2fa8a57718b36a8f773aa2526359a59cf2ff338f4d124658b03b774ab1b1ef0dea28c0cce489ffd2369d6c97068a42d6badb53ee9d6
+  checksum: a76d86ec973eb4b25a46071ac7f974adfd66ed89ad1db63043be1d976ec25417520a210e6d724b0ad937422b706afcf9962cedda9e92125992a8c0e8a95f2051
   languageName: node
   linkType: hard
 
@@ -15870,26 +15840,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.20.0-rc.2":
-  version: 0.20.0-rc.2
-  resolution: "scheduler@npm:0.20.0-rc.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 9ef85df2aa15ace919d8d48e3f5fa903be21ab2ce5e3d9f011141bb227e94ea24677d31bc6018294fe3ce3e880fcf3770bf7a894e35977d61f4502b30468a37b
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:0.20.0-rc.3":
-  version: 0.20.0-rc.3
-  resolution: "scheduler@npm:0.20.0-rc.3"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 573f2ff261a8e7a3359dd006bd75a691ae7e199c54f1db1c3363863da824aba3bed2c6b5e48028566d9ae9c2ff2f7b7194ae348628ed5948225a29947344ef19
-  languageName: node
-  linkType: hard
-
 "scheduler@npm:^0.19.1":
   version: 0.19.1
   resolution: "scheduler@npm:0.19.1"
@@ -15907,6 +15857,16 @@ fsevents@^1.2.7:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 092f965d23704e280a79ac4919afbed96548228c58b338e9e6a6ba1e3e48a9ff3db059ac756b071d4112350d07bf3c58a3fe45d88ba44f4616b443f2ee2a4469
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "scheduler@npm:0.20.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 377b4ad0d8313c4548bac7374bc38409e9d142799979ce396787efa04d1bcabf2591540f243f2131e3df8e56e7f5b29c5415248523e88ecb60f13a32db2e076f
   languageName: node
   linkType: hard
 

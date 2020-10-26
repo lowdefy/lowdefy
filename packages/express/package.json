@@ -35,8 +35,8 @@
     "express": "4.17.1",
     "graphql": "15.3.0",
     "nodemon": "2.0.6",
-    "react": "17.0.0-rc.3",
-    "react-dom": "17.0.0-rc.3"
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",
