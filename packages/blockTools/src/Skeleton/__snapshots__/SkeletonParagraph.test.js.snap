@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`default 1`] = `
+exports[`Render default 1`] = `
 <div
   style={
     Object {
@@ -47,7 +47,7 @@ exports[`default 1`] = `
 </div>
 `;
 
-exports[`lines1 1`] = `
+exports[`Render lines1 1`] = `
 <div
   style={
     Object {
@@ -67,7 +67,7 @@ exports[`lines1 1`] = `
 </div>
 `;
 
-exports[`lines7 1`] = `
+exports[`Render lines7 1`] = `
 <div
   style={
     Object {
@@ -141,7 +141,7 @@ exports[`lines7 1`] = `
 </div>
 `;
 
-exports[`width200 1`] = `
+exports[`Render width200 1`] = `
 <div
   style={
     Object {

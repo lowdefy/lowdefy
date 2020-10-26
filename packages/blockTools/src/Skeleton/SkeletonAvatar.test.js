@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import examples from '../demo/examples/Spinner.yaml';
-import runExampleTests from './runExampleTests';
-import { Spinner } from '../src';
+import examples from '../../demo/examples/SkeletonAvatar.yaml';
+import runRenderTests from '../runRenderTests';
+import SkeletonAvatar from './SkeletonAvatar';
 
-runExampleTests(examples, Spinner);
+runRenderTests(examples, SkeletonAvatar);

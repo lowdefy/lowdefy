@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`default 1`] = `
+exports[`Render default 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":20,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
   <svg
-    ariaHidden="true"
+    aria-hidden="true"
     className="icon-spinner"
     data-icon="loading-3-quarters"
     fill="currentColor"
@@ -22,12 +22,12 @@ exports[`default 1`] = `
 </span>
 `;
 
-exports[`sizedefault 1`] = `
+exports[`Render sizedefault 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":24,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
   <svg
-    ariaHidden="true"
+    aria-hidden="true"
     className="icon-spinner"
     data-icon="loading-3-quarters"
     fill="currentColor"
@@ -44,12 +44,12 @@ exports[`sizedefault 1`] = `
 </span>
 `;
 
-exports[`sizelarge 1`] = `
+exports[`Render sizelarge 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":32,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
   <svg
-    ariaHidden="true"
+    aria-hidden="true"
     className="icon-spinner"
     data-icon="loading-3-quarters"
     fill="currentColor"
@@ -66,12 +66,12 @@ exports[`sizelarge 1`] = `
 </span>
 `;
 
-exports[`sizesmall 1`] = `
+exports[`Render sizesmall 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":20,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
   <svg
-    ariaHidden="true"
+    aria-hidden="true"
     className="icon-spinner"
     data-icon="loading-3-quarters"
     fill="currentColor"

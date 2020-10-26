@@ -14,8 +14,26 @@
   limitations under the License.
 */
 
-import examples from '../demo/examples/SkeletonParagraph.yaml';
-import runExampleTests from './runExampleTests';
-import { SkeletonParagraph } from '../src';
+import useRunAfterUpdate from './useRunAfterUpdate';
+import { useRef, useLayoutEffect } from 'react';
 
-runExampleTests(examples, SkeletonParagraph);
+jest.mock('react', () => {
+  const useLayoutEffect = (fn) => fn();
+  const ref = { current: jest.fn() };
+  const useRef = () => ref;
+  return { useLayoutEffect, useRef };
+});
+
+const ref = useRef();
+const { current } = ref;
+
+beforeEach(() => {
+  ref.current.mockReset();
+});
+
+test('default call', () => {
+  const res = useRunAfterUpdate();
+  expect(current).toBeCalledTimes(1);
+  res('one');
+  expect(ref.current).toEqual('one');
+});

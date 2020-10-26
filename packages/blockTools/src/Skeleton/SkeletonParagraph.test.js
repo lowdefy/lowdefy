@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import examples from '../demo/examples/Skeleton.yaml';
-import runExampleTests from './runExampleTests';
-import { Skeleton } from '../src';
+import examples from '../../demo/examples/SkeletonParagraph.yaml';
+import runRenderTests from '../runRenderTests';
+import SkeletonParagraph from './SkeletonParagraph';
 
-runExampleTests(examples, Skeleton);
+runRenderTests(examples, SkeletonParagraph);

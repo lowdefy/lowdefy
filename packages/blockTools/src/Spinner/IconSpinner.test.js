@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import examples from '../demo/examples/IconSpinner.yaml';
-import runExampleTests from './runExampleTests';
-import { IconSpinner } from '../src';
+import examples from '../../demo/examples/IconSpinner.yaml';
+import runRenderTests from '../runRenderTests';
+import IconSpinner from './IconSpinner';
 
-runExampleTests(examples, IconSpinner);
+runRenderTests(examples, IconSpinner);

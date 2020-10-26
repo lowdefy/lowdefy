@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`default 1`] = `
+exports[`Render default 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
   style={
@@ -12,7 +12,7 @@ exports[`default 1`] = `
 />
 `;
 
-exports[`shaperound 1`] = `
+exports[`Render shaperound 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
   style={
@@ -24,7 +24,7 @@ exports[`shaperound 1`] = `
 />
 `;
 
-exports[`sizedefault 1`] = `
+exports[`Render sizedefault 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
   style={
@@ -36,7 +36,7 @@ exports[`sizedefault 1`] = `
 />
 `;
 
-exports[`sizelarge 1`] = `
+exports[`Render sizelarge 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
   style={
@@ -48,7 +48,7 @@ exports[`sizelarge 1`] = `
 />
 `;
 
-exports[`sizesmall 1`] = `
+exports[`Render sizesmall 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
   style={

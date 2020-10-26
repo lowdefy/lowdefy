@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import examples from '../demo/examples/SkeletonButton.yaml';
-import runExampleTests from './runExampleTests';
-import { SkeletonButton } from '../src';
+import examples from '../../demo/examples/Skeleton.yaml';
+import runRenderTests from '../runRenderTests';
+import Skeleton from './Skeleton';
 
-runExampleTests(examples, SkeletonButton);
+runRenderTests(examples, Skeleton);

@@ -49,7 +49,7 @@ const IconSpinner = ({ properties, methods }) => {
         width={size}
         height={size}
         fill="currentColor"
-        ariaHidden="true"
+        aria-hidden="true"
         className="icon-spinner"
       >
         <path

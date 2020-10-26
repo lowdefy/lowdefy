@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`default 1`] = `
+exports[`Render default 1`] = `
 <div
   className="{\\"style\\":{\\"height\\":\\"100%\\",\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\",\\"background\\":false}}"
 >
@@ -58,7 +58,7 @@ exports[`default 1`] = `
 </div>
 `;
 
-exports[`height100 1`] = `
+exports[`Render height100 1`] = `
 <div
   className="{\\"style\\":{\\"height\\":100,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\",\\"background\\":false}}"
 >
@@ -179,7 +179,7 @@ exports[`message 1`] = `
 </div>
 `;
 
-exports[`shaded 1`] = `
+exports[`Render shaded 1`] = `
 <div
   className="{\\"style\\":{\\"height\\":\\"100%\\",\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\",\\"background\\":\\"#f1f1f1\\"}}"
 >
@@ -237,7 +237,7 @@ exports[`shaded 1`] = `
 </div>
 `;
 
-exports[`styleheight 1`] = `
+exports[`Render styleheight 1`] = `
 <div
   className="{\\"style\\":{\\"height\\":\\"100%\\",\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\",\\"background\\":false}}"
 >
