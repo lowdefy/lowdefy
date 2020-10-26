@@ -3613,7 +3613,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/graphql", "workspace:packages/graphql"],
             ["apollo-server-express", "virtual:b48bfc75325537b9d641f357739049b25dac71eb86a05d5744ecd259c67ce3d1110d501b0f5cd21b669aa2cda1c9f77cfe9c3e49e1202cba9683bd40f09e88bb#npm:2.18.2"],
             ["babel-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:8.1.0"],
-            ["bundle-loader", "npm:0.5.6"],
             ["css-loader", "virtual:acf8ebf79a461c4f9f2ee32d35604720e52d54fc65cacbf3e944b2ad79cd4f17f95a2cb60cf4b37ca284c4f89981c732c25542cf20e548286d7eb31af1a6edda#npm:5.0.0"],
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.3.0"],
@@ -3814,7 +3813,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],
             ["babel-loader", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:8.1.0"],
-            ["bundle-loader", "npm:0.5.6"],
             ["css-loader", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:5.0.0"],
             ["graphql", "npm:15.3.0"],
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
@@ -7135,16 +7133,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/builtins-npm-1.0.3-f09d2d57f2-36aa0f11ef.zip/node_modules/builtins/",
           "packageDependencies": [
             ["builtins", "npm:1.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["bundle-loader", [
-        ["npm:0.5.6", {
-          "packageLocation": "./.yarn/cache/bundle-loader-npm-0.5.6-0f4b65b6bd-398972f0d9.zip/node_modules/bundle-loader/",
-          "packageDependencies": [
-            ["bundle-loader", "npm:0.5.6"],
-            ["loader-utils", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
