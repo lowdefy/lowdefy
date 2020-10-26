@@ -2809,7 +2809,6 @@ __metadata:
     "@lowdefy/graphql": 0.0.0-experimental.0
     apollo-server-express: 2.18.2
     babel-loader: 8.1.0
-    bundle-loader: 0.5.6
     css-loader: 5.0.0
     express: 4.17.1
     graphql: 15.3.0
@@ -2992,7 +2991,6 @@ __metadata:
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.1.0
-    bundle-loader: 0.5.6
     css-loader: 5.0.0
     graphql: 15.3.0
     graphql-type-json: 0.3.2
@@ -5627,15 +5625,6 @@ __metadata:
   version: 1.0.3
   resolution: "builtins@npm:1.0.3"
   checksum: 36aa0f11effcc9ab1637e69240752c70aab8ed1f9ed88baae94dd989fa3e34fc332a41f851062c24a888572f31343130e5cd7055344b9743c9d6bcbdc449eaf1
-  languageName: node
-  linkType: hard
-
-"bundle-loader@npm:0.5.6":
-  version: 0.5.6
-  resolution: "bundle-loader@npm:0.5.6"
-  dependencies:
-    loader-utils: ^1.1.0
-  checksum: 398972f0d9f58f351daae00683c0bf2bc422ad0d2cb26e448ec4718590cd752b2a21abb782dd1ac96d1561c676e6d2c321d316e711d92af1418d1bf559819e80
   languageName: node
   linkType: hard
 
@@ -11568,7 +11557,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^1.1.0, loader-utils@npm:^1.2.3, loader-utils@npm:^1.4.0":
+"loader-utils@npm:^1.2.3, loader-utils@npm:^1.4.0":
   version: 1.4.0
   resolution: "loader-utils@npm:1.4.0"
   dependencies:
