@@ -15,7 +15,7 @@
 */
 
 import useRunAfterUpdate from './useRunAfterUpdate';
-import { useRef, useLayoutEffect } from 'react';
+import { useRef } from 'react';
 
 jest.mock('react', () => {
   const useLayoutEffect = (fn) => fn();
