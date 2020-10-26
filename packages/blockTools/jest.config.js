@@ -6,8 +6,8 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '<rootDir>/dist/',
     '<rootDir>/tests/',
-    'runRenderTests',
-    'mockBlock',
+    'runRenderTests.js',
+    'mockBlock.js',
   ],
   coverageReporters: ['lcov', 'text', 'clover'],
   errorOnDeprecated: true,

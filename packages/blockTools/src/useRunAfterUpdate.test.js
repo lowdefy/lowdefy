@@ -15,10 +15,10 @@
 */
 
 import useRunAfterUpdate from './useRunAfterUpdate';
-import { useRef } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 
 jest.mock('react', () => {
-  const useLayoutEffect = (fn) => fn();
+  const useLayoutEffect = jest.fn();
   const ref = { current: jest.fn() };
   const useRef = () => ref;
   return { useLayoutEffect, useRef };
@@ -29,11 +29,21 @@ const { current } = ref;
 
 beforeEach(() => {
   ref.current.mockReset();
+  useLayoutEffect.mockReset();
+  useLayoutEffect.mockImplementation((fn) => fn());
 });
 
 test('default call', () => {
   const res = useRunAfterUpdate();
+  expect(useLayoutEffect).toHaveBeenCalledTimes(1);
   expect(current).toBeCalledTimes(1);
-  res('one');
-  expect(ref.current).toEqual('one');
+  res(() => 'one');
+  expect(ref.current()).toEqual('one');
+  useRunAfterUpdate();
+  expect(useLayoutEffect).toHaveBeenCalledTimes(2);
+  expect(current).toBeCalledTimes(1);
+  useRunAfterUpdate();
+  expect(useLayoutEffect).toHaveBeenCalledTimes(3);
+  expect(ref.current).toEqual(null);
+  expect(current).toBeCalledTimes(1);
 });
