@@ -55,6 +55,9 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
     });
     contentList.push({ ...content });
   });
+  const list = {
+    content: () => contentList.map((item) => item.content && item.content()),
+  };
   return (
     <BlockLayout
       id={`bl-${block.blockId}`}
@@ -79,6 +82,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         blockId={block.blockId}
         Components={rootContext.Components}
         content={contentList}
+        list={list}
         homePageId={rootContext.homePageId}
         key={block.blockId}
         loading={block.loading}
