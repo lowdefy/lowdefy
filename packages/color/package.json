@@ -24,6 +24,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
     "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
@@ -36,7 +37,7 @@
     "@babel/cli": "7.12.1",
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
-    "babel-jest": "26.5.2",
-    "jest": "26.5.3"
+    "babel-jest": "26.6.1",
+    "jest": "26.6.1"
   }
 }

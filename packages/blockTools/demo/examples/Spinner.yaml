@@ -13,12 +13,6 @@
     height: 500
   description: |
     style height: 500
-- id: message
-  type: Spinner
-  description: |
-    message: loading
-  properties:
-    message: loading
 - id: shaded
   type: Spinner
   description: |

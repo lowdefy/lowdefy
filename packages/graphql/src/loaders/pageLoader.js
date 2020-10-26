@@ -20,7 +20,7 @@ import readJsonFile from './readJsonFile';
 
 function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
   async function readPage(id) {
-    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `pages/${id}.json`);
+    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `pages/${id}/${id}.json`);
     return readJsonFile({ filePath });
   }
   async function loader(keys) {

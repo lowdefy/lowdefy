@@ -18,24 +18,23 @@ import path from 'path';
 import createComponentLoader from './componentLoader';
 import { ConfigurationError } from '../context/errors';
 
+const CONFIGURATION_BASE_PATH = path.resolve(process.cwd(), 'src/test/config');
+
 test('load component', async () => {
-  const CONFIGURATION_BASE_PATH = path.resolve(process.cwd(), 'src/test/config');
-  const pageLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
-  const res = await pageLoader.load('global');
+  const componentLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
+  const res = await componentLoader.load('global');
   expect(res).toEqual({
     global: 'value',
   });
 });
 
-test('load page, page does not exist', async () => {
-  const CONFIGURATION_BASE_PATH = path.resolve(process.cwd(), 'src/test/config');
-  const pageLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
-  const res = await pageLoader.load('doesNotExist');
+test('load component, component does not exist', async () => {
+  const componentLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
+  const res = await componentLoader.load('doesNotExist');
   expect(res).toEqual(null);
 });
 
 test('load component, invalid JSON', async () => {
-  const CONFIGURATION_BASE_PATH = path.resolve(process.cwd(), 'src/test/config/pages');
-  const pageLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
-  await expect(pageLoader.load('invalid')).rejects.toThrow(ConfigurationError);
+  const componentLoader = createComponentLoader({ CONFIGURATION_BASE_PATH });
+  await expect(componentLoader.load('invalid')).rejects.toThrow(ConfigurationError);
 });

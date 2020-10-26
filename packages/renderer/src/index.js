@@ -14,5 +14,4 @@
   limitations under the License.
 */
 
-import bootstrap from './bootstrap';
-bootstrap();
+import('./bootstrap');

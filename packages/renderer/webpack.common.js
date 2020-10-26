@@ -19,13 +19,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /bootstrap\.js$/,
-        loader: 'bundle-loader',
-        options: {
-          lazy: true,
-        },
-      },
       // TODO: FIXME: do NOT webpack 5 support with this
       // x-ref: https://github.com/webpack/webpack/issues/11467
       // waiting for babel fix: https://github.com/vercel/next.js/pull/17095#issuecomment-692435147
@@ -67,13 +60,14 @@ module.exports = {
       shared: {
         ...deps,
         react: {
-          import: 'react', // the "react" package will be used a provided and fallback module
-          shareKey: 'react', // under this name the shared module will be placed in the share scope
-          shareScope: 'default', // share scope with this name will be used
           singleton: true, // only a single version of the shared module is allowed
+          requiredVersion: '~17.0.0',
+          version: deps.react,
         },
         'react-dom': {
           singleton: true, // only a single version of the shared module is allowed
+          requiredVersion: '~17.0.0',
+          version: deps['react-dom'],
         },
       },
     }),
