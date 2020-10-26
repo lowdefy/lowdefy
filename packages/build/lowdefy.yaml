@@ -1,0 +1,14 @@
+
+types:
+  Context:
+    url: http://localhost:3002/meta/Context.json
+  Button:
+    url: http://localhost:3002/meta/Button.json
+
+
+pages:
+  - id: '1'
+    type: Context
+    blocks:
+      - id: button
+        type: Button
