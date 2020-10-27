@@ -26,11 +26,12 @@ async function build(program) {
     baseDirectory = path.resolve(program.baseDirectory);
   }
   const version = await getLowdefyVersion(program.baseDirectory);
-  const buildScript = await getBuildScript(version);
+  const cacheDirectory = path.resolve(baseDirectory, cacheDirectoryPath);
+  const buildScript = await getBuildScript(version, cacheDirectory);
 
   buildScript({
     logger: createPrint({ timestamp: true }),
-    cacheDirectory: path.resolve(baseDirectory, cacheDirectoryPath),
+    cacheDirectory,
     configDirectory: baseDirectory,
     outputDirectory: path.resolve(baseDirectory, outputDirectoryPath),
   });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import errorBoundary from './errorBoundary';
+import errorHandler from './errorHandler';
 import createPrint from './print';
 
 jest.mock('./print', () => {
@@ -38,7 +38,7 @@ beforeEach(() => {
 
 test('Error boundary with synchronous function', async () => {
   const fn = jest.fn(() => 1 + 1);
-  const wrapped = errorBoundary(fn);
+  const wrapped = errorHandler(fn);
   const res = await wrapped();
   expect(res).toBe(2);
   expect(fn).toHaveBeenCalled();
@@ -49,7 +49,7 @@ test('Error boundary with asynchronous function', async () => {
     await wait(3);
     return 4;
   });
-  const wrapped = errorBoundary(fn);
+  const wrapped = errorHandler(fn);
   const res = await wrapped();
   expect(res).toBe(4);
   expect(fn).toHaveBeenCalled();
@@ -57,7 +57,7 @@ test('Error boundary with asynchronous function', async () => {
 
 test('Pass args to synchronous function', async () => {
   const fn = jest.fn((arg1, arg2) => ({ arg1, arg2 }));
-  const wrapped = errorBoundary(fn);
+  const wrapped = errorHandler(fn);
   const res = await wrapped('1', '2');
   expect(res).toEqual({ arg1: '1', arg2: '2' });
 });
@@ -66,7 +66,7 @@ test('Catch error synchronous function, stay alive', async () => {
   const fn = jest.fn(() => {
     throw new Error('Error');
   });
-  const wrapped = errorBoundary(fn, { stayAlive: true });
+  const wrapped = errorHandler(fn, { stayAlive: true });
   const res = await wrapped();
   expect(res).toBe(undefined);
   expect(fn).toHaveBeenCalled();
@@ -78,7 +78,7 @@ test('Catch error asynchronous function, stay alive', async () => {
     await wait(3);
     throw new Error('Async Error');
   });
-  const wrapped = errorBoundary(fn, { stayAlive: true });
+  const wrapped = errorHandler(fn, { stayAlive: true });
   const res = await wrapped();
   expect(res).toBe(undefined);
   expect(fn).toHaveBeenCalled();
@@ -92,7 +92,7 @@ test('Catch error synchronous function, exit process', async () => {
   const fn = jest.fn(() => {
     throw new Error('Error');
   });
-  const wrapped = errorBoundary(fn);
+  const wrapped = errorHandler(fn);
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Error']]);
@@ -108,7 +108,7 @@ test('Catch error asynchronous function, exit process', async () => {
     await wait(3);
     throw new Error('Async Error');
   });
-  const wrapped = errorBoundary(fn);
+  const wrapped = errorHandler(fn);
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Async Error']]);

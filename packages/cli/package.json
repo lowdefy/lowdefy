@@ -43,9 +43,12 @@
     "@lowdefy/build": "0.0.0-experimental.0",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
+    "axios": "0.21.0",
     "chalk": "4.1.0",
     "chokidar": "3.4.2",
     "commander": "6.1.0",
+    "decompress": "4.2.1",
+    "decompress-targz": "4.1.1",
     "inquirer": "7.3.3",
     "js-yaml": "3.14.0"
   },
