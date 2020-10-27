@@ -2708,7 +2708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/block-tools@1.0.1-experimental.5, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@1.0.1-experimental.6, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
   dependencies:
@@ -2827,7 +2827,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-experimental.5
+    "@lowdefy/block-tools": 1.0.1-experimental.6
     "@lowdefy/graphql": 0.0.0-experimental.0
     apollo-server-express: 2.18.2
     babel-loader: 8.1.0

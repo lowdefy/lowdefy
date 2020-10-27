@@ -29,7 +29,7 @@
     "dev": "webpack serve --config webpack.dev.js"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.1-experimental.5",
+    "@lowdefy/block-tools": "1.0.1-experimental.6",
     "@lowdefy/graphql": "0.0.0-experimental.0",
     "apollo-server-express": "2.18.2",
     "express": "4.17.1",
