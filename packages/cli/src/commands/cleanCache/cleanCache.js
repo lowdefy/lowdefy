@@ -15,25 +15,20 @@
 */
 
 import path from 'path';
-import getBuildScript from './getBuildScript';
-import getLowdefyVersion from '../../utils/getLowdefyVersion';
+import { cleanDirectory } from '@lowdefy/node-utils';
 import createPrint from '../../utils/print';
-import { cacheDirectoryPath, outputDirectoryPath } from '../../utils/directories';
+import { cacheDirectoryPath } from '../../utils/directories';
 
-async function build(program) {
+async function cleanCache(program) {
   let baseDirectory = process.cwd();
   if (program.baseDirectory) {
     baseDirectory = path.resolve(program.baseDirectory);
   }
-  const version = await getLowdefyVersion(program.baseDirectory);
-  const buildScript = await getBuildScript(version);
-
-  buildScript({
-    logger: createPrint({ timestamp: true }),
-    cacheDirectory: path.resolve(baseDirectory, cacheDirectoryPath),
-    configDirectory: baseDirectory,
-    outputDirectory: path.resolve(baseDirectory, outputDirectoryPath),
-  });
+  const print = createPrint();
+  const cacheDir = path.resolve(baseDirectory, cacheDirectoryPath);
+  print.info(`Cleaning cache at "${cacheDir}".`);
+  await cleanDirectory(cacheDir);
+  print.info(`Cache cleaned.`);
 }
 
-export default build;
+export default cleanCache;

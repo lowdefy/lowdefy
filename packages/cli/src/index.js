@@ -17,6 +17,7 @@
 import program from 'commander';
 import packageJson from '../package.json';
 import build from './commands/build/build.js';
+import cleanCache from './commands/cleanCache/cleanCache.js';
 import errorHandler from './utils/errorHandler';
 
 const { description, version } = packageJson;
@@ -32,5 +33,15 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .action(errorHandler(build));
+
+program
+  .command('clean-cache')
+  .description('Build a Lowdefy deployment.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .action(errorHandler(cleanCache));
 
 program.parse(process.argv);
