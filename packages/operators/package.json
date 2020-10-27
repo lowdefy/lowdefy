@@ -29,7 +29,11 @@
     "test:watch": "jest --coverage --watch",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "npm-publish": "npm publish --access public"
+    "npm-publish": "npm publish --access public",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",

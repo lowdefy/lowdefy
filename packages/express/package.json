@@ -26,7 +26,11 @@
     "clean": "rm -rf shell/dist",
     "prepublishOnly": "yarn build",
     "start": "nodemon server.js",
-    "dev": "webpack serve --config webpack.dev.js"
+    "dev": "webpack serve --config webpack.dev.js",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
     "@lowdefy/block-tools": "1.0.1-experimental.5",

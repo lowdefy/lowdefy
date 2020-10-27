@@ -30,7 +30,11 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "yarn build",
     "start": "serve dist -p 3001",
-    "dev": "webpack serve --config webpack.dev.js"
+    "dev": "webpack serve --config webpack.dev.js",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
     "@apollo/client": "3.2.5",
