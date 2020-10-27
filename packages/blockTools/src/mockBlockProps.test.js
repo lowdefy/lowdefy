@@ -316,26 +316,26 @@ test('areas list', () => {
       },
       "blockId": "a",
       "id": "a",
-      "list": Object {
-        "content": [Function],
-      },
+      "list": Array [
+        Object {
+          "content": [Function],
+        },
+      ],
       "type": "List",
     }
   `);
-  expect(res.list.content()).toMatchInlineSnapshot(`
-    Array [
-      <div
-        style={
-          Object {
-            "border": "1px solid red",
-            "padding": 10,
-            "width": "100%",
-          }
+  expect(res.list[0].content()).toMatchInlineSnapshot(`
+    <div
+      style={
+        Object {
+          "border": "1px solid red",
+          "padding": 10,
+          "width": "100%",
         }
-      >
-        b
-      </div>,
-    ]
+      }
+    >
+      b
+    </div>
   `);
 });
 
