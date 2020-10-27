@@ -16,6 +16,7 @@
 
 import { unmountComponentAtNode } from 'react-dom';
 import mockBlockProps from './mockBlockProps';
+import blockDefaults from './blockDefaults';
 
 const mockBlock = ({ meta, logger }) => {
   // mock Match.random to generate consistent ids
@@ -70,7 +71,7 @@ const mockBlock = ({ meta, logger }) => {
     container.div.remove();
     container.div = null;
   };
-  const getProps = (example) => mockBlockProps({ example, meta, logger });
+  const getProps = (example) => blockDefaults(mockBlockProps({ example, meta, logger }));
   return { after, before, container, methods, getProps, renderOptions, nodeMock };
 };
 
