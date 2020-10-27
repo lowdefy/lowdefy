@@ -14,41 +14,68 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { type } from '@lowdefy/helpers';
 
 const mockBlockProps = (exBlock, meta) => {
+  const [value, setState] = useState(type.enforceType(meta.valueType, null));
+  const setValue = (val) => {
+    setState(type.enforceType(meta.valueType, val));
+  };
+
   const block = JSON.parse(JSON.stringify(exBlock));
   block.blockId = block.id;
-  if (block.blocks) {
+  if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
     if (!block.areas) block.areas = {};
-    block.areas.content = block.blocks;
+    if (block.blocks) block.areas.content = block.blocks;
   }
-  if (block.areas) {
-    if (meta.category === 'list') {
-      block.list = [];
-      block.areas.content.forEach((bl) => {
-        block.list.push({
-          content: () => (
-            <div key={bl.id} style={{ border: '1px solid red', padding: 10, width: '100%' }}>
-              {bl.id}
-            </div>
-          ),
-        });
-      });
-    } else {
-      block.content = {};
-      Object.keys(block.areas).forEach((key) => {
-        block.content[key] = () => (
-          <div key={key} style={{ border: '1px solid red', padding: 10, width: '100%' }}>
-            {key}
+  if (!block.methods) {
+    block.methods = {};
+  }
+
+  if (meta.category === 'list') {
+    block.list = [];
+    (block.areas.content || []).forEach((bl) => {
+      block.list.push({
+        content: () => (
+          <div key={bl.id} style={{ border: '1px solid red', padding: 10 }}>
+            {bl.id}
           </div>
-        );
+        ),
       });
-    }
+    });
+    block.methods = {
+      ...block.methods,
+      pushItem: () => alert('List pushItem'),
+      unshiftItem: () => alert('List unshiftItem'),
+      removeItem: (i) => alert(`List removeItem ${i}`),
+      moveItemDown: (i) => alert(`List moveItemDown ${i}`),
+      moveItemUp: (i) => alert(`List moveItemUp ${i}`),
+    };
+  }
+  if (meta.category === 'container' || meta.category === 'context') {
+    block.content = {};
+    Object.keys(block.areas).forEach((key) => {
+      block.content[key] = () => (
+        <div key={key} style={{ border: '1px solid red', padding: 10 }}>
+          {key}
+        </div>
+      );
+    });
+  }
+  if (meta.category === 'input') {
+    block.methods = {
+      ...block.methods,
+      setValue,
+    };
+    block.value = value;
   }
   if (block.actions) {
     block.methods = {
+      ...block.methods,
       callAction: (action) => alert(JSON.stringify(action, null, 2)),
+      registerAction: (action) => alert(JSON.stringify(action, null, 2)),
+      registerMethod: (method) => alert(JSON.stringify(method, null, 2)),
     };
   }
   return block;

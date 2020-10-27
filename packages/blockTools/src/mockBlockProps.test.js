@@ -14,7 +14,31 @@
   limitations under the License.
 */
 
+import { useState } from 'react';
 import mockBlockProps from './mockBlockProps';
+
+jest.mock('react', () => {
+  const React = {
+    createElement: jest.fn(),
+  };
+  const useState = jest.fn();
+  return { useState, default: React, __esModule: true };
+});
+const mockSetState = jest.fn();
+
+const alert = global.alert;
+beforeAll(() => {
+  global.alert = jest.fn();
+});
+afterAll(() => {
+  global.alert = alert;
+});
+beforeEach(() => {
+  global.alert.mockReset();
+  mockSetState.mockReset();
+  useState.mockReset();
+  useState.mockImplementation((value) => [value, mockSetState]);
+});
 
 test('basic display', () => {
   const config = {
@@ -24,7 +48,31 @@ test('basic display', () => {
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Display' });
+  expect(mockBlockProps(config, meta)).toEqual({
+    blockId: 'a',
+    id: 'a',
+    type: 'Display',
+    methods: {},
+  });
+});
+
+test('basic display with methods', () => {
+  const config = {
+    id: 'a',
+    type: 'Display',
+    methods: { fn: 'test' },
+  };
+  const meta = {
+    category: 'display',
+  };
+  expect(mockBlockProps(config, meta)).toEqual({
+    blockId: 'a',
+    id: 'a',
+    type: 'Display',
+    methods: {
+      fn: 'test',
+    },
+  });
 });
 
 test('basic input', () => {
@@ -35,7 +83,42 @@ test('basic input', () => {
   const meta = {
     category: 'input',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Input' });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "setValue": [Function],
+      },
+      "type": "Input",
+      "value": null,
+    }
+  `);
+});
+
+test('input setState', () => {
+  const config = {
+    id: 'a',
+    type: 'Input',
+  };
+  const meta = {
+    category: 'input',
+    valueType: 'string',
+  };
+  const res = mockBlockProps(config, meta);
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "setValue": [Function],
+      },
+      "type": "Input",
+      "value": null,
+    }
+  `);
+  res.methods.setValue('test');
+  expect(mockSetState).toBeCalledWith('test');
 });
 
 test('basic container', () => {
@@ -46,7 +129,16 @@ test('basic container', () => {
   const meta = {
     category: 'container',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Container' });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {},
+      "blockId": "a",
+      "content": Object {},
+      "id": "a",
+      "methods": Object {},
+      "type": "Container",
+    }
+  `);
 });
 
 test('basic context', () => {
@@ -57,7 +149,16 @@ test('basic context', () => {
   const meta = {
     category: 'context',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Context' });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {},
+      "blockId": "a",
+      "content": Object {},
+      "id": "a",
+      "methods": Object {},
+      "type": "Context",
+    }
+  `);
 });
 
 test('basic list', () => {
@@ -68,7 +169,55 @@ test('basic list', () => {
   const meta = {
     category: 'list',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'List' });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {},
+      "blockId": "a",
+      "id": "a",
+      "list": Array [],
+      "methods": Object {
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
+      "type": "List",
+    }
+  `);
+});
+
+test('list methods', () => {
+  const config = {
+    id: 'a',
+    type: 'List',
+  };
+  const meta = {
+    category: 'list',
+  };
+  const res = mockBlockProps(config, meta);
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {},
+      "blockId": "a",
+      "id": "a",
+      "list": Array [],
+      "methods": Object {
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
+      "type": "List",
+    }
+  `);
+  res.methods.moveItemDown(10);
+  res.methods.moveItemUp(11);
+  res.methods.removeItem(12);
+  res.methods.unshiftItem();
+  res.methods.pushItem();
+  expect(global.alert).toBeCalledTimes(5);
 });
 
 test('blocks container', () => {
@@ -107,23 +256,13 @@ test('blocks container', () => {
         "content": [Function],
       },
       "id": "a",
+      "methods": Object {},
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
 });
+
 test('blocks areas container', () => {
   const config = {
     id: 'a',
@@ -169,22 +308,11 @@ test('blocks areas container', () => {
         "content": [Function],
       },
       "id": "a",
+      "methods": Object {},
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
 });
 
 test('areas container', () => {
@@ -219,22 +347,11 @@ test('areas container', () => {
         "content": [Function],
       },
       "id": "a",
+      "methods": Object {},
       "type": "Container",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
 });
 
 test('areas context', () => {
@@ -269,22 +386,11 @@ test('areas context', () => {
         "content": [Function],
       },
       "id": "a",
+      "methods": Object {},
       "type": "Context",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
 });
 
 test('areas list', () => {
@@ -321,26 +427,20 @@ test('areas list', () => {
           "content": [Function],
         },
       ],
+      "methods": Object {
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
       "type": "List",
     }
   `);
-  expect(res.list[0].content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      b
-    </div>
-  `);
+  expect(res.list[0].content()).toMatchInlineSnapshot(`undefined`);
 });
 
 test('actions display', () => {
-  global.alert = jest.fn();
   const config = {
     id: 'a',
     type: 'Display',
@@ -371,10 +471,14 @@ test('actions display', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "type": "Display",
     }
   `);
   res.methods.callAction({ action: 'click' });
-  expect(global.alert).toBeCalledWith(JSON.stringify({ action: 'click' }, null, 2));
+  res.methods.registerAction({ action: 'onClick' });
+  res.methods.registerMethod({ action: 'open' });
+  expect(global.alert).toBeCalledTimes(3);
 });

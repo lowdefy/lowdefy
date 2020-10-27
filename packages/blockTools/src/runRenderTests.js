@@ -19,13 +19,19 @@ import renderer from 'react-test-renderer';
 import mockBlock from './mockBlock';
 
 const runRenderTests = (examples, Block, meta) => {
-  const { after, before, Component, methods, getProps } = mockBlock(Block, meta);
+  const { after, before, methods, getProps } = mockBlock(meta);
+
   beforeEach(before);
   afterEach(after);
 
   examples.forEach((ex) => {
     test(`Render ${ex.id}`, () => {
-      const comp = renderer.create(<Component {...getProps(ex)} methods={methods} />, {
+      // create shell to setup react hooks with getProps before render;
+      const Shell = () => {
+        const props = getProps(ex);
+        return <Block {...getProps(ex)} methods={methods} />;
+      };
+      const comp = renderer.create(<Shell />, {
         createNodeMock: () => {
           return { innerHTML: '' };
         },

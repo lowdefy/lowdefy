@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
+import React from 'react';
 import { unmountComponentAtNode } from 'react-dom';
 import mockBlockProps from './mockBlockProps';
 import blockDefaults from './blockDefaults';
 
-const mockBlock = (Block, meta) => {
+const mockBlock = (meta) => {
   // mock Match.random to generate consistent ids
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.123456789;
@@ -71,9 +72,8 @@ const mockBlock = (Block, meta) => {
     container.div.remove();
     container.div = null;
   };
-  const Component = blockDefaults(Block);
   const getProps = (config) => mockBlockProps(config, meta);
-  return { after, before, Component, container, methods, getProps, renderOptions, nodeMock };
+  return { after, before, container, methods, getProps, renderOptions, nodeMock };
 };
 
 export default mockBlock;
