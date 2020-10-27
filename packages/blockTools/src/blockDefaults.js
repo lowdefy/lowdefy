@@ -48,7 +48,7 @@ const blockDefaults = (Comp) => {
       methods={defaultMethods(methods || {})}
       Components={Components || {}}
       content={content || {}}
-      list={list || {}}
+      list={list || []}
       menus={menus || []}
       properties={properties || {}}
       user={user || {}}

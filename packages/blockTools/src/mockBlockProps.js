@@ -25,9 +25,9 @@ const mockBlockProps = (exBlock, meta) => {
   }
   if (block.areas) {
     if (meta.category === 'list') {
-      const list = [];
+      block.list = [];
       block.areas.content.forEach((bl) => {
-        list.push({
+        block.list.push({
           content: () => (
             <div key={bl.id} style={{ border: '1px solid red', padding: 10, width: '100%' }}>
               {bl.id}
@@ -35,9 +35,6 @@ const mockBlockProps = (exBlock, meta) => {
           ),
         });
       });
-      block.list = {
-        content: () => list.map((item) => item.content && item.content()),
-      };
     } else {
       block.content = {};
       Object.keys(block.areas).forEach((key) => {

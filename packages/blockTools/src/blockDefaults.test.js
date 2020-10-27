@@ -31,7 +31,7 @@ test('default', () => {
       actions={Object {}}
       blockId="blockId_1f9add"
       content={Object {}}
-      list={Object {}}
+      list={Array []}
       menus={Array []}
       methods={
         Object {
@@ -129,7 +129,7 @@ test('with no methods', () => {
       actions={Object {}}
       blockId="blockId_1f9add"
       content={Object {}}
-      list={Object {}}
+      list={Array []}
       menus={Array []}
       methods={
         Object {
@@ -162,7 +162,7 @@ test('with methods', () => {
       actions={Object {}}
       blockId="blockId_1f9add"
       content={Object {}}
-      list={Object {}}
+      list={Array []}
       menus={Array []}
       methods={
         Object {
