@@ -48,12 +48,18 @@ test('basic display', () => {
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps(config, meta)).toEqual({
-    blockId: 'a',
-    id: 'a',
-    type: 'Display',
-    methods: {},
-  });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "type": "Display",
+    }
+  `);
 });
 
 test('basic display with methods', () => {
@@ -65,14 +71,19 @@ test('basic display with methods', () => {
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps(config, meta)).toEqual({
-    blockId: 'a',
-    id: 'a',
-    type: 'Display',
-    methods: {
-      fn: 'test',
-    },
-  });
+  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "fn": "test",
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "type": "Display",
+    }
+  `);
 });
 
 test('basic input', () => {
@@ -88,6 +99,9 @@ test('basic input', () => {
       "blockId": "a",
       "id": "a",
       "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
         "setValue": [Function],
       },
       "type": "Input",
@@ -111,6 +125,9 @@ test('input setState', () => {
       "blockId": "a",
       "id": "a",
       "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
         "setValue": [Function],
       },
       "type": "Input",
@@ -135,7 +152,11 @@ test('basic container', () => {
       "blockId": "a",
       "content": Object {},
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Container",
     }
   `);
@@ -155,7 +176,11 @@ test('basic context', () => {
       "blockId": "a",
       "content": Object {},
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Context",
     }
   `);
@@ -176,9 +201,12 @@ test('basic list', () => {
       "id": "a",
       "list": Array [],
       "methods": Object {
+        "callAction": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
@@ -203,9 +231,12 @@ test('list methods', () => {
       "id": "a",
       "list": Array [],
       "methods": Object {
+        "callAction": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
@@ -256,7 +287,11 @@ test('blocks container', () => {
         "content": [Function],
       },
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Container",
     }
   `);
@@ -308,7 +343,11 @@ test('blocks areas container', () => {
         "content": [Function],
       },
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Container",
     }
   `);
@@ -347,7 +386,11 @@ test('areas container', () => {
         "content": [Function],
       },
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Container",
     }
   `);
@@ -386,7 +429,11 @@ test('areas context', () => {
         "content": [Function],
       },
       "id": "a",
-      "methods": Object {},
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
       "type": "Context",
     }
   `);
@@ -428,9 +475,12 @@ test('areas list', () => {
         },
       ],
       "methods": Object {
+        "callAction": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
         "removeItem": [Function],
         "unshiftItem": [Function],
       },

@@ -29,9 +29,13 @@ const mockBlockProps = (exBlock, meta) => {
     if (!block.areas) block.areas = {};
     if (block.blocks) block.areas.content = block.blocks;
   }
-  if (!block.methods) {
-    block.methods = {};
-  }
+  if (!block.methods) block.methods = {};
+  block.methods = {
+    ...block.methods,
+    callAction: (action) => alert(JSON.stringify(action, null, 2)),
+    registerAction: (action) => alert(JSON.stringify(action, null, 2)),
+    registerMethod: (method) => alert(JSON.stringify(method, null, 2)),
+  };
 
   if (meta.category === 'list') {
     block.list = [];
@@ -70,14 +74,7 @@ const mockBlockProps = (exBlock, meta) => {
     };
     block.value = value;
   }
-  if (block.actions) {
-    block.methods = {
-      ...block.methods,
-      callAction: (action) => alert(JSON.stringify(action, null, 2)),
-      registerAction: (action) => alert(JSON.stringify(action, null, 2)),
-      registerMethod: (method) => alert(JSON.stringify(method, null, 2)),
-    };
-  }
+
   return block;
 };
 
