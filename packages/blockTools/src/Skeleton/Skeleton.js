@@ -18,7 +18,8 @@ import React from 'react';
 import blockDefaults from '../blockDefaults';
 import './Skeleton.css';
 
-const Skeleton = ({ properties, methods }) => {
+const Skeleton = (props) => {
+  const { properties, methods } = blockDefaults(props);
   return (
     <div
       className={'skeleton ' + methods.makeCssClass(properties.style)}
@@ -27,4 +28,4 @@ const Skeleton = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(Skeleton);
+export default Skeleton;

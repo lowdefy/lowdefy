@@ -18,7 +18,8 @@ import React from 'react';
 import blockDefaults from '../blockDefaults';
 import Skeleton from './Skeleton';
 
-const SkeletonButton = ({ properties, methods }) => {
+const SkeletonButton = (props) => {
+  const { properties, methods } = blockDefaults(props);
   let height = properties.height || 32;
   switch (properties.size) {
     case 'small':
@@ -42,4 +43,4 @@ const SkeletonButton = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(SkeletonButton);
+export default SkeletonButton;

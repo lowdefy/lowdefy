@@ -18,4 +18,4 @@ import examples from '../../demo/examples/SkeletonInput.yaml';
 import runRenderTests from '../runRenderTests';
 import SkeletonInput from './SkeletonInput';
 
-runRenderTests(examples, SkeletonInput);
+runRenderTests(examples, SkeletonInput, {});

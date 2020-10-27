@@ -19,7 +19,8 @@ import { type } from '@lowdefy/helpers';
 import blockDefaults from '../blockDefaults';
 import Skeleton from './Skeleton';
 
-const SkeletonAvatar = ({ properties, methods }) => {
+const SkeletonAvatar = (props) => {
+  const { properties, methods } = blockDefaults(props);
   let size = properties.size || 32;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -45,4 +46,4 @@ const SkeletonAvatar = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(SkeletonAvatar);
+export default SkeletonAvatar;

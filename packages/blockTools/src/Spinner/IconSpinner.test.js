@@ -18,4 +18,4 @@ import examples from '../../demo/examples/IconSpinner.yaml';
 import runRenderTests from '../runRenderTests';
 import IconSpinner from './IconSpinner';
 
-runRenderTests(examples, IconSpinner);
+runRenderTests(examples, IconSpinner, {});
