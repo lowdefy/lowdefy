@@ -26,15 +26,9 @@ jest.mock('react', () => {
 });
 const mockSetState = jest.fn();
 
-const alert = global.alert;
-beforeAll(() => {
-  global.alert = jest.fn();
-});
-afterAll(() => {
-  global.alert = alert;
-});
+const logger = jest.fn();
 beforeEach(() => {
-  global.alert.mockReset();
+  logger.mockReset();
   mockSetState.mockReset();
   useState.mockReset();
   useState.mockImplementation((value) => [value, mockSetState]);
@@ -63,6 +57,8 @@ test('basic display', () => {
 });
 
 test('basic display with methods', () => {
+  const realAlert = global.alert;
+  global.alert = jest.fn();
   const config = {
     id: 'a',
     type: 'Display',
@@ -71,7 +67,8 @@ test('basic display with methods', () => {
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+  const res = mockBlockProps(config, meta);
+  expect(res).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
@@ -84,6 +81,11 @@ test('basic display with methods', () => {
       "type": "Display",
     }
   `);
+  res.methods.callAction();
+  res.methods.registerAction();
+  res.methods.registerMethod();
+  expect(global.alert).toBeCalledTimes(3);
+  global.alert = realAlert;
 });
 
 test('basic input', () => {
@@ -94,7 +96,7 @@ test('basic input', () => {
   const meta = {
     category: 'input',
   };
-  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+  expect(mockBlockProps(config, meta, logger)).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
@@ -119,7 +121,7 @@ test('input setState', () => {
     category: 'input',
     valueType: 'string',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
@@ -146,7 +148,7 @@ test('basic container', () => {
   const meta = {
     category: 'container',
   };
-  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+  expect(mockBlockProps(config, meta, logger)).toMatchInlineSnapshot(`
     Object {
       "areas": Object {},
       "blockId": "a",
@@ -170,7 +172,7 @@ test('basic context', () => {
   const meta = {
     category: 'context',
   };
-  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+  expect(mockBlockProps(config, meta, logger)).toMatchInlineSnapshot(`
     Object {
       "areas": Object {},
       "blockId": "a",
@@ -194,7 +196,7 @@ test('basic list', () => {
   const meta = {
     category: 'list',
   };
-  expect(mockBlockProps(config, meta)).toMatchInlineSnapshot(`
+  expect(mockBlockProps(config, meta, logger)).toMatchInlineSnapshot(`
     Object {
       "areas": Object {},
       "blockId": "a",
@@ -223,7 +225,7 @@ test('list methods', () => {
   const meta = {
     category: 'list',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {},
@@ -248,7 +250,7 @@ test('list methods', () => {
   res.methods.removeItem(12);
   res.methods.unshiftItem();
   res.methods.pushItem();
-  expect(global.alert).toBeCalledTimes(5);
+  expect(logger).toBeCalledTimes(5);
 });
 
 test('blocks container', () => {
@@ -265,7 +267,7 @@ test('blocks container', () => {
   const meta = {
     category: 'container',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -321,7 +323,7 @@ test('blocks areas container', () => {
     category: 'container',
   };
 
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -370,7 +372,7 @@ test('areas container', () => {
   const meta = {
     category: 'container',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -413,7 +415,7 @@ test('areas context', () => {
   const meta = {
     category: 'context',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -456,7 +458,7 @@ test('areas list', () => {
   const meta = {
     category: 'list',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -506,7 +508,7 @@ test('actions display', () => {
   const meta = {
     category: 'display',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps(config, meta, logger);
   expect(res).toMatchInlineSnapshot(`
     Object {
       "actions": Object {
@@ -530,5 +532,5 @@ test('actions display', () => {
   res.methods.callAction({ action: 'click' });
   res.methods.registerAction({ action: 'onClick' });
   res.methods.registerMethod({ action: 'open' });
-  expect(global.alert).toBeCalledTimes(3);
+  expect(logger).toBeCalledTimes(3);
 });

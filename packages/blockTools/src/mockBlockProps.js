@@ -17,7 +17,9 @@
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
-const mockBlockProps = (exBlock, meta) => {
+const mockBlockProps = (exBlock, meta, logger) => {
+  let log = alert;
+  if (logger) log = logger;
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
@@ -32,9 +34,9 @@ const mockBlockProps = (exBlock, meta) => {
   if (!block.methods) block.methods = {};
   block.methods = {
     ...block.methods,
-    callAction: (action) => alert(JSON.stringify(action, null, 2)),
-    registerAction: (action) => alert(JSON.stringify(action, null, 2)),
-    registerMethod: (method) => alert(JSON.stringify(method, null, 2)),
+    callAction: (action) => log(JSON.stringify(action, null, 2)),
+    registerAction: (action) => log(JSON.stringify(action, null, 2)),
+    registerMethod: (method) => log(JSON.stringify(method, null, 2)),
   };
 
   if (meta.category === 'list') {
@@ -50,11 +52,11 @@ const mockBlockProps = (exBlock, meta) => {
     });
     block.methods = {
       ...block.methods,
-      pushItem: () => alert('List pushItem'),
-      unshiftItem: () => alert('List unshiftItem'),
-      removeItem: (i) => alert(`List removeItem ${i}`),
-      moveItemDown: (i) => alert(`List moveItemDown ${i}`),
-      moveItemUp: (i) => alert(`List moveItemUp ${i}`),
+      pushItem: () => log('List pushItem'),
+      unshiftItem: () => log('List unshiftItem'),
+      removeItem: (i) => log(`List removeItem ${i}`),
+      moveItemDown: (i) => log(`List moveItemDown ${i}`),
+      moveItemUp: (i) => log(`List moveItemUp ${i}`),
     };
   }
   if (meta.category === 'container' || meta.category === 'context') {
