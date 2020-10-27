@@ -14,19 +14,8 @@
   limitations under the License.
 */
 
-import { useLayoutEffect, useRef } from 'react';
+import examples from '../../demo/examples/SkeletonAvatar.yaml';
+import runRenderTests from '../runRenderTests';
+import SkeletonAvatar from './SkeletonAvatar';
 
-const useRunAfterUpdate = () => {
-  const afterPaintRef = useRef(null);
-  useLayoutEffect(() => {
-    if (afterPaintRef.current) {
-      afterPaintRef.current();
-      afterPaintRef.current = null;
-    }
-  });
-  return (fn) => {
-    afterPaintRef.current = fn;
-  };
-};
-
-export default useRunAfterUpdate;
+runRenderTests(examples, SkeletonAvatar);

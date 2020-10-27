@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
+  style={
+    Object {
+      "height": 32,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Render shaperound 1`] = `
+<div
+  className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
+  style={
+    Object {
+      "height": 32,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Render sizedefault 1`] = `
+<div
+  className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
+  style={
+    Object {
+      "height": 32,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Render sizelarge 1`] = `
+<div
+  className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
+  style={
+    Object {
+      "height": 40,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Render sizesmall 1`] = `
+<div
+  className="skeleton {\\"style\\":{\\"borderRadius\\":false}}"
+  style={
+    Object {
+      "height": 24,
+      "width": "100%",
+    }
+  }
+/>
+`;

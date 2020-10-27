@@ -17,11 +17,13 @@
 import React from 'react';
 import makeCssClass from './makeCssClass';
 
+const noMethod = () => undefined;
+
 const defaultMethods = (methods) => ({
   makeCssClass,
-  callAction: methods.callAction || (() => undefined),
-  registerAction: methods.registerAction || (() => undefined),
-  registerMethod: methods.registerMethod || (() => undefined),
+  callAction: methods.callAction || noMethod,
+  registerAction: methods.registerAction || noMethod,
+  registerMethod: methods.registerMethod || noMethod,
   ...methods,
 });
 
@@ -31,8 +33,9 @@ const blockDefaults = (Comp) => {
     blockId,
     Components,
     content,
-    methods,
+    list,
     menus,
+    methods,
     properties,
     user,
     validate,
@@ -45,6 +48,7 @@ const blockDefaults = (Comp) => {
       methods={defaultMethods(methods || {})}
       Components={Components || {}}
       content={content || {}}
+      list={list || []}
       menus={menus || []}
       properties={properties || {}}
       user={user || {}}

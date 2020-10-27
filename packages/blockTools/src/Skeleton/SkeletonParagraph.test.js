@@ -14,19 +14,8 @@
   limitations under the License.
 */
 
-import { useLayoutEffect, useRef } from 'react';
+import examples from '../../demo/examples/SkeletonParagraph.yaml';
+import runRenderTests from '../runRenderTests';
+import SkeletonParagraph from './SkeletonParagraph';
 
-const useRunAfterUpdate = () => {
-  const afterPaintRef = useRef(null);
-  useLayoutEffect(() => {
-    if (afterPaintRef.current) {
-      afterPaintRef.current();
-      afterPaintRef.current = null;
-    }
-  });
-  return (fn) => {
-    afterPaintRef.current = fn;
-  };
-};
-
-export default useRunAfterUpdate;
+runRenderTests(examples, SkeletonParagraph);
