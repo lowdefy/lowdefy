@@ -16,10 +16,13 @@
 
 import blockDefaults from './blockDefaults';
 import ErrorBoundary from './ErrorBoundary';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
 import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
+import makeCssClass from './makeCssClass.js';
+import mediaToCssObject from './mediaToCssObject.js';
+import mockBlock from './mockBlock';
+import mockBlockProps from './mockBlockProps';
+import runRenderTests from './runRenderTests';
 import Skeleton from './Skeleton/Skeleton';
 import SkeletonAvatar from './Skeleton/SkeletonAvatar';
 import SkeletonButton from './Skeleton/SkeletonButton';
@@ -35,6 +38,9 @@ export {
   Loading,
   makeCssClass,
   mediaToCssObject,
+  mockBlock,
+  mockBlockProps,
+  runRenderTests,
   Skeleton,
   SkeletonAvatar,
   SkeletonButton,

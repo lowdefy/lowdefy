@@ -46,7 +46,7 @@ const SkeletonInput = ({ properties, methods }) => {
         methods={methods}
         properties={{
           width: properties.width || '100%',
-          height: properties.inputHeight || inputHeight || 32,
+          height: properties.inputHeight || inputHeight,
         }}
       />
     </div>
