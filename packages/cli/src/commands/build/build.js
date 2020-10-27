@@ -17,7 +17,6 @@
 import path from 'path';
 import getBuildScript from './getBuildScript';
 import getLowdefyVersion from '../../utils/getLowdefyVersion';
-import errorBoundary from '../../utils/errorBoundary';
 import createPrint from '../../utils/print';
 
 async function build(program) {
@@ -36,4 +35,4 @@ async function build(program) {
   });
 }
 
-export default errorBoundary(build);
+export default build;

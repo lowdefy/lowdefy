@@ -17,6 +17,7 @@
 import program from 'commander';
 import packageJson from '../package.json';
 import build from './commands/build/build.js';
+import errorHandler from './utils/errorHandler';
 
 const { description, version } = packageJson;
 
@@ -30,6 +31,6 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .action(build);
+  .action(errorHandler(build));
 
 program.parse(process.argv);

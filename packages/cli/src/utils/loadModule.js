@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+/*global __webpack_share_scopes__, __webpack_init_sharing__, __non_webpack_require__*/
+
 import path from 'path';
 
 async function loadModule(dir, moduleName, remoteEntry = 'remoteEntry.js') {
