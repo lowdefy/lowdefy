@@ -18,4 +18,4 @@ import examples from '../../demo/examples/Spinner.yaml';
 import runRenderTests from '../runRenderTests';
 import Spinner from './Spinner';
 
-runRenderTests(examples, Spinner, {});
+runRenderTests({ examples, Block: Spinner, meta: {} });

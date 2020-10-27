@@ -18,8 +18,8 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import mockBlock from './mockBlock';
 
-const runRenderTests = (examples, Block, meta, logger) => {
-  const { after, before, methods, getProps } = mockBlock(meta, logger);
+const runRenderTests = ({ examples, Block, meta, logger }) => {
+  const { after, before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(before);
   afterEach(after);

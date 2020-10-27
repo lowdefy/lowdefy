@@ -17,15 +17,15 @@
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
-const mockBlockProps = (exBlock, meta, logger) => {
-  let log = alert;
-  if (logger) log = logger;
+const mockBlockProps = ({ example, meta, logger }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
   };
+  let log = alert;
+  if (logger) log = logger;
 
-  const block = JSON.parse(JSON.stringify(exBlock));
+  const block = JSON.parse(JSON.stringify(example));
   block.blockId = block.id;
   if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
     if (!block.areas) block.areas = {};

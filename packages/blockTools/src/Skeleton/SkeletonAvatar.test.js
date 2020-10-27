@@ -18,4 +18,4 @@ import examples from '../../demo/examples/SkeletonAvatar.yaml';
 import runRenderTests from '../runRenderTests';
 import SkeletonAvatar from './SkeletonAvatar';
 
-runRenderTests(examples, SkeletonAvatar, {});
+runRenderTests({ examples, Block: SkeletonAvatar, meta: {} });
