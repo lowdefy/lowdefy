@@ -14,43 +14,87 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
+import Ajv from 'ajv';
+import AjvErrors from 'ajv-errors';
+import { type } from '@lowdefy/helpers';
+import blockSchema from './blockSchema.json';
 
-const mockBlockProps = (exBlock, meta) => {
-  const block = JSON.parse(JSON.stringify(exBlock));
+const initAjv = (options) => {
+  const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
+  AjvErrors(ajv, options);
+  return ajv;
+};
+const ajvInstance = initAjv();
+
+const mockBlockProps = ({ block, meta, logger }) => {
+  const [value, setState] = useState(type.enforceType(meta.valueType, null));
+  const setValue = (val) => {
+    setState(type.enforceType(meta.valueType, val));
+  };
+  let log = alert;
+  if (logger) log = logger;
+
+  // evaluate block schema
+  blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
+  const validate = ajvInstance.compile(blockSchema);
+  block.schemaErrors = !validate(block);
+  if (block.schemaErrors) block.schemaErrors = validate.errors;
+
+  // block defaults
   block.blockId = block.id;
-  if (block.blocks) {
+  if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
     if (!block.areas) block.areas = {};
-    block.areas.content = block.blocks;
+    if (!block.areas.content) block.areas.content = {};
+    if (block.blocks) block.areas.content.blocks = block.blocks;
   }
-  if (block.areas) {
-    if (meta.category === 'list') {
-      block.list = [];
-      block.areas.content.forEach((bl) => {
-        block.list.push({
-          content: () => (
-            <div key={bl.id} style={{ border: '1px solid red', padding: 10, width: '100%' }}>
-              {bl.id}
-            </div>
-          ),
-        });
-      });
-    } else {
-      block.content = {};
-      Object.keys(block.areas).forEach((key) => {
-        block.content[key] = () => (
-          <div key={key} style={{ border: '1px solid red', padding: 10, width: '100%' }}>
-            {key}
+  if (!block.methods) block.methods = {};
+  block.methods = {
+    callAction: (action) => log(JSON.stringify(action, null, 2)),
+    registerAction: (action) => log(JSON.stringify(action, null, 2)),
+    registerMethod: (method) => log(JSON.stringify(method, null, 2)),
+    ...block.methods,
+  };
+
+  // block category defaults
+  if (meta.category === 'list') {
+    block.list = [];
+    (block.areas.content.blocks || []).forEach((bl) => {
+      block.list.push({
+        content: () => (
+          <div key={bl.id} style={{ border: '1px solid red', padding: 10 }}>
+            {bl.id}
           </div>
-        );
+        ),
       });
-    }
-  }
-  if (block.actions) {
+    });
     block.methods = {
-      callAction: (action) => alert(JSON.stringify(action, null, 2)),
+      pushItem: () => log('List pushItem'),
+      unshiftItem: () => log('List unshiftItem'),
+      removeItem: (i) => log(`List removeItem ${i}`),
+      moveItemDown: (i) => log(`List moveItemDown ${i}`),
+      moveItemUp: (i) => log(`List moveItemUp ${i}`),
+      ...block.methods,
     };
   }
+  if (meta.category === 'container' || meta.category === 'context') {
+    block.content = {};
+    Object.keys(block.areas).forEach((key) => {
+      block.content[key] = () => (
+        <div key={key} style={{ border: '1px solid red', padding: 10 }}>
+          {key}
+        </div>
+      );
+    });
+  }
+  if (meta.category === 'input') {
+    block.methods = {
+      setValue,
+      ...block.methods,
+    };
+    block.value = value;
+  }
+
   return block;
 };
 

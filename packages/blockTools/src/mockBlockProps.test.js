@@ -14,305 +14,512 @@
   limitations under the License.
 */
 
+import { useState } from 'react';
 import mockBlockProps from './mockBlockProps';
 
+jest.mock('react', () => {
+  const React = {
+    createElement: jest.fn(),
+  };
+  const useState = jest.fn();
+  return { useState, default: React, __esModule: true };
+});
+const mockSetState = jest.fn();
+
+const logger = jest.fn();
+beforeEach(() => {
+  logger.mockReset();
+  mockSetState.mockReset();
+  useState.mockReset();
+  useState.mockImplementation((value) => [value, mockSetState]);
+});
+
 test('basic display', () => {
-  const config = {
+  const block = {
     id: 'a',
     type: 'Display',
   };
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Display' });
+  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Display",
+    }
+  `);
+});
+
+test('basic display with methods', () => {
+  const realAlert = global.alert;
+  global.alert = jest.fn();
+  const block = {
+    id: 'a',
+    type: 'Display',
+    methods: { fn: 'test' },
+  };
+  const meta = {
+    category: 'display',
+  };
+  const res = mockBlockProps({ block, meta });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "fn": "test",
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": Array [
+        Object {
+          "dataPath": "",
+          "keyword": "additionalProperties",
+          "message": "should NOT have additional properties",
+          "params": Object {
+            "additionalProperty": "methods",
+          },
+          "schemaPath": "#/additionalProperties",
+        },
+      ],
+      "type": "Display",
+    }
+  `);
+  res.methods.callAction();
+  res.methods.registerAction();
+  res.methods.registerMethod();
+  expect(global.alert).toBeCalledTimes(3);
+  global.alert = realAlert;
 });
 
 test('basic input', () => {
-  const config = {
+  const block = {
     id: 'a',
     type: 'Input',
   };
   const meta = {
     category: 'input',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Input' });
+  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+        "setValue": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Input",
+      "value": null,
+    }
+  `);
+});
+
+test('input setState', () => {
+  const block = {
+    id: 'a',
+    type: 'Input',
+  };
+  const meta = {
+    category: 'input',
+    valueType: 'string',
+  };
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+        "setValue": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Input",
+      "value": null,
+    }
+  `);
+  res.methods.setValue('test');
+  expect(mockSetState).toBeCalledWith('test');
 });
 
 test('basic container', () => {
-  const config = {
+  const block = {
     id: 'a',
     type: 'Container',
   };
   const meta = {
     category: 'container',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Container' });
+  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {},
+      },
+      "blockId": "a",
+      "content": Object {
+        "content": [Function],
+      },
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Container",
+    }
+  `);
 });
 
 test('basic context', () => {
-  const config = {
+  const block = {
     id: 'a',
     type: 'Context',
   };
   const meta = {
     category: 'context',
   };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'Context' });
-});
-
-test('basic list', () => {
-  const config = {
-    id: 'a',
-    type: 'List',
-  };
-  const meta = {
-    category: 'list',
-  };
-  expect(mockBlockProps(config, meta)).toEqual({ blockId: 'a', id: 'a', type: 'List' });
-});
-
-test('blocks container', () => {
-  const config = {
-    id: 'a',
-    type: 'Container',
-    blocks: [
-      {
-        id: 'b',
-        type: 'Test',
-      },
-    ],
-  };
-  const meta = {
-    category: 'container',
-  };
-  const res = mockBlockProps(config, meta);
-  expect(res).toMatchInlineSnapshot(`
+  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
-      },
-      "blockId": "a",
-      "blocks": Array [
-        Object {
-          "id": "b",
-          "type": "Test",
-        },
-      ],
-      "content": Object {
-        "content": [Function],
-      },
-      "id": "a",
-      "type": "Container",
-    }
-  `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
-});
-test('blocks areas container', () => {
-  const config = {
-    id: 'a',
-    type: 'Container',
-    blocks: [
-      {
-        id: 'b',
-        type: 'Test',
-      },
-    ],
-    areas: {
-      content: [
-        {
-          id: 'x',
-          type: 'Test',
-        },
-      ],
-    },
-  };
-  const meta = {
-    category: 'container',
-  };
-
-  const res = mockBlockProps(config, meta);
-  expect(res).toMatchInlineSnapshot(`
-    Object {
-      "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
-      },
-      "blockId": "a",
-      "blocks": Array [
-        Object {
-          "id": "b",
-          "type": "Test",
-        },
-      ],
-      "content": Object {
-        "content": [Function],
-      },
-      "id": "a",
-      "type": "Container",
-    }
-  `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
-});
-
-test('areas container', () => {
-  const config = {
-    id: 'a',
-    type: 'Container',
-    areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
-    },
-  };
-  const meta = {
-    category: 'container',
-  };
-  const res = mockBlockProps(config, meta);
-  expect(res).toMatchInlineSnapshot(`
-    Object {
-      "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {},
       },
       "blockId": "a",
       "content": Object {
         "content": [Function],
       },
       "id": "a",
-      "type": "Container",
-    }
-  `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
-  `);
-});
-
-test('areas context', () => {
-  const config = {
-    id: 'a',
-    type: 'Context',
-    areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
-    },
-  };
-  const meta = {
-    category: 'context',
-  };
-  const res = mockBlockProps(config, meta);
-  expect(res).toMatchInlineSnapshot(`
-    Object {
-      "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
-      "blockId": "a",
-      "content": Object {
-        "content": [Function],
-      },
-      "id": "a",
+      "schemaErrors": false,
       "type": "Context",
     }
   `);
-  expect(res.content.content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      content
-    </div>
+});
+
+test('basic list', () => {
+  const block = {
+    id: 'a',
+    type: 'List',
+  };
+  const meta = {
+    category: 'list',
+  };
+  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {},
+      },
+      "blockId": "a",
+      "id": "a",
+      "list": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
+      "schemaErrors": false,
+      "type": "List",
+    }
   `);
 });
 
+test('list methods', () => {
+  const block = {
+    id: 'a',
+    type: 'List',
+  };
+  const meta = {
+    category: 'list',
+  };
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {},
+      },
+      "blockId": "a",
+      "id": "a",
+      "list": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
+      "schemaErrors": false,
+      "type": "List",
+    }
+  `);
+  res.methods.moveItemDown(10);
+  res.methods.moveItemUp(11);
+  res.methods.removeItem(12);
+  res.methods.unshiftItem();
+  res.methods.pushItem();
+  expect(logger).toBeCalledTimes(5);
+});
+
+test('blocks container', () => {
+  const block = {
+    id: 'a',
+    type: 'Container',
+    blocks: [
+      {
+        id: 'b',
+        type: 'Test',
+      },
+    ],
+  };
+  const meta = {
+    category: 'container',
+  };
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
+      },
+      "blockId": "a",
+      "blocks": Array [
+        Object {
+          "id": "b",
+          "type": "Test",
+        },
+      ],
+      "content": Object {
+        "content": [Function],
+      },
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Container",
+    }
+  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+});
+
+test('blocks areas container', () => {
+  const block = {
+    id: 'a',
+    type: 'Container',
+    blocks: [
+      {
+        id: 'b',
+        type: 'Test',
+      },
+    ],
+    areas: {
+      content: {
+        blocks: [
+          {
+            id: 'x',
+            type: 'Test',
+          },
+        ],
+      },
+    },
+  };
+  const meta = {
+    category: 'container',
+  };
+
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
+      },
+      "blockId": "a",
+      "blocks": Array [
+        Object {
+          "id": "b",
+          "type": "Test",
+        },
+      ],
+      "content": Object {
+        "content": [Function],
+      },
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Container",
+    }
+  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+});
+
+test('areas container', () => {
+  const block = {
+    id: 'a',
+    type: 'Container',
+    areas: {
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
+    },
+  };
+  const meta = {
+    category: 'container',
+  };
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
+      },
+      "blockId": "a",
+      "content": Object {
+        "content": [Function],
+      },
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Container",
+    }
+  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+});
+
+test('areas context', () => {
+  const block = {
+    id: 'a',
+    type: 'Context',
+    areas: {
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
+    },
+  };
+  const meta = {
+    category: 'context',
+  };
+  const res = mockBlockProps({ block, meta, logger });
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "areas": Object {
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
+      },
+      "blockId": "a",
+      "content": Object {
+        "content": [Function],
+      },
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "schemaErrors": false,
+      "type": "Context",
+    }
+  `);
+  expect(res.content.content()).toMatchInlineSnapshot(`undefined`);
+});
+
 test('areas list', () => {
-  const config = {
+  const block = {
     id: 'a',
     type: 'List',
     areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
     },
   };
   const meta = {
     category: 'list',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "id": "a",
@@ -321,27 +528,25 @@ test('areas list', () => {
           "content": [Function],
         },
       ],
+      "methods": Object {
+        "callAction": [Function],
+        "moveItemDown": [Function],
+        "moveItemUp": [Function],
+        "pushItem": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+        "removeItem": [Function],
+        "unshiftItem": [Function],
+      },
+      "schemaErrors": false,
       "type": "List",
     }
   `);
-  expect(res.list[0].content()).toMatchInlineSnapshot(`
-    <div
-      style={
-        Object {
-          "border": "1px solid red",
-          "padding": 10,
-          "width": "100%",
-        }
-      }
-    >
-      b
-    </div>
-  `);
+  expect(res.list[0].content()).toMatchInlineSnapshot(`undefined`);
 });
 
 test('actions display', () => {
-  global.alert = jest.fn();
-  const config = {
+  const block = {
     id: 'a',
     type: 'Display',
     actions: {
@@ -356,7 +561,7 @@ test('actions display', () => {
   const meta = {
     category: 'display',
   };
-  const res = mockBlockProps(config, meta);
+  const res = mockBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "actions": Object {
@@ -371,10 +576,88 @@ test('actions display', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Display",
     }
   `);
   res.methods.callAction({ action: 'click' });
-  expect(global.alert).toBeCalledWith(JSON.stringify({ action: 'click' }, null, 2));
+  res.methods.registerAction({ action: 'onClick' });
+  res.methods.registerMethod({ action: 'open' });
+  expect(logger).toBeCalledTimes(3);
+});
+
+test('provide schema errors', () => {
+  let block = {
+    id: 'a',
+    type: 'Display',
+    properties: {
+      mistake: true,
+    },
+  };
+  const meta = {
+    category: 'display',
+    schema: {
+      properties: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          mistake: {
+            type: 'boolean',
+          },
+        },
+      },
+    },
+  };
+  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {
+        "mistake": true,
+      },
+      "schemaErrors": false,
+      "type": "Display",
+    }
+  `);
+  block = {
+    id: 'a',
+    type: 'Display',
+    properties: {
+      mistake: 1,
+    },
+  };
+  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {
+        "mistake": 1,
+      },
+      "schemaErrors": Array [
+        Object {
+          "dataPath": "/properties/mistake",
+          "keyword": "type",
+          "message": "should be boolean",
+          "params": Object {
+            "type": "boolean",
+          },
+          "schemaPath": "#/properties/properties/properties/mistake/type",
+        },
+      ],
+      "type": "Display",
+    }
+  `);
 });

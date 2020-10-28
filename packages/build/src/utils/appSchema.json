@@ -55,6 +55,12 @@
             "$ref": "#/definitions/request"
           }
         },
+        "required": {
+          "type": [
+            "boolean",
+            "object"
+          ]
+        },
         "mutations": {
           "type": "array",
           "items": {
@@ -71,7 +77,10 @@
               "type": "object",
               "properties": {
                 "blocks": {
-                  "$ref": "#/definitions/block"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/block"
+                  }
                 }
               }
             }

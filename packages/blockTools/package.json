@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-tools",
-  "version": "1.0.1-experimental.5",
+  "version": "1.0.1-alpha.8",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Tools",
   "homepage": "https://lowdefy.com",
@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
+    "ajv": "6.12.6",
+    "ajv-errors": "1.0.1",
     "create-emotion": "10.0.27",
     "react": "17.0.1",
     "react-dom": "17.0.1"
@@ -50,13 +52,13 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "0.1.1",
     "babel-jest": "26.6.1",
     "babel-loader": "8.1.0",
     "babel-plugin-import": "1.13.1",
     "buffer": "5.7.0",
     "css-loader": "5.0.0",
     "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.5",
     "html-webpack-plugin": "4.5.0",
     "identity-obj-proxy": "3.0.0",
     "jest": "26.6.1",

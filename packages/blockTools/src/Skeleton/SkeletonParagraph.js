@@ -18,7 +18,8 @@ import React from 'react';
 import blockDefaults from '../blockDefaults';
 import Skeleton from './Skeleton';
 
-const SkeletonParagraph = ({ properties, methods }) => {
+const SkeletonParagraph = (props) => {
+  const { properties, methods } = blockDefaults(props);
   const lines = [...Array(properties.lines || 4).keys()];
   return (
     <div style={{ width: properties.width || '100%' }}>
@@ -37,4 +38,4 @@ const SkeletonParagraph = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(SkeletonParagraph);
+export default SkeletonParagraph;
