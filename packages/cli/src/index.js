@@ -36,7 +36,7 @@ program
 
 program
   .command('clean-cache')
-  .description('Build a Lowdefy deployment.')
+  .description('Clean cached scripts and block meta descriptions.')
   .usage(`[options]`)
   .option(
     '--base-directory <base-directory>',
