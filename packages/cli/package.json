@@ -25,7 +25,7 @@
     "lowdefy": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist/*"
   ],
   "main": "dist/index.js",
   "scripts": {

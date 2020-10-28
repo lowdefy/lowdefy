@@ -22,6 +22,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "yarn webpack",
     "clean": "rm -rf dist",

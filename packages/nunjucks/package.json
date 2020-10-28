@@ -22,6 +22,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "main": "dist/nunjucks.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
