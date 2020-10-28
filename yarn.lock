@@ -2794,7 +2794,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/block-tools@1.0.1-alpha.1, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@1.0.1-alpha.2, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
   dependencies:
@@ -2804,6 +2804,8 @@ __metadata:
     "@babel/preset-react": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.1.1
+    ajv: 6.12.6
+    ajv-errors: 1.0.1
     babel-jest: 26.6.1
     babel-loader: 8.1.0
     babel-plugin-import: 1.13.1
@@ -2941,7 +2943,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.1
+    "@lowdefy/block-tools": 1.0.1-alpha.2
     "@lowdefy/graphql": 0.0.0-experimental.0
     apollo-server-express: 2.18.2
     babel-loader: 8.1.0
@@ -4669,7 +4671,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv-errors@npm:^1.0.0":
+"ajv-errors@npm:1.0.1, ajv-errors@npm:^1.0.0":
   version: 1.0.1
   resolution: "ajv-errors@npm:1.0.1"
   peerDependencies:

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-tools",
-  "version": "1.0.1-alpha.1",
+  "version": "1.0.1-alpha.2",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Tools",
   "homepage": "https://lowdefy.com",
@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
+    "ajv": "6.12.6",
+    "ajv-errors": "1.0.1",
     "create-emotion": "10.0.27",
     "react": "17.0.1",
     "react-dom": "17.0.1"
