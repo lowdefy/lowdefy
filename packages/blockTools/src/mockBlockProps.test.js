@@ -150,9 +150,13 @@ test('basic container', () => {
   };
   expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "areas": Object {},
+      "areas": Object {
+        "content": Object {},
+      },
       "blockId": "a",
-      "content": Object {},
+      "content": Object {
+        "content": [Function],
+      },
       "id": "a",
       "methods": Object {
         "callAction": [Function],
@@ -174,9 +178,13 @@ test('basic context', () => {
   };
   expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "areas": Object {},
+      "areas": Object {
+        "content": Object {},
+      },
       "blockId": "a",
-      "content": Object {},
+      "content": Object {
+        "content": [Function],
+      },
       "id": "a",
       "methods": Object {
         "callAction": [Function],
@@ -198,7 +206,9 @@ test('basic list', () => {
   };
   expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "areas": Object {},
+      "areas": Object {
+        "content": Object {},
+      },
       "blockId": "a",
       "id": "a",
       "list": Array [],
@@ -228,7 +238,9 @@ test('list methods', () => {
   const res = mockBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "areas": Object {},
+      "areas": Object {
+        "content": Object {},
+      },
       "blockId": "a",
       "id": "a",
       "list": Array [],
@@ -271,12 +283,14 @@ test('blocks container', () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "blocks": Array [
@@ -311,12 +325,14 @@ test('blocks areas container', () => {
       },
     ],
     areas: {
-      content: [
-        {
-          id: 'x',
-          type: 'Test',
-        },
-      ],
+      content: {
+        blocks: [
+          {
+            id: 'x',
+            type: 'Test',
+          },
+        ],
+      },
     },
   };
   const meta = {
@@ -327,12 +343,14 @@ test('blocks areas container', () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "blocks": Array [
@@ -361,12 +379,14 @@ test('areas container', () => {
     id: 'a',
     type: 'Container',
     areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
     },
   };
   const meta = {
@@ -376,12 +396,14 @@ test('areas container', () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "content": Object {
@@ -404,12 +426,14 @@ test('areas context', () => {
     id: 'a',
     type: 'Context',
     areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
     },
   };
   const meta = {
@@ -419,12 +443,14 @@ test('areas context', () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "content": Object {
@@ -447,12 +473,14 @@ test('areas list', () => {
     id: 'a',
     type: 'List',
     areas: {
-      content: [
-        {
-          id: 'b',
-          type: 'Test',
-        },
-      ],
+      content: {
+        blocks: [
+          {
+            id: 'b',
+            type: 'Test',
+          },
+        ],
+      },
     },
   };
   const meta = {
@@ -462,12 +490,14 @@ test('areas list', () => {
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
-        "content": Array [
-          Object {
-            "id": "b",
-            "type": "Test",
-          },
-        ],
+        "content": Object {
+          "blocks": Array [
+            Object {
+              "id": "b",
+              "type": "Test",
+            },
+          ],
+        },
       },
       "blockId": "a",
       "id": "a",

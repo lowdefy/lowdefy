@@ -29,7 +29,8 @@ const mockBlockProps = ({ block, meta, logger }) => {
   block.blockId = block.id;
   if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
     if (!block.areas) block.areas = {};
-    if (block.blocks) block.areas.content = block.blocks;
+    if (!block.areas.content) block.areas.content = {};
+    if (block.blocks) block.areas.content.blocks = block.blocks;
   }
   if (!block.methods) block.methods = {};
   block.methods = {
@@ -42,7 +43,7 @@ const mockBlockProps = ({ block, meta, logger }) => {
   // block category defaults
   if (meta.category === 'list') {
     block.list = [];
-    (block.areas.content || []).forEach((bl) => {
+    (block.areas.content.blocks || []).forEach((bl) => {
       block.list.push({
         content: () => (
           <div key={bl.id} style={{ border: '1px solid red', padding: 10 }}>
