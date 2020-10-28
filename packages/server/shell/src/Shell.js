@@ -21,7 +21,7 @@ import useDynamicScript from './utils/useDynamicScript';
 
 function Engine() {
   const { ready, failed } = useDynamicScript({
-    url: 'http://localhost:3001/remoteEntry.js',
+    url: 'http://unpkg.com/@lowdefy/renderer/dist/remoteEntry.js',
   });
 
   if (!ready) {

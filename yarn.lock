@@ -2807,6 +2807,7 @@ __metadata:
     babel-loader: 8.1.0
     babel-plugin-import: 1.13.1
     buffer: 5.7.0
+    clean-webpack-plugin: 3.0.0
     create-emotion: 10.0.27
     css-loader: 5.0.0
     enzyme: 3.11.0
@@ -2844,7 +2845,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/build@0.0.0-experimental.0, @lowdefy/build@workspace:packages/build":
+"@lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
@@ -2858,6 +2859,7 @@ __metadata:
     axios: 0.21.0
     babel-jest: 26.6.1
     babel-loader: 8.1.0
+    clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
     jest: 26.6.1
     js-yaml: 3.14.0
@@ -2875,7 +2877,6 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    "@lowdefy/build": 0.0.0-experimental.0
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
     axios: 0.21.0
@@ -2883,6 +2884,7 @@ __metadata:
     babel-loader: 8.1.0
     chalk: 4.1.0
     chokidar: 3.4.2
+    clean-webpack-plugin: 3.0.0
     commander: 6.2.0
     decompress: 4.2.1
     decompress-targz: 4.1.1
@@ -2935,31 +2937,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/express@workspace:packages/express":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/express@workspace:packages/express"
-  dependencies:
-    "@babel/core": 7.12.3
-    "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-experimental.5
-    "@lowdefy/graphql": 0.0.0-alpha.1
-    apollo-server-express: 2.18.2
-    babel-loader: 8.1.0
-    css-loader: 5.0.0
-    express: 4.17.1
-    graphql: 15.4.0
-    html-webpack-plugin: 4.5.0
-    nodemon: 2.0.6
-    react: 17.0.1
-    react-dom: 17.0.1
-    style-loader: 2.0.0
-    webpack: 5.3.0
-    webpack-cli: 4.1.0
-    webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
@@ -2995,6 +2972,7 @@ __metadata:
     apollo-server-testing: 2.18.2
     babel-jest: 26.6.1
     babel-loader: 8.1.0
+    clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
     graphql: 15.4.0
     graphql-type-json: 0.3.2
@@ -3047,6 +3025,7 @@ __metadata:
     babel-loader: 8.1.0
     babel-plugin-import: 1.13.1
     buffer: 5.7.0
+    clean-webpack-plugin: 3.0.0
     css-loader: 5.0.0
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
@@ -3149,6 +3128,7 @@ __metadata:
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.1.0
+    clean-webpack-plugin: 3.0.0
     css-loader: 5.0.0
     graphql: 15.4.0
     graphql-type-json: 0.3.2
@@ -3174,6 +3154,32 @@ __metadata:
   checksum: 8880af5555339624160884adf32d611457d316779af312ea90ebfb64c555fe6021aa034b86bd76656c823db0a98fd0006f1e5cc80b94fb0bd92789bf8d8aa79c
   languageName: node
   linkType: hard
+
+"@lowdefy/server@workspace:packages/server":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server@workspace:packages/server"
+  dependencies:
+    "@babel/core": 7.12.3
+    "@babel/preset-react": 7.12.1
+    "@lowdefy/block-tools": 1.0.1-experimental.5
+    "@lowdefy/graphql": 0.0.0-alpha.1
+    apollo-server-express: 2.18.2
+    babel-loader: 8.1.0
+    clean-webpack-plugin: 3.0.0
+    css-loader: 5.0.0
+    express: 4.17.1
+    graphql: 15.4.0
+    html-webpack-plugin: 4.5.0
+    nodemon: 2.0.6
+    react: 17.0.1
+    react-dom: 17.0.1
+    style-loader: 2.0.0
+    webpack: 5.3.0
+    webpack-cli: 4.1.0
+    webpack-dev-server: 3.11.0
+    webpack-merge: 5.2.0
+  languageName: unknown
+  linkType: soft
 
 "@lowdefy/type@npm:1.0.1":
   version: 1.0.1
@@ -3998,7 +4004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^4.41.8":
+"@types/webpack@npm:^4.4.31, @types/webpack@npm:^4.41.8":
   version: 4.41.23
   resolution: "@types/webpack@npm:4.41.23"
   dependencies:
@@ -6454,6 +6460,18 @@ __metadata:
   dependencies:
     source-map: ~0.6.0
   checksum: a60f7800828ea7a6b8315c3c855d700c59cf9e45e88a88e73c7fff12ee316a4afcbca1041b14453c8020f57de72ebf3d0ed6250f306faea83f5e05ee90a4c67a
+  languageName: node
+  linkType: hard
+
+"clean-webpack-plugin@npm:3.0.0":
+  version: 3.0.0
+  resolution: "clean-webpack-plugin@npm:3.0.0"
+  dependencies:
+    "@types/webpack": ^4.4.31
+    del: ^4.1.1
+  peerDependencies:
+    webpack: "*"
+  checksum: fc0fbd1c8e163b784209d51a5df4336ad359737f8b324697d33d1c484ee5c7efee9a1f9f18786860216019764f4a6e02e329e0410e3ab4d52e5e5b52a1038dfe
   languageName: node
   linkType: hard
 
