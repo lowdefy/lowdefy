@@ -18,11 +18,11 @@ import buildPages from './buildPages';
 import testContext from '../test/testContext';
 
 const mockLogWarn = jest.fn();
-const mockLogSuccess = jest.fn();
+const mockLog = jest.fn();
 
 const logger = {
   warn: mockLogWarn,
-  success: mockLogSuccess,
+  log: mockLog,
 };
 
 const blockMetas = {
@@ -180,7 +180,7 @@ const context = testContext({ logger, metaLoader });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
-  mockLogSuccess.mockReset();
+  mockLog.mockReset();
 });
 
 test('buildPages no pages', async () => {

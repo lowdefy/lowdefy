@@ -25,8 +25,11 @@
   "scripts": {
     "build": "yarn webpack",
     "clean": "rm -rf dist",
-    "webpack": "webpack --config webpack.config.js",
-    "test": "jest --coverage"
+    "npm-publish": "npm publish --access public",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
+    "test": "jest --coverage",
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",

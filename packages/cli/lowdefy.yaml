@@ -1,0 +1,22 @@
+version: '1.0.1-experimental.1'
+
+types:
+  Context:
+    url: http://localhost:3002/meta/Context.json
+  Button:
+    url: http://localhost:3002/meta/Button.json
+
+connections:
+  - id: con1
+    type: AxiosHttp
+
+pages:
+  - id: page1
+    type: Context
+    requests:
+      - id: req1
+        type: AxiosHttp
+        connectionId: con1
+    blocks:
+      - id: button
+        type: Button

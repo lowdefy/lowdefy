@@ -193,7 +193,6 @@ async function buildPages({ components, context }) {
     page.id = `page:${page.pageId}`;
   });
   await Promise.all(pageBuildPromises);
-  context.logger.debug('Built pages');
   return components;
 }
 

@@ -79,8 +79,6 @@ async function buildMenu({ components, context }) {
       );
     })
   );
-  await context.logger.debug('Built menus');
-  await context.logger.debug(JSON.stringify(components.menus));
   return components;
 }
 
