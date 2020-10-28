@@ -18,24 +18,24 @@ import testSchema from './testSchema';
 import testContext from '../test/testContext';
 
 const mockLogWarn = jest.fn();
-const mockLogSuccess = jest.fn();
+const mockLog = jest.fn();
 
 const logger = {
   warn: mockLogWarn,
-  success: mockLogSuccess,
+  log: mockLog,
 };
 
 const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
-  mockLogSuccess.mockReset();
+  mockLog.mockReset();
 });
 
 test('empty components', async () => {
   const components = {};
   await testSchema({ components, context });
-  expect(mockLogSuccess.mock.calls).toEqual([['Schema valid.']]);
+  expect(mockLog.mock.calls).toEqual([['Schema valid.']]);
 });
 
 test('app schema', async () => {
@@ -70,7 +70,7 @@ test('app schema', async () => {
     ],
   };
   testSchema({ components, context });
-  expect(mockLogSuccess.mock.calls).toEqual([['Schema valid.']]);
+  expect(mockLog.mock.calls).toEqual([['Schema valid.']]);
 });
 
 test('invalid schema', async () => {

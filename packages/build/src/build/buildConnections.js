@@ -25,8 +25,6 @@ async function buildConnections({ components, context }) {
       connection.id = `connection:${connection.id}`;
     });
   }
-  await context.logger.debug('Built connections');
-  await context.logger.debug(JSON.stringify(components.connections));
   return components;
 }
 
