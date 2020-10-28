@@ -299,7 +299,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -3659,7 +3659,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:1014ef660ce97becb8ac4df1a8d21a33469d752bd4a1c6c0282cd0e1cb1287e68fbacb2c474a03cbfe0a01bb9c7d0c2165dd449f02ebc6028899420c3fe79fc6#npm:26.6.1"],
             ["babel-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:8.1.0"],
             ["babel-plugin-import", "npm:1.13.1"],
-            ["buffer", "npm:5.6.1"],
+            ["buffer", "npm:5.7.0"],
             ["create-emotion", "npm:10.0.27"],
             ["css-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.0.0"],
             ["enzyme", "npm:3.11.0"],
@@ -3904,7 +3904,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:1014ef660ce97becb8ac4df1a8d21a33469d752bd4a1c6c0282cd0e1cb1287e68fbacb2c474a03cbfe0a01bb9c7d0c2165dd449f02ebc6028899420c3fe79fc6#npm:26.6.1"],
             ["babel-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.1.0"],
             ["babel-plugin-import", "npm:1.13.1"],
-            ["buffer", "npm:5.6.1"],
+            ["buffer", "npm:5.7.0"],
             ["css-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.0"],
             ["html-webpack-plugin", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:4.5.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -7567,6 +7567,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ieee754", "npm:1.1.13"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:5.7.0", {
+          "packageLocation": "./.yarn/cache/buffer-npm-5.7.0-09dd3873c0-33a6a08be4.zip/node_modules/buffer/",
+          "packageDependencies": [
+            ["buffer", "npm:5.7.0"],
+            ["base64-js", "npm:1.3.1"],
+            ["ieee754", "npm:1.1.13"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["buffer-alloc", [
@@ -8837,7 +8846,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.6.5", {
-          "packageLocation": "./.yarn/unplugged/core-js-npm-3.6.5-5941340066/node_modules/core-js/",
+          "packageLocation": "./.yarn/cache/core-js-npm-3.6.5-5941340066-9283348dd5.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.6.5"]
           ],
@@ -8857,7 +8866,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.6.5", {
-          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.6.5-c634b57d82/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.6.5-c634b57d82-91fc8e0b69.zip/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.6.5"]
           ],
@@ -10029,7 +10038,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["ejs", [
         ["npm:2.7.4", {
-          "packageLocation": "./.yarn/unplugged/ejs-npm-2.7.4-879ed38a4e/node_modules/ejs/",
+          "packageLocation": "./.yarn/cache/ejs-npm-2.7.4-879ed38a4e-f066d9a932.zip/node_modules/ejs/",
           "packageDependencies": [
             ["ejs", "npm:2.7.4"]
           ],
@@ -16370,7 +16379,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.6", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.6-533efccfd9/node_modules/nodemon/",
+          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.6-533efccfd9-6a4b0d6ba2.zip/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.6"],
             ["chokidar", "npm:3.4.2"],
