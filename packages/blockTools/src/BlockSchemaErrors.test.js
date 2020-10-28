@@ -45,7 +45,6 @@ test('with schema errors', () => {
           "background": "#fBB",
           "border": "1px solid red",
           "fontSize": "0.8rem",
-          "margin": 20,
           "padding": 10,
           "width": "100%",
         }

@@ -5,7 +5,6 @@ const BlockSchemaErrors = ({ schemaErrors }) => {
   return (
     <div
       style={{
-        margin: 20,
         padding: 10,
         fontSize: '0.8rem',
         border: '1px solid red',
