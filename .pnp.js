@@ -3702,7 +3702,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.21.0"],
             ["babel-jest", "virtual:1014ef660ce97becb8ac4df1a8d21a33469d752bd4a1c6c0282cd0e1cb1287e68fbacb2c474a03cbfe0a01bb9c7d0c2165dd449f02ebc6028899420c3fe79fc6#npm:26.6.1"],
             ["babel-loader", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:8.1.0"],
-            ["bundle-loader", "npm:0.5.6"],
             ["clean-webpack-plugin", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:3.0.0"],
             ["dataloader", "npm:2.0.0"],
             ["jest", "npm:26.6.1"],
@@ -7646,16 +7645,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/builtins-npm-1.0.3-f09d2d57f2-36aa0f11ef.zip/node_modules/builtins/",
           "packageDependencies": [
             ["builtins", "npm:1.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["bundle-loader", [
-        ["npm:0.5.6", {
-          "packageLocation": "./.yarn/cache/bundle-loader-npm-0.5.6-0f4b65b6bd-398972f0d9.zip/node_modules/bundle-loader/",
-          "packageDependencies": [
-            ["bundle-loader", "npm:0.5.6"],
-            ["loader-utils", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
