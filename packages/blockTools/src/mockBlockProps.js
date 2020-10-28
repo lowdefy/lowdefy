@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
-const mockBlockProps = ({ example, meta, logger }) => {
+const mockBlockProps = ({ block, meta, logger }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
@@ -25,7 +25,7 @@ const mockBlockProps = ({ example, meta, logger }) => {
   let log = alert;
   if (logger) log = logger;
 
-  const block = JSON.parse(JSON.stringify(example));
+  // block defaults
   block.blockId = block.id;
   if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
     if (!block.areas) block.areas = {};
@@ -33,12 +33,13 @@ const mockBlockProps = ({ example, meta, logger }) => {
   }
   if (!block.methods) block.methods = {};
   block.methods = {
-    ...block.methods,
     callAction: (action) => log(JSON.stringify(action, null, 2)),
     registerAction: (action) => log(JSON.stringify(action, null, 2)),
     registerMethod: (method) => log(JSON.stringify(method, null, 2)),
+    ...block.methods,
   };
 
+  // block category defaults
   if (meta.category === 'list') {
     block.list = [];
     (block.areas.content || []).forEach((bl) => {
@@ -51,12 +52,12 @@ const mockBlockProps = ({ example, meta, logger }) => {
       });
     });
     block.methods = {
-      ...block.methods,
       pushItem: () => log('List pushItem'),
       unshiftItem: () => log('List unshiftItem'),
       removeItem: (i) => log(`List removeItem ${i}`),
       moveItemDown: (i) => log(`List moveItemDown ${i}`),
       moveItemUp: (i) => log(`List moveItemUp ${i}`),
+      ...block.methods,
     };
   }
   if (meta.category === 'container' || meta.category === 'context') {
@@ -71,8 +72,8 @@ const mockBlockProps = ({ example, meta, logger }) => {
   }
   if (meta.category === 'input') {
     block.methods = {
-      ...block.methods,
       setValue,
+      ...block.methods,
     };
     block.value = value;
   }

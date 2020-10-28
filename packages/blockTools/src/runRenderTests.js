@@ -27,7 +27,7 @@ const runRenderTests = ({ examples, Block, meta, logger }) => {
   examples.forEach((ex) => {
     test(`Render ${ex.id}`, () => {
       // create shell to setup react hooks with getProps before render;
-      const Shell = () => <Block {...getProps(ex)} methods={methods} />;
+      const Shell = () => <Block {...getProps({ ...ex, methods })} />;
       const comp = renderer.create(<Shell />, {
         createNodeMock: () => {
           return { innerHTML: '' };
