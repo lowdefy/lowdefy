@@ -1,15 +1,15 @@
 import React from 'react';
-import BlockSchemaError from './BlockSchemaError';
+import BlockSchemaErrors from './BlockSchemaErrors';
 import { create, act } from 'react-test-renderer';
 
 test('default', () => {
   let comp;
   act(() => {
-    comp = create(<BlockSchemaError />);
+    comp = create(<BlockSchemaErrors />);
   });
   expect(comp.toJSON()).toMatchInlineSnapshot(`""`);
   act(() => {
-    comp = create(<BlockSchemaError schemaErrors={[]} />);
+    comp = create(<BlockSchemaErrors schemaErrors={[]} />);
   });
   expect(comp.toJSON()).toMatchInlineSnapshot(`""`);
 });
@@ -18,7 +18,7 @@ test('with schema errors', () => {
   let comp;
   act(() => {
     comp = create(
-      <BlockSchemaError
+      <BlockSchemaErrors
         schemaErrors={[
           {
             keyword: 'keyword-one',

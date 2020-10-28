@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BlockSchemaError = ({ schemaErrors }) => {
+const BlockSchemaErrors = ({ schemaErrors }) => {
   if (!schemaErrors || schemaErrors.length === 0) return '';
   return (
     <div
@@ -40,4 +40,4 @@ const BlockSchemaError = ({ schemaErrors }) => {
   );
 };
 
-export default BlockSchemaError;
+export default BlockSchemaErrors;

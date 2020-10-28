@@ -15,6 +15,7 @@
 */
 
 import blockDefaults from './blockDefaults';
+import BlockSchemaErrors from './BlockSchemaErrors';
 import ErrorBoundary from './ErrorBoundary';
 import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
@@ -34,6 +35,7 @@ import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
   blockDefaults,
+  BlockSchemaErrors,
   ErrorBoundary,
   IconSpinner,
   Loading,
