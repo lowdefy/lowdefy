@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/cli",
-  "version": "3.0.0-experimental.1",
+  "version": "3.0.0-alpha.1",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,6 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/build": "0.0.0-experimental.0",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
     "axios": "0.21.0",

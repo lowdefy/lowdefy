@@ -26,7 +26,7 @@ async function getBuildScript(version, cacheDirectory) {
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
     await loadBuildScriptToCache(version, cachePath);
   }
-  buildScript = await loadModule(cachePath, './build');
+  buildScript = await loadModule(path.resolve(cachePath, 'package/dist'), './build');
   return buildScript.default;
 }
 
