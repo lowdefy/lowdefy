@@ -37,7 +37,11 @@
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "test": "jest --coverage --passWithNoTests",
-    "webpack": "webpack --config webpack.config.js"
+    "webpack": "webpack --config webpack.config.js",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
     "@lowdefy/build": "0.0.0-experimental.0",

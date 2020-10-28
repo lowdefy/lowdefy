@@ -27,7 +27,11 @@
     "clean": "rm -rf dist",
     "test": "jest --coverage",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
     "moment": "2.29.1"
