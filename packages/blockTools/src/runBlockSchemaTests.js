@@ -75,8 +75,7 @@ const runBlockSchemaTests = ({ examples, meta }) => {
   examples.forEach((block) => {
     test(`Test Schema ${block.id}`, () => {
       const valid = validate(block);
-      console.log(valid);
-      expect(valid).toMatchSnapshot();
+      expect(valid).toEqual(true);
     });
   });
 };
