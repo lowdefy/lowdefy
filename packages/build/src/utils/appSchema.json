@@ -55,6 +55,12 @@
             "$ref": "#/definitions/request"
           }
         },
+        "required": {
+          "type": [
+            "boolean",
+            "object"
+          ]
+        },
         "mutations": {
           "type": "array",
           "items": {

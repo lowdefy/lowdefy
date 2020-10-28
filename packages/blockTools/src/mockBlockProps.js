@@ -15,7 +15,17 @@
 */
 
 import React, { useState } from 'react';
+import Ajv from 'ajv';
+import AjvErrors from 'ajv-errors';
 import { type } from '@lowdefy/helpers';
+import blockSchema from './blockSchema.json';
+
+const initAjv = (options) => {
+  const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
+  AjvErrors(ajv, options);
+  return ajv;
+};
+const ajvInstance = initAjv();
 
 const mockBlockProps = ({ block, meta, logger }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
@@ -24,6 +34,12 @@ const mockBlockProps = ({ block, meta, logger }) => {
   };
   let log = alert;
   if (logger) log = logger;
+
+  // evaluate block schema
+  blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
+  const validate = ajvInstance.compile(blockSchema);
+  block.schemaErrors = !validate(block);
+  if (block.schemaErrors) block.schemaErrors = validate.errors;
 
   // block defaults
   block.blockId = block.id;

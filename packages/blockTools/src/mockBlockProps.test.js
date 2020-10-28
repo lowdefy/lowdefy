@@ -51,6 +51,7 @@ test('basic display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Display",
     }
   `);
@@ -78,6 +79,17 @@ test('basic display with methods', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": Array [
+        Object {
+          "dataPath": "",
+          "keyword": "additionalProperties",
+          "message": "should NOT have additional properties",
+          "params": Object {
+            "additionalProperty": "methods",
+          },
+          "schemaPath": "#/additionalProperties",
+        },
+      ],
       "type": "Display",
     }
   `);
@@ -106,6 +118,7 @@ test('basic input', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
+      "schemaErrors": false,
       "type": "Input",
       "value": null,
     }
@@ -132,6 +145,7 @@ test('input setState', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
+      "schemaErrors": false,
       "type": "Input",
       "value": null,
     }
@@ -163,6 +177,7 @@ test('basic container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Container",
     }
   `);
@@ -191,6 +206,7 @@ test('basic context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Context",
     }
   `);
@@ -222,6 +238,7 @@ test('basic list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "schemaErrors": false,
       "type": "List",
     }
   `);
@@ -254,6 +271,7 @@ test('list methods', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "schemaErrors": false,
       "type": "List",
     }
   `);
@@ -308,6 +326,7 @@ test('blocks container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Container",
     }
   `);
@@ -368,6 +387,7 @@ test('blocks areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Container",
     }
   `);
@@ -415,6 +435,7 @@ test('areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Container",
     }
   `);
@@ -462,6 +483,7 @@ test('areas context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Context",
     }
   `);
@@ -516,6 +538,7 @@ test('areas list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "schemaErrors": false,
       "type": "List",
     }
   `);
@@ -556,6 +579,7 @@ test('actions display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "schemaErrors": false,
       "type": "Display",
     }
   `);
@@ -563,4 +587,77 @@ test('actions display', () => {
   res.methods.registerAction({ action: 'onClick' });
   res.methods.registerMethod({ action: 'open' });
   expect(logger).toBeCalledTimes(3);
+});
+
+test('provide schema errors', () => {
+  let block = {
+    id: 'a',
+    type: 'Display',
+    properties: {
+      mistake: true,
+    },
+  };
+  const meta = {
+    category: 'display',
+    schema: {
+      properties: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          mistake: {
+            type: 'boolean',
+          },
+        },
+      },
+    },
+  };
+  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {
+        "mistake": true,
+      },
+      "schemaErrors": false,
+      "type": "Display",
+    }
+  `);
+  block = {
+    id: 'a',
+    type: 'Display',
+    properties: {
+      mistake: 1,
+    },
+  };
+  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+    Object {
+      "blockId": "a",
+      "id": "a",
+      "methods": Object {
+        "callAction": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {
+        "mistake": 1,
+      },
+      "schemaErrors": Array [
+        Object {
+          "dataPath": "/properties/mistake",
+          "keyword": "type",
+          "message": "should be boolean",
+          "params": Object {
+            "type": "boolean",
+          },
+          "schemaPath": "#/properties/properties/properties/mistake/type",
+        },
+      ],
+      "type": "Display",
+    }
+  `);
 });

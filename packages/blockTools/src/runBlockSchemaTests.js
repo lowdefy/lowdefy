@@ -16,56 +16,12 @@
 
 import Ajv from 'ajv';
 import AjvErrors from 'ajv-errors';
+import blockSchema from './blockSchema.json';
 
 const initAjv = (options) => {
   const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
   AjvErrors(ajv, options);
   return ajv;
-};
-
-const blockSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['id', 'type'],
-  properties: {
-    id: {
-      type: 'string',
-    },
-    type: {
-      type: 'string',
-    },
-    properties: {
-      type: 'object',
-    },
-    layout: {
-      type: 'object',
-    },
-    blocks: {
-      type: 'array',
-      items: {
-        type: 'object',
-      },
-    },
-    actions: {
-      type: 'object',
-    },
-    areas: {
-      type: 'object',
-      patternProperties: {
-        '^.*$': {
-          type: 'object',
-          properties: {
-            blocks: {
-              type: 'array',
-              items: {
-                type: 'object',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
 };
 
 const ajvInstance = initAjv();
