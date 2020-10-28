@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const { dependencies, devDependencies } = require('./package.json');
 
@@ -38,6 +39,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
     new ModuleFederationPlugin({
       name: 'cli',
