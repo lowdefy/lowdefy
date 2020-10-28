@@ -71,7 +71,10 @@
               "type": "object",
               "properties": {
                 "blocks": {
-                  "$ref": "#/definitions/block"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/block"
+                  }
                 }
               }
             }
