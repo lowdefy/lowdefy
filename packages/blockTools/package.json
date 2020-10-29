@@ -52,7 +52,7 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.1",
-    "@wojtekmaj/enzyme-adapter-react-17": "0.1.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "0.2.0",
     "babel-jest": "26.6.1",
     "babel-loader": "8.1.0",
     "babel-plugin-import": "1.13.1",
