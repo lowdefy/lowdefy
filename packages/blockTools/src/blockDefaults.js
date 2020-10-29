@@ -16,6 +16,16 @@
 
 import makeCssClass from './makeCssClass';
 
+const noMethod = () => undefined;
+
+const defaultMethods = (methods) => ({
+  makeCssClass,
+  callAction: methods.callAction || noMethod,
+  registerAction: methods.registerAction || noMethod,
+  registerMethod: methods.registerMethod || noMethod,
+  ...methods,
+});
+
 const blockDefaults = (props = {}) => ({
   ...props,
   actions: props.actions || {},
@@ -23,7 +33,7 @@ const blockDefaults = (props = {}) => ({
   content: props.content || {},
   list: props.list || [],
   menus: props.menus || [],
-  methods: { makeCssClass, ...(props.methods || {}) },
+  methods: defaultMethods(props.methods || {}),
   properties: props.properties || {},
   user: props.user || {},
   validate: props.validate || [],

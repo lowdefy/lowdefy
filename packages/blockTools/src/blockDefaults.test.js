@@ -25,7 +25,10 @@ test('default', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {},
       "user": Object {},
@@ -45,7 +48,10 @@ test('default with id', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {},
       "user": Object {},
@@ -64,7 +70,10 @@ test('default with blockId', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {},
       "user": Object {},
@@ -84,7 +93,10 @@ test('default with blockId and id', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {},
       "user": Object {},
@@ -123,7 +135,10 @@ test('with values', () => {
         "menus",
       ],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {
         "properties": 1,
@@ -150,7 +165,10 @@ test('with no methods', () => {
       "list": Array [],
       "menus": Array [],
       "methods": Object {
+        "callAction": [Function],
         "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
       },
       "properties": Object {},
       "user": Object {},
@@ -185,4 +203,29 @@ test('with methods', () => {
       "validate": Array [],
     }
   `);
+});
+
+test('call default methods', () => {
+  const res = blockDefaults();
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "undefined_id",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
+  `);
+  expect(res.methods.callAction()).toEqual(undefined);
+  expect(res.methods.registerAction()).toEqual(undefined);
+  expect(res.methods.registerMethod()).toEqual(undefined);
 });
