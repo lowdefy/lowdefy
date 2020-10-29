@@ -24,12 +24,12 @@ const printToTerminal = (color, options = {}) => (text) => {
     const m = time.getMinutes();
     const s = time.getSeconds();
     const timeString = `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
-    message = `${timeString} - ${text}`;
+    message = `${chalk.dim(timeString)} - ${color(text)}`;
   } else {
-    message = text;
+    message = color(text);
   }
   // eslint-disable-next-line no-console
-  console.log(color(message));
+  console.log(message);
 };
 
 const createPrint = (options) => ({

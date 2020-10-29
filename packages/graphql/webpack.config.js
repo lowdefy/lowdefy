@@ -12,7 +12,7 @@ module.exports = {
   mode: 'production',
   target: 'node',
   node: false,
-  externals: Object.keys({ ...dependencies, ...devDependencies }),
+  externals: ['fs', 'path'],
   module: {
     rules: [
       {

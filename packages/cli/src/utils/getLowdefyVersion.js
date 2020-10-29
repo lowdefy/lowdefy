@@ -19,12 +19,14 @@ import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
 
-async function getLowdefyVersion(baseDirectory) {
-  const lowdefyYaml = await readFile(path.resolve(baseDirectory || process.cwd(), 'lowdefy.yaml'));
+async function getLowdefyVersion(context) {
+  const lowdefyYaml = await readFile(
+    path.resolve(context.baseDirectory || process.cwd(), 'lowdefy.yaml')
+  );
   if (!lowdefyYaml) {
-    if (baseDirectory) {
+    if (context.baseDirectory) {
       throw new Error(
-        `Could not find "lowdefy.yaml" file in specified base directory ${baseDirectory}.`
+        `Could not find "lowdefy.yaml" file in specified base directory ${context.baseDirectory}.`
       );
     }
     throw new Error(

@@ -46,7 +46,6 @@ function createContext(options) {
 
 async function build(options) {
   const context = createContext(options);
-  console.log('created context', context);
   try {
     let components = await buildRefs({ context });
     await testSchema({ components, context });

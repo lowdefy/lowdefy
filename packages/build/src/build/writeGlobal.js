@@ -27,7 +27,7 @@ async function writeGlobal({ components, context }) {
     filePath: 'global.json',
     content: JSON.stringify(components.global, null, 2),
   });
-  await context.logger.info('Updated global');
+  await context.logger.info('Updated global.');
 }
 
 export default writeGlobal;

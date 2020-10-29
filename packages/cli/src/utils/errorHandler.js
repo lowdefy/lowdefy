@@ -16,7 +16,7 @@
 
 import createPrint from './print';
 
-function errorBoundary(fn, options = {}) {
+function errorHandler(fn, options = {}) {
   async function run(...args) {
     try {
       const res = await fn(...args);
@@ -24,12 +24,9 @@ function errorBoundary(fn, options = {}) {
     } catch (error) {
       const print = createPrint();
       print.error(error.message);
-      if (!options.stayAlive) {
-        process.exit();
-      }
     }
   }
   return run;
 }
 
-export default errorBoundary;
+export default errorHandler;
