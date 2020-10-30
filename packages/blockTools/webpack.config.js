@@ -1,7 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
   entry: './demo/index.js',
@@ -19,6 +18,7 @@ module.exports = {
     },
     fallback: { buffer: false },
   },
+
   module: {
     rules: [
       // TODO: FIXME: do NOT webpack 5 support with this
@@ -53,38 +53,10 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader', // translates CSS into CommonJS
-          },
-          {
-            loader: 'less-loader', // compiles Less to CSS
-            options: {
-              lessOptions: {
-                modifyVars: {
-                  '@primary-color': '#697a8c',
-                  '@link-color': '#1890ff',
-                  '@layout-header-background': '#30383f',
-                  '@layout-sider-background': '#30383f',
-                  '@menu-dark-submenu-bg': '#21262b',
-                },
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
-      },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
-    new webpack.ProvidePlugin({ process: ['process'] }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),

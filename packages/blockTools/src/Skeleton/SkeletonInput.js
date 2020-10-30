@@ -15,11 +15,10 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
-const SkeletonInput = (props) => {
-  const { properties, methods } = blockDefaults(props);
+const SkeletonInput = ({ properties, methods }) => {
   let inputHeight;
   switch (properties.size) {
     case 'small':
@@ -53,5 +52,7 @@ const SkeletonInput = (props) => {
     </div>
   );
 };
+
+SkeletonInput.defaultProps = blockDefaultProps;
 
 export default SkeletonInput;

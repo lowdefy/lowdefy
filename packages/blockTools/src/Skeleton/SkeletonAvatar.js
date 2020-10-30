@@ -16,11 +16,10 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
-const SkeletonAvatar = (props) => {
-  const { properties, methods } = blockDefaults(props);
+const SkeletonAvatar = ({ properties, methods }) => {
   let size = properties.size || 32;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -45,5 +44,7 @@ const SkeletonAvatar = (props) => {
     />
   );
 };
+
+SkeletonAvatar.defaultProps = blockDefaultProps;
 
 export default SkeletonAvatar;

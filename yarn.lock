@@ -2794,7 +2794,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/block-tools@1.0.1-alpha.9, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@1.0.1-alpha.13, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
   dependencies:
@@ -2818,8 +2818,6 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.1
     js-yaml: 3.14.0
-    less: 3.12.2
-    less-loader: 7.0.2
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -2868,7 +2866,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.9
+    "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
     apollo-server-express: 2.18.2
@@ -3014,7 +3012,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.9
+    "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     antd: 4.4.2
     babel-jest: 26.6.1
@@ -3119,7 +3117,7 @@ __metadata:
     "@apollo/link-retry": 2.0.0-beta.3
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.9
+    "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/engine": 0.0.0-alpha.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
@@ -3148,7 +3146,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.9
+    "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/graphql": 0.0.0-alpha.1
     apollo-server-express: 2.18.2
     babel-loader: 8.1.0

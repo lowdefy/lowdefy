@@ -16,12 +16,10 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import './IconSpinner.css';
 
-const IconSpinner = (props) => {
-  const { properties, methods } = blockDefaults(props);
-
+const IconSpinner = ({ properties, methods }) => {
   let size = properties.size || 20;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -62,5 +60,7 @@ const IconSpinner = (props) => {
     </span>
   );
 };
+
+IconSpinner.defaultProps = blockDefaultProps;
 
 export default IconSpinner;

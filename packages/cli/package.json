@@ -44,7 +44,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.1-alpha.9",
+    "@lowdefy/block-tools": "1.0.1-alpha.13",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
     "apollo-server-express": "2.18.2",

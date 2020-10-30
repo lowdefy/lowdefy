@@ -16,11 +16,9 @@
 
 import React from 'react';
 import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
-import { blockDefaults, makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-tools';
 
 import Block from './Block';
-
-const ConnectedArea = blockDefaults(Area);
 
 const Container = ({ block, Blocks, Component, context, pageId, rootContext }) => {
   const content = {};
@@ -28,7 +26,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
   const areas = Blocks.subBlocks[block.id][0].areas;
   Object.keys(areas).forEach((areaKey) => {
     content[areaKey] = (areaStyle) => (
-      <ConnectedArea
+      <Area
         id={`ar-${block.blockId}-${areaKey}`}
         key={`ar-${block.blockId}-${areaKey}`}
         area={layoutParamsToArea({
@@ -50,7 +48,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
             rootContext={rootContext}
           />
         ))}
-      </ConnectedArea>
+      </Area>
     );
   });
   return (

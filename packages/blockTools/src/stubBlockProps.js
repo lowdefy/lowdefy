@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import Ajv from 'ajv';
 import AjvErrors from 'ajv-errors';
 import { type } from '@lowdefy/helpers';
+import makeCssClass from './makeCssClass';
 import blockSchema from './blockSchema.json';
 
 const initAjv = (options) => {
@@ -27,7 +28,7 @@ const initAjv = (options) => {
 };
 const ajvInstance = initAjv();
 
-const mockBlockProps = ({ block, meta, logger }) => {
+const stubBlockProps = ({ block, meta, logger }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
@@ -48,12 +49,13 @@ const mockBlockProps = ({ block, meta, logger }) => {
     if (!block.areas.content) block.areas.content = {};
     if (block.blocks) block.areas.content.blocks = block.blocks;
   }
-  if (!block.methods) block.methods = {};
+
+  // mock default block methods
   block.methods = {
     callAction: (action) => log(JSON.stringify(action, null, 2)),
     registerAction: (action) => log(JSON.stringify(action, null, 2)),
     registerMethod: (method) => log(JSON.stringify(method, null, 2)),
-    ...block.methods,
+    makeCssClass,
   };
 
   // block category defaults
@@ -98,4 +100,4 @@ const mockBlockProps = ({ block, meta, logger }) => {
   return block;
 };
 
-export default mockBlockProps;
+export default stubBlockProps;

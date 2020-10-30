@@ -3660,8 +3660,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.1"],
             ["js-yaml", "npm:3.14.0"],
-            ["less", "npm:3.12.2"],
-            ["less-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.0.2"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
             ["react", "npm:17.0.1"],
@@ -15140,26 +15138,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["less-loader", [
-        ["virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.0.2", {
-          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-aaf864cf4e/0/cache/less-loader-npm-7.0.2-e98973222a-e9e294a02e.zip/node_modules/less-loader/",
-          "packageDependencies": [
-            ["less-loader", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.0.2"],
-            ["@types/less", null],
-            ["@types/webpack", null],
-            ["klona", "npm:2.0.4"],
-            ["less", "npm:3.12.2"],
-            ["loader-utils", "npm:2.0.0"],
-            ["schema-utils", "npm:3.0.0"],
-            ["webpack", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.3.2"]
-          ],
-          "packagePeers": [
-            "@types/less",
-            "@types/webpack",
-            "less",
-            "webpack"
-          ],
-          "linkType": "HARD",
-        }],
         ["virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.0.2", {
           "packageLocation": "./.yarn/$$virtual/less-loader-virtual-a9ca0ffaf5/0/cache/less-loader-npm-7.0.2-e98973222a-e9e294a02e.zip/node_modules/less-loader/",
           "packageDependencies": [

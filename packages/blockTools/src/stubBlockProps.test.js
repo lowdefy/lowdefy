@@ -15,7 +15,7 @@
 */
 
 import { useState } from 'react';
-import mockBlockProps from './mockBlockProps';
+import stubBlockProps from './stubBlockProps';
 
 jest.mock('react', () => {
   const React = {
@@ -42,12 +42,13 @@ test('basic display', () => {
   const meta = {
     category: 'display',
   };
-  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -68,14 +69,14 @@ test('basic display with methods', () => {
   const meta = {
     category: 'display',
   };
-  const res = mockBlockProps({ block, meta });
+  const res = stubBlockProps({ block, meta });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
-        "fn": "test",
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -108,12 +109,13 @@ test('basic input', () => {
   const meta = {
     category: 'input',
   };
-  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
         "setValue": [Function],
@@ -134,13 +136,14 @@ test('input setState', () => {
     category: 'input',
     valueType: 'string',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
         "setValue": [Function],
@@ -162,7 +165,7 @@ test('basic container', () => {
   const meta = {
     category: 'container',
   };
-  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
         "content": Object {},
@@ -174,6 +177,7 @@ test('basic container', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -191,7 +195,7 @@ test('basic context', () => {
   const meta = {
     category: 'context',
   };
-  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
         "content": Object {},
@@ -203,6 +207,7 @@ test('basic context', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -220,7 +225,7 @@ test('basic list', () => {
   const meta = {
     category: 'list',
   };
-  expect(mockBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
         "content": Object {},
@@ -230,6 +235,7 @@ test('basic list', () => {
       "list": Array [],
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
@@ -252,7 +258,7 @@ test('list methods', () => {
   const meta = {
     category: 'list',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -263,6 +269,7 @@ test('list methods', () => {
       "list": Array [],
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
@@ -297,7 +304,7 @@ test('blocks container', () => {
   const meta = {
     category: 'container',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -323,6 +330,7 @@ test('blocks container', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -358,7 +366,7 @@ test('blocks areas container', () => {
     category: 'container',
   };
 
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -384,6 +392,7 @@ test('blocks areas container', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -412,7 +421,7 @@ test('areas container', () => {
   const meta = {
     category: 'container',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -432,6 +441,7 @@ test('areas container', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -460,7 +470,7 @@ test('areas context', () => {
   const meta = {
     category: 'context',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -480,6 +490,7 @@ test('areas context', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -508,7 +519,7 @@ test('areas list', () => {
   const meta = {
     category: 'list',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "areas": Object {
@@ -530,6 +541,7 @@ test('areas list', () => {
       ],
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
@@ -561,7 +573,7 @@ test('actions display', () => {
   const meta = {
     category: 'display',
   };
-  const res = mockBlockProps({ block, meta, logger });
+  const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
       "actions": Object {
@@ -576,6 +588,7 @@ test('actions display', () => {
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -611,12 +624,13 @@ test('provide schema errors', () => {
       },
     },
   };
-  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },
@@ -634,12 +648,13 @@ test('provide schema errors', () => {
       mistake: 1,
     },
   };
-  expect(mockBlockProps({ block, meta })).toMatchInlineSnapshot(`
+  expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
       "blockId": "a",
       "id": "a",
       "methods": Object {
         "callAction": [Function],
+        "makeCssClass": [Function],
         "registerAction": [Function],
         "registerMethod": [Function],
       },

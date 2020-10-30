@@ -14,19 +14,23 @@
   limitations under the License.
 */
 
-import React from 'react';
-import blockDefaultProps from '../blockDefaultProps';
-import './Skeleton.css';
+import makeCssClass from './makeCssClass';
 
-const Skeleton = ({ properties, methods }) => {
-  return (
-    <div
-      className={'skeleton ' + methods.makeCssClass(properties.style)}
-      style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
-  );
+const blockDefaultProps = {
+  actions: {},
+  blockId: 'undefined_id',
+  content: {},
+  list: [],
+  menus: [],
+  methods: {
+    callAction: () => undefined,
+    registerAction: () => undefined,
+    registerMethod: () => undefined,
+    makeCssClass: makeCssClass,
+  },
+  properties: {},
+  user: {},
+  validate: [],
 };
 
-Skeleton.defaultProps = blockDefaultProps;
-
-export default Skeleton;
+export default blockDefaultProps;

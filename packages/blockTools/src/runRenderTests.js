@@ -19,10 +19,9 @@ import renderer from 'react-test-renderer';
 import mockBlock from './mockBlock';
 
 const runRenderTests = ({ examples, Block, meta, logger }) => {
-  const { after, before, methods, getProps } = mockBlock({ meta, logger });
+  const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(before);
-  afterEach(after);
 
   examples.forEach((ex) => {
     test(`Render ${ex.id}`, () => {

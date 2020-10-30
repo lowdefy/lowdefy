@@ -14,17 +14,9 @@
   limitations under the License.
 */
 
-import { unmountComponentAtNode } from 'react-dom';
-import mockBlockProps from './mockBlockProps';
-import blockDefaults from './blockDefaults';
+import stubBlockProps from './stubBlockProps';
 
 const mockBlock = ({ meta, logger }) => {
-  // mock Match.random to generate consistent ids
-  const mockMath = Object.create(global.Math);
-  mockMath.random = () => 0.123456789;
-  global.Math = mockMath;
-
-  let container = {};
   const callAction = jest.fn();
   const makeCssClass = jest.fn();
   const moveItemDown = jest.fn();
@@ -46,18 +38,7 @@ const mockBlock = ({ meta, logger }) => {
     unshiftItem,
   };
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
-  let nodeMock = {};
-  let renderOptions = {
-    createNodeMock: () => nodeMock,
-  };
-
   const before = () => {
-    // clear all keys in note mock but keep object pointer
-    Object.keys(nodeMock).forEach((key) => {
-      delete nodeMock[key];
-    });
-    container.div = document.createElement('div');
-    document.body.appendChild(container.div);
     callAction.mockReset();
     makeCssClass.mockReset();
     makeCssClass.mockImplementation(makeCssImp);
@@ -69,13 +50,14 @@ const mockBlock = ({ meta, logger }) => {
     setValue.mockReset();
     unshiftItem.mockReset();
   };
-  const after = () => {
-    unmountComponentAtNode(container.div);
-    container.div.remove();
-    container.div = null;
+  const getProps = (block) => {
+    const props = stubBlockProps({ block, meta, logger });
+    return {
+      ...props,
+      methods,
+    };
   };
-  const getProps = (block) => blockDefaults(mockBlockProps({ block, meta, logger }));
-  return { after, before, container, methods, getProps, renderOptions, nodeMock };
+  return { before, methods, getProps };
 };
 
 export default mockBlock;

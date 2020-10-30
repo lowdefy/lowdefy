@@ -17,6 +17,7 @@
 import React from 'react';
 import { Col } from 'antd';
 import deriveLayout from './deriveLayout.js';
+import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const alignSelf = (align) => {
   if (align === 'bottom') {
@@ -53,5 +54,7 @@ const BlockLayout = ({ id, blockStyle, children, highlightBorders, layout, makeC
     </Col>
   );
 };
+
+BlockLayout.defaultProps = blockDefaultProps;
 
 export default BlockLayout;
