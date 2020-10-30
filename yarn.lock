@@ -3081,7 +3081,7 @@ __metadata:
     eslint-config-prettier: 6.15.0
     eslint-import-resolver-node: 0.3.4
     eslint-plugin-import: 2.22.1
-    eslint-plugin-jsx-a11y: 6.4.0
+    eslint-plugin-jsx-a11y: 6.4.1
     eslint-plugin-prettier: 3.1.4
     eslint-plugin-react: 7.21.5
     eslint-plugin-react-hooks: 4.2.0
@@ -8527,9 +8527,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:6.4.0":
-  version: 6.4.0
-  resolution: "eslint-plugin-jsx-a11y@npm:6.4.0"
+"eslint-plugin-jsx-a11y@npm:6.4.1":
+  version: 6.4.1
+  resolution: "eslint-plugin-jsx-a11y@npm:6.4.1"
   dependencies:
     "@babel/runtime": ^7.11.2
     aria-query: ^4.2.2
@@ -8540,11 +8540,11 @@ __metadata:
     damerau-levenshtein: ^1.0.6
     emoji-regex: ^9.0.0
     has: ^1.0.3
-    jsx-ast-utils: ^3.0.0
+    jsx-ast-utils: ^3.1.0
     language-tags: ^1.0.5
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7
-  checksum: d7c125b12670d00b866fef09a2af097c04190befad05c17f3b9a3f354c0c3aacbeb86e73be7e2921803a326b79c89758211ca8bf1273962d2c192ea1af3d95e1
+  checksum: 680d13f5e3e23f7e9b5208c87fa81497bff31909796cbaf5f6245462e54f4bf6b5d03db97662eb67afb344d3f525ade0902472bc807b411b2c3806549faf7203
   languageName: node
   linkType: hard
 
@@ -12306,7 +12306,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jsx-ast-utils@npm:^2.4.1 || ^3.0.0, jsx-ast-utils@npm:^3.0.0":
+"jsx-ast-utils@npm:^2.4.1 || ^3.0.0, jsx-ast-utils@npm:^3.1.0":
   version: 3.1.0
   resolution: "jsx-ast-utils@npm:3.1.0"
   dependencies:
