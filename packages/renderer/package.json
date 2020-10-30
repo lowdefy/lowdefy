@@ -41,7 +41,7 @@
     "@apollo/link-context": "2.0.0-beta.3",
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
-    "@lowdefy/block-tools": "1.0.1-alpha.11",
+    "@lowdefy/block-tools": "1.0.1-alpha.13",
     "@lowdefy/engine": "0.0.0-experimental.0",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/layout": "1.0.0",
