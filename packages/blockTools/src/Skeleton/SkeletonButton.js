@@ -15,11 +15,10 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
-const SkeletonButton = (props) => {
-  const { properties, methods } = blockDefaults(props);
+const SkeletonButton = ({ properties, methods }) => {
   let height = properties.height || 32;
   switch (properties.size) {
     case 'small':
@@ -42,5 +41,7 @@ const SkeletonButton = (props) => {
     />
   );
 };
+
+SkeletonButton.defaultProps = blockDefaultProps;
 
 export default SkeletonButton;

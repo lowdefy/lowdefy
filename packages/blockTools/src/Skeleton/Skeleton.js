@@ -15,11 +15,10 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import './Skeleton.css';
 
-const Skeleton = (props) => {
-  const { properties, methods } = blockDefaults(props);
+const Skeleton = ({ properties, methods }) => {
   return (
     <div
       className={'skeleton ' + methods.makeCssClass(properties.style)}
@@ -27,5 +26,7 @@ const Skeleton = (props) => {
     ></div>
   );
 };
+
+Skeleton.defaultProps = blockDefaultProps;
 
 export default Skeleton;

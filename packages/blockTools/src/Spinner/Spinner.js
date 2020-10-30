@@ -16,10 +16,9 @@
 
 import React from 'react';
 import LogoSpinner from './LogoSpinner';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 
-const Loading = (props) => {
-  const { properties, methods } = blockDefaults(props);
+const Spinner = ({ properties, methods }) => {
   return (
     <div
       className={methods.makeCssClass({
@@ -52,4 +51,6 @@ const Loading = (props) => {
   );
 };
 
-export default Loading;
+Spinner.defaultProps = blockDefaultProps;
+
+export default Spinner;
