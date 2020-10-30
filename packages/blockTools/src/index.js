@@ -22,7 +22,6 @@ import Loading from './Loading';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import mockBlock from './mockBlock';
-import mockBlockProps from './mockBlockProps';
 import runBlockSchemaTests from './runBlockSchemaTests';
 import runRenderTests from './runRenderTests';
 import Skeleton from './Skeleton/Skeleton';
@@ -31,6 +30,7 @@ import SkeletonButton from './Skeleton/SkeletonButton';
 import SkeletonInput from './Skeleton/SkeletonInput';
 import SkeletonParagraph from './Skeleton/SkeletonParagraph';
 import Spinner from './Spinner/Spinner';
+import stubBlockProps from './stubBlockProps';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
@@ -42,7 +42,6 @@ export {
   makeCssClass,
   mediaToCssObject,
   mockBlock,
-  mockBlockProps,
   runBlockSchemaTests,
   runRenderTests,
   Skeleton,
@@ -51,5 +50,6 @@ export {
   SkeletonInput,
   SkeletonParagraph,
   Spinner,
+  stubBlockProps,
   useRunAfterUpdate,
 };
