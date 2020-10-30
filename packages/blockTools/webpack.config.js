@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -56,8 +55,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /runRenderTests/ }),
-    new webpack.IgnorePlugin({ resourceRegExp: /mockBlock/ }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
