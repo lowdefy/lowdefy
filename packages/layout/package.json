@@ -40,6 +40,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
+    "@lowdefy/block-tools": "1.0.1-alpha.10",
     "@lowdefy/helpers": "1.1.0",
     "antd": "4.4.2",
     "react": "17.0.1",
