@@ -4,7 +4,7 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/test/'],
-  coverageReporters: ['lcov', 'text', 'clover'],
+  coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
