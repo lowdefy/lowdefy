@@ -3136,7 +3136,7 @@ __metadata:
     webpack: 5.3.2
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
   languageName: unknown
   linkType: soft
 
@@ -3162,7 +3162,7 @@ __metadata:
     webpack: 5.3.2
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
   languageName: unknown
   linkType: soft
 
@@ -19713,13 +19713,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:5.2.0":
-  version: 5.2.0
-  resolution: "webpack-merge@npm:5.2.0"
+"webpack-merge@npm:5.3.0":
+  version: 5.3.0
+  resolution: "webpack-merge@npm:5.3.0"
   dependencies:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
-  checksum: edc100b9c7cfc675d1e1857afd6a194daa1756d140eda9da452e4f73933307a9af7a485a94b68ef29dfa3047f69e34d6ca724e5858109ed287f32b79c0c0d11b
+  checksum: 7486c5a45ad48f775bc75b3e80938ec3196960cece7af9239863a87d842b21340ff51f95aeaa9434604b04b1471b6d6197c6447a1efd747456451e884d107008
   languageName: node
   linkType: hard
 
