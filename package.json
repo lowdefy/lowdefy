@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@yarnpkg/pnpify": "2.3.3",
-    "eslint": "7.12.0",
+    "eslint": "7.12.1",
     "eslint-config-prettier": "6.14.0",
     "eslint-import-resolver-node": "0.3.4",
     "eslint-plugin-import": "2.22.1",
