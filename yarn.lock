@@ -2833,20 +2833,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-tools@npm:1.0.1-alpha.9":
-  version: 1.0.1-alpha.9
-  resolution: "@lowdefy/block-tools@npm:1.0.1-alpha.9"
-  dependencies:
-    "@lowdefy/helpers": 1.1.0
-    ajv: 6.12.6
-    ajv-errors: 1.0.1
-    create-emotion: 10.0.27
-    react: 17.0.1
-    react-dom: 17.0.1
-  checksum: 1283256de9c9035d806822ff66cdf2056a9d0068a2b31004effa5e07f3a80e20ee3eeea3f0fe83db0212f00dbe1ae276a81ee1ddabf80383a3290ef585521536
-  languageName: node
-  linkType: hard
-
 "@lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
@@ -2880,7 +2866,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-alpha.9
+    "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
     apollo-server-express: 2.18.2

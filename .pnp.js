@@ -3636,19 +3636,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/block-tools", [
-        ["npm:1.0.1-alpha.9", {
-          "packageLocation": "./.yarn/cache/@lowdefy-block-tools-npm-1.0.1-alpha.9-4588a99901-1283256de9.zip/node_modules/@lowdefy/block-tools/",
-          "packageDependencies": [
-            ["@lowdefy/block-tools", "npm:1.0.1-alpha.9"],
-            ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["ajv", "npm:6.12.6"],
-            ["ajv-errors", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:1.0.1"],
-            ["create-emotion", "npm:10.0.27"],
-            ["react", "npm:17.0.1"],
-            ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"]
-          ],
-          "linkType": "HARD",
-        }],
         ["workspace:packages/blockTools", {
           "packageLocation": "./packages/blockTools/",
           "packageDependencies": [
@@ -3725,7 +3712,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.12.3"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.1"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.12.1"],
-            ["@lowdefy/block-tools", "npm:1.0.1-alpha.9"],
+            ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["apollo-server-express", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:2.18.2"],
