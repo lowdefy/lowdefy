@@ -1667,7 +1667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^0.2.0":
+"@eslint/eslintrc@npm:^0.2.1":
   version: 0.2.1
   resolution: "@eslint/eslintrc@npm:0.2.1"
   dependencies:
@@ -3077,7 +3077,7 @@ __metadata:
   resolution: "@lowdefy/lowdefy@workspace:."
   dependencies:
     "@yarnpkg/pnpify": 2.3.3
-    eslint: 7.12.0
+    eslint: 7.12.1
     eslint-config-prettier: 6.14.0
     eslint-import-resolver-node: 0.3.4
     eslint-plugin-import: 2.22.1
@@ -8623,12 +8623,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:7.12.0":
-  version: 7.12.0
-  resolution: "eslint@npm:7.12.0"
+"eslint@npm:7.12.1":
+  version: 7.12.1
+  resolution: "eslint@npm:7.12.1"
   dependencies:
     "@babel/code-frame": ^7.0.0
-    "@eslint/eslintrc": ^0.2.0
+    "@eslint/eslintrc": ^0.2.1
     ajv: ^6.10.0
     chalk: ^4.0.0
     cross-spawn: ^7.0.2
@@ -8666,7 +8666,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: 22f86c0ebaf75993d197d230a8c35f11ba4ffc7cd0b280aeecb28a04c26446b9e6906eedee264a445311a3b9b31f9bca787ee58546acc087cb2c1056ca89f624
+  checksum: b3d11ea516d2932db5854ea942a546b711e6ee8735306627042bb9e2539e96844cc62cdb5826039f5d0509202936045c2cd7b84b457004c891a326f8eccae333
   languageName: node
   linkType: hard
 
