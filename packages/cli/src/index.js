@@ -18,6 +18,7 @@ import program from 'commander';
 import packageJson from '../package.json';
 import build from './commands/build/build.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
+import dev from './commands/dev/dev.js';
 import errorHandler from './utils/errorHandler';
 
 const { description, version } = packageJson;
@@ -32,6 +33,7 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .passCommandToAction(false)
   .action(errorHandler(build));
 
 program
@@ -42,6 +44,18 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .passCommandToAction(false)
   .action(errorHandler(cleanCache));
+
+program
+  .command('dev')
+  .description('Start a Lowdefy development server.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .passCommandToAction(false)
+  .action(errorHandler(dev, { stayAlive: true }));
 
 program.parse(process.argv);

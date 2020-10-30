@@ -19,15 +19,15 @@ import path from 'path';
 import loadBuildScriptToCache from './loadBuildScriptToCache';
 import loadModule from '../../utils/loadModule';
 
-async function getBuildScript(version, cacheDirectory) {
-  let buildScript;
-  const cleanVersion = version.replace(/[-.]/g, '_');
-  const cachePath = path.resolve(cacheDirectory, `scripts/build_${cleanVersion}`);
+async function getBuildScript(context) {
+  const cleanVersion = context.version.replace(/[-.]/g, '_');
+  const cachePath = path.resolve(context.cacheDirectory, `scripts/build_${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
-    await loadBuildScriptToCache(version, cachePath);
+    await loadBuildScriptToCache(context, cachePath);
   }
-  buildScript = await loadModule(cachePath, './build');
-  return buildScript.default;
+  const buildScript = await loadModule(path.resolve(cachePath, 'package/dist'), './build');
+  context.buildScript = buildScript.default;
+  return context;
 }
 
 export default getBuildScript;

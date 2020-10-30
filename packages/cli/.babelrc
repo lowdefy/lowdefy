@@ -7,6 +7,7 @@
           "node": "12"
         }
       }
-    ]
+    ],
+    "@babel/preset-react"
   ]
 }

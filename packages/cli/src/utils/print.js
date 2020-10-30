@@ -19,17 +19,17 @@ import chalk from 'chalk';
 const printToTerminal = (color, options = {}) => (text) => {
   let message;
   if (options.timestamp) {
-    const time = options.timestamp === true ? new Date(Date.now()) : new Date(options.timestamp);
+    const time = new Date(Date.now());
     const h = time.getHours();
     const m = time.getMinutes();
     const s = time.getSeconds();
     const timeString = `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
-    message = `${timeString} - ${text}`;
+    message = `${chalk.dim(timeString)} - ${color(text)}`;
   } else {
-    message = text;
+    message = color(text);
   }
   // eslint-disable-next-line no-console
-  console.log(color(message));
+  console.log(message);
 };
 
 const createPrint = (options) => ({

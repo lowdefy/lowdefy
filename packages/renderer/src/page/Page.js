@@ -51,6 +51,15 @@ const PageContext = ({ rootContext }) => {
   }
   // redirect 404
   if (!data.page) return <Redirect to="/404" />;
+
+  // Prefetch all prefetchPages to Apollo cache
+  get(data.page, 'properties.prefetchPages', { default: [] }).map((fetchPageId) =>
+    rootContext.client.query({
+      query: GET_PAGE,
+      variables: { id: fetchPageId },
+    })
+  );
+
   return (
     <>
       <Helmet pageProperties={get(data.page, 'properties', { default: {} })} />

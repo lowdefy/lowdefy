@@ -15,11 +15,17 @@
 */
 
 const path = require('path');
-const build = require('./dist/index.js').default;
 
-build({
-  logger: console,
-  cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
-  configDirectory: process.cwd(),
-  outputDirectory: path.resolve(process.cwd(), '.lowdefy/build'),
-});
+async function run() {
+  // Doing weird things for webpack module federation.
+  // Webpack needs an async import to resolve shared dependencies.
+  const build = await require('./dist/index.js').default.then((module) => module.default);
+  await build({
+    logger: console,
+    cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
+    configDirectory: process.cwd(),
+    outputDirectory: path.resolve(process.cwd(), '.lowdefy/build'),
+  });
+}
+
+run();
