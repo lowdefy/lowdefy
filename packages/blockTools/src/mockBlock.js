@@ -15,22 +15,17 @@
 */
 
 import stubBlockProps from './stubBlockProps';
-import makeCssClass from './makeCssClass';
-
-jest.mock('./makeCssClass', () => {
-  const makeCssClass = jest.fn();
-  return { default: makeCssClass, __esModule: true };
-});
-const callAction = jest.fn();
-const moveItemDown = jest.fn();
-const moveItemUp = jest.fn();
-const pushItem = jest.fn();
-const registerMethod = jest.fn();
-const removeItem = jest.fn();
-const setValue = jest.fn();
-const unshiftItem = jest.fn();
 
 const mockBlock = ({ meta, logger }) => {
+  const callAction = jest.fn();
+  const makeCssClass = jest.fn();
+  const moveItemDown = jest.fn();
+  const moveItemUp = jest.fn();
+  const pushItem = jest.fn();
+  const registerMethod = jest.fn();
+  const removeItem = jest.fn();
+  const setValue = jest.fn();
+  const unshiftItem = jest.fn();
   const methods = {
     callAction,
     makeCssClass,
@@ -55,8 +50,13 @@ const mockBlock = ({ meta, logger }) => {
     setValue.mockReset();
     unshiftItem.mockReset();
   };
-
-  const getProps = (block) => stubBlockProps({ block, meta, logger });
+  const getProps = (block) => {
+    const props = stubBlockProps({ block, meta, logger });
+    return {
+      ...props,
+      methods,
+    };
+  };
   return { before, methods, getProps };
 };
 
