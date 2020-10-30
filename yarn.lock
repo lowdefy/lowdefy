@@ -2835,30 +2835,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-tools@npm:1.0.1-experimental.1":
-  version: 1.0.1-experimental.1
-  resolution: "@lowdefy/block-tools@npm:1.0.1-experimental.1"
-  dependencies:
-    "@lowdefy/helpers": 1.0.0
-    create-emotion: 10.0.27
-    react: 17.0.0-rc.2
-    react-dom: 17.0.0-rc.2
-  checksum: f08d07dec833189eaf264db5de7a09aea872f05b501d7e3d80d94598cf19d72a525536af2454f386bded4f67eecd9a4eba1d894e7961cd7e47da58ec6cf02333
-  languageName: node
-  linkType: hard
-
-"@lowdefy/block-tools@npm:1.0.1-experimental.5":
-  version: 1.0.1-experimental.5
-  resolution: "@lowdefy/block-tools@npm:1.0.1-experimental.5"
-  dependencies:
-    "@lowdefy/helpers": 1.1.0
-    create-emotion: 10.0.27
-    react: 17.0.1
-    react-dom: 17.0.1
-  checksum: f9c924dc3522abe8229f010d7818a4b2c43d7f4de003f383897a75ef084a18edca5cad1888b844155ccce6d447a43a836c7202db258d881c61ea4dfbb8cf67bc
-  languageName: node
-  linkType: hard
-
 "@lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
@@ -2937,16 +2913,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/delete@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@lowdefy/delete@npm:1.0.1"
-  dependencies:
-    "@lowdefy/get": 1.0.1
-    "@lowdefy/type": 1.0.1
-  checksum: fee9d86f52643b4d2a8f68d732fec64f1805628fe6d1b42ff1bfea515b767ff8fb6198ee3fce49033f9edcb943676d0993ef537048e3118b6e7855dee4535c6e
-  languageName: node
-  linkType: hard
-
 "@lowdefy/engine@npm:0.0.0-alpha.1":
   version: 0.0.0-alpha.1
   resolution: "@lowdefy/engine@npm:0.0.0-alpha.1"
@@ -2987,15 +2953,6 @@ __metadata:
     moment: 2.29.1
   languageName: unknown
   linkType: soft
-
-"@lowdefy/get@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@lowdefy/get@npm:1.0.1"
-  dependencies:
-    "@lowdefy/type": 1.0.1
-  checksum: 6f66955a79f693620309ceb98684b7e612bef7d7e787fb7c4791498653b4911c7d8131e205bee781bf66c1c536b94db605fdca498d86699c7e13bac82d2a84f3
-  languageName: node
-  linkType: hard
 
 "@lowdefy/graphql@npm:0.0.0-alpha.1":
   version: 0.0.0-alpha.1
@@ -3049,19 +3006,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/helpers@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@lowdefy/helpers@npm:1.0.0"
-  dependencies:
-    "@lowdefy/delete": 1.0.1
-    "@lowdefy/serializer": 1.0.0
-    "@lowdefy/type": 1.0.1
-    lodash.merge: 4.6.2
-    query-string: 6.13.1
-  checksum: 3f3a15df441caf88d1fdbc92b3942b2251426b8023462584c1909f3b1de65df2f8b534f4f2c7fe8cddf883c646bfc7d642973d2ded6ba662e528d3fd6cae532c
-  languageName: node
-  linkType: hard
-
 "@lowdefy/layout@1.0.0, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
@@ -3070,7 +3014,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-experimental.1
+    "@lowdefy/block-tools": 1.0.1-alpha.9
     "@lowdefy/helpers": 1.1.0
     antd: 4.4.2
     babel-jest: 26.6.1
@@ -3175,7 +3119,7 @@ __metadata:
     "@apollo/link-retry": 2.0.0-beta.3
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.1
-    "@lowdefy/block-tools": 1.0.1-experimental.5
+    "@lowdefy/block-tools": 1.0.1-alpha.9
     "@lowdefy/engine": 0.0.0-alpha.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
@@ -3197,15 +3141,6 @@ __metadata:
     webpack-merge: 5.2.0
   languageName: unknown
   linkType: soft
-
-"@lowdefy/serializer@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@lowdefy/serializer@npm:1.0.0"
-  dependencies:
-    "@lowdefy/type": 1.0.1
-  checksum: 8880af5555339624160884adf32d611457d316779af312ea90ebfb64c555fe6021aa034b86bd76656c823db0a98fd0006f1e5cc80b94fb0bd92789bf8d8aa79c
-  languageName: node
-  linkType: hard
 
 "@lowdefy/server@workspace:packages/server":
   version: 0.0.0-use.local
@@ -3232,13 +3167,6 @@ __metadata:
     webpack-merge: 5.2.0
   languageName: unknown
   linkType: soft
-
-"@lowdefy/type@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@lowdefy/type@npm:1.0.1"
-  checksum: 42778b9f54ac984cc14f29e600d0e3cb794b9b944c66bc9098154c1c7cb50a3113161e4a9afc07815bd0f330014185aff0eabe34f3ebe07a02b4df4063ba8f5d
-  languageName: node
-  linkType: hard
 
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
@@ -15520,17 +15448,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"query-string@npm:6.13.1":
-  version: 6.13.1
-  resolution: "query-string@npm:6.13.1"
-  dependencies:
-    decode-uri-component: ^0.2.0
-    split-on-first: ^1.0.0
-    strict-uri-encode: ^2.0.0
-  checksum: 5e640f0cf6077f3fd4dcb6d8f3a88306bbb5d5638001450b15a244ca74f76e4a6a1d70baff114cef43ca15670d5d2523f92113f3567561b9dbd1fcb26489066a
-  languageName: node
-  linkType: hard
-
 "query-string@npm:6.13.6":
   version: 6.13.6
   resolution: "query-string@npm:6.13.6"
@@ -16191,19 +16108,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.0-rc.2":
-  version: 17.0.0-rc.2
-  resolution: "react-dom@npm:17.0.0-rc.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: 0.20.0-rc.2
-  peerDependencies:
-    react: 17.0.0-rc.2
-  checksum: 46e1d1f403a399a61a3f9d6976f23818d99018ef797091b20beba14e69ca8ad50d4931aacd68c36a88e2a7b54cf08b36a81b29cae41fc3165c36840441e6d764
-  languageName: node
-  linkType: hard
-
 "react-fast-compare@npm:^3.1.1":
   version: 3.2.0
   resolution: "react-fast-compare@npm:3.2.0"
@@ -16359,16 +16263,6 @@ fsevents@^1.2.7:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: a76d86ec973eb4b25a46071ac7f974adfd66ed89ad1db63043be1d976ec25417520a210e6d724b0ad937422b706afcf9962cedda9e92125992a8c0e8a95f2051
-  languageName: node
-  linkType: hard
-
-"react@npm:17.0.0-rc.2":
-  version: 17.0.0-rc.2
-  resolution: "react@npm:17.0.0-rc.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 57784112c78026887b7ac4baf23a9828e72480f47b9238660bb618404da38c41d9ba8153a3b5f673ca7ea1ae018a3cbb50915f5ea89c298aab25f2f0dd2201ec
   languageName: node
   linkType: hard
 
@@ -17237,16 +17131,6 @@ fsevents@^1.2.7:
   dependencies:
     xmlchars: ^2.2.0
   checksum: 6ad14be68da9b84af0fa3de346fd78bd3a8e8a73a462e2852279a1fff1e2619988919294001abe3ecef3783f9498962a0619d960ccca4ec2ca914526fde1acc2
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:0.20.0-rc.2":
-  version: 0.20.0-rc.2
-  resolution: "scheduler@npm:0.20.0-rc.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: 9ef85df2aa15ace919d8d48e3f5fa903be21ab2ce5e3d9f011141bb227e94ea24677d31bc6018294fe3ce3e880fcf3770bf7a894e35977d61f4502b30468a37b
   languageName: node
   linkType: hard
 
