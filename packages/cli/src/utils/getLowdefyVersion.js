@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
 
-async function getLowdefyVersion(context) {
+async function getLowdefyVersion(context = {}) {
   const lowdefyYaml = await readFile(
     path.resolve(context.baseDirectory || process.cwd(), 'lowdefy.yaml')
   );

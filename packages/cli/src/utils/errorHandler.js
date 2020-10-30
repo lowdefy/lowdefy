@@ -24,6 +24,7 @@ function errorHandler(fn, options = {}) {
     } catch (error) {
       const print = createPrint();
       print.error(error.message);
+      // TODO: Stay alive feature
     }
   }
   return run;

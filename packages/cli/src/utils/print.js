@@ -19,7 +19,7 @@ import chalk from 'chalk';
 const printToTerminal = (color, options = {}) => (text) => {
   let message;
   if (options.timestamp) {
-    const time = options.timestamp === true ? new Date(Date.now()) : new Date(options.timestamp);
+    const time = new Date(Date.now());
     const h = time.getHours();
     const m = time.getMinutes();
     const s = time.getSeconds();

@@ -30,7 +30,8 @@
     "clean": "lerna run clean",
     "prepare": "lerna run prepare",
     "prettier": "prettier --config .prettierrc --write **/*.js",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "test:ci": "yarn install --immutable --immutable-cache --check-cache &&  yarn version check && yarn build && yarn test --ignore='@lowdefy/format'"
   },
   "devDependencies": {
     "@yarnpkg/pnpify": "2.3.3",

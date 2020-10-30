@@ -22,13 +22,15 @@ import { outputDirectoryPath } from '../../utils/directories';
 async function build(options) {
   const context = await createContext(options);
   await getBuildScript(context);
+  const outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   context.print.info('Starting build.');
   await context.buildScript({
     logger: context.print,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
-    outputDirectory: path.resolve(context.baseDirectory, outputDirectoryPath),
+    outputDirectory,
   });
+  context.print.info(`Build artifacts saved at ${outputDirectory}.`);
 }
 
 export default build;

@@ -19,7 +19,7 @@ import getLowdefyVersion from './getLowdefyVersion';
 import createPrint from './print';
 import { cacheDirectoryPath } from './directories';
 
-async function createContext(options) {
+async function createContext(options = {}) {
   const context = {
     baseDirectory: path.resolve(options.baseDirectory || process.cwd()),
     print: createPrint({ timestamp: true }),
