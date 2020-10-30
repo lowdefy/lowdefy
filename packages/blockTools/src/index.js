@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import blockDefaults from './blockDefaults';
+import blockDefaultProps from './blockDefaultProps';
 import BlockSchemaErrors from './BlockSchemaErrors';
 import ErrorBoundary from './ErrorBoundary';
 import IconSpinner from './Spinner/IconSpinner';
@@ -34,7 +34,7 @@ import Spinner from './Spinner/Spinner';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
-  blockDefaults,
+  blockDefaultProps,
   BlockSchemaErrors,
   ErrorBoundary,
   IconSpinner,
