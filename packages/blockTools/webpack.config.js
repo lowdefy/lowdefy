@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -81,6 +82,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
     new webpack.ProvidePlugin({ process: ['process'] }),
     new HtmlWebpackPlugin({

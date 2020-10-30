@@ -16,25 +16,21 @@
 
 import path from 'path';
 import getBuildScript from './getBuildScript';
-import getLowdefyVersion from '../../utils/getLowdefyVersion';
-import createPrint from '../../utils/print';
-import { cacheDirectoryPath, outputDirectoryPath } from '../../utils/directories';
+import createContext from '../../utils/context';
+import { outputDirectoryPath } from '../../utils/directories';
 
-async function build(program) {
-  let baseDirectory = process.cwd();
-  if (program.baseDirectory) {
-    baseDirectory = path.resolve(program.baseDirectory);
-  }
-  const version = await getLowdefyVersion(program.baseDirectory);
-  const cacheDirectory = path.resolve(baseDirectory, cacheDirectoryPath);
-  const buildScript = await getBuildScript(version, cacheDirectory);
-
-  buildScript({
-    logger: createPrint({ timestamp: true }),
-    cacheDirectory,
-    configDirectory: baseDirectory,
-    outputDirectory: path.resolve(baseDirectory, outputDirectoryPath),
+async function build(options) {
+  const context = await createContext(options);
+  await getBuildScript(context);
+  const outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
+  context.print.info('Starting build.');
+  await context.buildScript({
+    logger: context.print,
+    cacheDirectory: context.cacheDirectory,
+    configDirectory: context.baseDirectory,
+    outputDirectory,
   });
+  context.print.info(`Build artifacts saved at ${outputDirectory}.`);
 }
 
 export default build;

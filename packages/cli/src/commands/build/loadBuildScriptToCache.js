@@ -18,7 +18,7 @@ import axios from 'axios';
 import decompress from 'decompress';
 import decompressTargz from 'decompress-targz';
 
-async function loadBuildScriptToCache(version, cachePath) {
+async function loadBuildScriptToCache(context, cachePath) {
   const registryUrl = 'https://registry.npmjs.org/@lowdefy/build';
   const packageInfo = await axios.get(registryUrl);
   if (!packageInfo || !packageInfo.data) {
@@ -27,16 +27,18 @@ async function loadBuildScriptToCache(version, cachePath) {
       `Build package could not be found at ${registryUrl}. Check internet connection.`
     );
   }
-  if (!packageInfo.data.versions[version]) {
-    throw new Error(`Invalid Lowdefy version. Version "${version}" does not exist.`);
+  if (!packageInfo.data.versions[context.version]) {
+    throw new Error(`Invalid Lowdefy version. Version "${context.version}" does not exist.`);
   }
-  const tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
+  const tarball = await axios.get(packageInfo.data.versions[context.version].dist.tarball, {
     responseType: 'arraybuffer',
   });
   if (!tarball || !tarball.data) {
     /// TODO: Check if user has internet connection.
     throw new Error(
-      `Build script could not be fetched from ${packageInfo.data.versions[version].dist.tarball}. Check internet connection.`
+      `Build script could not be fetched from ${
+        packageInfo.data.versions[context.version].dist.tarball
+      }. Check internet connection.`
     );
   }
   await decompress(tarball.data, cachePath, {

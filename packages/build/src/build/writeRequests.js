@@ -65,14 +65,15 @@ async function updateRequestsOnPage({ page, context }) {
       filePath: `pages/${page.pageId}/requests/${request.requestId}.json`,
       content: JSON.stringify(request, null, 2),
     });
-    await context.logger.info(`Updated request ${request.requestId} on page ${page.pageId}`);
   });
   const writeMutationPromises = mutations.map(async (mutation) => {
     await context.artifactSetter.set({
       filePath: `pages/${page.pageId}/mutations/${mutation.mutationId}.json`,
       content: JSON.stringify(mutation, null, 2),
     });
-    await context.logger.info(`Updated mutation ${mutation.mutationId} on page ${page.pageId}`);
+    await context.logger.info(
+      `Updated mutation "${mutation.mutationId}" on page "${page.pageId}".`
+    );
   });
 
   return Promise.all([...writeRequestPromises, ...writeMutationPromises]);

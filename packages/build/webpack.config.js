@@ -1,5 +1,6 @@
 const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { dependencies } = require('./package.json');
 
 module.exports = {
@@ -37,12 +38,13 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
       name: 'build',
       library: { type: 'commonjs' },
       filename: 'remoteEntry.js',
       exposes: {
-        './build': './src/index.js',
+        './build': './src/build.js',
       },
       shared: dependencies,
     }),

@@ -4,7 +4,6 @@ releases:
   "@lowdefy/cli": patch
   "@lowdefy/color": patch
   "@lowdefy/engine": patch
-  "@lowdefy/express": patch
   "@lowdefy/format": patch
   "@lowdefy/graphql": patch
   "@lowdefy/helpers": patch
@@ -14,3 +13,4 @@ releases:
   "@lowdefy/nunjucks": patch
   "@lowdefy/operators": patch
   "@lowdefy/renderer": patch
+  "@lowdefy/server": patch

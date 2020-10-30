@@ -62,33 +62,7 @@ test('Pass args to synchronous function', async () => {
   expect(res).toEqual({ arg1: '1', arg2: '2' });
 });
 
-test('Catch error synchronous function, stay alive', async () => {
-  const fn = jest.fn(() => {
-    throw new Error('Error');
-  });
-  const wrapped = errorHandler(fn, { stayAlive: true });
-  const res = await wrapped();
-  expect(res).toBe(undefined);
-  expect(fn).toHaveBeenCalled();
-  expect(print.error.mock.calls).toEqual([['Error']]);
-});
-
-test('Catch error asynchronous function, stay alive', async () => {
-  const fn = jest.fn(async () => {
-    await wait(3);
-    throw new Error('Async Error');
-  });
-  const wrapped = errorHandler(fn, { stayAlive: true });
-  const res = await wrapped();
-  expect(res).toBe(undefined);
-  expect(fn).toHaveBeenCalled();
-  expect(print.error.mock.calls).toEqual([['Async Error']]);
-});
-
-test('Catch error synchronous function, exit process', async () => {
-  const realExit = process.exit;
-  const mockExit = jest.fn();
-  process.exit = mockExit;
+test('Catch error synchronous function', async () => {
   const fn = jest.fn(() => {
     throw new Error('Error');
   });
@@ -96,14 +70,9 @@ test('Catch error synchronous function, exit process', async () => {
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Error']]);
-  expect(mockExit).toHaveBeenCalled();
-  process.exit = realExit;
 });
 
-test('Catch error asynchronous function, exit process', async () => {
-  const realExit = process.exit;
-  const mockExit = jest.fn();
-  process.exit = mockExit;
+test('Catch error asynchronous function', async () => {
   const fn = jest.fn(async () => {
     await wait(3);
     throw new Error('Async Error');
@@ -112,6 +81,27 @@ test('Catch error asynchronous function, exit process', async () => {
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Async Error']]);
-  expect(mockExit).toHaveBeenCalled();
-  process.exit = realExit;
 });
+
+// test('Catch error synchronous function, stay alive', async () => {
+//   const fn = jest.fn(() => {
+//     throw new Error('Error');
+//   });
+//   const wrapped = errorHandler(fn, { stayAlive: true });
+//   const res = await wrapped();
+//   expect(res).toBe(undefined);
+//   expect(fn).toHaveBeenCalled();
+//   expect(print.error.mock.calls).toEqual([['Error']]);
+// });
+
+// test('Catch error asynchronous function, stay alive', async () => {
+//   const fn = jest.fn(async () => {
+//     await wait(3);
+//     throw new Error('Async Error');
+//   });
+//   const wrapped = errorHandler(fn, { stayAlive: true });
+//   const res = await wrapped();
+//   expect(res).toBe(undefined);
+//   expect(fn).toHaveBeenCalled();
+//   expect(print.error.mock.calls).toEqual([['Async Error']]);
+// });
