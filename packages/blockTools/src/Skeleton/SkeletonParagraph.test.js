@@ -18,4 +18,4 @@ import examples from '../../demo/examples/SkeletonParagraph.yaml';
 import runRenderTests from '../runRenderTests';
 import SkeletonParagraph from './SkeletonParagraph';
 
-runRenderTests(examples, SkeletonParagraph);
+runRenderTests({ examples, Block: SkeletonParagraph, meta: {} });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+// FIX: should be removed: block components should not be recreated.
 import { useLayoutEffect, useRef } from 'react';
 
 const useRunAfterUpdate = () => {

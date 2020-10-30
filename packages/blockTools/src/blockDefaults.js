@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import React from 'react';
 import makeCssClass from './makeCssClass';
 
 const noMethod = () => undefined;
@@ -27,34 +26,17 @@ const defaultMethods = (methods) => ({
   ...methods,
 });
 
-const blockDefaults = (Comp) => {
-  return ({
-    actions,
-    blockId,
-    Components,
-    content,
-    list,
-    menus,
-    methods,
-    properties,
-    user,
-    validate,
-    ...props
-  }) => (
-    <Comp
-      {...props}
-      actions={actions || {}}
-      blockId={blockId || `blockId_${Math.floor(Math.random() * 16777215).toString(16)}`}
-      methods={defaultMethods(methods || {})}
-      Components={Components || {}}
-      content={content || {}}
-      list={list || []}
-      menus={menus || []}
-      properties={properties || {}}
-      user={user || {}}
-      validate={validate || []}
-    />
-  );
-};
+const blockDefaults = (props = {}) => ({
+  ...props,
+  actions: props.actions || {},
+  blockId: props.id || props.blockId || 'undefined_id',
+  content: props.content || {},
+  list: props.list || [],
+  menus: props.menus || [],
+  methods: defaultMethods(props.methods || {}),
+  properties: props.properties || {},
+  user: props.user || {},
+  validate: props.validate || [],
+});
 
 export default blockDefaults;

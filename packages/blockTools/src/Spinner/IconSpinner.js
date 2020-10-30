@@ -19,7 +19,9 @@ import { type } from '@lowdefy/helpers';
 import blockDefaults from '../blockDefaults';
 import './IconSpinner.css';
 
-const IconSpinner = ({ properties, methods }) => {
+const IconSpinner = (props) => {
+  const { properties, methods } = blockDefaults(props);
+
   let size = properties.size || 20;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -61,4 +63,4 @@ const IconSpinner = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(IconSpinner);
+export default IconSpinner;

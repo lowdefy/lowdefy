@@ -18,7 +18,7 @@ import { unmountComponentAtNode } from 'react-dom';
 import mockBlockProps from './mockBlockProps';
 import blockDefaults from './blockDefaults';
 
-const mockBlock = (Block, meta) => {
+const mockBlock = ({ meta, logger }) => {
   // mock Match.random to generate consistent ids
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.123456789;
@@ -27,21 +27,23 @@ const mockBlock = (Block, meta) => {
   let container = {};
   const callAction = jest.fn();
   const makeCssClass = jest.fn();
-  const registerMethod = jest.fn();
-  const pushItem = jest.fn();
-  const unshiftItem = jest.fn();
-  const removeItem = jest.fn();
   const moveItemDown = jest.fn();
   const moveItemUp = jest.fn();
+  const pushItem = jest.fn();
+  const registerMethod = jest.fn();
+  const removeItem = jest.fn();
+  const setValue = jest.fn();
+  const unshiftItem = jest.fn();
   const methods = {
     callAction,
     makeCssClass,
-    registerMethod,
-    pushItem,
-    unshiftItem,
-    removeItem,
     moveItemDown,
     moveItemUp,
+    pushItem,
+    registerMethod,
+    removeItem,
+    setValue,
+    unshiftItem,
   };
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
   let nodeMock = {};
@@ -56,24 +58,24 @@ const mockBlock = (Block, meta) => {
     });
     container.div = document.createElement('div');
     document.body.appendChild(container.div);
+    callAction.mockReset();
     makeCssClass.mockReset();
     makeCssClass.mockImplementation(makeCssImp);
-    callAction.mockReset();
-    registerMethod.mockReset();
-    pushItem.mockReset();
-    unshiftItem.mockReset();
-    removeItem.mockReset();
     moveItemDown.mockReset();
     moveItemUp.mockReset();
+    pushItem.mockReset();
+    registerMethod.mockReset();
+    removeItem.mockReset();
+    setValue.mockReset();
+    unshiftItem.mockReset();
   };
   const after = () => {
     unmountComponentAtNode(container.div);
     container.div.remove();
     container.div = null;
   };
-  const Component = blockDefaults(Block);
-  const getProps = (config) => mockBlockProps(config, meta);
-  return { after, before, Component, container, methods, getProps, renderOptions, nodeMock };
+  const getProps = (block) => blockDefaults(mockBlockProps({ block, meta, logger }));
+  return { after, before, container, methods, getProps, renderOptions, nodeMock };
 };
 
 export default mockBlock;

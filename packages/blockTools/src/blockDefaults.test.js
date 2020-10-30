@@ -14,47 +14,101 @@
   limitations under the License.
 */
 
-import React from 'react';
 import blockDefaults from './blockDefaults';
 
-const mockMath = Object.create(global.Math);
-mockMath.random = () => 0.123456789;
-global.Math = mockMath;
-
 test('default', () => {
-  const Comp = () => <div>Comp</div>;
-  const res = blockDefaults(Comp);
-  const props = {};
-  expect(res(props)).toMatchInlineSnapshot(`
-    <Comp
-      Components={Object {}}
-      actions={Object {}}
-      blockId="blockId_1f9add"
-      content={Object {}}
-      list={Array []}
-      menus={Array []}
-      methods={
-        Object {
-          "callAction": [Function],
-          "makeCssClass": [Function],
-          "registerAction": [Function],
-          "registerMethod": [Function],
-        }
-      }
-      properties={Object {}}
-      user={Object {}}
-      validate={Array []}
-    />
+  expect(blockDefaults()).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "undefined_id",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
+  `);
+});
+
+test('default with id', () => {
+  const props = { id: 'id' };
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "id",
+      "content": Object {},
+      "id": "id",
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
+  `);
+});
+
+test('default with blockId', () => {
+  const props = { blockId: 'blockId' };
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "blockId",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
+  `);
+});
+
+test('default with blockId and id', () => {
+  const props = { id: 'id', blockId: 'blockId' };
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "id",
+      "content": Object {},
+      "id": "id",
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
   `);
 });
 
 test('with values', () => {
-  const Comp = () => <div>Comp</div>;
-  const res = blockDefaults(Comp);
   const props = {
     actions: { actions: 1 },
     Components: { Components: 1 },
-    blockId: '1',
     content: { content: 1 },
     list: { list: 1 },
     menus: ['menus'],
@@ -62,93 +116,68 @@ test('with values', () => {
     user: { user: 1 },
     validate: ['validate'],
   };
-  expect(res(props)).toMatchInlineSnapshot(`
-    <Comp
-      Components={
-        Object {
-          "Components": 1,
-        }
-      }
-      actions={
-        Object {
-          "actions": 1,
-        }
-      }
-      blockId="1"
-      content={
-        Object {
-          "content": 1,
-        }
-      }
-      list={
-        Object {
-          "list": 1,
-        }
-      }
-      menus={
-        Array [
-          "menus",
-        ]
-      }
-      methods={
-        Object {
-          "callAction": [Function],
-          "makeCssClass": [Function],
-          "registerAction": [Function],
-          "registerMethod": [Function],
-        }
-      }
-      properties={
-        Object {
-          "properties": 1,
-        }
-      }
-      user={
-        Object {
-          "user": 1,
-        }
-      }
-      validate={
-        Array [
-          "validate",
-        ]
-      }
-    />
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "Components": Object {
+        "Components": 1,
+      },
+      "actions": Object {
+        "actions": 1,
+      },
+      "blockId": "undefined_id",
+      "content": Object {
+        "content": 1,
+      },
+      "list": Object {
+        "list": 1,
+      },
+      "menus": Array [
+        "menus",
+      ],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {
+        "properties": 1,
+      },
+      "user": Object {
+        "user": 1,
+      },
+      "validate": Array [
+        "validate",
+      ],
+    }
   `);
 });
 
 test('with no methods', () => {
-  const Comp = () => <div>Comp</div>;
-  const res = blockDefaults(Comp);
   const props = {
     methods: {},
   };
-  expect(res(props)).toMatchInlineSnapshot(`
-    <Comp
-      Components={Object {}}
-      actions={Object {}}
-      blockId="blockId_1f9add"
-      content={Object {}}
-      list={Array []}
-      menus={Array []}
-      methods={
-        Object {
-          "callAction": [Function],
-          "makeCssClass": [Function],
-          "registerAction": [Function],
-          "registerMethod": [Function],
-        }
-      }
-      properties={Object {}}
-      user={Object {}}
-      validate={Array []}
-    />
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "undefined_id",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
   `);
 });
 
 test('with methods', () => {
-  const Comp = () => <div>Comp</div>;
-  const res = blockDefaults(Comp);
   const props = {
     methods: {
       callAction: 'callAction',
@@ -156,25 +185,47 @@ test('with methods', () => {
       registerMethod: 'registerMethod',
     },
   };
-  expect(res(props)).toMatchInlineSnapshot(`
-    <Comp
-      Components={Object {}}
-      actions={Object {}}
-      blockId="blockId_1f9add"
-      content={Object {}}
-      list={Array []}
-      menus={Array []}
-      methods={
-        Object {
-          "callAction": "callAction",
-          "makeCssClass": [Function],
-          "registerAction": "registerAction",
-          "registerMethod": "registerMethod",
-        }
-      }
-      properties={Object {}}
-      user={Object {}}
-      validate={Array []}
-    />
+  expect(blockDefaults(props)).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "undefined_id",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": "callAction",
+        "makeCssClass": [Function],
+        "registerAction": "registerAction",
+        "registerMethod": "registerMethod",
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
   `);
+});
+
+test('call default methods', () => {
+  const res = blockDefaults();
+  expect(res).toMatchInlineSnapshot(`
+    Object {
+      "actions": Object {},
+      "blockId": "undefined_id",
+      "content": Object {},
+      "list": Array [],
+      "menus": Array [],
+      "methods": Object {
+        "callAction": [Function],
+        "makeCssClass": [Function],
+        "registerAction": [Function],
+        "registerMethod": [Function],
+      },
+      "properties": Object {},
+      "user": Object {},
+      "validate": Array [],
+    }
+  `);
+  expect(res.methods.callAction()).toEqual(undefined);
+  expect(res.methods.registerAction()).toEqual(undefined);
+  expect(res.methods.registerMethod()).toEqual(undefined);
 });
