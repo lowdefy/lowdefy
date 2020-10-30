@@ -36,7 +36,7 @@
     "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "test": "jest --coverage --passWithNoTests",
+    "test": "FORCE_COLOR=3 jest --coverage",
     "webpack": "webpack --config webpack.config.js",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch -d",
