@@ -17,6 +17,7 @@
 import React from 'react';
 import { Row } from 'antd';
 import gutterSetup from './gutterSetup.js';
+import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const Area = ({ area, areaStyle, children, highlightBorders, id, makeCssClass }) => (
   <Row
@@ -36,5 +37,7 @@ const Area = ({ area, areaStyle, children, highlightBorders, id, makeCssClass })
     {children}
   </Row>
 );
+
+Area.defaultProps = blockDefaultProps;
 
 export default Area;
