@@ -16,17 +16,15 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import {
-  IconSpinner,
-  Skeleton,
-  SkeletonAvatar,
-  SkeletonButton,
-  SkeletonInput,
-  SkeletonParagraph,
-  Spinner,
-  makeCssClass,
-  ErrorBoundary,
-} from '../src';
+import IconSpinner from '../src/Spinner/IconSpinner';
+import Spinner from '../src/Spinner/Spinner';
+import Skeleton from '../src/Skeleton/Skeleton';
+import SkeletonAvatar from '../src/Skeleton/SkeletonAvatar';
+import SkeletonButton from '../src/Skeleton/SkeletonButton';
+import SkeletonInput from '../src/Skeleton/SkeletonInput';
+import SkeletonParagraph from '../src/Skeleton/SkeletonParagraph';
+import makeCssClass from '../src/makeCssClass';
+import ErrorBoundary from '../src/ErrorBoundary';
 import IconSpinnerEx from './examples/IconSpinner.yaml';
 import SkeletonEx from './examples/Skeleton.yaml';
 import SkeletonAvatarEx from './examples/SkeletonAvatar.yaml';
