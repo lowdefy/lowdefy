@@ -57,7 +57,7 @@ async function dev(options) {
   app.set('port', options.port);
   server.applyMiddleware({ app, path: '/api/graphql' });
   const reloadReturned = await reload(app, { route: '/api/dev/reload.js' });
-  app.use(express.static('dist/shell'));
+  app.use(express.static(path.join(__dirname, 'shell')));
   app.use('/api/dev/version', (req, res) => {
     res.json(context.version);
   });
