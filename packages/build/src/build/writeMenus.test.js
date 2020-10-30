@@ -17,21 +17,15 @@
 import writeMenus from './writeMenus';
 import testContext from '../test/testContext';
 
-const mockLogInfo = jest.fn();
 const mockSet = jest.fn();
-
-const logger = {
-  info: mockLogInfo,
-};
 
 const artifactSetter = {
   set: mockSet,
 };
 
-const context = testContext({ logger, artifactSetter });
+const context = testContext({ artifactSetter });
 
 beforeEach(() => {
-  mockLogInfo.mockReset();
   mockSet.mockReset();
 });
 
@@ -60,7 +54,6 @@ test('writeMenus', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated menus']]);
 });
 
 test('writeMenus empty menus', async () => {
@@ -76,7 +69,6 @@ test('writeMenus empty menus', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated menus']]);
 });
 
 test('writeMenus menus undefined', async () => {

@@ -24,7 +24,6 @@ async function writePage({ page, context }) {
     filePath: `pages/${page.pageId}/${page.pageId}.json`,
     content: JSON.stringify(page, null, 2),
   });
-  await context.logger.info(`Updated page "${page.pageId}".`);
 }
 
 async function writePages({ components, context }) {

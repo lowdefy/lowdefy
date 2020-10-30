@@ -17,21 +17,15 @@
 import writeGlobal from './writeGlobal';
 import testContext from '../test/testContext';
 
-const mockLogInfo = jest.fn();
 const mockSet = jest.fn();
-
-const logger = {
-  info: mockLogInfo,
-};
 
 const artifactSetter = {
   set: mockSet,
 };
 
-const context = testContext({ logger, artifactSetter });
+const context = testContext({ artifactSetter });
 
 beforeEach(() => {
-  mockLogInfo.mockReset();
   mockSet.mockReset();
 });
 
@@ -52,7 +46,6 @@ test('writeGlobal', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated global']]);
 });
 
 test('writeGlobal empty global', async () => {
@@ -68,7 +61,6 @@ test('writeGlobal empty global', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated global']]);
 });
 
 test('writeGlobal global undefined', async () => {
@@ -82,7 +74,6 @@ test('writeGlobal global undefined', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated global']]);
 });
 
 test('writeGlobal global not an object', async () => {

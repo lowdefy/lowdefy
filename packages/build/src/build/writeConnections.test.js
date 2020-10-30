@@ -17,21 +17,15 @@
 import writeConnections from './writeConnections';
 import testContext from '../test/testContext';
 
-const mockLogInfo = jest.fn();
 const mockSet = jest.fn();
-
-const logger = {
-  info: mockLogInfo,
-};
 
 const artifactSetter = {
   set: mockSet,
 };
 
-const context = testContext({ logger, artifactSetter });
+const context = testContext({ artifactSetter });
 
 beforeEach(() => {
-  mockLogInfo.mockReset();
   mockSet.mockReset();
 });
 
@@ -62,7 +56,6 @@ test('writeConnections write connection', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated connection connection1']]);
 });
 
 test('writeConnections multiple connection', async () => {
@@ -99,10 +92,6 @@ test('writeConnections multiple connection', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([
-    ['Updated connection connection1'],
-    ['Updated connection connection2'],
-  ]);
 });
 
 test('writeConnections no connections', async () => {
@@ -111,14 +100,12 @@ test('writeConnections no connections', async () => {
   };
   await writeConnections({ components, context });
   expect(mockSet.mock.calls).toEqual([]);
-  expect(mockLogInfo.mock.calls).toEqual([]);
 });
 
 test('writeConnections connections undefined', async () => {
   const components = {};
   await writeConnections({ components, context });
   expect(mockSet.mock.calls).toEqual([]);
-  expect(mockLogInfo.mock.calls).toEqual([]);
 });
 
 test('writeConnections connections not an array', async () => {

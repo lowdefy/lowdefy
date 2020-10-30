@@ -26,7 +26,6 @@ async function writeConnections({ components, context }) {
       filePath: `connections/${connection.connectionId}.json`,
       content: JSON.stringify(connection, null, 2),
     });
-    await context.logger.info(`Updated connection "${connection.connectionId}".`);
   });
   return Promise.all(writePromises);
 }

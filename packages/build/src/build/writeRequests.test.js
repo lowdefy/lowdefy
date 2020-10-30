@@ -17,21 +17,15 @@
 import writeRequests from './writeRequests';
 import testContext from '../test/testContext';
 
-const mockLogInfo = jest.fn();
 const mockSet = jest.fn();
-
-const logger = {
-  info: mockLogInfo,
-};
 
 const artifactSetter = {
   set: mockSet,
 };
 
-const context = testContext({ logger, artifactSetter });
+const context = testContext({ artifactSetter });
 
 beforeEach(() => {
-  mockLogInfo.mockReset();
   mockSet.mockReset();
 });
 
@@ -69,7 +63,6 @@ test('writeRequests write request', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated request request1 on page page1']]);
 });
 
 test('writeRequests write nested request', async () => {
@@ -116,7 +109,6 @@ test('writeRequests write nested request', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated request request1 on page page1']]);
 });
 
 test('writeRequests add mutation', async () => {
@@ -153,7 +145,6 @@ test('writeRequests add mutation', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated mutation mutation1 on page page1']]);
 });
 
 test('writeRequests add nested mutation', async () => {
@@ -199,7 +190,6 @@ test('writeRequests add nested mutation', async () => {
       },
     ],
   ]);
-  expect(mockLogInfo.mock.calls).toEqual([['Updated mutation mutation1 on page page1']]);
 });
 
 test('writeRequests requests is not an array', async () => {
@@ -238,14 +228,12 @@ test('writeRequests empty pages array', async () => {
   };
   await writeRequests({ components, context });
   expect(mockSet.mock.calls).toEqual([]);
-  expect(mockLogInfo.mock.calls).toEqual([]);
 });
 
 test('writeRequests no pages array', async () => {
   const components = {};
   await writeRequests({ components, context });
   expect(mockSet.mock.calls).toEqual([]);
-  expect(mockLogInfo.mock.calls).toEqual([]);
 });
 
 test('writeRequests pages not an array', async () => {

@@ -24,7 +24,6 @@ async function writeMenus({ components, context }) {
     filePath: 'menus.json',
     content: JSON.stringify(components.menus, null, 2),
   });
-  await context.logger.info('Updated menus.');
 }
 
 export default writeMenus;
