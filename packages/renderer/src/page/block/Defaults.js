@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
-import { blockDefaults } from '@lowdefy/block-tools';
+import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const Defaults = ({ Component, render }) => render(blockDefaults(Component));
+const Defaults = ({ Component, render }) => {
+  Component.defaultProps = blockDefaultProps;
+  return render(Component);
+};
 
 export default Defaults;
