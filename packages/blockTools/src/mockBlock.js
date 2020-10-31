@@ -49,6 +49,19 @@ const mockBlock = ({ meta, logger }) => {
     removeItem.mockReset();
     setValue.mockReset();
     unshiftItem.mockReset();
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
   };
   const getProps = (block) => {
     const props = stubBlockProps({ block, meta, logger });
