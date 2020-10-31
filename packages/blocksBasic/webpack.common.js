@@ -30,6 +30,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
+  resolve: { fallback: { buffer: require.resolve('buffer/') } },
   module: {
     rules: [
       // TODO: FIXME: do NOT webpack 5 support with this
