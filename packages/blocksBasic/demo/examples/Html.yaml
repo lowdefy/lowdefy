@@ -1,0 +1,23 @@
+- id: default
+  type: Html
+- id: properties.html
+  type: Html
+  properties:
+    html: |
+      <div style="background: green; padding: 10px;">Content green background</div>
+- id: properties.style
+  type: Html
+  properties:
+    style: 
+      background: yellow
+      padding: 10
+    html: |
+      <div>properties.style yellow background</div>
+- id: properties.html-styled
+  type: Html
+  properties:
+    style: 
+      background: yellow
+      padding: 10
+    html: |
+      <div style="background: green; padding: 10px;">Content green background and properties.style yellow background</div>

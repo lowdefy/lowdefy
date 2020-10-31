@@ -1,0 +1,20 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html": {
+          "type": "string",
+          "description": "Content to be rendered as Html."
+        },
+        "style": {
+          "type": "object",
+          "description": "Style to apply to Html div."
+        }
+      }
+    }
+  }
+}
