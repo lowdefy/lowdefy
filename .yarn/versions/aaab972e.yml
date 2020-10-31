@@ -1,5 +1,6 @@
 releases:
   "@lowdefy/block-tools": patch
+  "@lowdefy/blocks-basic": patch
   "@lowdefy/build": patch
   "@lowdefy/cli": patch
   "@lowdefy/color": patch
