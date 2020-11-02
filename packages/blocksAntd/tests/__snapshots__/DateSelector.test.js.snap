@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="default_popup"
+          />
+          <div
+            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onMouseUp={[Function]}
+          >
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                id="default_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Select Date"
+                readOnly={true}
+                size={12}
+                title=""
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="DateSelector title"
+    >
+      DateSelector title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.title_popup"
+          />
+          <div
+            className="ant-picker {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onMouseUp={[Function]}
+          >
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                id="properties.title_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="Select Date"
+                readOnly={true}
+                size={12}
+                title=""
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;

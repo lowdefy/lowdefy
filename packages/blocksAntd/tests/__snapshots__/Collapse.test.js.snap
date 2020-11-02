@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-collapse ant-collapse-icon-position-left"
+  role={null}
+>
+  <div
+    className="ant-collapse-item ant-collapse-item-active"
+  >
+    <div
+      aria-expanded="true"
+      className="ant-collapse-header"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      <span
+        aria-label="right"
+        className="anticon anticon-right ant-collapse-arrow"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          className=""
+          data-icon="right"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          style={
+            Object {
+              "msTransform": "rotate(90deg)",
+              "transform": "rotate(90deg)",
+            }
+          }
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+          />
+        </svg>
+      </span>
+      content
+    </div>
+    <div
+      className="ant-collapse-content ant-collapse-content-active"
+      role={null}
+    >
+      <div
+        className="ant-collapse-content-box"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-collapse ant-collapse-icon-position-left"
+  role={null}
+>
+  <div
+    className="ant-collapse-item ant-collapse-item-active"
+  >
+    <div
+      aria-expanded="true"
+      className="ant-collapse-header"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      <span
+        aria-label="right"
+        className="anticon anticon-right ant-collapse-arrow"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          className=""
+          data-icon="right"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          style={
+            Object {
+              "msTransform": "rotate(90deg)",
+              "transform": "rotate(90deg)",
+            }
+          }
+          viewBox="64 64 896 896"
+          width="1em"
+        >
+          <path
+            d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"
+          />
+        </svg>
+      </span>
+      content
+    </div>
+    <div
+      className="ant-collapse-content ant-collapse-content-active"
+      role={null}
+    >
+      <div
+        className="ant-collapse-content-box"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `false`;
+
+exports[`Test Schema properties.title 2`] = `
+Array [
+  Object {
+    "dataPath": "/properties",
+    "keyword": "additionalProperties",
+    "message": "should NOT have additional properties",
+    "params": Object {
+      "additionalProperty": "title",
+    },
+    "schemaPath": "#/properties/properties/additionalProperties",
+  },
+]
+`;

@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="default_input"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-object 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-object_input"
+      title="properties.options-object"
+    >
+      properties.options-object
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.options-object_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-object_0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              one
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-object_1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              two
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-string 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-string_input"
+      title="properties.options-string"
+    >
+      properties.options-string
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.options-string_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-string_one"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              one
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-string_two"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              two
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="Radio selector"
+    >
+      Radio selector
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.title_input"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.options-object 1`] = `true`;
+
+exports[`Test Schema properties.options-object 2`] = `null`;
+
+exports[`Test Schema properties.options-string 1`] = `true`;
+
+exports[`Test Schema properties.options-string 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;

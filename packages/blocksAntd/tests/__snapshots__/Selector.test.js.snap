@@ -1,0 +1,525 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="default_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="default_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="default_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="default_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="default_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={true}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": 0,
+                    }
+                  }
+                  type="search"
+                  unselectable="on"
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-object 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-object_input"
+      title="properties.options-object"
+    >
+      properties.options-object
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-object_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-object_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-object_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-object_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-object_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={true}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": 0,
+                    }
+                  }
+                  type="search"
+                  unselectable="on"
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-string 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-string_input"
+      title="properties.options-string"
+    >
+      properties.options-string
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.options-string_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.options-string_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.options-string_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.options-string_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.options-string_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={true}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": 0,
+                    }
+                  }
+                  type="search"
+                  unselectable="on"
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="Select value"
+    >
+      Select value
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.title_popup"
+          />
+          <div
+            className="ant-select {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-select-single ant-select-allow-clear ant-select-show-arrow"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-select-selector"
+              onClick={[Function]}
+              onMouseDown={[Function]}
+            >
+              <span
+                className="ant-select-selection-search"
+              >
+                <input
+                  aria-activedescendant="properties.title_input_list_0"
+                  aria-autocomplete="list"
+                  aria-controls="properties.title_input_list"
+                  aria-haspopup="listbox"
+                  aria-owns="properties.title_input_list"
+                  autoComplete="off"
+                  className="ant-select-selection-search-input"
+                  id="properties.title_input"
+                  onChange={[Function]}
+                  onCompositionEnd={[Function]}
+                  onCompositionStart={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  onPaste={[Function]}
+                  readOnly={true}
+                  role="combobox"
+                  style={
+                    Object {
+                      "opacity": 0,
+                    }
+                  }
+                  type="search"
+                  unselectable="on"
+                  value=""
+                />
+              </span>
+              <span
+                className="ant-select-selection-placeholder"
+              >
+                Select item
+              </span>
+            </div>
+            <span
+              aria-hidden={true}
+              className="ant-select-arrow"
+              onMouseDown={[Function]}
+              style={
+                Object {
+                  "WebkitUserSelect": "none",
+                  "userSelect": "none",
+                }
+              }
+              unselectable="on"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-select-suffix"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.options-object 1`] = `true`;
+
+exports[`Test Schema properties.options-object 2`] = `null`;
+
+exports[`Test Schema properties.options-string 1`] = `true`;
+
+exports[`Test Schema properties.options-string 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
