@@ -27,6 +27,7 @@ const initAjv = (options) => {
   return ajv;
 };
 const ajvInstance = initAjv();
+const validate = {};
 
 const stubBlockProps = ({ block, meta, logger }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, null));
@@ -37,11 +38,16 @@ const stubBlockProps = ({ block, meta, logger }) => {
   if (logger) log = logger;
 
   // evaluate block schema
-  blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
-  const validate = ajvInstance.compile(blockSchema);
-  block.schemaErrors = !validate(block);
-  if (block.schemaErrors) block.schemaErrors = validate.errors;
-
+  if (!validate[block.type]) {
+    blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
+    try {
+      validate[block.type] = ajvInstance.compile(blockSchema);
+    } catch (error) {
+      throw new Error(`Schema error in ${block.type} - ${error.message}`);
+    }
+  }
+  block.schemaErrors = !validate[block.type](block);
+  if (block.schemaErrors) block.schemaErrors = validate[block.type].errors;
   // block defaults
   block.blockId = block.id;
   if (meta.category === 'list' || meta.category === 'container' || meta.category === 'context') {
