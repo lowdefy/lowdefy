@@ -1,0 +1,41 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable the anchor if true."
+        },
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design icon"
+        },
+        "strong": {
+          "type": "boolean",
+          "description": "Makes the text bold when true."
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to applied to anchor."
+        },
+        "title": {
+          "type": "string",
+          "description": "Text to display in the anchor."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClick": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

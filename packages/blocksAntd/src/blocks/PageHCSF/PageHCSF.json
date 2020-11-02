@@ -1,0 +1,64 @@
+{
+  "category": "context",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "header": {
+          "type": "object",
+          "description": "Header properties.",
+          "additionalProperties": false,
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark"],
+              "description": "Header theme color."
+            },
+            "color": {
+              "type": "string",
+              "description": "Header color."
+            },
+            "style": {
+              "type": "object",
+              "description": "Header css style object."
+            }
+          }
+        },
+        "main": {
+          "type": "object",
+          "description": "Main layout properties."
+        },
+        "constent": {
+          "type": "object",
+          "description": "Content properties."
+        },
+        "sider": {
+          "type": "object",
+          "description": "Sider properties."
+        },
+        "footer": {
+          "type": "object",
+          "description": "Footer properties."
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to apply to layout."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onCollapse": {
+          "type": "array"
+        },
+        "onBreakpoint": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

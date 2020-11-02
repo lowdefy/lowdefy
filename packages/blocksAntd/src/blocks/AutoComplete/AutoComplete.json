@@ -1,0 +1,140 @@
+{
+  "valueType": "string",
+  "category": "input",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowClear": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow the user to clear the selected value, sets the value to null."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Autofocus to the block on page load."
+        },
+        "backfill": {
+          "type": "boolean",
+          "default": false,
+          "description": "Backfill selected item the input when using keyboard"
+        },
+        "defaultActiveFirstOption": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether active first option by default."
+        },
+        "defaultOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Initial open state of dropdown."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the block if true."
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input."
+        },
+        "optionsStyle": {
+          "type": "object",
+          "description": "Css style to applied to option elements."
+        },
+        "label": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Label properties.",
+          "properties": {
+            "align": {
+              "type": "string",
+              "enum": ["left", "right"],
+              "defaultValue": "right",
+              "description": "Align label left or right when inline."
+            },
+            "colon": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Append label with colon."
+            },
+            "extra": {
+              "type": "string",
+              "description": "Extra text to display beneath the content."
+            },
+            "title": {
+              "type": "string",
+              "description": "Label title."
+            },
+            "hasFeedback": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "extraStyle": {
+              "type": "object",
+              "description": "Css style to applied to label extra."
+            },
+            "feedbackStyle": {
+              "type": "object",
+              "description": "Css style to applied to label feedback."
+            }
+          }
+        },
+        "options": {
+          "type": "array",
+          "default": [],
+          "description": "Auto complete options can either be an array of string values, on an array of label, value pairs.",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "required": ["value"],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Title shown to user."
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Value selected."
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "Type or select item",
+          "description": "Placeholder text inside the block before user selects input."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default", "large"],
+          "default": "default",
+          "description": "Size of the block."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onChange": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

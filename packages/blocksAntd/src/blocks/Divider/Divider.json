@@ -1,0 +1,36 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashed": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether line is dashed."
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["left", "right", "center"],
+          "description": "Position of title inside divider."
+        },
+        "title": {
+          "type": "string",
+          "description": "Divider title."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["horizontal", "vertical"],
+          "description": "Direction type of divider"
+        },
+        "plain": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show text as plain style."
+        }
+      }
+    }
+  }
+}

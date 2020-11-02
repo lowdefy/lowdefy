@@ -1,0 +1,103 @@
+{
+  "valueType": "boolean",
+  "category": "input",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "autoFocus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Autofocus to the block on page load."
+        },
+        "checkedIcon": {
+          "type": ["string", "object"],
+          "default": "CheckOutlined",
+          "description": "Ant Icon to shown when switch is checked (true)."
+        },
+        "color": {
+          "type": "string",
+          "description": "Switch checked color."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the block if true."
+        },
+        "disableIcons": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disables icons for checked and unchecked state."
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input."
+        },
+        "label": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Label properties.",
+          "properties": {
+            "align": {
+              "type": "string",
+              "enum": ["left", "right"],
+              "defaultValue": "right",
+              "description": "Align label left or right when inline."
+            },
+            "colon": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Append label with colon."
+            },
+            "extra": {
+              "type": "string",
+              "description": "Extra text to display beneath the content."
+            },
+            "title": {
+              "type": "string",
+              "description": "Label title."
+            },
+            "hasFeedback": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "extraStyle": {
+              "type": "object",
+              "description": "Css style to applied to label extra."
+            },
+            "feedbackStyle": {
+              "type": "object",
+              "description": "Css style to applied to label feedback."
+            }
+          }
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default"],
+          "description": "Size of the block."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        },
+        "uncheckedIcon": {
+          "type": ["string", "object"],
+          "default": "CloseOutlined",
+          "description": "Ant Icon to shown when switch is unchecked (false)."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onChange": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

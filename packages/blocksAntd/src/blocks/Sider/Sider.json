@@ -1,0 +1,70 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "breakpoint": {
+          "type": "string",
+          "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
+          "description": "Breakpoints of the responsive layout"
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Set the current collapsed state"
+        },
+        "collapsedWidth": {
+          "type": "integer",
+          "description": "Width of the collapsed sidebar, by setting to 0 a special trigger will appear"
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Whether can be collapsed"
+        },
+        "color": {
+          "type": "string",
+          "description": "Sider color"
+        },
+        "defaultCollapsed": {
+          "type": "boolean",
+          "description": "Set the initial collapsed state"
+        },
+        "reverseArrow": {
+          "type": "boolean",
+          "description": "Direction of arrow, for a sider that expands from the right"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark"],
+          "description": "Color theme of the sidebar"
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to apply to sider."
+        },
+        "width": {
+          "type": ["string", "number"],
+          "description": "width of the sidebar"
+        },
+        "zeroWidthTriggerStyle": {
+          "type": "object",
+          "description": "Css style to applied to zero width trigger."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onCollapse": {
+          "type": "array"
+        },
+        "onBreakpoint": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

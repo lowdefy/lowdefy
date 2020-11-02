@@ -1,0 +1,86 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "activeKey": {
+          "type": "string",
+          "description": "Current TabPane's key."
+        },
+        "animated": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to change tabs with animation. Only works while tabPosition is top or bottom."
+        },
+        "defaultActiveKey": {
+          "type": "string",
+          "description": "Initial active TabPane's key, if activeKey is not set."
+        },
+        "size": {
+          "type": "string",
+          "default": "default",
+          "enum": ["default", "small", "large"],
+          "description": "Size of the tabs."
+        },
+        "tabPosition": {
+          "type": "string",
+          "default": "top",
+          "enum": ["top", "right", "bottom", "left"],
+          "description": "Position of the tabs."
+        },
+        "tabType": {
+          "type": "string",
+          "default": "line",
+          "enum": ["line", "card", "editable-card"],
+          "description": "Type of tabs."
+        },
+        "tabs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Title of the tab."
+              },
+              "key": {
+                "type": "string",
+                "description": "Key of the tab."
+              },
+              "disabled": {
+                "type": "boolean",
+                "description": "Disable the tab if true."
+              },
+              "icon": {
+                "type": ["string", "object"],
+                "description": "Icon to show in tab title."
+              }
+            }
+          }
+        },
+        "tabBarStyle": {
+          "type": "object",
+          "description": "Css style to apply to the tab bar."
+        }
+      }
+    }
+  },
+  "actions": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array"
+      },
+      "onTabScroll": {
+        "type": "array"
+      },
+      "onTabClick": {
+        "type": "array"
+      }
+    }
+  }
+}
