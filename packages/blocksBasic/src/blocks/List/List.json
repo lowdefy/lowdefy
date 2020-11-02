@@ -1,0 +1,27 @@
+{
+  "category": "list",
+  "valueType": "array",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "type": "object",
+          "description": "Style to apply to Box div."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClick":  {
+          "type": "array"
+        }
+      }
+    }
+  }
+}
+

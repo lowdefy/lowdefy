@@ -1,0 +1,29 @@
+- id: default
+  type: Context
+- id: properties.content
+  type: Context
+  properties:
+    content: Foo
+- id: properties.style
+  type: Context
+  properties:
+    style: 
+      border: '1px solid blue'
+- id: areas.content
+  type: Context
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: actions.onClick
+  type: Context
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+  actions:
+    onClick: 
+      - id: testAction
+        type: Text
