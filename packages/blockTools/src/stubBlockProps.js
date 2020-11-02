@@ -36,7 +36,6 @@ const stubBlockProps = ({ block, meta, logger }) => {
   };
   let log = alert;
   if (logger) log = logger;
-
   // evaluate block schema
   if (!validate[block.type]) {
     blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
