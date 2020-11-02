@@ -872,7 +872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-syntax-top-level-await@npm:^7.12.1":
+"@babel/plugin-syntax-top-level-await@npm:^7.12.1, @babel/plugin-syntax-top-level-await@npm:^7.8.3":
   version: 7.12.1
   resolution: "@babel/plugin-syntax-top-level-await@npm:7.12.1"
   dependencies:
@@ -1810,7 +1810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^26.5.2, @jest/core@npm:^26.5.3, @jest/core@npm:^26.6.1":
+"@jest/core@npm:^26.6.1":
   version: 26.6.1
   resolution: "@jest/core@npm:26.6.1"
   dependencies:
@@ -1955,7 +1955,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/transform@npm:^26.5.2, @jest/transform@npm:^26.6.1":
+"@jest/transform@npm:^26.6.1":
   version: 26.6.1
   resolution: "@jest/transform@npm:26.6.1"
   dependencies:
@@ -1978,7 +1978,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^26.5.2, @jest/types@npm:^26.6.1":
+"@jest/transform@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "@jest/transform@npm:26.6.2"
+  dependencies:
+    "@babel/core": ^7.1.0
+    "@jest/types": ^26.6.2
+    babel-plugin-istanbul: ^6.0.0
+    chalk: ^4.0.0
+    convert-source-map: ^1.4.0
+    fast-json-stable-stringify: ^2.0.0
+    graceful-fs: ^4.2.4
+    jest-haste-map: ^26.6.2
+    jest-regex-util: ^26.0.0
+    jest-util: ^26.6.2
+    micromatch: ^4.0.2
+    pirates: ^4.0.1
+    slash: ^3.0.0
+    source-map: ^0.6.1
+    write-file-atomic: ^3.0.0
+  checksum: 28e97c9eb837af80095f8e94e34a81b4515912a25d13c70a83e3920757783751be6ccb7bca9acb4a384ab78cd54f0ebcf34c1be826173719fdf88d981d54e4b7
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^26.6.1":
   version: 26.6.1
   resolution: "@jest/types@npm:26.6.1"
   dependencies:
@@ -1988,6 +2011,19 @@ __metadata:
     "@types/yargs": ^15.0.0
     chalk: ^4.0.0
   checksum: dd75ac899d412503a22b5daa6402a76de54f143193d239b9f48a1b685b7278034620997d76f1c222455b938f1218bd9728e6ac94bb19d5ae7cfce28339e1e6c0
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "@jest/types@npm:26.6.2"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^3.0.0
+    "@types/node": "*"
+    "@types/yargs": ^15.0.0
+    chalk: ^4.0.0
+  checksum: 5c511d7807f414b298299ae4a053abf265f39984942e0eefdfb17a7986a36f1047e0fd9a6f785bdddbf7343a5737595dfabe148719a80e118dd77486502009cc
   languageName: node
   linkType: hard
 
@@ -2806,7 +2842,7 @@ __metadata:
     "@wojtekmaj/enzyme-adapter-react-17": 0.2.0
     ajv: 6.12.6
     ajv-errors: 1.0.1
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     create-emotion: 10.0.27
@@ -2841,7 +2877,7 @@ __metadata:
     "@babel/preset-react": 7.12.1
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@wojtekmaj/enzyme-adapter-react-17": 0.2.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     buffer: 5.7.0
     clean-webpack-plugin: 3.0.0
@@ -2850,7 +2886,7 @@ __metadata:
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
-    jest: 26.5.2
+    jest: 26.6.1
     js-yaml: 3.14.0
     react: 17.0.1
     react-dom: 17.0.1
@@ -2879,7 +2915,7 @@ __metadata:
     "@lowdefy/nunjucks": 1.0.0
     ajv: 6.12.6
     axios: 0.21.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
@@ -2903,9 +2939,9 @@ __metadata:
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
-    apollo-server-express: 2.18.2
+    apollo-server-express: 2.19.0
     axios: 0.21.0
-    babel-jest: 26.5.2
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     chalk: 4.1.0
     chokidar: 3.4.3
@@ -2918,7 +2954,7 @@ __metadata:
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
     inquirer: 7.3.3
-    jest: 26.5.3
+    jest: 26.6.1
     js-yaml: 3.14.0
     opener: 1.5.2
     react: 17.0.1
@@ -2939,7 +2975,7 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
     tinycolor2: 1.4.2
   languageName: unknown
@@ -2966,7 +3002,7 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/operators": 1.0.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     graphql: 15.4.0
     graphql-tag: 2.11.0
     jest: 26.6.1
@@ -2980,7 +3016,7 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
     moment: 2.29.1
   languageName: unknown
@@ -3009,9 +3045,9 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
-    apollo-server: 2.18.2
-    apollo-server-testing: 2.18.2
-    babel-jest: 26.6.1
+    apollo-server: 2.19.0
+    apollo-server-testing: 2.19.0
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
@@ -3030,9 +3066,9 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
-    jest-diff: 26.6.1
+    jest-diff: 26.6.2
     lodash.merge: 4.6.2
     query-string: 6.13.6
   languageName: unknown
@@ -3049,7 +3085,7 @@ __metadata:
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     antd: 4.4.2
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     babel-loader: 8.1.0
     babel-plugin-import: 1.13.1
     buffer: 5.7.0
@@ -3103,9 +3139,9 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
-    jest-diff: 26.6.1
+    jest-diff: 26.6.2
     rimraf: 3.0.2
   languageName: unknown
   linkType: soft
@@ -3118,7 +3154,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
     nunjucks: 3.2.2
     nunjucks-date-filter: 0.1.1
@@ -3134,7 +3170,7 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/nunjucks": 1.0.0
-    babel-jest: 26.6.1
+    babel-jest: 26.6.2
     jest: 26.6.1
     js-yaml: 3.14.0
     mingo: 3.1.0
@@ -3170,7 +3206,7 @@ __metadata:
     webpack: 5.3.2
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
   languageName: unknown
   linkType: soft
 
@@ -3182,7 +3218,7 @@ __metadata:
     "@babel/preset-react": 7.12.1
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/graphql": 0.0.0-alpha.1
-    apollo-server-express: 2.18.2
+    apollo-server-express: 2.19.0
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     css-loader: 5.0.0
@@ -3196,7 +3232,7 @@ __metadata:
     webpack: 5.3.2
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
   languageName: unknown
   linkType: soft
 
@@ -3643,6 +3679,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cors@npm:2.8.8":
+  version: 2.8.8
+  resolution: "@types/cors@npm:2.8.8"
+  dependencies:
+    "@types/express": "*"
+  checksum: 4a11dd4d1e76056b0c76e69e29347003338346cf3cf72a0aad94742fc99bf4bb540b0cc2b3f61ed4fdfd9cf979d7b40afe0816458d20a9c865e8c286b14373a4
+  languageName: node
+  linkType: hard
+
 "@types/emscripten@npm:^1.38.0":
   version: 1.39.4
   resolution: "@types/emscripten@npm:1.39.4"
@@ -3685,6 +3730,17 @@ __metadata:
     "@types/qs": "*"
     "@types/range-parser": "*"
   checksum: 20ddd0d2639ee65a4f016e29137b69a1b8e057cb0dfd568ac7c6abc32f295f3631b480b58d2da89c72a4574d971516b6adaf4b1b9c72399880234b937a1f3f23
+  languageName: node
+  linkType: hard
+
+"@types/express-serve-static-core@npm:4.17.13":
+  version: 4.17.13
+  resolution: "@types/express-serve-static-core@npm:4.17.13"
+  dependencies:
+    "@types/node": "*"
+    "@types/qs": "*"
+    "@types/range-parser": "*"
+  checksum: 6db6f2e0ebadcb3492b97fc76e66bc49c44385c8c1a6c7df75f7bce5fdade53061393cc3271b9183137d9877df03dd45dc42f4e0ec2d89f8ad5479341da302f0
   languageName: node
   linkType: hard
 
@@ -4953,6 +5009,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-cache-control@npm:^0.11.4":
+  version: 0.11.4
+  resolution: "apollo-cache-control@npm:0.11.4"
+  dependencies:
+    apollo-server-env: ^2.4.5
+    apollo-server-plugin-base: ^0.10.2
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 271900ca7084d0d0760b7ba01b2c1ba23d4c89ec6c04a8a4a8487d2090f3e7f1d12be9f3b1ba848101c7c46d2fc67f0e704989481974284e53de0b977f49afd4
+  languageName: node
+  linkType: hard
+
 "apollo-datasource@npm:^0.7.2":
   version: 0.7.2
   resolution: "apollo-datasource@npm:0.7.2"
@@ -5010,6 +5078,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-reporting-protobuf@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "apollo-reporting-protobuf@npm:0.6.1"
+  dependencies:
+    "@apollo/protobufjs": ^1.0.3
+  checksum: 67261d2b0eec5dd754bb54e864e30eba67291e29ef206e9b0a35939174e881439e4cacb9621381e40a8929e8b69d9b44fc38176d4134b9bf3073d02ecca2531d
+  languageName: node
+  linkType: hard
+
 "apollo-server-caching@npm:^0.5.2":
   version: 0.5.2
   resolution: "apollo-server-caching@npm:0.5.2"
@@ -5055,6 +5132,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-server-core@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "apollo-server-core@npm:2.19.0"
+  dependencies:
+    "@apollographql/apollo-tools": ^0.4.3
+    "@apollographql/graphql-playground-html": 1.6.26
+    "@types/graphql-upload": ^8.0.0
+    "@types/ws": ^7.0.0
+    apollo-cache-control: ^0.11.4
+    apollo-datasource: ^0.7.2
+    apollo-graphql: ^0.6.0
+    apollo-reporting-protobuf: ^0.6.1
+    apollo-server-caching: ^0.5.2
+    apollo-server-env: ^2.4.5
+    apollo-server-errors: ^2.4.2
+    apollo-server-plugin-base: ^0.10.2
+    apollo-server-types: ^0.6.1
+    apollo-tracing: ^0.12.0
+    async-retry: ^1.2.1
+    fast-json-stable-stringify: ^2.0.0
+    graphql-extensions: ^0.12.6
+    graphql-tag: ^2.9.2
+    graphql-tools: ^4.0.0
+    graphql-upload: ^8.0.2
+    loglevel: ^1.6.7
+    lru-cache: ^5.0.0
+    sha.js: ^2.4.11
+    subscriptions-transport-ws: ^0.9.11
+    uuid: ^8.0.0
+    ws: ^6.0.0
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: f7a2d4c111197c8be84231e409cd3d5a20d638af6814e6935d90fac671bf1d2311841ed50b9d5d661ce6c3fcd6a3c335c53e6c3f6963136bc9e59a3ed6f584e8
+  languageName: node
+  linkType: hard
+
 "apollo-server-env@npm:^2.4.5":
   version: 2.4.5
   resolution: "apollo-server-env@npm:2.4.5"
@@ -5074,7 +5187,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:2.18.2, apollo-server-express@npm:^2.18.2":
+"apollo-server-express@npm:2.19.0, apollo-server-express@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "apollo-server-express@npm:2.19.0"
+  dependencies:
+    "@apollographql/graphql-playground-html": 1.6.26
+    "@types/accepts": ^1.3.5
+    "@types/body-parser": 1.19.0
+    "@types/cors": 2.8.8
+    "@types/express": 4.17.7
+    "@types/express-serve-static-core": 4.17.13
+    accepts: ^1.3.5
+    apollo-server-core: ^2.19.0
+    apollo-server-types: ^0.6.1
+    body-parser: ^1.18.3
+    cors: ^2.8.4
+    express: ^4.17.1
+    graphql-subscriptions: ^1.0.0
+    graphql-tools: ^4.0.0
+    parseurl: ^1.3.2
+    subscriptions-transport-ws: ^0.9.16
+    type-is: ^1.6.16
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: d1633fe6d951b95945ffc9afcefd520611a399251e1ee81de707c4f8f9006fe627a41a550f9603fba618b0068ccb3a83f92758a5fc0ca46765effc4bdc98820c
+  languageName: node
+  linkType: hard
+
+"apollo-server-express@npm:^2.18.2":
   version: 2.18.2
   resolution: "apollo-server-express@npm:2.18.2"
   dependencies:
@@ -5112,14 +5252,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-testing@npm:2.18.2":
-  version: 2.18.2
-  resolution: "apollo-server-testing@npm:2.18.2"
+"apollo-server-plugin-base@npm:^0.10.2":
+  version: 0.10.2
+  resolution: "apollo-server-plugin-base@npm:0.10.2"
   dependencies:
-    apollo-server-core: ^2.18.2
+    apollo-server-types: ^0.6.1
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 8785148d75a0e0d2378ee514401c3dc83a6610679429231c01194cccc777bc50e8d01ea5b1600e999dfe767c9b56bb96a56e2c7d6ffea9da0178a63658a21d88
+  checksum: 0a07ae11b85d0e388e5ffa779e92b78fe0209a53e618c80e09befeb2ee24754a7a1cce3dfc960a6ec00538febc3d7abcfb5b3485b4f38f60621ef83215f3f5d3
+  languageName: node
+  linkType: hard
+
+"apollo-server-testing@npm:2.19.0":
+  version: 2.19.0
+  resolution: "apollo-server-testing@npm:2.19.0"
+  dependencies:
+    apollo-server-core: ^2.19.0
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: ca420da9367b162c70b7c3ccf3c3763d575c5ecc2d2b659d8768121b44f6dbae8314ca623b3c96f16355b9ec42901b012a0ac6c437623588a7a5425bdd383052
   languageName: node
   linkType: hard
 
@@ -5133,6 +5284,19 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 1ac6ded7bfa7dac369fd57e163e0b98f09fbb674fe139b2ccff359931112ac5176686615039909beabc8bb79a4e0f04b4406712fca4cadd7a23e3546beb275f0
+  languageName: node
+  linkType: hard
+
+"apollo-server-types@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "apollo-server-types@npm:0.6.1"
+  dependencies:
+    apollo-reporting-protobuf: ^0.6.1
+    apollo-server-caching: ^0.5.2
+    apollo-server-env: ^2.4.5
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 5feeec1d0a0d1645ede9366cbb6f3d338ae7d3d6f642fe3b1e79449ffbb3fbf9bb6ba921ebef84f0225353672c5dfcd78b4dcd08989ab1a3ea0f8c2f3b754093
   languageName: node
   linkType: hard
 
@@ -5151,6 +5315,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-server@npm:2.19.0":
+  version: 2.19.0
+  resolution: "apollo-server@npm:2.19.0"
+  dependencies:
+    apollo-server-core: ^2.19.0
+    apollo-server-express: ^2.19.0
+    express: ^4.0.0
+    graphql-subscriptions: ^1.0.0
+    graphql-tools: ^4.0.0
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: fd50075dcda40178a2ea3e4dd83b624fc139c87c532f3d4682ac69e90a7c0d0e680a45c4f6ea5cc2430ca07e76d2c446eb70720407b29cb716510c2c8ac0660c
+  languageName: node
+  linkType: hard
+
 "apollo-tracing@npm:^0.11.4":
   version: 0.11.4
   resolution: "apollo-tracing@npm:0.11.4"
@@ -5160,6 +5339,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 1ac23007e3180da412ba14db89d17a057e2d047735f818a29ab1023a2c382ab1b9cca71d760bdc296a455b96492d8fdfcdd36bf34859f0908a902b1c3f19037d
+  languageName: node
+  linkType: hard
+
+"apollo-tracing@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "apollo-tracing@npm:0.12.0"
+  dependencies:
+    apollo-server-env: ^2.4.5
+    apollo-server-plugin-base: ^0.10.2
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: eb55d90ced9c45ba4d12c6787a53996c5d3ce8fe5a0151e06a660e597923febb189e40811ffad9cd29e611a043a39e2506ba360cbb93bb261da2239dfb35e061
   languageName: node
   linkType: hard
 
@@ -5580,25 +5771,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:26.5.2":
-  version: 26.5.2
-  resolution: "babel-jest@npm:26.5.2"
+"babel-jest@npm:26.6.2":
+  version: 26.6.2
+  resolution: "babel-jest@npm:26.6.2"
   dependencies:
-    "@jest/transform": ^26.5.2
-    "@jest/types": ^26.5.2
+    "@jest/transform": ^26.6.2
+    "@jest/types": ^26.6.2
     "@types/babel__core": ^7.1.7
     babel-plugin-istanbul: ^6.0.0
-    babel-preset-jest: ^26.5.0
+    babel-preset-jest: ^26.6.2
     chalk: ^4.0.0
     graceful-fs: ^4.2.4
     slash: ^3.0.0
   peerDependencies:
     "@babel/core": ^7.0.0
-  checksum: 7605afeb430c965718251bd3bc611fbc2474f7c33071f597fc04b5749b4aa1a5640775fda99a382a070ca1d12ef52c87de6cae856d0e45f1b4b483309e62c935
+  checksum: 93994be33a36956b744943656c62d88213fe1c2a7cfa7b6e0d7489496f49d13cf015c588fdf91f1b6232f6d502b43f3c80efbb002bc364376a0c09a84b50caa2
   languageName: node
   linkType: hard
 
-"babel-jest@npm:26.6.1, babel-jest@npm:^26.6.1":
+"babel-jest@npm:^26.6.1":
   version: 26.6.1
   resolution: "babel-jest@npm:26.6.1"
   dependencies:
@@ -5676,6 +5867,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-jest-hoist@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "babel-plugin-jest-hoist@npm:26.6.2"
+  dependencies:
+    "@babel/template": ^7.3.3
+    "@babel/types": ^7.3.3
+    "@types/babel__core": ^7.0.0
+    "@types/babel__traverse": ^7.0.6
+  checksum: e9c1de0fced1c8220590a0d6f37631f5b975964a8e876f0426fc7fd224f4c154b01f156e87401de47556b873bf4414eb2a9632fb56765f35fc07fe69e5b76d31
+  languageName: node
+  linkType: hard
+
 "babel-preset-current-node-syntax@npm:^0.1.3":
   version: 0.1.4
   resolution: "babel-preset-current-node-syntax@npm:0.1.4"
@@ -5697,6 +5900,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-preset-current-node-syntax@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "babel-preset-current-node-syntax@npm:1.0.0"
+  dependencies:
+    "@babel/plugin-syntax-async-generators": ^7.8.4
+    "@babel/plugin-syntax-bigint": ^7.8.3
+    "@babel/plugin-syntax-class-properties": ^7.8.3
+    "@babel/plugin-syntax-import-meta": ^7.8.3
+    "@babel/plugin-syntax-json-strings": ^7.8.3
+    "@babel/plugin-syntax-logical-assignment-operators": ^7.8.3
+    "@babel/plugin-syntax-nullish-coalescing-operator": ^7.8.3
+    "@babel/plugin-syntax-numeric-separator": ^7.8.3
+    "@babel/plugin-syntax-object-rest-spread": ^7.8.3
+    "@babel/plugin-syntax-optional-catch-binding": ^7.8.3
+    "@babel/plugin-syntax-optional-chaining": ^7.8.3
+    "@babel/plugin-syntax-top-level-await": ^7.8.3
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: d3db297d1ade74f812e93e90b2fc76986449f4158f62d660a91b7d94a308314acc730a282fb55d3d1a2b69ce92c64b553aaef59b82f37cc68640ee779438a58c
+  languageName: node
+  linkType: hard
+
 "babel-preset-jest@npm:^26.5.0":
   version: 26.5.0
   resolution: "babel-preset-jest@npm:26.5.0"
@@ -5706,6 +5931,18 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: 508af4cfa10cb8d2fae11498d1df54d435a65856377dca983511f05883a5d079a64ceb17c7502673f12fc3d93b07a177d4b43300ba392e1207e51c251960c921
+  languageName: node
+  linkType: hard
+
+"babel-preset-jest@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "babel-preset-jest@npm:26.6.2"
+  dependencies:
+    babel-plugin-jest-hoist: ^26.6.2
+    babel-preset-current-node-syntax: ^1.0.0
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: 466ca17bba2638cadda5c25f3108dab1867b30e5d728366d0d2309be5d6555db8738a6cacd2c43284bee2ce7917e3285194c223a22b3d9817794f00c2775fdb2
   languageName: node
   linkType: hard
 
@@ -7938,6 +8175,13 @@ __metadata:
   version: 26.5.0
   resolution: "diff-sequences@npm:26.5.0"
   checksum: 3eca32056c1149e5a02c917e56c4c87535fad80c65543b4d80df8f977e5a4ebb68ee36815da20474b475cfd7305152287a926a4cca65d822ea94a4039628aede
+  languageName: node
+  linkType: hard
+
+"diff-sequences@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "diff-sequences@npm:26.6.2"
+  checksum: dd1eb6e52f0a200228b836876a69c90690003b8991cf7d9264d6e6063acde8fe852084b6a196f2a13f169d309e30c24c457e9c8db617aed186c665efb50af1d8
   languageName: node
   linkType: hard
 
@@ -10263,6 +10507,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"graphql-extensions@npm:^0.12.6":
+  version: 0.12.6
+  resolution: "graphql-extensions@npm:0.12.6"
+  dependencies:
+    "@apollographql/apollo-tools": ^0.4.3
+    apollo-server-env: ^2.4.5
+    apollo-server-types: ^0.6.1
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 82a9ac087ca650b1bd2d6fec92870f88a061d6d7edb22b8a774d88802a0b2630d03a2fc1705d939f5fd047977f6ac83773bdd5a4e5cb4c60494e43b92966b690
+  languageName: node
+  linkType: hard
+
 "graphql-subscriptions@npm:^1.0.0":
   version: 1.1.0
   resolution: "graphql-subscriptions@npm:1.1.0"
@@ -11892,7 +12149,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^26.5.2, jest-cli@npm:^26.5.3, jest-cli@npm:^26.6.1":
+"jest-cli@npm:^26.6.1":
   version: 26.6.1
   resolution: "jest-cli@npm:26.6.1"
   dependencies:
@@ -11946,7 +12203,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:26.6.1, jest-diff@npm:^26.6.1":
+"jest-diff@npm:26.6.2":
+  version: 26.6.2
+  resolution: "jest-diff@npm:26.6.2"
+  dependencies:
+    chalk: ^4.0.0
+    diff-sequences: ^26.6.2
+    jest-get-type: ^26.3.0
+    pretty-format: ^26.6.2
+  checksum: 05d0f1bdba147a026eab4121a73a69ee3df21aec59ecd34659d665ee0663e518636650b435d248974ab5aceb345de9bfcc035efd01df723fe788756a07c8d046
+  languageName: node
+  linkType: hard
+
+"jest-diff@npm:^26.6.1":
   version: 26.6.1
   resolution: "jest-diff@npm:26.6.1"
   dependencies:
@@ -12038,6 +12307,31 @@ fsevents@^1.2.7:
     fsevents:
       optional: true
   checksum: f6252c2f02fd4a5e1cbfa3963067e391644d871b3c05892419d8bf195f14db596c055103073a7d8b54fe42da75ab36f8d670600e2afa00635dca7a9d05a1c10c
+  languageName: node
+  linkType: hard
+
+"jest-haste-map@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "jest-haste-map@npm:26.6.2"
+  dependencies:
+    "@jest/types": ^26.6.2
+    "@types/graceful-fs": ^4.1.2
+    "@types/node": "*"
+    anymatch: ^3.0.3
+    fb-watchman: ^2.0.0
+    fsevents: ^2.1.2
+    graceful-fs: ^4.2.4
+    jest-regex-util: ^26.0.0
+    jest-serializer: ^26.6.2
+    jest-util: ^26.6.2
+    jest-worker: ^26.6.2
+    micromatch: ^4.0.2
+    sane: ^4.0.3
+    walker: ^1.0.7
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: 5c9e3a1e3feee8cf6e06aec5ddc28703d75d484c398802469ec881a922591a2c94b1bc86ce9510dec854b363740781f9eb2d76b224fdd560ecb8fa2436b35432
   languageName: node
   linkType: hard
 
@@ -12236,6 +12530,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"jest-serializer@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "jest-serializer@npm:26.6.2"
+  dependencies:
+    "@types/node": "*"
+    graceful-fs: ^4.2.4
+  checksum: 62802ac809f7af3386b3640a3a01b6a979a093f48085c5b76a05c186a862b8dd3c1b2ea2d62373fd9fe31c0f893631006623079d30d8f8ebf32dff5ef279059e
+  languageName: node
+  linkType: hard
+
 "jest-snapshot@npm:^26.6.1":
   version: 26.6.1
   resolution: "jest-snapshot@npm:26.6.1"
@@ -12271,6 +12575,20 @@ fsevents@^1.2.7:
     is-ci: ^2.0.0
     micromatch: ^4.0.2
   checksum: e0e13c6cc3ca694f0a661d10e4eb9efcdb00180795267ec1d8e1b43a30038143e8084213b553cb7d44c5453b5fba112a6f652ff20268b652db142c3a42fd3b05
+  languageName: node
+  linkType: hard
+
+"jest-util@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "jest-util@npm:26.6.2"
+  dependencies:
+    "@jest/types": ^26.6.2
+    "@types/node": "*"
+    chalk: ^4.0.0
+    graceful-fs: ^4.2.4
+    is-ci: ^2.0.0
+    micromatch: ^4.0.2
+  checksum: 1aef748c8224d00ead3389899177bd3b619479db7318f8d7de7fbedce283ac6a8dc8c9364a40a68e83e68e03fa18afbd6b49c8aafb81112807872f0f90fb5a37
   languageName: node
   linkType: hard
 
@@ -12314,29 +12632,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest@npm:26.5.2":
-  version: 26.5.2
-  resolution: "jest@npm:26.5.2"
+"jest-worker@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "jest-worker@npm:26.6.2"
   dependencies:
-    "@jest/core": ^26.5.2
-    import-local: ^3.0.2
-    jest-cli: ^26.5.2
-  bin:
-    jest: bin/jest.js
-  checksum: 8c31ca019ce4241f9de95bff9c389eb73db060278c7d19111c67554b2caebacd33b3ddc4eb9662f6d29e509aa012451a47c8021e58bbddf1d7439288de1d2eb1
-  languageName: node
-  linkType: hard
-
-"jest@npm:26.5.3":
-  version: 26.5.3
-  resolution: "jest@npm:26.5.3"
-  dependencies:
-    "@jest/core": ^26.5.3
-    import-local: ^3.0.2
-    jest-cli: ^26.5.3
-  bin:
-    jest: bin/jest.js
-  checksum: e5fe5dbcf94025b7a454273f29ee5e6567ca385ce942acd8eef55d6db5f937f669d1c22fe1c87f37acebbb1d002d9557f1f700b20c128794255f0ca7a4d87080
+    "@types/node": "*"
+    merge-stream: ^2.0.0
+    supports-color: ^7.0.0
+  checksum: 5eb349833b5e9750ce8700388961dfd5d5e207c913122221e418e48b9cda3c17b0fb418f6a90f1614cfdc3ca836158b720c5dc1de82cb1e708266b4d76e31a38
   languageName: node
   linkType: hard
 
@@ -15506,6 +15809,18 @@ fsevents@^1.2.7:
     ansi-styles: ^4.0.0
     react-is: ^17.0.1
   checksum: a9e31328106e91efde5b49aef7f7b2e668bdaec4a890598bf7ee32560c628738341f5ac5a2985cfbf627e168325492a8c72892b64a0ecea0c9224f93c27f55f2
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "pretty-format@npm:26.6.2"
+  dependencies:
+    "@jest/types": ^26.6.2
+    ansi-regex: ^5.0.0
+    ansi-styles: ^4.0.0
+    react-is: ^17.0.1
+  checksum: 5ad34fc128218485732cf0271d396158a00584708fc97bf063c1c3c000fe14da572e9a1d3d7b92d95c5e24965434656c56ed0e45804dea2435ca59a1f86f1b07
   languageName: node
   linkType: hard
 
@@ -20265,6 +20580,16 @@ fsevents@^1.2.7:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
   checksum: edc100b9c7cfc675d1e1857afd6a194daa1756d140eda9da452e4f73933307a9af7a485a94b68ef29dfa3047f69e34d6ca724e5858109ed287f32b79c0c0d11b
+  languageName: node
+  linkType: hard
+
+"webpack-merge@npm:5.3.0":
+  version: 5.3.0
+  resolution: "webpack-merge@npm:5.3.0"
+  dependencies:
+    clone-deep: ^4.0.1
+    wildcard: ^2.0.0
+  checksum: 7486c5a45ad48f775bc75b3e80938ec3196960cece7af9239863a87d842b21340ff51f95aeaa9434604b04b1471b6d6197c6447a1efd747456451e884d107008
   languageName: node
   linkType: hard
 

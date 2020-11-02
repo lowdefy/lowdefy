@@ -8,11 +8,11 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "Box content string, alternatively provide and list of blocks as Box content."
+          "description": "Span content string, alternatively provide and list of blocks as Span content."
         },
         "style": {
           "type": "object",
-          "description": "Style to apply to Box div."
+          "description": "Style to apply to Span div."
         }
       }
     },
