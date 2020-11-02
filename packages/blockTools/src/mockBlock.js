@@ -17,12 +17,16 @@
 import stubBlockProps from './stubBlockProps';
 
 const mockBlock = ({ meta, logger }) => {
+  const mockMath = Object.create(global.Math);
+  mockMath.random = () => 0.5;
+  global.Math = mockMath;
   const callAction = jest.fn();
   const makeCssClass = jest.fn();
   const moveItemDown = jest.fn();
   const moveItemUp = jest.fn();
   const pushItem = jest.fn();
   const registerMethod = jest.fn();
+  const registerAction = jest.fn();
   const removeItem = jest.fn();
   const setValue = jest.fn();
   const unshiftItem = jest.fn();
@@ -33,6 +37,7 @@ const mockBlock = ({ meta, logger }) => {
     moveItemUp,
     pushItem,
     registerMethod,
+    registerAction,
     removeItem,
     setValue,
     unshiftItem,
@@ -46,6 +51,7 @@ const mockBlock = ({ meta, logger }) => {
     moveItemUp.mockReset();
     pushItem.mockReset();
     registerMethod.mockReset();
+    registerAction.mockReset();
     removeItem.mockReset();
     setValue.mockReset();
     unshiftItem.mockReset();
