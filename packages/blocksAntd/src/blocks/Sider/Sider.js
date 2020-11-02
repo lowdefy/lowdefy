@@ -18,7 +18,7 @@ import React from 'react';
 import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const { Sider } = Layout;
+const Sider = Layout.Sider;
 
 const SiderBlock = ({ blockId, properties, content, methods }) => {
   const additionalProps = {};
