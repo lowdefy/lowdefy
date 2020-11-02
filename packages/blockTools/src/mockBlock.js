@@ -49,19 +49,37 @@ const mockBlock = ({ meta, logger }) => {
     removeItem.mockReset();
     setValue.mockReset();
     unshiftItem.mockReset();
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    // for antd from:
+    // https://github.com/ant-design/ant-design/blob/master/tests/setup.js
+    // ref: https://github.com/ant-design/ant-design/issues/18774
+    if (!window.matchMedia) {
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: jest.fn().mockImplementation((query) => ({
+          matches: false,
+          media: query.includes('max-width'),
+          onchange: null,
+          addListener: jest.fn(),
+          removeListener: jest.fn(),
+          addEventListener: jest.fn(),
+          removeEventListener: jest.fn(),
+          dispatchEvent: jest.fn(),
+        })),
+      });
+    }
+    if (typeof window !== 'undefined') {
+      window.resizeTo = (width, height) => {
+        window.innerWidth = width || window.innerWidth;
+        window.innerHeight = height || window.innerHeight;
+        window.dispatchEvent(new Event('resize'));
+      };
+      window.scrollTo = () => {};
+      // Fix css-animation or rc-motion deps on these
+      // https://github.com/react-component/motion/blob/9c04ef1a210a4f3246c9becba6e33ea945e00669/src/util/motion.ts#L27-L35
+      // https://github.com/yiminghe/css-animation/blob/a5986d73fd7dfce75665337f39b91483d63a4c8c/src/Event.js#L44
+      window.AnimationEvent = window.AnimationEvent || (() => {});
+      window.TransitionEvent = window.TransitionEvent || (() => {});
+    }
   };
   const getProps = (block) => {
     const props = stubBlockProps({ block, meta, logger });
@@ -70,6 +88,7 @@ const mockBlock = ({ meta, logger }) => {
       methods,
     };
   };
+
   return { before, methods, getProps };
 };
 
