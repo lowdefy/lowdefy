@@ -47,7 +47,7 @@
     "@lowdefy/block-tools": "1.0.1-alpha.13",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
-    "apollo-server-express": "2.18.2",
+    "apollo-server-express": "2.19.0",
     "axios": "0.21.0",
     "chalk": "4.1.0",
     "chokidar": "3.4.3",
