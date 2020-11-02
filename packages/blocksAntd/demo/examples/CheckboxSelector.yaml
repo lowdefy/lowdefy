@@ -1,0 +1,20 @@
+- id: default
+  type: CheckboxSelector
+- id: properties.title
+  type: CheckboxSelector
+  properties:
+    title: Checkbox selector
+- id: properties.options-string
+  type: CheckboxSelector
+  properties:
+    options:
+      - one
+      - two
+- id: properties.options-object
+  type: CheckboxSelector
+  properties:
+    options:
+      - value: 1
+        label: one
+      - value: 2
+        label: two

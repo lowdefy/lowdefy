@@ -1,0 +1,6 @@
+- id: default
+  type: WeekSelector
+- id: properties.title
+  type: WeekSelector
+  properties:
+    title: WeekSelector title

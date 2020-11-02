@@ -1,0 +1,20 @@
+- id: default
+  type: Selector
+- id: properties.title
+  type: Selector
+  properties:
+    title: Select value
+- id: properties.options-string
+  type: Selector
+  properties:
+    options:
+      - one
+      - two
+- id: properties.options-object
+  type: Selector
+  properties:
+    options:
+      - value: 1
+        label: one
+      - value: 2
+        label: two

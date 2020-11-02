@@ -1,0 +1,6 @@
+- id: default
+  type: DateTimeSelector
+- id: properties.title
+  type: DateTimeSelector
+  properties:
+    title: DateTimeSelector title

@@ -1,0 +1,6 @@
+- id: default
+  type: RatingSlider
+- id: properties.title
+  type: RatingSlider
+  properties:
+    title: Rating slider

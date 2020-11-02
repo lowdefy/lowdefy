@@ -1,0 +1,6 @@
+- id: default
+  type: Paragraph
+- id: properties.content
+  type: Paragraph
+  properties:
+    content: This is a paragraph

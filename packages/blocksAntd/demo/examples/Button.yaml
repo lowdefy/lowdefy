@@ -1,0 +1,6 @@
+- id: default
+  type: Button
+- id: properties.icon
+  type: Button
+  properties:
+    icon: SaveOutlined

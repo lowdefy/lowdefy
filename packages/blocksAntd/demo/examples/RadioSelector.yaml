@@ -1,0 +1,20 @@
+- id: default
+  type: RadioSelector
+- id: properties.title
+  type: RadioSelector
+  properties:
+    title: Radio selector
+- id: properties.options-string
+  type: RadioSelector
+  properties:
+    options:
+      - one
+      - two
+- id: properties.options-object
+  type: RadioSelector
+  properties:
+    options:
+      - value: 1
+        label: one
+      - value: 2
+        label: two

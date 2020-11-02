@@ -1,0 +1,6 @@
+- id: default
+  type: Pagination
+- id: properties.total
+  type: Pagination
+  properties:
+    total: 500

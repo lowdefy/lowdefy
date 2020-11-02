@@ -1,0 +1,6 @@
+- id: default
+  type: TextInput
+- id: properties.title
+  type: TextInput
+  properties:
+    title: Test Title

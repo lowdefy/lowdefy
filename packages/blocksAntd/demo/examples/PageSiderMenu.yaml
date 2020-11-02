@@ -1,0 +1,6 @@
+- id: default
+  type: PageSiderMenu
+- id: properties.content
+  type: PageSiderMenu
+  properties:
+    content: This is page content

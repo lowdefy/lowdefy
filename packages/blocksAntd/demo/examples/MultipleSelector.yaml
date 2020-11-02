@@ -1,0 +1,20 @@
+- id: default
+  type: MultipleSelector
+- id: properties.title
+  type: MultipleSelector
+  properties:
+    title: Radio selector
+- id: properties.options-string
+  type: MultipleSelector
+  properties:
+    options:
+      - one
+      - two
+- id: properties.options-object
+  type: MultipleSelector
+  properties:
+    options:
+      - value: 1
+        label: one
+      - value: 2
+        label: two

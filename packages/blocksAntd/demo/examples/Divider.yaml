@@ -1,0 +1,6 @@
+- id: default
+  type: Divider
+- id: properties.title
+  type: Divider
+  properties:
+    title: Divider title

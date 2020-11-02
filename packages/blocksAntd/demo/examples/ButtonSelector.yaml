@@ -1,0 +1,20 @@
+- id: default
+  type: ButtonSelector
+- id: properties.title
+  type: ButtonSelector
+  properties:
+    title: Button selector
+- id: properties.options-string
+  type: ButtonSelector
+  properties:
+    options:
+      - one
+      - two
+- id: properties.options-object
+  type: ButtonSelector
+  properties:
+    options:
+      - value: 1
+        label: one
+      - value: 2
+        label: two

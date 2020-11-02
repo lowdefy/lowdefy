@@ -1,0 +1,6 @@
+- id: default
+  type: Label
+- id: properties.title
+  type: Label
+  properties:
+    title: Label title

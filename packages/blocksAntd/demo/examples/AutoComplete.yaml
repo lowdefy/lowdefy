@@ -1,0 +1,12 @@
+- id: default
+  type: AutoComplete
+- id: properties.title
+  type: AutoComplete
+  properties:
+    title: Auto Complete Title
+- id: properties.options-string
+  type: AutoComplete
+  properties:
+    options:
+      - one
+      - two
