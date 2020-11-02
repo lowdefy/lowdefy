@@ -33,7 +33,7 @@
     "prepublishOnly": "yarn build",
     "serve": "serve dist -p 3002",
     "start": "webpack serve --config webpack.dev.js",
-    "test": "jest --coverage --config jest.config.json --no-cache",
+    "test": "jest --coverage --config jest.config.js --no-cache",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch -d",
     "version:minor": "yarn version minor -d",
