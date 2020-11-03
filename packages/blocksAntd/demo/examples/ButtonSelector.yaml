@@ -19,6 +19,12 @@
     options:
       - 15
       - 20
+- id: "properties.options-boolean"
+  type: ButtonSelector
+  properties:
+    options:
+      - true
+      - false
 - id: "properties.options-object"
   type: ButtonSelector
   properties:
@@ -34,14 +40,21 @@
       - Option 1
       - Option 2
     buttonStyle: outline
-- id: "properties.color_'#'" #use with buttonStyle: outline to see text
+- id: "properties.color_yellow" #use with buttonStyle: outline to see text on light colors
   type: ButtonSelector
   properties:
     options:
       - Option 1
       - Option 2
     buttonStyle: outline
-    color: "#e6f7ff"
+    color: yellow
+- id: "properties.color_red" 
+  type: ButtonSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    color: red
 - id: "properties.disabled: true"
   type: ButtonSelector
   properties:
