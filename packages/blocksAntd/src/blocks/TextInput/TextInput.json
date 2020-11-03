@@ -68,7 +68,7 @@
             },
             "disabled": {
               "type": "boolean",
-              "description": "Disable input label."
+              "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
