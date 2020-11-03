@@ -26,7 +26,7 @@ const addRemoteEntryUrl = (content, absoluteFrom) => {
 };
 
 module.exports = merge(common, {
-  entry: './src/index.js',
+  entry: './demo/index',
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
