@@ -78,20 +78,19 @@
               "type": "number",
               "description": "Label inline span."
             },
-            "inline": {
-              "type": "boolean",
-              "defaultValue": false,
-              "description": "Render input and label inline."
-            },
             "disabled": {
               "type": "boolean",
-              "default": false,
-              "description": "Disable the block if true."
+              "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
