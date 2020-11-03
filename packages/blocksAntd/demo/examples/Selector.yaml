@@ -25,7 +25,6 @@
   properties:
     label:
       title: My Selector Title
-
 - id: "properties.allowClear: false"
   type: Selector
   properties:
@@ -45,6 +44,16 @@
   properties:
     allowClear: true
     clearIcon: ChromeFilled
+    options:
+      - Option 1
+      - Option 2
+- id: "properties.clearIcon-object: ChromeFilled"
+  type: Selector
+  properties:
+    allowClear: true
+    clearIcon:
+      name: ChromeFilled
+      color: red
     options:
       - Option 1
       - Option 2
@@ -70,8 +79,15 @@
 - id: "properties.size: large"
   type: Selector
   properties:
-    showSearch: true
     size: large
+- id: "properties.size: small"
+  type: Selector
+  properties:
+    size: small
+- id: "properties.size: default"
+  type: Selector
+  properties:
+    size: default
 - id: "properties.suffixIcon: DoubleLeftOutlined"
   type: Selector
   properties:
@@ -86,6 +102,11 @@
   properties:
     label:
       align: right
+- id: "properties.label align: left"
+  type: Selector
+  properties:
+    label:
+      align: left
 - id: "properties.label inline: true"
   type: Selector
   properties:
