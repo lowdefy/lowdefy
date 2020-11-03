@@ -102,8 +102,8 @@
           "default": [],
           "description": "Auto complete options can be an array of string values.",
           "items": {
-              "type": "string"
-              }
+            "type": "string"
+          }
         },
         "placeholder": {
           "type": "string",
