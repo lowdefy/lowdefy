@@ -26,12 +26,13 @@ const addRemoteEntryUrl = (content, absoluteFrom) => {
 };
 
 module.exports = merge(common, {
-  entry: './src/index.js',
+  entry: './demo/index',
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     port: 3002,
+    historyApiFallback: true,
   },
   plugins: [
     new CopyPlugin({
