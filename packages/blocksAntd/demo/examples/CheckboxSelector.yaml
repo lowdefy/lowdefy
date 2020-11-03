@@ -3,18 +3,89 @@
 - id: properties.title
   type: CheckboxSelector
   properties:
-    title: Checkbox selector
-- id: properties.options-string
+    options:
+      - Option 1
+      - Option 2
+    title: "properties.title: My CheckboxSelector Title"
+- id: "properties.options-string"
   type: CheckboxSelector
   properties:
     options:
-      - one
-      - two
-- id: properties.options-object
+      - Option 1
+      - Option 2
+- id: "properties.options-number"
   type: CheckboxSelector
   properties:
     options:
-      - value: 1
-        label: one
-      - value: 2
-        label: two
+      - 15
+      - 20
+- id: "properties.options-object"
+  type: CheckboxSelector
+  properties:
+    options:
+      - label: one
+        value: 1
+      - label: two
+        value: 2
+- id: "properties.color_'#'" #use with buttonStyle: outline to see text
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    color: "#cf1322"
+- id: "properties.disabled: true"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    disabled: true
+- id: "properties.label: span_12"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      span: 12
+- id: "properties.label: align_right"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      align: right
+- id: "properties.label: inline_true"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      inline: true
+- id: "properties.label.disabled: true"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      disabled: true
+- id: "properties.label.colon: false"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      colon: false
+- id: "properties.label.extra: showingextra"
+  type: CheckboxSelector
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    label:
+      extra: showing extra
