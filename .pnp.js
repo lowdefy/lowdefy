@@ -3752,7 +3752,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:4.3.1"],
-            ["react-syntax-highlighter", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.2.1"],
+            ["react-syntax-highlighter", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.3.0"],
             ["serve", "npm:11.3.2"],
             ["style-loader", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:2.0.0"],
             ["webpack", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:5.3.2"],
@@ -20350,10 +20350,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-syntax-highlighter", [
-        ["virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.2.1", {
-          "packageLocation": "./.yarn/$$virtual/react-syntax-highlighter-virtual-cdf5f5d1f7/0/cache/react-syntax-highlighter-npm-15.2.1-102a3321c0-22b880f0ec.zip/node_modules/react-syntax-highlighter/",
+        ["virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.3.0", {
+          "packageLocation": "./.yarn/$$virtual/react-syntax-highlighter-virtual-93aac1c46e/0/cache/react-syntax-highlighter-npm-15.3.0-0a74e2bc36-07a40895ee.zip/node_modules/react-syntax-highlighter/",
           "packageDependencies": [
-            ["react-syntax-highlighter", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.2.1"],
+            ["react-syntax-highlighter", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:15.3.0"],
             ["@babel/runtime", "npm:7.12.1"],
             ["@types/react", null],
             ["highlight.js", "npm:10.3.2"],
