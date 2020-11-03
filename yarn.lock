@@ -2845,7 +2845,7 @@ __metadata:
     "@lowdefy/color": 1.0.0
     "@lowdefy/format": 1.0.0
     "@lowdefy/helpers": 1.1.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.2.0
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
     antd: 4.4.2
     babel-jest: 26.6.1
     babel-loader: 8.1.0
@@ -4403,27 +4403,6 @@ __metadata:
     jscodeshift: ^0.7.0
     yeoman-generator: ^4.7.2
   checksum: 4dfb986ba704be1ba1914533e0f2cdfd6dfd6431b7e26dc3d3c711ab65ef61b9bc6914b1f2f0ea2602c1245adb8802ee17d09cc8cfec816cd98af59cbecfbe0a
-  languageName: node
-  linkType: hard
-
-"@wojtekmaj/enzyme-adapter-react-17@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.2.0"
-  dependencies:
-    enzyme-adapter-utils: ^1.13.1
-    enzyme-shallow-equal: ^1.0.4
-    has: ^1.0.3
-    object.assign: ^4.1.0
-    object.values: ^1.1.1
-    prop-types: ^15.7.2
-    react-is: ^16.13.1
-    react-test-renderer: ^17.0.0-0
-    semver: ^5.7.0
-  peerDependencies:
-    enzyme: ^3.0.0
-    react: ^17.0.0-0
-    react-dom: ^17.0.0-0
-  checksum: e5044988cf9e2f760c55826729e5e5dcd2318f98d20c02eb6cc7a45639238c1940e8d599b896594136eed81016824cf2ff5319eafd8a42eaaa89dd33ea8fa8a3
   languageName: node
   linkType: hard
 
