@@ -3,7 +3,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 
 const common = require('./webpack.common.js');
-const package = require('./package.json');
+const packageJson = require('./package.json');
 
 const sanitizeName = (name) => {
   return name
@@ -14,15 +14,15 @@ const sanitizeName = (name) => {
 };
 
 const addRemoteEntryUrl = (content, absoluteFrom) => {
-  const scope = sanitizeName(package.name);
+  const scope = sanitizeName(packageJson.name);
   const meta = JSON.parse(content);
   // if no moduleFederation info is provided, default to unpkg
   if (!meta.moduleFederation) {
     meta.moduleFederation = {
       module: path.basename(absoluteFrom, '.json'),
       scope,
-      version: package.version,
-      remoteEntryUrl: `https://unpkg.com/${package.name}@${package.version}/dist/remoteEntry.js`,
+      version: packageJson.version,
+      remoteEntryUrl: `https://unpkg.com/${packageJson.name}@${packageJson.version}/dist/remoteEntry.js`,
     };
   }
   return JSON.stringify(meta);
