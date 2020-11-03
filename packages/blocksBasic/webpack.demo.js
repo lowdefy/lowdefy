@@ -32,6 +32,7 @@ module.exports = merge(common, {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     port: 3002,
+    historyApiFallback: true,
   },
   plugins: [
     new CopyPlugin({
