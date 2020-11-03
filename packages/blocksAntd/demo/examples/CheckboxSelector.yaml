@@ -27,13 +27,13 @@
         value: 1
       - label: two
         value: 2
-- id: "properties.color_'#'" #use with buttonStyle: outline to see text
+- id: "properties.color_red"
   type: CheckboxSelector
   properties:
     options:
       - Option 1
       - Option 2
-    color: "#cf1322"
+    color: red
 - id: "properties.disabled: true"
   type: CheckboxSelector
   properties:
