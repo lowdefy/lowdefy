@@ -74,6 +74,20 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the block if true."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
