@@ -1,8 +1,108 @@
 - id: default
   type: Selector
-- id: properties.options
+- id: "properties.options-string"
   type: Selector
   properties:
     options:
       - Option 1
       - Option 2
+- id: "properties.options-number"
+  type: Selector
+  properties:
+    options:
+      - 10
+      - 12
+- id: "properties.options-object"
+  type: Selector
+  properties:
+    options:
+      - label: one
+        value: 1
+      - label: two
+        value: 2
+- id: "properties.title: My Selector Title"
+  type: Selector
+  properties:
+    label:
+      title: My Selector Title
+
+- id: "properties.allowClear: false"
+  type: Selector
+  properties:
+    allowClear: false
+    options:
+      - Option 1
+      - Option 2
+- id: "properties.autoFocus: true"
+  type: Selector
+  properties:
+    autoFocus: true
+    options:
+      - Option 1
+      - Option 2
+- id: "properties.clearIcon: ChromeFilled"
+  type: Selector
+  properties:
+    allowClear: true
+    clearIcon: ChromeFilled
+    options:
+      - Option 1
+      - Option 2
+- id: "properties.disabled: true"
+  type: Selector
+  properties:
+    disabled: true
+- id: "properties.placeholder: Find item in list"
+  type: Selector
+  properties:
+    placeholder: Find item in list
+- id: "properties.showArrow: false"
+  type: Selector
+  properties:
+    showArrow: false
+- id: "properties.showSearch: true"
+  type: Selector
+  properties:
+    showSearch: true
+    options:
+      - Option 1
+      - Option 2
+- id: "properties.size: large"
+  type: Selector
+  properties:
+    showSearch: true
+    size: large
+- id: "properties.suffixIcon: DoubleLeftOutlined"
+  type: Selector
+  properties:
+    suffixIcon: DoubleLeftOutlined
+- id: "properties.label span: 12"
+  type: Selector
+  properties:
+    label:
+      span: 12
+- id: "properties.label align: right"
+  type: Selector
+  properties:
+    label:
+      align: right
+- id: "properties.label inline: true"
+  type: Selector
+  properties:
+    label:
+      inline: true
+- id: "properties.label disabled: true"
+  type: Selector
+  properties:
+    label:
+      disabled: true
+- id: "properties.label colon: false"
+  type: Selector
+  properties:
+    label:
+      colon: false
+- id: "properties.label extra: showing extra"
+  type: Selector
+  properties:
+    label:
+      extra: showing extra
