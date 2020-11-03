@@ -28,7 +28,6 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
-    "dev": "webpack serve",
     "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
