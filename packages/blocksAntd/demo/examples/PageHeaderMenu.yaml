@@ -3,4 +3,5 @@
 - id: properties.content
   type: PageHeaderMenu
   properties:
-    content: This is page content
+    content: 
+      content: This is page content

@@ -3,4 +3,5 @@
 - id: properties.content
   type: PageHSCF
   properties:
-    content: This is page content
+    content: 
+      content: This is page content
