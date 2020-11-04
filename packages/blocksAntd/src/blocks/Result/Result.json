@@ -8,7 +8,7 @@
       "properties": {
         "icon": {
           "type": ["string", "object"],
-          "description": "Ant icon to use as image."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to use as result image."
         },
         "status": {
           "type": "string",

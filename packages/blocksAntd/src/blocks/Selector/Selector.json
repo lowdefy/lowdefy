@@ -20,7 +20,7 @@
         "clearIcon": {
           "type": ["string", "object"],
           "default": "CloseCircleOutlined",
-          "description": "Ant Icon at far right position of the selector, shown when user is given option to clear input."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input."
         },
         "inputStyle": {
           "type": "object",
@@ -159,7 +159,7 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "DownOutlined",
-          "description": "Ant Icon at the drop-down position of the selector."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at the drop-down position of the selector."
         },
         "title": {
           "type": "string",

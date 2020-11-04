@@ -72,7 +72,7 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "CalenderOutlined",
-          "description": "Ant Icon at the right-hand side of the date picker,."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker."
         },
         "label": {
           "type": "object",

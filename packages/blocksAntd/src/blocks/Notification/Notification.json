@@ -26,11 +26,11 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Customized notification icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize notification icon."
         },
         "closeIcon": {
           "type": ["string", "object"],
-          "description": "Customized close icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize close icon."
         },
         "message": {
           "type": "string",

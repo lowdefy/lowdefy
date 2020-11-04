@@ -32,7 +32,7 @@
         },
         "prefixIcon": {
           "type": ["string", "object"],
-          "description": "Ant Icon to prefix the block."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to prefix the text input."
         },
         "inputStyle": {
           "type": "object",
@@ -102,7 +102,7 @@
         },
         "suffixIcon": {
           "type": ["string", "object"],
-          "description": "Ant Icon to suffix the block."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to suffix the text input."
         },
         "title": {
           "type": "string",

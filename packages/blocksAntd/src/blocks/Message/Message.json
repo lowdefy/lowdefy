@@ -17,7 +17,7 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Customized icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize message icon."
         },
         "status": {
           "type": "string",
