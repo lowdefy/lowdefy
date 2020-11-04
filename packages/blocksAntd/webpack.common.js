@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
 const fs = require('fs');
@@ -113,9 +112,6 @@ module.exports = {
           version: packageJson.dependencies['react-dom'],
         },
       },
-    }),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
     }),
   ],
 };
