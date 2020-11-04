@@ -47,8 +47,8 @@
         },
         "label": {
           "type": "object",
-          "additionalProperties": false,
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -69,10 +69,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -87,27 +100,9 @@
         "options": {
           "type": "array",
           "default": [],
-          "description": "Auto complete options can either be an array of string values, on an array of label, value pairs.",
+          "description": "Auto complete options can be an array of string values.",
           "items": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "object",
-                "required": ["value"],
-                "properties": {
-                  "label": {
-                    "type": "string",
-                    "description": "Title shown to user."
-                  },
-                  "value": {
-                    "type": "string",
-                    "description": "Value selected."
-                  }
-                }
-              }
-            ]
+            "type": "string"
           }
         },
         "placeholder": {
