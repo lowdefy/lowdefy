@@ -41,13 +41,13 @@
       - Option 2
     inputStyle:
       borderBottom: 1px solid red
-- id: "properties.color_'#'" #use with buttonStyle: outline to see text
+- id: "properties.color_red"
   type: RadioSelector
   properties:
     options:
       - Option 1
       - Option 2
-    color: "#cf1322"
+    color: red
 - id: "properties.disabled: true"
   type: RadioSelector
   properties:
