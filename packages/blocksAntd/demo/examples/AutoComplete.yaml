@@ -90,38 +90,32 @@
     label:
       colon: false
       span: 4
-    title: "properties.label span: 12"
 - id: properties.label.align_right
   type: AutoComplete
   properties:
     label:
       colon: false
       align: right
-    title: "properties.align align: right"
 - id: properties.label.inline_true
   type: AutoComplete
   properties:
     label:
       colon: false
       inline: true
-    title: "properties.label inline: true"
 - id: properties.label.disabled_true
   type: AutoComplete
   properties:
     label:
       colon: false
       disabled: true
-    title: "properties.label disabled: true"
 - id: properties.label.colon_false
   type: AutoComplete
   properties:
     label:
       colon: false
-    title: "properties.label colon: false"
 - id: properties.label.extra_showingextra
   type: AutoComplete
   properties:
     label:
       colon: false
       extra: showing extra
-    title: "properties.label extra: showing extra"
