@@ -16,7 +16,15 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["default", "date", "humanizeDuration"],
+              "enum": [
+                "default",
+                "intlDateTimeFormat",
+                "intlListFormat",
+                "intlNumberFormat",
+                "intlRelativeTimeFormat",
+                "momentFormat",
+                "momentHumanizeDuration"
+              ],
               "description": "Type of formatter to apply to value."
             },
             "properties": {
