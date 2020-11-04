@@ -805,12 +805,6 @@
             "ZoomOutOutlined"
           ]
         },
-        "theme": {
-          "type": "string",
-          "enum": ["Outlined", "Filled", "TwoTone"],
-          "default": "Outlined",
-          "description": "Icon theme style"
-        },
         "rotate": {
           "type": "number",
           "description": "Number of degrees to rotate the icon"
