@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { get, type, serializer } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 import Icon from '../Icon/Icon';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
@@ -37,10 +37,6 @@ const AnchorContent = ({ icon, methods, strong, title }) => {
 };
 
 const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
-  let propertiesIcon = serializer.copy(properties.icon);
-  if (type.isString(propertiesIcon)) {
-    propertiesIcon = { name: propertiesIcon };
-  }
   if (properties.disabled || get(actions, 'onClick.loading') || loading) {
     return (
       <span className={methods.makeCssClass(properties.style)}>
@@ -48,7 +44,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
           icon={
             get(actions, 'onClick.loading') || loading
               ? { name: 'LoadingOutlined', spin: true }
-              : propertiesIcon
+              : properties.icon
           }
           methods={methods}
           strong={properties.strong}
@@ -65,7 +61,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
       }
     >
       <AnchorContent
-        icon={propertiesIcon}
+        icon={properties.icon}
         methods={methods}
         strong={properties.strong}
         title={type.isNone(properties.title) ? blockId : properties.title}
