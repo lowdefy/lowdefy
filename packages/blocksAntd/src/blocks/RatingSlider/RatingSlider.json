@@ -28,12 +28,12 @@
         "minIcon": {
           "type": ["string", "object"],
           "default": "FrownOutlined",
-          "description": "Ant Icon to the left of the minimum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider."
         },
         "maxIcon": {
           "type": ["string", "object"],
           "default": "SmileOutlined",
-          "description": "Ant Icon to the right of the maximum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider."
         },
         "inputStyle": {
           "type": "object",

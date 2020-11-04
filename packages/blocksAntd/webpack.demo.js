@@ -1,4 +1,5 @@
 const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const { merge } = require('webpack-merge');
 
@@ -45,6 +46,9 @@ module.exports = merge(common, {
           transform: addRemoteEntryUrl,
         },
       ],
+    }),
+    new HtmlWebpackPlugin({
+      template: './demo/index.html',
     }),
   ],
 });

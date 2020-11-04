@@ -16,7 +16,15 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["default", "date", "humanizeDuration"],
+              "enum": [
+                "default",
+                "intlDateTimeFormat",
+                "intlListFormat",
+                "intlNumberFormat",
+                "intlRelativeTimeFormat",
+                "momentFormat",
+                "momentHumanizeDuration"
+              ],
               "description": "Type of formatter to apply to value."
             },
             "properties": {
@@ -45,7 +53,7 @@
         },
         "prefixIcon": {
           "type": ["string", "object"],
-          "description": "Icon to prefix statistic."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which prefix the statistic."
         },
         "suffix": {
           "type": "string",
@@ -53,7 +61,7 @@
         },
         "suffixIcon": {
           "type": ["string", "object"],
-          "description": "Icon to suffix statistic."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which suffix the statistic."
         },
         "title": {
           "type": "string",

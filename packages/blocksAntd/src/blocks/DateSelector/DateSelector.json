@@ -51,6 +51,7 @@
         "label": {
           "type": "object",
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -71,10 +72,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -110,7 +124,7 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "CalendarOutlined",
-          "description": "Ant Icon at the right-hand side of the date picker,."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker."
         },
         "title": {
           "type": "string",

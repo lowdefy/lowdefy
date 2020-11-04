@@ -21,7 +21,7 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Customized modal icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize modal icon."
         },
         "mask": {
           "type": "boolean",

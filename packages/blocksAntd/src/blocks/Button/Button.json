@@ -26,10 +26,6 @@
           "type": "boolean",
           "description": "Make the button's background transparent when true."
         },
-        "hideActionLoading": {
-          "type": "boolean",
-          "description": "Hide the loading message when an action is in progress. Useful when using the button as a link to a new page."
-        },
         "hideTitle": {
           "type": "boolean",
           "description": "Hide the button's title."
@@ -40,12 +36,12 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Icon to be used in button."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use icon in button."
         },
         "shape": {
           "type": "string",
           "default": "square",
-          "enum": ["round", "circle", "square"],
+          "enum": ["round", "circle"],
           "description": "Shape of the button."
         },
         "size": {

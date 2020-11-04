@@ -60,18 +60,6 @@ exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
-exports[`Test Schema properties.content 1`] = `false`;
+exports[`Test Schema properties.content 1`] = `true`;
 
-exports[`Test Schema properties.content 2`] = `
-Array [
-  Object {
-    "dataPath": "/properties/content",
-    "keyword": "type",
-    "message": "should be object",
-    "params": Object {
-      "type": "object",
-    },
-    "schemaPath": "#/properties/properties/properties/content/type",
-  },
-]
-`;
+exports[`Test Schema properties.content 2`] = `null`;

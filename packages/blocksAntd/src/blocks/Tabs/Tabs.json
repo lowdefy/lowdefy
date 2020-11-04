@@ -49,7 +49,7 @@
               },
               "key": {
                 "type": "string",
-                "description": "Key of the tab."
+                "description": "Area key of the tab."
               },
               "disabled": {
                 "type": "boolean",
@@ -57,7 +57,7 @@
               },
               "icon": {
                 "type": ["string", "object"],
-                "description": "Icon to show in tab title."
+                "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to show in tab title."
               }
             }
           }

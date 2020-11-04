@@ -15,7 +15,7 @@
         "checkedIcon": {
           "type": ["string", "object"],
           "default": "CheckOutlined",
-          "description": "Ant Icon to shown when switch is checked (true)."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is checked (true)."
         },
         "color": {
           "type": "string",
@@ -86,7 +86,7 @@
         "uncheckedIcon": {
           "type": ["string", "object"],
           "default": "CloseOutlined",
-          "description": "Ant Icon to shown when switch is unchecked (false)."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is unchecked (false)."
         }
       }
     },

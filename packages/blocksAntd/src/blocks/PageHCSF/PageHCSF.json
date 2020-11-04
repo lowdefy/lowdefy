@@ -30,7 +30,7 @@
           "type": "object",
           "description": "Main layout properties."
         },
-        "constent": {
+        "content": {
           "type": "object",
           "description": "Content properties."
         },
