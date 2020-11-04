@@ -833,11 +833,6 @@
           "type": "boolean",
           "default": false,
           "description": "While loading after the icon has been clicked, don't render the loading icon"
-        },
-        "hideLoadingMessage": {
-          "type": "boolean",
-          "default": false,
-          "description": "While loading after the icon has been clicked, don't show the loading message"
         }
       }
     },

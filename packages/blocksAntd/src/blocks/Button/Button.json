@@ -26,10 +26,6 @@
           "type": "boolean",
           "description": "Make the button's background transparent when true."
         },
-        "hideActionLoading": {
-          "type": "boolean",
-          "description": "Hide the loading message when an action is in progress. Useful when using the button as a link to a new page."
-        },
         "hideTitle": {
           "type": "boolean",
           "description": "Hide the button's title."

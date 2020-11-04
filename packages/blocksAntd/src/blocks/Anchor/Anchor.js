@@ -56,9 +56,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
   return (
     <a
       className={methods.makeCssClass(properties.style)}
-      onClick={() =>
-        methods.callAction({ action: 'onClick', hideLoading: properties.hideActionLoading })
-      }
+      onClick={() => methods.callAction({ action: 'onClick' })}
     >
       <AnchorContent
         icon={properties.icon}
