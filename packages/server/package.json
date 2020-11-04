@@ -34,7 +34,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.1",
+    "@lowdefy/block-tools": "1.0.2",
     "@lowdefy/graphql": "0.0.0-alpha.1",
     "apollo-server-express": "2.19.0",
     "express": "4.17.1",
