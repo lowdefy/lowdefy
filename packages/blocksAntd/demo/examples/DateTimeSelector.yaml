@@ -35,7 +35,7 @@
         - _date: 2020-10-26
         - 2020-10-29
         - 2020-11-02
-- id: "properties.disabledDates.ranges" #Works as >= start, but < end?
+- id: "properties.disabledDates.ranges"
   type: DateSelector
   properties:
     disabledDates:
