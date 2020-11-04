@@ -1,14 +1,15 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
 
-const deps = require('./package.json').dependencies;
+const packageJson = require('./package.json');
 
 module.exports = {
-  entry: './shell/src/index',
+  entry: './src/shell/index',
   output: {
-    path: path.resolve(__dirname, 'shell/dist'),
+    path: path.resolve(__dirname, 'dist/shell'),
   },
   module: {
     rules: [
@@ -38,21 +39,32 @@ module.exports = {
     new ModuleFederationPlugin({
       name: 'lowdefy_web_shell',
       shared: {
-        ...deps,
+        ...packageJson.dependencies,
         react: {
           singleton: true, // only a single version of the shared module is allowed
           requiredVersion: '~17.0.0',
-          version: deps.react,
+          version: packageJson.dependencies.react,
         },
         'react-dom': {
           singleton: true, // only a single version of the shared module is allowed
           requiredVersion: '~17.0.0',
-          version: deps['react-dom'],
+          version: packageJson.dependencies['react-dom'],
         },
+      },
+      remotes: {
+        lowdefy_renderer: `lowdefy_renderer@https://unpkg.com/@lowdefy/renderer@${packageJson.version}/dist/remoteEntry.js`,
       },
     }),
     new HtmlWebpackPlugin({
-      template: './shell/public/index.html',
+      template: './src/shell/index.html',
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'src/server.js',
+          to: '../server.js',
+        },
+      ],
     }),
   ],
 };

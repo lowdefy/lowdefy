@@ -14,7 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/*global __webpack_share_scopes__, __webpack_init_sharing__*/
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Shell from './Shell';
+import { Loading } from '@lowdefy/block-tools';
+
+const Renderer = React.lazy(() => import('lowdefy_renderer/Renderer'));
+
+function Shell() {
+  return (
+    <React.Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
+      <Renderer />
+    </React.Suspense>
+  );
+}
+
 ReactDOM.render(<Shell />, document.getElementById('root'));

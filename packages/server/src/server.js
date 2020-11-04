@@ -38,12 +38,12 @@ const app = express();
 server.applyMiddleware({ app, path: '/api/graphql' });
 
 // Serve Webpack shell files from './shell/dist'
-app.use(express.static('shell/dist'));
+app.use(express.static('dist/shell'));
 
 // Redirect all 404 to index.html with status 200
 // This should always be the last route
 app.use((req, res) => {
-  res.sendFile(path.resolve(process.cwd(), 'shell/dist/index.html'));
+  res.sendFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
 });
 
 app.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));
