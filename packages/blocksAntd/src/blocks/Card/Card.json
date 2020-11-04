@@ -1,0 +1,41 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        },
+        "bordered": {
+          "type": "boolean",
+          "description": "Toggles rendering of the border around the card."
+        },
+        "hoverable": {
+          "type": "boolean",
+          "description": "Lift up when hovering card."
+        },
+        "headerStyle": {
+          "type": "object",
+          "description": "Css style to applied to card header."
+        },
+        "bodyStyle": {
+          "type": "object",
+          "description": "Css style to applied to card body."
+        },
+        "inner": {
+          "type": "boolean",
+          "description": "Change the card style to inner."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["default", "small"],
+          "description": "Size of the card."
+        }
+      }
+    }
+  }
+}

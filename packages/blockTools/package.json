@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-tools",
-  "version": "1.0.1-alpha.13",
+  "version": "1.0.1",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Tools",
   "homepage": "https://lowdefy.com",
@@ -57,6 +57,7 @@
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.0.0",
     "enzyme": "3.11.0",
+    "enzyme-to-json": "3.6.1",
     "html-webpack-plugin": "4.5.0",
     "identity-obj-proxy": "3.0.0",
     "jest": "26.6.3",

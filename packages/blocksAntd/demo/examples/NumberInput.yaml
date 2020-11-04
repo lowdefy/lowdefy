@@ -1,0 +1,6 @@
+- id: default
+  type: NumberInput
+- id: properties.title
+  type: NumberInput
+  properties:
+    title: Number Input Title

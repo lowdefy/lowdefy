@@ -1,0 +1,15 @@
+- id: default
+  type: Descriptions
+- id: properties.items-object
+  type: Descriptions
+  properties:
+    items:
+      - value: 1
+        label: one
+      - value: 2
+        label: two
+- id: properties.opt
+  type: Descriptions
+  properties:
+    a: 1
+

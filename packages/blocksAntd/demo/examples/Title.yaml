@@ -1,0 +1,6 @@
+- id: default
+  type: Title
+- id: properties.content
+  type: Title
+  properties:
+    content: Content Test

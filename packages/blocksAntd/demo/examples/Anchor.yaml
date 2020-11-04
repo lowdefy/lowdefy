@@ -1,0 +1,10 @@
+- id: default
+  type: Anchor
+- id: properties.title
+  type: Anchor
+  properties:
+    title: Alert title
+- id: properties.icon
+  type: Anchor
+  properties:
+    icon: LinkOutlined

@@ -1,0 +1,6 @@
+- id: default
+  type: Result
+- id: properties.title
+  type: Result
+  properties:
+    title: Result title

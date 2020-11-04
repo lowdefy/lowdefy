@@ -1,0 +1,81 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "decimalSeparator": {
+          "type": "string",
+          "default": ".",
+          "description": "Decimal separator."
+        },
+        "formatter": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "default",
+                "intlDateTimeFormat",
+                "intlListFormat",
+                "intlNumberFormat",
+                "intlRelativeTimeFormat",
+                "momentFormat",
+                "momentHumanizeDuration"
+              ],
+              "description": "Type of formatter to apply to value."
+            },
+            "properties": {
+              "type": "object",
+              "properties": {
+                "format": {
+                  "type": "string",
+                  "description": "Moment.js date format"
+                }
+              }
+            }
+          }
+        },
+        "groupSeparator": {
+          "type": "string",
+          "default": ",",
+          "description": "Group separator."
+        },
+        "precision": {
+          "type": "number",
+          "description": "Number of decimals to display."
+        },
+        "prefix": {
+          "type": "string",
+          "description": "Prefix text, priority over prefixIcon."
+        },
+        "prefixIcon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which prefix the statistic."
+        },
+        "suffix": {
+          "type": "string",
+          "description": "Suffix text, priority over suffixIcon."
+        },
+        "suffixIcon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which suffix the statistic."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        },
+        "value": {
+          "type": ["number", "string", "object"],
+          "description": "Value to display."
+        },
+        "valueStyle": {
+          "type": "object",
+          "description": "Css style to applied to value."
+        }
+      }
+    }
+  }
+}

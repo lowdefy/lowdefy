@@ -1,0 +1,10 @@
+- id: default
+  type: Tabs
+- id: properties.tabs
+  type: Tabs
+  properties:
+    tabs: 
+      - title: one
+        key: one
+      - title: two
+        key: two

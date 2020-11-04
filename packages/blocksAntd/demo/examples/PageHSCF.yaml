@@ -1,0 +1,7 @@
+- id: default
+  type: PageHSCF
+- id: properties.content
+  type: PageHSCF
+  properties:
+    content: 
+      content: This is page content

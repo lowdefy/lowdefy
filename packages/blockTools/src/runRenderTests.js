@@ -27,13 +27,10 @@ const runRenderTests = ({ examples, Block, meta, logger }) => {
     test(`Render ${ex.id}`, () => {
       // create shell to setup react hooks with getProps before render;
       const Shell = () => <Block {...getProps({ ...ex, methods })} />;
-      const comp = renderer.create(<Shell />, {
-        createNodeMock: () => {
-          return { innerHTML: '' };
-        },
-      });
+      const comp = renderer.create(<Shell />);
       const tree = comp.toJSON();
       expect(tree).toMatchSnapshot();
+      comp.unmount();
     });
   });
 };

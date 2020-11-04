@@ -1,0 +1,33 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to use as result image."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["success", "error", "info", "warning", "404", "403", "500"],
+          "default": "info",
+          "description": "Status of the result. Determines image and color."
+        },
+        "subTitle": {
+          "type": "string",
+          "description": "Result subtitle or secondary text."
+        },
+        "title": {
+          "type": "string",
+          "description": "Result title or primary text."
+        }
+      }
+    },
+    "actions": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+- id: default
+  type: Timeline
+- id: properties.items
+  type: Timeline
+  properties:
+    items: 
+      - title: one
+      - title: two

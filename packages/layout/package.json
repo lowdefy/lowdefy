@@ -39,7 +39,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.1-alpha.13",
+    "@lowdefy/block-tools": "1.0.1",
     "@lowdefy/helpers": "1.1.0",
     "antd": "4.4.2",
     "react": "17.0.1",
@@ -50,7 +50,7 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
-    "@lowdefy/block-tools": "1.0.1-alpha.13",
+    "@lowdefy/block-tools": "1.0.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.1.0",
     "babel-plugin-import": "1.13.1",

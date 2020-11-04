@@ -1,0 +1,10 @@
+- id: default
+  type: Switch
+- id: properties.title
+  type: Switch
+  properties:
+    title: A Switch
+- id: properties.uncheckedIcon
+  type: Switch
+  properties:
+    uncheckedIcon: DeleteOutlined

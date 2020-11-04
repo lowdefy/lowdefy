@@ -1,0 +1,6 @@
+- id: default
+  type: Alert
+- id: properties.message
+  type: Alert
+  properties:
+    message: Alert message

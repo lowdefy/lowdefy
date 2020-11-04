@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-alert ant-alert-info ant-alert-no-icon"
+  data-show={true}
+>
+  <span
+    className="ant-alert-message"
+  />
+  <span
+    className="ant-alert-description"
+  />
+</div>
+`;
+
+exports[`Render properties.message 1`] = `
+<div
+  className="ant-alert ant-alert-info ant-alert-no-icon"
+  data-show={true}
+>
+  <span
+    className="ant-alert-message"
+  >
+    Alert message
+  </span>
+  <span
+    className="ant-alert-description"
+  />
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.message 1`] = `true`;
+
+exports[`Test Schema properties.message 2`] = `null`;
