@@ -47,7 +47,7 @@
     "@babel/preset-react": "7.12.5",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "3.0.0",
-    "copy-webpack-plugin": "6.2.1",
+    "copy-webpack-plugin": "6.3.0",
     "css-loader": "5.0.0",
     "html-webpack-plugin": "4.5.0",
     "nodemon": "2.0.6",
