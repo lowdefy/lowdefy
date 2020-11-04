@@ -49,7 +49,7 @@
               },
               "key": {
                 "type": "string",
-                "description": "Key of the tab."
+                "description": "Area key of the tab."
               },
               "disabled": {
                 "type": "boolean",
