@@ -62,11 +62,12 @@
         "label": {
           "type": "object",
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "left",
+              "defaultValue": "right",
               "description": "Align label left or right when inline."
             },
             "colon": {
@@ -82,10 +83,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -111,7 +125,7 @@
         "secondStep": {
           "type": "integer",
           "default": 5,
-          "minimum": 30,
+          "minimum": 1,
           "description": "Minute intervals to show in the time selector."
         },
         "selectGMT": {
