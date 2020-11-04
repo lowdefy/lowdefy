@@ -26,10 +26,6 @@
           "type": "object",
           "description": "Css style to applied to card body."
         },
-        "loading": {
-          "type": "boolean",
-          "description": "Shows a loading indicator while the contents of the card are being fetched."
-        },
         "inner": {
           "type": "boolean",
           "description": "Change the card style to inner."
