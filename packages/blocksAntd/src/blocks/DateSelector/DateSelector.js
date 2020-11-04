@@ -41,7 +41,7 @@ const DateSelector = ({ blockId, loading, methods, properties, required, validat
   return (
     <Label
       blockId={blockId}
-      properties={{ title: properties.title, size: properties.size, ...properties.Label }}
+      properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validate={validate}
       required={required}
       loading={loading}
