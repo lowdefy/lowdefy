@@ -46,7 +46,7 @@
         "open": {
           "type": "boolean",
           "default": false,
-          "description": "Overwrite the modal dialog is open."
+          "description": "Set the modal as open or closed using a property instead of actions."
         },
         "okText": {
           "type": "string",

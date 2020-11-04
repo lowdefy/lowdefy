@@ -46,7 +46,7 @@ const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties }
       href={properties.href}
       id={blockId}
       loading={loading || get(actions, 'onClick.loading')}
-      shape={properties.shape === 'square' ? undefined : properties.shape}
+      shape={properties.shape}
       size={properties.size}
       type={get(properties, 'type', { default: 'primary' })}
       icon={properties.icon && <Icon methods={methods} properties={properties.icon} actions={{}} />}

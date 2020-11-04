@@ -33,10 +33,7 @@ const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => {
       shape={properties.shape}
       size={properties.size}
       src={properties.src}
-      onClick={
-        onClick ||
-        (() => methods.callAction({ action: 'onClick', hideLoading: properties.hideActionLoading }))
-      }
+      onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
       className={methods.makeCssClass([
         {
           backgroundColor:

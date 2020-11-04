@@ -73,7 +73,7 @@
                   },
                   "icon": {
                     "type": ["string", "object"],
-                    "description": "Menu item icon."
+                    "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item."
                   },
                   "danger": {
                     "type": "boolean",

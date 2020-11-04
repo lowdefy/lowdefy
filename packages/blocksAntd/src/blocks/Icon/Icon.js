@@ -53,7 +53,6 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
                 (() =>
                   methods.callAction({
                     action: 'onClick',
-                    hideLoading: propertiesCopy.hideActionLoading,
                   }))
               }
               twoToneColor={propertiesCopy.color}
