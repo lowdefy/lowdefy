@@ -48,13 +48,6 @@
       - Option 1
       - Option 2
     backfill: true
-- id: "properties.defaultActiveFirstOption: true"
-  type: AutoComplete
-  properties:
-    options:
-      - Option 1
-      - Option 2
-    defaultActiveFirstOption: true
 - id: "properties.defaultOpen: true"
   type: AutoComplete
   properties:

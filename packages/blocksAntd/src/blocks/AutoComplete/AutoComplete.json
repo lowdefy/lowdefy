@@ -22,11 +22,6 @@
           "default": false,
           "description": "Backfill selected item the input when using keyboard"
         },
-        "defaultActiveFirstOption": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether active first option by default."
-        },
         "defaultOpen": {
           "type": "boolean",
           "default": false,

@@ -47,7 +47,6 @@ const AutoCompleteInput = ({
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
             className={methods.makeCssClass(properties.inputStyle)}
-            defaultActiveFirstOption={properties.defaultActiveFirstOption}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled}
             placeholder={properties.placeholder || 'Type or select item'}

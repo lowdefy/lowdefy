@@ -16,10 +16,6 @@ exports[`Test Schema properties.backfill: true 1`] = `true`;
 
 exports[`Test Schema properties.backfill: true 2`] = `null`;
 
-exports[`Test Schema properties.defaultActiveFirstOption: true 1`] = `true`;
-
-exports[`Test Schema properties.defaultActiveFirstOption: true 2`] = `null`;
-
 exports[`Test Schema properties.defaultOpen: true 1`] = `true`;
 
 exports[`Test Schema properties.defaultOpen: true 2`] = `null`;
