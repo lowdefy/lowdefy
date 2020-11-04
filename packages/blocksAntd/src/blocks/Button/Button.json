@@ -45,7 +45,7 @@
         "shape": {
           "type": "string",
           "default": "square",
-          "enum": ["round", "circle", "square"],
+          "enum": ["round", "circle"],
           "description": "Shape of the button."
         },
         "size": {
