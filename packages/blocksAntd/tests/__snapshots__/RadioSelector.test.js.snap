@@ -41,6 +41,1021 @@ exports[`Render default 1`] = `
 </div>
 `;
 
+exports[`Render properties.color_red 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.color_red_input"
+      title="properties.color_red"
+    >
+      properties.color_red
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[{\\"& > label > span.ant-radio-checked:not(.ant-radio-disabled) > span\\":{\\"borderColor\\":\\"red !important\\",\\"&:after\\":{\\"backgroundColor\\":\\"red !important\\"}}},null]}"
+          id="properties.color_red_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.color_red_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.color_red_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.disabled: true_input"
+      title="properties.disabled: true"
+    >
+      properties.disabled: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.disabled: true_input"
+        >
+          <label
+            className="ant-radio-wrapper ant-radio-wrapper-disabled"
+          >
+            <span
+              className="ant-radio ant-radio-disabled"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                disabled={true}
+                id="properties.disabled: true_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper ant-radio-wrapper-disabled"
+          >
+            <span
+              className="ant-radio ant-radio-disabled"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                disabled={true}
+                id="properties.disabled: true_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle. CSS style 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.inputStyle. CSS style_input"
+      title="properties.inputStyle. CSS style"
+    >
+      properties.inputStyle. CSS style
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,{\\"borderBottom\\":\\"1px solid red\\"}]}"
+          id="properties.inputStyle. CSS style_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.inputStyle. CSS style_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.inputStyle. CSS style_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.colon: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.colon: false_input"
+      title="properties.label.colon: false"
+    >
+      properties.label.colon: false
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label.colon: false_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.colon: false_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.colon: false_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label.disabled: true_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.disabled: true_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.disabled: true_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.extra: showingextra 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label.extra: showingextra_input"
+      title="properties.label.extra: showingextra"
+    >
+      properties.label.extra: showingextra
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label.extra: showingextra_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.extra: showingextra_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label.extra: showingextra_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      showing extra
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label: align_right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label: align_right_input"
+      title="properties.label: align_right"
+    >
+      properties.label: align_right
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label: align_right_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: align_right_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: align_right_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label: inline_true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label: inline_true_input"
+      title="properties.label: inline_true"
+    >
+      properties.label: inline_true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label: inline_true_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: inline_true_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: inline_true_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label: span_12 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label: span_12_input"
+      title="properties.label: span_12"
+    >
+      properties.label: span_12
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.label: span_12_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: span_12_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.label: span_12_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-boolean 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-boolean_input"
+      title="properties.options-boolean"
+    >
+      properties.options-boolean
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.options-boolean_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-boolean_true"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              true
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-boolean_false"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              false
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-number 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-number_input"
+      title="properties.options-number"
+    >
+      properties.options-number
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
+          id="properties.options-number_input"
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-number_16"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              16
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.options-number_20"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              20
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
@@ -178,7 +1193,7 @@ exports[`Render properties.options-string 1`] = `
               <input
                 checked={false}
                 className="ant-radio-input"
-                id="properties.options-string_one"
+                id="properties.options-string_Option 1"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -190,7 +1205,7 @@ exports[`Render properties.options-string 1`] = `
               />
             </span>
             <span>
-              one
+              Option 1
             </span>
           </label>
           <label
@@ -203,7 +1218,7 @@ exports[`Render properties.options-string 1`] = `
               <input
                 checked={false}
                 className="ant-radio-input"
-                id="properties.options-string_two"
+                id="properties.options-string_Option 2"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -215,7 +1230,7 @@ exports[`Render properties.options-string 1`] = `
               />
             </span>
             <span>
-              two
+              Option 2
             </span>
           </label>
         </div>
@@ -241,9 +1256,9 @@ exports[`Render properties.title 1`] = `
     <label
       className="{}"
       htmlFor="properties.title_input"
-      title="Radio selector"
+      title="properties.title: My RadioSelector Title "
     >
-      Radio selector
+      properties.title: My RadioSelector Title 
     </label>
   </div>
   <div
@@ -259,7 +1274,58 @@ exports[`Render properties.title 1`] = `
         <div
           className="ant-radio-group ant-radio-group-outline {\\"style\\":[null,null]}"
           id="properties.title_input"
-        />
+        >
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.title_Option 1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={0}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 1
+            </span>
+          </label>
+          <label
+            className="ant-radio-wrapper"
+          >
+            <span
+              className="ant-radio"
+              style={Object {}}
+            >
+              <input
+                checked={false}
+                className="ant-radio-input"
+                id="properties.title_Option 2"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+                value={1}
+              />
+              <span
+                className="ant-radio-inner"
+              />
+            </span>
+            <span>
+              Option 2
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -269,6 +1335,50 @@ exports[`Render properties.title 1`] = `
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.color_red 1`] = `true`;
+
+exports[`Test Schema properties.color_red 2`] = `null`;
+
+exports[`Test Schema properties.disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.inputStyle. CSS style 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle. CSS style 2`] = `null`;
+
+exports[`Test Schema properties.label.colon: false 1`] = `true`;
+
+exports[`Test Schema properties.label.colon: false 2`] = `null`;
+
+exports[`Test Schema properties.label.disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.label.disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.label.extra: showingextra 1`] = `true`;
+
+exports[`Test Schema properties.label.extra: showingextra 2`] = `null`;
+
+exports[`Test Schema properties.label: align_right 1`] = `true`;
+
+exports[`Test Schema properties.label: align_right 2`] = `null`;
+
+exports[`Test Schema properties.label: inline_true 1`] = `true`;
+
+exports[`Test Schema properties.label: inline_true 2`] = `null`;
+
+exports[`Test Schema properties.label: span_12 1`] = `true`;
+
+exports[`Test Schema properties.label: span_12 2`] = `null`;
+
+exports[`Test Schema properties.options-boolean 1`] = `true`;
+
+exports[`Test Schema properties.options-boolean 2`] = `null`;
+
+exports[`Test Schema properties.options-number 1`] = `true`;
+
+exports[`Test Schema properties.options-number 2`] = `null`;
 
 exports[`Test Schema properties.options-object 1`] = `true`;
 
