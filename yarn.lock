@@ -1193,16 +1193,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx-development@npm:^7.12.1":
-  version: 7.12.1
-  resolution: "@babel/plugin-transform-react-jsx-development@npm:7.12.1"
+"@babel/plugin-transform-react-jsx-development@npm:^7.12.1, @babel/plugin-transform-react-jsx-development@npm:^7.12.5":
+  version: 7.12.5
+  resolution: "@babel/plugin-transform-react-jsx-development@npm:7.12.5"
   dependencies:
     "@babel/helper-builder-react-jsx-experimental": ^7.12.1
     "@babel/helper-plugin-utils": ^7.10.4
     "@babel/plugin-syntax-jsx": ^7.12.1
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 2af1228b5e259f44e474439605ebe875df1c87bbd0f2ce7ba15be1d4e204edeb34b0334d3d8ae93cb47255cab3ade7be9f6cfc1a7a8f6a3099355587caf675b5
+  checksum: fec194e2f4dfbee97c6c18c2af6fd037b97bfe6024df2548d4453074fd687239bc2d452d9ef1ecc20fb63d2074178994c2c659ffb630ca4d45d4e9462ba643b6
   languageName: node
   linkType: hard
 
@@ -1228,9 +1228,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx@npm:^7.12.1":
-  version: 7.12.1
-  resolution: "@babel/plugin-transform-react-jsx@npm:7.12.1"
+"@babel/plugin-transform-react-jsx@npm:^7.12.1, @babel/plugin-transform-react-jsx@npm:^7.12.5":
+  version: 7.12.5
+  resolution: "@babel/plugin-transform-react-jsx@npm:7.12.5"
   dependencies:
     "@babel/helper-builder-react-jsx": ^7.10.4
     "@babel/helper-builder-react-jsx-experimental": ^7.12.1
@@ -1238,7 +1238,7 @@ __metadata:
     "@babel/plugin-syntax-jsx": ^7.12.1
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 58dbb169e2a97a7cba0a6b204c8288827be7d8a5aa895240c0228eae9c889e9ec991ee84b32fc8be665709822febc4356e7ddff02168c24ccafa16641c5bab25
+  checksum: 254ddc1097fe88acb3c25f01a439f97df0124bf08a73a3e27418029f4bb47cd761d0430615713380afba02f0ca5ce26c44351228d084214ecb024852bff0d473
   languageName: node
   linkType: hard
 
@@ -1486,6 +1486,23 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 67219d33110be1e6cb64b7a5470589cc4a0ada14fa80a86e676adf0baa3b3180c3586964e989509509b659b8c7744abb57d4a5513130fc40fca12fbc16aa6669
+  languageName: node
+  linkType: hard
+
+"@babel/preset-react@npm:7.12.5":
+  version: 7.12.5
+  resolution: "@babel/preset-react@npm:7.12.5"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.10.4
+    "@babel/plugin-transform-react-display-name": ^7.12.1
+    "@babel/plugin-transform-react-jsx": ^7.12.5
+    "@babel/plugin-transform-react-jsx-development": ^7.12.5
+    "@babel/plugin-transform-react-jsx-self": ^7.12.1
+    "@babel/plugin-transform-react-jsx-source": ^7.12.1
+    "@babel/plugin-transform-react-pure-annotations": ^7.12.1
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 1083243ebf652f0895f407b2f8f74c602e602056f225b5c9e9f181019e76d6d475130749b4c543437ca78ee84fa54b3552bcd5a7bb2f40de26cdd3adffe7222a
   languageName: node
   linkType: hard
 
@@ -2850,7 +2867,7 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/helpers": 1.1.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
     ajv: 6.12.6
@@ -2873,7 +2890,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -2938,14 +2955,14 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
     babel-jest: 26.6.3
     babel-loader: 8.1.0
     buffer: 5.7.0
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.2.1
+    copy-webpack-plugin: 6.3.0
     css-loader: 5.0.0
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
@@ -2957,7 +2974,7 @@ __metadata:
     react-markdown: 4.3.1
     react-syntax-highlighter: 15.3.0
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.2.0
@@ -2986,7 +3003,7 @@ __metadata:
     js-yaml: 3.14.0
     json5: 2.1.3
     uuid: 8.3.1
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
   languageName: unknown
   linkType: soft
@@ -2998,7 +3015,7 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
@@ -3024,7 +3041,7 @@ __metadata:
     react-dom: 17.0.1
     reload: 3.1.1
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.0.0
   bin:
     lowdefy: ./dist/index.js
@@ -3117,7 +3134,7 @@ __metadata:
     graphql: 15.4.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
   languageName: unknown
   linkType: soft
@@ -3144,7 +3161,7 @@ __metadata:
     "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/helpers": 1.1.0
     antd: 4.4.2
@@ -3168,7 +3185,7 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
     yaml-jest: 1.0.5
@@ -3249,7 +3266,7 @@ __metadata:
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
     "@babel/core": 7.12.3
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/engine": 0.0.0-alpha.1
     "@lowdefy/helpers": 1.1.0
@@ -3266,7 +3283,7 @@ __metadata:
     react-router-dom: 5.2.0
     serve: 11.3.2
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.3.0
@@ -3278,7 +3295,7 @@ __metadata:
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
     "@babel/core": 7.12.3
-    "@babel/preset-react": 7.12.1
+    "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.1-alpha.13
     "@lowdefy/graphql": 0.0.0-alpha.1
     apollo-server-express: 2.19.0
@@ -3292,7 +3309,7 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.1.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.3.0
@@ -7428,6 +7445,27 @@ __metadata:
   peerDependencies:
     webpack: ^4.37.0 || ^5.0.0
   checksum: 99ef83b4237b51e95618365ad2e62775b640fe1cae0d39d3ab03bcb09c9026a00ab0fb1c03f72d164c1457482114ddf959e7a03ab409704f34686e0a64ee4a31
+  languageName: node
+  linkType: hard
+
+"copy-webpack-plugin@npm:6.3.0":
+  version: 6.3.0
+  resolution: "copy-webpack-plugin@npm:6.3.0"
+  dependencies:
+    cacache: ^15.0.5
+    fast-glob: ^3.2.4
+    find-cache-dir: ^3.3.1
+    glob-parent: ^5.1.1
+    globby: ^11.0.1
+    loader-utils: ^2.0.0
+    normalize-path: ^3.0.0
+    p-limit: ^3.0.2
+    schema-utils: ^3.0.0
+    serialize-javascript: ^5.0.1
+    webpack-sources: ^1.4.3
+  peerDependencies:
+    webpack: ^4.37.0 || ^5.0.0
+  checksum: edca6ec5cd079eb6bdb16ff0c0d964951396fdbd5af2970110119dafaf9f98843af7738f8b68ef87383b3917a16c397a2162f2a66940dc0b2e08f041e128ffc9
   languageName: node
   linkType: hard
 
@@ -20697,6 +20735,43 @@ fsevents@^1.2.7:
   bin:
     webpack: bin/webpack.js
   checksum: 334a24989d164e4652f6afd2ca2302ecd7d3fd5a963164f60e368ca812b5036fff9b1b6bdbf0257b94a4bbe401ccc0d2922b262631011ec2bcbcc810bcae88a3
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.4.0":
+  version: 5.4.0
+  resolution: "webpack@npm:5.4.0"
+  dependencies:
+    "@types/eslint-scope": ^3.7.0
+    "@types/estree": ^0.0.45
+    "@webassemblyjs/ast": 1.9.0
+    "@webassemblyjs/helper-module-context": 1.9.0
+    "@webassemblyjs/wasm-edit": 1.9.0
+    "@webassemblyjs/wasm-parser": 1.9.0
+    acorn: ^8.0.4
+    browserslist: ^4.14.5
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.3.1
+    eslint-scope: ^5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.4
+    json-parse-better-errors: ^1.0.2
+    loader-runner: ^4.1.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    pkg-dir: ^4.2.0
+    schema-utils: ^3.0.0
+    tapable: ^2.0.0
+    terser-webpack-plugin: ^5.0.3
+    watchpack: ^2.0.0
+    webpack-sources: ^2.1.1
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 1da5d7f1f0ec1f8f0a0ef2ef4b374805a9abd9a1a30e8834ab4b2f7793ce43251ea5c50b0132884666bd5189711f2049c66bb06ca6c381bfb022355619dc93bc
   languageName: node
   linkType: hard
 
