@@ -29,7 +29,7 @@ const BadgeBlock = ({ blockId, content, properties }) => (
     overflowCount={type.isNumber(properties.overflowCount) ? properties.overflowCount : 100}
     showZero={properties.showZero}
     status={properties.status}
-    text={properties.text}
+    text={content.text ? content.text() : properties.text}
     title={properties.title}
   >
     {content.content && content.content()}
