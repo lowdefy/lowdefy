@@ -1,5 +1,4 @@
 releases:
-  "@lowdefy/block-tools": patch
   "@lowdefy/blocks-antd": patch
   "@lowdefy/blocks-basic": patch
   "@lowdefy/build": patch
