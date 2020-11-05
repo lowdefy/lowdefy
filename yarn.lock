@@ -2827,7 +2827,7 @@ __metadata:
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     create-emotion: 10.0.27
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     enzyme: 3.11.0
     enzyme-to-json: 3.6.1
     html-webpack-plugin: 4.5.0
@@ -2871,7 +2871,7 @@ __metadata:
     classnames: 2.2.6
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 6.2.1
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     enzyme: 3.11.0
     enzyme-to-json: 3.6.1
     html-webpack-plugin: 4.5.0
@@ -2913,7 +2913,7 @@ __metadata:
     buffer: 6.0.1
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 6.3.0
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
@@ -2977,7 +2977,7 @@ __metadata:
     chokidar: 3.4.3
     clean-webpack-plugin: 3.0.0
     commander: 6.2.0
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     decompress: 4.2.1
     decompress-targz: 4.1.1
     express: 4.17.1
@@ -3120,7 +3120,7 @@ __metadata:
     babel-plugin-import: 1.13.1
     buffer: 6.0.1
     clean-webpack-plugin: 3.0.0
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
@@ -3223,7 +3223,7 @@ __metadata:
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     graphql: 15.4.0
     graphql-type-json: 0.3.2
     html-webpack-plugin: 4.5.0
@@ -3252,7 +3252,7 @@ __metadata:
     babel-loader: 8.1.0
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 6.3.0
-    css-loader: 5.0.0
+    css-loader: 5.0.1
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
@@ -6416,7 +6416,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase@npm:^6.0.0, camelcase@npm:^6.1.0":
+"camelcase@npm:^6.0.0, camelcase@npm:^6.2.0":
   version: 6.2.0
   resolution: "camelcase@npm:6.2.0"
   checksum: 654700600a80cb1f06ab85b3e2fe80333f94b441884d40826becdac549774f51b0317c6dcb6040416df26241fa9481eb58d0c1659d4d6d5627dcd4259be61beb
@@ -7507,15 +7507,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-loader@npm:5.0.0":
-  version: 5.0.0
-  resolution: "css-loader@npm:5.0.0"
+"css-loader@npm:5.0.1":
+  version: 5.0.1
+  resolution: "css-loader@npm:5.0.1"
   dependencies:
-    camelcase: ^6.1.0
+    camelcase: ^6.2.0
     cssesc: ^3.0.0
     icss-utils: ^5.0.0
     loader-utils: ^2.0.0
-    postcss: ^8.1.1
+    postcss: ^8.1.4
     postcss-modules-extract-imports: ^3.0.0
     postcss-modules-local-by-default: ^4.0.0
     postcss-modules-scope: ^3.0.0
@@ -7525,7 +7525,7 @@ __metadata:
     semver: ^7.3.2
   peerDependencies:
     webpack: ^4.27.0 || ^5.0.0
-  checksum: 8b0d45e2011d09ba91fd6d200f07ee7206104e676a84c7a01f9c7d6b7515e9b882b44a290f44002d4624d8252d9b06303f0a5c0e1885c43238ad84482e5efb51
+  checksum: 5c257ac08dcc8c3b52175d4fbd3154c331c5784a48b24c2d432505daf5ee9a10504ef85171bc41f32fe1c3f491e9c4f60949927cbb8ed0ebcd3c5d67161484e4
   languageName: node
   linkType: hard
 
@@ -15567,7 +15567,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.1":
+"postcss@npm:^8.1.4":
   version: 8.1.4
   resolution: "postcss@npm:8.1.4"
   dependencies:
