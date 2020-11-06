@@ -1,0 +1,6 @@
+- id: default
+  type: ConfirmModal
+- id: properties.title
+  type: ConfirmModal
+  properties:
+    title: ConfirmModal block

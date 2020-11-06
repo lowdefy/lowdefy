@@ -1,0 +1,7 @@
+- id: default
+  type: PageHeaderMenu
+- id: properties.content
+  type: PageHeaderMenu
+  properties:
+    content: 
+      content: This is page content

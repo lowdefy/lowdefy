@@ -1,0 +1,6 @@
+- id: default
+  type: Comment
+- id: properties.author
+  type: Comment
+  properties:
+    author: Comment author

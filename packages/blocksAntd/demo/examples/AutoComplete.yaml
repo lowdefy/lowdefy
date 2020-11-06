@@ -1,0 +1,114 @@
+- id: default
+  type: AutoComplete
+- id: "properties.options-string"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+- id: properties.title
+  type: AutoComplete
+  properties:
+    title: "properties.title: My AutoComplete Title"
+- id: "properties.allowClear: false"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    allowClear: false
+- id: "properties.inputStyle: CSS style applied"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    inputStyle:
+      border: 1px solid red
+- id: "properties.optionsStyle: CSS style applied"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    optionsStyle:
+      color: blue
+
+- id: "properties.autoFocus: true"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    autoFocus: true
+- id: "properties.backfill: true"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    backfill: true
+- id: "properties.defaultOpen: true"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    defaultOpen: true
+- id: "properties.disabled: true"
+  type: AutoComplete
+  properties:
+    disabled: true
+- id: "properties.placeholder_Text_inside_block"
+  type: AutoComplete"
+  properties:
+    placeholder: Text inside block
+- id: "properties.size: small"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    size: small
+- id: "properties.size: large"
+  type: AutoComplete
+  properties:
+    options:
+      - Option 1
+      - Option 2
+    size: large
+- id: properties.label.span_12
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+      span: 4
+- id: properties.label.align_right
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+      align: right
+- id: properties.label.inline_true
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+      inline: true
+- id: properties.label.disabled_true
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+      disabled: true
+- id: properties.label.colon_false
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+- id: properties.label.extra_showingextra
+  type: AutoComplete
+  properties:
+    label:
+      colon: false
+      extra: showing extra

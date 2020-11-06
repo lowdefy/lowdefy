@@ -19,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lowdefy/blocks-basic.git"
+    "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "browser": "dist/remoteEntry.js",
   "files": [
@@ -40,7 +40,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.1-alpha.13",
+    "@lowdefy/block-tools": "1.0.2",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
@@ -52,10 +52,10 @@
     "@wojtekmaj/enzyme-adapter-react-17": "0.3.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.1.0",
-    "buffer": "5.7.0",
+    "buffer": "6.0.1",
     "clean-webpack-plugin": "3.0.0",
     "copy-webpack-plugin": "6.3.0",
-    "css-loader": "5.0.0",
+    "css-loader": "5.0.1",
     "enzyme": "3.11.0",
     "html-webpack-plugin": "4.5.0",
     "identity-obj-proxy": "3.0.0",
@@ -65,7 +65,7 @@
     "react-syntax-highlighter": "15.3.0",
     "style-loader": "2.0.0",
     "webpack": "5.4.0",
-    "webpack-cli": "4.1.0",
+    "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.2.0",
     "yaml-jest": "1.0.5",

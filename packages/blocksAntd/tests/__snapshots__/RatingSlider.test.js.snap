@@ -1,0 +1,1025 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\"}}"
+        >
+          <div
+            className="ant-row ant-form-item {\\"style\\":{}}"
+            style={
+              Object {
+                "marginBottom": 0,
+              }
+            }
+          >
+            <div
+              className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+              style={Object {}}
+            >
+              <div
+                className="ant-form-item-control-input"
+              >
+                <div
+                  className="ant-form-item-control-input-content"
+                >
+                  <div
+                    className="ant-checkbox-group {\\"style\\":[null,null]}"
+                    id="undefined_id_input"
+                  >
+                    <label
+                      className="ant-checkbox-wrapper"
+                    >
+                      <span
+                        className="ant-checkbox"
+                        style={Object {}}
+                      >
+                        <input
+                          checked={false}
+                          className="ant-checkbox-input"
+                          id="undefined_id_0"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          type="checkbox"
+                          value={0}
+                        />
+                        <span
+                          className="ant-checkbox-inner"
+                        />
+                      </span>
+                      <span>
+                        N/A
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span
+            aria-label="loading-3-quarters"
+            className="anticon anticon-loading-3-quarters {\\"style\\":{\\"flex\\":\\"0 0 1\\",\\"fontSize\\":\\"20px\\",\\"padding\\":\\"6px 6px 0 0\\"}}"
+            content={Object {}}
+            id="undefined_id"
+            list={Array []}
+            menus={Array []}
+            role="img"
+            user={Object {}}
+            validate={Array []}
+          >
+            <svg
+              aria-hidden="true"
+              className="anticon-spin"
+              data-icon="loading-3-quarters"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="0 0 1024 1024"
+              width="1em"
+            >
+              <path
+                d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+              />
+            </svg>
+          </span>
+          <div
+            className="ant-slider ant-slider-with-marks {\\"style\\":[null,{\\"flex\\":\\"auto\\"},null]}"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            onTouchStart={[Function]}
+          >
+            <div
+              className="ant-slider-rail"
+              style={Object {}}
+            />
+            <div
+              className="ant-slider-track"
+              style={
+                Object {
+                  "left": "0%",
+                  "right": "auto",
+                  "width": "0%",
+                }
+              }
+            />
+            <div
+              className="ant-slider-step"
+            >
+              <span
+                className="ant-slider-dot ant-slider-dot-active"
+                style={
+                  Object {
+                    "left": "0%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "9.090909090909092%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "18.181818181818183%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "27.27272727272727%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "36.36363636363637%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "45.45454545454545%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "54.54545454545454%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "63.63636363636363%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "72.72727272727273%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "81.81818181818183%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "90.9090909090909%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "100%",
+                  }
+                }
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              aria-valuemax={10}
+              aria-valuemin={-1}
+              aria-valuenow={-1}
+              className="ant-slider-handle"
+              onBlur={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              role="slider"
+              style={
+                Object {
+                  "left": "0%",
+                  "right": "auto",
+                  "transform": "translateX(-50%)",
+                }
+              }
+              tabIndex={0}
+            />
+            <div
+              className="ant-slider-mark"
+            >
+              <span
+                className="ant-slider-mark-text ant-slider-mark-text-active"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "0%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <span />
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "9.090909090909092%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  0
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "18.181818181818183%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  1
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "27.27272727272727%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  2
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "36.36363636363637%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  3
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "45.45454545454545%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  4
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "54.54545454545454%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  5
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "63.63636363636363%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  6
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "72.72727272727273%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  7
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "81.81818181818183%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  8
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "90.9090909090909%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  9
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "100%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  10
+                </strong>
+              </span>
+            </div>
+          </div>
+          <span
+            aria-label="loading-3-quarters"
+            className="anticon anticon-loading-3-quarters {\\"style\\":{\\"flex\\":\\"0 0 1\\",\\"fontSize\\":\\"20px\\",\\"padding\\":\\"6px 0 0 6px\\"}}"
+            content={Object {}}
+            id="undefined_id"
+            list={Array []}
+            menus={Array []}
+            role="img"
+            user={Object {}}
+            validate={Array []}
+          >
+            <svg
+              aria-hidden="true"
+              className="anticon-spin"
+              data-icon="loading-3-quarters"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="0 0 1024 1024"
+              width="1em"
+            >
+              <path
+                d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="Rating slider"
+    >
+      Rating slider
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\"}}"
+        >
+          <div
+            className="ant-row ant-form-item {\\"style\\":{}}"
+            style={
+              Object {
+                "marginBottom": 0,
+              }
+            }
+          >
+            <div
+              className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+              style={Object {}}
+            >
+              <div
+                className="ant-form-item-control-input"
+              >
+                <div
+                  className="ant-form-item-control-input-content"
+                >
+                  <div
+                    className="ant-checkbox-group {\\"style\\":[null,null]}"
+                    id="undefined_id_input"
+                  >
+                    <label
+                      className="ant-checkbox-wrapper"
+                    >
+                      <span
+                        className="ant-checkbox"
+                        style={Object {}}
+                      >
+                        <input
+                          checked={false}
+                          className="ant-checkbox-input"
+                          id="undefined_id_0"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          type="checkbox"
+                          value={0}
+                        />
+                        <span
+                          className="ant-checkbox-inner"
+                        />
+                      </span>
+                      <span>
+                        N/A
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span
+            aria-label="loading-3-quarters"
+            className="anticon anticon-loading-3-quarters {\\"style\\":{\\"flex\\":\\"0 0 1\\",\\"fontSize\\":\\"20px\\",\\"padding\\":\\"6px 6px 0 0\\"}}"
+            content={Object {}}
+            id="undefined_id"
+            list={Array []}
+            menus={Array []}
+            role="img"
+            user={Object {}}
+            validate={Array []}
+          >
+            <svg
+              aria-hidden="true"
+              className="anticon-spin"
+              data-icon="loading-3-quarters"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="0 0 1024 1024"
+              width="1em"
+            >
+              <path
+                d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+              />
+            </svg>
+          </span>
+          <div
+            className="ant-slider ant-slider-with-marks {\\"style\\":[null,{\\"flex\\":\\"auto\\"},null]}"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+            onTouchStart={[Function]}
+          >
+            <div
+              className="ant-slider-rail"
+              style={Object {}}
+            />
+            <div
+              className="ant-slider-track"
+              style={
+                Object {
+                  "left": "0%",
+                  "right": "auto",
+                  "width": "0%",
+                }
+              }
+            />
+            <div
+              className="ant-slider-step"
+            >
+              <span
+                className="ant-slider-dot ant-slider-dot-active"
+                style={
+                  Object {
+                    "left": "0%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "9.090909090909092%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "18.181818181818183%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "27.27272727272727%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "36.36363636363637%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "45.45454545454545%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "54.54545454545454%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "63.63636363636363%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "72.72727272727273%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "81.81818181818183%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "90.9090909090909%",
+                  }
+                }
+              />
+              <span
+                className="ant-slider-dot"
+                style={
+                  Object {
+                    "left": "100%",
+                  }
+                }
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              aria-valuemax={10}
+              aria-valuemin={-1}
+              aria-valuenow={-1}
+              className="ant-slider-handle"
+              onBlur={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              role="slider"
+              style={
+                Object {
+                  "left": "0%",
+                  "right": "auto",
+                  "transform": "translateX(-50%)",
+                }
+              }
+              tabIndex={0}
+            />
+            <div
+              className="ant-slider-mark"
+            >
+              <span
+                className="ant-slider-mark-text ant-slider-mark-text-active"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "0%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <span />
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "9.090909090909092%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  0
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "18.181818181818183%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  1
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "27.27272727272727%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  2
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "36.36363636363637%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  3
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "45.45454545454545%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  4
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "54.54545454545454%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  5
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "63.63636363636363%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  6
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "72.72727272727273%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  7
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "81.81818181818183%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  8
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "90.9090909090909%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  9
+                </strong>
+              </span>
+              <span
+                className="ant-slider-mark-text"
+                onMouseDown={[Function]}
+                onTouchStart={[Function]}
+                style={
+                  Object {
+                    "fontSize": 12,
+                    "left": "100%",
+                    "marginTop": 2,
+                    "msTransform": "translateX(-50%)",
+                    "transform": "translateX(-50%)",
+                  }
+                }
+              >
+                <strong>
+                  10
+                </strong>
+              </span>
+            </div>
+          </div>
+          <span
+            aria-label="loading-3-quarters"
+            className="anticon anticon-loading-3-quarters {\\"style\\":{\\"flex\\":\\"0 0 1\\",\\"fontSize\\":\\"20px\\",\\"padding\\":\\"6px 0 0 6px\\"}}"
+            content={Object {}}
+            id="undefined_id"
+            list={Array []}
+            menus={Array []}
+            role="img"
+            user={Object {}}
+            validate={Array []}
+          >
+            <svg
+              aria-hidden="true"
+              className="anticon-spin"
+              data-icon="loading-3-quarters"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              viewBox="0 0 1024 1024"
+              width="1em"
+            >
+              <path
+                d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;

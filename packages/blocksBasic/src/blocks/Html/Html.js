@@ -20,7 +20,9 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 class HtmlBlock extends React.Component {
   constructor(props) {
     super(props);
-    this.div = null;
+    this.div = {
+      innerHTML: '',
+    };
   }
 
   componentDidMount() {
@@ -38,7 +40,9 @@ class HtmlBlock extends React.Component {
         id={blockId}
         data-testid={blockId}
         ref={(el) => {
-          this.div = el;
+          if (el) {
+            this.div = el;
+          }
         }}
         className={methods.makeCssClass(properties.style)}
       />

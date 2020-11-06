@@ -1,0 +1,65 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bordered": {
+          "type": "boolean",
+          "description": "Render items in a table."
+        },
+        "colon": {
+          "type": "boolean",
+          "description": "Include a colon in item labels."
+        },
+        "column": {
+          "type": ["number", "object"],
+          "description": "The number of description items in a row, could be a number or a object like { xs: 8, sm: 16, md: 24}."
+        },
+        "items": {
+          "anyOf": [
+            {
+              "type": "array",
+              "description": "List of items to display",
+              "items": {
+                "type": "object",
+                "required": ["label"],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Item label."
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Value of item."
+                  },
+                  "span": {
+                    "type": "string",
+                    "description": "Number of columns for this item to span."
+                  }
+                }
+              }
+            },
+            { "type": "object" }
+          ]
+        },
+        "layout": {
+          "type": "string",
+          "description": "Put values next to or below their labels.",
+          "enum": ["horizontal", "vertical"]
+        },
+        "size": {
+          "type": "string",
+          "description": "Size of the block.",
+          "enum": ["default", "small", "middle"]
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the description block, placed at the top."
+        }
+      }
+    }
+  }
+}

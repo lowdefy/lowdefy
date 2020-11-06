@@ -1,0 +1,2039 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="default_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="default_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle: CSS style applied 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
+    >
+      properties.inputStyle: CSS style applied
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.inputStyle: CSS style applied_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\"}]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.inputStyle: CSS style applied_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="DateRangeSelector title"
+    >
+      DateRangeSelector title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="properties.title_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="properties.title_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.allowClear: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
+    >
+      property.allowClear: false
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.allowClear: false_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.allowClear: false_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.autoFocus: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
+    >
+      property.autoFocus: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.autoFocus: true_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                autoFocus={true}
+                disabled={false}
+                id="property.autoFocus: true_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
+    >
+      property.disabled: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.disabled: true_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-disabled"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={true}
+                id="property.disabled: true_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={true}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.format: YYYY-MMM-DD 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.format: YYYY-MMM-DD_input"
+      title="property.format: YYYY-MMM-DD"
+    >
+      property.format: YYYY-MMM-DD
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.format: YYYY-MMM-DD_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.format: YYYY-MMM-DD_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={13}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={13}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label align: right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
+    >
+      property.label align: right
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label align: right_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label align: right_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label colon: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
+    >
+      property.label colon: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label colon: true_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label colon: true_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label disabled: true_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label disabled: true_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label extra: extra text added 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
+    >
+      property.label extra: extra text added
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label extra: extra text added_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label extra: extra text added_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      extra text added
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label inline: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{}"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
+    >
+      property.label inline: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label inline: true_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label inline: true_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.label span: 5 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24 ant-col-md-5"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
+    >
+      property.label span: 5
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-19"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.label span: 5_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.label span: 5_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.placeholder: - Start Date - End Date 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.placeholder: - Start Date - End Date_input"
+      title="property.placeholder: - Start Date - End Date"
+    >
+      property.placeholder: - Start Date - End Date
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.placeholder: - Start Date - End Date_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.placeholder: - Start Date - End Date_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="From this Start Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder="To this End Date"
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.separator: ǁ 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.separator: ǁ_input"
+      title="property.separator: ǁ"
+    >
+      property.separator: ǁ
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.separator: ǁ_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.separator: ǁ_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ǁ
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.size: large 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
+    >
+      property.size: large
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.size: large_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-large"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.size: large_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.size: small 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
+    >
+      property.size: small
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.size: small_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-picker-small"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.size: small_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.suffixIcon Red: CalendarOutlined 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.suffixIcon Red: CalendarOutlined_input"
+      title="property.suffixIcon Red: CalendarOutlined"
+    >
+      property.suffixIcon Red: CalendarOutlined
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.suffixIcon Red: CalendarOutlined_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.suffixIcon Red: CalendarOutlined_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+            <span
+              className="ant-picker-suffix"
+            >
+              <span
+                aria-label="loading-3-quarters"
+                className="anticon anticon-loading-3-quarters {}"
+                content={Object {}}
+                id="undefined_id"
+                list={Array []}
+                menus={Array []}
+                role="img"
+                user={Object {}}
+                validate={Array []}
+              >
+                <svg
+                  aria-hidden="true"
+                  className="anticon-spin"
+                  data-icon="loading-3-quarters"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 1024 1024"
+                  width="1em"
+                >
+                  <path
+                    d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.suffixIcon: CalendarOutlined 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.suffixIcon: CalendarOutlined_input"
+      title="property.suffixIcon: CalendarOutlined"
+    >
+      property.suffixIcon: CalendarOutlined
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="{\\"style\\":{\\"width\\":\\"100%\\"}}"
+        >
+          <div
+            id="property.suffixIcon: CalendarOutlined_popup"
+          />
+          <div
+            className="ant-picker ant-picker-range {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ant-picker-input ant-picker-input-active"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                id="property.suffixIcon: CalendarOutlined_input"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-range-separator"
+            >
+              ~
+            </div>
+            <div
+              className="ant-picker-input"
+            >
+              <input
+                autoComplete="off"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                placeholder=""
+                readOnly={true}
+                size={12}
+                value=""
+              />
+            </div>
+            <div
+              className="ant-picker-active-bar"
+              style={
+                Object {
+                  "left": 0,
+                  "position": "absolute",
+                  "width": 0,
+                }
+              }
+            />
+            <span
+              className="ant-picker-suffix"
+            >
+              <span
+                aria-label="loading-3-quarters"
+                className="anticon anticon-loading-3-quarters {}"
+                content={Object {}}
+                id="undefined_id"
+                list={Array []}
+                menus={Array []}
+                role="img"
+                user={Object {}}
+                validate={Array []}
+              >
+                <svg
+                  aria-hidden="true"
+                  className="anticon-spin"
+                  data-icon="loading-3-quarters"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="0 0 1024 1024"
+                  width="1em"
+                >
+                  <path
+                    d="M512 1024c-69.1 0-136.2-13.5-199.3-40.2C251.7 958 197 921 150 874c-47-47-84-101.7-109.8-162.7C13.5 648.2 0 581.1 0 512c0-19.9 16.1-36 36-36s36 16.1 36 36c0 59.4 11.6 117 34.6 171.3 22.2 52.4 53.9 99.5 94.3 139.9 40.4 40.4 87.5 72.2 139.9 94.3C395 940.4 452.6 952 512 952c59.4 0 117-11.6 171.3-34.6 52.4-22.2 99.5-53.9 139.9-94.3 40.4-40.4 72.2-87.5 94.3-139.9C940.4 629 952 571.4 952 512c0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.2C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3s-13.5 136.2-40.2 199.3C958 772.3 921 827 874 874c-47 47-101.8 83.9-162.7 109.7-63.1 26.8-130.2 40.3-199.3 40.3z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 2`] = `null`;
+
+exports[`Test Schema properties.title 1`] = `true`;
+
+exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema property.allowClear: false 1`] = `true`;
+
+exports[`Test Schema property.allowClear: false 2`] = `null`;
+
+exports[`Test Schema property.autoFocus: true 1`] = `true`;
+
+exports[`Test Schema property.autoFocus: true 2`] = `null`;
+
+exports[`Test Schema property.disabled: true 1`] = `true`;
+
+exports[`Test Schema property.disabled: true 2`] = `null`;
+
+exports[`Test Schema property.format: YYYY-MMM-DD 1`] = `true`;
+
+exports[`Test Schema property.format: YYYY-MMM-DD 2`] = `null`;
+
+exports[`Test Schema property.label align: right 1`] = `true`;
+
+exports[`Test Schema property.label align: right 2`] = `null`;
+
+exports[`Test Schema property.label colon: true 1`] = `true`;
+
+exports[`Test Schema property.label colon: true 2`] = `null`;
+
+exports[`Test Schema property.label disabled: true 1`] = `true`;
+
+exports[`Test Schema property.label disabled: true 2`] = `null`;
+
+exports[`Test Schema property.label extra: extra text added 1`] = `true`;
+
+exports[`Test Schema property.label extra: extra text added 2`] = `null`;
+
+exports[`Test Schema property.label inline: true 1`] = `true`;
+
+exports[`Test Schema property.label inline: true 2`] = `null`;
+
+exports[`Test Schema property.label span: 5 1`] = `true`;
+
+exports[`Test Schema property.label span: 5 2`] = `null`;
+
+exports[`Test Schema property.placeholder: - Start Date - End Date 1`] = `true`;
+
+exports[`Test Schema property.placeholder: - Start Date - End Date 2`] = `null`;
+
+exports[`Test Schema property.separator: ǁ 1`] = `true`;
+
+exports[`Test Schema property.separator: ǁ 2`] = `null`;
+
+exports[`Test Schema property.size: large 1`] = `true`;
+
+exports[`Test Schema property.size: large 2`] = `null`;
+
+exports[`Test Schema property.size: small 1`] = `true`;
+
+exports[`Test Schema property.size: small 2`] = `null`;
+
+exports[`Test Schema property.suffixIcon Red: CalendarOutlined 1`] = `true`;
+
+exports[`Test Schema property.suffixIcon Red: CalendarOutlined 2`] = `null`;
+
+exports[`Test Schema property.suffixIcon: CalendarOutlined 1`] = `true`;
+
+exports[`Test Schema property.suffixIcon: CalendarOutlined 2`] = `null`;

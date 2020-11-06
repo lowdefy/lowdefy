@@ -1,0 +1,78 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "block": {
+          "type": "boolean",
+          "description": "Fit the button's span to its parent container span."
+        },
+        "color": {
+          "type": "string",
+          "description": "Button color."
+        },
+        "danger": {
+          "type": "boolean",
+          "description": "Set button style to danger."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable the button if true."
+        },
+        "ghost": {
+          "type": "boolean",
+          "description": "Make the button's background transparent when true."
+        },
+        "hideTitle": {
+          "type": "boolean",
+          "description": "Hide the button's title."
+        },
+        "href": {
+          "type": "string",
+          "description": "The URL to redirect to when the button is clicked. Useful when used with a type link button."
+        },
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use icon in button."
+        },
+        "shape": {
+          "type": "string",
+          "default": "square",
+          "enum": ["round", "circle"],
+          "description": "Shape of the button."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default", "large"],
+          "description": "Size of the button."
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to applied to button."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title text on the button."
+        },
+        "type": {
+          "type": "string",
+          "default": "primary",
+          "enum": ["primary", "default", "dashed", "danger", "link", "text"],
+          "description": "The button type."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClick": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

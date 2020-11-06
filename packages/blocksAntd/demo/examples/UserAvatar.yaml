@@ -1,0 +1,6 @@
+- id: default
+  type: UserAvatar
+- id: properties.name
+  type: UserAvatar
+  properties:
+    name: Avatar name

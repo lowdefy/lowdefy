@@ -605,7 +605,7 @@ test('actions display', () => {
 test('provide schema errors', () => {
   let block = {
     id: 'a',
-    type: 'Display',
+    type: 'DisplayError',
     properties: {
       mistake: true,
     },
@@ -638,12 +638,12 @@ test('provide schema errors', () => {
         "mistake": true,
       },
       "schemaErrors": false,
-      "type": "Display",
+      "type": "DisplayError",
     }
   `);
   block = {
     id: 'a',
-    type: 'Display',
+    type: 'DisplayError',
     properties: {
       mistake: 1,
     },
@@ -672,7 +672,34 @@ test('provide schema errors', () => {
           "schemaPath": "#/properties/properties/properties/mistake/type",
         },
       ],
-      "type": "Display",
+      "type": "DisplayError",
     }
   `);
+});
+
+test('throw schema error', () => {
+  let block = {
+    id: 'a',
+    type: 'Error',
+    properties: {
+      mistake: true,
+    },
+  };
+  const meta = {
+    category: 'display',
+    schema: {
+      properties: {
+        type: 'MISTAKE',
+        additionalProperties: false,
+        properties: {
+          value: {
+            type: 'boolean',
+          },
+        },
+      },
+    },
+  };
+  expect(() => stubBlockProps({ block, meta })).toThrowErrorMatchingInlineSnapshot(
+    `"Schema error in Error - schema is invalid: data/properties/properties/type should be equal to one of the allowed values, data/properties/properties/type should be array, data/properties/properties/type should match some schema in anyOf"`
+  );
 });

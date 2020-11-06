@@ -1,0 +1,179 @@
+{
+  "valueType": "array",
+  "category": "input",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowClear": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow the user to clear the selected value, sets the value to null."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Autofocus to the block on page load."
+        },
+        "clearIcon": {
+          "type": ["string", "object"],
+          "default": "CloseCircleOutlined",
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the block if true."
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input."
+        },
+        "optionsStyle": {
+          "type": "object",
+          "description": "Css style to applied to option elements."
+        },
+        "label": {
+          "type": "object",
+          "description": "Label properties.",
+          "additionalProperties": false,
+          "properties": {
+            "align": {
+              "type": "string",
+              "enum": ["left", "right"],
+              "defaultValue": "right",
+              "description": "Align label left or right when inline."
+            },
+            "colon": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Append label with colon."
+            },
+            "extra": {
+              "type": "string",
+              "description": "Extra text to display beneath the content."
+            },
+            "title": {
+              "type": "string",
+              "description": "Label title."
+            },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
+            "hasFeedback": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
+            },
+            "extraStyle": {
+              "type": "object",
+              "description": "Css style to applied to label extra."
+            },
+            "feedbackStyle": {
+              "type": "object",
+              "description": "Css style to applied to label feedback."
+            }
+          }
+        },
+        "options": {
+          "type": "array",
+          "default": [],
+          "description": "Selector options can either be an array of primitive values, on an array of label, value pairs.",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "required": ["value"],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Value label shown to user."
+                  },
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "description": "Value selected."
+                  },
+                  "disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable the option if true."
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "placeholder": {
+          "type": "string",
+          "default": "Select item",
+          "description": "Placeholder text inside the block before user selects input."
+        },
+        "selectedIcon": {
+          "type": ["string", "object"],
+          "default": "CheckOutlined",
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon showing when a selection is made in the drop-down list."
+        },
+        "showArrow": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the suffix icon at the drop-down position of the selector."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default", "large"],
+          "default": "default",
+          "description": "Size of the block."
+        },
+        "suffixIcon": {
+          "type": ["string", "object"],
+          "default": "DownOutlined",
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize at the drop-down position of the selector."
+        },
+        "title": {
+          "type": "string",
+          "description": "Multiple selector label title."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onChange": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

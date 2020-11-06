@@ -1,0 +1,13 @@
+- id: default
+  type: Modal
+- id: properties.title
+  type: Modal
+  properties:
+    title: Modal title
+- id: areas.content
+  type: Modal
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test

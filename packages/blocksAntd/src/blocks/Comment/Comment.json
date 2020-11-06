@@ -1,0 +1,28 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Comment author title."
+        },
+        "avatar": {
+          "type": ["string", "object"],
+          "description": "Comment avatar."
+        },
+        "content": {
+          "type": "string",
+          "description": "Comment content."
+        },
+        "datetime": {
+          "type": "string",
+          "description": "Comment content."
+        }
+      }
+    }
+  }
+}

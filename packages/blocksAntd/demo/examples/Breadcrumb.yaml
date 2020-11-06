@@ -1,0 +1,8 @@
+- id: default
+  type: Breadcrumb
+- id: properties.list
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Page One
+      - label: Page two

@@ -1,0 +1,6 @@
+- id: default
+  type: Spin
+- id: properties.spinning
+  type: Spin
+  properties:
+    spinning: false
