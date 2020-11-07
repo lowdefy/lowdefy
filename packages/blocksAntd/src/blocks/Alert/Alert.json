@@ -33,7 +33,7 @@
         "type": {
           "type": "string",
           "enum": ["success", "info", "warning", "error"],
-          "default": "success",
+          "default": "info",
           "description": "Alert style type."
         }
       }

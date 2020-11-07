@@ -3,4 +3,45 @@
 - id: properties.message
   type: Alert
   properties:
-    message: Alert message
+    message: Alert message - Completed!
+- id: "properties.icon"
+  type: Info
+  properties:
+    icon: CheckCircleOutlined
+    message: Message with Icon!
+- id: "properties.type: success"
+  type: Alert
+  properties:
+    message: Alert message - success!
+    type: success
+- id: "properties.type: info"
+  type: Alert
+  properties:
+    message: Alert message - info!
+    type: info
+- id: "properties.type: warning"
+  type: Alert
+  properties:
+    message: Alert message - warning!
+    type: warning
+- id: "properties.type: error"
+  type: Alert
+  properties:
+    message: Alert message - error!
+    type: error
+- id: "properties.banner: true"
+  type: info
+  properties:
+    banner: true
+    message: Message banner true
+- id: "properties.closable: true"
+  type: info
+  properties:
+    closable: true
+    message: Message closable true
+- id: "properties.closeText: Close Text"
+  type: info
+  properties:
+    closable: true
+    closeText: Close Text
+    message: Message closable true
