@@ -3,8 +3,21 @@
 - id: properties.title
   type: Anchor
   properties:
-    title: Alert title
+    title: Anchor title
 - id: properties.icon
   type: Anchor
   properties:
-    icon: LinkOutlined
+    icon: FireFilled
+- id: properties.title
+  type: Anchor
+  properties:
+    strong: true
+    title: Strong
+- id: "properties.style"
+  type: Anchor
+  # style: { color: red !important, fontSize: 18 }
+  properties:
+    title: Click here
+    icon:
+      twoToneColor: red
+      name: RocketTwoTone
