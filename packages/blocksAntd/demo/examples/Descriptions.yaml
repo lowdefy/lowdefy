@@ -1,15 +1,84 @@
 - id: default
   type: Descriptions
+- id: default
+  type: Descriptions
+  properties:
+    title: Descriptions title
 - id: properties.items-object
   type: Descriptions
   properties:
+    title: Title
     items:
-      - value: 1
-        label: one
-      - value: 2
-        label: two
-- id: properties.opt
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: properties.items-list
   type: Descriptions
   properties:
-    a: 1
-
+    title: Title
+    items:
+      - label: field_one
+        value: "1"
+        span: "null"
+      - label: field_two
+        value: "2"
+        span: "1"
+      - label: field_three
+        value: "3"
+        span: "2"
+- id: "properties.bordered: true"
+  type: Descriptions
+  properties:
+    bordered: true
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: "properties.colon: false"
+  type: Descriptions
+  properties:
+    colon: false
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: "properties.column: 2"
+  type: Descriptions
+  properties:
+    column: 2
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: "properties.layout: vertical"
+  type: Descriptions
+  properties:
+    layout: vertical
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: "properties.size: small"
+  type: Descriptions
+  properties:
+    size: small
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+- id: "properties.size: middle"
+  type: Descriptions
+  properties:
+    size: middle
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+# - id: "properties.size: default" #no difference from middle
+#   type: Descriptions
+#   properties:
+#     size: default
+#     items:
+#       field_one: value one
+#       field_two: 2
+#       field_three: value three
