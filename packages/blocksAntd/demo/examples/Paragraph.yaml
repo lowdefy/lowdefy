@@ -3,4 +3,83 @@
 - id: properties.content
   type: Paragraph
   properties:
-    content: This is a paragraph
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.code: true'
+  type: Paragraph
+  properties:
+    code: true
+    content: |
+      - id: default
+        type: Paragraph
+      - id: properties.content
+        type: Paragraph
+        properties:
+          content: |
+            This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+      - id: properties.content
+        type: Paragraph
+        properties:
+          code: true
+          content: |
+- id: 'properties.copyable: true'
+  type: Paragraph
+  properties:
+    copyable: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.delete: true'
+  type: Paragraph
+  properties:
+    delete: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.disabled: true'
+  type: Paragraph
+  properties:
+    disabled: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.ellipsis: true'
+  type: Paragraph
+  properties:
+    ellipsis: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available. This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available. 
+- id: 'properties.mark: true'
+  type: Paragraph
+  properties:
+    mark: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.strong: true'
+  type: Paragraph
+  properties:
+    strong: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.underline: true'
+  type: Paragraph
+  properties:
+    underline: true
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.type: secondary'
+  type: Paragraph
+  properties:
+    type: secondary
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.type: warning'
+  type: Paragraph
+  properties:
+    type: warning
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+- id: 'properties.type: danger'
+  type: Paragraph
+  properties:
+    type: danger
+    content: |
+      This is a paragraph. It is a text component, and part of the 'Display Blocks' elements available.
+
