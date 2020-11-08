@@ -4,7 +4,169 @@
   type: Menu
   properties:
     links:
-      - id: one
+      - id: Menu_item_one
         type: MenuLink
-      - id: two
+        pageId: page_1
+      - id: Menu Item two
         type: MenuLink
+        pageId: page_2
+- id: 'properties.backgroundColor'
+  type: Menu
+  properties:
+    backgroundColor: '#016e1e'
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+- id: 'properties.theme: light'
+  type: Menu
+  properties:
+    theme: light
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+- id: 'properties.mode: horizontal'
+  type: Menu
+  properties:
+    mode: horizontal
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+- id: 'properties.mode: inline'
+  type: Menu
+  properties:
+    mode: inline
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+- id: 'properties.icon'
+  type: Menu
+  properties:
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+        properties:
+          icon: RocketFilled
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+        properties:
+          icon: VideoCameraFilled
+- id: 'properties.title'
+  type: Menu
+  properties:
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+        properties:
+          title: Title Menu Item 1
+          icon: RocketFilled
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+- id: 'properties.danger: true'
+  type: Menu
+  properties:
+    links:
+      - id: Menu_item_one
+        type: MenuLink
+        pageId: page_1
+        properties:
+          title: Title Menu Item 1
+          danger: true
+      - id: Menu Item two
+        type: MenuLink
+        pageId: page_2
+        properties:
+          title: Title Menu Item 2
+          icon: VideoCameraFilled
+# - id: 'properties.selectable: false'
+#   type: Menu
+#   properties:
+#     selectable: false
+#     links:
+#       - id: Menu_item_one
+#         type: MenuLink
+#         pageId: page_1
+#       - id: Menu Item two
+#         type: MenuLink
+#         pageId: page_2
+- id: 'properties.MenuGroup with MenuLInks'
+  type: Menu
+  properties:
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1
+            type: MenuLink
+            PageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_2
+            type: MenuLink
+            PageId: page_1_2
+            properties:
+              title: Menu Item two
+- id: 'properties.subMenuOpenDelay: 5'
+  type: Menu
+  properties:
+    subMenuOpenDelay: 5
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_2
+            type: MenuLink
+            PageId: page_1_2
+            properties:
+              title: Menu Item two
+- id: 'properties.subMenuCloseDelay: 5'
+  type: Menu
+  properties:
+    subMenuCloseDelay: 5
+    links:
+      - id: menu_group_1
+        type: MenuGroup
+        properties:
+          title: Menu Group 1
+        links:
+          - id: menu_item_1
+            type: MenuLink
+            pageId: page_1_1
+            properties:
+              title: Menu Item one
+          - id: menu_item_2
+            type: MenuLink
+            pageId: page_1_2
+            properties:
+              title: Menu Item two
