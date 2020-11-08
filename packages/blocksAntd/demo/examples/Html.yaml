@@ -1,0 +1,7 @@
+# - id: default
+#   type: Html
+- id: default
+  type: Html
+  properties:
+    html: |
+      This is html text
