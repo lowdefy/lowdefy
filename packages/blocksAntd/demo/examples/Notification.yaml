@@ -1,13 +1,79 @@
 - id: default
   type: Notification
-- id: properties.message
+- id: "properties.message"
   type: Notification
   properties:
     message: Notification message
-- id: areas.content
+    description: Notification description.
+- id: "properties.bottom: 50"
   type: Notification
-  areas:
-    content:
-      blocks:
-        - id: testArea
-          type: Test
+  properties:
+    bottom: 50
+    message: Notification message
+    description: "Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit pixels)."
+- id: "properties.top: 50"
+  type: Notification
+  properties:
+    top: 50
+    message: Notification message
+    description: "Distance from the top of the viewport, when placement is topRight or topLeft (unit pixels)."
+- id: "properties.button: dashed"
+  type: Notification
+  properties:
+    button: dashed
+    message: Notification message
+    description: "Customized close button."
+- id: "properties.duration: 6"
+  type: Notification
+  properties:
+    duration: 6
+    message: Notification message
+    description: "The content description of notification box."
+- id: "properties.icon"
+  type: Notification
+  properties:
+    icon: AccountBookFilled
+    message: Notification message
+    description: ""
+- id: "properties.closeIcon: AlertOutlined"
+  type: Notification
+  properties:
+    closeIcon: AlertOutlined
+    message: Notification message
+    description: Customized close icon."
+- id: "properties.placement: topLeft"
+  type: Notification
+  properties:
+    placement: topLeft
+    message: Notification message
+    description: "Position of Notification."
+- id: "properties.placement: bottomLeft"
+  type: Notification
+  properties:
+    placement: bottomLeft
+    message: Notification message
+    description: "Position of Notification."
+- id: "properties.placement: bottomRight"
+  type: Notification
+  properties:
+    placement: bottomRight
+    message: Notification message
+    description: "Position of Notification."
+- id: "properties.status: error"
+  type: Notification
+  properties:
+    status: error
+    message: Notification message
+    description: "Notification status type."
+- id: "properties.status: info"
+  type: Notification
+  properties:
+    status: info
+    message: Notification message
+    description: "Notification status type."
+- id: "properties.status: warning"
+  type: Notification
+  properties:
+    status: warning
+    message: Notification message
+    description: "Notification status type."
