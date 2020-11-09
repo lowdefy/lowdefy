@@ -14,7 +14,7 @@
         },
         "showInfo": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Whether to display the progress value and the status icon."
         },
         "percent": {
@@ -25,6 +25,7 @@
         "status": {
           "type": "string",
           "enum": ["success", "exception", "normal", "active"],
+          "default": "active",
           "description": "Set the status of the Progress."
         },
         "strokeLinecap": {
@@ -63,6 +64,7 @@
         "gapPosition": {
           "type": "string",
           "enum": ["top", "bottom", "left", "right"],
+          "default": "top",
           "description": "The gap position."
         }
       }
