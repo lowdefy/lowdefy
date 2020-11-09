@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
 const SkeletonParagraph = ({ properties, methods }) => {
@@ -37,4 +37,6 @@ const SkeletonParagraph = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(SkeletonParagraph);
+SkeletonParagraph.defaultProps = blockDefaultProps;
+
+export default SkeletonParagraph;

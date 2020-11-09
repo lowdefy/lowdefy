@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import React from 'react';
+// FIX: should be removed: block components should not be recreated.
+import { useLayoutEffect, useRef } from 'react';
 
 const useRunAfterUpdate = () => {
-  const afterPaintRef = React.useRef(null);
-  React.useLayoutEffect(() => {
+  const afterPaintRef = useRef(null);
+  useLayoutEffect(() => {
     if (afterPaintRef.current) {
       afterPaintRef.current();
       afterPaintRef.current = null;

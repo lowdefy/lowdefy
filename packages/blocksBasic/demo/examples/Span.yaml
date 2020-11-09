@@ -1,0 +1,29 @@
+- id: default
+  type: Span
+- id: properties.content
+  type: Span
+  properties:
+    content: Foo
+- id: properties.style
+  type: Span
+  properties:
+    style: 
+      border: '1px solid blue'
+- id: areas.content
+  type: Span
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: actions.onClick
+  type: Span
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+  actions:
+    onClick: 
+      - id: testAction
+        type: Text

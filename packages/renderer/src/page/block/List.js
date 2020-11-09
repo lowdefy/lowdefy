@@ -16,11 +16,9 @@
 
 import React from 'react';
 import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
-import { blockDefaults, makeCssClass } from '@lowdefy/block-tools';
+import { makeCssClass } from '@lowdefy/block-tools';
 
 import Block from './Block';
-
-const ConnectedArea = blockDefaults(Area);
 
 const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
   const content = {};
@@ -28,7 +26,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
   Blocks.subBlocks[block.id].forEach((SBlock) => {
     Object.keys(SBlock.areas).forEach((areaKey) => {
       content[areaKey] = (areaStyle) => (
-        <ConnectedArea
+        <Area
           id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           area={layoutParamsToArea({
@@ -50,7 +48,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
               rootContext={rootContext}
             />
           ))}
-        </ConnectedArea>
+        </Area>
       );
     });
     contentList.push({ ...content });
@@ -78,7 +76,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         actions={block.eval.actions}
         blockId={block.blockId}
         Components={rootContext.Components}
-        content={contentList}
+        list={contentList}
         homePageId={rootContext.homePageId}
         key={block.blockId}
         loading={block.loading}

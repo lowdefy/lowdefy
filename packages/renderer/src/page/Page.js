@@ -21,8 +21,7 @@ import { useParams, useHistory, useLocation, Redirect } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
 import { Loading } from '@lowdefy/block-tools';
-import get from '@lowdefy/get';
-import { urlQuery } from '@lowdefy/helpers';
+import { get, urlQuery } from '@lowdefy/helpers';
 
 import Helmet from './Helmet';
 import Block from './block/Block';
@@ -52,6 +51,15 @@ const PageContext = ({ rootContext }) => {
   }
   // redirect 404
   if (!data.page) return <Redirect to="/404" />;
+
+  // Prefetch all prefetchPages to Apollo cache
+  get(data.page, 'properties.prefetchPages', { default: [] }).map((fetchPageId) =>
+    rootContext.client.query({
+      query: GET_PAGE,
+      variables: { id: fetchPageId },
+    })
+  );
+
   return (
     <>
       <Helmet pageProperties={get(data.page, 'properties', { default: {} })} />

@@ -16,15 +16,10 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
-import get from '@lowdefy/get';
-import set from '@lowdefy/set';
-import { applyArrayIndices } from '@lowdefy/helpers';
-import serializer from '@lowdefy/serializer';
+import { applyArrayIndices, get, serializer, set, swap, type } from '@lowdefy/helpers';
 
 import BlockActions from './BlockActions';
 import getFieldValues from './getFieldValues';
-import swap from './swap';
 
 class Blocks {
   constructor({ arrayIndices, areas, context }) {
@@ -92,6 +87,7 @@ class Blocks {
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
         Object.keys(block.areas).forEach((key) => {
+          // eslint-disable-next-line no-unused-vars
           const { blocks, ...areaLayout } = block.areas[key];
           block.areasLayout[key] = { ...areaLayout };
         });

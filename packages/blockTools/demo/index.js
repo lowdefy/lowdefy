@@ -14,17 +14,25 @@
   limitations under the License.
 */
 
-import { render } from 'react-dom';
-import IconSpinner from './IconSpinner';
 import React from 'react';
-import Skeleton from './Skeleton';
-import SkeletonAvatar from './SkeletonAvatar';
-import SkeletonButton from './SkeletonButton';
-import SkeletonInput from './SkeletonInput';
-import SkeletonParagraph from './SkeletonParagraph';
-import Spinner from './Spinner';
-
-import { makeCssClass, ErrorBoundary } from '../src';
+import { render } from 'react-dom';
+import IconSpinner from '../src/Spinner/IconSpinner';
+import Spinner from '../src/Spinner/Spinner';
+import Skeleton from '../src/Skeleton/Skeleton';
+import SkeletonAvatar from '../src/Skeleton/SkeletonAvatar';
+import SkeletonButton from '../src/Skeleton/SkeletonButton';
+import SkeletonInput from '../src/Skeleton/SkeletonInput';
+import SkeletonParagraph from '../src/Skeleton/SkeletonParagraph';
+import makeCssClass from '../src/makeCssClass';
+import ErrorBoundary from '../src/ErrorBoundary';
+import IconSpinnerEx from './examples/IconSpinner.yaml';
+import SkeletonEx from './examples/Skeleton.yaml';
+import SkeletonAvatarEx from './examples/SkeletonAvatar.yaml';
+import SkeletonButtonEx from './examples/SkeletonButton.yaml';
+import SkeletonInputEx from './examples/SkeletonInput.yaml';
+import SkeletonParagraphEx from './examples/SkeletonParagraph.yaml';
+import SpinnerEx from './examples/Spinner.yaml';
+import Examples from './Examples';
 
 const ErrorComp = () => <div>{this.unknown}</div>;
 const FallbackComp = ({ name, error }) => (
@@ -32,7 +40,6 @@ const FallbackComp = ({ name, error }) => (
     {name} {error.message}
   </div>
 );
-
 const Demo = () => (
   <div id="page">
     <h4>ErrorBoundary with renderError=true :</h4>
@@ -50,13 +57,17 @@ const Demo = () => (
     <div id="emotion" />
     <h4>{"makeCssClass({ color: 'red' })"} :</h4>
     <div className={makeCssClass({ color: 'red' })}>Red text</div>
-    <IconSpinner />
-    <Spinner />
-    <Skeleton />
-    <SkeletonAvatar />
-    <SkeletonButton />
-    <SkeletonInput />
-    <SkeletonParagraph />
+    <Examples Component={IconSpinner} examples={IconSpinnerEx} title={'IconSpinner'} />
+    <Examples Component={Skeleton} examples={SkeletonEx} title={'Skeleton'} />
+    <Examples Component={Spinner} examples={SpinnerEx} title={'Spinner'} />
+    <Examples Component={SkeletonAvatar} examples={SkeletonAvatarEx} title={'SkeletonAvatar'} />
+    <Examples Component={SkeletonButton} examples={SkeletonButtonEx} title={'SkeletonButton'} />
+    <Examples Component={SkeletonInput} examples={SkeletonInputEx} title={'SkeletonInput'} />
+    <Examples
+      Component={SkeletonParagraph}
+      examples={SkeletonParagraphEx}
+      title={'SkeletonParagraph'}
+    />
   </div>
 );
 

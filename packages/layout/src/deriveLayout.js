@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
+import { type } from '@lowdefy/helpers';
 
 const sanitizeGrow = (value) => {
   if (value === 'unset' || value === 'inherit' || value === 'initial') {

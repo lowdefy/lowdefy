@@ -15,6 +15,7 @@
 */
 
 import { mergeObjects } from '@lowdefy/helpers';
+
 import mediaToCssObject from './mediaToCssObject';
 import getEmotionCss from './getEmotionCss';
 

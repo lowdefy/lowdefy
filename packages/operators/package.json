@@ -22,28 +22,33 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "npm-publish": "npm publish --access public"
+    "npm-publish": "npm publish --access public",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/get": "1.0.1",
-    "@lowdefy/helpers": "1.0.0",
+    "@lowdefy/helpers": "1.1.0",
     "@lowdefy/nunjucks": "1.0.0",
-    "@lowdefy/serializer": "1.0.0",
-    "@lowdefy/type": "1.0.1",
     "js-yaml": "3.14.0",
-    "mingo": "3.0.6"
+    "mingo": "3.1.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",
-    "@babel/core": "7.12.1",
+    "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
-    "babel-jest": "26.5.2",
-    "jest": "26.5.3"
+    "babel-jest": "26.6.3",
+    "jest": "26.6.3"
   }
 }

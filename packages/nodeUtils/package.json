@@ -1,0 +1,52 @@
+{
+  "name": "@lowdefy/node-utils",
+  "version": "1.0.0",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "clean": "rm -rf dist",
+    "test": "jest --coverage",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
+    "npm-publish": "npm publish --access public",
+    "version:prerelease": "yarn version prerelease",
+    "version:patch": "yarn version patch -d",
+    "version:minor": "yarn version minor -d",
+    "version:major": "yarn version major -d"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "1.1.0",
+    "rimraf": "3.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.12.1",
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
+    "babel-jest": "26.6.3",
+    "jest": "26.6.3",
+    "jest-diff": "26.6.2"
+  }
+}

@@ -15,8 +15,8 @@
 */
 
 import React from 'react';
-import type from '@lowdefy/type';
-import blockDefaults from '../blockDefaults';
+import { type } from '@lowdefy/helpers';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
 const SkeletonAvatar = ({ properties, methods }) => {
@@ -45,4 +45,6 @@ const SkeletonAvatar = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(SkeletonAvatar);
+SkeletonAvatar.defaultProps = blockDefaultProps;
+
+export default SkeletonAvatar;

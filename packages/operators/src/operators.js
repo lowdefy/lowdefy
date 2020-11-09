@@ -16,12 +16,10 @@
   limitations under the License.
 */
 
-import get from '@lowdefy/get';
-import serializer from '@lowdefy/serializer';
-import type from '@lowdefy/type';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 import YAML from 'js-yaml';
 import mingo from 'mingo';
+import { get, serializer, type } from '@lowdefy/helpers';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { useOperators as mingoUseOperators, OperatorType as MingoOperatorType } from 'mingo/core';
 import * as mingoAccumulatorOperators from 'mingo/operators/accumulator';
 import * as mingoExpressionOperators from 'mingo/operators/expression';

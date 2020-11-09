@@ -1,0 +1,61 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply code style."
+        },
+        "content": {
+          "type": "string",
+          "description": "Paragraph text content."
+        },
+        "copyable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Provide copy text button."
+        },
+        "delete": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply deleted (strikethrough) style."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply disabled style."
+        },
+        "ellipsis": {
+          "type": "boolean",
+          "default": false,
+          "description": "Display ellipsis when text overflows a single line."
+        },
+        "mark": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply marked (highlighted) style."
+        },
+        "strong": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply strong (bold) style."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["secondary", "warning", "danger"],
+          "description": "Additional types. Don't specify for default."
+        },
+        "underline": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply underline style."
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
 const SkeletonInput = ({ properties, methods }) => {
@@ -46,11 +46,13 @@ const SkeletonInput = ({ properties, methods }) => {
         methods={methods}
         properties={{
           width: properties.width || '100%',
-          height: properties.inputHeight || inputHeight || 32,
+          height: properties.inputHeight || inputHeight,
         }}
       />
     </div>
   );
 };
 
-export default blockDefaults(SkeletonInput);
+SkeletonInput.defaultProps = blockDefaultProps;
+
+export default SkeletonInput;

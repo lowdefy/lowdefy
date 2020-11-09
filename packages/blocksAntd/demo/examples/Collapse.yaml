@@ -1,0 +1,6 @@
+- id: default
+  type: Collapse
+- id: properties.title
+  type: Collapse
+  properties:
+    title: Collapse block

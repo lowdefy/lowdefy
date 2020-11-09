@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import blockDefaults from '../blockDefaults';
+import blockDefaultProps from '../blockDefaultProps';
 import './Skeleton.css';
 
 const Skeleton = ({ properties, methods }) => {
@@ -27,4 +27,6 @@ const Skeleton = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(Skeleton);
+Skeleton.defaultProps = blockDefaultProps;
+
+export default Skeleton;

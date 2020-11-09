@@ -1,0 +1,14 @@
+- id: default
+  type: Layout
+- id: properties.style
+  type: Layout
+  properties:
+    style: 
+      border: '1px solid blue'
+- id: areas.content
+  type: Layout
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test

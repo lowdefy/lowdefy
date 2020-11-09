@@ -1,0 +1,29 @@
+- id: default
+  type: Box
+- id: properties.content
+  type: Box
+  properties:
+    content: Foo
+- id: properties.style
+  type: Box
+  properties:
+    style: 
+      border: '1px solid blue'
+- id: areas.content
+  type: Box
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: actions.onClick
+  type: Box
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+  actions:
+    onClick: 
+      - id: testAction
+        type: Text

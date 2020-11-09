@@ -14,32 +14,42 @@
   limitations under the License.
 */
 
-import blockDefaults from './blockDefaults';
+import blockDefaultProps from './blockDefaultProps';
+import BlockSchemaErrors from './BlockSchemaErrors';
 import ErrorBoundary from './ErrorBoundary';
-import makeCssClass from './makeCssClass.js';
-import mediaToCssObject from './mediaToCssObject.js';
 import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
+import makeCssClass from './makeCssClass.js';
+import mediaToCssObject from './mediaToCssObject.js';
+import mockBlock from './mockBlock';
+import runBlockSchemaTests from './runBlockSchemaTests';
+import runRenderTests from './runRenderTests';
 import Skeleton from './Skeleton/Skeleton';
 import SkeletonAvatar from './Skeleton/SkeletonAvatar';
 import SkeletonButton from './Skeleton/SkeletonButton';
 import SkeletonInput from './Skeleton/SkeletonInput';
 import SkeletonParagraph from './Skeleton/SkeletonParagraph';
 import Spinner from './Spinner/Spinner';
+import stubBlockProps from './stubBlockProps';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
-  blockDefaults,
+  blockDefaultProps,
+  BlockSchemaErrors,
   ErrorBoundary,
   IconSpinner,
   Loading,
   makeCssClass,
   mediaToCssObject,
+  mockBlock,
+  runBlockSchemaTests,
+  runRenderTests,
   Skeleton,
   SkeletonAvatar,
   SkeletonButton,
   SkeletonInput,
   SkeletonParagraph,
   Spinner,
+  stubBlockProps,
   useRunAfterUpdate,
 };

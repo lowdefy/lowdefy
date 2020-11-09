@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import get from '@lowdefy/get';
+import { get } from '@lowdefy/helpers';
 import { useQuery, gql } from '@apollo/client';
 import { Loading } from '@lowdefy/block-tools';
 

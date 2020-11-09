@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
-import serializer from '@lowdefy/serializer';
+import { serializer, type } from '@lowdefy/helpers';
 
 function makeContextId({ blockId, pageId, urlQuery = {} }) {
   if (!type.isString(blockId)) {

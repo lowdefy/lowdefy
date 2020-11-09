@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
 import merge from 'lodash.merge';
+
+import type from './type';
 
 const mergeObjects = (objects) => {
   let merged = objects;

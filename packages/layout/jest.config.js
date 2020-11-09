@@ -4,7 +4,7 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{js,jsx}', '!demo/*'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/tests/'],
-  coverageReporters: ['lcov', 'text', 'clover'],
+  coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'yaml', 'css'],

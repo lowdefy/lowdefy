@@ -1,0 +1,25 @@
+- id: default
+  type: List
+- id: default-two-items
+  type: List
+  blocks:
+    - id: one
+      type: Test
+    - id: two
+      type: Test
+- id: properties.style
+  type: List
+  properties:
+    style: 
+      border: 1px solid blue
+- id: properties.style-two-items
+  type: List
+  properties:
+    style: 
+      border: 1px solid blue
+  blocks:
+    - id: one
+      type: Test
+    - id: two
+      type: Test
+

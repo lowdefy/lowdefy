@@ -14,12 +14,7 @@
   limitations under the License.
 */
 
-import type from '@lowdefy/type';
-import get from '@lowdefy/get';
-import set from '@lowdefy/set';
-import del from '@lowdefy/delete';
-import serializer from '@lowdefy/serializer';
-import swap from './swap';
+import { unset, get, serializer, set, swap, type } from '@lowdefy/helpers';
 
 class State {
   constructor(context) {
@@ -58,7 +53,7 @@ class State {
   }
 
   del(field) {
-    del(this.context.state, field);
+    unset(this.context.state, field);
   }
 
   swapItems(field, from, to) {

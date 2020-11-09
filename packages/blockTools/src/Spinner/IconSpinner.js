@@ -15,8 +15,8 @@
 */
 
 import React from 'react';
-import type from '@lowdefy/type';
-import blockDefaults from '../blockDefaults';
+import { type } from '@lowdefy/helpers';
+import blockDefaultProps from '../blockDefaultProps';
 import './IconSpinner.css';
 
 const IconSpinner = ({ properties, methods }) => {
@@ -49,7 +49,7 @@ const IconSpinner = ({ properties, methods }) => {
         width={size}
         height={size}
         fill="currentColor"
-        ariaHidden="true"
+        aria-hidden="true"
         className="icon-spinner"
       >
         <path
@@ -61,4 +61,6 @@ const IconSpinner = ({ properties, methods }) => {
   );
 };
 
-export default blockDefaults(IconSpinner);
+IconSpinner.defaultProps = blockDefaultProps;
+
+export default IconSpinner;

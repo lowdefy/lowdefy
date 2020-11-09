@@ -1,0 +1,10 @@
+- id: default
+  type: Menu
+- id: properties.links
+  type: Menu
+  properties:
+    links:
+      - id: one
+        type: MenuLink
+      - id: two
+        type: MenuLink
