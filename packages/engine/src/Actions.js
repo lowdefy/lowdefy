@@ -72,33 +72,6 @@ class Actions {
     }));
   }
 
-  mutate(mutationId, successMessage, errorMessage, args, arrayIndices) {
-    if (type.isString(mutationId)) {
-      return this.context.Mutations.callMutation({
-        mutationId,
-        args,
-        arrayIndices,
-      })
-        .then((response) => ({ successMessage, response }))
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    }
-    return Promise.reject({
-      errorMessage: errorMessage || `Failed to fetch.`,
-      error: new Error(`Invalid mutation id: ${mutationId}`),
-    });
-  }
-
   reset(_, successMessage, errorMessage) {
     try {
       this.context.State.resetState();

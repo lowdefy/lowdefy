@@ -17,17 +17,9 @@
 import { useEffect, useState } from 'react';
 import getContext from '@lowdefy/engine';
 
-const onEnter = (context) => {
+const callAction = ({ action, context }) => {
   return context.RootBlocks.areas.root.blocks[0].callAction({
-    action: 'onEnter',
-    hideLoading: true,
-  });
-};
-
-const fetchAll = (context) => {
-  // fetch all new requests on page
-  return context.Requests.callRequests({
-    onlyNew: true,
+    action,
   });
 };
 
@@ -44,9 +36,9 @@ const useContext = ({ block, pageId, rootContext, contextId }) => {
           pageId,
           rootContext,
         });
-        if (mounted) await onEnter(ctx);
+        if (mounted) await callAction({ action: 'onEnter', context: ctx });
         if (mounted) {
-          fetchAll(ctx);
+          callAction({ action: 'onEnterAsync', context: ctx });
           setContext(ctx);
         }
       } catch (err) {

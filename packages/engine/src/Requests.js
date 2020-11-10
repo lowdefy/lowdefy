@@ -38,23 +38,20 @@ class Requests {
     this.fetch = this.fetch.bind(this);
   }
 
-  callRequests({ requestIds, onlyNew, args, arrayIndices } = {}) {
+  callRequests({ requestIds, args, arrayIndices } = {}) {
     if (!requestIds) {
       return Promise.all(
         this.requestList.map((request) =>
-          this.callRequest({ requestId: request.requestId, onlyNew, args, arrayIndices })
+          this.callRequest({ requestId: request.requestId, args, arrayIndices })
         )
       );
     }
     return Promise.all(
-      requestIds.map((requestId) => this.callRequest({ requestId, onlyNew, args, arrayIndices }))
+      requestIds.map((requestId) => this.callRequest({ requestId, args, arrayIndices }))
     );
   }
 
-  callRequest({ requestId, onlyNew, args, arrayIndices }) {
-    if (onlyNew) {
-      if (requestId in this.context.requests) return Promise.resolve();
-    }
+  callRequest({ requestId, args, arrayIndices }) {
     if (!this.context.requests[requestId]) {
       const request = this.requestList.find((req) => req.requestId === requestId);
       if (!request) {

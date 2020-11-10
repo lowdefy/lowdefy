@@ -172,7 +172,7 @@ test('callRequests', async () => {
     urlQuery,
   };
   const Requests = new RequestsClass(context);
-  const promise = Requests.callRequests({ requestIds: ['req_one'], onlyNew: true });
+  const promise = Requests.callRequests({ requestIds: ['req_one'] });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -285,32 +285,6 @@ test('callRequest request does not exist', async () => {
       response: null,
     },
   });
-});
-
-test('callRequest not called the same request twice with onlyNew true', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
-    rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
-  expect(context.requests).toEqual({
-    req_one: {
-      error: [null],
-      loading: false,
-      response: 1,
-    },
-  });
-  await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
-  expect(mockQuery).toHaveBeenCalledTimes(1);
 });
 
 test('update function should be called', async () => {
