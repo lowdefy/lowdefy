@@ -362,7 +362,6 @@ test('no blocks on page', async () => {
         type: 'Context',
         meta: outputMetas.Context,
         requests: [],
-        mutations: [],
       },
     ],
   });
@@ -431,7 +430,6 @@ test('block meta should include all meta fields', async () => {
         type: 'Context',
         meta: outputMetas.Context,
         requests: [],
-        mutations: [],
         areas: {
           content: {
             blocks: [
@@ -492,7 +490,6 @@ test('nested blocks', async () => {
         type: 'Context',
         meta: outputMetas.Context,
         requests: [],
-        mutations: [],
         areas: {
           content: {
             blocks: [
@@ -564,7 +561,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [],
@@ -604,7 +600,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -652,7 +647,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               gutter: 20,
@@ -708,7 +702,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -771,7 +764,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -842,7 +834,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -929,7 +920,6 @@ describe('block areas', () => {
           type: 'Context',
           meta: outputMetas.Context,
           requests: [],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -1037,7 +1027,6 @@ describe('build requests', () => {
               requestId: 'request_1',
             },
           ],
-          mutations: [],
         },
       ],
     });
@@ -1072,7 +1061,6 @@ describe('build requests', () => {
           blockId: 'page_1',
           type: 'Context',
           meta: outputMetas.Context,
-          mutations: [],
           requests: [],
           areas: {
             content: {
@@ -1088,7 +1076,6 @@ describe('build requests', () => {
                       requestId: 'request_1',
                     },
                   ],
-                  mutations: [],
                 },
               ],
             },
@@ -1133,7 +1120,6 @@ describe('build requests', () => {
               requestId: 'request_1',
             },
           ],
-          mutations: [],
           areas: {
             content: {
               blocks: [
@@ -1186,7 +1172,6 @@ describe('build requests', () => {
           blockId: 'page_1',
           type: 'Context',
           meta: outputMetas.Context,
-          mutations: [],
           requests: [],
           areas: {
             content: {
@@ -1202,7 +1187,6 @@ describe('build requests', () => {
                       requestId: 'request_1',
                     },
                   ],
-                  mutations: [],
                   areas: {
                     content: {
                       blocks: [
@@ -1258,282 +1242,6 @@ describe('build requests', () => {
             {
               id: 'request:page_1:page_1:request_2',
               requestId: 'request_2',
-            },
-          ],
-          mutations: [],
-        },
-      ],
-    });
-  });
-});
-
-describe('build mutations', () => {
-  test('mutations not an array', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          mutations: 'mutations',
-        },
-      ],
-    };
-    await expect(buildPages({ components, context })).rejects.toThrow(
-      'Mutations is not an array at page_1 on page page_1. Received "mutations"'
-    );
-  });
-
-  test('give mutation an id', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          mutations: [
-            {
-              id: 'mutation_1',
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          mutations: [
-            {
-              id: 'mutation:page_1:page_1:mutation_1',
-              mutationId: 'mutation_1',
-            },
-          ],
-        },
-      ],
-    });
-  });
-
-  test('mutation on a context block not at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          blocks: [
-            {
-              id: 'context',
-              type: 'Context',
-              mutations: [
-                {
-                  id: 'mutation_1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          mutations: [],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:context',
-                  blockId: 'context',
-                  type: 'Context',
-                  meta: outputMetas.Context,
-                  requests: [],
-                  mutations: [
-                    {
-                      id: 'mutation:page_1:context:mutation_1',
-                      mutationId: 'mutation_1',
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('mutation on a non-context block not at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          blocks: [
-            {
-              id: 'box',
-              type: 'Container',
-              mutations: [
-                {
-                  id: 'mutation_1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          mutations: [
-            {
-              id: 'mutation:page_1:page_1:mutation_1',
-              mutationId: 'mutation_1',
-            },
-          ],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:box',
-                  blockId: 'box',
-                  type: 'Container',
-                  meta: outputMetas.Container,
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('mutation on a non-context block below a context block not at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          blocks: [
-            {
-              id: 'context',
-              type: 'Context',
-              blocks: [
-                {
-                  id: 'box',
-                  type: 'Container',
-                  mutations: [
-                    {
-                      id: 'mutation_1',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          blockId: 'page_1',
-          pageId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          mutations: [],
-          requests: [],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:context',
-                  blockId: 'context',
-                  type: 'Context',
-                  meta: outputMetas.Context,
-                  requests: [],
-                  mutations: [
-                    {
-                      id: 'mutation:page_1:context:mutation_1',
-                      mutationId: 'mutation_1',
-                    },
-                  ],
-                  areas: {
-                    content: {
-                      blocks: [
-                        {
-                          id: 'block:page_1:box',
-                          blockId: 'box',
-                          type: 'Container',
-                          meta: outputMetas.Container,
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('multiple mutations', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          mutations: [
-            {
-              id: 'mutation_1',
-            },
-            {
-              id: 'mutation_2',
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          mutations: [
-            {
-              id: 'mutation:page_1:page_1:mutation_1',
-              mutationId: 'mutation_1',
-            },
-            {
-              id: 'mutation:page_1:page_1:mutation_2',
-              mutationId: 'mutation_2',
             },
           ],
         },

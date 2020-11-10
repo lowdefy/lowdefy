@@ -28,7 +28,6 @@ Blocks:
   - set blockId = id
   - set id = `block:${pageId}:${block.id}` if not a page
   - set request ids
-  - set mutation ids
   - set block meta
   - set blocks to areas.content
 */
@@ -48,21 +47,6 @@ function buildRequests(block, context) {
       context.requests.push(request);
     });
     delete block.requests;
-  }
-  if (!type.isNone(block.mutations)) {
-    if (!type.isArray(block.mutations)) {
-      throw new Error(
-        `Mutations is not an array at ${block.blockId} on page ${
-          context.pageId
-        }. Received ${JSON.stringify(block.mutations)}`
-      );
-    }
-    block.mutations.forEach((mutation) => {
-      mutation.mutationId = mutation.id;
-      mutation.id = `mutation:${context.pageId}:${context.contextId}:${mutation.id}`;
-      context.mutations.push(mutation);
-    });
-    delete block.mutations;
   }
 }
 
@@ -133,13 +117,11 @@ async function buildBlock(block, context) {
   await setBlockMeta(block, context);
   if (block.meta.category === 'context') {
     context.requests = [];
-    context.mutations = [];
     context.contextId = block.blockId;
   }
   buildRequests(block, context);
   if (block.meta.category === 'context') {
     block.requests = context.requests;
-    block.mutations = context.mutations;
   }
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
@@ -186,7 +168,6 @@ async function buildPages({ components, context }) {
     await buildBlock(page, {
       pageId: page.pageId,
       requests: [],
-      mutations: [],
       metaLoader: context.metaLoader,
     });
     // set page.id since buildBlock sets id as well.
