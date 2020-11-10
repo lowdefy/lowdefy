@@ -18,19 +18,26 @@ import path from 'path';
 import Dataloader from 'dataloader';
 import readJsonFile from './readJsonFile';
 
-function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
-  async function readPage(id) {
-    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `${id}.json`);
+function cacheKeyFn({ pageId, contextId, requestId }) {
+  return `${pageId}:${contextId}:${requestId}`;
+}
+
+function createRequestBatchLoader({ CONFIGURATION_BASE_PATH }) {
+  async function readRequest({ pageId, contextId, requestId }) {
+    const filePath = path.resolve(
+      CONFIGURATION_BASE_PATH,
+      `pages/${pageId}/requests/${contextId}/${requestId}.json`
+    );
     return readJsonFile({ filePath });
   }
-  async function componentLoader(keys) {
-    return keys.map((id) => readPage(id));
+  async function requestLoader(keys) {
+    return keys.map((key) => readRequest(key));
   }
-  return componentLoader;
+  return requestLoader;
 }
 
-function createPageLoader({ CONFIGURATION_BASE_PATH }) {
-  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
+function createRequestLoader({ CONFIGURATION_BASE_PATH }) {
+  return new Dataloader(createRequestBatchLoader({ CONFIGURATION_BASE_PATH }), { cacheKeyFn });
 }
 
-export default createPageLoader;
+export default createRequestLoader;

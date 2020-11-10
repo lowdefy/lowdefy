@@ -15,27 +15,27 @@
 */
 
 import path from 'path';
-import createPageLoader from './pageLoader';
+import createConnectionLoader from './connectionLoader';
 import { ConfigurationError } from '../context/errors';
 
 const CONFIGURATION_BASE_PATH = path.resolve(process.cwd(), 'src/test/config');
 
-test('load page', async () => {
-  const pageLoader = createPageLoader({ CONFIGURATION_BASE_PATH });
-  const res = await pageLoader.load('page1');
+test('load connection', async () => {
+  const connectionLoader = createConnectionLoader({ CONFIGURATION_BASE_PATH });
+  const res = await connectionLoader.load('connection1');
   expect(res).toEqual({
-    id: 'page:page1',
-    type: 'TestPage',
+    id: 'connection:connection1',
+    type: 'TestConnection',
   });
 });
 
-test('load page, page does not exist', async () => {
-  const pageLoader = createPageLoader({ CONFIGURATION_BASE_PATH });
-  const res = await pageLoader.load('doesNotExist');
+test('load connection, connection does not exist', async () => {
+  const connectionLoader = createConnectionLoader({ CONFIGURATION_BASE_PATH });
+  const res = await connectionLoader.load('doesNotExist');
   expect(res).toEqual(null);
 });
 
-test('load page, invalid JSON', async () => {
-  const pageLoader = createPageLoader({ CONFIGURATION_BASE_PATH });
-  await expect(pageLoader.load('invalid')).rejects.toThrow(ConfigurationError);
+test('load connection, invalid JSON', async () => {
+  const connectionLoader = createConnectionLoader({ CONFIGURATION_BASE_PATH });
+  await expect(connectionLoader.load('invalid')).rejects.toThrow(ConfigurationError);
 });

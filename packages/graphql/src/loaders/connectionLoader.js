@@ -18,19 +18,19 @@ import path from 'path';
 import Dataloader from 'dataloader';
 import readJsonFile from './readJsonFile';
 
-function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
-  async function readPage(id) {
-    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `${id}.json`);
+function createConnectionBatchLoader({ CONFIGURATION_BASE_PATH }) {
+  async function readConnection(id) {
+    const filePath = path.resolve(CONFIGURATION_BASE_PATH, `connections/${id}.json`);
     return readJsonFile({ filePath });
   }
-  async function componentLoader(keys) {
-    return keys.map((id) => readPage(id));
+  async function connectionLoader(keys) {
+    return keys.map((id) => readConnection(id));
   }
-  return componentLoader;
+  return connectionLoader;
 }
 
-function createPageLoader({ CONFIGURATION_BASE_PATH }) {
-  return new Dataloader(createPageBatchLoader({ CONFIGURATION_BASE_PATH }));
+function createConnectionLoader({ CONFIGURATION_BASE_PATH }) {
+  return new Dataloader(createConnectionBatchLoader({ CONFIGURATION_BASE_PATH }));
 }
 
-export default createPageLoader;
+export default createConnectionLoader;

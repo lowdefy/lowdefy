@@ -22,6 +22,19 @@ const typeDefs = gql`
     page(pageId: ID!): JSON
     lowdefyGlobal: JSON
     menu: MenuResponse
+    request(input: RequestInput!): RequestResponse
+  }
+
+  input RequestInput {
+    args: JSON!
+    arrayIndices: JSON!
+    contextId: String!
+    input: JSON!
+    lowdefyGlobal: JSON!
+    pageId: String!
+    requestId: String!
+    state: JSON!
+    urlQuery: JSON!
   }
 
   type MenuResponse {
@@ -51,6 +64,13 @@ const typeDefs = gql`
     properties: JSON
     pageId: String
     url: String
+  }
+
+  type RequestResponse {
+    id: ID!
+    type: String
+    success: Boolean
+    response: JSON
   }
 `;
 
