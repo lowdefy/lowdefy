@@ -3622,7 +3622,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:65bbdbc833194d48af8b473ccb9eb396af4cb12a8148bcea865208cb4df1306b9afb0a62408cbd348e6f2af9b92764096868c744881c07da8a59708a1c9cb4f4#npm:5.3.2"],
             ["webpack-cli", "virtual:65bbdbc833194d48af8b473ccb9eb396af4cb12a8148bcea865208cb4df1306b9afb0a62408cbd348e6f2af9b92764096868c744881c07da8a59708a1c9cb4f4#npm:4.2.0"],
             ["webpack-dev-server", "virtual:65bbdbc833194d48af8b473ccb9eb396af4cb12a8148bcea865208cb4df1306b9afb0a62408cbd348e6f2af9b92764096868c744881c07da8a59708a1c9cb4f4#npm:3.11.0"],
-            ["webpack-merge", "npm:5.2.0"],
+            ["webpack-merge", "npm:5.3.0"],
             ["yaml-jest", "npm:1.0.5"],
             ["yaml-loader", "npm:0.6.0"]
           ],
@@ -3659,7 +3659,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:5.4.0"],
             ["webpack-cli", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:4.2.0"],
             ["webpack-dev-server", "virtual:88778edb3eb541da91ed32af0b5c47e0a05d782a1945b337b1a3bcc46014df8b6dac985855b5111a0a12ffbcd2c69ceaa1dc4fc613dece78de9e845311d96041#npm:3.11.0"],
-            ["webpack-merge", "npm:5.2.0"],
+            ["webpack-merge", "npm:5.3.0"],
             ["yaml-jest", "npm:1.0.5"],
             ["yaml-loader", "npm:0.6.0"]
           ],
@@ -24357,15 +24357,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["webpack-merge", "npm:4.2.2"],
             ["lodash", "npm:4.17.20"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:5.2.0", {
-          "packageLocation": "./.yarn/cache/webpack-merge-npm-5.2.0-dfa3a85026-edc100b9c7.zip/node_modules/webpack-merge/",
-          "packageDependencies": [
-            ["webpack-merge", "npm:5.2.0"],
-            ["clone-deep", "npm:4.0.1"],
-            ["wildcard", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }],

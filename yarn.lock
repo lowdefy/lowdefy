@@ -2789,7 +2789,7 @@ __metadata:
     webpack: 5.3.2
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2824,7 +2824,7 @@ __metadata:
     webpack: 5.4.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -19307,16 +19307,6 @@ fsevents@^1.2.7:
     ansi-colors: ^3.0.0
     uuid: ^3.3.2
   checksum: 250db04c41e278aa15a4f452808ef32ca8eca0f7df9d4c7c28b3d94e45d2649fbeb90a0adbee1c675447209b6a35136e13c1fb31476c3ca81c972bb41f0535bb
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:5.2.0":
-  version: 5.2.0
-  resolution: "webpack-merge@npm:5.2.0"
-  dependencies:
-    clone-deep: ^4.0.1
-    wildcard: ^2.0.0
-  checksum: edc100b9c7cfc675d1e1857afd6a194daa1756d140eda9da452e4f73933307a9af7a485a94b68ef29dfa3047f69e34d6ca724e5858109ed287f32b79c0c0d11b
   languageName: node
   linkType: hard
 
