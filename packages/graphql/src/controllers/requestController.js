@@ -40,7 +40,7 @@ class RequestController {
   async callRequest({
     args,
     arrayIndices,
-    contextId,
+    blockId,
     input,
     lowdefyGlobal,
     pageId,
@@ -48,7 +48,7 @@ class RequestController {
     state,
     urlQuery,
   }) {
-    const requestData = await this.requestLoader.load({ pageId, contextId, requestId });
+    const requestData = await this.requestLoader.load({ pageId, contextId: blockId, requestId });
 
     validateRequest(requestData, requestId);
 

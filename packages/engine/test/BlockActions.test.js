@@ -31,18 +31,32 @@ const displayMessage = {
   success: mockSuccess,
 };
 
-const mockMutateImp = ({ mutationId }) => {
+const mockReqResponses = {
+  request1: {
+    data: {
+      request: {
+        id: 'request1',
+        success: true,
+        response: 1,
+      },
+    },
+  },
+};
+
+const mockQueryImp = ({ variables }) => {
+  const { requestInput } = variables;
+  const { requestId } = requestInput;
   return new Promise((resolve, reject) => {
-    if (mutationId === 'req_error') {
+    if (requestId === 'req_error') {
       reject({ errorMessage: 'Error!' });
     }
-    resolve({ successMessage: 'Done!' });
+    resolve(mockReqResponses[requestId]);
   });
 };
-const mockMutate = jest.fn();
+const mockQuery = jest.fn();
 
 const client = {
-  mutate: mockMutate,
+  query: mockQuery,
 };
 
 const RealDate = Date;
@@ -68,8 +82,8 @@ beforeEach(() => {
   mockLoading.mockImplementation(() => mockLoadingCallback);
   mockSuccess.mockReset();
   mockError.mockReset();
-  mockMutate.mockReset();
-  mockMutate.mockImplementation(mockMutateImp);
+  mockQuery.mockReset();
+  mockQuery.mockImplementation(mockQueryImp);
 });
 
 test('init BlockActions', () => {
@@ -203,7 +217,7 @@ test('callAction x2', async () => {
     meta: {
       category: 'context',
     },
-    mutations: [{ mutationId: 'mut1' }],
+    requests: [{ requestId: 'request1' }],
     areas: {
       content: {
         blocks: [
@@ -217,7 +231,7 @@ test('callAction x2', async () => {
             actions: {
               onClick: [
                 { id: 'a', type: 'SetState', params: { a: 'a' } },
-                { id: 'b', type: 'Mutate', params: 'mut1' },
+                { id: 'b', type: 'Request', params: 'request1' },
               ],
             },
           },

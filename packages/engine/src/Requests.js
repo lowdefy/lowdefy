@@ -38,18 +38,20 @@ class Requests {
     this.fetch = this.fetch.bind(this);
   }
 
-  callRequests({ requestIds, onlyNew } = {}) {
+  callRequests({ requestIds, onlyNew, args, arrayIndices } = {}) {
     if (!requestIds) {
       return Promise.all(
         this.requestList.map((request) =>
-          this.callRequest({ requestId: request.requestId, onlyNew })
+          this.callRequest({ requestId: request.requestId, onlyNew, args, arrayIndices })
         )
       );
     }
-    return Promise.all(requestIds.map((requestId) => this.callRequest({ requestId, onlyNew })));
+    return Promise.all(
+      requestIds.map((requestId) => this.callRequest({ requestId, onlyNew, args, arrayIndices }))
+    );
   }
 
-  callRequest({ requestId, onlyNew }) {
+  callRequest({ requestId, onlyNew, args, arrayIndices }) {
     if (onlyNew) {
       if (requestId in this.context.requests) return Promise.resolve();
     }
@@ -72,10 +74,10 @@ class Requests {
       };
     }
 
-    return this.fetch(requestId);
+    return this.fetch({ requestId, args, arrayIndices });
   }
 
-  fetch(requestId) {
+  fetch({ requestId, args, arrayIndices }) {
     this.context.requests[requestId].loading = true;
     if (this.context.RootBlocks) {
       this.context.RootBlocks.setBlocksLoadingCache();
@@ -87,8 +89,10 @@ class Requests {
         fetchPolicy: 'network-only',
         variables: {
           requestInput: {
+            arrayIndices,
             requestId,
             blockId: this.context.blockId,
+            args: serializer.serialize(args) || {},
             input: serializer.serialize(this.context.input),
             lowdefyGlobal: serializer.serialize(this.context.lowdefyGlobal),
             pageId: this.context.pageId,

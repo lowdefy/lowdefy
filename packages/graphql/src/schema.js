@@ -28,7 +28,7 @@ const typeDefs = gql`
   input RequestInput {
     args: JSON!
     arrayIndices: JSON!
-    contextId: String!
+    blockId: String!
     input: JSON!
     lowdefyGlobal: JSON!
     pageId: String!

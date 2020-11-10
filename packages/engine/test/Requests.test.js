@@ -313,7 +313,7 @@ test('callRequest not called the same request twice with onlyNew true', async ()
   expect(mockQuery).toHaveBeenCalledTimes(1);
 });
 
-test('update unction should be called', async () => {
+test('update function should be called', async () => {
   const updateFunction = jest.fn();
   const context = {
     blockId,
@@ -353,7 +353,7 @@ test('fetch should set blocks loading and call query every time it is called', a
   await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(1);
   expect(mockQuery).toHaveBeenCalledTimes(1);
-  Requests.fetch('req_one');
+  Requests.fetch({ requestId: 'req_one' });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(2);
   expect(mockQuery).toHaveBeenCalledTimes(2);
 });

@@ -63,7 +63,7 @@ beforeEach(() => {
   mockQuery.mockImplementation(mockQueryImp);
 });
 
-test('Fetch call one request', async () => {
+test('Request call one request', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -85,7 +85,7 @@ test('Fetch call one request', async () => {
               valueType: 'string',
             },
             actions: {
-              onClick: [{ id: 'a', type: 'Fetch', params: 'req_one' }],
+              onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
             },
           },
         ],
@@ -118,7 +118,7 @@ test('Fetch call one request', async () => {
   });
 });
 
-test('Fetch call all requests', async () => {
+test('Request call all requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -143,7 +143,7 @@ test('Fetch call all requests', async () => {
               valueType: 'string',
             },
             actions: {
-              onClick: [{ id: 'a', type: 'Fetch' }],
+              onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
             },
           },
         ],
@@ -197,7 +197,7 @@ test('Fetch call all requests', async () => {
   });
 });
 
-test('Fetch call array of requests', async () => {
+test('Request call array of requests', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -222,7 +222,7 @@ test('Fetch call array of requests', async () => {
               valueType: 'string',
             },
             actions: {
-              onClick: [{ id: 'a', type: 'Fetch', params: ['req_one', 'req_two'] }],
+              onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
             },
           },
         ],
@@ -270,6 +270,72 @@ test('Fetch call array of requests', async () => {
     },
     req_two: {
       error: [null, null],
+      loading: false,
+      response: 2,
+    },
+  });
+});
+
+test('Request pass if params are none', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    requests: [
+      {
+        requestId: 'req_one',
+      },
+      {
+        requestId: 'req_two',
+      },
+    ],
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            actions: {
+              onClick: [{ id: 'a', type: 'Request' }],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  await context.Requests.callRequests();
+  expect(context.requests).toEqual({
+    req_one: {
+      error: [null],
+      loading: false,
+      response: 1,
+    },
+    req_two: {
+      error: [null],
+      loading: false,
+      response: 2,
+    },
+  });
+  await button.callAction({ action: 'onClick' });
+  expect(context.requests).toEqual({
+    req_one: {
+      error: [null],
+      loading: false,
+      response: 1,
+    },
+    req_two: {
+      error: [null],
       loading: false,
       response: 2,
     },
