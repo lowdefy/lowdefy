@@ -175,3 +175,16 @@ test('_input param object with no default', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_input replace key arrayIndices', () => {
+  const obj = { a: { _input: 'arr.$.a' } };
+  const parser = new NodeParser({
+    input,
+    arrayIndices: [1],
+  });
+  const res = parser.parse({ input: obj, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'input a2',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
