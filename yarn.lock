@@ -2786,7 +2786,7 @@ __metadata:
     react-syntax-highlighter: 15.3.0
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.3.2
+    webpack: 5.4.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
     webpack-merge: 5.3.0
@@ -19134,43 +19134,6 @@ fsevents@^1.2.7:
   bin:
     webpack: bin/webpack.js
   checksum: 1da5d7f1f0ec1f8f0a0ef2ef4b374805a9abd9a1a30e8834ab4b2f7793ce43251ea5c50b0132884666bd5189711f2049c66bb06ca6c381bfb022355619dc93bc
-  languageName: node
-  linkType: hard
-
-"webpack@npm:5.3.2":
-  version: 5.3.2
-  resolution: "webpack@npm:5.3.2"
-  dependencies:
-    "@types/eslint-scope": ^3.7.0
-    "@types/estree": ^0.0.45
-    "@webassemblyjs/ast": 1.9.0
-    "@webassemblyjs/helper-module-context": 1.9.0
-    "@webassemblyjs/wasm-edit": 1.9.0
-    "@webassemblyjs/wasm-parser": 1.9.0
-    acorn: ^8.0.4
-    browserslist: ^4.14.5
-    chrome-trace-event: ^1.0.2
-    enhanced-resolve: ^5.3.1
-    eslint-scope: ^5.1.1
-    events: ^3.2.0
-    glob-to-regexp: ^0.4.1
-    graceful-fs: ^4.2.4
-    json-parse-better-errors: ^1.0.2
-    loader-runner: ^4.1.0
-    mime-types: ^2.1.27
-    neo-async: ^2.6.2
-    pkg-dir: ^4.2.0
-    schema-utils: ^3.0.0
-    tapable: ^2.0.0
-    terser-webpack-plugin: ^5.0.3
-    watchpack: ^2.0.0
-    webpack-sources: ^2.1.1
-  peerDependenciesMeta:
-    webpack-cli:
-      optional: true
-  bin:
-    webpack: bin/webpack.js
-  checksum: 334a24989d164e4652f6afd2ca2302ecd7d3fd5a963164f60e368ca812b5036fff9b1b6bdbf0257b94a4bbe401ccc0d2922b262631011ec2bcbcc810bcae88a3
   languageName: node
   linkType: hard
 
