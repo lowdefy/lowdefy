@@ -1724,7 +1724,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^26.5.2, @jest/core@npm:^26.6.3":
+"@jest/core@npm:^26.6.3":
   version: 26.6.3
   resolution: "@jest/core@npm:26.6.3"
   dependencies:
@@ -1869,7 +1869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/transform@npm:^26.6.1, @jest/transform@npm:^26.6.2":
+"@jest/transform@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/transform@npm:26.6.2"
   dependencies:
@@ -1892,7 +1892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^26.6.1, @jest/types@npm:^26.6.2":
+"@jest/types@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/types@npm:26.6.2"
   dependencies:
@@ -2761,7 +2761,7 @@ __metadata:
     "@lowdefy/helpers": 1.1.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
     antd: 4.4.2
-    babel-jest: 26.6.1
+    babel-jest: 26.6.3
     babel-loader: 8.1.0
     babel-plugin-import: 1.13.1
     buffer: 6.0.2
@@ -2773,7 +2773,7 @@ __metadata:
     enzyme-to-json: 3.6.1
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
-    jest: 26.5.2
+    jest: 26.6.3
     js-yaml: 3.14.0
     less: 3.12.2
     less-loader: 7.0.2
@@ -5450,24 +5450,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:26.6.1":
-  version: 26.6.1
-  resolution: "babel-jest@npm:26.6.1"
-  dependencies:
-    "@jest/transform": ^26.6.1
-    "@jest/types": ^26.6.1
-    "@types/babel__core": ^7.1.7
-    babel-plugin-istanbul: ^6.0.0
-    babel-preset-jest: ^26.5.0
-    chalk: ^4.0.0
-    graceful-fs: ^4.2.4
-    slash: ^3.0.0
-  peerDependencies:
-    "@babel/core": ^7.0.0
-  checksum: d48f8a17d9838c2129883fc619c27d68d4e8d0f7db5e97070d92b2062a5d9ca6bb890fd99a32e7f7816e00d46a199adefa65c3ac281cb0cad41c4b8369823834
-  languageName: node
-  linkType: hard
-
 "babel-jest@npm:26.6.3, babel-jest@npm:^26.6.3":
   version: 26.6.3
   resolution: "babel-jest@npm:26.6.3"
@@ -5568,7 +5550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-preset-jest@npm:^26.5.0, babel-preset-jest@npm:^26.6.2":
+"babel-preset-jest@npm:^26.6.2":
   version: 26.6.2
   resolution: "babel-preset-jest@npm:26.6.2"
   dependencies:
@@ -11383,7 +11365,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^26.5.2, jest-cli@npm:^26.6.3":
+"jest-cli@npm:^26.6.3":
   version: 26.6.3
   resolution: "jest-cli@npm:26.6.3"
   dependencies:
@@ -11803,19 +11785,6 @@ fsevents@^1.2.7:
     merge-stream: ^2.0.0
     supports-color: ^7.0.0
   checksum: 5eb349833b5e9750ce8700388961dfd5d5e207c913122221e418e48b9cda3c17b0fb418f6a90f1614cfdc3ca836158b720c5dc1de82cb1e708266b4d76e31a38
-  languageName: node
-  linkType: hard
-
-"jest@npm:26.5.2":
-  version: 26.5.2
-  resolution: "jest@npm:26.5.2"
-  dependencies:
-    "@jest/core": ^26.5.2
-    import-local: ^3.0.2
-    jest-cli: ^26.5.2
-  bin:
-    jest: bin/jest.js
-  checksum: 8c31ca019ce4241f9de95bff9c389eb73db060278c7d19111c67554b2caebacd33b3ddc4eb9662f6d29e509aa012451a47c8021e58bbddf1d7439288de1d2eb1
   languageName: node
   linkType: hard
 
