@@ -2783,7 +2783,7 @@ __metadata:
     react-dom: 17.0.1
     react-markdown: 4.3.1
     react-router-dom: 5.2.0
-    react-syntax-highlighter: 15.2.1
+    react-syntax-highlighter: 15.3.0
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
     webpack: 5.3.2
@@ -14800,7 +14800,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prismjs@npm:^1.21.0, prismjs@npm:^1.22.0, prismjs@npm:~1.22.0":
+"prismjs@npm:^1.22.0, prismjs@npm:~1.22.0":
   version: 1.22.0
   resolution: "prismjs@npm:1.22.0"
   dependencies:
@@ -15879,21 +15879,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:15.2.1":
-  version: 15.2.1
-  resolution: "react-syntax-highlighter@npm:15.2.1"
-  dependencies:
-    "@babel/runtime": ^7.3.1
-    highlight.js: ^10.1.1
-    lowlight: ^1.14.0
-    prismjs: ^1.21.0
-    refractor: ^3.1.0
-  peerDependencies:
-    react: ">= 0.14.0"
-  checksum: 22b880f0ece6c3dcef0796e18028931cf1580ecccae69c1e38b6cd1da3b84d4aa9c6aff4f87c6acce4b9256b28d05d571ded9e6d92c5c93b59df5dba825712c8
-  languageName: node
-  linkType: hard
-
 "react-syntax-highlighter@npm:15.3.0":
   version: 15.3.0
   resolution: "react-syntax-highlighter@npm:15.3.0"
@@ -16171,7 +16156,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"refractor@npm:^3.1.0, refractor@npm:^3.2.0":
+"refractor@npm:^3.2.0":
   version: 3.2.0
   resolution: "refractor@npm:3.2.0"
   dependencies:
