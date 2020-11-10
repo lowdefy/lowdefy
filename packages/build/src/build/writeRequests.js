@@ -43,7 +43,7 @@ function getRequestsOnBlock({ block, requests, pageId }) {
   }
 }
 
-async function updateRequestsOnPage({ page, context }) {
+async function writeRequestsOnPage({ page, context }) {
   if (!type.isObject(page)) {
     throw new Error(`Page is not an object.`);
   }
@@ -52,7 +52,7 @@ async function updateRequestsOnPage({ page, context }) {
 
   return requests.map(async (request) => {
     await context.artifactSetter.set({
-      filePath: `pages/${page.pageId}/requests/${request.requestId}.json`,
+      filePath: `pages/${page.pageId}/requests/${request.contextId}/${request.requestId}.json`,
       content: JSON.stringify(request, null, 2),
     });
   });
@@ -63,7 +63,7 @@ async function writeRequests({ components, context }) {
   if (!type.isArray(components.pages)) {
     throw new Error(`Pages is not an array.`);
   }
-  const writePromises = components.pages.map((page) => updateRequestsOnPage({ page, context }));
+  const writePromises = components.pages.map((page) => writeRequestsOnPage({ page, context }));
   return Promise.all(writePromises);
 }
 

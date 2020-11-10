@@ -43,6 +43,7 @@ function buildRequests(block, context) {
     }
     block.requests.forEach((request) => {
       request.requestId = request.id;
+      request.contextId = context.contextId;
       request.id = `request:${context.pageId}:${context.contextId}:${request.id}`;
       context.requests.push(request);
     });

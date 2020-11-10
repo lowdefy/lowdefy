@@ -1025,6 +1025,7 @@ describe('build requests', () => {
             {
               id: 'request:page_1:page_1:request_1',
               requestId: 'request_1',
+              contextId: 'page_1',
             },
           ],
         },
@@ -1074,6 +1075,7 @@ describe('build requests', () => {
                     {
                       id: 'request:page_1:context:request_1',
                       requestId: 'request_1',
+                      contextId: 'context',
                     },
                   ],
                 },
@@ -1118,6 +1120,7 @@ describe('build requests', () => {
             {
               id: 'request:page_1:page_1:request_1',
               requestId: 'request_1',
+              contextId: 'page_1',
             },
           ],
           areas: {
@@ -1185,6 +1188,7 @@ describe('build requests', () => {
                     {
                       id: 'request:page_1:context:request_1',
                       requestId: 'request_1',
+                      contextId: 'context',
                     },
                   ],
                   areas: {
@@ -1238,10 +1242,12 @@ describe('build requests', () => {
             {
               id: 'request:page_1:page_1:request_1',
               requestId: 'request_1',
+              contextId: 'page_1',
             },
             {
               id: 'request:page_1:page_1:request_2',
               requestId: 'request_2',
+              contextId: 'page_1',
             },
           ],
         },

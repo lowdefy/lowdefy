@@ -39,6 +39,7 @@ test('writeRequests write request', async () => {
           {
             id: 'request:page1:page1:request1',
             requestId: 'request1',
+            contextId: 'page1',
             connectionId: 'connection1',
             properties: { key: 'value' },
           },
@@ -50,10 +51,11 @@ test('writeRequests write request', async () => {
   expect(mockSet.mock.calls).toEqual([
     [
       {
-        filePath: 'pages/page1/requests/request1.json',
+        filePath: 'pages/page1/requests/page1/request1.json',
         content: `{
   "id": "request:page1:page1:request1",
   "requestId": "request1",
+  "contextId": "page1",
   "connectionId": "connection1",
   "properties": {
     "key": "value"
@@ -80,6 +82,7 @@ test('writeRequests write nested request', async () => {
                   {
                     id: 'request:page1:page1:request1',
                     requestId: 'request1',
+                    contextId: 'page1',
                     connectionId: 'connection1',
                     properties: { key: 'value' },
                   },
@@ -95,10 +98,11 @@ test('writeRequests write nested request', async () => {
   expect(mockSet.mock.calls).toEqual([
     [
       {
-        filePath: 'pages/page1/requests/request1.json',
+        filePath: 'pages/page1/requests/page1/request1.json',
         content: `{
   "id": "request:page1:page1:request1",
   "requestId": "request1",
+  "contextId": "page1",
   "connectionId": "connection1",
   "properties": {
     "key": "value"
