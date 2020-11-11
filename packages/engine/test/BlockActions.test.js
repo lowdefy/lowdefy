@@ -44,8 +44,8 @@ const mockReqResponses = {
 };
 
 const mockQueryImp = ({ variables }) => {
-  const { requestInput } = variables;
-  const { requestId } = requestInput;
+  const { input } = variables;
+  const { requestId } = input;
   return new Promise((resolve, reject) => {
     if (requestId === 'req_error') {
       reject({ errorMessage: 'Error!' });
