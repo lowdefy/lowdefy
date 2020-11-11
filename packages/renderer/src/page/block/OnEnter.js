@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { useEffect, useState } from 'react';
-import getContext from '@lowdefy/engine';
+import React, { useEffect, useState } from 'react';
+import { Loading } from '@lowdefy/block-tools';
+import { get } from '@lowdefy/helpers';
 
 const callAction = ({ action, context }) => {
   return context.RootBlocks.areas.root.blocks[0].callAction({
@@ -23,23 +24,17 @@ const callAction = ({ action, context }) => {
   });
 };
 
-const useContext = ({ block, pageId, rootContext, contextId }) => {
+const OnEnter = ({ block, context, render }) => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [context, setContext] = useState(null);
   useEffect(() => {
     let mounted = true;
     const mount = async () => {
       try {
-        const ctx = await getContext({
-          block,
-          contextId,
-          pageId,
-          rootContext,
-        });
-        if (mounted) await callAction({ action: 'onEnter', context: ctx });
+        await callAction({ action: 'onEnter', context });
         if (mounted) {
-          callAction({ action: 'onEnterAsync', context: ctx });
-          setContext(ctx);
+          callAction({ action: 'onEnterAsync', context });
+          setLoading(false);
         }
       } catch (err) {
         setError(err);
@@ -49,9 +44,19 @@ const useContext = ({ block, pageId, rootContext, contextId }) => {
     return () => {
       mounted = false;
     };
-  }, [block, pageId, rootContext, contextId]);
+  }, [context]);
 
-  return { error, context, loading: !context && !error };
+  if (loading)
+    return (
+      <Loading
+        properties={get(block, 'meta.loading.properties')}
+        type={get(block, 'meta.loading.type')}
+      />
+    );
+
+  if (error) throw error;
+
+  return render(context);
 };
 
-export default useContext;
+export default OnEnter;
