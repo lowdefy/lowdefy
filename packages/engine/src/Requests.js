@@ -18,8 +18,8 @@ import gql from 'graphql-tag';
 import { get, serializer } from '@lowdefy/helpers';
 
 const CALL_REQUEST = gql`
-  query callRequest($requestInput: RequestInput!) {
-    request(requestInput: $requestInput) {
+  query callRequest($input: RequestInput!) {
+    request(input: $input) {
       id
       type
       success
@@ -85,7 +85,7 @@ class Requests {
         query: CALL_REQUEST,
         fetchPolicy: 'network-only',
         variables: {
-          requestInput: {
+          input: {
             arrayIndices,
             requestId,
             blockId: this.context.blockId,

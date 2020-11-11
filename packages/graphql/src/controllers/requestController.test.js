@@ -52,7 +52,7 @@ const context = testBootstrapContext({ loaders, getConnectionSecrets });
 const defaultInput = {
   args: {},
   arrayIndices: [],
-  contextId: 'contextId',
+  blockId: 'contextId',
   input: {},
   lowdefyGlobal: {},
   pageId: 'pageId',
@@ -242,7 +242,7 @@ test('parse request properties for operators', async () => {
       value: 'argValue',
     },
     arrayIndices: [1],
-    contextId: 'contextId',
+    blockId: 'contextId',
     input: {
       value: 'inputValue',
     },
@@ -306,7 +306,7 @@ test('parse connection properties for operators', async () => {
       value: 'argValue',
     },
     arrayIndices: [1],
-    contextId: 'contextId',
+    blockId: 'contextId',
     input: {
       value: 'inputValue',
     },
