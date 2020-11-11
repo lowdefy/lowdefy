@@ -20,7 +20,6 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import LoadBlock from './LoadBlock';
-import Defaults from './Defaults';
 import CategorySwitch from './CategorySwitch';
 import WatchCache from './WatchCache';
 
