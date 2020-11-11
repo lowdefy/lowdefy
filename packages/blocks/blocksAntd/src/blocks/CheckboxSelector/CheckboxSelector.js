@@ -23,6 +23,7 @@ import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';
 
+// TODO: item style, left or right, input groups
 const CheckboxSelector = ({ blockId, loading, properties, required, validate, value, methods }) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (

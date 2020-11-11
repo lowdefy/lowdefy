@@ -23,7 +23,8 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/blocks/*"
   ],
   "scripts": {
     "build": "lerna run build",
