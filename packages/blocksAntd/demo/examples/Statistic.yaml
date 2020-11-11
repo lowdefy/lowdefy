@@ -4,3 +4,59 @@
   type: Statistic
   properties:
     title: Statistic title
+- id: "properties.value: 3.45 as number"
+  type: Statistic
+  properties:
+    value: 3.45
+- id: "properties.value: '3.45' as string"
+  type: Statistic
+  properties:
+    value: "3.45"
+- id: "properties.decimalSeparator: ','"
+  type: Statistic
+  properties:
+    value: 3.45
+    decimalSeparator: ","
+- id: "properties.type: intlNumberFormat"
+  type: Statistic
+  properties:
+    value: 3.45
+    formatter:
+      type: "intlNumberFormat"
+      properties:
+        locale: en-ZA
+        options:
+          style: currency
+          currency: ZAR
+# I dont have access to new Lowdefy formatter options
+- id: "properties.groupSeparator: ','"
+  type: Statistic
+  properties:
+    value: 3565542.45
+    decimalSeparator: ","
+    groupSeparator: "."
+- id: "properties.precision: 2"
+  type: Statistic
+  properties:
+    value: 3.456
+    precision: 2
+- id: "properties.prefix: R"
+  type: Statistic
+  properties:
+    value: 3.45
+    prefix: R
+- id: "properties.prefixIcon: AccountBookFilled"
+  type: Statistic
+  properties:
+    value: 3.45
+    prefixIcon: AccountBookFilled
+- id: "properties.suffix: Rand"
+  type: Statistic
+  properties:
+    value: 3.45
+    suffix: Rand
+- id: "properties.suffixIcon: AccountBookFilled"
+  type: Statistic
+  properties:
+    value: 3.45
+    suffixIcon: AccountBookFilled
