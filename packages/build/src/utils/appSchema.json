@@ -43,6 +43,9 @@
         "layout": {
           "type": "object"
         },
+        "style": {
+          "type": "object"
+        },
         "blocks": {
           "type": "array",
           "items": {
