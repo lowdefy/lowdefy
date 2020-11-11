@@ -21,11 +21,15 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "build:dev": "webpack --config webpack.dev.js",
     "build:docker": "docker build --tag lowdefy/lowdefy .",
     "clean": "rm -rf dist",
+    "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
     "start": "nodemon dev/server.js",
     "version:prerelease": "yarn version prerelease",
