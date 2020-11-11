@@ -46,6 +46,9 @@
         "style": {
           "type": "object"
         },
+        "visible": {
+          "type": "boolean"
+        },
         "blocks": {
           "type": "array",
           "items": {
