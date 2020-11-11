@@ -79,6 +79,7 @@ class Actions {
         serializer.deserializeFromString(this.context.State.frozenState)
       );
       this.context.update();
+      // Consider firing onReset and onResetAsync actions
     } catch (error) {
       // log e
       return Promise.reject({ errorMessage: errorMessage || 'Failed to reset page.', error });

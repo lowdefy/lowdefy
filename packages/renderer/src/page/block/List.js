@@ -75,7 +75,6 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         }}
         actions={block.eval.actions}
         blockId={block.blockId}
-        Components={rootContext.Components}
         list={contentList}
         homePageId={rootContext.homePageId}
         key={block.blockId}
