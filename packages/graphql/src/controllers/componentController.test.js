@@ -15,10 +15,7 @@
 */
 
 import createComponentController from './componentController';
-
-const DEPLOYMENT_ID = 'test';
-const DEPLOYMENT_NAME = 'Test App';
-const DOMAIN_NAME = 'test.com';
+import { testBootstrapContext } from '../test/testContext';
 
 const mockLoadComponent = jest.fn();
 const loaders = {
@@ -27,14 +24,7 @@ const loaders = {
   },
 };
 
-const getLoader = jest.fn((loader) => loaders[loader]);
-
-const context = {
-  getLoader,
-  DEPLOYMENT_ID,
-  DEPLOYMENT_NAME,
-  DOMAIN_NAME,
-};
+const context = testBootstrapContext({ loaders });
 
 beforeEach(() => {
   mockLoadComponent.mockReset();

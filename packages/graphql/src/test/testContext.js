@@ -16,20 +16,24 @@
 
 import createGetController from '../context/getController';
 
-const bootstrapContext = {
-  DEPLOYMENT_ID: 'test',
-  DEPLOYMENT_NAME: 'Test App',
-  DOMAIN_NAME: 'test.com',
-  CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
-  ORIGIN: 'test.com',
-  HOST: 'test.com',
-  getLoader: () => {},
-  getController: () => {},
-  getConnectionSecrets: () => {},
-  logger: { log: () => {} },
-};
+function testBootstrapContext({ loaders, getConnectionSecrets } = {}) {
+  const bootstrapContext = {
+    DEPLOYMENT_ID: 'test',
+    DEPLOYMENT_NAME: 'Test App',
+    DOMAIN_NAME: 'test.com',
+    CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
+    ORIGIN: 'test.com',
+    HOST: 'test.com',
+    getLoader: loaders ? (name) => loaders[name] : () => {},
+    getController: () => {},
+    getConnectionSecrets: getConnectionSecrets || (() => {}),
+    logger: { log: () => {} },
+  };
+  bootstrapContext.getController = createGetController(bootstrapContext);
+  return bootstrapContext;
+}
 
-function testContext({ loaders, setters }) {
+function testContext({ loaders } = {}) {
   const bootstrapContext = {
     DEPLOYMENT_ID: 'test',
     DEPLOYMENT_NAME: 'Test App',
@@ -37,7 +41,6 @@ function testContext({ loaders, setters }) {
     ORIGIN: 'test.com',
     HOST: 'test.com',
     getLoader: (name) => loaders[name],
-    getSetter: (name) => setters[name],
     getConnectionSecrets: () => {},
     logger: { log: () => {} },
   };
@@ -48,6 +51,4 @@ function testContext({ loaders, setters }) {
   };
 }
 
-export { bootstrapContext };
-
-export default testContext;
+export { testBootstrapContext, testContext };
