@@ -149,3 +149,16 @@ test('_args param object with no default', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_args replace key arrayIndices', () => {
+  const input = { a: { _args: 'arr.$.a' } };
+  const parser = new NodeParser({
+    args,
+    arrayIndices: [1],
+  });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'a2',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
