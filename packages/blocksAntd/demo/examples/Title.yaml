@@ -1,6 +1,76 @@
 - id: default
   type: Title
-- id: properties.content
+- id: "properties.title"
   type: Title
   properties:
-    content: Content Test
+    content: Title
+- id: "properties. code: true"
+  type: Title
+  properties:
+    code: true
+    content: Title code
+- id: "properties.color: "
+  type: Title
+  properties:
+    color: "#009688"
+    content: Title in color
+- id: "properties.copyable: true "
+  type: Title
+  properties:
+    copyable: true
+    content: Title
+- id: "properties.delete: true "
+  type: Title
+  properties:
+    delete: true
+    content: Title
+- id: "properties.disabled: true "
+  type: Title
+  properties:
+    disabled: true
+    content: Title
+- id: "properties.ellipsis: true "
+  type: Title
+  properties:
+    ellipsis: true
+    content: Title
+- id: "properties.level: 2 "
+  type: Title
+  properties:
+    level: 2
+    content: Title
+- id: "properties.level: 3 "
+  type: Title
+  properties:
+    level: 3
+    content: Title
+- id: "properties.level: 4 "
+  type: Title
+  properties:
+    level: 4
+    content: Title
+- id: "properties.mark: true "
+  type: Title
+  properties:
+    mark: true
+    content: Title
+- id: "properties.underline: true "
+  type: Title
+  properties:
+    underline: true
+    content: Title
+- id: "properties.type: secondary "
+  type: Title
+  properties:
+    type: secondary
+    content: Title
+- id: "properties.type: warning "
+  type: Title
+  properties:
+    type: warning
+    content: Title
+- id: "properties.type: danger "
+  type: Title
+  properties:
+    type: danger
+    content: Title
