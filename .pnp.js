@@ -3788,17 +3788,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/engine", [
-        ["npm:0.0.0-alpha.1", {
-          "packageLocation": "./.yarn/cache/@lowdefy-engine-npm-0.0.0-alpha.1-004c11a426-096f56708e.zip/node_modules/@lowdefy/engine/",
-          "packageDependencies": [
-            ["@lowdefy/engine", "npm:0.0.0-alpha.1"],
-            ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["@lowdefy/operators", "workspace:packages/operators"],
-            ["graphql", "npm:15.4.0"],
-            ["graphql-tag", "virtual:6d4867ee4fb8830f03b424335e168bbaaf3cc73c4f5842fe2e15e2018196f3c7a36bd76c13a330d9b1a581291f12312b2f6cbc93927d93207d728fdabaec0bea#npm:2.11.0"]
-          ],
-          "linkType": "HARD",
-        }],
         ["workspace:packages/engine", {
           "packageLocation": "./packages/engine/",
           "packageDependencies": [
@@ -3832,19 +3821,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@lowdefy/graphql", [
-        ["npm:0.0.0-alpha.1", {
-          "packageLocation": "./.yarn/cache/@lowdefy-graphql-npm-0.0.0-alpha.1-ae7035028f-877635c0c9.zip/node_modules/@lowdefy/graphql/",
-          "packageDependencies": [
-            ["@lowdefy/graphql", "npm:0.0.0-alpha.1"],
-            ["@lowdefy/helpers", "workspace:packages/helpers"],
-            ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
-            ["apollo-server", "virtual:ae7035028fe098af7723e2a0116c980cb844247355f1160c88d292f558932c460f67172fcfb427139b49ecf4c8f07dd3c917374c11ae46950494ff2e27c0da08#npm:2.18.2"],
-            ["dataloader", "npm:2.0.0"],
-            ["graphql", "npm:15.4.0"],
-            ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"]
-          ],
-          "linkType": "HARD",
-        }],
         ["workspace:packages/graphql", {
           "packageLocation": "./packages/graphql/",
           "packageDependencies": [
@@ -4018,7 +3994,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.12.3"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.12.5"],
             ["@lowdefy/block-tools", "workspace:packages/blockTools"],
-            ["@lowdefy/engine", "npm:0.0.0-alpha.1"],
+            ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],
             ["babel-loader", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:8.2.0"],
@@ -4049,7 +4025,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.12.3"],
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.12.5"],
             ["@lowdefy/block-tools", "workspace:packages/blockTools"],
-            ["@lowdefy/graphql", "npm:0.0.0-alpha.1"],
+            ["@lowdefy/graphql", "workspace:packages/graphql"],
             ["apollo-server-express", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:2.19.0"],
             ["babel-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:8.2.0"],
             ["clean-webpack-plugin", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:3.0.0"],
@@ -6467,24 +6443,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/$$virtual/apollo-server-virtual-7a1c3ca22a/0/cache/apollo-server-npm-2.19.0-1c1da1a4b4-fd50075dcd.zip/node_modules/apollo-server/",
           "packageDependencies": [
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.19.0"],
-            ["@types/graphql", null],
-            ["apollo-server-core", "virtual:05694db66a4c505fb6a94fc2f188440f8ad3ab6fa252a4f26b3fbd370a0443fb7f13f908e6fc4f0dc60de0bb0a4dfdee9d6a7f9b3710773fb6aa884d64a83012#npm:2.19.0"],
-            ["apollo-server-express", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:2.19.0"],
-            ["express", "npm:4.17.1"],
-            ["graphql", "npm:15.4.0"],
-            ["graphql-subscriptions", "virtual:05694db66a4c505fb6a94fc2f188440f8ad3ab6fa252a4f26b3fbd370a0443fb7f13f908e6fc4f0dc60de0bb0a4dfdee9d6a7f9b3710773fb6aa884d64a83012#npm:1.1.0"],
-            ["graphql-tools", "virtual:05694db66a4c505fb6a94fc2f188440f8ad3ab6fa252a4f26b3fbd370a0443fb7f13f908e6fc4f0dc60de0bb0a4dfdee9d6a7f9b3710773fb6aa884d64a83012#npm:4.0.8"]
-          ],
-          "packagePeers": [
-            "@types/graphql",
-            "graphql"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:ae7035028fe098af7723e2a0116c980cb844247355f1160c88d292f558932c460f67172fcfb427139b49ecf4c8f07dd3c917374c11ae46950494ff2e27c0da08#npm:2.18.2", {
-          "packageLocation": "./.yarn/$$virtual/apollo-server-virtual-d15d7abacf/0/cache/apollo-server-npm-2.18.2-77202a583b-bab696b73e.zip/node_modules/apollo-server/",
-          "packageDependencies": [
-            ["apollo-server", "virtual:ae7035028fe098af7723e2a0116c980cb844247355f1160c88d292f558932c460f67172fcfb427139b49ecf4c8f07dd3c917374c11ae46950494ff2e27c0da08#npm:2.18.2"],
             ["@types/graphql", null],
             ["apollo-server-core", "virtual:05694db66a4c505fb6a94fc2f188440f8ad3ab6fa252a4f26b3fbd370a0443fb7f13f908e6fc4f0dc60de0bb0a4dfdee9d6a7f9b3710773fb6aa884d64a83012#npm:2.19.0"],
             ["apollo-server-express", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:2.19.0"],

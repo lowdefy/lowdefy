@@ -2944,19 +2944,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@npm:0.0.0-alpha.1":
-  version: 0.0.0-alpha.1
-  resolution: "@lowdefy/engine@npm:0.0.0-alpha.1"
-  dependencies:
-    "@lowdefy/helpers": 1.1.0
-    "@lowdefy/operators": 1.0.0
-    graphql: 15.4.0
-    graphql-tag: 2.11.0
-  checksum: 096f56708ed0f01a2eed998f72d35195ea8c8b1024e8bd12954be679e254f29ae097f0fa57da88804403d81bb662d967a12f801470eecd0e60e0f9554c154f17
-  languageName: node
-  linkType: hard
-
-"@lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@0.0.0-alpha.3, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
@@ -2964,7 +2952,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
-    "@lowdefy/operators": 1.0.0
+    "@lowdefy/operators": 1.0.1
     babel-jest: 26.6.3
     graphql: 15.4.0
     graphql-tag: 2.11.0
@@ -2985,21 +2973,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/graphql@npm:0.0.0-alpha.1":
-  version: 0.0.0-alpha.1
-  resolution: "@lowdefy/graphql@npm:0.0.0-alpha.1"
-  dependencies:
-    "@lowdefy/helpers": 1.1.0
-    "@lowdefy/node-utils": 1.0.0
-    apollo-server: 2.18.2
-    dataloader: 2.0.0
-    graphql: 15.4.0
-    graphql-type-json: 0.3.2
-  checksum: 877635c0c91b5ae792d8ffa210592bf10e0161a0c97fcfa7ed6f7ab4f781a3fa68bbf2496a067f448da168547d2a7db85eac7f981957622eb29cef9c924864a2
-  languageName: node
-  linkType: hard
-
-"@lowdefy/graphql@workspace:packages/graphql":
+"@lowdefy/graphql@0.0.0-alpha.3, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/graphql@workspace:packages/graphql"
   dependencies:
@@ -3008,7 +2982,7 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
-    "@lowdefy/operators": 1.0.0
+    "@lowdefy/operators": 1.0.1
     "@sendgrid/mail": 7.3.0
     "@shelf/jest-mongodb": 1.2.3
     ajv: 6.12.6
@@ -3131,7 +3105,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@1.0.0, @lowdefy/operators@workspace:packages/operators":
+"@lowdefy/operators@1.0.1, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
@@ -3158,7 +3132,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/engine": 0.0.0-alpha.1
+    "@lowdefy/engine": 0.0.0-alpha.3
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.2.0
@@ -3187,7 +3161,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/graphql": 0.0.0-alpha.1
+    "@lowdefy/graphql": 0.0.0-alpha.3
     apollo-server-express: 2.19.0
     babel-loader: 8.2.0
     clean-webpack-plugin: 3.0.0
@@ -5091,7 +5065,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:^2.18.2, apollo-server-core@npm:^2.19.0":
+"apollo-server-core@npm:^2.19.0":
   version: 2.19.0
   resolution: "apollo-server-core@npm:2.19.0"
   dependencies:
@@ -5146,7 +5120,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-express@npm:2.19.0, apollo-server-express@npm:^2.18.2, apollo-server-express@npm:^2.19.0":
+"apollo-server-express@npm:2.19.0, apollo-server-express@npm:^2.19.0":
   version: 2.19.0
   resolution: "apollo-server-express@npm:2.19.0"
   dependencies:
@@ -5205,21 +5179,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 5feeec1d0a0d1645ede9366cbb6f3d338ae7d3d6f642fe3b1e79449ffbb3fbf9bb6ba921ebef84f0225353672c5dfcd78b4dcd08989ab1a3ea0f8c2f3b754093
-  languageName: node
-  linkType: hard
-
-"apollo-server@npm:2.18.2":
-  version: 2.18.2
-  resolution: "apollo-server@npm:2.18.2"
-  dependencies:
-    apollo-server-core: ^2.18.2
-    apollo-server-express: ^2.18.2
-    express: ^4.0.0
-    graphql-subscriptions: ^1.0.0
-    graphql-tools: ^4.0.0
-  peerDependencies:
-    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: bab696b73e6c48a08d2dec903ce49132babf96d3f35b94e6bfe297cd3d9225d89ab48d373bf6563524dec5256ff7ebd246fb94d3ab6d7c399eb4dcb781a30d66
   languageName: node
   linkType: hard
 
