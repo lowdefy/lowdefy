@@ -132,6 +132,1596 @@ exports[`Render default 1`] = `
 </div>
 `;
 
+exports[`Render properties.autoFocus: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.autoFocus: true_input"
+      title="properties.autoFocus: true"
+    >
+      properties.autoFocus: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-input-number-focused"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              autoFocus={true}
+              className="ant-input-number-input"
+              id="properties.autoFocus: true_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.disabled: true_input"
+      title="properties.disabled: true"
+    >
+      properties.disabled: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]} ant-input-number-disabled"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-disabled={true}
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up ant-input-number-handler-up-disabled"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-disabled={true}
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down ant-input-number-handler-down-disabled"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              disabled={true}
+              id="properties.disabled: true_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle: CSS style applied 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
+    >
+      properties.inputStyle: CSS style applied
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\",\\"fontSize\\":\\"25px\\"}]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.inputStyle: CSS style applied_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label align: right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label align: right_input"
+      title="properties.label align: right"
+    >
+      properties.label align: right
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label align: right_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label colon: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label colon: false_input"
+      title="properties.label colon: false"
+    >
+      properties.label colon: false
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label colon: false_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label disabled: true_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label extra: showing extra 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label extra: showing extra_input"
+      title="properties.label extra: showing extra"
+    >
+      properties.label extra: showing extra
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label extra: showing extra_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      showing extra
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label inline: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label inline: true_input"
+      title="properties.label inline: true"
+    >
+      properties.label inline: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label inline: true_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label span: 5 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24 ant-col-md-5"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.label span: 5_input"
+      title="properties.label span: 5"
+    >
+      properties.label span: 5
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-19"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.label span: 5_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.placeholder: Please enter a number between 10 and 250 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
+      title="properties.placeholder: Please enter a number between 10 and 250"
+    >
+      properties.placeholder: Please enter a number between 10 and 250
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.placeholder: Please enter a number between 10 and 250_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              placeholder="Please enter a number between 10 and 250"
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.size: large 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.size: large_input"
+      title="properties.size: large"
+    >
+      properties.size: large
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number ant-input-number-lg {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.size: large_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.size: small 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.size: small_input"
+      title="properties.size: small"
+    >
+      properties.size: small
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number ant-input-number-sm {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="properties.size: small_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
@@ -264,10 +1854,738 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
+exports[`Render property.decimalSeparator: "," 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.decimalSeparator: \\",\\"_input"
+      title="property.decimalSeparator: \\",\\""
+    >
+      property.decimalSeparator: ","
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="property.decimalSeparator: \\",\\"_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.max: 250 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.max: 250_input"
+      title="property.max: 250"
+    >
+      property.max: 250
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={250}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="property.max: 250_input"
+              max={250}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.min: 10 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.min: 10_input"
+      title="property.min: 10"
+    >
+      property.min: 10
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={10}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="property.min: 10_input"
+              max={Infinity}
+              min={10}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.precision: 1 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.precision: 1_input"
+      title="property.precision: 1"
+    >
+      property.precision: 1
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="property.precision: 1_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={1}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render property.step: 3 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="property.step: 3_input"
+      title="property.step: 3"
+    >
+      property.step: 3
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-input-number {\\"style\\":[{\\"width\\":\\"100%\\"},null]}"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={Object {}}
+        >
+          <div
+            className="ant-input-number-handler-wrap"
+          >
+            <span
+              aria-label="Increase Value"
+              className="ant-input-number-handler ant-input-number-handler-up"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="up"
+                className="anticon anticon-up ant-input-number-handler-up-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="up"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+            <span
+              aria-label="Decrease Value"
+              className="ant-input-number-handler ant-input-number-handler-down"
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              role="button"
+              unselectable="unselectable"
+            >
+              <span
+                aria-label="down"
+                className="anticon anticon-down ant-input-number-handler-down-inner"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  className=""
+                  data-icon="down"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            className="ant-input-number-input-wrap"
+          >
+            <input
+              aria-valuemax={Infinity}
+              aria-valuemin={-Infinity}
+              aria-valuenow={null}
+              autoComplete="off"
+              className="ant-input-number-input"
+              id="property.step: 3_input"
+              max={Infinity}
+              min={-Infinity}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseUp={[Function]}
+              required={false}
+              role="spinbutton"
+              step={3}
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
+exports[`Test Schema properties.autoFocus: true 1`] = `true`;
+
+exports[`Test Schema properties.autoFocus: true 2`] = `null`;
+
+exports[`Test Schema properties.disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 1`] = `true`;
+
+exports[`Test Schema properties.inputStyle: CSS style applied 2`] = `null`;
+
+exports[`Test Schema properties.label align: right 1`] = `true`;
+
+exports[`Test Schema properties.label align: right 2`] = `null`;
+
+exports[`Test Schema properties.label colon: false 1`] = `true`;
+
+exports[`Test Schema properties.label colon: false 2`] = `null`;
+
+exports[`Test Schema properties.label disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.label disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.label extra: showing extra 1`] = `true`;
+
+exports[`Test Schema properties.label extra: showing extra 2`] = `null`;
+
+exports[`Test Schema properties.label inline: true 1`] = `true`;
+
+exports[`Test Schema properties.label inline: true 2`] = `null`;
+
+exports[`Test Schema properties.label span: 5 1`] = `true`;
+
+exports[`Test Schema properties.label span: 5 2`] = `null`;
+
+exports[`Test Schema properties.placeholder: Please enter a number between 10 and 250 1`] = `true`;
+
+exports[`Test Schema properties.placeholder: Please enter a number between 10 and 250 2`] = `null`;
+
+exports[`Test Schema properties.size: large 1`] = `true`;
+
+exports[`Test Schema properties.size: large 2`] = `null`;
+
+exports[`Test Schema properties.size: small 1`] = `true`;
+
+exports[`Test Schema properties.size: small 2`] = `null`;
+
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema property.decimalSeparator: "," 1`] = `true`;
+
+exports[`Test Schema property.decimalSeparator: "," 2`] = `null`;
+
+exports[`Test Schema property.max: 250 1`] = `true`;
+
+exports[`Test Schema property.max: 250 2`] = `null`;
+
+exports[`Test Schema property.min: 10 1`] = `true`;
+
+exports[`Test Schema property.min: 10 2`] = `null`;
+
+exports[`Test Schema property.precision: 1 1`] = `true`;
+
+exports[`Test Schema property.precision: 1 2`] = `null`;
+
+exports[`Test Schema property.step: 3 1`] = `true`;
+
+exports[`Test Schema property.step: 3 2`] = `null`;
