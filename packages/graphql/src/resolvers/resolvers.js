@@ -18,6 +18,7 @@ import GraphQLJSON from 'graphql-type-json';
 import lowdefyGlobal from './queries/lowdefyGlobal/lowdefyGlobal';
 import menu from './queries/menu/menu';
 import page from './queries/page/page';
+import request from './queries/request/request';
 
 function resolveMenuItem(menuItem) {
   if (menuItem.type === 'MenuLink') {
@@ -32,6 +33,7 @@ const resolvers = {
     lowdefyGlobal,
     menu,
     page,
+    request,
   },
   MenuItem: {
     __resolveType: resolveMenuItem,

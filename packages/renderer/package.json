@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/renderer",
-  "version": "0.0.0-alpha.2",
+  "version": "0.0.0-alpha.3",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
     "@lowdefy/block-tools": "1.0.2",
-    "@lowdefy/engine": "0.0.0-alpha.1",
+    "@lowdefy/engine": "0.0.0-alpha.3",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/layout": "1.0.0",
     "graphql": "15.4.0",
@@ -56,7 +56,7 @@
   "devDependencies": {
     "@babel/core": "7.12.3",
     "@babel/preset-react": "7.12.5",
-    "babel-loader": "8.1.0",
+    "babel-loader": "8.2.1",
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.0.1",
     "html-webpack-plugin": "4.5.0",
