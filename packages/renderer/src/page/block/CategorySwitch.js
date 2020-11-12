@@ -95,7 +95,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             }}
             actions={block.eval.actions}
             blockId={block.blockId}
-            Components={rootContext.Components}
             homePageId={rootContext.homePageId}
             key={block.blockId}
             loading={block.loading}
@@ -127,7 +126,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             }}
             actions={block.eval.actions}
             blockId={block.blockId}
-            Components={rootContext.Components}
             homePageId={rootContext.homePageId}
             key={block.blockId}
             loading={block.loading}

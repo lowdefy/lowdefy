@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { get, serializer, type } from '@lowdefy/helpers';
+import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 import {
   _and,
@@ -38,10 +38,10 @@ import {
   _type,
 } from './operators';
 
-function getFromObject(params, object, operator, location) {
+function getFromObject({ params, object, arrayIndices, operator, location }) {
   if (params === true) return object;
   if (type.isString(params)) {
-    return get(object, params, { default: null });
+    return get(object, applyArrayIndices(arrayIndices, params), { default: null });
   }
   if (type.isObject(params)) {
     if (params.all === true) return object;
@@ -52,7 +52,9 @@ function getFromObject(params, object, operator, location) {
         )} at ${location}.`
       );
     }
-    return get(object, params.key, { default: get(params, 'default', { default: null }) });
+    return get(object, applyArrayIndices(arrayIndices, params.key), {
+      default: get(params, 'default', { default: null }),
+    });
   }
   throw new Error(
     `Operator Error: ${operator} params must be of type string or object. Received: ${JSON.stringify(
@@ -61,31 +63,60 @@ function getFromObject(params, object, operator, location) {
   );
 }
 
-function _args({ params, args, location }) {
-  return getFromObject(params, args, '_args', location);
+function _args({ params, args, location, arrayIndices }) {
+  return getFromObject({ params, object: args, operator: '_args', location, arrayIndices });
 }
 
-function _global({ params, lowdefyGlobal, location }) {
-  return getFromObject(params, lowdefyGlobal, '_global', location);
+function _global({ params, lowdefyGlobal, location, arrayIndices }) {
+  return getFromObject({
+    params,
+    object: lowdefyGlobal,
+    operator: '_global',
+    location,
+    arrayIndices,
+  });
 }
 
-function _input({ params, input, location }) {
-  return getFromObject(params, input, '_input', location);
+function _input({ params, input, location, arrayIndices }) {
+  return getFromObject({
+    params,
+    object: input,
+    operator: '_input',
+    location,
+    arrayIndices,
+  });
 }
 
 function _secret({ params, secrets, location }) {
-  return getFromObject(params, secrets, '_secret', location);
+  return getFromObject({
+    params,
+    object: secrets,
+    operator: '_secret',
+    location,
+  });
 }
 
-function _state({ params, state, location }) {
-  return getFromObject(params, state, '_state', location);
+function _state({ params, state, location, arrayIndices }) {
+  return getFromObject({
+    params,
+    object: state,
+    operator: '_state',
+    location,
+    arrayIndices,
+  });
 }
 
-function _url_query({ params, urlQuery, location }) {
-  return getFromObject(params, urlQuery, '_url_query', location);
+function _url_query({ params, urlQuery, location, arrayIndices }) {
+  return getFromObject({
+    params,
+    object: urlQuery,
+    operator: '_url_query',
+    location,
+    arrayIndices,
+  });
 }
 
-function _get({ params, location }) {
+function _get({ params, location, arrayIndices }) {
   if (!type.isObject(params)) {
     throw new Error(
       `Operator Error: _get takes an object as params. Received: ${JSON.stringify(
@@ -102,11 +133,14 @@ function _get({ params, location }) {
   if (!type.isObject(params.from) && !type.isArray(params.from)) {
     return null;
   }
-  return get(params.from, params.key, { default: get(params, 'default', { default: null }) });
+  return get(params.from, applyArrayIndices(arrayIndices, params.key), {
+    default: get(params, 'default', { default: null }),
+  });
 }
 
 class NodeParser {
-  constructor({ config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
+  constructor({ arrayIndices, config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
+    this.arrayIndices = arrayIndices;
     this.config = config;
     this.input = input;
     this.lowdefyGlobal = lowdefyGlobal;
@@ -161,6 +195,7 @@ class NodeParser {
             if (!type.isUndefined(value[op])) {
               const res = this.operations[op]({
                 args,
+                arrayIndices: this.arrayIndices,
                 config: this.config,
                 input: this.input,
                 location,

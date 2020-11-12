@@ -173,3 +173,16 @@ test('_global param object with no default', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_global replace key arrayIndices', () => {
+  const input = { a: { _global: 'arr.$.a' } };
+  const parser = new NodeParser({
+    lowdefyGlobal,
+    arrayIndices: [1],
+  });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'a2',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -21,7 +21,7 @@ import createCacheKey from './createCacheKey';
 function createFetchMetaCache({ cacheDirectory }) {
   async function fetchMetaCache(location) {
     const cacheKey = createCacheKey(location);
-    const fileContent = await readFile(path.resolve(cacheDirectory, cacheKey));
+    const fileContent = await readFile(path.resolve(cacheDirectory, 'meta/', cacheKey));
     return JSON.parse(fileContent);
   }
   return fetchMetaCache;
