@@ -309,7 +309,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -3806,7 +3806,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.4.0"],
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
             ["jest", "npm:26.6.3"],
-            ["mongodb", "npm:3.6.2"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.4.0"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.2.0"]
           ],
@@ -4356,7 +4356,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.3"],
             ["@types/mongodb", null],
             ["debug", "virtual:1395e3253bdebab17e67802f1d9d443afbc9a171f1af353097bb34ea7f2a4648d264c4bdb0ee3507285b01dcf7ed4d6fa7dac6547b79bc15e9c2551d5355f6f0#npm:4.1.1"],
-            ["mongodb", "npm:3.6.2"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3"],
             ["mongodb-memory-server", "npm:6.6.7"],
             ["uuid", "npm:8.3.0"]
           ],
@@ -9204,7 +9204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-npm-3.7.0-53202614cd/node_modules/core-js/",
+          "packageLocation": "./.yarn/cache/core-js-npm-3.7.0-53202614cd-95958cddb7.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.7.0"]
           ],
@@ -9224,7 +9224,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.7.0-213dcef0c2/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.7.0-213dcef0c2-7fdff8bda2.zip/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.7.0"]
           ],
@@ -16369,11 +16369,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["saslprep", "npm:1.0.3"]
           ],
           "linkType": "HARD",
+        }],
+        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3", {
+          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-83d746e913/0/cache/mongodb-npm-3.6.3-3206384cb1-85a8064180.zip/node_modules/mongodb/",
+          "packageDependencies": [
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3"],
+            ["aws4", null],
+            ["bl", "npm:2.2.1"],
+            ["bson", "npm:1.1.5"],
+            ["bson-ext", null],
+            ["denque", "npm:1.4.1"],
+            ["kerberos", null],
+            ["mongodb-client-encryption", null],
+            ["mongodb-extjson", null],
+            ["require_optional", "npm:1.0.1"],
+            ["safe-buffer", "npm:5.2.1"],
+            ["saslprep", "npm:1.0.3"],
+            ["snappy", null]
+          ],
+          "packagePeers": [
+            "aws4",
+            "bson-ext",
+            "kerberos",
+            "mongodb-client-encryption",
+            "mongodb-extjson",
+            "snappy"
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["mongodb-memory-server", [
         ["npm:6.6.7", {
-          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.6.7-6b4dc63f77/node_modules/mongodb-memory-server/",
+          "packageLocation": "./.yarn/cache/mongodb-memory-server-npm-6.6.7-6b4dc63f77-267e382d33.zip/node_modules/mongodb-memory-server/",
           "packageDependencies": [
             ["mongodb-memory-server", "npm:6.6.7"],
             ["mongodb-memory-server-core", "npm:6.6.7"]
@@ -16772,7 +16799,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.6", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.6-533efccfd9/node_modules/nodemon/",
+          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.6-533efccfd9-6a4b0d6ba2.zip/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.6"],
             ["chokidar", "npm:3.4.3"],

@@ -2961,7 +2961,7 @@ __metadata:
     graphql: 15.4.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
-    mongodb: 3.6.2
+    mongodb: 3.6.3
     webpack: 5.4.0
     webpack-cli: 4.2.0
   languageName: unknown
@@ -13418,7 +13418,37 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.6.2, mongodb@npm:^3.5.9":
+"mongodb@npm:3.6.3":
+  version: 3.6.3
+  resolution: "mongodb@npm:3.6.3"
+  dependencies:
+    bl: ^2.2.1
+    bson: ^1.1.4
+    denque: ^1.4.1
+    require_optional: ^1.0.1
+    safe-buffer: ^5.1.2
+    saslprep: ^1.0.0
+  dependenciesMeta:
+    saslprep:
+      optional: true
+  peerDependenciesMeta:
+    aws4:
+      optional: true
+    bson-ext:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    mongodb-extjson:
+      optional: true
+    snappy:
+      optional: true
+  checksum: 85a80641803e75b93e76bb9e84c26429ec2c374e7138114562a25a6272880d1c18cf5dda21b8bd75c7dd110dac997d11572bb2da506c12c99c9faa4c668364c7
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^3.5.9":
   version: 3.6.2
   resolution: "mongodb@npm:3.6.2"
   dependencies:
