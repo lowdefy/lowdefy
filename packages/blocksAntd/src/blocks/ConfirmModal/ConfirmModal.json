@@ -16,7 +16,7 @@
           "description": "Centered Modal"
         },
         "content": {
-          "type": "object",
+          "type": "string",
           "description": "Modal content."
         },
         "icon": {
