@@ -135,17 +135,18 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             )}
             <Slider
               id={`${blockId}_input`}
-              className={methods.makeCssClass([
+              className={`${methods.makeCssClass(
                 properties.color && {
                   '& > div.ant-slider-track': { backgroundColor: `${properties.color} !important` },
                   '& > div.ant-slider-handle': { borderColor: `${properties.color} !important` },
                   '& > div.ant-slider-step > span.ant-slider-dot-active': {
                     borderColor: `${properties.color} !important`,
                   },
-                },
-                styles.slider,
-                properties.inputStyle,
-              ])}
+                }
+              )} 
+                ${methods.makeCssClass(styles.slider)}
+                ${methods.makeCssClass(properties.inputStyle)}
+              `}
               autoFocus={properties.autoFocus}
               disabled={properties.disabled || (check === true && !properties.disableNotApplicable)}
               dots={get(properties, 'showDots', { default: true })}

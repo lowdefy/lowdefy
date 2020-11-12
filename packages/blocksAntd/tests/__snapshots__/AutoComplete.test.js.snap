@@ -1,5 +1,1486 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="default_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="default_input_list"
+                aria-haspopup="listbox"
+                aria-owns="default_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="default_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.allowClear: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.allowClear: false_input"
+      title="properties.allowClear: false"
+    >
+      properties.allowClear: false
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.allowClear: false_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.allowClear: false_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.allowClear: false_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.allowClear: false_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.autoFocus: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.autoFocus: true_input"
+      title="properties.autoFocus: true"
+    >
+      properties.autoFocus: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.autoFocus: true_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.autoFocus: true_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.autoFocus: true_input_list"
+                autoComplete="off"
+                autoFocus={true}
+                className="ant-select-selection-search-input"
+                id="properties.autoFocus: true_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.backfill: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.backfill: true_input"
+      title="properties.backfill: true"
+    >
+      properties.backfill: true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.backfill: true_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.backfill: true_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.backfill: true_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.backfill: true_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inputStyle: CSS style applied 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
+    >
+      properties.inputStyle: CSS style applied
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {\\"style\\":{\\"border\\":\\"1px solid red\\"}} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.inputStyle: CSS style applied_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.inputStyle: CSS style applied_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.inputStyle: CSS style applied_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.inputStyle: CSS style applied_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.align_right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.align_right_input"
+      title="properties.label.align_right"
+    >
+      properties.label.align_right
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.align_right_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.align_right_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.align_right_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.align_right_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.colon_false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.colon_false_input"
+      title="properties.label.colon_false"
+    >
+      properties.label.colon_false
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.colon_false_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.colon_false_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.colon_false_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.colon_false_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.disabled_true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.disabled_true_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.disabled_true_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.disabled_true_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.disabled_true_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.extra_showingextra 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.extra_showingextra_input"
+      title="properties.label.extra_showingextra"
+    >
+      properties.label.extra_showingextra
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.extra_showingextra_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.extra_showingextra_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.extra_showingextra_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.extra_showingextra_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      showing extra
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.inline_true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.inline_true_input"
+      title="properties.label.inline_true"
+    >
+      properties.label.inline_true
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.inline_true_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.inline_true_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.inline_true_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.inline_true_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.label.span_12 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {}"
+      htmlFor="properties.label.span_12_input"
+      title="properties.label.span_12"
+    >
+      properties.label.span_12
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-20"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.label.span_12_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.label.span_12_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.label.span_12_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.label.span_12_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.options-string 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.options-string_input"
+      title="properties.options-string"
+    >
+      properties.options-string
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.options-string_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.options-string_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.options-string_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.options-string_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.optionsStyle: CSS style applied 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.optionsStyle: CSS style applied_input"
+      title="properties.optionsStyle: CSS style applied"
+    >
+      properties.optionsStyle: CSS style applied
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.optionsStyle: CSS style applied_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.optionsStyle: CSS style applied_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.optionsStyle: CSS style applied_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.optionsStyle: CSS style applied_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.placeholder_Text_inside_block 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.placeholder_Text_inside_block_input"
+      title="properties.placeholder_Text_inside_block"
+    >
+      properties.placeholder_Text_inside_block
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.placeholder_Text_inside_block_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.placeholder_Text_inside_block_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.placeholder_Text_inside_block_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.placeholder_Text_inside_block_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Text inside block
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.size: large 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.size: large_input"
+      title="properties.size: large"
+    >
+      properties.size: large
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-lg ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.size: large_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.size: large_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.size: large_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.size: large_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.size: small 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.size: small_input"
+      title="properties.size: small"
+    >
+      properties.size: small
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-sm ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.size: small_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.size: small_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.size: small_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.size: small_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{}"
+      htmlFor="properties.title_input"
+      title="properties.title: My AutoComplete Title"
+    >
+      properties.title: My AutoComplete Title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          className="ant-select {} ant-select-auto-complete ant-select-single ant-select-allow-clear ant-select-show-search"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+        >
+          <div
+            className="ant-select-selector"
+            onClick={[Function]}
+            onMouseDown={[Function]}
+          >
+            <span
+              className="ant-select-selection-search"
+            >
+              <input
+                aria-activedescendant="properties.title_input_list_0"
+                aria-autocomplete="list"
+                aria-controls="properties.title_input_list"
+                aria-haspopup="listbox"
+                aria-owns="properties.title_input_list"
+                autoComplete="off"
+                className="ant-select-selection-search-input"
+                id="properties.title_input"
+                onChange={[Function]}
+                onCompositionEnd={[Function]}
+                onCompositionStart={[Function]}
+                onKeyDown={[Function]}
+                onMouseDown={[Function]}
+                onPaste={[Function]}
+                readOnly={false}
+                role="combobox"
+                style={
+                  Object {
+                    "opacity": null,
+                  }
+                }
+                type="search"
+                unselectable={null}
+                value=""
+              />
+            </span>
+            <span
+              className="ant-select-selection-placeholder"
+            >
+              Type or select item
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
@@ -15,14 +1496,6 @@ exports[`Test Schema properties.autoFocus: true 2`] = `null`;
 exports[`Test Schema properties.backfill: true 1`] = `true`;
 
 exports[`Test Schema properties.backfill: true 2`] = `null`;
-
-exports[`Test Schema properties.defaultOpen: true 1`] = `true`;
-
-exports[`Test Schema properties.defaultOpen: true 2`] = `null`;
-
-exports[`Test Schema properties.disabled: true 1`] = `true`;
-
-exports[`Test Schema properties.disabled: true 2`] = `null`;
 
 exports[`Test Schema properties.inputStyle: CSS style applied 1`] = `true`;
 
