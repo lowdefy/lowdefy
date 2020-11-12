@@ -20,6 +20,6 @@ import MultipleSelector from '../src/blocks/MultipleSelector/MultipleSelector';
 import examples from '../demo/examples/MultipleSelector.yaml';
 import meta from '../src/blocks/MultipleSelector/MultipleSelector.json';
 
-// FIX: TypeError: Cannot read property 'scrollWidth' of null
+// FIX Jest: TypeError: Cannot read property 'scrollWidth' of null
 // runRenderTests({ examples, Block: MultipleSelector, meta });
 runBlockSchemaTests({ examples, meta });
