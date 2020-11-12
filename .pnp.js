@@ -3716,6 +3716,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["css-loader", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:5.0.1"],
             ["decompress", "npm:4.2.1"],
             ["decompress-targz", "npm:4.1.1"],
+            ["dotenv", "npm:8.2.0"],
             ["express", "npm:4.17.1"],
             ["graphql", "npm:15.4.0"],
             ["html-webpack-plugin", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:4.5.0"],
@@ -10361,6 +10362,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["dot-prop", "npm:5.3.0"],
             ["is-obj", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["dotenv", [
+        ["npm:8.2.0", {
+          "packageLocation": "./.yarn/cache/dotenv-npm-8.2.0-6b21df4d37-16cb89cbd7.zip/node_modules/dotenv/",
+          "packageDependencies": [
+            ["dotenv", "npm:8.2.0"]
           ],
           "linkType": "HARD",
         }]

@@ -2877,6 +2877,7 @@ __metadata:
     css-loader: 5.0.1
     decompress: 4.2.1
     decompress-targz: 4.1.1
+    dotenv: 8.2.0
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
@@ -8083,6 +8084,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: 76e6693d8803eeff9cb920988446bf223cf1f6e5b1c0c2fe07a66906392134931a481b11e3c0bd852c5cfc97fad65258bcb4359169ad1d8d624cb3f56932be98
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:8.2.0":
+  version: 8.2.0
+  resolution: "dotenv@npm:8.2.0"
+  checksum: 16cb89cbd7b98b053899b8aba8c5044c8fb61a2db8a81fe70360b75035fce5fed53bd7a34d772be717d0880c0321122a4c09423f518025e1b52d96791521b1a7
   languageName: node
   linkType: hard
 
