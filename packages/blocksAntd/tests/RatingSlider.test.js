@@ -20,5 +20,6 @@ import RatingSlider from '../src/blocks/RatingSlider/RatingSlider';
 import examples from '../demo/examples/RatingSlider.yaml';
 import meta from '../src/blocks/RatingSlider/RatingSlider.json';
 
+// FIX: for properties.autoFocus - TypeError: Cannot read property 'focus' of null
 runRenderTests({ examples, Block: RatingSlider, meta });
 runBlockSchemaTests({ examples, meta });
