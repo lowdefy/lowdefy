@@ -3683,7 +3683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["@wojtekmaj/enzyme-adapter-react-17", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:0.3.1"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
-            ["babel-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.1.0"],
+            ["babel-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.2.1"],
             ["buffer", "npm:6.0.1"],
             ["clean-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:3.0.0"],
             ["copy-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:6.3.0"],
@@ -3705,7 +3705,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.4.0"],
             ["webpack-cli", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:4.2.0"],
             ["webpack-dev-server", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:3.11.0"],
-            ["webpack-merge", "npm:5.2.0"],
+            ["webpack-merge", "npm:5.3.0"],
             ["yaml-jest", "npm:1.0.5"],
             ["yaml-loader", "npm:0.6.0"]
           ],
@@ -7341,16 +7341,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.1.0", {
-          "packageLocation": "./.yarn/$$virtual/babel-loader-virtual-fca04c88ac/0/cache/babel-loader-npm-8.1.0-e8c38740ba-f7b236a5f7.zip/node_modules/babel-loader/",
+        ["virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.2.1", {
+          "packageLocation": "./.yarn/$$virtual/babel-loader-virtual-cb3992ca19/0/cache/babel-loader-npm-8.2.1-182f33735c-e4bc46cbd8.zip/node_modules/babel-loader/",
           "packageDependencies": [
-            ["babel-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.1.0"],
+            ["babel-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:8.2.1"],
             ["@babel/core", "npm:7.12.3"],
             ["@types/babel__core", null],
             ["@types/webpack", null],
             ["find-cache-dir", "npm:2.1.0"],
             ["loader-utils", "npm:1.4.0"],
-            ["mkdirp", "npm:0.5.5"],
+            ["make-dir", "npm:2.1.0"],
             ["pify", "npm:4.0.1"],
             ["schema-utils", "npm:2.7.1"],
             ["webpack", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.4.0"]
@@ -25102,15 +25102,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["webpack-merge", "npm:4.2.2"],
             ["lodash", "npm:4.17.20"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:5.2.0", {
-          "packageLocation": "./.yarn/cache/webpack-merge-npm-5.2.0-dfa3a85026-edc100b9c7.zip/node_modules/webpack-merge/",
-          "packageDependencies": [
-            ["webpack-merge", "npm:5.2.0"],
-            ["clone-deep", "npm:4.0.1"],
-            ["wildcard", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }],

@@ -2841,7 +2841,7 @@ __metadata:
     "@lowdefy/block-tools": 1.0.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
     babel-jest: 26.6.3
-    babel-loader: 8.1.0
+    babel-loader: 8.2.1
     buffer: 6.0.1
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 6.3.0
@@ -2863,7 +2863,7 @@ __metadata:
     webpack: 5.4.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.2.0
+    webpack-merge: 5.3.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -5623,22 +5623,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: 89231d00e6b73e1dc6f009cb97a74edb1af4426f2cfa5d9b71684d1382526651820f8dd301857b9007a44c6b7d1fb77242b201bdea3cff98488b893e9c7d7182
-  languageName: node
-  linkType: hard
-
-"babel-loader@npm:8.1.0":
-  version: 8.1.0
-  resolution: "babel-loader@npm:8.1.0"
-  dependencies:
-    find-cache-dir: ^2.1.0
-    loader-utils: ^1.4.0
-    mkdirp: ^0.5.3
-    pify: ^4.0.1
-    schema-utils: ^2.6.5
-  peerDependencies:
-    "@babel/core": ^7.0.0
-    webpack: ">=2"
-  checksum: f7b236a5f7b3f2c8a49ec41ed0a2905075ed4bb6d6ba85552b50be7c56b8fdb46e92270576ef29e6598f23919f7a00a515091c2410ced25c08992a4bd799124b
   languageName: node
   linkType: hard
 
@@ -13559,7 +13543,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.3, mkdirp@npm:^0.5.5":
+"mkdirp@npm:^0.5.0, mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.5":
   version: 0.5.5
   resolution: "mkdirp@npm:0.5.5"
   dependencies:
@@ -19695,16 +19679,6 @@ fsevents@^1.2.7:
     ansi-colors: ^3.0.0
     uuid: ^3.3.2
   checksum: 250db04c41e278aa15a4f452808ef32ca8eca0f7df9d4c7c28b3d94e45d2649fbeb90a0adbee1c675447209b6a35136e13c1fb31476c3ca81c972bb41f0535bb
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:5.2.0":
-  version: 5.2.0
-  resolution: "webpack-merge@npm:5.2.0"
-  dependencies:
-    clone-deep: ^4.0.1
-    wildcard: ^2.0.0
-  checksum: edc100b9c7cfc675d1e1857afd6a194daa1756d140eda9da452e4f73933307a9af7a485a94b68ef29dfa3047f69e34d6ca724e5858109ed287f32b79c0c0d11b
   languageName: node
   linkType: hard
 
