@@ -54,6 +54,15 @@ class State {
 
   del(field) {
     unset(this.context.state, field);
+    // remove all empty objects from state as an effect of deleted values
+    const fields = field.split('.');
+    if (fields.length > 0) {
+      const parent = ''.join(fields.slice(0, fields.length - 1));
+      const parentValue = get(this.context.state, parent);
+      if (type.isObject(parentValue) && Object.keys(parentValue).length === 0) {
+        this.del(parent);
+      }
+    }
   }
 
   swapItems(field, from, to) {
