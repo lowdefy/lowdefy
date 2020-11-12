@@ -25,17 +25,22 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "build:dev": "webpack --config webpack.dev.js",
+    "babel": "babel src --out-dir dist",
+    "babel:dev": "babel src --out-dir dev",
+    "build": "yarn webpack && yarn babel",
+    "build:dev": "yarn webpack:dev && yarn babel:dev",
     "build:docker": "docker build --tag lowdefy/lowdefy .",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf dev",
     "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
     "start": "nodemon dev/server.js",
+    "test": "jest --coverage",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch -d",
     "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:major": "yarn version major -d",
+    "webpack": "webpack --config webpack.prod.js",
+    "webpack:dev": "webpack --config webpack.dev.js"
   },
   "dependencies": {
     "@lowdefy/block-tools": "1.0.2",
@@ -47,13 +52,16 @@
     "react-dom": "17.0.1"
   },
   "devDependencies": {
+    "@babel/cli": "7.12.1",
     "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.5",
+    "babel-jest": "26.6.3",
     "babel-loader": "8.2.1",
     "clean-webpack-plugin": "3.0.0",
-    "copy-webpack-plugin": "6.3.0",
     "css-loader": "5.0.1",
     "html-webpack-plugin": "4.5.0",
+    "jest": "26.6.3",
     "nodemon": "2.0.6",
     "style-loader": "2.0.0",
     "webpack": "5.4.0",
