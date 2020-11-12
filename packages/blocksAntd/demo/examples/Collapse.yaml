@@ -1,6 +1,147 @@
 - id: default
   type: Collapse
-- id: properties.title
+# Die style settings in docs werk nie hier nie? Het dit uitgehaal.
+- id: "properties.panels"
   type: Collapse
   properties:
-    title: Collapse block
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Html
+          properties:
+            html: block_1
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Html
+          properties:
+            html: block_2
+- id: "properties.accordion: true"
+  type: Collapse
+  properties:
+    accordion: true
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.activeKey: content_two"
+  type: Collapse
+  properties:
+    activeKey: content_two
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.defaultActiveKey: content_two"
+  type: Collapse
+  properties:
+    defaultActiveKey: content_two
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.bordered: false"
+  type: Collapse
+  properties:
+    bordered: false
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.destroyInactivePanel: true"
+  type: Collapse
+  properties:
+    destroyInactivePanel: true
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.expandIcon: ArrowRightOutlined"
+  type: Collapse
+  properties:
+    expandIcon: ArrowRightOutlined
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.expandIconPosition: right"
+  type: Collapse
+  properties:
+    expandIcon: ArrowRightOutlined
+    expandIconPosition: right
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.forceRender: true"
+  type: Collapse
+  properties:
+    forceRender: true
+    # Nie seker wat hierdie doen nie - kry nie ref daarvoor nie.
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
+- id: "properties.showArrow: false"
+  type: Collapse
+  properties:
+    showArrow: false
+    panels:
+      - disabled: false
+        extraKey: content_one_extra
+        key: content_one
+        title: Title One
+      - disabled: false
+        extraKey: content_two_extra
+        key: content_two
+        title: Title Two
