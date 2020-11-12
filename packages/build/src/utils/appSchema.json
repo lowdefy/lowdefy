@@ -43,6 +43,12 @@
         "layout": {
           "type": "object"
         },
+        "style": {
+          "type": "object"
+        },
+        "visible": {
+          "type": "boolean"
+        },
         "blocks": {
           "type": "array",
           "items": {
@@ -60,12 +66,6 @@
             "boolean",
             "object"
           ]
-        },
-        "mutations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/mutation"
-          }
         },
         "actions": {
           "type": "object"
@@ -89,29 +89,6 @@
       }
     },
     "request": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type",
-        "connectionId"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "connectionId": {
-          "type": "string"
-        },
-        "properties": {
-          "type": "object"
-        }
-      }
-    },
-    "mutation": {
       "type": "object",
       "additionalProperties": false,
       "required": [

@@ -34,7 +34,7 @@ const config = {
   DEPLOYMENT_ID: 'DEPLOYMENT_ID',
   DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
   DOMAIN_NAME: 'DOMAIN_NAME',
-  CONFIGURATION_BASE_PATH: 'DOMAIN_NAME',
+  CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
   logger,
   getHeadersFromInput: mockGetHeadersFromInput,
   getSecrets: mockGetSecrets,

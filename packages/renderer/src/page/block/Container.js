@@ -68,7 +68,6 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
         }}
         actions={block.eval.actions}
         blockId={block.blockId}
-        Components={rootContext.Components}
         content={content}
         homePageId={rootContext.homePageId}
         key={block.blockId}

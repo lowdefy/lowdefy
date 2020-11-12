@@ -32,7 +32,14 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
     className: methods.makeCssClass(properties.style),
     rotate: propertiesCopy.rotate,
     spin: propertiesCopy.spin,
-    ...omit(props, ['registerAction', 'registerMethod', 'loading', 'schemaErrors']),
+    ...omit(props, [
+      'homePageId',
+      'loading',
+      'pageId',
+      'registerAction',
+      'registerMethod',
+      'schemaErrors',
+    ]),
   };
   const IconComp = memo(lazy(() => import(`./icons/${propertiesCopy.name}`)));
   return (
