@@ -1,6 +1,23 @@
 - id: default
   type: Card
-- id: properties.title
+- id: "properties.title"
   type: Card
   properties:
     title: Card block
+- id: "properties.size: small"
+  type: Card
+  properties:
+    size: small
+    title: Card block small
+- id: "properties.bordered: false"
+  type: Card
+  properties:
+    bordered: false
+- id: "properties.hoverable: true"
+  type: Card
+  properties:
+    hoverable: true
+- id: "properties.inner: true"
+  type: Card
+  properties:
+    inner: true
