@@ -29,7 +29,7 @@
   type: UserAvatar
   properties:
     name: Avatar name
-- id: "properties.showName: left"
+- id: "properties.showName: left "
   type: UserAvatar
   properties:
     showName: left
