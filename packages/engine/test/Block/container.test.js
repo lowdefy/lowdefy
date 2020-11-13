@@ -61,7 +61,6 @@ test('container and set value from block', () => {
                   {
                     type: 'TextInput',
                     blockId: 'textB',
-                    defaultValue: 'b',
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -79,6 +78,7 @@ test('container and set value from block', () => {
     rootContext,
     rootBlock,
     pageId,
+    initState: { textB: 'b' },
   });
   const { textA, textB } = context.RootBlocks.map;
   expect(textA.value).toBe(null);
@@ -91,7 +91,7 @@ test('container and set value from block', () => {
   expect(context.state).toEqual({ textA: 'Hello', textB: 'b' });
 });
 
-test('container blocks visibility toggle fields in state', () => {
+test('container blocks visibility toggle fields in state and propagate visibility to children', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -162,7 +162,7 @@ test('container blocks visibility toggle fields in state', () => {
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
   swtch2.setValue(false);
   expect(container.visibleEval.output).toEqual(false);
-  expect(text.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(false);
   expect(context.state).toEqual({ swtch1: true, swtch2: false });
   swtch2.setValue(true);
   expect(container.visibleEval.output).toEqual(true);
@@ -170,7 +170,7 @@ test('container blocks visibility toggle fields in state', () => {
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
-test('container blocks visibility toggle fields in state with nested containers', () => {
+test('container blocks visibility toggle fields in state with nested containers and propagate visibility to children', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -256,7 +256,7 @@ test('container blocks visibility toggle fields in state with nested containers'
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
   swtch2.setValue(false);
   expect(container1.visibleEval.output).toEqual(false);
-  expect(text.visibleEval.output).toEqual(true);
+  expect(text.visibleEval.output).toEqual(false);
   expect(context.state).toEqual({ swtch1: true, swtch2: false });
   swtch2.setValue(true);
   expect(container1.visibleEval.output).toEqual(true);
