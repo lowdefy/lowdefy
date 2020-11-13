@@ -39,7 +39,6 @@ class Blocks {
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
     this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.setUndefinedValuesToState = this.setUndefinedValuesToState.bind(this);
     this.recContainerDelState = this.recContainerDelState.bind(this);
     this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
     this.recSetUndefined = this.recSetUndefined.bind(this);
@@ -80,6 +79,14 @@ class Blocks {
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.actions = type.isNone(block.actions) ? {} : block.actions;
 
+      block.visibleEval = {};
+      block.propertiesEval = {};
+      block.requiredEval = {};
+      block.validationEval = {};
+      block.styleEval = {};
+      block.layoutEval = {};
+      block.areasLayoutEval = {};
+
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
         Object.keys(block.areas).forEach((key) => {
@@ -105,6 +112,7 @@ class Blocks {
       };
 
       if (get(block, 'meta.category') === 'list') {
+        // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
         block.unshiftItem = () => {
           this.subBlocks[block.id].forEach((bl, i) => {
             bl.recUpdateArrayIndices(
@@ -113,7 +121,7 @@ class Blocks {
             );
           });
           this.subBlocks[block.id].unshift(
-            this.newBlocks(this.arrayIndices.concat([0]), block, {})
+            this.newBlocks({ arrayIndices: this.arrayIndices.concat([0]), block, initState: {} })
           );
           this.context.State.set(block.field, undefined);
           // set block and subBlock values undefined, so as not to pass values to new blocks
@@ -124,7 +132,11 @@ class Blocks {
 
         block.pushItem = () => {
           this.subBlocks[block.id].push(
-            this.newBlocks(this.arrayIndices.concat([this.subBlocks[block.id].length]), block, {})
+            this.newBlocks({
+              arrayIndices: this.arrayIndices.concat([this.subBlocks[block.id].length]),
+              block,
+              initState: {},
+            })
           );
           block.update = true;
           this.context.update();
@@ -221,7 +233,7 @@ class Blocks {
             blockValue.forEach((item, i) => {
               if (!this.subBlocks[block.id][i]) {
                 this.subBlocks[block.id].push(
-                  this.newBlocks(this.arrayIndices.concat([i]), block, initState)
+                  this.newBlocks({ arrayIndices: this.arrayIndices.concat([i]), block, initState })
                 );
               } else {
                 this.subBlocks[block.id][i].reset(initState);
@@ -241,7 +253,9 @@ class Blocks {
           this.subBlocks[block.id] = [];
         }
         if (!this.subBlocks[block.id][0]) {
-          this.subBlocks[block.id].push(this.newBlocks(this.arrayIndices, block, initState));
+          this.subBlocks[block.id].push(
+            this.newBlocks({ arrayIndices: this.arrayIndices, block, initState })
+          );
         } else {
           this.subBlocks[block.id][0].reset(initState);
         }
@@ -249,7 +263,7 @@ class Blocks {
     });
   }
 
-  newBlocks(arrayIndices, block, initState) {
+  newBlocks({ arrayIndices, block, initState }) {
     const SubBlocks = new Blocks({
       arrayIndices,
       areas: block.areas,
@@ -333,15 +347,15 @@ class Blocks {
           });
           // for parser errors
           if (parsed.errors.length > 0) {
-            block.validationEval.errors.output.push(parsed.output.message);
+            block.validationEval.output.errors.push(parsed.output.message);
             block.validationEval.errors.push(parsed.errors);
             validationError = true;
             return;
           }
           // failed validation
           if (!parsed.output.pass) {
-            block.validationEval.output.push(parsed.output);
-            if (test.status === 'error') {
+            // no status indication on validation tests defaults to error
+            if (!test.status || test.status === 'error') {
               block.validationEval.output.errors.push(parsed.output.message);
               validationError = true;
             }
@@ -453,7 +467,7 @@ class Blocks {
   }
 
   updateStateFromRoot() {
-    const repeat = this.recEval();
+    const repeat = this.recEval(true);
     this.updateState();
     if (repeat && this.recCount < 20) {
       this.recCount += 1;
