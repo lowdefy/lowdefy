@@ -2951,6 +2951,7 @@ __metadata:
     "@sendgrid/mail": 7.3.0
     "@shelf/jest-mongodb": 1.2.3
     ajv: 6.12.6
+    ajv-errors: 1.0.1
     apollo-server: 2.19.0
     apollo-server-testing: 2.19.0
     aws-sdk: 2.790.0

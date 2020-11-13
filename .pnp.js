@@ -3796,6 +3796,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sendgrid/mail", "npm:7.3.0"],
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.3"],
             ["ajv", "npm:6.12.6"],
+            ["ajv-errors", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:1.0.1"],
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.19.0"],
             ["apollo-server-testing", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.19.0"],
             ["aws-sdk", "npm:2.790.0"],

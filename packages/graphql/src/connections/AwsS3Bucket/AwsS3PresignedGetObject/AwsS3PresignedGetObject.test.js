@@ -15,8 +15,9 @@
 */
 
 import AWS from 'aws-sdk';
-import presignedGetObject from './presignedGetObject';
-import { ConfigurationError, RequestError } from '../../context/errors';
+import AwsS3PresignedGetObject from './AwsS3PresignedGetObject';
+import { ConfigurationError, RequestError } from '../../../context/errors';
+import testSchema from '../../../test/testSchema';
 
 jest.mock('aws-sdk');
 
@@ -31,6 +32,8 @@ const s3ConstructorMockImp = () => ({
 
 AWS.S3 = mockS3Constructor;
 
+const { resolver, schema } = AwsS3PresignedGetObject;
+
 beforeEach(() => {
   mockGetSignedUrl.mockReset();
   mockS3Constructor.mockReset();
@@ -38,7 +41,7 @@ beforeEach(() => {
   mockS3Constructor.mockImplementation(s3ConstructorMockImp);
 });
 
-test('presignedGetObject', () => {
+test('awsS3PresignedGetObject', () => {
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -47,7 +50,7 @@ test('presignedGetObject', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = presignedGetObject({ request, connection, context });
+  const res = resolver({ request, connection, context });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -70,7 +73,7 @@ test('presignedGetObject', () => {
   expect(res).toEqual('res');
 });
 
-test('presignedGetObject options ', async () => {
+test('awsS3PresignedGetObject options ', async () => {
   const request = {
     key: 'key',
     versionId: 'versionId',
@@ -84,7 +87,7 @@ test('presignedGetObject options ', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  const res = presignedGetObject({ request, connection, context });
+  const res = resolver({ request, connection, context });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -120,10 +123,8 @@ test('bucket with read false', async () => {
     bucket: 'bucket',
     read: false,
   };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
-  );
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
+  await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
+  await expect(() => resolver({ request, connection, context })).toThrow(
     'AWS S3 Bucket does not allow reads'
   );
 });
@@ -136,7 +137,7 @@ test('bucket with no read specified', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  const res = presignedGetObject({ request, connection, context });
+  const res = resolver({ request, connection, context });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -168,7 +169,7 @@ test('bucket with read true specified', async () => {
     bucket: 'bucket',
     read: true,
   };
-  const res = presignedGetObject({ request, connection, context });
+  const res = resolver({ request, connection, context });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -191,91 +192,73 @@ test('bucket with read true specified', async () => {
   expect(res).toEqual('res');
 });
 
-test('accessKeyId missing', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
-  );
-});
-
-test('secretAccessKey missing', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    region: 'region',
-    bucket: 'bucket',
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
-  );
-});
-
-test('region missing', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    bucket: 'bucket',
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
-  );
-});
-
-test('bucket missing', async () => {
+test('Error from s3 client', async () => {
+  mockGetSignedUrl.mockImplementation(() => {
+    throw new Error('Test S3 client error.');
+  });
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
     secretAccessKey: 'secretAccessKey',
     region: 'region',
+    bucket: 'bucket',
   };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
+  await expect(() => resolver({ request, connection, context })).toThrow(RequestError);
+  await expect(() => resolver({ request, connection, context })).toThrow('Test S3 client error.');
+});
+
+test('Request properties is not an object', async () => {
+  const request = 'request';
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request properties should be an object.'
   );
 });
 
-test('key missing', async () => {
+test('Request key missing', async () => {
   const request = {};
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request should have required property "key".'
   );
 });
 
-test('versionId not an allowed value', async () => {
-  const request = { key: 'key', versionId: true };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-    write: true,
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
-  );
-});
-
-test('expires invalid value', async () => {
+test('Request expires property not a number', async () => {
   const request = { key: 'key', expires: 'expires' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-    write: true,
-  };
-  await expect(() => presignedGetObject({ request, connection, context })).toThrow(
-    ConfigurationError
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request property "expires" should be a number.'
+  );
+});
+
+test('Request key not a string', async () => {
+  const request = { key: true };
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request property "key" should be a string.'
+  );
+});
+
+test('Request responseContentDisposition not a string', async () => {
+  const request = { key: 'key', responseContentDisposition: true };
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request property "responseContentDisposition" should be a string.'
+  );
+});
+
+test('Request responseContentType not a string', async () => {
+  const request = { key: 'key', responseContentType: true };
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request property "responseContentType" should be a string.'
+  );
+});
+
+test('Request versionId not a string', async () => {
+  const request = { key: 'key', versionId: true };
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(
+    'AwsS3PresignedGetObject request property "versionId" should be a string.'
   );
 });
