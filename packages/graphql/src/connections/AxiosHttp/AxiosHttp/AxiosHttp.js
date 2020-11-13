@@ -17,6 +17,8 @@
 import axios from 'axios';
 import { mergeObjects } from '@lowdefy/helpers';
 
+import schema from '../AxiosHttpSchema.json';
+
 async function axiosHTTP({ request, connection, context }) {
   try {
     const config = mergeObjects([connection, request]);
@@ -35,4 +37,4 @@ async function axiosHTTP({ request, connection, context }) {
   }
 }
 
-export default axiosHTTP;
+export default { resolver: axiosHTTP, schema };
