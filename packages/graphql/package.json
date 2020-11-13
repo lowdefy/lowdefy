@@ -46,6 +46,7 @@
     "aws-sdk": "2.790.0",
     "axios": "0.21.0",
     "dataloader": "2.0.0",
+    "google-spreadsheet": "3.0.13",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
     "mongodb": "3.6.2"
