@@ -56,8 +56,8 @@ class State {
     unset(this.context.state, field);
     // remove all empty objects from state as an effect of deleted values
     const fields = field.split('.');
-    if (fields.length > 0) {
-      const parent = ''.join(fields.slice(0, fields.length - 1));
+    if (fields.length > 1) {
+      const parent = fields.slice(0, fields.length - 1).join('.');
       const parentValue = get(this.context.state, parent);
       if (type.isObject(parentValue) && Object.keys(parentValue).length === 0) {
         this.del(parent);

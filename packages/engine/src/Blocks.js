@@ -496,7 +496,7 @@ class Blocks {
 
   getValidateRec(result) {
     this.loopBlocks((block) => {
-      if (block.validationEval.output.status === 'error' && block.visibleEval.output) {
+      if (block.visibleEval.output && block.validationEval.output.status === 'error') {
         result.push({
           blockId: block.blockId,
           validation: block.validationEval.output,

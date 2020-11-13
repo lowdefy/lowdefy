@@ -344,7 +344,7 @@ class Actions {
       this.context.showValidationErrors = true;
       let validationErrors = this.context.RootBlocks.validate();
       if (params) {
-        const blockIds = type.isString(blockId) ? [params] : params;
+        const blockIds = type.isString(params) ? [params] : params;
         validationErrors = validationErrors.filter((block) => {
           return blockIds.includes(block.blockId);
         });
