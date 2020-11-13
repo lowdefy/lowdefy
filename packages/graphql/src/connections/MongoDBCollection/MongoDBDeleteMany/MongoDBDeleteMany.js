@@ -15,36 +15,13 @@
 */
 
 import { MongoClient } from 'mongodb';
-import { get, type } from '@lowdefy/helpers';
-import { serialize, deserialize } from './serialize';
+import { serialize, deserialize } from '../serialize';
+import checkWrite from '../checkWrite';
 
-function validateRequest({ request, context }) {
-  if (!request.filter) {
-    throw new context.ConfigurationError('Request filter not specified');
-  }
-}
+import schema from './MongoDBDeleteManySchema.json';
 
-function validateConnection({ connection, context }) {
-  if (!connection.databaseUri) {
-    throw new context.ConfigurationError('Connection databaseUri not specified');
-  }
-  if (!type.isString(connection.databaseUri)) {
-    throw new context.ConfigurationError('Connection databaseUri is not a string');
-  }
-  if (!connection.collection) {
-    throw new context.ConfigurationError('Connection collection not specified');
-  }
-  if (!type.isString(connection.collection)) {
-    throw new context.ConfigurationError('Connection collection is not a string');
-  }
-  if (!get(connection, 'write', { default: false })) {
-    throw new context.ConfigurationError('Connection does not allow writes');
-  }
-}
-
-async function mongodbDeleteOne({ request, connection, context }) {
-  validateRequest({ request, context });
-  validateConnection({ connection, context });
+async function mongodbDeleteMany({ request, connection, context }) {
+  checkWrite({ connection, context });
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
   const { databaseUri, databaseName, collection } = connection;
@@ -61,7 +38,7 @@ async function mongodbDeleteOne({ request, connection, context }) {
   let res;
   try {
     const db = client.db(databaseName);
-    res = await db.collection(collection).deleteOne(filter, options);
+    res = await db.collection(collection).deleteMany(filter, options);
   } catch (err) {
     await client.close();
     throw new context.RequestError(`${err.name}: ${err.message}`);
@@ -71,4 +48,4 @@ async function mongodbDeleteOne({ request, connection, context }) {
   return { deletedCount };
 }
 
-export default mongodbDeleteOne;
+export default { resolver: mongodbDeleteMany, schema };

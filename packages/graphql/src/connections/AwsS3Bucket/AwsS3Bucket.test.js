@@ -53,7 +53,7 @@ test('accessKeyId missing', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  // expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: connection })).toThrow(
     'AwsS3Bucket connection should have required property "accessKeyId".'
   );
@@ -66,7 +66,7 @@ test('accessKeyId is not a string', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  // expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: connection })).toThrow(
     'AwsS3Bucket connection property "accessKeyId" should be a string.'
   );

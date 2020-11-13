@@ -15,36 +15,13 @@
 */
 
 import { MongoClient } from 'mongodb';
-import { get, type } from '@lowdefy/helpers';
-import { serialize, deserialize } from './serialize';
+import { serialize, deserialize } from '../serialize';
+import checkRead from '../checkRead';
 
-function validateRequest({ request, context }) {
-  if (!request.query) {
-    throw new context.ConfigurationError('Request query not specified');
-  }
-}
-
-function validateConnection({ connection, context }) {
-  if (!connection.databaseUri) {
-    throw new context.ConfigurationError('Connection databaseUri not specified');
-  }
-  if (!type.isString(connection.databaseUri)) {
-    throw new context.ConfigurationError('Connection databaseUri is not a string');
-  }
-  if (!connection.collection) {
-    throw new context.ConfigurationError('Connection collection not specified');
-  }
-  if (!type.isString(connection.collection)) {
-    throw new context.ConfigurationError('Connection collection is not a string');
-  }
-  if (!get(connection, 'read', { default: true })) {
-    throw new context.ConfigurationError('Connection does not allow reads');
-  }
-}
+import schema from './MongoDBFindOneSchema.json';
 
 async function mongodbFindOne({ request, connection, context }) {
-  validateRequest({ request, context });
-  validateConnection({ connection, context });
+  checkRead({ connection, context });
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
   const { databaseUri, databaseName, collection } = connection;
@@ -70,4 +47,4 @@ async function mongodbFindOne({ request, connection, context }) {
   return serialize(res);
 }
 
-export default mongodbFindOne;
+export default { resolver: mongodbFindOne, schema };
