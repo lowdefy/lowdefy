@@ -10,11 +10,11 @@ exports[`Render default 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -23,6 +23,705 @@ exports[`Render default 1`] = `
   </div>
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.align: left 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.align: left_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.align: right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.align: right_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.colon: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.colon: false_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.colon: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.colon: true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extra: Extra long 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extra: Extra long with inline = true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long with inline = true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extra: Extra long with inline true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long with inline true_input"
+      title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extra: Extra text 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra text_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Extra text
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.extraStyle: border 1px purple 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extraStyle: border 1px purple_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
+    >
+      Extra text
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.feedbackStyle: border 1px blue 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.feedbackStyle: border 1px blue_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      The extra content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.inline: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.inline: true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.span: 2 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-2"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.span: 2_input"
+      title="This is the long label title wrapped by short span"
+    >
+      This is the long label title wrapped by short span
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-22"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.span: 2 with long work title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-2"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.span: 2 with long work title_input"
+      title="Thisisthelonglabeltitlea"
+    >
+      Thisisthelonglabeltitlea
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-22"
     style={Object {}}
   >
     <div
@@ -57,11 +756,11 @@ exports[`Render properties.title 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
       htmlFor="properties.title_input"
       title="Label title"
     >
@@ -94,10 +793,961 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
+exports[`Render properties.title long 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.title long_input"
+      title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true default 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="default_input"
+      title="default"
+    >
+      default
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.align: left 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.align: left_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.align: right 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.align: right_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.colon: false 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.colon: false_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.colon: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.colon: true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.disabled: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extra: Extra long 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extra: Extra long with inline = true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long with inline = true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extra: Extra long with inline true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra long with inline true_input"
+      title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extra: Extra text 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extra: Extra text_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      Extra text
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.extraStyle: border 1px purple 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.extraStyle: border 1px purple_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
+    >
+      Extra text
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.feedbackStyle: border 1px blue 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.feedbackStyle: border 1px blue_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+    <div
+      className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+    >
+      The extra content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.inline: true 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    style={
+      Object {
+        "flex": "0 1 auto",
+      }
+    }
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.inline: true_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control"
+    style={
+      Object {
+        "flex": "1 1 auto",
+      }
+    }
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.span: 2 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-2"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.span: 2_input"
+      title="This is the long label title wrapped by short span"
+    >
+      This is the long label title wrapped by short span
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-22"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.span: 2 with long work title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-2"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.span: 2 with long work title_input"
+      title="Thisisthelonglabeltitlea"
+    >
+      Thisisthelonglabeltitlea
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24 ant-col-md-22"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.title 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.title_input"
+      title="Label title"
+    >
+      Label title
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.title long 1`] = `
+<div
+  className="ant-row ant-form-item {\\"style\\":{}}"
+  style={
+    Object {
+      "marginBottom": 0,
+    }
+  }
+>
+  <div
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <label
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      htmlFor="properties.title long_input"
+      title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+    </label>
+  </div>
+  <div
+    className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+    style={Object {}}
+  >
+    <div
+      className="ant-form-item-control-input"
+    >
+      <div
+        className="ant-form-item-control-input-content"
+      >
+        <div
+          style={
+            Object {
+              "border": "1px solid red",
+              "padding": 10,
+            }
+          }
+        >
+          content
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
+exports[`Test Schema properties.align: left 1`] = `true`;
+
+exports[`Test Schema properties.align: left 2`] = `null`;
+
+exports[`Test Schema properties.align: right 1`] = `true`;
+
+exports[`Test Schema properties.align: right 2`] = `null`;
+
+exports[`Test Schema properties.colon: false 1`] = `true`;
+
+exports[`Test Schema properties.colon: false 2`] = `null`;
+
+exports[`Test Schema properties.colon: true 1`] = `true`;
+
+exports[`Test Schema properties.colon: true 2`] = `null`;
+
+exports[`Test Schema properties.disabled: true 1`] = `true`;
+
+exports[`Test Schema properties.disabled: true 2`] = `null`;
+
+exports[`Test Schema properties.extra: Extra long 1`] = `true`;
+
+exports[`Test Schema properties.extra: Extra long 2`] = `null`;
+
+exports[`Test Schema properties.extra: Extra long with inline = true 1`] = `true`;
+
+exports[`Test Schema properties.extra: Extra long with inline = true 2`] = `null`;
+
+exports[`Test Schema properties.extra: Extra long with inline true 1`] = `true`;
+
+exports[`Test Schema properties.extra: Extra long with inline true 2`] = `null`;
+
+exports[`Test Schema properties.extra: Extra text 1`] = `true`;
+
+exports[`Test Schema properties.extra: Extra text 2`] = `null`;
+
+exports[`Test Schema properties.extraStyle: border 1px purple 1`] = `true`;
+
+exports[`Test Schema properties.extraStyle: border 1px purple 2`] = `null`;
+
+exports[`Test Schema properties.feedbackStyle: border 1px blue 1`] = `true`;
+
+exports[`Test Schema properties.feedbackStyle: border 1px blue 2`] = `null`;
+
+exports[`Test Schema properties.inline: true 1`] = `true`;
+
+exports[`Test Schema properties.inline: true 2`] = `null`;
+
+exports[`Test Schema properties.span: 2 1`] = `true`;
+
+exports[`Test Schema properties.span: 2 2`] = `null`;
+
+exports[`Test Schema properties.span: 2 with long work title 1`] = `true`;
+
+exports[`Test Schema properties.span: 2 with long work title 2`] = `null`;
+
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.title long 1`] = `true`;
+
+exports[`Test Schema properties.title long 2`] = `null`;

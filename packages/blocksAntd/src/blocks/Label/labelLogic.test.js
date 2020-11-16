@@ -41,801 +41,2558 @@ const defaultInput = {
   blockId: 'label_1',
   content: {},
   methods: { makeCssClass },
+  properties: {
+    title: 'Test title',
+  },
+  validation: {
+    status: null,
+    warnings: [],
+    errors: [],
+  },
 };
 
-test('label default logic', () => {
-  expect(labelLogic(defaultInput)).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
+test('label default label', () => {
+  let res = labelLogic({ properties: { title: '' }, content: {}, methods: { makeCssClass } });
+  expect(res.label).toEqual(null);
+  res = labelLogic({
+    properties: { title: 'a', disabled: true },
+    content: {},
+    methods: { makeCssClass },
   });
+  expect(res.label).toEqual(false);
+  res = labelLogic({ blockId: 'blockId', content: {}, methods: { makeCssClass } });
+  expect(res.label).toEqual('blockId');
+  res = labelLogic({ content: { label: () => 'content.label' }, methods: { makeCssClass } });
+  expect(res.label).toEqual('content.label');
+});
+
+test('label default label', () => {
+  let res = labelLogic({
+    properties: { extra: null },
+    validation: { status: null },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+  res = labelLogic({
+    properties: { extra: null },
+    validation: { status: 'success' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+  res = labelLogic({
+    properties: { extra: null },
+    validation: { status: 'error' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+  res = labelLogic({
+    properties: { extra: 'a' },
+    validation: { status: null },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(true);
+  res = labelLogic({
+    properties: { extra: 'a' },
+    validation: { status: 'success' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(true);
+  res = labelLogic({
+    properties: { extra: 'a' },
+    validation: { status: 'error' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+});
+
+test('label default label', () => {
+  let res = labelLogic({
+    validation: { status: 'error' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showFeedback).toEqual(true);
+  res = labelLogic({
+    validation: { status: 'warning' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showFeedback).toEqual(true);
+  res = labelLogic({
+    validation: { status: 'success' },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+  res = labelLogic({
+    validation: { status: null },
+    content: {},
+    methods: { makeCssClass },
+  });
+  expect(res.showExtra).toEqual(false);
+});
+
+test('label default', () => {
+  expect(labelLogic({ blockId: 'label_1', content: {}, methods: { makeCssClass } }))
+    .toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic title undefined', () => {
+  expect(labelLogic({ ...defaultInput, properties: { title: undefined } })).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic with required', () => {
-  expect(labelLogic({ ...defaultInput, required: true })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  expect(labelLogic({ ...defaultInput, properties: { required: true } })).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
+    }
+  `);
 });
 
-test('label default logic with required and validated', () => {
-  expect(labelLogic({ ...defaultInput, required: true, validated: true })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+test('label default logic with validation.status = error', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}',
-    validateStatus: 'success',
-    wrapperCol: {
-      sm: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+    }
+  `);
+});
+test('label default logic with validation.status = warning', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
       },
-    },
-  });
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
-test('label default logic with required, validated and validate', () => {
+test('label default logic with validation.status = success', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic with required', () => {
   expect(
     labelLogic({
       ...defaultInput,
       required: true,
-      validated: true,
-      validate: [{ message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      required: true,
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      required: true,
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      required: true,
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic properties.align = right', () => {
-  expect(labelLogic({ ...defaultInput, properties: { align: 'right' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'right' },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'right' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'right' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'right' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic properties.align = left', () => {
-  expect(labelLogic({ ...defaultInput, properties: { align: 'left' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'left' },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'left' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'left' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { align: 'left' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic properties.inline = true', () => {
-  expect(labelLogic({ ...defaultInput, properties: { inline: true } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: { flex: '0 1 auto' },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{"flexWrap":"inherit"}}',
-    validateStatus: null,
-    wrapperCol: { flex: '1 1 auto' },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { inline: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { inline: true },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{"flexWrap":"inherit"}}'
-  );
   expect(
     labelLogic({
       ...defaultInput,
       properties: { inline: true },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: { flex: '0 1 auto' },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName:
-      'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{"flexWrap":"inherit"}}',
-    validateStatus: 'error',
-    wrapperCol: { flex: '1 1 auto' },
-  });
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { inline: true },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { inline: true },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { inline: true },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
 });
 
 test('label default logic properties.colon = true', () => {
-  expect(labelLogic({ ...defaultInput, properties: { colon: true } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { colon: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { colon: true },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
   expect(
     labelLogic({
       ...defaultInput,
       properties: { colon: true },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { colon: true },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { colon: true },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { colon: true },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic properties.title = title_1', () => {
-  expect(labelLogic({ ...defaultInput, properties: { title: 'title_1' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'title_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { colon: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { title: 'title_1' },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
   expect(
     labelLogic({
       ...defaultInput,
       properties: { title: 'title_1' },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'title_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "title_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-});
-
-test('label default logic properties.hasFeedback = false', () => {
-  expect(labelLogic({ ...defaultInput, properties: { hasFeedback: false } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: false,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { hasFeedback: false }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { hasFeedback: false },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual(false);
-  expect(reponse.rowClassName).toEqual('ant-form-item ant-form-item-has-success {"style":{}}');
+    }
+  `);
   expect(
     labelLogic({
       ...defaultInput,
-      properties: { hasFeedback: false },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
+      properties: { title: 'title_1' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "title_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-error {"style":{}}',
-    validateStatus: false,
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { title: 'title_1' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "title_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { title: 'title_1' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "title_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic properties.title = long', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic properties.title = long and properties.inline = true', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        inline: true,
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        inline: true,
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        inline: true,
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        inline: true,
+        title:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod',
+      },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "flex": "0 1 auto",
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "flex": "1 1 auto",
+      },
+    }
+  `);
 });
 
 test('label default logic properties.size = small', () => {
-  expect(labelLogic({ ...defaultInput, properties: { size: 'small' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":-4},null]}',
-    label: 'label_1',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { size: 'small' }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { colon: true },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
   expect(
     labelLogic({
       ...defaultInput,
       properties: { size: 'small' },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":-4},null]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'small' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'small' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'small' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic properties.size = large', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'large' },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'large' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'large' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: { size: 'large' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
 
 test('label default logic properties.disabled = true', () => {
-  expect(labelLogic({ ...defaultInput, properties: { disabled: true } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: false,
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { disabled: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { hasFeedback: false },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual(false);
-  expect(reponse.rowClassName).toEqual('ant-form-item ant-form-item-has-success {"style":{}}');
   expect(
     labelLogic({
       ...defaultInput,
       properties: { disabled: true },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: false,
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": false,
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-});
-
-test('label default logic properties.style && properties.extraStyle', () => {
-  expect(
-    labelLogic({ ...defaultInput, properties: { style: { b: 2 }, extraStyle: { a: 1 } } })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},{"a":1}]}',
-    label: 'label_1',
-    labelClassName: '{"style":{"b":2}}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { disabled: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    properties: { style: { b: 2 }, extraStyle: { a: 1 } },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {"style":{"b":2}}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
+    }
+  `);
   expect(
     labelLogic({
       ...defaultInput,
-      properties: { style: { b: 2 }, extraStyle: { a: 1 } },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
+      properties: { disabled: true },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},{"a":1}]}',
-    label: 'label_1',
-    labelClassName: 'ant-form-item-required {"style":{"b":2}}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": false,
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-});
-
-test('label default logic content.label = () => one', () => {
-  expect(labelLogic({ ...defaultInput, content: { label: () => 'one' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'one',
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { colon: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    content: { label: () => 'one' },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
+    }
+  `);
   expect(
     labelLogic({
       ...defaultInput,
-      content: { label: () => 'one' },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
+      properties: { disabled: true },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: 'one',
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": false,
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-});
-
-test('label default logic label === "" ', () => {
-  expect(labelLogic({ ...defaultInput, content: { label: () => '' } })).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: null,
-    labelClassName: '{}',
-    labelCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item {"style":{}}',
-    validateStatus: null,
-    wrapperCol: {
-      sm: {
-        span: 24,
-      },
-      xs: {
-        span: 24,
-      },
-    },
-  });
-  let reponse = labelLogic({ ...defaultInput, properties: { colon: true }, required: true });
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  reponse = labelLogic({
-    ...defaultInput,
-    content: { label: () => '' },
-    required: true,
-    validated: true,
-  });
-
-  expect(reponse.labelClassName).toEqual('ant-form-item-required {}');
-  expect(reponse.validateStatus).toEqual('success');
-  expect(reponse.rowClassName).toEqual(
-    'ant-form-item ant-form-item-has-feedback ant-form-item-has-success {"style":{}}'
-  );
+    }
+  `);
   expect(
     labelLogic({
       ...defaultInput,
-      content: { label: () => '' },
-      required: true,
-      validated: true,
-      validate: [{ status: 'error', message: 'fail' }],
+      properties: { disabled: true },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
     })
-  ).toEqual({
-    extraClassName: 'ant-form-item-extra {"style":[{"marginTop":0},null]}',
-    label: null,
-    labelClassName: 'ant-form-item-required {}',
-    labelCol: {
-      sm: {
-        span: 24,
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": false,
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-      xs: {
-        span: 24,
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-    labelColClassName: 'ant-form-item-label ant-form-item-label-left',
-    rowClassName: 'ant-form-item ant-form-item-has-feedback ant-form-item-has-error {"style":{}}',
-    validateStatus: 'error',
-    wrapperCol: {
-      sm: {
-        span: 24,
+    }
+  `);
+});
+
+test('label default logic properties.style', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        style: {
+          border: '1px solid yellow',
+        },
       },
-      xs: {
-        span: 24,
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
       },
-    },
-  });
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        style: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        style: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        style: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic properties.extraStyle', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        extraStyle: {
+          border: '1px solid yellow',
+        },
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        extraStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        extraStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        extraStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic properties.feedbackStyle', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        feedbackStyle: {
+          border: '1px solid yellow',
+        },
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        feedbackStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        feedbackStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      properties: {
+        feedbackStyle: {
+          border: '1px solid yellow',
+        },
+      },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "label": "label_1",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+});
+
+test('label default logic content.content = () => one', () => {
+  expect(
+    labelLogic({
+      ...defaultInput,
+      content: { content: () => 'one' },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      content: { content: () => 'one' },
+      validation: {
+        status: 'error',
+        errors: ['an error'],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      content: { content: () => 'one' },
+      validation: {
+        status: 'warning',
+        errors: [],
+        warnings: ['an warning'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": true,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
+  expect(
+    labelLogic({
+      ...defaultInput,
+      content: { content: () => 'one' },
+      validation: {
+        status: 'success',
+        errors: [],
+        warnings: [],
+      },
+    })
+  ).toMatchInlineSnapshot(`
+    Object {
+      "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
+      "label": "Test title",
+      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "showExtra": false,
+      "showFeedback": false,
+      "wrapperCol": Object {
+        "sm": Object {
+          "span": 24,
+        },
+        "xs": Object {
+          "span": 24,
+        },
+      },
+    }
+  `);
 });
