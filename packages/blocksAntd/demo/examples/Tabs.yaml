@@ -3,8 +3,276 @@
 - id: properties.tabs
   type: Tabs
   properties:
-    tabs: 
-      - title: one
-        key: one
-      - title: two
-        key: two
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. activeKey: content_two"
+  type: Tabs
+  properties:
+    activeKey: content_two
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. defaultActiveKey: content_three"
+  type: Tabs
+  properties:
+    defaultActiveKey: content_three
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. animated: false"
+  type: Tabs
+  properties:
+    animated: false
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. size: small"
+  type: Tabs
+  properties:
+    size: small
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. size: large"
+  type: Tabs
+  properties:
+    size: large
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. tabPosition: right - top is default"
+  type: Tabs
+  properties:
+    tabPosition: right
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. tabPosition: bottom"
+  type: Tabs
+  properties:
+    tabPosition: bottom
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. tabPosition: left"
+  type: Tabs
+  properties:
+    tabPosition: left
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+- id: "properties. tabType: card - line is default"
+  type: Tabs
+  properties:
+    tabType: card
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+# editable card execute nie?
+- id: "properties. tabType: editable-card"
+  type: Tabs
+  properties:
+    tabType: editable-card
+    tabs:
+      - disabled: false
+        key: content_one
+        title: Title One
+      - disabled: false
+        key: content_two
+        title: Title Two
+      - disabled: false
+        key: content_three
+        title: Title Three
+# Nie seker of die volgende reg wys nie?
+- id: tabs_with_block_in_content_area
+  type: Tabs
+  properties:
+    tabs:
+      - key: one
+        title: One
+      - key: two
+        title: Two
+  areas:
+    one:
+      blocks:
+        - id: ex_1_block_1
+          type: Html
+          style:
+            background: "#04b0ff"
+            textAlign: center
+            color: white
+          properties:
+            html: block_1
+    two:
+      blocks:
+        - id: ex_1_block_2
+          type: Html
+          style:
+            background: "#e57373"
+            textAlign: center
+            color: white
+          properties:
+            html: block_2
+# kyk asb of volgende reg execute
+- id: tabs_with_different_form_details
+  type: Tabs
+  properties:
+    tabs:
+      - key: personal_details
+        title: Personal Details
+      - key: education
+        title: Education
+      - key: work_experience
+        title: Work Experience
+  areas:
+    personal_details:
+      blocks:
+        - id: Name
+          type: TextInput
+        - id: Surname
+          type: TextInput
+        - id: Email
+          type: TextInput
+        - id: Status
+          type: RadioSelector
+          properties:
+            options:
+              - Employed
+              - Unemployed
+              - Freelancer
+              - Student
+        - id: Company
+          type: TextInput
+          visible:
+            _eq:
+              - _state: Status
+              - Employed
+        - id: School
+          type: TextInput
+          visible:
+            _eq:
+              - _state: Status
+              - Student
+    education:
+      blocks:
+        - id: Education
+          type: ControlledList
+          blocks:
+            - id: Education.$.School
+              type: TextInput
+              properties:
+                title: School
+              layout:
+                span: 18
+            - id: Education.$.Year
+              type: NumberInput
+              properties:
+                title: Year
+              layout:
+                span: 6
+            - id: Education.$.Qualification
+              type: TextInput
+              properties:
+                title: Qualification
+    work_experience:
+      blocks:
+        - id: work_experience
+          type: ControlledList
+          blocks:
+            - id: work_experience.$.Company
+              type: TextInput
+              properties:
+                title: Company
+            - id: work_experience.$.Year_Start
+              type: NumberInput
+              properties:
+                title: Year Start
+              layout:
+                span: 6
+            - id: work_experience.$.Year_End
+              type: NumberInput
+              properties:
+                title: Year End
+              layout:
+                span: 6
+            - id: work_experience.$.Position
+              type: TextInput
+              properties:
+                title: Position
+            - id: work_experience.$.Position
+              type: TextInput
+              properties:
+                title: Position
+              layout:
+                span: 12
