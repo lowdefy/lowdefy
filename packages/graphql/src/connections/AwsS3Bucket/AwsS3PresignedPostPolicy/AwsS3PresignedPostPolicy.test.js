@@ -188,7 +188,7 @@ test('Request property acl not a string', async () => {
   const request = { key: 'key', acl: true };
   await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   await expect(() => testSchema({ schema, object: request })).toThrow(
-    'AwsS3PresignedPostPolicy request property "acl" should be a string.'
+    'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 
@@ -196,7 +196,7 @@ test('Request property acl not an allowed value', async () => {
   const request = { key: 'key', acl: 'acl' };
   await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   await expect(() => testSchema({ schema, object: request })).toThrow(
-    'AwsS3PresignedPostPolicy request property "acl" is not a valid value.'
+    'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 

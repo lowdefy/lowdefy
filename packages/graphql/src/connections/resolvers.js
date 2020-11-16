@@ -32,6 +32,10 @@ const resolvers = {
   //   resolver: sendGridMailSend,
   //   connectionType: 'SendGridMail',
   // },
+  // GoogleSheetsGetRows: {
+  //   resolver: getRows,
+  //   connectionType: 'GoogleSheet',
+  // },
 };
 
 export default resolvers;

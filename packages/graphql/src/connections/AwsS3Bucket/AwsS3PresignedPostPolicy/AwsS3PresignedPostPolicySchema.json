@@ -18,7 +18,7 @@
       "description": "Access control lists used to grant read and write access.",
       "errorMessage": {
         "type": "AwsS3PresignedPostPolicy request property \"acl\" should be a string.",
-        "enum": "AwsS3PresignedPostPolicy request property \"acl\" is not a valid value."
+        "enum": "AwsS3PresignedPostPolicy request property \"acl\" is not one of \"private\", \"public-read\", \"public-read-write\", \"aws-exec-read\", \"authenticated-read\", \"bucket-owner-read\", \"bucket-owner-full-control\"."
       }
     },
     "conditions": {

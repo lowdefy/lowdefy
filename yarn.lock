@@ -2947,6 +2947,7 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/nunjucks": 1.0.0
     "@lowdefy/operators": 1.0.1
     "@sendgrid/mail": 7.3.0
     "@shelf/jest-mongodb": 1.2.3

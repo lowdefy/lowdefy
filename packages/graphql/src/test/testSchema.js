@@ -16,6 +16,7 @@
 
 import Ajv from 'ajv';
 import ajvErrors from 'ajv-errors';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { ConfigurationError } from '../context/errors';
 
 const ajv = new Ajv({
@@ -27,7 +28,11 @@ ajvErrors(ajv);
 function testSchema({ schema, object }) {
   const valid = ajv.validate(schema, object);
   if (!valid) {
-    throw new ConfigurationError(ajv.errors[0].message);
+    console.log(ajv.errors);
+    const error = ajv.errors.reverse()[0];
+    const template = nunjucksFunction(error.message);
+    const message = template(error);
+    throw new ConfigurationError(message);
   }
   return true;
 }

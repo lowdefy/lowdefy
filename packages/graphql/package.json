@@ -39,6 +39,7 @@
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
+    "@lowdefy/nunjucks": "1.0.0",
     "@lowdefy/operators": "1.0.1",
     "@sendgrid/mail": "7.3.0",
     "ajv": "6.12.6",

@@ -61,3 +61,13 @@ test('valid connection schema, all properties', () => {
   };
   expect(testSchema({ schema, object: connection })).toBe(true);
 });
+
+test('url is not a string', () => {
+  const connection = {
+    url: true,
+  };
+  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: connection })).toThrow(
+    'AxiosHttp property "url" should be a string.'
+  );
+});
