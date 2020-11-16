@@ -3793,7 +3793,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/operators", "workspace:packages/operators"],
-            ["@sendgrid/mail", "npm:7.3.0"],
+            ["@sendgrid/mail", "npm:7.4.0"],
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.3"],
             ["ajv", "npm:6.12.6"],
             ["apollo-server", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:2.19.0"],
@@ -4343,10 +4343,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@sendgrid/mail", [
-        ["npm:7.3.0", {
-          "packageLocation": "./.yarn/cache/@sendgrid-mail-npm-7.3.0-b0ab85d247-f5532694c6.zip/node_modules/@sendgrid/mail/",
+        ["npm:7.4.0", {
+          "packageLocation": "./.yarn/cache/@sendgrid-mail-npm-7.4.0-d2c6571c36-8412418efb.zip/node_modules/@sendgrid/mail/",
           "packageDependencies": [
-            ["@sendgrid/mail", "npm:7.3.0"],
+            ["@sendgrid/mail", "npm:7.4.0"],
             ["@sendgrid/client", "npm:7.4.0"],
             ["@sendgrid/helpers", "npm:7.4.0"]
           ],
