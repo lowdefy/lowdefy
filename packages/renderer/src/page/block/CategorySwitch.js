@@ -103,7 +103,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             properties={block.eval.properties}
             required={block.eval.required}
             user={rootContext.user}
-            validate={block.eval.validate}
+            validation={block.eval.validation}
             value={block.value}
           />
         </BlockLayout>
@@ -134,7 +134,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             properties={block.eval.properties}
             required={block.eval.required}
             user={rootContext.user}
-            validate={block.eval.validate}
+            validation={block.eval.validation}
           />
         </BlockLayout>
       );

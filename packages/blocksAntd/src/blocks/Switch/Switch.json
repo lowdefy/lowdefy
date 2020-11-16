@@ -2,6 +2,10 @@
   "valueType": "boolean",
   "category": "input",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
   "schema": {
     "properties": {
       "type": "object",
