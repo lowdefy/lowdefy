@@ -38,14 +38,14 @@ const DateRangeSelector = ({
   methods,
   properties,
   required,
-  validate,
+  validation,
   value,
 }) => {
   return (
     <Label
       blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validate={validate}
+      validation={validation}
       required={required}
       loading={loading}
       methods={methods}

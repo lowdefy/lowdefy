@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import RadioSelector from '../src/blocks/RadioSelector/RadioSelector';
 import examples from '../demo/examples/RadioSelector.yaml';
 import meta from '../src/blocks/RadioSelector/RadioSelector.json';
 
-runRenderTests({ examples, Block: RadioSelector, meta });
+runRenderTests({ examples, Block: RadioSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

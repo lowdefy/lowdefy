@@ -39,7 +39,6 @@ test('set block to init', () => {
           {
             type: 'TextInput',
             blockId: 'textInput',
-            defaultValue: 'dV',
             meta: {
               category: 'input',
               valueType: 'string',
@@ -101,7 +100,6 @@ test('Blocks to init with arrayIndices not an array', () => {
           {
             type: 'TextInput',
             blockId: 'textInput',
-            defaultValue: 'dV',
             meta: {
               category: 'input',
               valueType: 'string',
@@ -144,7 +142,6 @@ test('Blocks to init with undefined arrayIndices', () => {
           {
             type: 'TextInput',
             blockId: 'textInput',
-            defaultValue: 'dV',
             meta: {
               category: 'input',
               valueType: 'string',
@@ -165,7 +162,7 @@ test('Blocks to init with undefined arrayIndices', () => {
   expect(context.state).toEqual({ textInput: 'a' });
 });
 
-test('set block enforceType value, no default value, no init', () => {
+test('set block enforceType value no init', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -177,7 +174,6 @@ test('set block enforceType value, no default value, no init', () => {
           {
             type: 'MultipleSelector',
             blockId: 'selector',
-            defaultValue: null,
             meta: {
               category: 'input',
               valueType: 'array',
@@ -197,7 +193,7 @@ test('set block enforceType value, no default value, no init', () => {
   expect(context.state).toEqual({ selector: [] });
 });
 
-test('set block to defaultValue for no init -- CHECK?', () => {
+test('Reset to change blocks back to initState', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -209,7 +205,6 @@ test('set block to defaultValue for no init -- CHECK?', () => {
           {
             type: 'TextInput',
             blockId: 'textInput',
-            defaultValue: 'dV',
             meta: {
               category: 'input',
               valueType: 'string',
@@ -226,41 +221,8 @@ test('set block to defaultValue for no init -- CHECK?', () => {
     initState: { b: 'b' },
   });
   const { textInput } = context.RootBlocks.map;
-  expect(textInput.value).toEqual('dV');
-  expect(context.state).toEqual({ textInput: 'dV', b: 'b' });
-});
-
-test('Reset to change blocks back to defaultValue for no init', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            defaultValue: 'dV',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { b: 'b' },
-  });
-  const { textInput } = context.RootBlocks.map;
-  expect(textInput.value).toEqual('dV');
-  expect(context.state).toEqual({ textInput: 'dV', b: 'b' });
+  expect(textInput.value).toEqual(null);
+  expect(context.state).toEqual({ b: 'b', textInput: null });
   textInput.setValue('new');
   expect(textInput.value).toEqual('new');
   expect(context.state).toEqual({ textInput: 'new', b: 'b' });
@@ -269,8 +231,8 @@ test('Reset to change blocks back to defaultValue for no init', () => {
   context.RootBlocks.reset(serializer.deserializeFromString(context.State.frozenState));
   context.update();
   // ----
-  expect(textInput.value).toEqual('dV');
-  expect(context.state).toEqual({ textInput: 'dV', b: 'b' });
+  expect(textInput.value).toEqual(null);
+  expect(context.state).toEqual({ textInput: null, b: 'b' });
 });
 
 test('state should not have value if block is not visible', () => {
@@ -804,6 +766,58 @@ test('non-input blocks visibility toggle in array', () => {
   swtch1.setValue(false);
   expect(context.state).toEqual({ list: [{ swtch: true }, { swtch: false }] });
   expect(button1.visibleEval.output).toEqual(false);
+});
+
+test('no need to evaluate invisible blocks', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'Button',
+            blockId: 'button',
+            visible: { _state: 'swtch' },
+            meta: {
+              category: 'display',
+            },
+            properties: {
+              field: { _state: 'swtch' },
+            },
+          },
+          {
+            type: 'Switch',
+            blockId: 'swtch',
+            meta: {
+              category: 'input',
+              valueType: 'boolean',
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+    initState: { swtch: true },
+  });
+  expect(context.state).toEqual({ swtch: true });
+  const { button, swtch } = context.RootBlocks.map;
+  expect(button.visibleEval.output).toEqual(true);
+  expect(button.propertiesEval.output.field).toEqual(true);
+  swtch.setValue(false);
+  expect(context.state).toEqual({ swtch: false });
+  expect(button.visibleEval.output).toEqual(false);
+  expect(button.propertiesEval.output.field).toEqual(true);
+  swtch.setValue(true);
+  expect(context.state).toEqual({ swtch: true });
+  expect(button.visibleEval.output).toEqual(true);
+  expect(button.propertiesEval.output.field).toEqual(true);
 });
 
 // TODO: Check again

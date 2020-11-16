@@ -14,7 +14,7 @@ module.exports = [
     mode: 'production',
     target: 'node',
     node: false,
-    externals: { ...dependencies, ...devDependencies },
+    externals: [...Object.keys(dependencies), ...Object.keys(devDependencies)],
     module: {
       rules: [
         {
@@ -49,7 +49,7 @@ module.exports = [
     mode: 'production',
     target: 'node',
     node: false,
-    externals: ['fs', 'path'],
+    externals: ['fs', 'path', 'chokidar'],
     module: {
       rules: [
         {

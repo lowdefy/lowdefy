@@ -26,12 +26,12 @@ import disabledDate from '../../disabledDate';
 
 const WeekPicker = DatePicker.WeekPicker;
 
-const WeekSelector = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const WeekSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
       blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validate={validate}
+      validation={validation}
       required={required}
       loading={loading}
       methods={methods}
