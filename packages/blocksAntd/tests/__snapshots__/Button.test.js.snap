@@ -24,12 +24,19 @@ exports[`Render properties.icon 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.icon_icon"
     list={Array []}
     menus={Array []}
+    required={false}
     role="img"
     user={Object {}}
-    validate={Array []}
+    validation={
+      Object {
+        "errors": Array [],
+        "status": null,
+        "warnings": Array [],
+      }
+    }
   >
     <svg
       aria-hidden="true"

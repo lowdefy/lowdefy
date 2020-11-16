@@ -109,6 +109,7 @@ const PageHeaderMenu = ({
         content: () => (
           <>
             <Header
+              blockId={`${blockId}_header`}
               methods={methods}
               properties={mergeObjects([
                 {
@@ -137,6 +138,7 @@ const PageHeaderMenu = ({
                     <div className={methods.makeCssClass(styles.headerContent)}>
                       <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
                         <Menu
+                          blockId={`${blockId}_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -161,6 +163,7 @@ const PageHeaderMenu = ({
                         )}
                       <div className={methods.makeCssClass([styles.desktop, styles.userAvatar])}>
                         <UserAvatar
+                          blockId={`${blockId}_user_avatar`}
                           methods={methods}
                           user={user}
                           properties={mergeObjects([
@@ -174,6 +177,7 @@ const PageHeaderMenu = ({
                       </div>
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
+                          blockId={`${blockId}_mobile_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -193,6 +197,7 @@ const PageHeaderMenu = ({
               }}
             />
             <Content
+              blockId={`${blockId}_content`}
               methods={methods}
               properties={mergeObjects([properties.content, { style: styles.body }])}
               content={{
@@ -200,6 +205,7 @@ const PageHeaderMenu = ({
                   <>
                     {!type.isNone(properties.breadcrumb) ? (
                       <Breadcrumb
+                        blockId={`${blockId}_breadcrumb`}
                         methods={methods}
                         properties={mergeObjects([
                           properties.breadcrumb,
@@ -216,6 +222,7 @@ const PageHeaderMenu = ({
             />
             {content.footer && (
               <Footer
+                blockId={`${blockId}_footer`}
                 methods={methods}
                 properties={properties.footer}
                 content={{

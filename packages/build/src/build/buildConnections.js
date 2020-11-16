@@ -18,7 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function buildConnections({ components, context }) {
+async function buildConnections({ components }) {
   if (type.isArray(components.connections)) {
     components.connections.forEach((connection) => {
       connection.connectionId = connection.id;

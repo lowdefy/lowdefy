@@ -44,8 +44,13 @@ test('default', () => {
         "registerMethod": [Function],
       },
       "properties": Object {},
+      "required": false,
       "user": Object {},
-      "validate": Array [],
+      "validation": Object {
+        "errors": Array [],
+        "status": null,
+        "warnings": Array [],
+      },
     }
   `);
 });

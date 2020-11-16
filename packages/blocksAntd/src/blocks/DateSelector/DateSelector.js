@@ -24,12 +24,12 @@ import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 import disabledDate from '../../disabledDate';
 
-const DateSelector = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const DateSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
       blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validate={validate}
+      validation={validation}
       required={required}
       loading={loading}
       methods={methods}
@@ -51,6 +51,7 @@ const DateSelector = ({ blockId, loading, methods, properties, required, validat
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />

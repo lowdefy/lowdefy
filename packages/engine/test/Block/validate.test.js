@@ -59,20 +59,29 @@ test('parse validate on fields', () => {
   const { text } = context.RootBlocks.map;
 
   expect(context.state).toEqual({ text: 'a' });
-  expect(text.validateEval.output).toEqual([]);
+  expect(text.validationEval.output).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
   context.showValidationErrors = true;
   context.update();
-  expect(text.validateEval.output).toEqual([{ message: "Not 'c'", pass: false }]);
+  expect(text.validationEval.output).toEqual({
+    errors: ["Not 'c'"],
+    status: 'error',
+    warnings: [],
+  });
 
   text.setValue('c');
-  expect(text.validateEval.output).toEqual([{ message: "Not 'a'", pass: false }]);
+  expect(text.validationEval.output).toEqual({
+    errors: ["Not 'a'"],
+    status: 'error',
+    warnings: [],
+  });
 
   text.setValue('b');
-  expect(text.validateEval.output).toEqual([
-    { message: "Not 'a'", pass: false },
-    { message: "Not 'c'", pass: false },
-  ]);
+  expect(text.validationEval.output).toEqual({
+    errors: ["Not 'a'", "Not 'c'"],
+    status: 'error',
+    warnings: [],
+  });
 });
 
 test('validate should fail if parser has errors', () => {
@@ -111,8 +120,12 @@ test('validate should fail if parser has errors', () => {
 
   context.showValidationErrors = true;
   context.update();
-  expect(text.validateEval.output).toEqual([{ message: 'Parser failed', pass: false }]);
-  expect(text.validateEval.errors.length > 0).toBe(true);
+  expect(text.validationEval.output).toEqual({
+    errors: ['Parser failed'],
+    status: 'error',
+    warnings: [],
+  });
+  expect(text.validationEval.errors.length > 0).toBe(true);
 });
 
 test('validate, only test where parser failed should fail', () => {
@@ -155,7 +168,11 @@ test('validate, only test where parser failed should fail', () => {
 
   context.showValidationErrors = true;
   context.update();
-  expect(text.validateEval.output).toEqual([{ message: 'Parser failed', pass: false }]);
+  expect(text.validationEval.output).toEqual({
+    errors: ['Parser failed'],
+    status: 'error',
+    warnings: [],
+  });
 });
 
 test('parse validate, validate an object not an array', () => {
@@ -174,10 +191,12 @@ test('parse validate, validate an object not an array', () => {
               category: 'input',
               valueType: 'string',
             },
-            validate: {
-              pass: { _regex: { pattern: 'c', key: 'text' } },
-              message: "Not 'c'",
-            },
+            validate: [
+              {
+                pass: { _regex: { pattern: 'c', key: 'text' } },
+                message: "Not 'c'",
+              },
+            ],
           },
         ],
       },
@@ -191,13 +210,17 @@ test('parse validate, validate an object not an array', () => {
   });
   const { text } = context.RootBlocks.map;
   expect(context.state).toEqual({ text: 'a' });
-  expect(text.validateEval.output).toEqual([]);
+  expect(text.validationEval.output).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
   context.showValidationErrors = true;
   context.update();
-  expect(text.validateEval.output).toEqual([{ message: "Not 'c'", pass: false }]);
+  expect(text.validationEval.output).toEqual({
+    errors: ["Not 'c'"],
+    status: 'error',
+    warnings: [],
+  });
   text.setValue('c');
-  expect(text.validateEval.output).toEqual([]);
+  expect(text.validationEval.output).toEqual({ errors: [], status: 'success', warnings: [] });
 });
 
 test('RootBlock.validate() to ignore errors where field not visible', () => {
@@ -273,12 +296,18 @@ test('RootBlock.validate() to ignore errors where field not visible', () => {
   context.showValidationErrors = true;
   context.RootBlocks.update();
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list', validate: [{ message: 'Error 123', pass: false, status: 'error' }] },
+    {
+      blockId: 'list',
+      validation: { errors: ['Error 123'], status: 'error', warnings: [] },
+    },
   ]);
 
   text.setValue('12');
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list', validate: [{ message: 'Error 123', pass: false, status: 'error' }] },
+    {
+      blockId: 'list',
+      validation: { errors: ['Error 123'], status: 'error', warnings: [] },
+    },
   ]);
 
   text.setValue('123');
@@ -287,10 +316,10 @@ test('RootBlock.validate() to ignore errors where field not visible', () => {
   text.setValue('12');
   list.pushItem();
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list', validate: [{ message: 'Error 123', pass: false, status: 'error' }] },
+    { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
-      validate: [{ message: 'Error 1234', pass: false, status: 'error' }],
+      validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
     },
   ]);
 
@@ -299,11 +328,11 @@ test('RootBlock.validate() to ignore errors where field not visible', () => {
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'list.0.innerText',
-      validate: [{ message: 'Error 1234', pass: false, status: 'error' }],
+      validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
     },
     {
       blockId: 'list.1.innerText',
-      validate: [{ message: 'Error 1234', pass: false, status: 'error' }],
+      validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
     },
   ]);
 
@@ -315,14 +344,14 @@ test('RootBlock.validate() to ignore errors where field not visible', () => {
 
   text.setValue('12');
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list', validate: [{ message: 'Error 123', pass: false, status: 'error' }] },
+    { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
-      validate: [{ message: 'Error 1234', pass: false, status: 'error' }],
+      validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
     },
     {
       blockId: 'list.1.innerText',
-      validate: [{ message: 'Error 1234', pass: false, status: 'error' }],
+      validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
     },
   ]);
 });
@@ -363,13 +392,7 @@ test('required on input to return validation error on RootBlock.validate()', () 
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'text',
-      validate: [
-        {
-          message: 'This field is required',
-          pass: false,
-          status: 'error',
-        },
-      ],
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
@@ -378,13 +401,7 @@ test('required on input to return validation error on RootBlock.validate()', () 
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'text',
-      validate: [
-        {
-          message: 'This field is required',
-          pass: false,
-          status: 'error',
-        },
-      ],
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
 });
@@ -432,31 +449,22 @@ test('required on input to return validation error with priority over validation
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'text',
-      validate: [
-        {
-          message: 'This field is required',
-          pass: false,
-          status: 'error',
-        },
-        {
-          message: 'Error 1234',
-          pass: false,
-          status: 'error',
-        },
-      ],
+      validation: {
+        errors: ['This field is required', 'Error 1234'],
+        status: 'error',
+        warnings: [],
+      },
     },
   ]);
   text.setValue('a');
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'text',
-      validate: [
-        {
-          message: 'Error 1234',
-          pass: false,
-          status: 'error',
-        },
-      ],
+      validation: {
+        errors: ['Error 1234'],
+        status: 'error',
+        warnings: [],
+      },
     },
   ]);
   text.setValue('1234');
@@ -465,18 +473,11 @@ test('required on input to return validation error with priority over validation
   expect(context.RootBlocks.validate()).toEqual([
     {
       blockId: 'text',
-      validate: [
-        {
-          message: 'This field is required',
-          pass: false,
-          status: 'error',
-        },
-        {
-          message: 'Error 1234',
-          pass: false,
-          status: 'error',
-        },
-      ],
+      validation: {
+        errors: ['This field is required', 'Error 1234'],
+        status: 'error',
+        warnings: [],
+      },
     },
   ]);
 });
@@ -511,7 +512,6 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
                   {
                     type: 'Switch',
                     blockId: 'list.$.swtch',
-                    defaultValue: true,
                     meta: {
                       category: 'input',
                       valueType: 'boolean',
@@ -579,7 +579,13 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     rootBlock,
     pageId,
     initState: {
-      list: [null, null, { innerList: [{ number: 1 }] }, { innerList: [{ number: 2 }] }, null],
+      list: [
+        { swtch: true },
+        { swtch: false },
+        { innerList: [{ number: 1 }] },
+        { innerList: [{ number: 2 }] },
+        { swtch: true },
+      ],
     },
   });
   const { text } = context.RootBlocks.map;
@@ -588,9 +594,9 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     text: null,
     list: [
       { innerList: [], swtch: true },
-      { innerList: [], swtch: true },
-      { innerList: [{ number: 1 }], swtch: true },
-      { innerList: [{ number: 2 }], swtch: true },
+      { innerList: [], swtch: false },
+      { innerList: [{ number: 1 }], swtch: false },
+      { innerList: [{ number: 2 }], swtch: false },
       { innerList: [], swtch: true },
     ],
   });
@@ -600,9 +606,9 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     text: 'a',
     list: [
       { innerList: [], swtch: true },
-      { innerList: [], swtch: true },
-      { innerList: [{ number: 1 }], swtch: true },
-      { innerList: [{ number: 2 }], swtch: true },
+      { innerList: [], swtch: false },
+      { innerList: [{ number: 1 }], swtch: false },
+      { innerList: [{ number: 2 }], swtch: false },
       { innerList: [], swtch: true },
     ],
   });
@@ -611,44 +617,165 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
   context.showValidationErrors = true;
   context.RootBlocks.update();
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list.0.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.1.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.2.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.0.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.1.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.2.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
     {
       blockId: 'list.2.innerList.0.number',
-      validate: [{ message: 'Error 1', pass: false, status: 'error' }],
+      validation: {
+        errors: ['Error 1'],
+        status: 'error',
+        warnings: [],
+      },
     },
-    { blockId: 'list.3.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.3.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
     {
       blockId: 'list.3.innerList.0.number',
-      validate: [{ message: 'Error 1', pass: false, status: 'error' }],
+      validation: {
+        errors: ['Error 1'],
+        status: 'error',
+        warnings: [],
+      },
     },
-    { blockId: 'list.4.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.4.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
   ]);
   text.setValue('1');
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list.0.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.1.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.2.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.3.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.4.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.0.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.1.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.2.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.3.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.4.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
   ]);
   text.setValue('12');
   expect(context.RootBlocks.validate()).toEqual([]);
   text.setValue('0');
   expect(context.RootBlocks.validate()).toEqual([
-    { blockId: 'list.0.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.1.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
-    { blockId: 'list.2.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.0.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.1.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
+    {
+      blockId: 'list.2.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
     {
       blockId: 'list.2.innerList.0.number',
-      validate: [{ message: 'Error 1', pass: false, status: 'error' }],
+      validation: {
+        errors: ['Error 1'],
+        status: 'error',
+        warnings: [],
+      },
     },
-    { blockId: 'list.3.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.3.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
     {
       blockId: 'list.3.innerList.0.number',
-      validate: [{ message: 'Error 1', pass: false, status: 'error' }],
+      validation: {
+        errors: ['Error 1'],
+        status: 'error',
+        warnings: [],
+      },
     },
-    { blockId: 'list.4.swtch', validate: [{ message: 'Error 12', pass: false, status: 'error' }] },
+    {
+      blockId: 'list.4.swtch',
+      validation: {
+        errors: ['Error 12'],
+        status: 'error',
+        warnings: [],
+      },
+    },
   ]);
 });
