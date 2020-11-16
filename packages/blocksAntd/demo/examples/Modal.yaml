@@ -11,3 +11,84 @@
       blocks:
         - id: testArea
           type: Test
+- id: "properties: centered: true"
+  type: Modal
+  properties:
+    centered: true
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: closable: false"
+  type: Modal
+  properties:
+    closable: false
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: footer: false"
+  type: Modal
+  properties:
+    footer: false
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: mask: false"
+  type: Modal
+  properties:
+    mask: false
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: maskClosable: false"
+  type: Modal
+  properties:
+    maskClosable: false
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: okText: Text of the OK button"
+  type: Modal
+  properties:
+    okText: Text of the OK button
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: cancelText: Text of the Cancel button "
+  type: Modal
+  properties:
+    cancelText: Text of the Cancel button
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: width: 550px - 520px is default"
+  type: Modal
+  properties:
+    width: 550px
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
+- id: "properties: zIndex: 1200 - 1000 is the default"
+  type: Modal
+  properties:
+    zIndex: 1200
+  areas:
+    content:
+      blocks:
+        - id: testArea
+          type: Test
