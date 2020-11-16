@@ -15,6 +15,7 @@
 */
 
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import { Slider } from 'antd';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
@@ -69,7 +70,7 @@ const styles = {
   },
 };
 
-const RatingSlider = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const RatingSlider = ({ blockId, loading, methods, properties, required, validation, value }) => {
   const [check, unCheck] = useState(false);
   let propertiesIconMin = serializer.copy(properties.minIcon);
   if (type.isString(propertiesIconMin)) {
@@ -82,8 +83,11 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
   const minMax = [get(properties, 'max', { default: 10 }), properties.min || 0].sort(
     (a, b) => a - b
   );
+
   // round to fix floating point error
   const minMin = parseFloat((minMax[0] - (properties.step || 1)).toPrecision(8));
+  const validationColor =
+    validation.status === 'error' ? '#ff4d4f' : validation.status === 'warning' ? '#faad14' : null;
   return (
     <Label
       blockId={blockId}
@@ -91,10 +95,18 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
-      validate={validate}
+      validation={validation}
       content={{
         content: () => (
-          <div className={methods.makeCssClass(styles.content)}>
+          <div
+            className={methods.makeCssClass([
+              styles.content,
+              {
+                paddingRight: validation.status && 30,
+                paddingTop: 18,
+              },
+            ])}
+          >
             {!required && !properties.disableNotApplicable && (
               <CheckboxSelector
                 properties={mergeObjects([
@@ -135,17 +147,24 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             )}
             <Slider
               id={`${blockId}_input`}
-              className={methods.makeCssClass([
-                properties.color && {
-                  '& > div.ant-slider-track': { backgroundColor: `${properties.color} !important` },
-                  '& > div.ant-slider-handle': { borderColor: `${properties.color} !important` },
-                  '& > div.ant-slider-step > span.ant-slider-dot-active': {
-                    borderColor: `${properties.color} !important`,
+              className={classNames(
+                methods.makeCssClass([
+                  properties.color && {
+                    '& > div.ant-slider-track': {
+                      backgroundColor: `${properties.color} !important`,
+                    },
+                    '& > div.ant-slider-handle': { borderColor: `${properties.color} !important` },
+                    '& > div.ant-slider-step > span.ant-slider-dot-active': {
+                      borderColor: `${properties.color} !important`,
+                    },
                   },
-                },
-                styles.slider,
-                properties.inputStyle,
-              ])}
+                  validationColor && {
+                    '& > div.ant-slider-rail': { backgroundColor: `${validationColor} !important` },
+                  },
+                ]),
+                methods.makeCssClass(styles.slider),
+                methods.makeCssClass(properties.inputStyle)
+              )}
               autoFocus={properties.autoFocus}
               disabled={properties.disabled || (check === true && !properties.disableNotApplicable)}
               dots={get(properties, 'showDots', { default: true })}

@@ -92,15 +92,18 @@ test('Validate', async () => {
     initState: { a: 'init' },
   });
   const { button, text1 } = context.RootBlocks.map;
-  expect(text1.validateEval.output).toEqual([]);
+  expect(text1.validationEval.output).toEqual({
+    errors: ['text1 does not match pattern 12'],
+    status: null,
+    warnings: [],
+  });
   context.showValidationErrors = true;
   context.update();
-  expect(text1.validateEval.output).toEqual([
-    {
-      message: 'text1 does not match pattern 12',
-      pass: false,
-    },
-  ]);
+  expect(text1.validationEval.output).toEqual({
+    errors: ['text1 does not match pattern 12'],
+    status: 'error',
+    warnings: [],
+  });
   await button.callAction({ action: 'onClick' });
   expect(button.BlockActions.actions.onClick.calls[0].error).toEqual([
     {

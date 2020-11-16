@@ -82,9 +82,10 @@ class BlockActions {
   }
 
   createCall(actions) {
+    const fnActions = this.context.Actions.build(actions);
     return (args) =>
       new Promise((resolve, reject) => {
-        this.callRec(args, this.context.Actions.build(actions), [], resolve, reject);
+        this.callRec(args, fnActions, [], resolve, reject);
       });
   }
 

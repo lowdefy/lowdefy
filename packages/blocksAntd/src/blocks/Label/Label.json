@@ -1,6 +1,10 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -30,11 +34,6 @@
           "type": "string",
           "description": "Label title."
         },
-        "hasFeedback": {
-          "type": "boolean",
-          "defaultValue": true,
-          "description": "Display feedback extra from validation, this does not disable validation."
-        },
         "extraStyle": {
           "type": "object",
           "description": "Css style to applied to label extra."
@@ -42,6 +41,15 @@
         "feedbackStyle": {
           "type": "object",
           "description": "Css style to applied to label feedback."
+        },
+        "span": {
+          "type": "number",
+          "description": "Label inline span."
+        },
+        "inline": {
+          "type": "boolean",
+          "defaultValue": false,
+          "description": "Render input and label inline."
         }
       }
     }

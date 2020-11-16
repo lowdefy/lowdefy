@@ -25,7 +25,15 @@ import getUniqueValues from '../../getUniqueValues';
 
 const Option = Select.Option;
 
-const MultipleSelector = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const MultipleSelector = ({
+  blockId,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
@@ -34,7 +42,7 @@ const MultipleSelector = ({ blockId, loading, methods, properties, required, val
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
-      validate={validate}
+      validation={validation}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>

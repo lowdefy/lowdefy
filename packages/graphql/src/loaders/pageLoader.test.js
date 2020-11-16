@@ -25,7 +25,7 @@ test('load page', async () => {
   const res = await pageLoader.load('page1');
   expect(res).toEqual({
     id: 'page:page1',
-    type: 'PageSiderMenu',
+    type: 'TestPage',
   });
 });
 
