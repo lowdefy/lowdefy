@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -48,7 +48,7 @@
     "dataloader": "2.0.0",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
-    "mongodb": "3.6.2"
+    "mongodb": "3.6.3"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",

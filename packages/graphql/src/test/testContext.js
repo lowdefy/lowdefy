@@ -16,32 +16,22 @@
 
 import createGetController from '../context/getController';
 
-function testBootstrapContext({ loaders, getConnectionSecrets } = {}) {
+function testBootstrapContext({ loaders, getSecrets } = {}) {
   const bootstrapContext = {
-    DEPLOYMENT_ID: 'test',
-    DEPLOYMENT_NAME: 'Test App',
-    DOMAIN_NAME: 'test.com',
     CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
-    ORIGIN: 'test.com',
-    HOST: 'test.com',
     getLoader: loaders ? (name) => loaders[name] : () => {},
     getController: () => {},
-    getConnectionSecrets: getConnectionSecrets || (() => {}),
+    getSecrets: getSecrets || (() => {}),
     logger: { log: () => {} },
   };
   bootstrapContext.getController = createGetController(bootstrapContext);
   return bootstrapContext;
 }
 
-function testContext({ loaders } = {}) {
+function testContext({ loaders, getSecrets } = {}) {
   const bootstrapContext = {
-    DEPLOYMENT_ID: 'test',
-    DEPLOYMENT_NAME: 'Test App',
-    DOMAIN_NAME: 'test.com',
-    ORIGIN: 'test.com',
-    HOST: 'test.com',
     getLoader: (name) => loaders[name],
-    getConnectionSecrets: () => {},
+    getSecrets: getSecrets || (() => {}),
     logger: { log: () => {} },
   };
   bootstrapContext.getController = createGetController(bootstrapContext);

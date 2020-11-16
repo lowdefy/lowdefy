@@ -34,7 +34,7 @@ const secrets = {
   REQUEST: 'requestSecret',
 };
 
-const getConnectionSecrets = () => secrets;
+const getSecrets = () => secrets;
 
 const mockLoadConnection = jest.fn();
 const mockLoadRequest = jest.fn();
@@ -47,7 +47,7 @@ const loaders = {
   },
 };
 
-const context = testBootstrapContext({ loaders, getConnectionSecrets });
+const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
   args: {},

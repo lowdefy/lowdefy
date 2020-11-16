@@ -30,11 +30,10 @@ function validateConnection(connectionData, requestData) {
 }
 
 class RequestController {
-  constructor({ getController, getLoader, getConnectionSecrets }) {
-    this.getConnectionSecrets = getConnectionSecrets;
+  constructor({ getLoader, getSecrets }) {
+    this.getSecrets = getSecrets;
     this.requestLoader = getLoader('request');
     this.connectionLoader = getLoader('connection');
-    this.pageController = getController('page');
   }
 
   async callRequest({
@@ -58,11 +57,13 @@ class RequestController {
 
     const requestType = get(requestData, 'type');
 
+    const secrets = await this.getSecrets();
+
     const operatorsParser = new NodeParser({
       arrayIndices,
       input,
       lowdefyGlobal,
-      secrets: this.getConnectionSecrets(),
+      secrets,
       state,
       urlQuery,
     });
