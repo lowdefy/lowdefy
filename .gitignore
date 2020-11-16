@@ -6,6 +6,7 @@
 **/coverage/*
 **/.lowdefy/*
 **/lowdefy.yaml
+**/.env
 
 .DS_Store
 

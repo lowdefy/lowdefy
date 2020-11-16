@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/renderer",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
     "@lowdefy/block-tools": "1.0.2",
-    "@lowdefy/engine": "0.0.0-alpha.3",
+    "@lowdefy/engine": "0.0.0-alpha.4",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/layout": "1.0.0",
     "graphql": "15.4.0",
