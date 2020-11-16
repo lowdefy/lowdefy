@@ -3,7 +3,7 @@
 exports[`Render default 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="default_Login"
+  id="default_button"
   onClick={[Function]}
   type="button"
 >
@@ -11,7 +11,7 @@ exports[`Render default 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="default_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -49,7 +49,7 @@ exports[`Render default 1`] = `
 exports[`Render properties.avatar.shape: square 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.avatar.shape: square_Login"
+  id="properties.avatar.shape: square_button"
   onClick={[Function]}
   type="button"
 >
@@ -57,7 +57,7 @@ exports[`Render properties.avatar.shape: square 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.avatar.shape: square_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -97,7 +97,7 @@ exports[`Render properties.disabled: true 1`] = `""`;
 exports[`Render properties.loggedIn: false 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.loggedIn: false_Login"
+  id="properties.loggedIn: false_button"
   onClick={[Function]}
   type="button"
 >
@@ -105,7 +105,7 @@ exports[`Render properties.loggedIn: false 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.loggedIn: false_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -143,7 +143,7 @@ exports[`Render properties.loggedIn: false 1`] = `
 exports[`Render properties.loginButton 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.loginButton_Login"
+  id="properties.loginButton_button"
   onClick={[Function]}
   type="button"
 >
@@ -151,7 +151,7 @@ exports[`Render properties.loginButton 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.loginButton_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -189,7 +189,7 @@ exports[`Render properties.loginButton 1`] = `
 exports[`Render properties.name 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.name_Login"
+  id="properties.name_button"
   onClick={[Function]}
   type="button"
 >
@@ -197,7 +197,7 @@ exports[`Render properties.name 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.name_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -235,7 +235,7 @@ exports[`Render properties.name 1`] = `
 exports[`Render properties.showName: left 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.showName: left_Login"
+  id="properties.showName: left_button"
   onClick={[Function]}
   type="button"
 >
@@ -243,7 +243,7 @@ exports[`Render properties.showName: left 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.showName: left_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -281,7 +281,7 @@ exports[`Render properties.showName: left 1`] = `
 exports[`Render properties.showName: none 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.showName: none_Login"
+  id="properties.showName: none_button"
   onClick={[Function]}
   type="button"
 >
@@ -289,7 +289,7 @@ exports[`Render properties.showName: none 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.showName: none_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -327,7 +327,7 @@ exports[`Render properties.showName: none 1`] = `
 exports[`Render properties.showName: right 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.showName: right_Login"
+  id="properties.showName: right_button"
   onClick={[Function]}
   type="button"
 >
@@ -335,7 +335,7 @@ exports[`Render properties.showName: right 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.showName: right_button_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -373,7 +373,7 @@ exports[`Render properties.showName: right 1`] = `
 exports[`Render properties.theme: dark 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
-  id="properties.theme: dark_Login"
+  id="properties.theme: dark_button"
   onClick={[Function]}
   type="button"
 >
@@ -381,7 +381,7 @@ exports[`Render properties.theme: dark 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.theme: dark_button_icon"
     list={Array []}
     menus={Array []}
     required={false}

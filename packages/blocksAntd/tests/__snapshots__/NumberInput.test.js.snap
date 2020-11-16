@@ -3,6 +3,7 @@
 exports[`Render default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15,10 +16,10 @@ exports[`Render default 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -135,6 +136,7 @@ exports[`Render default 1`] = `
 exports[`Render properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -147,10 +149,10 @@ exports[`Render properties.autoFocus: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -268,6 +270,7 @@ exports[`Render properties.autoFocus: true 1`] = `
 exports[`Render properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -280,10 +283,10 @@ exports[`Render properties.disabled: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -403,6 +406,7 @@ exports[`Render properties.disabled: true 1`] = `
 exports[`Render properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -415,10 +419,10 @@ exports[`Render properties.inputStyle: CSS style applied 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -535,6 +539,7 @@ exports[`Render properties.inputStyle: CSS style applied 1`] = `
 exports[`Render properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -547,10 +552,10 @@ exports[`Render properties.label align: right 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -667,6 +672,7 @@ exports[`Render properties.label align: right 1`] = `
 exports[`Render properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -679,10 +685,10 @@ exports[`Render properties.label colon: false 1`] = `
   >
     <label
       className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -799,6 +805,7 @@ exports[`Render properties.label colon: false 1`] = `
 exports[`Render properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -919,6 +926,7 @@ exports[`Render properties.label disabled: true 1`] = `
 exports[`Render properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -931,10 +939,10 @@ exports[`Render properties.label extra: showing extra 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -1056,6 +1064,7 @@ exports[`Render properties.label extra: showing extra 1`] = `
 exports[`Render properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1072,10 +1081,10 @@ exports[`Render properties.label inline: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -1196,6 +1205,7 @@ exports[`Render properties.label inline: true 1`] = `
 exports[`Render properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1208,10 +1218,10 @@ exports[`Render properties.label span: 5 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -1328,6 +1338,7 @@ exports[`Render properties.label span: 5 1`] = `
 exports[`Render properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1340,10 +1351,10 @@ exports[`Render properties.placeholder: Please enter a number between 10 and 250
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -1461,6 +1472,7 @@ exports[`Render properties.placeholder: Please enter a number between 10 and 250
 exports[`Render properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1473,10 +1485,10 @@ exports[`Render properties.size: large 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -1593,6 +1605,7 @@ exports[`Render properties.size: large 1`] = `
 exports[`Render properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1605,10 +1618,10 @@ exports[`Render properties.size: small 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -1725,6 +1738,7 @@ exports[`Render properties.size: small 1`] = `
 exports[`Render properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1737,7 +1751,7 @@ exports[`Render properties.title 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -1857,6 +1871,7 @@ exports[`Render properties.title 1`] = `
 exports[`Render property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -1869,10 +1884,10 @@ exports[`Render property.decimalSeparator: "," 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -1989,6 +2004,7 @@ exports[`Render property.decimalSeparator: "," 1`] = `
 exports[`Render property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2001,10 +2017,10 @@ exports[`Render property.max: 250 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -2121,6 +2137,7 @@ exports[`Render property.max: 250 1`] = `
 exports[`Render property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2133,10 +2150,10 @@ exports[`Render property.min: 10 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -2253,6 +2270,7 @@ exports[`Render property.min: 10 1`] = `
 exports[`Render property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2265,10 +2283,10 @@ exports[`Render property.precision: 1 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -2385,6 +2403,7 @@ exports[`Render property.precision: 1 1`] = `
 exports[`Render property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2397,10 +2416,10 @@ exports[`Render property.step: 3 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
@@ -2517,6 +2536,7 @@ exports[`Render property.step: 3 1`] = `
 exports[`Render required = true default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2529,10 +2549,10 @@ exports[`Render required = true default 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -2649,6 +2669,7 @@ exports[`Render required = true default 1`] = `
 exports[`Render required = true properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2661,10 +2682,10 @@ exports[`Render required = true properties.autoFocus: true 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -2782,6 +2803,7 @@ exports[`Render required = true properties.autoFocus: true 1`] = `
 exports[`Render required = true properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2794,10 +2816,10 @@ exports[`Render required = true properties.disabled: true 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -2917,6 +2939,7 @@ exports[`Render required = true properties.disabled: true 1`] = `
 exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -2929,10 +2952,10 @@ exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -3049,6 +3072,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
 exports[`Render required = true properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3061,10 +3085,10 @@ exports[`Render required = true properties.label align: right 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -3181,6 +3205,7 @@ exports[`Render required = true properties.label align: right 1`] = `
 exports[`Render required = true properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3193,10 +3218,10 @@ exports[`Render required = true properties.label colon: false 1`] = `
   >
     <label
       className="ant-form-item-required ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -3313,6 +3338,7 @@ exports[`Render required = true properties.label colon: false 1`] = `
 exports[`Render required = true properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3433,6 +3459,7 @@ exports[`Render required = true properties.label disabled: true 1`] = `
 exports[`Render required = true properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3445,10 +3472,10 @@ exports[`Render required = true properties.label extra: showing extra 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -3570,6 +3597,7 @@ exports[`Render required = true properties.label extra: showing extra 1`] = `
 exports[`Render required = true properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3586,10 +3614,10 @@ exports[`Render required = true properties.label inline: true 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -3710,6 +3738,7 @@ exports[`Render required = true properties.label inline: true 1`] = `
 exports[`Render required = true properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3722,10 +3751,10 @@ exports[`Render required = true properties.label span: 5 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -3842,6 +3871,7 @@ exports[`Render required = true properties.label span: 5 1`] = `
 exports[`Render required = true properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3854,10 +3884,10 @@ exports[`Render required = true properties.placeholder: Please enter a number be
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -3975,6 +4005,7 @@ exports[`Render required = true properties.placeholder: Please enter a number be
 exports[`Render required = true properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -3987,10 +4018,10 @@ exports[`Render required = true properties.size: large 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -4107,6 +4138,7 @@ exports[`Render required = true properties.size: large 1`] = `
 exports[`Render required = true properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4119,10 +4151,10 @@ exports[`Render required = true properties.size: small 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -4239,6 +4271,7 @@ exports[`Render required = true properties.size: small 1`] = `
 exports[`Render required = true properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4251,7 +4284,7 @@ exports[`Render required = true properties.title 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -4371,6 +4404,7 @@ exports[`Render required = true properties.title 1`] = `
 exports[`Render required = true property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4383,10 +4417,10 @@ exports[`Render required = true property.decimalSeparator: "," 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -4503,6 +4537,7 @@ exports[`Render required = true property.decimalSeparator: "," 1`] = `
 exports[`Render required = true property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4515,10 +4550,10 @@ exports[`Render required = true property.max: 250 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -4635,6 +4670,7 @@ exports[`Render required = true property.max: 250 1`] = `
 exports[`Render required = true property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4647,10 +4683,10 @@ exports[`Render required = true property.min: 10 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -4767,6 +4803,7 @@ exports[`Render required = true property.min: 10 1`] = `
 exports[`Render required = true property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4779,10 +4816,10 @@ exports[`Render required = true property.precision: 1 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -4899,6 +4936,7 @@ exports[`Render required = true property.precision: 1 1`] = `
 exports[`Render required = true property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -4911,10 +4949,10 @@ exports[`Render required = true property.step: 3 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
@@ -5031,6 +5069,7 @@ exports[`Render required = true property.step: 3 1`] = `
 exports[`Render validation.status = error default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5043,10 +5082,10 @@ exports[`Render validation.status = error default 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -5192,6 +5231,7 @@ exports[`Render validation.status = error default 1`] = `
 exports[`Render validation.status = error properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5204,10 +5244,10 @@ exports[`Render validation.status = error properties.autoFocus: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -5354,6 +5394,7 @@ exports[`Render validation.status = error properties.autoFocus: true 1`] = `
 exports[`Render validation.status = error properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5366,10 +5407,10 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -5518,6 +5559,7 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
 exports[`Render validation.status = error properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5530,10 +5572,10 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -5679,6 +5721,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
 exports[`Render validation.status = error properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5691,10 +5734,10 @@ exports[`Render validation.status = error properties.label align: right 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -5840,6 +5883,7 @@ exports[`Render validation.status = error properties.label align: right 1`] = `
 exports[`Render validation.status = error properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -5852,10 +5896,10 @@ exports[`Render validation.status = error properties.label colon: false 1`] = `
   >
     <label
       className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -6001,6 +6045,7 @@ exports[`Render validation.status = error properties.label colon: false 1`] = `
 exports[`Render validation.status = error properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6150,6 +6195,7 @@ exports[`Render validation.status = error properties.label disabled: true 1`] = 
 exports[`Render validation.status = error properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6162,10 +6208,10 @@ exports[`Render validation.status = error properties.label extra: showing extra 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -6311,6 +6357,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
 exports[`Render validation.status = error properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6327,10 +6374,10 @@ exports[`Render validation.status = error properties.label inline: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -6480,6 +6527,7 @@ exports[`Render validation.status = error properties.label inline: true 1`] = `
 exports[`Render validation.status = error properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6492,10 +6540,10 @@ exports[`Render validation.status = error properties.label span: 5 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -6641,6 +6689,7 @@ exports[`Render validation.status = error properties.label span: 5 1`] = `
 exports[`Render validation.status = error properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6653,10 +6702,10 @@ exports[`Render validation.status = error properties.placeholder: Please enter a
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -6803,6 +6852,7 @@ exports[`Render validation.status = error properties.placeholder: Please enter a
 exports[`Render validation.status = error properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6815,10 +6865,10 @@ exports[`Render validation.status = error properties.size: large 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -6964,6 +7014,7 @@ exports[`Render validation.status = error properties.size: large 1`] = `
 exports[`Render validation.status = error properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -6976,10 +7027,10 @@ exports[`Render validation.status = error properties.size: small 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -7125,6 +7176,7 @@ exports[`Render validation.status = error properties.size: small 1`] = `
 exports[`Render validation.status = error properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7137,7 +7189,7 @@ exports[`Render validation.status = error properties.title 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -7286,6 +7338,7 @@ exports[`Render validation.status = error properties.title 1`] = `
 exports[`Render validation.status = error property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7298,10 +7351,10 @@ exports[`Render validation.status = error property.decimalSeparator: "," 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -7447,6 +7500,7 @@ exports[`Render validation.status = error property.decimalSeparator: "," 1`] = `
 exports[`Render validation.status = error property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7459,10 +7513,10 @@ exports[`Render validation.status = error property.max: 250 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -7608,6 +7662,7 @@ exports[`Render validation.status = error property.max: 250 1`] = `
 exports[`Render validation.status = error property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7620,10 +7675,10 @@ exports[`Render validation.status = error property.min: 10 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -7769,6 +7824,7 @@ exports[`Render validation.status = error property.min: 10 1`] = `
 exports[`Render validation.status = error property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7781,10 +7837,10 @@ exports[`Render validation.status = error property.precision: 1 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -7930,6 +7986,7 @@ exports[`Render validation.status = error property.precision: 1 1`] = `
 exports[`Render validation.status = error property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -7942,10 +7999,10 @@ exports[`Render validation.status = error property.step: 3 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
@@ -8091,6 +8148,7 @@ exports[`Render validation.status = error property.step: 3 1`] = `
 exports[`Render validation.status = null default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8103,10 +8161,10 @@ exports[`Render validation.status = null default 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -8223,6 +8281,7 @@ exports[`Render validation.status = null default 1`] = `
 exports[`Render validation.status = null properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8235,10 +8294,10 @@ exports[`Render validation.status = null properties.autoFocus: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -8356,6 +8415,7 @@ exports[`Render validation.status = null properties.autoFocus: true 1`] = `
 exports[`Render validation.status = null properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8368,10 +8428,10 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -8491,6 +8551,7 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
 exports[`Render validation.status = null properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8503,10 +8564,10 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -8623,6 +8684,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
 exports[`Render validation.status = null properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8635,10 +8697,10 @@ exports[`Render validation.status = null properties.label align: right 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -8755,6 +8817,7 @@ exports[`Render validation.status = null properties.label align: right 1`] = `
 exports[`Render validation.status = null properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -8767,10 +8830,10 @@ exports[`Render validation.status = null properties.label colon: false 1`] = `
   >
     <label
       className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -8887,6 +8950,7 @@ exports[`Render validation.status = null properties.label colon: false 1`] = `
 exports[`Render validation.status = null properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9007,6 +9071,7 @@ exports[`Render validation.status = null properties.label disabled: true 1`] = `
 exports[`Render validation.status = null properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9019,10 +9084,10 @@ exports[`Render validation.status = null properties.label extra: showing extra 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -9144,6 +9209,7 @@ exports[`Render validation.status = null properties.label extra: showing extra 1
 exports[`Render validation.status = null properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9160,10 +9226,10 @@ exports[`Render validation.status = null properties.label inline: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -9284,6 +9350,7 @@ exports[`Render validation.status = null properties.label inline: true 1`] = `
 exports[`Render validation.status = null properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9296,10 +9363,10 @@ exports[`Render validation.status = null properties.label span: 5 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -9416,6 +9483,7 @@ exports[`Render validation.status = null properties.label span: 5 1`] = `
 exports[`Render validation.status = null properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9428,10 +9496,10 @@ exports[`Render validation.status = null properties.placeholder: Please enter a 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -9549,6 +9617,7 @@ exports[`Render validation.status = null properties.placeholder: Please enter a 
 exports[`Render validation.status = null properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9561,10 +9630,10 @@ exports[`Render validation.status = null properties.size: large 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -9681,6 +9750,7 @@ exports[`Render validation.status = null properties.size: large 1`] = `
 exports[`Render validation.status = null properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9693,10 +9763,10 @@ exports[`Render validation.status = null properties.size: small 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -9813,6 +9883,7 @@ exports[`Render validation.status = null properties.size: small 1`] = `
 exports[`Render validation.status = null properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9825,7 +9896,7 @@ exports[`Render validation.status = null properties.title 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -9945,6 +10016,7 @@ exports[`Render validation.status = null properties.title 1`] = `
 exports[`Render validation.status = null property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -9957,10 +10029,10 @@ exports[`Render validation.status = null property.decimalSeparator: "," 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -10077,6 +10149,7 @@ exports[`Render validation.status = null property.decimalSeparator: "," 1`] = `
 exports[`Render validation.status = null property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10089,10 +10162,10 @@ exports[`Render validation.status = null property.max: 250 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -10209,6 +10282,7 @@ exports[`Render validation.status = null property.max: 250 1`] = `
 exports[`Render validation.status = null property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10221,10 +10295,10 @@ exports[`Render validation.status = null property.min: 10 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -10341,6 +10415,7 @@ exports[`Render validation.status = null property.min: 10 1`] = `
 exports[`Render validation.status = null property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10353,10 +10428,10 @@ exports[`Render validation.status = null property.precision: 1 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -10473,6 +10548,7 @@ exports[`Render validation.status = null property.precision: 1 1`] = `
 exports[`Render validation.status = null property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10485,10 +10561,10 @@ exports[`Render validation.status = null property.step: 3 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
@@ -10605,6 +10681,7 @@ exports[`Render validation.status = null property.step: 3 1`] = `
 exports[`Render validation.status = success default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10617,10 +10694,10 @@ exports[`Render validation.status = success default 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -10761,6 +10838,7 @@ exports[`Render validation.status = success default 1`] = `
 exports[`Render validation.status = success properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10773,10 +10851,10 @@ exports[`Render validation.status = success properties.autoFocus: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -10918,6 +10996,7 @@ exports[`Render validation.status = success properties.autoFocus: true 1`] = `
 exports[`Render validation.status = success properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -10930,10 +11009,10 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -11077,6 +11156,7 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
 exports[`Render validation.status = success properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11089,10 +11169,10 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -11233,6 +11313,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
 exports[`Render validation.status = success properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11245,10 +11326,10 @@ exports[`Render validation.status = success properties.label align: right 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -11389,6 +11470,7 @@ exports[`Render validation.status = success properties.label align: right 1`] = 
 exports[`Render validation.status = success properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11401,10 +11483,10 @@ exports[`Render validation.status = success properties.label colon: false 1`] = 
   >
     <label
       className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -11545,6 +11627,7 @@ exports[`Render validation.status = success properties.label colon: false 1`] = 
 exports[`Render validation.status = success properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11689,6 +11772,7 @@ exports[`Render validation.status = success properties.label disabled: true 1`] 
 exports[`Render validation.status = success properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11701,10 +11785,10 @@ exports[`Render validation.status = success properties.label extra: showing extr
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -11850,6 +11934,7 @@ exports[`Render validation.status = success properties.label extra: showing extr
 exports[`Render validation.status = success properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -11866,10 +11951,10 @@ exports[`Render validation.status = success properties.label inline: true 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -12014,6 +12099,7 @@ exports[`Render validation.status = success properties.label inline: true 1`] = 
 exports[`Render validation.status = success properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12026,10 +12112,10 @@ exports[`Render validation.status = success properties.label span: 5 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -12170,6 +12256,7 @@ exports[`Render validation.status = success properties.label span: 5 1`] = `
 exports[`Render validation.status = success properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12182,10 +12269,10 @@ exports[`Render validation.status = success properties.placeholder: Please enter
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -12327,6 +12414,7 @@ exports[`Render validation.status = success properties.placeholder: Please enter
 exports[`Render validation.status = success properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12339,10 +12427,10 @@ exports[`Render validation.status = success properties.size: large 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -12483,6 +12571,7 @@ exports[`Render validation.status = success properties.size: large 1`] = `
 exports[`Render validation.status = success properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12495,10 +12584,10 @@ exports[`Render validation.status = success properties.size: small 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -12639,6 +12728,7 @@ exports[`Render validation.status = success properties.size: small 1`] = `
 exports[`Render validation.status = success properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12651,7 +12741,7 @@ exports[`Render validation.status = success properties.title 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -12795,6 +12885,7 @@ exports[`Render validation.status = success properties.title 1`] = `
 exports[`Render validation.status = success property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12807,10 +12898,10 @@ exports[`Render validation.status = success property.decimalSeparator: "," 1`] =
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -12951,6 +13042,7 @@ exports[`Render validation.status = success property.decimalSeparator: "," 1`] =
 exports[`Render validation.status = success property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -12963,10 +13055,10 @@ exports[`Render validation.status = success property.max: 250 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -13107,6 +13199,7 @@ exports[`Render validation.status = success property.max: 250 1`] = `
 exports[`Render validation.status = success property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13119,10 +13212,10 @@ exports[`Render validation.status = success property.min: 10 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -13263,6 +13356,7 @@ exports[`Render validation.status = success property.min: 10 1`] = `
 exports[`Render validation.status = success property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13275,10 +13369,10 @@ exports[`Render validation.status = success property.precision: 1 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -13419,6 +13513,7 @@ exports[`Render validation.status = success property.precision: 1 1`] = `
 exports[`Render validation.status = success property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13431,10 +13526,10 @@ exports[`Render validation.status = success property.step: 3 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
@@ -13575,6 +13670,7 @@ exports[`Render validation.status = success property.step: 3 1`] = `
 exports[`Render validation.status = warning default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="default_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13587,10 +13683,10 @@ exports[`Render validation.status = warning default 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="default_input"
-      title="default"
+      htmlFor="default_label_input"
+      title="default_label"
     >
-      default
+      default_label
     </label>
   </div>
   <div
@@ -13736,6 +13832,7 @@ exports[`Render validation.status = warning default 1`] = `
 exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.autoFocus: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13748,10 +13845,10 @@ exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.autoFocus: true_input"
-      title="properties.autoFocus: true"
+      htmlFor="properties.autoFocus: true_label_input"
+      title="properties.autoFocus: true_label"
     >
-      properties.autoFocus: true
+      properties.autoFocus: true_label
     </label>
   </div>
   <div
@@ -13898,6 +13995,7 @@ exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
 exports[`Render validation.status = warning properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -13910,10 +14008,10 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.disabled: true_input"
-      title="properties.disabled: true"
+      htmlFor="properties.disabled: true_label_input"
+      title="properties.disabled: true_label"
     >
-      properties.disabled: true
+      properties.disabled: true_label
     </label>
   </div>
   <div
@@ -14062,6 +14160,7 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
 exports[`Render validation.status = warning properties.inputStyle: CSS style applied 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.inputStyle: CSS style applied_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14074,10 +14173,10 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_input"
-      title="properties.inputStyle: CSS style applied"
+      htmlFor="properties.inputStyle: CSS style applied_label_input"
+      title="properties.inputStyle: CSS style applied_label"
     >
-      properties.inputStyle: CSS style applied
+      properties.inputStyle: CSS style applied_label
     </label>
   </div>
   <div
@@ -14223,6 +14322,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
 exports[`Render validation.status = warning properties.label align: right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label align: right_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14235,10 +14335,10 @@ exports[`Render validation.status = warning properties.label align: right 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label align: right_input"
-      title="properties.label align: right"
+      htmlFor="properties.label align: right_label_input"
+      title="properties.label align: right_label"
     >
-      properties.label align: right
+      properties.label align: right_label
     </label>
   </div>
   <div
@@ -14384,6 +14484,7 @@ exports[`Render validation.status = warning properties.label align: right 1`] = 
 exports[`Render validation.status = warning properties.label colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label colon: false_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14396,10 +14497,10 @@ exports[`Render validation.status = warning properties.label colon: false 1`] = 
   >
     <label
       className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label colon: false_input"
-      title="properties.label colon: false"
+      htmlFor="properties.label colon: false_label_input"
+      title="properties.label colon: false_label"
     >
-      properties.label colon: false
+      properties.label colon: false_label
     </label>
   </div>
   <div
@@ -14545,6 +14646,7 @@ exports[`Render validation.status = warning properties.label colon: false 1`] = 
 exports[`Render validation.status = warning properties.label disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label disabled: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14694,6 +14796,7 @@ exports[`Render validation.status = warning properties.label disabled: true 1`] 
 exports[`Render validation.status = warning properties.label extra: showing extra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label extra: showing extra_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14706,10 +14809,10 @@ exports[`Render validation.status = warning properties.label extra: showing extr
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label extra: showing extra_input"
-      title="properties.label extra: showing extra"
+      htmlFor="properties.label extra: showing extra_label_input"
+      title="properties.label extra: showing extra_label"
     >
-      properties.label extra: showing extra
+      properties.label extra: showing extra_label
     </label>
   </div>
   <div
@@ -14855,6 +14958,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
 exports[`Render validation.status = warning properties.label inline: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label inline: true_label"
   style={
     Object {
       "marginBottom": 0,
@@ -14871,10 +14975,10 @@ exports[`Render validation.status = warning properties.label inline: true 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label inline: true_input"
-      title="properties.label inline: true"
+      htmlFor="properties.label inline: true_label_input"
+      title="properties.label inline: true_label"
     >
-      properties.label inline: true
+      properties.label inline: true_label
     </label>
   </div>
   <div
@@ -15024,6 +15128,7 @@ exports[`Render validation.status = warning properties.label inline: true 1`] = 
 exports[`Render validation.status = warning properties.label span: 5 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label span: 5_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15036,10 +15141,10 @@ exports[`Render validation.status = warning properties.label span: 5 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.label span: 5_input"
-      title="properties.label span: 5"
+      htmlFor="properties.label span: 5_label_input"
+      title="properties.label span: 5_label"
     >
-      properties.label span: 5
+      properties.label span: 5_label
     </label>
   </div>
   <div
@@ -15185,6 +15290,7 @@ exports[`Render validation.status = warning properties.label span: 5 1`] = `
 exports[`Render validation.status = warning properties.placeholder: Please enter a number between 10 and 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.placeholder: Please enter a number between 10 and 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15197,10 +15303,10 @@ exports[`Render validation.status = warning properties.placeholder: Please enter
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.placeholder: Please enter a number between 10 and 250_input"
-      title="properties.placeholder: Please enter a number between 10 and 250"
+      htmlFor="properties.placeholder: Please enter a number between 10 and 250_label_input"
+      title="properties.placeholder: Please enter a number between 10 and 250_label"
     >
-      properties.placeholder: Please enter a number between 10 and 250
+      properties.placeholder: Please enter a number between 10 and 250_label
     </label>
   </div>
   <div
@@ -15347,6 +15453,7 @@ exports[`Render validation.status = warning properties.placeholder: Please enter
 exports[`Render validation.status = warning properties.size: large 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.size: large_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15359,10 +15466,10 @@ exports[`Render validation.status = warning properties.size: large 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: large_input"
-      title="properties.size: large"
+      htmlFor="properties.size: large_label_input"
+      title="properties.size: large_label"
     >
-      properties.size: large
+      properties.size: large_label
     </label>
   </div>
   <div
@@ -15508,6 +15615,7 @@ exports[`Render validation.status = warning properties.size: large 1`] = `
 exports[`Render validation.status = warning properties.size: small 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.size: small_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15520,10 +15628,10 @@ exports[`Render validation.status = warning properties.size: small 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.size: small_input"
-      title="properties.size: small"
+      htmlFor="properties.size: small_label_input"
+      title="properties.size: small_label"
     >
-      properties.size: small
+      properties.size: small_label
     </label>
   </div>
   <div
@@ -15669,6 +15777,7 @@ exports[`Render validation.status = warning properties.size: small 1`] = `
 exports[`Render validation.status = warning properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.title_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15681,7 +15790,7 @@ exports[`Render validation.status = warning properties.title 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="properties.title_input"
+      htmlFor="properties.title_label_input"
       title="Number Input Title"
     >
       Number Input Title
@@ -15830,6 +15939,7 @@ exports[`Render validation.status = warning properties.title 1`] = `
 exports[`Render validation.status = warning property.decimalSeparator: "," 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="property.decimalSeparator: \\",\\"_label"
   style={
     Object {
       "marginBottom": 0,
@@ -15842,10 +15952,10 @@ exports[`Render validation.status = warning property.decimalSeparator: "," 1`] =
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.decimalSeparator: \\",\\"_input"
-      title="property.decimalSeparator: \\",\\""
+      htmlFor="property.decimalSeparator: \\",\\"_label_input"
+      title="property.decimalSeparator: \\",\\"_label"
     >
-      property.decimalSeparator: ","
+      property.decimalSeparator: ","_label
     </label>
   </div>
   <div
@@ -15991,6 +16101,7 @@ exports[`Render validation.status = warning property.decimalSeparator: "," 1`] =
 exports[`Render validation.status = warning property.max: 250 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="property.max: 250_label"
   style={
     Object {
       "marginBottom": 0,
@@ -16003,10 +16114,10 @@ exports[`Render validation.status = warning property.max: 250 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.max: 250_input"
-      title="property.max: 250"
+      htmlFor="property.max: 250_label_input"
+      title="property.max: 250_label"
     >
-      property.max: 250
+      property.max: 250_label
     </label>
   </div>
   <div
@@ -16152,6 +16263,7 @@ exports[`Render validation.status = warning property.max: 250 1`] = `
 exports[`Render validation.status = warning property.min: 10 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="property.min: 10_label"
   style={
     Object {
       "marginBottom": 0,
@@ -16164,10 +16276,10 @@ exports[`Render validation.status = warning property.min: 10 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.min: 10_input"
-      title="property.min: 10"
+      htmlFor="property.min: 10_label_input"
+      title="property.min: 10_label"
     >
-      property.min: 10
+      property.min: 10_label
     </label>
   </div>
   <div
@@ -16313,6 +16425,7 @@ exports[`Render validation.status = warning property.min: 10 1`] = `
 exports[`Render validation.status = warning property.precision: 1 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="property.precision: 1_label"
   style={
     Object {
       "marginBottom": 0,
@@ -16325,10 +16438,10 @@ exports[`Render validation.status = warning property.precision: 1 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.precision: 1_input"
-      title="property.precision: 1"
+      htmlFor="property.precision: 1_label_input"
+      title="property.precision: 1_label"
     >
-      property.precision: 1
+      property.precision: 1_label
     </label>
   </div>
   <div
@@ -16474,6 +16587,7 @@ exports[`Render validation.status = warning property.precision: 1 1`] = `
 exports[`Render validation.status = warning property.step: 3 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="property.step: 3_label"
   style={
     Object {
       "marginBottom": 0,
@@ -16486,10 +16600,10 @@ exports[`Render validation.status = warning property.step: 3 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
-      htmlFor="property.step: 3_input"
-      title="property.step: 3"
+      htmlFor="property.step: 3_label_input"
+      title="property.step: 3_label"
     >
-      property.step: 3
+      property.step: 3_label
     </label>
   </div>
   <div
