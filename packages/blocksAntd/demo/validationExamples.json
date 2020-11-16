@@ -1,0 +1,32 @@
+[
+  {
+    "status": null,
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "status": "success",
+    "errors": [],
+    "warnings": []
+  },
+  {
+    "status": "error",
+    "errors": ["validation error"],
+    "warnings": []
+  },
+  {
+    "status": "error",
+    "errors": ["validation error", "second validation error"],
+    "warnings": []
+  },
+  {
+    "status": "error",
+    "errors": ["validation error"],
+    "warnings": ["validation warning"]
+  },
+  {
+    "status": "warning",
+    "warnings": ["validation warning"],
+    "errors": []
+  }
+]
