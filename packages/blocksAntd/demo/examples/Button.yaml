@@ -4,10 +4,16 @@
   type: Button
   properties:
     title: Button title
-- id: properties.icon
+- id: properties.icon string
   type: Button
   properties:
     icon: SaveOutlined
+- id: properties.icon object
+  type: Button
+  properties:
+    icon: 
+      name: SaveOutlined
+      color: red
 - id: "properties.shape: circle"
   type: Button
   properties:
@@ -20,7 +26,7 @@
   type: Button
   properties:
     block: true
-- id: "properties.color: true"
+- id: "properties.color: #9c27b0"
   type: Button
   properties:
     color: "#9c27b0"
@@ -68,7 +74,8 @@
   type: Button
   properties:
     hideTitle: true
+    icon: DeleteOutlined
 - id: "properties.href: www.lowdefy.com"
   type: Button
   properties:
-    href: www.lowdefy.com
+    href: https://www.lowdefy.com
