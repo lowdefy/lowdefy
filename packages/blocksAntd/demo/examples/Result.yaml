@@ -4,3 +4,43 @@
   type: Result
   properties:
     title: Result title
+- id: "properties. icon: ApiFilled"
+  type: Result
+  properties:
+    icon: ApiFilled
+- id: "properties. status: success  default is info"
+  type: Result
+  properties:
+    status: success
+- id: "properties. status: error"
+  type: Result
+  properties:
+    status: error
+- id: "properties. status: info"
+  type: Result
+  properties:
+    status: info
+- id: "properties. status: warning"
+  type: Result
+  properties:
+    status: warning
+- id: "properties. status: 404"
+  type: Result
+  properties:
+    status: "404"
+- id: "properties. status: 403"
+  type: Result
+  properties:
+    status: "403"
+- id: "properties. status: 500"
+  type: Result
+  properties:
+    status: "500"
+- id: "properties. subTitle: subTitle text"
+  type: Result
+  properties:
+    subTitle: subTitle text
+- id: "properties. title: Title text"
+  type: Result
+  properties:
+    title: Title text
