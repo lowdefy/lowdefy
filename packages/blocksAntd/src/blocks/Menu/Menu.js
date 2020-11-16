@@ -222,7 +222,11 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                 icon={
                   link.properties &&
                   link.properties.icon && (
-                    <Icon methods={methods} properties={link.properties.icon} />
+                    <Icon
+                      blockId={`${link.id}_icon`}
+                      methods={methods}
+                      properties={link.properties.icon}
+                    />
                   )
                 }
               >
@@ -252,6 +256,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                                 subLinkGroup.properties &&
                                 subLinkGroup.properties.icon && (
                                   <Icon
+                                    blockId={`${subLinkGroup.id}_icon`}
                                     methods={methods}
                                     properties={subLinkGroup.properties.icon}
                                   />
@@ -280,7 +285,11 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                           icon={
                             subLink.properties &&
                             subLink.properties.icon && (
-                              <Icon methods={methods} properties={subLink.properties.icon} />
+                              <Icon
+                                blockId={`${subLink.id}_icon`}
+                                methods={methods}
+                                properties={subLink.properties.icon}
+                              />
                             )
                           }
                         >
@@ -308,7 +317,11 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                 icon={
                   link.properties &&
                   link.properties.icon && (
-                    <Icon methods={methods} properties={link.properties.icon} />
+                    <Icon
+                      blockId={`${link.id}_icon`}
+                      methods={methods}
+                      properties={link.properties.icon}
+                    />
                   )
                 }
               >

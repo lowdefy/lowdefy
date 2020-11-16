@@ -42,7 +42,7 @@ const DateTimeSelector = ({
     : 'minute';
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -66,6 +66,7 @@ const DateTimeSelector = ({
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />

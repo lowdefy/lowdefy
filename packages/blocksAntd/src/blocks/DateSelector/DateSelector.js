@@ -51,6 +51,7 @@ const DateSelector = ({ blockId, loading, methods, properties, required, validat
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />

@@ -29,7 +29,7 @@ const WeekPicker = DatePicker.WeekPicker;
 const WeekSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -52,6 +52,7 @@ const WeekSelector = ({ blockId, loading, methods, properties, required, validat
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />

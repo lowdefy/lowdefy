@@ -29,7 +29,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -49,11 +49,21 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
               placeholder={get(properties, 'placeholder', { default: 'Select item' })}
               suffixIcon={
                 properties.suffixIcon && (
-                  <Icon methods={methods} properties={properties.suffixIcon} />
+                  <Icon
+                    blockId={`${blockId}_suffixIcon`}
+                    methods={methods}
+                    properties={properties.suffixIcon}
+                  />
                 )
               }
               clearIcon={
-                properties.clearIcon && <Icon methods={methods} properties={properties.clearIcon} />
+                properties.clearIcon && (
+                  <Icon
+                    blockId={`${blockId}_clearIcon`}
+                    methods={methods}
+                    properties={properties.clearIcon}
+                  />
+                )
               }
               showArrow={properties.showArrow}
               allowClear={properties.allowClear !== false}

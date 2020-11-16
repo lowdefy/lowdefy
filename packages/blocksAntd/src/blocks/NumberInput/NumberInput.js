@@ -23,7 +23,7 @@ import Label from '../Label/Label';
 const NumberInput = ({ blockId, loading, properties, required, validation, value, methods }) => {
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

@@ -40,6 +40,7 @@ const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties })
         getContainer: () => document.getElementById(`${blockId}_popup`),
         icon: properties.icon && (
           <Icon
+            blockId={`${blockId}_icon`}
             properties={{
               name: 'QuestionCircleOutlined',
               ...propertiesIcon,

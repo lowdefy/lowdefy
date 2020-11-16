@@ -26,8 +26,8 @@ const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => {
     : serializer.copy(properties.icon);
   return (
     <Avatar
-      alt={properties.alt}
       id={blockId}
+      alt={properties.alt}
       gap={properties.gap}
       shape={properties.shape}
       size={properties.size}

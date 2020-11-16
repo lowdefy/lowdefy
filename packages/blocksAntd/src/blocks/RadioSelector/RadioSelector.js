@@ -18,8 +18,8 @@ import React from 'react';
 import { Radio } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
-import Label from '../Label/Label';
 
+import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';
 
@@ -29,7 +29,7 @@ const RadioSelector = ({ blockId, loading, properties, required, validation, val
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

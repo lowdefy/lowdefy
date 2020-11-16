@@ -29,7 +29,7 @@ const MonthPicker = DatePicker.MonthPicker;
 const MonthSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -52,6 +52,7 @@ const MonthSelector = ({ blockId, loading, methods, properties, required, valida
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />

@@ -33,7 +33,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
   }
   return (
     <Label
-      blockId={blockId}
+      blockId={`${blockId}_label`}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -59,6 +59,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
                 <span>{properties.checkedText}</span>
               ) : (
                 <Icon
+                  blockId={`${blockId}_checkedIcon`}
                   methods={methods}
                   properties={{
                     name: 'CheckOutlined',
@@ -72,6 +73,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
                 <span>{properties.uncheckedText}</span>
               ) : (
                 <Icon
+                  blockId={`${blockId}_uncheckedIcon`}
                   methods={methods}
                   properties={{
                     name: 'CloseOutlined',
