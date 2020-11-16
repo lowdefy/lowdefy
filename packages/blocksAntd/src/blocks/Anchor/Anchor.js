@@ -46,6 +46,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
       <Strong strong={properties.strong}>
         {properties.icon && (
           <Icon
+            blockId={`${blockId}_icon`}
             methods={methods}
             properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
           />
