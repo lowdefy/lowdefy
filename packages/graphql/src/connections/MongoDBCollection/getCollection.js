@@ -14,27 +14,30 @@
   limitations under the License.
 */
 
-import getCollection from '../getCollection';
-import { serialize, deserialize } from '../serialize';
-import checkRead from '../checkRead';
+import { MongoClient } from 'mongodb';
 
-import schema from './MongoDBAggregationSchema.json';
-
-async function mongodbAggregation({ request, connection, context }) {
-  checkRead({ connection, context });
-  const deserializedRequest = deserialize(request);
-  const { pipeline, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
-  let res;
+async function getCollection({ connection, context }) {
+  let client;
+  const { databaseUri, databaseName, collection } = connection;
   try {
-    const cursor = await collection.aggregate(pipeline, options);
-    res = await cursor.toArray();
+    client = new MongoClient(databaseUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    await client.connect();
+  } catch (err) {
+    throw new context.RequestError(`${err.name}: ${err.message}`);
+  }
+  try {
+    const db = client.db(databaseName);
+    return {
+      client,
+      collection: db.collection(collection),
+    };
   } catch (err) {
     await client.close();
     throw new context.RequestError(`${err.name}: ${err.message}`);
   }
-  await client.close();
-  return serialize(res);
 }
 
-export default { resolver: mongodbAggregation, schema };
+export default getCollection;

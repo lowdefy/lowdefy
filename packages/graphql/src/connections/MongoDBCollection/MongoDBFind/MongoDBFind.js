@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
+import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
 import checkRead from '../checkRead';
 
@@ -24,22 +24,10 @@ async function mongodbFind({ request, connection, context }) {
   checkRead({ connection, context });
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
-  const { databaseUri, databaseName, collection } = connection;
-
-  let client;
-  try {
-    client = new MongoClient(databaseUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    await client.connect();
-  } catch (err) {
-    throw new context.RequestError(`${err.name}: ${err.message}`);
-  }
+  const { collection, client } = await getCollection({ connection, context });
   let res;
   try {
-    const db = client.db(databaseName);
-    const cursor = await db.collection(collection).find(query, options);
+    const cursor = await collection.find(query, options);
     res = await cursor.toArray();
   } catch (err) {
     await client.close();
