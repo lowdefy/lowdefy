@@ -64,7 +64,7 @@ const labelLogic = ({
     [methods.makeCssClass({
       overflow: properties.inline && 'inherit', // wrap label content below input
       whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
-      marginBottom: 8,
+      marginBottom: properties.size === 'small' ? 0 : 8,
     })]: true,
   });
 
