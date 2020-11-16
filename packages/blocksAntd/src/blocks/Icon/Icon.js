@@ -65,7 +65,14 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
               twoToneColor={propertiesCopy.color}
               rotate={propertiesCopy.rotate}
               spin={propertiesCopy.spin}
-              {...omit(props, ['registerAction', 'registerMethod', 'loading'])} // spread props for Ant design to populate props from parent
+              {...omit(props, [
+                'content',
+                'loading',
+                'registerAction',
+                'registerMethod',
+                'user',
+                'validation',
+              ])} // spread props for Ant design to populate props from parent
             />
           </Suspense>
         </ErrorBoundary>
