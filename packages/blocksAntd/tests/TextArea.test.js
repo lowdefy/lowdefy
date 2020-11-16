@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import TextArea from '../src/blocks/TextArea/TextArea';
 import examples from '../demo/examples/TextArea.yaml';
 import meta from '../src/blocks/TextArea/TextArea.json';
 
-runRenderTests({ examples, Block: TextArea, meta });
+runRenderTests({ examples, Block: TextArea, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

@@ -16,8 +16,9 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import Icon from '../Icon/Icon';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+
+import Icon from '../Icon/Icon';
 
 const AlertBlock = ({ blockId, methods, properties }) => (
   <Alert
@@ -31,7 +32,11 @@ const AlertBlock = ({ blockId, methods, properties }) => (
     onClose={() => methods.callAction({ action: 'onClose' })}
     showIcon={!!properties.icon}
     type={properties.type}
-    icon={properties.icon && <Icon methods={methods} properties={properties.icon} />}
+    icon={
+      properties.icon && (
+        <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+      )
+    }
   />
 );
 

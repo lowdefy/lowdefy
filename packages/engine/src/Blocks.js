@@ -39,7 +39,6 @@ class Blocks {
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
     this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.setUndefinedValuesToState = this.setUndefinedValuesToState.bind(this);
     this.recContainerDelState = this.recContainerDelState.bind(this);
     this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
     this.recSetUndefined = this.recSetUndefined.bind(this);
@@ -74,15 +73,19 @@ class Blocks {
         : block.blockId;
       block.visible = type.isNone(block.visible) ? true : block.visible;
       block.required = type.isNone(block.required) ? false : block.required;
-      block.validate = type.isNone(block.validate)
-        ? []
-        : type.isArray(block.validate)
-        ? block.validate
-        : [block.validate];
+      block.validate = type.isArray(block.validate) ? block.validate : [];
       block.properties = type.isNone(block.properties) ? {} : block.properties;
       block.style = type.isNone(block.style) ? {} : block.style;
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.actions = type.isNone(block.actions) ? {} : block.actions;
+
+      block.visibleEval = {};
+      block.propertiesEval = {};
+      block.requiredEval = {};
+      block.validationEval = {};
+      block.styleEval = {};
+      block.layoutEval = {};
+      block.areasLayoutEval = {};
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
@@ -109,6 +112,7 @@ class Blocks {
       };
 
       if (get(block, 'meta.category') === 'list') {
+        // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
         block.unshiftItem = () => {
           this.subBlocks[block.id].forEach((bl, i) => {
             bl.recUpdateArrayIndices(
@@ -117,7 +121,7 @@ class Blocks {
             );
           });
           this.subBlocks[block.id].unshift(
-            this.newBlocks(this.arrayIndices.concat([0]), block, {})
+            this.newBlocks({ arrayIndices: this.arrayIndices.concat([0]), block, initState: {} })
           );
           this.context.State.set(block.field, undefined);
           // set block and subBlock values undefined, so as not to pass values to new blocks
@@ -128,7 +132,11 @@ class Blocks {
 
         block.pushItem = () => {
           this.subBlocks[block.id].push(
-            this.newBlocks(this.arrayIndices.concat([this.subBlocks[block.id].length]), block, {})
+            this.newBlocks({
+              arrayIndices: this.arrayIndices.concat([this.subBlocks[block.id].length]),
+              block,
+              initState: {},
+            })
           );
           block.update = true;
           this.context.update();
@@ -186,6 +194,7 @@ class Blocks {
       if (get(block, 'meta.category') === 'input') {
         block.setValue = (value) => {
           block.value = type.enforceType(block.meta.valueType, value);
+
           this.context.State.set(block.field, block.value);
           block.update = true;
           this.context.update();
@@ -208,24 +217,15 @@ class Blocks {
     this.loopBlocks((block) => {
       block.update = true;
       if (get(block, 'meta.category') === 'input' || get(block, 'meta.category') === 'list') {
-        const stateValue = get(initState, block.field);
-        let blockValue;
-        if (!type.isUndefined(stateValue)) {
-          blockValue = stateValue;
-        } else {
-          const parsedBlockValue = this.context.parser.parse({
-            input: type.enforceType(
-              block.meta.valueType,
-              get(block, 'defaultValue', { default: null })
-            ),
-            location: block.blockId,
-            arrayIndices: this.arrayIndices,
-          });
-          // TODO: handel blockValue parse errors
-          blockValue = parsedBlockValue.output;
-          set(initState, block.field, blockValue); // pass defaultValues to subBlocks
+        let blockValue = get(initState, block.field);
+        if (type.isUndefined(blockValue)) {
+          // default null value for block type
+          blockValue = type.enforceType(block.meta.valueType, null);
+          this.context.State.set(block.field, block.value);
+          block.update = true;
         }
         if (get(block, 'meta.category') === 'list') {
+          // load list value into list blocks
           if (!type.isArray(this.subBlocks[block.id])) {
             this.subBlocks[block.id] = [];
           }
@@ -233,7 +233,7 @@ class Blocks {
             blockValue.forEach((item, i) => {
               if (!this.subBlocks[block.id][i]) {
                 this.subBlocks[block.id].push(
-                  this.newBlocks(this.arrayIndices.concat([i]), block, initState)
+                  this.newBlocks({ arrayIndices: this.arrayIndices.concat([i]), block, initState })
                 );
               } else {
                 this.subBlocks[block.id][i].reset(initState);
@@ -244,32 +244,26 @@ class Blocks {
         } else {
           block.value = blockValue;
         }
-      } else if (get(block, 'meta.category') === 'container') {
+      } else if (
+        get(block, 'meta.category') === 'container' ||
+        // do not make sub blocks for sub contexts
+        (get(block, 'meta.category') === 'context' && this === this.context.RootBlocks)
+      ) {
         if (!type.isArray(this.subBlocks[block.id])) {
           this.subBlocks[block.id] = [];
         }
         if (!this.subBlocks[block.id][0]) {
-          this.subBlocks[block.id].push(this.newBlocks(this.arrayIndices, block, initState));
+          this.subBlocks[block.id].push(
+            this.newBlocks({ arrayIndices: this.arrayIndices, block, initState })
+          );
         } else {
           this.subBlocks[block.id][0].reset(initState);
         }
-      } else if (get(block, 'meta.category') === 'context') {
-        if (this === this.context.RootBlocks) {
-          if (!type.isArray(this.subBlocks[block.id])) {
-            this.subBlocks[block.id] = [];
-          }
-          if (!this.subBlocks[block.id][0]) {
-            this.subBlocks[block.id].push(this.newBlocks(this.arrayIndices, block, initState));
-          } else {
-            this.subBlocks[block.id][0].reset(initState);
-          }
-        }
       }
     });
-    this.setUndefinedValuesToState(); // to get undefinedValues in state
   }
 
-  newBlocks(arrayIndices, block, initState) {
+  newBlocks({ arrayIndices, block, initState }) {
     const SubBlocks = new Blocks({
       arrayIndices,
       areas: block.areas,
@@ -279,6 +273,7 @@ class Blocks {
     return SubBlocks;
   }
 
+  // used for update comparison
   static blockEvalToString(block) {
     return serializer.serializeToString({
       areasLayoutEval: block.areasLayoutEval,
@@ -286,13 +281,13 @@ class Blocks {
       propertiesEval: block.propertiesEval,
       requiredEval: block.requiredEval,
       styleEval: block.styleEval,
-      validateEval: block.validateEval,
+      validationEval: block.validationEval,
       value: block.value,
       visibleEval: block.visibleEval,
     });
   }
 
-  recEval() {
+  recEval(visibleParent) {
     let repeat = false;
     this.loopBlocks((block) => {
       if (block.meta.category === 'input') {
@@ -300,76 +295,102 @@ class Blocks {
         // enforce type here? should we reassign value here??
         block.value = type.isUndefined(stateValue) ? block.value : stateValue;
       }
-      block.propertiesEval = this.context.parser.parse({
-        input: block.properties,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      block.requiredEval = this.context.parser.parse({
-        input: block.required,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      const requiredValidation = {
-        pass: { _not: { _type: 'none' } },
-        status: 'error',
-        message: type.isString(block.requiredEval.output)
-          ? block.requiredEval.output
-          : get(block, 'requiredEval.output.message', { default: 'This field is required' }),
-      };
-      const validation =
-        block.required === false ? block.validate : [requiredValidation, ...block.validate];
-      block.validateEval = {
-        output: [],
-        errors: [],
-      };
-      validation.forEach((test) => {
-        const parsed = this.context.parser.parse({
-          input: test,
+      const beforeVisible = block.visibleEval ? block.visibleEval.output : true;
+      if (!visibleParent) {
+        block.visibleEval.output = false;
+      } else {
+        block.visibleEval = this.context.parser.parse({
+          input: block.visible,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        }); // run parser on index combinations to get visible value object
+      }
+      if (beforeVisible !== block.visibleEval.output) {
+        repeat = true;
+      }
+      // only evaluate visible blocks
+      if (block.visibleEval.output) {
+        block.propertiesEval = this.context.parser.parse({
+          input: block.properties,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
         });
-        if (parsed.errors.length > 0) {
-          block.validateEval.output.push({
-            ...parsed.output,
-            pass: false,
+        block.requiredEval = this.context.parser.parse({
+          input: block.required,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
+        const requiredValidation = {
+          pass: { _not: { _type: 'none' } },
+          status: 'error',
+          message: type.isString(block.requiredEval.output)
+            ? block.requiredEval.output
+            : 'This field is required',
+        };
+        const validation =
+          block.required === false ? block.validate : [requiredValidation, ...block.validate];
+        block.validationEval = {
+          output: {
+            status: null,
+            errors: [],
+            warnings: [],
+          },
+          errors: [],
+        };
+        let validationError = false;
+        let validationWarning = false;
+        validation.forEach((test) => {
+          const parsed = this.context.parser.parse({
+            input: test,
+            location: block.blockId,
+            arrayIndices: this.arrayIndices,
           });
-          block.validateEval.errors.push(parsed.errors);
-          return;
+          // for parser errors
+          if (parsed.errors.length > 0) {
+            block.validationEval.output.errors.push(parsed.output.message);
+            block.validationEval.errors.push(parsed.errors);
+            validationError = true;
+            return;
+          }
+          // failed validation
+          if (!parsed.output.pass) {
+            // no status indication on validation tests defaults to error
+            if (!test.status || test.status === 'error') {
+              block.validationEval.output.errors.push(parsed.output.message);
+              validationError = true;
+            }
+            if (test.status === 'warning') {
+              block.validationEval.output.errors.push(parsed.output.message);
+              validationWarning = true;
+            }
+          }
+        });
+        if (this.context.showValidationErrors && validation.length > 0) {
+          block.validationEval.output.status = 'success';
         }
-        if (!parsed.output.pass) {
-          block.validateEval.output.push(parsed.output);
-          block.validateEval.errors.push(parsed.errors);
+        if (validationWarning) {
+          block.validationEval.output.status = 'warning';
         }
-      });
+        if (this.context.showValidationErrors && validationError) {
+          block.validationEval.output.status = 'error';
+        }
 
-      // if page has not called Validate action clear errors
-      if (!this.context.showValidationErrors) {
-        block.validateEval.output = block.validateEval.output.filter(
-          (val) => val.status && val.status !== 'error'
-        );
+        block.styleEval = this.context.parser.parse({
+          input: block.style,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
+        block.layoutEval = this.context.parser.parse({
+          input: block.layout,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
+        block.areasLayoutEval = this.context.parser.parse({
+          input: block.areasLayout,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
       }
-      block.styleEval = this.context.parser.parse({
-        input: block.style,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      block.layoutEval = this.context.parser.parse({
-        input: block.layout,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      block.areasLayoutEval = this.context.parser.parse({
-        input: block.areasLayout,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      const vis = block.visibleEval ? block.visibleEval.output : true;
-      block.visibleEval = this.context.parser.parse({
-        input: block.visible,
-        location: block.blockId,
-        arrayIndices: this.arrayIndices,
-      }); // run parser on index combinations to get visible value object
       if (
         get(block, 'meta.category') === 'container' ||
         get(block, 'meta.category') === 'context' ||
@@ -377,12 +398,9 @@ class Blocks {
       ) {
         if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
           this.subBlocks[block.id].forEach((blockClass) => {
-            repeat = blockClass.recEval() || repeat;
+            repeat = blockClass.recEval(block.visibleEval.output) || repeat;
           });
         }
-      }
-      if (vis !== block.visibleEval.output) {
-        repeat = true;
       }
       const after = Blocks.blockEvalToString(block);
       if (block.before !== after) {
@@ -449,23 +467,13 @@ class Blocks {
   }
 
   updateStateFromRoot() {
-    const repeat = this.recEval();
+    const repeat = this.recEval(true);
     this.updateState();
     if (repeat && this.recCount < 20) {
       this.recCount += 1;
       this.updateStateFromRoot();
     }
     this.recCount = 0;
-  }
-
-  setUndefinedValuesToState() {
-    this.loopBlocks((block) => {
-      if (get(block, 'meta.category') === 'input') {
-        if (type.isUndefined(get(this.context.state, block.field))) {
-          this.context.State.set(block.field, block.value);
-        }
-      }
-    });
   }
 
   recUpdateArrayIndices(oldIndices, newIndices) {
@@ -488,10 +496,10 @@ class Blocks {
 
   getValidateRec(result) {
     this.loopBlocks((block) => {
-      if (block.validateEval.output.length > 0 && block.visibleEval.output) {
+      if (block.visibleEval.output && block.validationEval.output.status === 'error') {
         result.push({
           blockId: block.blockId,
-          validate: block.validateEval.output,
+          validation: block.validationEval.output,
         });
       }
     });
@@ -526,7 +534,7 @@ class Blocks {
   }
 
   validate() {
-    this.update(); // update to recalculate validateEval with showValidationErrors set to raise block errors
+    this.update(); // update to recalculate validationEval with showValidationErrors set to raise block errors
     return this.getValidateRec([]);
   }
 
@@ -551,7 +559,7 @@ class Blocks {
           required: block.requiredEval.output,
           layout: block.layoutEval.output,
           style: block.styleEval.output,
-          validate: block.validateEval.output,
+          validation: block.validationEval.output,
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };

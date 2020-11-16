@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import ButtonSelector from '../src/blocks/ButtonSelector/ButtonSelector';
 import examples from '../demo/examples/ButtonSelector.yaml';
 import meta from '../src/blocks/ButtonSelector/ButtonSelector.json';
 
-runRenderTests({ examples, Block: ButtonSelector, meta });
+runRenderTests({ examples, Block: ButtonSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

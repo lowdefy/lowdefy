@@ -21,14 +21,13 @@ import { Avatar } from 'antd';
 import Icon from '../Icon/Icon';
 
 const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => {
-  let propertiesIcon = serializer.copy(properties.icon);
-  if (type.isString(propertiesIcon)) {
-    propertiesIcon = { name: propertiesIcon };
-  }
+  const propertiesIcon = type.isString(properties.icon)
+    ? { name: properties.icon }
+    : serializer.copy(properties.icon);
   return (
     <Avatar
-      alt={properties.alt}
       id={blockId}
+      alt={properties.alt}
       gap={properties.gap}
       shape={properties.shape}
       size={properties.size}
@@ -36,16 +35,18 @@ const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => {
       onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
       className={methods.makeCssClass([
         {
-          backgroundColor:
-            !properties.src &&
-            (properties.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`),
+          backgroundColor: !properties.src && properties.color,
           cursor: (onClick || actions.onClick) && 'pointer',
         },
         properties.style,
       ])}
       icon={
         propertiesIcon && (
-          <Icon properties={{ size: properties.size, ...propertiesIcon }} methods={methods} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            properties={{ size: properties.size, ...propertiesIcon }}
+            methods={methods}
+          />
         )
       }
     >

@@ -78,3 +78,13 @@ test('_get key: int', () => {
     ]
   `);
 });
+
+test('_get replace key arrayIndices', () => {
+  const input = { a: { _get: { from: object, key: 'arr.$.a' } } };
+  const parser = new NodeParser({ arrayIndices: [1] });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'a2',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
