@@ -2877,6 +2877,7 @@ __metadata:
     css-loader: 5.0.1
     decompress: 4.2.1
     decompress-targz: 4.1.1
+    dotenv: 8.2.0
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
@@ -2908,7 +2909,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@0.0.0-alpha.3, @lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@0.0.0-alpha.4, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
@@ -2937,7 +2938,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/graphql@0.0.0-alpha.3, @lowdefy/graphql@workspace:packages/graphql":
+"@lowdefy/graphql@0.0.0-alpha.4, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/graphql@workspace:packages/graphql"
   dependencies:
@@ -3096,7 +3097,7 @@ __metadata:
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/engine": 0.0.0-alpha.3
+    "@lowdefy/engine": 0.0.0-alpha.4
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.2.1
@@ -3122,18 +3123,21 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
+    "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
+    "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/graphql": 0.0.0-alpha.3
+    "@lowdefy/graphql": 0.0.0-alpha.4
     apollo-server-express: 2.19.0
+    babel-jest: 26.6.3
     babel-loader: 8.2.1
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.0
     css-loader: 5.0.1
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
+    jest: 26.6.3
     nodemon: 2.0.6
     react: 17.0.1
     react-dom: 17.0.1
@@ -8080,6 +8084,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: 76e6693d8803eeff9cb920988446bf223cf1f6e5b1c0c2fe07a66906392134931a481b11e3c0bd852c5cfc97fad65258bcb4359169ad1d8d624cb3f56932be98
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:8.2.0":
+  version: 8.2.0
+  resolution: "dotenv@npm:8.2.0"
+  checksum: 16cb89cbd7b98b053899b8aba8c5044c8fb61a2db8a81fe70360b75035fce5fed53bd7a34d772be717d0880c0321122a4c09423f518025e1b52d96791521b1a7
   languageName: node
   linkType: hard
 
