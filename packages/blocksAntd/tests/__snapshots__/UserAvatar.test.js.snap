@@ -14,9 +14,16 @@ exports[`Render default 1`] = `
     id="undefined_id"
     list={Array []}
     menus={Array []}
+    required={false}
     role="img"
     user={Object {}}
-    validate={Array []}
+    validation={
+      Object {
+        "errors": Array [],
+        "status": null,
+        "warnings": Array [],
+      }
+    }
   >
     <svg
       aria-hidden="true"
@@ -53,9 +60,16 @@ exports[`Render properties.name 1`] = `
     id="undefined_id"
     list={Array []}
     menus={Array []}
+    required={false}
     role="img"
     user={Object {}}
-    validate={Array []}
+    validation={
+      Object {
+        "errors": Array [],
+        "status": null,
+        "warnings": Array [],
+      }
+    }
   >
     <svg
       aria-hidden="true"
