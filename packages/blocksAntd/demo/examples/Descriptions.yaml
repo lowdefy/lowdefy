@@ -16,16 +16,39 @@
   type: Descriptions
   properties:
     title: Title
+    column: 2
     items:
       - label: field_one
         value: "1"
-        span: "null"
+        span: 1
       - label: field_two
         value: "2"
-        span: "1"
+        span: 1
       - label: field_three
         value: "3"
-        span: "2"
+        span: 2
+- id: properties.items-list-primitive
+  type: Descriptions
+  properties:
+    title: Title
+    items:
+      - 1
+      - 2
+      - 3
+      - 4
+- id: properties.items-object-object
+  type: Descriptions
+  properties:
+    title: Title
+    items:
+      one: 
+        two: 3
+      four:
+        five: six
+      seven: 
+        eight:
+          - 9 
+          - ten
 - id: "properties.bordered: true"
   type: Descriptions
   properties:
@@ -66,19 +89,23 @@
       field_one: value one
       field_two: 2
       field_three: value three
-- id: "properties.size: middle"
+- id: "properties.size: default"
   type: Descriptions
   properties:
-    size: middle
+    size: default
     items:
       field_one: value one
       field_two: 2
       field_three: value three
-# - id: "properties.size: default" #no difference from middle
-#   type: Descriptions
-#   properties:
-#     size: default
-#     items:
-#       field_one: value one
-#       field_two: 2
-#       field_three: value three
+- id: "properties.size: small, properties.bordered: true"
+  type: Descriptions
+  properties:
+    size: small
+    bordered: true
+    items:
+      field_one: value one
+      field_two: 2
+      field_three: value three
+      field_4: value 4
+      field_5: 5
+      field_6: value 6
