@@ -22,7 +22,7 @@ import { type, serializer } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 
-const SwitchBlock = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const SwitchBlock = ({ blockId, loading, methods, properties, required, validation, value }) => {
   let propertiesIconChecked = serializer.copy(properties.checkedIcon);
   if (type.isString(propertiesIconChecked)) {
     propertiesIconChecked = { name: propertiesIconChecked };
@@ -38,7 +38,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validate
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
-      validate={validate}
+      validation={validation}
       content={{
         content: () => (
           <Switch

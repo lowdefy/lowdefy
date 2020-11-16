@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import MultipleSelector from '../src/blocks/MultipleSelector/MultipleSelector';
 import examples from '../demo/examples/MultipleSelector.yaml';
 import meta from '../src/blocks/MultipleSelector/MultipleSelector.json';
 
 // FIX Jest: TypeError: Cannot read property 'scrollWidth' of null
-// runRenderTests({ examples, Block: MultipleSelector, meta });
+// runRenderTests({ examples, Block: MultipleSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });
