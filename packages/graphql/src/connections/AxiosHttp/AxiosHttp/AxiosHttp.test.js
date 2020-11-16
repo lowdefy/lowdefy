@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import AxiosHTTP from './AxiosHTTP';
+import AxiosHTTP from './AxiosHttp';
 import { ConfigurationError, RequestError } from '../../../context/errors';
 
 const context = { ConfigurationError, RequestError };
