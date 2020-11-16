@@ -1,4 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lowdefy Connection Schema - MongoDBCollection",
   "type": "object",
   "required": ["databaseUri", "collection"],
   "properties": {

@@ -1,4 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lowdefy Connection Schema - AwsS3Bucket",
   "type": "object",
   "required": ["accessKeyId", "secretAccessKey", "region", "bucket"],
   "properties": {
