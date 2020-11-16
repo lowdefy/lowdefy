@@ -29,7 +29,7 @@ const WeekPicker = DatePicker.WeekPicker;
 const WeekSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

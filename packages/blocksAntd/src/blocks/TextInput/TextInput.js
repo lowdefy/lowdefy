@@ -24,7 +24,7 @@ import Icon from '../Icon/Icon';
 const TextInput = ({ blockId, loading, methods, properties, required, validation, value }) => {
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}

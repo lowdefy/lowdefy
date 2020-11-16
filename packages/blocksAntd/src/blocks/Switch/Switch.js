@@ -33,7 +33,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
   }
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}

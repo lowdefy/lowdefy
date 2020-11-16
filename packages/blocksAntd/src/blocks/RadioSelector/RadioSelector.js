@@ -29,7 +29,7 @@ const RadioSelector = ({ blockId, loading, properties, required, validation, val
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

@@ -90,7 +90,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
     validation.status === 'error' ? '#ff4d4f' : validation.status === 'warning' ? '#faad14' : null;
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
