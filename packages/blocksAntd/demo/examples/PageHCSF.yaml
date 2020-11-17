@@ -2,6 +2,55 @@
   type: PageHCSF
 - id: properties.content
   type: PageHCSF
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.theme: light - dark is default"
+  type: PageHCSF
   properties:
-    content: 
-      content: This is page content
+    header:
+      theme: light
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.color: #4432a8 "
+  type: PageHCSF
+  properties:
+    header:
+      color: "#4432a8"
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+# collapsed is not described in js or json, but still works in example and docs?
+- id: "properties.sider.collapsed: true "
+  type: PageHCSF
+  properties:
+    sider:
+      collapsed: true
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
