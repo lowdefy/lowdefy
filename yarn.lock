@@ -60,7 +60,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.5, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.2.6":
+  version: 3.2.6
+  resolution: "@apollo/client@npm:3.2.6"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.2.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.13.0
+    prop-types: ^15.7.2
+    symbol-observable: ^3.0.0
+    ts-invariant: ^0.5.0
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: d60d25b73aef0d0e0ecdec5c573dfdc09c84924497a2a196c801c98f24b27f0b3e13024dcccea778e5f47b2fb599c6fbf66eb026044b25fd25e4f065a62f50da
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.5
   resolution: "@apollo/client@npm:3.2.5"
   dependencies:
@@ -3090,7 +3120,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.5
+    "@apollo/client": 3.2.6
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -18156,6 +18186,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"symbol-observable@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "symbol-observable@npm:3.0.0"
+  checksum: 516cb0a6555624ece67b91be14b15f72a7562a18f15d5058938ee9ced1ef672a87c5fe5d3be72e79df3bb2f7eadba6dd9aae81cd31b6d6e797bdb6075ab9c596
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -18676,6 +18713,15 @@ fsevents@^1.2.7:
   dependencies:
     tslib: ^1.9.3
   checksum: 0280fb0e853db923605d84d83a7587342b2fcf718af5eac858cc461fcaa95837543de5f6d0a9afd8caf84faa01ffcc2a21cf71f5f51894d3e854b8a9504786bc
+  languageName: node
+  linkType: hard
+
+"ts-invariant@npm:^0.5.0":
+  version: 0.5.1
+  resolution: "ts-invariant@npm:0.5.1"
+  dependencies:
+    tslib: ^1.9.3
+  checksum: efa4a387f7b54eeea7dd0b29730cf353f90cc7087bf49dc8e3a0c78c970a348a7a001bea63777f1a8a2422d6910894be2c0cfdd956514ebf16ef963c0a5155d2
   languageName: node
   linkType: hard
 
