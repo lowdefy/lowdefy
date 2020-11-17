@@ -99,6 +99,7 @@ const PageSiderMenu = ({
         content: () => (
           <>
             <Header
+              blockId={`${blockId}_header`}
               methods={methods}
               properties={mergeObjects([{ style: styles.header }, properties.header])}
               content={{
@@ -114,6 +115,7 @@ const PageSiderMenu = ({
                         )}
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
+                          blockId={`${blockId}_mobile_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -129,6 +131,7 @@ const PageSiderMenu = ({
                       </div>
                       <div className={methods.makeCssClass(styles.desktop)}>
                         <UserAvatar
+                          blockId={`${blockId}_user_avatar`}
                           methods={methods}
                           user={user}
                           properties={mergeObjects([
@@ -161,12 +164,14 @@ const PageSiderMenu = ({
               }}
             />
             <Layout
+              blockId={`${blockId}_layout`}
               properties={properties.layout}
               methods={methods}
               content={{
                 content: () => (
                   <>
                     <Sider
+                      blockId={`${blockId}_sider`}
                       methods={methods}
                       properties={mergeObjects([
                         {
@@ -179,6 +184,7 @@ const PageSiderMenu = ({
                         content: () => (
                           <>
                             <Menu
+                              blockId={`${blockId}_menu`}
                               methods={methods}
                               menus={menus}
                               pageId={pageId}
@@ -199,6 +205,7 @@ const PageSiderMenu = ({
                       }}
                     />
                     <Content
+                      blockId={`${blockId}_content`}
                       methods={methods}
                       properties={mergeObjects([{ style: styles.body }, properties.content])}
                       content={{
@@ -218,6 +225,7 @@ const PageSiderMenu = ({
                             {content.content && content.content()}
                             {content.footer && (
                               <Footer
+                                blockId={`${blockId}_footer`}
                                 methods={methods}
                                 properties={properties.footer}
                                 content={{

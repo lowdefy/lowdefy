@@ -18,11 +18,13 @@ import { type } from '@lowdefy/helpers';
 
 import createPageController from '../controllers/pageController';
 import createComponentController from '../controllers/componentController';
+import createRequestController from '../controllers/requestController';
 
 function creatGetController(context) {
   const constructors = {
     page: createPageController,
     component: createComponentController,
+    request: createRequestController,
   };
   const memoized = {};
 

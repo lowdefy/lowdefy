@@ -18,8 +18,8 @@ import gql from 'graphql-tag';
 import { get, serializer } from '@lowdefy/helpers';
 
 const CALL_REQUEST = gql`
-  query callRequest($requestInput: RequestInput!) {
-    request(requestInput: $requestInput) {
+  query callRequest($input: RequestInput!) {
+    request(input: $input) {
       id
       type
       success
@@ -38,21 +38,20 @@ class Requests {
     this.fetch = this.fetch.bind(this);
   }
 
-  callRequests({ requestIds, onlyNew } = {}) {
+  callRequests({ requestIds, args, arrayIndices } = {}) {
     if (!requestIds) {
       return Promise.all(
         this.requestList.map((request) =>
-          this.callRequest({ requestId: request.requestId, onlyNew })
+          this.callRequest({ requestId: request.requestId, args, arrayIndices })
         )
       );
     }
-    return Promise.all(requestIds.map((requestId) => this.callRequest({ requestId, onlyNew })));
+    return Promise.all(
+      requestIds.map((requestId) => this.callRequest({ requestId, args, arrayIndices }))
+    );
   }
 
-  callRequest({ requestId, onlyNew }) {
-    if (onlyNew) {
-      if (requestId in this.context.requests) return Promise.resolve();
-    }
+  callRequest({ requestId, args, arrayIndices }) {
     if (!this.context.requests[requestId]) {
       const request = this.requestList.find((req) => req.requestId === requestId);
       if (!request) {
@@ -72,10 +71,10 @@ class Requests {
       };
     }
 
-    return this.fetch(requestId);
+    return this.fetch({ requestId, args, arrayIndices });
   }
 
-  fetch(requestId) {
+  fetch({ requestId, args, arrayIndices }) {
     this.context.requests[requestId].loading = true;
     if (this.context.RootBlocks) {
       this.context.RootBlocks.setBlocksLoadingCache();
@@ -86,9 +85,11 @@ class Requests {
         query: CALL_REQUEST,
         fetchPolicy: 'network-only',
         variables: {
-          requestInput: {
+          input: {
+            arrayIndices,
             requestId,
             blockId: this.context.blockId,
+            args: serializer.serialize(args) || {},
             input: serializer.serialize(this.context.input),
             lowdefyGlobal: serializer.serialize(this.context.lowdefyGlobal),
             pageId: this.context.pageId,

@@ -75,7 +75,6 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         }}
         actions={block.eval.actions}
         blockId={block.blockId}
-        Components={rootContext.Components}
         list={contentList}
         homePageId={rootContext.homePageId}
         key={block.blockId}
@@ -85,7 +84,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         properties={block.eval.properties}
         required={block.eval.required}
         user={rootContext.user}
-        validate={block.eval.validate}
+        validation={block.eval.validation}
       />
     </BlockLayout>
   );

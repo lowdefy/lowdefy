@@ -17,8 +17,9 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import mockBlock from './mockBlock';
+import { MemoryRouter } from 'react-router-dom';
 
-const runRenderTests = ({ examples, Block, meta, logger }) => {
+const runRenderTests = ({ examples, Block, meta, logger, validationsExamples }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(before);
@@ -27,11 +28,47 @@ const runRenderTests = ({ examples, Block, meta, logger }) => {
     test(`Render ${ex.id}`, () => {
       // create shell to setup react hooks with getProps before render;
       const Shell = () => <Block {...getProps({ ...ex, methods })} />;
-      const comp = renderer.create(<Shell />);
+      const comp = renderer.create(
+        <MemoryRouter>
+          <Shell />
+        </MemoryRouter>
+      );
       const tree = comp.toJSON();
       expect(tree).toMatchSnapshot();
       comp.unmount();
     });
+
+    if (meta.test && meta.test.validation) {
+      (validationsExamples || []).map((validationEx) => {
+        test(`Render validation.status = ${validationEx.status} ${ex.id}`, () => {
+          // create shell to setup react hooks with getProps before render;
+          const Shell = () => <Block {...getProps({ ...ex, methods })} validation={validationEx} />;
+          const comp = renderer.create(
+            <MemoryRouter>
+              <Shell />
+            </MemoryRouter>
+          );
+          const tree = comp.toJSON();
+          expect(tree).toMatchSnapshot();
+          comp.unmount();
+        });
+      });
+    }
+
+    if (meta.test && meta.test.required) {
+      test(`Render required = true ${ex.id}`, () => {
+        // create shell to setup react hooks with getProps before render;
+        const Shell = () => <Block {...getProps({ ...ex, methods })} required />;
+        const comp = renderer.create(
+          <MemoryRouter>
+            <Shell />
+          </MemoryRouter>
+        );
+        const tree = comp.toJSON();
+        expect(tree).toMatchSnapshot();
+        comp.unmount();
+      });
+    }
   });
 };
 

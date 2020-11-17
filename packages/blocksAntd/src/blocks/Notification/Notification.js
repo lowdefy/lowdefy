@@ -31,6 +31,7 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
           properties.button &&
           (() => (
             <Button
+              blockId={`${blockId}_button`}
               properties={properties.button}
               methods={methods}
               onClick={properties.button.onClick}
@@ -42,7 +43,11 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
         getContainer: () => document.getElementById(`${blockId}_notification`),
         icon: properties.icon && <Icon properties={properties.icon} methods={methods} />,
         closeIcon: properties.closeIcon && (
-          <Icon properties={properties.closeIcon} methods={methods} />
+          <Icon
+            blockId={`${blockId}_closeIcon`}
+            properties={properties.closeIcon}
+            methods={methods}
+          />
         ),
         key: blockId,
         message: args.message || properties.message || blockId,

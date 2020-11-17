@@ -18,6 +18,7 @@ import Affix from './blocks/Affix/Affix';
 import Alert from './blocks/Alert/Alert';
 import Anchor from './blocks/Anchor/Anchor';
 import AutoComplete from './blocks/AutoComplete/AutoComplete';
+import Avatar from './blocks/Avatar/Avatar';
 import Badge from './blocks/Badge/Badge';
 import Breadcrumb from './blocks/Breadcrumb/Breadcrumb';
 import Button from './blocks/Button/Button';
@@ -79,6 +80,7 @@ export {
   Alert,
   Anchor,
   AutoComplete,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
@@ -140,6 +142,7 @@ export default {
   Alert,
   Anchor,
   AutoComplete,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,

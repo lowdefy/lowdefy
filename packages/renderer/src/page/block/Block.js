@@ -20,7 +20,6 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import LoadBlock from './LoadBlock';
-import Defaults from './Defaults';
 import CategorySwitch from './CategorySwitch';
 import WatchCache from './WatchCache';
 
@@ -38,22 +37,17 @@ const Block = ({ block, Blocks, context, pageId, rootContext }) => {
         <LoadBlock
           meta={block.meta}
           render={(Comp) => (
-            <Defaults
-              Component={Comp}
-              render={(CompWithDefaults) => (
-                <WatchCache
+            <WatchCache
+              block={block}
+              rootContext={rootContext}
+              render={() => (
+                <CategorySwitch
+                  Component={Comp}
                   block={block}
+                  Blocks={Blocks}
+                  context={context}
+                  pageId={pageId}
                   rootContext={rootContext}
-                  render={() => (
-                    <CategorySwitch
-                      Component={CompWithDefaults}
-                      block={block}
-                      Blocks={Blocks}
-                      context={context}
-                      pageId={pageId}
-                      rootContext={rootContext}
-                    />
-                  )}
                 />
               )}
             />

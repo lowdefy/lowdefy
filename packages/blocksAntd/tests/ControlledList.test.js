@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import ControlledList from '../src/blocks/ControlledList/ControlledList';
 import examples from '../demo/examples/ControlledList.yaml';
 import meta from '../src/blocks/ControlledList/ControlledList.json';
 
-runRenderTests({ examples, Block: ControlledList, meta });
+runRenderTests({ examples, Block: ControlledList, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

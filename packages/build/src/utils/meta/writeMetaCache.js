@@ -22,7 +22,7 @@ function createWriteMetaCache({ cacheDirectory }) {
   async function writeMetaCache({ location, meta }) {
     const cacheKey = createCacheKey(location);
     return writeFile({
-      filePath: path.resolve(cacheDirectory, cacheKey),
+      filePath: path.resolve(cacheDirectory, 'meta/', cacheKey),
       content: JSON.stringify(meta, null, 2),
     });
   }

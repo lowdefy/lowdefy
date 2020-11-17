@@ -51,12 +51,8 @@ test('_regex with nonexistent key', () => {
   const input = { _regex: { pattern: '^a$', key: 'notThere' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _regex.on must be a string. Received: {"pattern":"^a$","key":"notThere"} at locationId.],
-    ]
-  `);
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_regex with nonexistent key', () => {
@@ -66,7 +62,7 @@ test('_regex with nonexistent key', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _regex.on must be a string. Received: {"pattern":"^a$","key":null} at locationId.],
+      [Error: Operator Error: _regex.key must be a string. Received: {"pattern":"^a$","key":null} at locationId.],
     ]
   `);
 });
