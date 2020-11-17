@@ -22,15 +22,22 @@ const { resolver, schema } = SendGridMailSend;
 
 const context = { ConfigurationError, RequestError };
 
-jest.mock('@sendgrid/mail', () => ({
-  setApiKey: jest.fn(),
-  send: (msg) => {
-    if (msg.templateId === 'template error') {
-      throw new Error({ response: { body: 'Error test' } });
-    }
-    return Promise.resolve(msg);
-  },
-}));
+jest.mock('@sendgrid/mail', () => {
+  return {
+    setApiKey: jest.fn(),
+    send: (msg) => {
+      if (msg.to === 'response_error') {
+        const error = new Error('Test error.');
+        error.response = { body: ['Test error 1.', 'Test error 2.'] };
+        throw error;
+      }
+      if (msg.to === 'generic_error') {
+        throw new Error('Test error.');
+      }
+      return Promise.resolve(msg);
+    },
+  };
+});
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -157,5 +164,35 @@ test('Error request with dynamicTemplateData is not an object', async () => {
   await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   await expect(() => testSchema({ schema, object: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
+  );
+});
+
+test('request throws an error', async () => {
+  const request = {
+    to: 'generic_error',
+    subject: 'A',
+    text: 'B',
+  };
+  const connection = {
+    apiKey: 'X',
+    from: { name: 'a@b.om', email: 'a.cc@mm.co' },
+  };
+  await expect(() => resolver({ request, connection, context })).rejects.toThrow(RequestError);
+  await expect(() => resolver({ request, connection, context })).rejects.toThrow('Test error');
+});
+
+test('request throws an error with response body', async () => {
+  const request = {
+    to: 'response_error',
+    subject: 'A',
+    text: 'B',
+  };
+  const connection = {
+    apiKey: 'X',
+    from: { name: 'a@b.om', email: 'a.cc@mm.co' },
+  };
+  await expect(() => resolver({ request, connection, context })).rejects.toThrow(RequestError);
+  await expect(() => resolver({ request, connection, context })).rejects.toThrow(
+    '["Test error 1.","Test error 2."]'
   );
 });

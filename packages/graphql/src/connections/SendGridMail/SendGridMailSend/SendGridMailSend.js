@@ -57,16 +57,11 @@ async function sendGridMailSend({ request, connection, context }) {
   };
   try {
     await sendgrid.send(msg);
-  } catch (err) {
-    throw new context.RequestError(
-      `${
-        (err.response &&
-          err.response.body.errors.map(
-            (error) => `field: '${error.field}', message: '${error.message}'`
-          )) ||
-        JSON.stringify(err)
-      }`
-    );
+  } catch (error) {
+    if (error.response) {
+      throw new context.RequestError(JSON.stringify(error.response.body));
+    }
+    throw new context.RequestError(error.message);
   }
   return { response: 'Mail sent successfully' };
 }
