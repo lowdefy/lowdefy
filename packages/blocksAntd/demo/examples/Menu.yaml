@@ -136,6 +136,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -148,10 +149,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -172,6 +183,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -184,10 +196,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -208,6 +230,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -220,10 +243,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -245,6 +278,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -257,10 +291,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -283,6 +327,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -295,10 +340,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -323,6 +378,7 @@
 #     selectedKeys: 
 #       - menu_item_1_1
 #       - menu_item_3
+#       - menu_item_1_2_2
 #     links:
 #       - id: menu_group_1
 #         type: MenuGroup
@@ -335,10 +391,20 @@
 #             properties:
 #               title: Menu Item one
 #           - id: menu_item_1_2
-#             type: MenuLink
-#             pageId: page_1_2
+#             type: MenuGroup
 #             properties:
-#               title: Menu Item two
+#               title: Menu Group
+#             links:
+#               - id: menu_item_1_2_1
+#                 type: MenuLink
+#                 pageId: page_1_2_1
+#                 properties:
+#                   title: Menu Group one
+#               - id: menu_item_1_2_2
+#                 type: MenuLink
+#                 pageId: page_1_2_2
+#                 properties:
+#                   title: Menu Group two
 #       - id: menu_item_2
 #         type: MenuLink
 #         pageId: page_2
@@ -359,6 +425,7 @@
 #     selectedKeys: 
 #       - menu_item_1_1
 #       - menu_item_3
+#       - menu_item_1_2_2
 #     links:
 #       - id: menu_group_1
 #         type: MenuGroup
@@ -371,10 +438,20 @@
 #             properties:
 #               title: Menu Item one
 #           - id: menu_item_1_2
-#             type: MenuLink
-#             pageId: page_1_2
+#             type: MenuGroup
 #             properties:
-#               title: Menu Item two
+#               title: Menu Group
+#             links:
+#               - id: menu_item_1_2_1
+#                 type: MenuLink
+#                 pageId: page_1_2_1
+#                 properties:
+#                   title: Menu Group one
+#               - id: menu_item_1_2_2
+#                 type: MenuLink
+#                 pageId: page_1_2_2
+#                 properties:
+#                   title: Menu Group two
 #       - id: menu_item_2
 #         type: MenuLink
 #         pageId: page_2
@@ -395,6 +472,7 @@
 #     selectedKeys: 
 #       - menu_item_1_1
 #       - menu_item_3
+#       - menu_item_1_2_2
 #     links:
 #       - id: menu_group_1
 #         type: MenuGroup
@@ -407,10 +485,20 @@
 #             properties:
 #               title: Menu Item one
 #           - id: menu_item_1_2
-#             type: MenuLink
-#             pageId: page_1_2
+#             type: MenuGroup
 #             properties:
-#               title: Menu Item two
+#               title: Menu Group
+#             links:
+#               - id: menu_item_1_2_1
+#                 type: MenuLink
+#                 pageId: page_1_2_1
+#                 properties:
+#                   title: Menu Group one
+#               - id: menu_item_1_2_2
+#                 type: MenuLink
+#                 pageId: page_1_2_2
+#                 properties:
+#                   title: Menu Group two
 #       - id: menu_item_2
 #         type: MenuLink
 #         pageId: page_2
@@ -432,6 +520,7 @@
 #     selectedKeys: 
 #       - menu_item_1_1
 #       - menu_item_3
+#       - menu_item_1_2_2
 #     links:
 #       - id: menu_group_1
 #         type: MenuGroup
@@ -444,10 +533,20 @@
 #             properties:
 #               title: Menu Item one
 #           - id: menu_item_1_2
-#             type: MenuLink
-#             pageId: page_1_2
+#             type: MenuGroup
 #             properties:
-#               title: Menu Item two
+#               title: Menu Group
+#             links:
+#               - id: menu_item_1_2_1
+#                 type: MenuLink
+#                 pageId: page_1_2_1
+#                 properties:
+#                   title: Menu Group one
+#               - id: menu_item_1_2_2
+#                 type: MenuLink
+#                 pageId: page_1_2_2
+#                 properties:
+#                   title: Menu Group two
 #       - id: menu_item_2
 #         type: MenuLink
 #         pageId: page_2
@@ -470,6 +569,7 @@
 #     selectedKeys: 
 #       - menu_item_1_1
 #       - menu_item_3
+#       - menu_item_1_2_2
 #     links:
 #       - id: menu_group_1
 #         type: MenuGroup
@@ -482,10 +582,20 @@
 #             properties:
 #               title: Menu Item one
 #           - id: menu_item_1_2
-#             type: MenuLink
-#             pageId: page_1_2
+#             type: MenuGroup
 #             properties:
-#               title: Menu Item two
+#               title: Menu Group
+#             links:
+#               - id: menu_item_1_2_1
+#                 type: MenuLink
+#                 pageId: page_1_2_1
+#                 properties:
+#                   title: Menu Group one
+#               - id: menu_item_1_2_2
+#                 type: MenuLink
+#                 pageId: page_1_2_2
+#                 properties:
+#                   title: Menu Group two
 #       - id: menu_item_2
 #         type: MenuLink
 #         pageId: page_2
@@ -510,6 +620,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -522,10 +633,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -546,6 +667,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -558,10 +680,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -582,6 +714,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -594,10 +727,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -619,6 +762,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -631,10 +775,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -657,6 +811,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -669,10 +824,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -696,6 +861,7 @@
     selectedKeys: 
       - menu_item_1_1
       - menu_item_3
+      - menu_item_1_2_2
     links:
       - id: menu_group_1
         type: MenuGroup
@@ -708,10 +874,20 @@
             properties:
               title: Menu Item one
           - id: menu_item_1_2
-            type: MenuLink
-            pageId: page_1_2
+            type: MenuGroup
             properties:
-              title: Menu Item two
+              title: Menu Group
+            links:
+              - id: menu_item_1_2_1
+                type: MenuLink
+                pageId: page_1_2_1
+                properties:
+                  title: Menu Group one
+              - id: menu_item_1_2_2
+                type: MenuLink
+                pageId: page_1_2_2
+                properties:
+                  title: Menu Group two
       - id: menu_item_2
         type: MenuLink
         pageId: page_2
@@ -728,7 +904,8 @@
 - id: 'menus: links[0]'
   type: Menu
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -749,7 +926,8 @@
 - id: 'menus: default'
   type: Menu
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -767,7 +945,8 @@
           properties:
             title: Title Menu Item 2
             icon: VideoCameraFilled
-    - menuId: default 
+    - id: menu_one
+      menuId: default 
       links:
         - id: default_menu_group_1
           type: MenuGroup
@@ -785,7 +964,8 @@
   properties:
     menuId: menu_one
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_group_1
           type: MenuGroup
@@ -803,7 +983,8 @@
           properties:
             title: Title Menu Item 2
             icon: VideoCameraFilled
-    - menuId: default 
+    - id: menu_one
+      menuId: default 
       links:
         - id: default_menu_group_1
           type: MenuGroup
@@ -819,7 +1000,8 @@
 - id: 'menusTitle properties.title'
   type: Menu
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_item_2
           type: MenuLink
@@ -831,7 +1013,8 @@
 - id: 'menusTitle pageId'
   type: Menu
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_item_2
           type: MenuLink
@@ -842,7 +1025,8 @@
 - id: 'menusTitle url'
   type: Menu
   menus:
-    - menuId: menu_one 
+    - id: menu_one
+      menuId: menu_one 
       links:
         - id: menu_item_2
           type: MenuLink
