@@ -52,6 +52,7 @@ test('basic display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Display",
     }
@@ -80,6 +81,7 @@ test('basic display with methods', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": Array [
         Object {
           "dataPath": "",
@@ -97,7 +99,7 @@ test('basic display with methods', () => {
   res.methods.callAction();
   res.methods.registerAction();
   res.methods.registerMethod();
-  expect(global.alert).toBeCalledTimes(3);
+  expect(global.alert).toBeCalledTimes(2);
   global.alert = realAlert;
 });
 
@@ -120,6 +122,7 @@ test('basic input', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Input",
       "value": null,
@@ -148,6 +151,7 @@ test('input setState', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Input",
       "value": null,
@@ -181,6 +185,7 @@ test('basic container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -211,6 +216,7 @@ test('basic context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Context",
     }
@@ -244,6 +250,7 @@ test('basic list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -278,6 +285,7 @@ test('list methods', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -334,6 +342,7 @@ test('blocks container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -396,6 +405,7 @@ test('blocks areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -445,6 +455,7 @@ test('areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -494,6 +505,7 @@ test('areas context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Context",
     }
@@ -550,6 +562,7 @@ test('areas list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -592,6 +605,7 @@ test('actions display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Display",
     }
@@ -599,7 +613,7 @@ test('actions display', () => {
   res.methods.callAction({ action: 'click' });
   res.methods.registerAction({ action: 'onClick' });
   res.methods.registerMethod({ action: 'open' });
-  expect(logger).toBeCalledTimes(3);
+  expect(logger).toBeCalledTimes(2);
 });
 
 test('provide schema errors', () => {
@@ -637,6 +651,7 @@ test('provide schema errors', () => {
       "properties": Object {
         "mistake": true,
       },
+      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "DisplayError",
     }
@@ -661,6 +676,7 @@ test('provide schema errors', () => {
       "properties": Object {
         "mistake": 1,
       },
+      "registeredMethods": Object {},
       "schemaErrors": Array [
         Object {
           "dataPath": "/properties/mistake",
@@ -702,4 +718,20 @@ test('throw schema error', () => {
   expect(() => stubBlockProps({ block, meta })).toThrowErrorMatchingInlineSnapshot(
     `"Schema error in Error - schema is invalid: data/properties/properties/type should be equal to one of the allowed values, data/properties/properties/type should be array, data/properties/properties/type should match some schema in anyOf"`
   );
+});
+
+test('registeredMethods for test purposes', () => {
+  const block = {
+    id: 'a',
+    type: 'Display',
+  };
+  const meta = {
+    category: 'display',
+  };
+  const res = stubBlockProps({ block, meta });
+  const mockMethod = jest.fn();
+  res.methods.registerMethod('methodsName', mockMethod);
+  expect(res.registeredMethods.methodsName).toBeDefined();
+  res.registeredMethods.methodsName({ test: 1 });
+  expect(mockMethod).toBeCalledWith({ test: 1 });
 });
