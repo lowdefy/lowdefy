@@ -35,7 +35,7 @@ const getDefaultMenu = (menus, menuId, links) => {
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ id, methods, menuId, pageId, properties, url, linkStyle }) =>
+const MenuTitle = ({ id, methods, pageId, properties, url, linkStyle }) =>
   type.isString(pageId) ? (
     <Link to={`/${pageId}`} className={methods.makeCssClass([linkStyle])}>
       {getTitle(id, properties, pageId)}
@@ -45,7 +45,7 @@ const MenuTitle = ({ id, methods, menuId, pageId, properties, url, linkStyle }) 
       {getTitle(id, properties, url)}
     </a>
   ) : (
-    <span className={methods.makeCssClass([linkStyle])}>{getTitle(id, properties, menuId)}</span>
+    <span className={methods.makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>
   );
 
 const getNestedColors = (menuColor, background) => {
@@ -99,6 +99,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
           theme === 'dark' && {
             '& > li.ant-menu-item-selected': nestedColorsBg,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
           },
         properties.selectedColor &&
           theme === 'light' && {
@@ -108,6 +109,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
             '& > li.ant-menu-submenu:hover': nestedColors,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item:hover': nestedColors,
             '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
           },
         properties.style,
       ])}
@@ -129,21 +131,23 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
               <Menu.SubMenu
                 className={methods.makeCssClass([
                   {
-                    '& > ul.ant-menu-sub': bgColorDarker,
+                    '& > ul': bgColorDarker,
                   },
                 ])}
                 popupClassName={methods.makeCssClass([
                   properties.backgroundColor && {
-                    '& > ul.ant-menu-sub': bgColorDarker,
+                    '& > ul': bgColorDarker,
                   },
                   properties.selectedColor &&
                     theme === 'dark' && {
-                      '& > ul.ant-menu-sub > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
                     },
                   properties.selectedColor &&
                     theme === 'light' && {
-                      '& > ul.ant-menu-sub > li.ant-menu-item-selected': nestedColorsBg,
-                      '& > ul.ant-menu-sub > li.ant-menu-item:hover': nestedColors,
+                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item:hover': nestedColors,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
                     },
                 ])}
                 key={link.id}
@@ -152,10 +156,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                     linkStyle={link.style}
                     id={link.id}
                     methods={methods}
-                    menuId={link.menuId}
-                    pageId={link.pageId}
                     properties={link.properties}
-                    url={link.url}
                   />
                 }
                 icon={
@@ -180,10 +181,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                               linkStyle={subLink.style}
                               id={subLink.id}
                               methods={methods}
-                              menuId={subLink.menuId}
                               properties={subLink.properties}
-                              url={subLink.url}
-                              pageId={subLink.pageId}
                             />
                           }
                         >
@@ -206,7 +204,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                                 linkStyle={subLinkGroup.style}
                                 id={subLinkGroup.id}
                                 methods={methods}
-                                menuId={subLinkGroup.menuId}
                                 pageId={subLinkGroup.pageId}
                                 properties={subLinkGroup.properties}
                                 url={subLinkGroup.url}
@@ -236,7 +233,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                             linkStyle={subLink.style}
                             id={subLink.id}
                             methods={methods}
-                            menuId={subLink.menuId}
                             pageId={subLink.pageId}
                             properties={subLink.properties}
                             url={subLink.url}
@@ -268,7 +264,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                   linkStyle={link.style}
                   id={link.id}
                   methods={methods}
-                  menuId={link.menuId}
                   pageId={link.pageId}
                   properties={link.properties}
                   url={link.url}
