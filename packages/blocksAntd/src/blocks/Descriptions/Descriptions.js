@@ -30,7 +30,7 @@ const DescriptionsBlock = ({ blockId, properties }) => (
     colon={properties.colon}
   >
     {type.isArray(properties.items)
-      ? (properties.items || []).map((item, i) =>
+      ? properties.items.map((item, i) =>
           type.isPrimitive(item) ? (
             <Descriptions.Item key={i} label={item} span={item}>
               {item}
@@ -42,7 +42,7 @@ const DescriptionsBlock = ({ blockId, properties }) => (
           )
         )
       : type.isObject(properties.items) &&
-        (Object.keys(properties.items) || []).map((key, i) => (
+        Object.keys(properties.items).map((key, i) => (
           <Descriptions.Item key={i} label={key}>
             {type.isPrimitive(properties.items[key])
               ? `${properties.items[key]}`
