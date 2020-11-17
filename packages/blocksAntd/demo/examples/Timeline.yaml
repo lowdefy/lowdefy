@@ -1,8 +1,178 @@
+# Check hierdie example asb soos valk - baie aspekte onseker oor ...
 - id: default
   type: Timeline
-- id: properties.items
+- id: "properties.mode: alternate"
   type: Timeline
   properties:
-    items: 
-      - title: one
-      - title: two
+    mode: alternate
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
+- id: "properties.mode: right"
+  type: Timeline
+  properties:
+    mode: right
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
+- id: "properties.mode: left"
+  type: Timeline
+  properties:
+    mode: left
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
+- id: "properties.reverse: true"
+  type: Timeline
+  properties:
+    reverse: true
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
+- id: "properties.pending: true"
+  type: Timeline
+  properties:
+    pending: true
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
+- id: "properties.pendingDotIcon: "
+  type: Timeline
+  properties:
+    pending: true
+    pendingDotIcon: FireFilled
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: AlibabaOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
+  blocks:
+    - id: Title 1
+      type: Title
+      properties:
+        level: 4
+    - id: Text 2
+      type: Paragraph
+      properties:
+        content: >
+          Text 2
+    - id: Text 3
+      type: Paragraph
+      properties:
+        content: >
+          Text 3
