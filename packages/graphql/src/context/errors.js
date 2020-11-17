@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 /*
   Copyright 2020 Lowdefy, Inc
 
@@ -15,6 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+/* eslint-disable max-classes-per-file */
 
 import { ApolloError } from 'apollo-server';
 

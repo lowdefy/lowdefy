@@ -16,7 +16,6 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
 import createGetController from './getController';
 import createGetLoader from './getLoader';
 
@@ -27,12 +26,10 @@ function createContext(config) {
     logger,
     getSecrets,
   };
-  bootstrapContext.getLoader = createGetLoader(bootstrapContext);
-  const getController = createGetController(bootstrapContext);
-
   async function context() {
+    bootstrapContext.getLoader = createGetLoader(bootstrapContext);
     return {
-      getController,
+      getController: createGetController(bootstrapContext),
       logger,
     };
   }

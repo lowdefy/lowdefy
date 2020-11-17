@@ -46,9 +46,7 @@
         "style": {
           "type": "object"
         },
-        "visible": {
-          "type": "boolean"
-        },
+        "visible": {},
         "blocks": {
           "type": "array",
           "items": {
@@ -61,14 +59,23 @@
             "$ref": "#/definitions/request"
           }
         },
-        "required": {
-          "type": [
-            "boolean",
-            "object"
-          ]
+        "required": {},
+        "validate": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
         },
         "actions": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/action"
+              }
+            }
+          }
         },
         "areas": {
           "type": "object",
@@ -191,9 +198,36 @@
           }
         }
       }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "success": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "skip": {},
+        "params": {}
+      }
     }
   },
   "properties": {
+    "version": {
+      "type": "string"
+    },
     "global": {
       "type": "object"
     },
