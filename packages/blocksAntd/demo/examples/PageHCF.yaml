@@ -2,6 +2,34 @@
   type: PageHCF
 - id: properties.content
   type: PageHCF
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+- id: "properties.header.theme: light - dark is default"
+  type: PageHCF
   properties:
-    content: 
-      content: This is page content
+    header:
+      theme: light
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+- id: "properties.header.color: #4432a8 "
+  type: PageHCF
+  properties:
+    header:
+      color: "#4432a8"
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
