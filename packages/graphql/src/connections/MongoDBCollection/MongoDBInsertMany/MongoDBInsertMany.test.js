@@ -17,7 +17,7 @@
 import MongoDBInsertMany from './MongoDBInsertMany';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import testSchema from '../../../test/testSchema';
+import { testSchema } from '../../../controllers/requestController';
 
 const { resolver, schema } = MongoDBInsertMany;
 

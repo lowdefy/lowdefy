@@ -17,7 +17,7 @@
 import AWS from 'aws-sdk';
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import testSchema from '../../../test/testSchema';
+import { testSchema } from '../../../controllers/requestController';
 
 jest.mock('aws-sdk');
 

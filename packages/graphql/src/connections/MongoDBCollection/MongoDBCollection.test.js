@@ -15,7 +15,7 @@
 */
 
 import MongoDBCollection from './MongoDBCollection';
-import testSchema from '../../test/testSchema';
+import { testSchema } from '../../controllers/requestController';
 import { ConfigurationError } from '../../context/errors';
 
 const { schema } = MongoDBCollection;

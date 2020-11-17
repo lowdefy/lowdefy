@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import SendGridMailSend from './sendGridMailSend';
+import SendGridMailSend from './SendGridMailSend';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import testSchema from '../../../test/testSchema';
+import { testSchema } from '../../../controllers/requestController';
 
 const { resolver, schema } = SendGridMailSend;
 

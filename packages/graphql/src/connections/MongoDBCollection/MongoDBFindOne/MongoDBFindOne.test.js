@@ -17,7 +17,7 @@
 import MongoDBFindOne from './MongoDBFindOne';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import testSchema from '../../../test/testSchema';
+import { testSchema } from '../../../controllers/requestController';
 
 const { resolver, schema } = MongoDBFindOne;
 

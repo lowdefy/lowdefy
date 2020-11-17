@@ -17,33 +17,56 @@
 /* eslint-disable no-underscore-dangle */
 
 import { get, serializer } from '@lowdefy/helpers';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { NodeParser } from '@lowdefy/operators';
+import Ajv from 'ajv';
+import ajvErrors from 'ajv-errors';
 import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
 
-function validateRequest(requestData, requestId) {
-  if (!requestData) {
-    throw new ConfigurationError(`Request "${requestId}" does not exist.`);
+const ajv = new Ajv({
+  allErrors: true,
+  jsonPointers: true,
+});
+ajvErrors(ajv);
+
+function testSchema({ schema, object }) {
+  const valid = ajv.validate(schema, object);
+  if (!valid) {
+    let message;
+    if (ajv.errors.length > 1) {
+      const firstMessage = ajv.errors[0].message;
+      const lastMessage = ajv.errors[ajv.errors.length - 1].message;
+      const firstTemplate = nunjucksFunction(firstMessage);
+      const lastTemplate = nunjucksFunction(lastMessage);
+      message = `${firstTemplate(ajv.errors[0])}; ${lastTemplate(
+        ajv.errors[ajv.errors.length - 1]
+      )}`;
+    } else {
+      const template = nunjucksFunction(ajv.errors[0].message);
+      message = template(ajv.errors[0]);
+    }
+    throw new ConfigurationError(message);
   }
-  if (!requestData.connectionId) {
-    throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
+  return true;
+}
+
+function validateRequest({ requestData, connectionData, requestId }) {
+  const connection = resolvers[connectionData.type];
+  if (!connection) {
+    throw new ConfigurationError(
+      `Request "${requestId}" has invalid connection type "${connectionData.type}".`
+    );
   }
-  if (!Object.keys(resolvers).includes(requestData.type)) {
+
+  const request = connection.requests[requestData.type];
+  if (!request) {
     throw new ConfigurationError(
       `Request "${requestId}" has invalid request type "${requestData.type}".`
     );
   }
-}
-
-function validateConnection(connectionData, requestData) {
-  if (!connectionData) {
-    throw new ConfigurationError(`Connection "${requestData.connectionId}" does not exist.`);
-  }
-  if (resolvers[requestData.type].connectionType !== connectionData.type) {
-    throw new ConfigurationError(
-      `Connection "${requestData.connectionId}" is not of type required by request "${requestData.requestId}".`
-    );
-  }
+  testSchema({ schema: connection.schema, object: connectionData.properties });
+  testSchema({ schema: request.schema, object: requestData.properties });
 }
 
 class RequestController {
@@ -65,14 +88,21 @@ class RequestController {
     urlQuery,
   }) {
     const requestData = await this.requestLoader.load({ pageId, contextId: blockId, requestId });
-
-    validateRequest(requestData, requestId);
-
+    if (!requestData) {
+      throw new ConfigurationError(`Request "${requestId}" does not exist.`);
+    }
+    if (!requestData.connectionId) {
+      throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
+    }
     const connectionData = await this.connectionLoader.load(requestData.connectionId);
+    if (!connectionData) {
+      throw new ConfigurationError(`Connection "${requestData.connectionId}" does not exist.`);
+    }
 
-    validateConnection(connectionData, requestData);
+    validateRequest({ requestData, connectionData, requestId });
 
-    const requestType = get(requestData, 'type');
+    const requestType = requestData.type;
+    const resolver = resolvers[connectionData.type].requests[requestData.type].resolver;
 
     const secrets = await this.getSecrets();
 
@@ -108,7 +138,7 @@ class RequestController {
     const context = { ConfigurationError, RequestError };
 
     try {
-      const response = await resolvers[requestType].resolver({
+      const response = await resolver({
         request,
         connection,
         context,
@@ -132,6 +162,6 @@ function createRequestController(context) {
   return new RequestController(context);
 }
 
-export { RequestController };
+export { RequestController, testSchema };
 
 export default createRequestController;

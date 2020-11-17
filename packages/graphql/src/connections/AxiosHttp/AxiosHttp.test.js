@@ -15,7 +15,7 @@
 */
 
 import AxiosHttp from './AxiosHttp';
-import testSchema from '../../test/testSchema';
+import { testSchema } from '../../controllers/requestController';
 import { ConfigurationError } from '../../context/errors';
 
 const { schema } = AxiosHttp;

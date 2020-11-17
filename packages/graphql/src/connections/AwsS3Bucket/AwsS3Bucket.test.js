@@ -15,7 +15,7 @@
 */
 
 import AwsS3Bucket from './AwsS3Bucket';
-import testSchema from '../../test/testSchema';
+import { testSchema } from '../../controllers/requestController';
 import { ConfigurationError } from '../../context/errors';
 
 const { schema } = AwsS3Bucket;

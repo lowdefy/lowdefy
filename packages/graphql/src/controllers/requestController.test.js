@@ -22,9 +22,14 @@ import { ConfigurationError, RequestError } from '../context/errors';
 jest.mock('../connections/resolvers', () => {
   const mockTestRequestResolver = jest.fn();
   return {
-    TestRequest: {
-      resolver: mockTestRequestResolver,
-      connectionType: 'TestConnection',
+    TestConnection: {
+      schema: {},
+      requests: {
+        TestRequest: {
+          resolver: mockTestRequestResolver,
+          schema: {},
+        },
+      },
     },
   };
 });
@@ -98,13 +103,13 @@ const defaultResolverImp = ({ request, connection }) => ({
 beforeEach(() => {
   mockLoadConnection.mockReset();
   mockLoadRequest.mockReset();
-  resolvers.TestRequest.resolver.mockReset();
+  resolvers.TestConnection.requests.TestRequest.resolver.mockReset();
 });
 
 test('call request', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
@@ -125,7 +130,7 @@ test('call request', async () => {
 test('request does not exist', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(() => null);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -148,7 +153,7 @@ test('request does not have a connectionId', async () => {
     }
     return null;
   });
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -172,7 +177,7 @@ test('request is not a valid request type', async () => {
     }
     return null;
   });
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -183,7 +188,7 @@ test('request is not a valid request type', async () => {
 test('connection does not exist', async () => {
   mockLoadConnection.mockImplementation(() => null);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -206,11 +211,11 @@ test('connection does not have correct type', async () => {
     return null;
   });
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Connection "testConnection" is not of type required by request "requestId".'
+    'Request "requestId" has invalid connection type "OtherConnection".'
   );
 });
 
@@ -235,7 +240,7 @@ test('parse request properties for operators', async () => {
     }
     return null;
   });
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
     args: {
@@ -299,7 +304,7 @@ test('parse connection properties for operators', async () => {
     return null;
   });
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
     args: {
@@ -371,7 +376,7 @@ test('parse secrets', async () => {
     }
     return null;
   });
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest(defaultInput);
   expect(res).toEqual({
@@ -405,7 +410,7 @@ test('request properties operator error', async () => {
     }
     return null;
   });
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -428,7 +433,7 @@ test('connection properties operator error', async () => {
     return null;
   });
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
@@ -439,7 +444,7 @@ test('connection properties operator error', async () => {
 test('request resolver throws RequestError', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(() => {
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(() => {
     throw new RequestError('Test request error.');
   });
   const controller = createRequestController(context);
@@ -450,7 +455,7 @@ test('request resolver throws RequestError', async () => {
 test('request resolver throws ConfigurationError', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(() => {
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(() => {
     throw new ConfigurationError('Test configuration error.');
   });
   const controller = createRequestController(context);
@@ -461,7 +466,7 @@ test('request resolver throws ConfigurationError', async () => {
 test('request resolver throws generic error', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
-  resolvers.TestRequest.resolver.mockImplementation(() => {
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(() => {
     throw new Error('Test generic error.');
   });
   const controller = createRequestController(context);

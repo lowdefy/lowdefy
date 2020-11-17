@@ -14,28 +14,16 @@
   limitations under the License.
 */
 
-// import axiosHTTPS from './axios/http';
-// import mongodbAggregation from './mongodb/aggregation';
-// import mongodbDeleteOne from './mongodb/deleteOne';
-// import mongodbDeleteMany from './mongodb/deleteMany';
-// import mongodbFind from './mongodb/find';
-// import mongodbFindOne from './mongodb/findOne';
-// import mongodbInsertOne from './mongodb/insertOne';
-// import mongodbInsertMany from './mongodb/insertMany';
-// import mongodbUpdateOne from './mongodb/updateOne';
-// import mongodbUpdateMany from './mongodb/updateMany';
-// import sendGridMailSend from './sendgrid/sendGridMailSend';
-// import getRows from './googleSheets/getRows';
+import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
+import AxiosHttp from './AxiosHttp/AxiosHttp';
+import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
+import SendGridMail from './SendGridMail/SendGridMail';
 
 const resolvers = {
-  // SendGridMailSend: {
-  //   resolver: sendGridMailSend,
-  //   connectionType: 'SendGridMail',
-  // },
-  // GoogleSheetsGetRows: {
-  //   resolver: getRows,
-  //   connectionType: 'GoogleSheet',
-  // },
+  AwsS3bucket,
+  AxiosHttp,
+  MongoDBCollection,
+  SendGridMail,
 };
 
 export default resolvers;
