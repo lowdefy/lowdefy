@@ -15,24 +15,31 @@
 */
 
 import createGetController from './getController';
-import { bootstrapContext } from '../test/testContext';
+import { testBootstrapContext } from '../test/testContext';
 import { PageController } from '../controllers/pageController';
 import { ComponentController } from '../controllers/componentController';
+import { RequestController } from '../controllers/requestController';
 
 test('get page controller', () => {
-  const getController = createGetController(bootstrapContext);
-  const pageController = getController('page');
-  expect(pageController).toBeInstanceOf(PageController);
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('page');
+  expect(controller).toBeInstanceOf(PageController);
 });
 
 test('get component controller', () => {
-  const getController = createGetController(bootstrapContext);
-  const componentController = getController('component');
-  expect(componentController).toBeInstanceOf(ComponentController);
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('component');
+  expect(controller).toBeInstanceOf(ComponentController);
+});
+
+test('get request controller', () => {
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('request');
+  expect(controller).toBeInstanceOf(RequestController);
 });
 
 test('memoise controller', () => {
-  const getController = createGetController(bootstrapContext);
+  const getController = createGetController(testBootstrapContext());
   const controller1 = getController('page');
   const controller2 = getController('page');
   expect(controller1).toBe(controller2);

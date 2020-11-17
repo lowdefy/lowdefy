@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import Switch from '../src/blocks/Switch/Switch';
 import examples from '../demo/examples/Switch.yaml';
 import meta from '../src/blocks/Switch/Switch.json';
 
-runRenderTests({ examples, Block: Switch, meta });
+runRenderTests({ examples, Block: Switch, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import TextInput from '../src/blocks/TextInput/TextInput';
 import examples from '../demo/examples/TextInput.yaml';
 import meta from '../src/blocks/TextInput/TextInput.json';
 
-runRenderTests({ examples, Block: TextInput, meta });
+runRenderTests({ examples, Block: TextInput, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

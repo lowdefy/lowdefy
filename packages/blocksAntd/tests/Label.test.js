@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import Label from '../src/blocks/Label/Label';
 import examples from '../demo/examples/Label.yaml';
 import meta from '../src/blocks/Label/Label.json';
 
-runRenderTests({ examples, Block: Label, meta });
+runRenderTests({ examples, Block: Label, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

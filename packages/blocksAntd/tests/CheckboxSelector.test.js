@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import CheckboxSelector from '../src/blocks/CheckboxSelector/CheckboxSelector';
 import examples from '../demo/examples/CheckboxSelector.yaml';
 import meta from '../src/blocks/CheckboxSelector/CheckboxSelector.json';
 
-runRenderTests({ examples, Block: CheckboxSelector, meta });
+runRenderTests({ examples, Block: CheckboxSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

@@ -30,7 +30,12 @@ const blockDefaultProps = {
   },
   properties: {},
   user: {},
-  validate: [],
+  required: false,
+  validation: {
+    status: null,
+    errors: [],
+    warnings: [],
+  },
 };
 
 export default blockDefaultProps;

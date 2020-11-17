@@ -40,8 +40,8 @@ const mockReqResponses = {
 
 const mockQuery = jest.fn();
 const mockQueryImp = ({ variables }) => {
-  const { requestInput } = variables;
-  const { requestId } = requestInput;
+  const { input } = variables;
+  const { requestId } = input;
   return new Promise((resolve, reject) => {
     if (requestId === 'req_error') {
       reject(mockReqResponses[requestId]);
@@ -172,7 +172,7 @@ test('callRequests', async () => {
     urlQuery,
   };
   const Requests = new RequestsClass(context);
-  const promise = Requests.callRequests({ requestIds: ['req_one'], onlyNew: true });
+  const promise = Requests.callRequests({ requestIds: ['req_one'] });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -287,33 +287,7 @@ test('callRequest request does not exist', async () => {
   });
 });
 
-test('callRequest not called the same request twice with onlyNew true', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
-    rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
-  expect(context.requests).toEqual({
-    req_one: {
-      error: [null],
-      loading: false,
-      response: 1,
-    },
-  });
-  await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
-  expect(mockQuery).toHaveBeenCalledTimes(1);
-});
-
-test('update unction should be called', async () => {
+test('update function should be called', async () => {
   const updateFunction = jest.fn();
   const context = {
     blockId,
@@ -353,7 +327,7 @@ test('fetch should set blocks loading and call query every time it is called', a
   await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(1);
   expect(mockQuery).toHaveBeenCalledTimes(1);
-  Requests.fetch('req_one');
+  Requests.fetch({ requestId: 'req_one' });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(2);
   expect(mockQuery).toHaveBeenCalledTimes(2);
 });
