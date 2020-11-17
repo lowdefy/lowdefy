@@ -143,7 +143,7 @@ class RequestController {
 
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
       input: connection.properties || {},
-      location: connection.connectionId || {},
+      location: connection.connectionId,
       args,
     });
     if (connectionErrors.length > 0) {
@@ -151,7 +151,7 @@ class RequestController {
     }
 
     const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
-      input: request.properties,
+      input: request.properties || {},
       location: request.requestId,
       args,
     });
