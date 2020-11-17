@@ -1,19 +1,13 @@
 {
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "id",
-    "type"
-  ],
+  "required": ["id", "type"],
   "properties": {
     "id": {
       "type": "string"
     },
     "required": {
-      "type": [
-        "boolean",
-        "object"
-      ]
+      "type": ["boolean", "object"]
     },
     "type": {
       "type": "string"
@@ -32,6 +26,12 @@
     },
     "actions": {
       "type": "object"
+    },
+    "menus": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "areas": {
       "type": "object",

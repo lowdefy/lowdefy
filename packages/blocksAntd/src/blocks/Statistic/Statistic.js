@@ -34,14 +34,22 @@ const StatisticBlock = ({ blockId, properties, methods }) => (
     valueStyle={properties.valueStyle}
     prefix={
       properties.prefixIcon ? (
-        <Icon methods={methods} properties={properties.prefixIcon} />
+        <Icon
+          blockId={`${blockId}_prefixIcon`}
+          methods={methods}
+          properties={properties.prefixIcon}
+        />
       ) : (
         properties.prefix || ''
       )
     }
     suffix={
       properties.suffixIcon ? (
-        <Icon methods={methods} properties={properties.suffixIcon} />
+        <Icon
+          blockId={`${blockId}_suffixIcon`}
+          methods={methods}
+          properties={properties.suffixIcon}
+        />
       ) : (
         properties.suffix || ''
       )

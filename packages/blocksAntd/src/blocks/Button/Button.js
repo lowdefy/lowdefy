@@ -49,7 +49,11 @@ const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties }
       shape={properties.shape}
       size={properties.size}
       type={get(properties, 'type', { default: 'primary' })}
-      icon={properties.icon && <Icon methods={methods} properties={properties.icon} actions={{}} />}
+      icon={
+        properties.icon && (
+          <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+        )
+      }
       onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
     >
       {properties.hideTitle ? '' : type.isNone(properties.title) ? blockId : properties.title}

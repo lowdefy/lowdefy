@@ -6,7 +6,7 @@ exports[`Render default 1`] = `
 >
   <button
     className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
-    id="undefined_id"
+    id="default_button"
     onClick={[Function]}
     type="button"
   >
@@ -14,12 +14,19 @@ exports[`Render default 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {}"
       content={Object {}}
-      id="undefined_id"
+      id="default_button_icon"
       list={Array []}
       menus={Array []}
+      required={false}
       role="img"
       user={Object {}}
-      validate={Array []}
+      validation={
+        Object {
+          "errors": Array [],
+          "status": null,
+          "warnings": Array [],
+        }
+      }
     >
       <svg
         aria-hidden="true"
@@ -46,7 +53,7 @@ exports[`Render properties.links 1`] = `
 >
   <button
     className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
-    id="undefined_id"
+    id="properties.links_button"
     onClick={[Function]}
     type="button"
   >
@@ -54,12 +61,19 @@ exports[`Render properties.links 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {}"
       content={Object {}}
-      id="undefined_id"
+      id="properties.links_button_icon"
       list={Array []}
       menus={Array []}
+      required={false}
       role="img"
       user={Object {}}
-      validate={Array []}
+      validation={
+        Object {
+          "errors": Array [],
+          "status": null,
+          "warnings": Array [],
+        }
+      }
     >
       <svg
         aria-hidden="true"

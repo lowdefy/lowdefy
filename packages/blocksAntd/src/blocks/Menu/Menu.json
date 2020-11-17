@@ -10,18 +10,18 @@
           "type": "string",
           "description": "Menu background color."
         },
-        "color": {
+        "selectedColor": {
           "type": "string",
-          "description": "Menu primary color."
+          "description": "Menu primary selected color."
+        },
+        "menuId": {
+          "type": "string",
+          "description": "App menu id used to get menu links."
         },
         "mode": {
           "type": "string",
           "enum": ["vertical", "horizontal", "inline"],
           "description": "Type of menu to render."
-        },
-        "selectable": {
-          "type": "boolean",
-          "description": "Allows selecting menu items."
         },
         "selectedKeys": {
           "type": "array",

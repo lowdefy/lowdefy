@@ -3,8 +3,52 @@
 - id: properties.title
   type: Anchor
   properties:
-    title: Alert title
-- id: properties.icon
+    title: Anchor title
+- id: properties.icon string
+  type: Anchor
+  properties:
+    icon: FireFilled
+- id: properties.icon object
+  type: Anchor
+  properties:
+    title: Click here
+    icon:
+      color: red
+      name: RocketTwoTone
+- id: properties.icon and properties.title
   type: Anchor
   properties:
     icon: LinkOutlined
+    title: This is the anchor title
+- id: properties.disabled
+  type: Anchor
+  properties:
+    disabled: true
+    title: disabled
+- id: properties.icon, properties.title and properties.disabled
+  type: Anchor
+  properties:
+    icon: LinkOutlined
+    title: This is the anchor title
+    disabled: true
+- id: properties.strong
+  type: Anchor
+  properties:
+    strong: true
+    title: Strong
+- id: properties.style
+  type: Anchor
+  properties:
+    title: Click here
+    style:
+      color: green !important
+      fontSize: 18
+- id: properties.style with icon
+  type: Anchor
+  properties:
+    title: Click here
+    icon: LinkOutlined
+    style:
+      color: green !important
+      fontSize: 8
+    

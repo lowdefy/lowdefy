@@ -37,7 +37,6 @@ test('writePages write page', async () => {
         pageId: 'page1',
         blockId: 'page1',
         requests: [],
-        mutations: [],
       },
     ],
   };
@@ -50,8 +49,7 @@ test('writePages write page', async () => {
   "id": "page:page1",
   "pageId": "page1",
   "blockId": "page1",
-  "requests": [],
-  "mutations": []
+  "requests": []
 }`,
       },
     ],
@@ -66,14 +64,12 @@ test('writePages multiple pages', async () => {
         pageId: 'page1',
         blockId: 'page1',
         requests: [],
-        mutations: [],
       },
       {
         id: 'page:page2',
         pageId: 'page2',
         blockId: 'page2',
         requests: [],
-        mutations: [],
       },
     ],
   };
@@ -86,8 +82,7 @@ test('writePages multiple pages', async () => {
   "id": "page:page1",
   "pageId": "page1",
   "blockId": "page1",
-  "requests": [],
-  "mutations": []
+  "requests": []
 }`,
       },
     ],
@@ -98,8 +93,7 @@ test('writePages multiple pages', async () => {
   "id": "page:page2",
   "pageId": "page2",
   "blockId": "page2",
-  "requests": [],
-  "mutations": []
+  "requests": []
 }`,
       },
     ],

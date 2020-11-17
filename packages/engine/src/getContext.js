@@ -18,22 +18,18 @@ import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions';
 import Blocks from './Blocks';
-import Mutations from './Mutations';
 import Requests from './Requests';
 import State from './State';
-import getFieldValues from './getFieldValues';
 
 const blockData = ({
   actions,
   areas,
   blockId,
   blocks,
-  defaultValue,
   field,
   id,
   layout,
   meta,
-  mutations,
   pageId,
   properties,
   requests,
@@ -47,12 +43,10 @@ const blockData = ({
   areas,
   blockId,
   blocks,
-  defaultValue,
   field,
   id,
   layout,
   meta,
-  mutations,
   pageId,
   properties,
   requests,
@@ -90,13 +84,12 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     allInputs: rootContext.input,
     lowdefyGlobal: rootContext.lowdefyGlobal,
     menus: rootContext.menus,
-    mutations: {},
     requests: {},
-    rootBlock: blockData(block), // filter block to prevent circular loop structure
+    rootBlock: blockData(block), // filter block to prevent circular structure
     routeHistory: rootContext.routeHistory,
     showValidationErrors: false,
     state: {},
-    update: () => {}, // Initialize update since Requests/Mutations might call it during context creation
+    update: () => {}, // Initialize update since Requests might call it during context creation
     updateBlock: rootContext.updateBlock,
     urlQuery: rootContext.urlQuery,
     window: rootContext.window,
@@ -107,11 +100,6 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);
-  ctx.Mutations = new Mutations(ctx);
-  const dVRequests = getFieldValues('_request', ...getFieldValues('defaultValue', ctx.rootBlock));
-  await ctx.Requests.callRequests({
-    requestIds: dVRequests,
-  });
   ctx.RootBlocks = new Blocks({
     areas: { root: { blocks: [ctx.rootBlock] } },
     context: ctx,
@@ -129,8 +117,9 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     });
   };
   ctx.update();
-  await ctx.RootBlocks.map[ctx.blockId].callAction({ action: 'onInit', hideLoading: true });
+  await ctx.RootBlocks.map[ctx.blockId].callAction({ action: 'onInit' });
   ctx.State.freezeState();
+  ctx.RootBlocks.map[ctx.blockId].callAction({ action: 'onInitAsync' });
   return ctx;
 };
 
