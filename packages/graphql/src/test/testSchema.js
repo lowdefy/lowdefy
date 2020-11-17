@@ -28,10 +28,19 @@ ajvErrors(ajv);
 function testSchema({ schema, object }) {
   const valid = ajv.validate(schema, object);
   if (!valid) {
-    console.log(ajv.errors);
-    const error = ajv.errors.reverse()[0];
-    const template = nunjucksFunction(error.message);
-    const message = template(error);
+    let message;
+    if (ajv.errors.length > 1) {
+      const firstMessage = ajv.errors[0].message;
+      const lastMessage = ajv.errors[ajv.errors.length - 1].message;
+      const firstTemplate = nunjucksFunction(firstMessage);
+      const lastTemplate = nunjucksFunction(lastMessage);
+      message = `${firstTemplate(ajv.errors[0])}; ${lastTemplate(
+        ajv.errors[ajv.errors.length - 1]
+      )}`;
+    } else {
+      const template = nunjucksFunction(ajv.errors[0].message);
+      message = template(ajv.errors[0]);
+    }
     throw new ConfigurationError(message);
   }
   return true;

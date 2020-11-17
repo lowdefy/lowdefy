@@ -137,13 +137,13 @@ test('property from is missing', () => {
   );
 });
 
-test.only('property from is not a string', () => {
+test('property from is not a string', () => {
   const connection = {
     apiKey: 'API_KEY',
     from: true,
   };
-  // expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: connection })).toThrow(
-    'SendGridMail connection property "/from" should be an email address, or a list of email addresses.'
+    'SendGridMail connection property "/from" should be a string.; SendGridMail connection property "/from" should be an email address, or a list of email addresses'
   );
 });

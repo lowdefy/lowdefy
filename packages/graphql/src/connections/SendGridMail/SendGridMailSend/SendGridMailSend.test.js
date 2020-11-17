@@ -115,15 +115,15 @@ test('Error request with to is not a email address', async () => {
   );
 });
 
-test.only('Error request with subject is not a string', async () => {
+test('Error request with subject is not a string', async () => {
   const request = {
     subject: true,
     text: 'B',
     to: 'a@b.com',
   };
-  // await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   await expect(() => testSchema({ schema, object: request })).toThrow(
-    'SendGridMailSend request properties should be an object or a array describing emails to send.'
+    'SendGridMailSend request property "subject" should be a string.; SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
 
