@@ -17,7 +17,7 @@
 import React, { lazy, Suspense, memo } from 'react';
 import { Loading3QuartersOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { ErrorBoundary, blockDefaultProps } from '@lowdefy/block-tools';
-import { omit, serializer, type } from '@lowdefy/helpers';
+import { omit, type } from '@lowdefy/helpers';
 
 const lowdefyProps = [
   'content',
@@ -37,28 +37,25 @@ const lowdefyProps = [
   'validation',
 ];
 const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
-  let propertiesCopy = serializer.copy(properties);
-  if (type.isString(propertiesCopy)) {
-    propertiesCopy = { name: propertiesCopy };
-  }
-  if (!type.isString(propertiesCopy.name)) {
-    propertiesCopy.name = 'CloseCircleOutlined';
+  const propertiesObj = type.isString(properties) ? { name: properties } : properties;
+  if (!type.isString(propertiesObj.name)) {
+    propertiesObj.name = 'CloseCircleOutlined';
   }
   const iconProps = {
     id: blockId,
     className: methods.makeCssClass([
-      { color: propertiesCopy.color, fontSize: propertiesCopy.size },
-      properties.style,
+      { color: propertiesObj.color, fontSize: propertiesObj.size },
+      propertiesObj.style,
     ]),
-    rotate: propertiesCopy.rotate,
-    spin: propertiesCopy.spin,
-    twoToneColor: propertiesCopy.color,
+    rotate: propertiesObj.rotate,
+    spin: propertiesObj.spin,
+    twoToneColor: propertiesObj.color,
     ...omit(props, lowdefyProps),
   };
-  const IconComp = memo(lazy(() => import(`./icons/${propertiesCopy.name}`)));
+  const IconComp = memo(lazy(() => import(`./icons/${propertiesObj.name}`)));
   return (
     <>
-      {actions.onClick && actions.onClick.loading && !propertiesCopy.disableLoadingIcon ? (
+      {actions.onClick && actions.onClick.loading && !propertiesObj.disableLoadingIcon ? (
         <Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />
       ) : (
         <ErrorBoundary fallback={<ExclamationCircleOutlined {...iconProps} />}>
