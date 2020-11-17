@@ -72,6 +72,8 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
                 'registerMethod',
                 'user',
                 'validation',
+                'list',
+                'menus',
               ])} // spread props for Ant design to populate props from parent
             />
           </Suspense>
