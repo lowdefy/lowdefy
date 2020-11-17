@@ -16,7 +16,7 @@
 
 import SendGridMailSend from './SendGridMailSend';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import { testSchema } from '../../../controllers/requestController';
+import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema } = SendGridMailSend;
 

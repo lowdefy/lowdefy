@@ -17,7 +17,7 @@
 import MongoDBAggregation from './MongoDBAggregation';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import { testSchema } from '../../../controllers/requestController';
+import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema } = MongoDBAggregation;
 

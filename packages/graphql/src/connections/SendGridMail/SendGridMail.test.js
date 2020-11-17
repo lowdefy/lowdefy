@@ -15,7 +15,7 @@
 */
 
 import SendGridMail from './SendGridMail';
-import { testSchema } from '../../controllers/requestController';
+import testSchema from '../../utils/testSchema';
 import { ConfigurationError } from '../../context/errors';
 
 const { schema } = SendGridMail;

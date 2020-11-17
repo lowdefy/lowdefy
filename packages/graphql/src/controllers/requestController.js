@@ -14,60 +14,11 @@
   limitations under the License.
 */
 
-/* eslint-disable no-underscore-dangle */
-
-import { get, serializer } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
+import { serializer } from '@lowdefy/helpers';
 import { NodeParser } from '@lowdefy/operators';
-import Ajv from 'ajv';
-import ajvErrors from 'ajv-errors';
 import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
-
-const ajv = new Ajv({
-  allErrors: true,
-  jsonPointers: true,
-});
-ajvErrors(ajv);
-
-function testSchema({ schema, object }) {
-  const valid = ajv.validate(schema, object);
-  if (!valid) {
-    let message;
-    if (ajv.errors.length > 1) {
-      const firstMessage = ajv.errors[0].message;
-      const lastMessage = ajv.errors[ajv.errors.length - 1].message;
-      const firstTemplate = nunjucksFunction(firstMessage);
-      const lastTemplate = nunjucksFunction(lastMessage);
-      message = `${firstTemplate(ajv.errors[0])}; ${lastTemplate(
-        ajv.errors[ajv.errors.length - 1]
-      )}`;
-    } else {
-      const template = nunjucksFunction(ajv.errors[0].message);
-      message = template(ajv.errors[0]);
-    }
-    throw new ConfigurationError(message);
-  }
-  return true;
-}
-
-function validateRequest({ requestData, connectionData, requestId }) {
-  const connection = resolvers[connectionData.type];
-  if (!connection) {
-    throw new ConfigurationError(
-      `Request "${requestId}" has invalid connection type "${connectionData.type}".`
-    );
-  }
-
-  const request = connection.requests[requestData.type];
-  if (!request) {
-    throw new ConfigurationError(
-      `Request "${requestId}" has invalid request type "${requestData.type}".`
-    );
-  }
-  testSchema({ schema: connection.schema, object: connectionData.properties });
-  testSchema({ schema: request.schema, object: requestData.properties });
-}
+import testSchema from '../utils/testSchema';
 
 class RequestController {
   constructor({ getLoader, getSecrets }) {
@@ -87,25 +38,100 @@ class RequestController {
     state,
     urlQuery,
   }) {
-    const requestData = await this.requestLoader.load({ pageId, contextId: blockId, requestId });
-    if (!requestData) {
+    const request = await this.loadRequest({
+      pageId,
+      contextId: blockId,
+      requestId,
+    });
+    const connection = await this.loadConnection({ connectionId: request.connectionId });
+
+    // Get resolver early to throw and avoid parsing if request/connection type is invalid
+    const { connectionSchema, requestSchema, resolver } = this.getResolverAndSchemas({
+      connection,
+      request,
+    });
+
+    const { connectionProperties, requestProperties } = await this.parseOperators({
+      args,
+      arrayIndices,
+      connection,
+      input,
+      lowdefyGlobal,
+      request,
+      state,
+      urlQuery,
+    });
+
+    testSchema({ schema: connectionSchema, object: connectionProperties });
+    testSchema({ schema: requestSchema, object: requestProperties });
+
+    const response = await this.callResolver({
+      connectionProperties,
+      requestProperties,
+      resolver,
+    });
+
+    return {
+      id: request.id,
+      success: true,
+      type: request.type,
+      response: serializer.serialize(response),
+    };
+  }
+
+  async loadRequest({ pageId, contextId, requestId }) {
+    const request = await this.requestLoader.load({ pageId, contextId, requestId });
+    if (!request) {
       throw new ConfigurationError(`Request "${requestId}" does not exist.`);
     }
-    if (!requestData.connectionId) {
+    if (!request.connectionId) {
       throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
     }
-    const connectionData = await this.connectionLoader.load(requestData.connectionId);
-    if (!connectionData) {
-      throw new ConfigurationError(`Connection "${requestData.connectionId}" does not exist.`);
+
+    return request;
+  }
+
+  async loadConnection({ connectionId }) {
+    const connection = await this.connectionLoader.load(connectionId);
+    if (!connection) {
+      throw new ConfigurationError(`Connection "${connectionId}" does not exist.`);
     }
+    return connection;
+  }
 
-    validateRequest({ requestData, connectionData, requestId });
+  getResolverAndSchemas({ connection, request }) {
+    // Name ??
+    const connectionObj = resolvers[connection.type];
+    if (!connectionObj) {
+      throw new ConfigurationError(
+        `Request "${request.requestId}" has invalid connection type "${connection.type}".`
+      );
+    }
+    // Name ??
+    const requestObj = connectionObj.requests[request.type];
+    if (!requestObj) {
+      throw new ConfigurationError(
+        `Request "${request.requestId}" has invalid request type "${request.type}".`
+      );
+    }
+    return {
+      connectionSchema: connectionObj.schema,
+      requestSchema: requestObj.schema,
+      resolver: requestObj.resolver,
+    };
+  }
 
-    const requestType = requestData.type;
-    const resolver = resolvers[connectionData.type].requests[requestData.type].resolver;
-
+  async parseOperators({
+    args,
+    arrayIndices,
+    connection,
+    input,
+    lowdefyGlobal,
+    request,
+    state,
+    urlQuery,
+  }) {
     const secrets = await this.getSecrets();
-
     const operatorsParser = new NodeParser({
       arrayIndices,
       input,
@@ -115,40 +141,39 @@ class RequestController {
       urlQuery,
     });
 
-    const { output: request, errors: requestParseErrors } = operatorsParser.parse({
-      input: get(requestData, 'properties', { default: {} }),
+    const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+      input: connection.properties || {},
+      location: connection.connectionId || {},
       args,
-      location: requestId,
     });
-
-    if (requestParseErrors.length > 0) {
-      throw new RequestError(requestParseErrors[0]);
+    if (connectionErrors.length > 0) {
+      throw new RequestError(connectionErrors[0]);
     }
 
-    const { output: connection, errors: connectionParseErrors } = operatorsParser.parse({
-      input: get(connectionData, 'properties', { default: {} }),
+    const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+      input: request.properties,
+      location: request.requestId,
       args,
-      location: connectionData.connectionId,
     });
-
-    if (connectionParseErrors.length > 0) {
-      throw new RequestError(connectionParseErrors[0]);
+    if (requestErrors.length > 0) {
+      throw new RequestError(requestErrors[0]);
     }
 
+    return {
+      connectionProperties,
+      requestProperties,
+    };
+  }
+
+  async callResolver({ connectionProperties, requestProperties, resolver }) {
     const context = { ConfigurationError, RequestError };
-
     try {
       const response = await resolver({
-        request,
-        connection,
+        request: requestProperties,
+        connection: connectionProperties,
         context,
       });
-      return {
-        id: requestData.id,
-        success: true,
-        type: requestType,
-        response: serializer.serialize(response),
-      };
+      return response;
     } catch (err) {
       if (err instanceof ConfigurationError || err instanceof RequestError) {
         throw err;

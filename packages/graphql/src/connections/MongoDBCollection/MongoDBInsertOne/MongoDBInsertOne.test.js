@@ -18,7 +18,7 @@ import { MongoClient } from 'mongodb';
 import MongoDBInsertOne from './MongoDBInsertOne';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
 import { ConfigurationError, RequestError } from '../../../context/errors';
-import { testSchema } from '../../../controllers/requestController';
+import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema } = MongoDBInsertOne;
 

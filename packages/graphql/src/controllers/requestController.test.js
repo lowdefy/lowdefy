@@ -394,6 +394,63 @@ test('parse secrets', async () => {
   });
 });
 
+test('request properties default value', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {
+        connectionProperty: 'connectionProperty',
+      },
+      request: {},
+    },
+    success: true,
+    type: 'TestRequest',
+  });
+});
+
+test('connection properties default value', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(defaultLoadRequestImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {},
+      request: {
+        requestProperty: 'requestProperty',
+      },
+    },
+    success: true,
+    type: 'TestRequest',
+  });
+});
+
 test('request properties operator error', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
