@@ -27,6 +27,7 @@
   type: Badge
   properties:
     status: success
+# on antd but not working
 - id: "properties.status: processing"
   type: Badge
   properties:
@@ -39,6 +40,11 @@
   type: Badge
   properties:
     status: error
+- id: "properties.status: error and text: Error!"
+  type: Badge
+  properties:
+    status: error
+    text: Error!
 - id: "properties.dot: true"
   type: Badge
   properties:
@@ -54,3 +60,13 @@
     offset:
       - 25
       - 10
+- id: "properties.icon string"
+  type: Badge
+  properties:
+    icon: NotificationOutlined
+- id: "properties.icon object"
+  type: Badge
+  properties:
+    icon: 
+      name: NotificationOutlined
+      spin: true
