@@ -32,6 +32,12 @@
     name: RocketOutlined
     size: 25
     color: '#9c27b0'
+- id: 'properties.style: border: 1px solid red'
+  type: Icon
+  properties:
+    name: RocketOutlined
+    style:
+      border: 1px solid red
 
 
 
