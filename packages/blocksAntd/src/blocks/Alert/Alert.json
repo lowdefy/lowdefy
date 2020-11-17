@@ -30,6 +30,11 @@
           "type": "string",
           "description": "Content message of alert."
         },
+        "showIcon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show type default icon."
+        },
         "type": {
           "type": "string",
           "enum": ["success", "info", "warning", "error"],
