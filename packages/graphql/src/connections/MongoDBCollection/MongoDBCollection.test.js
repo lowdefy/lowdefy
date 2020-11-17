@@ -20,17 +20,17 @@ import { ConfigurationError } from '../../context/errors';
 
 const { schema } = MongoDBCollection;
 
-// test('All requests are present', () => {
-//   expect(MongoDBCollection.requests.MongoDBAggregation).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBDeleteOne).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBDeleteMany).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBFind).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBFindOne).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBInsertOne).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBInsertMany).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBUpdateOne).toBeDefined();
-//   expect(MongoDBCollection.requests.MongoDBUpdateMany).toBeDefined();
-// });
+test('All requests are present', () => {
+  expect(MongoDBCollection.requests.MongoDBAggregation).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBDeleteMany).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBDeleteOne).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBFind).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBFindOne).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBInsertMany).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBInsertOne).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBUpdateMany).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBUpdateOne).toBeDefined();
+});
 
 test('valid connection schema', () => {
   const connection = {
