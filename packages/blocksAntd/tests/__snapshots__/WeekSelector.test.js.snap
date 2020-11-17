@@ -1359,21 +1359,10 @@ exports[`Render property.suffixIcon: CalendarFilled 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -1464,21 +1453,10 @@ exports[`Render property.suffixIcon: CalendarFilled.blue 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -2864,21 +2842,10 @@ exports[`Render required = true property.suffixIcon: CalendarFilled 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -2969,21 +2936,10 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -4915,21 +4871,10 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled 1`
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -5049,21 +4994,10 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -6478,21 +6412,10 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled 1`]
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -6583,21 +6506,10 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -8439,21 +8351,10 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -8568,21 +8469,10 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -10538,21 +10428,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -10672,21 +10551,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"

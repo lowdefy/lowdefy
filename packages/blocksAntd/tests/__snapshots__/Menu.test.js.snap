@@ -94,21 +94,10 @@ exports[`Render menus: links[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -183,21 +172,10 @@ exports[`Render menus: properties.menuId: menu_one 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -246,21 +224,10 @@ exports[`Render menusTitle pageId 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -309,21 +276,10 @@ exports[`Render menusTitle properties.title 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -372,21 +328,10 @@ exports[`Render menusTitle url 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -469,21 +414,10 @@ exports[`Render mode: inline, backgroundColor: #016e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -524,21 +458,10 @@ exports[`Render mode: inline, backgroundColor: #016e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -622,21 +545,10 @@ exports[`Render mode: inline, selectedColor: #f16e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -677,21 +589,10 @@ exports[`Render mode: inline, selectedColor: #f16e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -775,21 +676,10 @@ exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e 1
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -830,21 +720,10 @@ exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e 1
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -928,21 +807,10 @@ exports[`Render mode: inline, theme: light 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -983,21 +851,10 @@ exports[`Render mode: inline, theme: light 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1081,21 +938,10 @@ exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1136,21 +982,10 @@ exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1234,21 +1069,10 @@ exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundCo
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1289,21 +1113,10 @@ exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundCo
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1378,21 +1191,10 @@ exports[`Render mode: vertical, backgroundColor: #016e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1429,21 +1231,10 @@ exports[`Render mode: vertical, backgroundColor: #016e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1518,21 +1309,10 @@ exports[`Render mode: vertical, selectedColor: #f16e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1569,21 +1349,10 @@ exports[`Render mode: vertical, selectedColor: #f16e1e 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1658,21 +1427,10 @@ exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1709,21 +1467,10 @@ exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1798,21 +1545,10 @@ exports[`Render mode: vertical, theme: light 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1849,21 +1585,10 @@ exports[`Render mode: vertical, theme: light 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1938,21 +1663,10 @@ exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, background
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -1989,21 +1703,10 @@ exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, background
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -2116,21 +1819,10 @@ exports[`Render properties.danger: true 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -2179,21 +1871,10 @@ exports[`Render properties.icon 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu_item_one_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -2230,21 +1911,10 @@ exports[`Render properties.icon 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu Item two_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -2413,21 +2083,10 @@ exports[`Render properties.title 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu_item_one_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"
@@ -2464,21 +2123,10 @@ exports[`Render properties.title 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu Item two_icon"
-      list={Array []}
-      menus={Array []}
       required={false}
       role="img"
-      user={Object {}}
-      validation={
-        Object {
-          "errors": Array [],
-          "status": null,
-          "warnings": Array [],
-        }
-      }
     >
       <svg
         aria-hidden="true"

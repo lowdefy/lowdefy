@@ -19,6 +19,23 @@ import { Loading3QuartersOutlined, ExclamationCircleOutlined } from '@ant-design
 import { ErrorBoundary, blockDefaultProps } from '@lowdefy/block-tools';
 import { omit, serializer, type } from '@lowdefy/helpers';
 
+const lowdefyProps = [
+  'content',
+  'homePageId',
+  'list',
+  'loading',
+  'loading',
+  'menus',
+  'pageId',
+  'registerAction',
+  'registerAction',
+  'registeredMethods',
+  'registerMethod',
+  'registerMethod',
+  'schemaErrors',
+  'user',
+  'validation',
+];
 const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
   let propertiesCopy = serializer.copy(properties);
   if (type.isString(propertiesCopy)) {
@@ -29,17 +46,14 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
   }
   const iconProps = {
     id: blockId,
-    className: methods.makeCssClass(properties.style),
+    className: methods.makeCssClass([
+      { color: propertiesCopy.color, fontSize: propertiesCopy.size },
+      properties.style,
+    ]),
     rotate: propertiesCopy.rotate,
     spin: propertiesCopy.spin,
-    ...omit(props, [
-      'homePageId',
-      'loading',
-      'pageId',
-      'registerAction',
-      'registerMethod',
-      'schemaErrors',
-    ]),
+    twoToneColor: propertiesCopy.color,
+    ...omit(props, lowdefyProps),
   };
   const IconComp = memo(lazy(() => import(`./icons/${propertiesCopy.name}`)));
   return (
@@ -51,10 +65,6 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
           <Suspense fallback={<Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />}>
             <IconComp
               id={blockId}
-              className={methods.makeCssClass([
-                { color: propertiesCopy.color, fontSize: propertiesCopy.size },
-                properties.style,
-              ])}
               onClick={
                 actions.onClick &&
                 (() =>
@@ -62,19 +72,7 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
                     action: 'onClick',
                   }))
               }
-              twoToneColor={propertiesCopy.color}
-              rotate={propertiesCopy.rotate}
-              spin={propertiesCopy.spin}
-              {...omit(props, [
-                'content',
-                'loading',
-                'registerAction',
-                'registerMethod',
-                'user',
-                'validation',
-                'list',
-                'menus',
-              ])} // spread props for Ant design to populate props from parent
+              {...iconProps} // spread props for Ant design to populate props from parent
             />
           </Suspense>
         </ErrorBoundary>
