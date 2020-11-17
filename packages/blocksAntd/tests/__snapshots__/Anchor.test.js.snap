@@ -3,6 +3,7 @@
 exports[`Render default 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="default"
   onClick={[Function]}
 >
    default
@@ -12,6 +13,7 @@ exports[`Render default 1`] = `
 exports[`Render properties.disabled 1`] = `
 <span
   className="{\\"style\\":[null,{\\"color\\":\\"#BEBEBE\\",\\"cursor\\":\\"not-allowed\\"}]}"
+  id="properties.disabled"
 >
    disabled
 </span>
@@ -20,13 +22,14 @@ exports[`Render properties.disabled 1`] = `
 exports[`Render properties.icon and properties.title 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="properties.icon and properties.title"
   onClick={[Function]}
 >
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.icon and properties.title_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -62,13 +65,14 @@ exports[`Render properties.icon and properties.title 1`] = `
 exports[`Render properties.icon object 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="properties.icon object"
   onClick={[Function]}
 >
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.icon object_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -104,13 +108,14 @@ exports[`Render properties.icon object 1`] = `
 exports[`Render properties.icon string 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="properties.icon string"
   onClick={[Function]}
 >
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.icon string_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -146,12 +151,13 @@ exports[`Render properties.icon string 1`] = `
 exports[`Render properties.icon, properties.title and properties.disabled 1`] = `
 <span
   className="{\\"style\\":[null,{\\"color\\":\\"#BEBEBE\\",\\"cursor\\":\\"not-allowed\\"}]}"
+  id="properties.icon, properties.title and properties.disabled"
 >
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.icon, properties.title and properties.disabled_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -187,6 +193,7 @@ exports[`Render properties.icon, properties.title and properties.disabled 1`] = 
 exports[`Render properties.strong 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="properties.strong"
   onClick={[Function]}
 >
   <b>
@@ -198,6 +205,7 @@ exports[`Render properties.strong 1`] = `
 exports[`Render properties.style 1`] = `
 <a
   className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":18},null]}"
+  id="properties.style"
   onClick={[Function]}
 >
    Click here
@@ -207,13 +215,14 @@ exports[`Render properties.style 1`] = `
 exports[`Render properties.style with icon 1`] = `
 <a
   className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":8},null]}"
+  id="properties.style with icon"
   onClick={[Function]}
 >
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {}"
     content={Object {}}
-    id="undefined_id"
+    id="properties.style with icon_icon"
     list={Array []}
     menus={Array []}
     required={false}
@@ -249,6 +258,7 @@ exports[`Render properties.style with icon 1`] = `
 exports[`Render properties.title 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
+  id="properties.title"
   onClick={[Function]}
 >
    Anchor title

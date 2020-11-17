@@ -52,6 +52,7 @@ const WeekSelector = ({ blockId, loading, methods, properties, required, validat
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />

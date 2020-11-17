@@ -57,15 +57,29 @@ const MultipleSelector = ({
               placeholder={get(properties, 'placeholder', { default: 'Select items' })}
               suffixIcon={
                 properties.suffixIcon && (
-                  <Icon methods={methods} properties={properties.suffixIcon} />
+                  <Icon
+                    blockId={`${blockId}_suffixIcon`}
+                    methods={methods}
+                    properties={properties.suffixIcon}
+                  />
                 )
               }
               clearIcon={
-                properties.clearIcon && <Icon methods={methods} properties={properties.clearIcon} />
+                properties.clearIcon && (
+                  <Icon
+                    blockId={`${blockId}_clearIcon`}
+                    methods={methods}
+                    properties={properties.clearIcon}
+                  />
+                )
               }
               menuItemSelectedIcon={
                 properties.selectedIcon && (
-                  <Icon methods={methods} properties={properties.selectedIcon} />
+                  <Icon
+                    blockId={`${blockId}_selectedIcon`}
+                    methods={methods}
+                    properties={properties.selectedIcon}
+                  />
                 )
               }
               showArrow={get(properties, 'showArrow', { default: true })}

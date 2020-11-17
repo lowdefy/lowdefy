@@ -62,7 +62,7 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
     ) : null;
 
   return (
-    <Row className={rowClassName} style={{ marginBottom: 0 }}>
+    <Row id={blockId} className={rowClassName} style={{ marginBottom: 0 }}>
       {label && (
         <Col {...labelCol} className={labelColClassName}>
           <label htmlFor={`${blockId}_input`} className={labelClassName} title={label}>

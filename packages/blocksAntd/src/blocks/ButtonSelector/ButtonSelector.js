@@ -18,6 +18,7 @@ import React from 'react';
 import { Radio } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
+
 import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';

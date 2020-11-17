@@ -3,6 +3,7 @@
 exports[`Render default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -44,6 +45,7 @@ exports[`Render default 1`] = `
 exports[`Render properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -136,6 +138,7 @@ exports[`Render properties.color_red 1`] = `
 exports[`Render properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -230,6 +233,7 @@ exports[`Render properties.disabled: true 1`] = `
 exports[`Render properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -322,6 +326,7 @@ exports[`Render properties.inputStyle. CSS style 1`] = `
 exports[`Render properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -414,6 +419,7 @@ exports[`Render properties.label.colon: false 1`] = `
 exports[`Render properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -494,6 +500,7 @@ exports[`Render properties.label.disabled: true 1`] = `
 exports[`Render properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -591,6 +598,7 @@ exports[`Render properties.label.extra: showingextra 1`] = `
 exports[`Render properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -683,6 +691,7 @@ exports[`Render properties.label: align_right 1`] = `
 exports[`Render properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -783,6 +792,7 @@ exports[`Render properties.label: inline_true 1`] = `
 exports[`Render properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -875,6 +885,7 @@ exports[`Render properties.label: span_12 1`] = `
 exports[`Render properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -967,6 +978,7 @@ exports[`Render properties.options-boolean 1`] = `
 exports[`Render properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -1059,6 +1071,7 @@ exports[`Render properties.options-number 1`] = `
 exports[`Render properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -1151,6 +1164,7 @@ exports[`Render properties.options-object 1`] = `
 exports[`Render properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -1243,6 +1257,7 @@ exports[`Render properties.options-string 1`] = `
 exports[`Render properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,
@@ -1335,6 +1350,7 @@ exports[`Render properties.title 1`] = `
 exports[`Render required = true default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -1376,6 +1392,7 @@ exports[`Render required = true default 1`] = `
 exports[`Render required = true properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -1468,6 +1485,7 @@ exports[`Render required = true properties.color_red 1`] = `
 exports[`Render required = true properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -1562,6 +1580,7 @@ exports[`Render required = true properties.disabled: true 1`] = `
 exports[`Render required = true properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -1654,6 +1673,7 @@ exports[`Render required = true properties.inputStyle. CSS style 1`] = `
 exports[`Render required = true properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -1746,6 +1766,7 @@ exports[`Render required = true properties.label.colon: false 1`] = `
 exports[`Render required = true properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -1826,6 +1847,7 @@ exports[`Render required = true properties.label.disabled: true 1`] = `
 exports[`Render required = true properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -1923,6 +1945,7 @@ exports[`Render required = true properties.label.extra: showingextra 1`] = `
 exports[`Render required = true properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -2015,6 +2038,7 @@ exports[`Render required = true properties.label: align_right 1`] = `
 exports[`Render required = true properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -2115,6 +2139,7 @@ exports[`Render required = true properties.label: inline_true 1`] = `
 exports[`Render required = true properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -2207,6 +2232,7 @@ exports[`Render required = true properties.label: span_12 1`] = `
 exports[`Render required = true properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -2299,6 +2325,7 @@ exports[`Render required = true properties.options-boolean 1`] = `
 exports[`Render required = true properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -2391,6 +2418,7 @@ exports[`Render required = true properties.options-number 1`] = `
 exports[`Render required = true properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -2483,6 +2511,7 @@ exports[`Render required = true properties.options-object 1`] = `
 exports[`Render required = true properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -2575,6 +2604,7 @@ exports[`Render required = true properties.options-string 1`] = `
 exports[`Render required = true properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,
@@ -2667,6 +2697,7 @@ exports[`Render required = true properties.title 1`] = `
 exports[`Render validation.status = error default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -2737,6 +2768,7 @@ exports[`Render validation.status = error default 1`] = `
 exports[`Render validation.status = error properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -2858,6 +2890,7 @@ exports[`Render validation.status = error properties.color_red 1`] = `
 exports[`Render validation.status = error properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -2981,6 +3014,7 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
 exports[`Render validation.status = error properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -3102,6 +3136,7 @@ exports[`Render validation.status = error properties.inputStyle. CSS style 1`] =
 exports[`Render validation.status = error properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -3223,6 +3258,7 @@ exports[`Render validation.status = error properties.label.colon: false 1`] = `
 exports[`Render validation.status = error properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -3332,6 +3368,7 @@ exports[`Render validation.status = error properties.label.disabled: true 1`] = 
 exports[`Render validation.status = error properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -3453,6 +3490,7 @@ exports[`Render validation.status = error properties.label.extra: showingextra 1
 exports[`Render validation.status = error properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -3574,6 +3612,7 @@ exports[`Render validation.status = error properties.label: align_right 1`] = `
 exports[`Render validation.status = error properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -3703,6 +3742,7 @@ exports[`Render validation.status = error properties.label: inline_true 1`] = `
 exports[`Render validation.status = error properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -3824,6 +3864,7 @@ exports[`Render validation.status = error properties.label: span_12 1`] = `
 exports[`Render validation.status = error properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -3945,6 +3986,7 @@ exports[`Render validation.status = error properties.options-boolean 1`] = `
 exports[`Render validation.status = error properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -4066,6 +4108,7 @@ exports[`Render validation.status = error properties.options-number 1`] = `
 exports[`Render validation.status = error properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -4187,6 +4230,7 @@ exports[`Render validation.status = error properties.options-object 1`] = `
 exports[`Render validation.status = error properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -4308,6 +4352,7 @@ exports[`Render validation.status = error properties.options-string 1`] = `
 exports[`Render validation.status = error properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,
@@ -4429,6 +4474,7 @@ exports[`Render validation.status = error properties.title 1`] = `
 exports[`Render validation.status = null default 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -4470,6 +4516,7 @@ exports[`Render validation.status = null default 1`] = `
 exports[`Render validation.status = null properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -4562,6 +4609,7 @@ exports[`Render validation.status = null properties.color_red 1`] = `
 exports[`Render validation.status = null properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -4656,6 +4704,7 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
 exports[`Render validation.status = null properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -4748,6 +4797,7 @@ exports[`Render validation.status = null properties.inputStyle. CSS style 1`] = 
 exports[`Render validation.status = null properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -4840,6 +4890,7 @@ exports[`Render validation.status = null properties.label.colon: false 1`] = `
 exports[`Render validation.status = null properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -4920,6 +4971,7 @@ exports[`Render validation.status = null properties.label.disabled: true 1`] = `
 exports[`Render validation.status = null properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -5017,6 +5069,7 @@ exports[`Render validation.status = null properties.label.extra: showingextra 1`
 exports[`Render validation.status = null properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -5109,6 +5162,7 @@ exports[`Render validation.status = null properties.label: align_right 1`] = `
 exports[`Render validation.status = null properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -5209,6 +5263,7 @@ exports[`Render validation.status = null properties.label: inline_true 1`] = `
 exports[`Render validation.status = null properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -5301,6 +5356,7 @@ exports[`Render validation.status = null properties.label: span_12 1`] = `
 exports[`Render validation.status = null properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -5393,6 +5449,7 @@ exports[`Render validation.status = null properties.options-boolean 1`] = `
 exports[`Render validation.status = null properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -5485,6 +5542,7 @@ exports[`Render validation.status = null properties.options-number 1`] = `
 exports[`Render validation.status = null properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -5577,6 +5635,7 @@ exports[`Render validation.status = null properties.options-object 1`] = `
 exports[`Render validation.status = null properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -5669,6 +5728,7 @@ exports[`Render validation.status = null properties.options-string 1`] = `
 exports[`Render validation.status = null properties.title 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,
@@ -5761,6 +5821,7 @@ exports[`Render validation.status = null properties.title 1`] = `
 exports[`Render validation.status = success default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -5826,6 +5887,7 @@ exports[`Render validation.status = success default 1`] = `
 exports[`Render validation.status = success properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -5942,6 +6004,7 @@ exports[`Render validation.status = success properties.color_red 1`] = `
 exports[`Render validation.status = success properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -6060,6 +6123,7 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
 exports[`Render validation.status = success properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -6176,6 +6240,7 @@ exports[`Render validation.status = success properties.inputStyle. CSS style 1`]
 exports[`Render validation.status = success properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -6292,6 +6357,7 @@ exports[`Render validation.status = success properties.label.colon: false 1`] = 
 exports[`Render validation.status = success properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -6396,6 +6462,7 @@ exports[`Render validation.status = success properties.label.disabled: true 1`] 
 exports[`Render validation.status = success properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -6517,6 +6584,7 @@ exports[`Render validation.status = success properties.label.extra: showingextra
 exports[`Render validation.status = success properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -6633,6 +6701,7 @@ exports[`Render validation.status = success properties.label: align_right 1`] = 
 exports[`Render validation.status = success properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -6757,6 +6826,7 @@ exports[`Render validation.status = success properties.label: inline_true 1`] = 
 exports[`Render validation.status = success properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -6873,6 +6943,7 @@ exports[`Render validation.status = success properties.label: span_12 1`] = `
 exports[`Render validation.status = success properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -6989,6 +7060,7 @@ exports[`Render validation.status = success properties.options-boolean 1`] = `
 exports[`Render validation.status = success properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -7105,6 +7177,7 @@ exports[`Render validation.status = success properties.options-number 1`] = `
 exports[`Render validation.status = success properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -7221,6 +7294,7 @@ exports[`Render validation.status = success properties.options-object 1`] = `
 exports[`Render validation.status = success properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -7337,6 +7411,7 @@ exports[`Render validation.status = success properties.options-string 1`] = `
 exports[`Render validation.status = success properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,
@@ -7453,6 +7528,7 @@ exports[`Render validation.status = success properties.title 1`] = `
 exports[`Render validation.status = warning default 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="default"
   style={
     Object {
       "marginBottom": 0,
@@ -7523,6 +7599,7 @@ exports[`Render validation.status = warning default 1`] = `
 exports[`Render validation.status = warning properties.color_red 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.color_red"
   style={
     Object {
       "marginBottom": 0,
@@ -7644,6 +7721,7 @@ exports[`Render validation.status = warning properties.color_red 1`] = `
 exports[`Render validation.status = warning properties.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -7767,6 +7845,7 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
 exports[`Render validation.status = warning properties.inputStyle. CSS style 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.inputStyle. CSS style"
   style={
     Object {
       "marginBottom": 0,
@@ -7888,6 +7967,7 @@ exports[`Render validation.status = warning properties.inputStyle. CSS style 1`]
 exports[`Render validation.status = warning properties.label.colon: false 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label.colon: false"
   style={
     Object {
       "marginBottom": 0,
@@ -8009,6 +8089,7 @@ exports[`Render validation.status = warning properties.label.colon: false 1`] = 
 exports[`Render validation.status = warning properties.label.disabled: true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label.disabled: true"
   style={
     Object {
       "marginBottom": 0,
@@ -8118,6 +8199,7 @@ exports[`Render validation.status = warning properties.label.disabled: true 1`] 
 exports[`Render validation.status = warning properties.label.extra: showingextra 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label.extra: showingextra"
   style={
     Object {
       "marginBottom": 0,
@@ -8239,6 +8321,7 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
 exports[`Render validation.status = warning properties.label: align_right 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label: align_right"
   style={
     Object {
       "marginBottom": 0,
@@ -8360,6 +8443,7 @@ exports[`Render validation.status = warning properties.label: align_right 1`] = 
 exports[`Render validation.status = warning properties.label: inline_true 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  id="properties.label: inline_true"
   style={
     Object {
       "marginBottom": 0,
@@ -8489,6 +8573,7 @@ exports[`Render validation.status = warning properties.label: inline_true 1`] = 
 exports[`Render validation.status = warning properties.label: span_12 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.label: span_12"
   style={
     Object {
       "marginBottom": 0,
@@ -8610,6 +8695,7 @@ exports[`Render validation.status = warning properties.label: span_12 1`] = `
 exports[`Render validation.status = warning properties.options-boolean 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.options-boolean"
   style={
     Object {
       "marginBottom": 0,
@@ -8731,6 +8817,7 @@ exports[`Render validation.status = warning properties.options-boolean 1`] = `
 exports[`Render validation.status = warning properties.options-number 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.options-number"
   style={
     Object {
       "marginBottom": 0,
@@ -8852,6 +8939,7 @@ exports[`Render validation.status = warning properties.options-number 1`] = `
 exports[`Render validation.status = warning properties.options-object 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.options-object"
   style={
     Object {
       "marginBottom": 0,
@@ -8973,6 +9061,7 @@ exports[`Render validation.status = warning properties.options-object 1`] = `
 exports[`Render validation.status = warning properties.options-string 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.options-string"
   style={
     Object {
       "marginBottom": 0,
@@ -9094,6 +9183,7 @@ exports[`Render validation.status = warning properties.options-string 1`] = `
 exports[`Render validation.status = warning properties.title 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  id="properties.title"
   style={
     Object {
       "marginBottom": 0,

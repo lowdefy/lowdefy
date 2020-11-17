@@ -50,13 +50,21 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
               prefix={
                 properties.prefix ||
                 (properties.prefixIcon && (
-                  <Icon methods={methods} properties={properties.prefixIcon} />
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    methods={methods}
+                    properties={properties.prefixIcon}
+                  />
                 ))
               }
               suffix={
                 properties.suffix ||
                 (properties.suffixIcon && (
-                  <Icon methods={methods} properties={properties.suffixIcon} />
+                  <Icon
+                    blockId={`${blockId}_suffixIcon`}
+                    methods={methods}
+                    properties={properties.suffixIcon}
+                  />
                 ))
               }
               size={properties.size}

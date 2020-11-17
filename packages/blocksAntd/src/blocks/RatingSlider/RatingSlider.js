@@ -109,6 +109,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
           >
             {!required && !properties.disableNotApplicable && (
               <CheckboxSelector
+                blockId={`${blockId}_checkbox_selector`}
                 properties={mergeObjects([
                   {
                     label: { disabled: true },
@@ -134,6 +135,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             )}
             {!properties.disableIcons && (
               <Icon
+                blockId={`${blockId}_iconMin`}
                 methods={methods}
                 properties={mergeObjects([
                   {
@@ -198,6 +200,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             />
             {!properties.disableIcons && (
               <Icon
+                blockId={`${blockId}_iconMax`}
                 methods={methods}
                 properties={mergeObjects([
                   {

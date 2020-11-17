@@ -17,6 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { mergeObjects } from '@lowdefy/helpers';
+
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Content from '../Content/Content';
@@ -32,6 +33,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
         <>
           {content.header && (
             <Header
+              blockId={`${blockId}_header`}
               properties={properties.header}
               methods={methods}
               content={{
@@ -41,6 +43,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
           )}
           {content.content && (
             <Content
+              blockId={`${blockId}_content`}
               properties={properties.content}
               methods={methods}
               content={{
@@ -50,6 +53,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
           )}
           {content.footer && (
             <Footer
+              blockId={`${blockId}_footer`}
               properties={properties.footer}
               methods={methods}
               content={{

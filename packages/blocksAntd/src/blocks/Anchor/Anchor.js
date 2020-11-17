@@ -21,11 +21,13 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
-const Tag = ({ children, className, disabled, onClick }) =>
+const Tag = ({ blockId, children, className, disabled, onClick }) =>
   disabled ? (
-    <span className={className}>{children}</span>
+    <span id={blockId} className={className}>
+      {children}
+    </span>
   ) : (
-    <a className={className} onClick={onClick}>
+    <a id={blockId} className={className} onClick={onClick}>
       {children}
     </a>
   );
@@ -36,6 +38,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
   const disabled = properties.disabled || showLoading;
   return (
     <Tag
+      blockId={blockId}
       className={methods.makeCssClass([
         properties.style,
         disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
@@ -46,6 +49,7 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
       <Strong strong={properties.strong}>
         {properties.icon && (
           <Icon
+            blockId={`${blockId}_icon`}
             methods={methods}
             properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
           />

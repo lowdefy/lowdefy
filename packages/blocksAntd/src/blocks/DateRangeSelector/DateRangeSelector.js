@@ -71,6 +71,7 @@ const DateRangeSelector = ({
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />
