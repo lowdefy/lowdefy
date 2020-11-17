@@ -22,14 +22,11 @@ import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import Icon from '../Icon/Icon';
 
-const getDefaultMenu = (menus, menuId, links) => {
-  if (type.isArray(links)) return links || [];
-  if (menuId) {
-    return (menus.find((item) => item.menuId === menuId) || {}).links || [];
-  }
-  return (
-    (menus.find((item) => item.menuId === 'default') || {}).links || (menus[0] || {}).links || []
-  );
+const getDefaultMenu = (menus, menuId = 'default', links) => {
+  if (type.isArray(links)) return links;
+  if (!type.isArray(menus)) return [];
+  const menu = menus.find((item) => item.menuId === menuId) || menus[0] || {};
+  return menu.links || [];
 };
 
 const getTitle = (id, properties, defaultTitle) =>
