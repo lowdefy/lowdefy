@@ -27,10 +27,9 @@ class Actions {
 
     this.build = this.build.bind(this);
     this.callMethod = this.callMethod.bind(this);
-    this.fetch = this.fetch.bind(this);
+    this.request = this.request.bind(this);
     this.link = this.link.bind(this);
     this.message = this.message.bind(this);
-    this.mutate = this.mutate.bind(this);
     this.reset = this.reset.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.setGlobal = this.setGlobal.bind(this);
@@ -39,10 +38,9 @@ class Actions {
 
     this.actions = {
       CallMethod: this.callMethod,
-      Fetch: this.fetch,
+      Request: this.request,
       Link: this.link,
       Message: this.message,
-      Mutate: this.mutate,
       Reset: this.reset,
       ScrollTo: this.scrollTo,
       SetGlobal: this.setGlobal,
@@ -74,33 +72,6 @@ class Actions {
     }));
   }
 
-  mutate(mutationId, successMessage, errorMessage, args, arrayIndices) {
-    if (type.isString(mutationId)) {
-      return this.context.Mutations.callMutation({
-        mutationId,
-        args,
-        arrayIndices,
-      })
-        .then((response) => ({ successMessage, response }))
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    }
-    return Promise.reject({
-      errorMessage: errorMessage || `Failed to fetch.`,
-      error: new Error(`Invalid mutation id: ${mutationId}`),
-    });
-  }
-
   reset(_, successMessage, errorMessage) {
     try {
       this.context.State.resetState();
@@ -108,8 +79,7 @@ class Actions {
         serializer.deserializeFromString(this.context.State.frozenState)
       );
       this.context.update();
-      // Fetch all requests
-      return this.fetch(undefined, successMessage, errorMessage);
+      // Consider firing onReset and onResetAsync actions
     } catch (error) {
       // log e
       return Promise.reject({ errorMessage: errorMessage || 'Failed to reset page.', error });
@@ -134,9 +104,13 @@ class Actions {
     }
   }
 
-  fetch(params, successMessage, errorMessage) {
+  request(params, successMessage, errorMessage, args, arrayIndices) {
     if (type.isNone(params)) {
-      return this.context.Requests.callRequests()
+      // Should this resolve or error
+      return Promise.resolve();
+    }
+    if (params.all === true) {
+      return this.context.Requests.callRequests({ args, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -152,7 +126,7 @@ class Actions {
         });
     }
     if (type.isString(params)) {
-      return this.context.Requests.callRequest({ requestId: params })
+      return this.context.Requests.callRequest({ requestId: params, args, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -168,7 +142,7 @@ class Actions {
         });
     }
     if (type.isArray(params)) {
-      return this.context.Requests.callRequests({ requestIds: params })
+      return this.context.Requests.callRequests({ requestIds: params, args, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -184,7 +158,7 @@ class Actions {
         });
     }
     return Promise.reject({
-      errorMessage: errorMessage || `Failed to fetch.`,
+      errorMessage: errorMessage || `Failed to call request.`,
       error: new Error(`Invalid _request params: ${params}`),
     });
   }
@@ -362,15 +336,20 @@ class Actions {
     return Promise.resolve({ successMessage });
   }
 
-  validate(blockId, successMessage, errorMessage) {
+  validate(params, successMessage, errorMessage) {
     try {
+      if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
+        throw new Error('Invalid validate params.');
+      }
       this.context.showValidationErrors = true;
       let validationErrors = this.context.RootBlocks.validate();
-      if (type.isString(blockId)) {
+      if (params) {
+        const blockIds = type.isString(params) ? [params] : params;
         validationErrors = validationErrors.filter((block) => {
-          return block.blockId === blockId;
+          return blockIds.includes(block.blockId);
         });
       }
+
       if (validationErrors.length > 0) {
         return Promise.reject({
           errorMessage:

@@ -8,10 +8,17 @@ exports[`Render default 1`] = `
   id="default"
   list={Array []}
   menus={Array []}
+  required={false}
   role="img"
   type="Icon"
   user={Object {}}
-  validate={Array []}
+  validation={
+    Object {
+      "errors": Array [],
+      "status": null,
+      "warnings": Array [],
+    }
+  }
 >
   <svg
     aria-hidden="true"
@@ -38,10 +45,17 @@ exports[`Render properties.icon 1`] = `
   id="properties.icon"
   list={Array []}
   menus={Array []}
+  required={false}
   role="img"
   type="Icon"
   user={Object {}}
-  validate={Array []}
+  validation={
+    Object {
+      "errors": Array [],
+      "status": null,
+      "warnings": Array [],
+    }
+  }
 >
   <svg
     aria-hidden="true"

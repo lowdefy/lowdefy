@@ -16,9 +16,10 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import DateSelector from '../src/blocks/DateSelector/DateSelector';
 import examples from '../demo/examples/DateSelector.yaml';
 import meta from '../src/blocks/DateSelector/DateSelector.json';
 
-runRenderTests({ examples, Block: DateSelector, meta });
+runRenderTests({ examples, Block: DateSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

@@ -16,16 +16,38 @@
 
 import Dataloader from 'dataloader';
 import createGetLoader from './getLoader';
-import { bootstrapContext } from '../test/testContext';
+import { testBootstrapContext } from '../test/testContext';
 
 test('get page loader', () => {
-  const getLoader = createGetLoader(bootstrapContext);
-  const pageLoader = getLoader('page');
-  expect(pageLoader).toBeInstanceOf(Dataloader);
+  const getLoader = createGetLoader(testBootstrapContext());
+  const loader = getLoader('page');
+  expect(loader).toBeInstanceOf(Dataloader);
+  expect(loader._batchLoadFn.name).toEqual('pageLoader');
+});
+
+test('get component loader', () => {
+  const getLoader = createGetLoader(testBootstrapContext());
+  const loader = getLoader('component');
+  expect(loader).toBeInstanceOf(Dataloader);
+  expect(loader._batchLoadFn.name).toEqual('componentLoader');
+});
+
+test('get request loader', () => {
+  const getLoader = createGetLoader(testBootstrapContext());
+  const loader = getLoader('request');
+  expect(loader).toBeInstanceOf(Dataloader);
+  expect(loader._batchLoadFn.name).toEqual('requestLoader');
+});
+
+test('get connection loader', () => {
+  const getLoader = createGetLoader(testBootstrapContext());
+  const loader = getLoader('connection');
+  expect(loader).toBeInstanceOf(Dataloader);
+  expect(loader._batchLoadFn.name).toEqual('connectionLoader');
 });
 
 test('memoise loader', () => {
-  const getLoader = createGetLoader(bootstrapContext);
+  const getLoader = createGetLoader(testBootstrapContext());
   const loader1 = getLoader('page');
   const loader2 = getLoader('page');
   expect(loader1).toBe(loader2);

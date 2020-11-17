@@ -203,12 +203,19 @@ function _regex({ params, state, location }) {
       )} at ${location}.`
     );
   }
+  let on = !type.isUndefined(params.on) ? params.on : get(state, location);
+  if (!type.isUndefined(params.key)) {
+    if (!type.isString(params.key)) {
+      throw new Error(
+        `Operator Error: _regex.key must be a string. Received: ${JSON.stringify(
+          params
+        )} at ${location}.`
+      );
+    }
+    on = get(state, params.key);
+  }
 
-  const on = !type.isUndefined(params.on)
-    ? params.on
-    : get(state, get(params, 'key', { default: location }));
-
-  if (type.isNull(on)) {
+  if (type.isNone(on)) {
     return false;
   }
   if (!type.isString(on)) {

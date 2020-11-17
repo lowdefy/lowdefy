@@ -17,8 +17,9 @@
 import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
-import Button from '../Button/Button';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+
+import Button from '../Button/Button';
 
 const ControlledListBlock = ({ blockId, properties, list, methods }) => {
   useEffect(() => {
@@ -79,6 +80,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
           <div className={methods.makeCssClass([styles.footer, properties.footerStyle])}>
             <br />
             <Button
+              blockId={`${blockId}_add_button`}
               properties={{
                 title: get(properties, 'addItemButton.title ') || 'Add Item',
                 type: 'primary',
@@ -102,6 +104,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
           actions={
             !properties.hideRemoveButton && [
               <Button
+                blockId={`${blockId}_${i}_remove_button`}
                 properties={{
                   title: '',
                   type: 'danger',

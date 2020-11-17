@@ -7,7 +7,7 @@ exports[`Render default 1`] = `
 >
   <main
     className="ant-layout-content {}"
-    id="undefined_id"
+    id="default_content"
   >
     <div
       style={
@@ -30,7 +30,7 @@ exports[`Render properties.content 1`] = `
 >
   <main
     className="ant-layout-content {}"
-    id="undefined_id"
+    id="properties.content_content"
   >
     <div
       style={

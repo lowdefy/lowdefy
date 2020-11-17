@@ -12,7 +12,7 @@ exports[`Render default 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -61,7 +61,7 @@ exports[`Render properties.author 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}

@@ -105,6 +105,9 @@ const defaultMetaLocations = {
   Header: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^1.0.0/dist/meta/Header.json',
   },
+  Icon: {
+    url: 'https://unpkg.com/@lowdefy/blocks-antd@^1.0.0/dist/meta/Icon.json',
+  },
   Label: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^1.0.0/dist/meta/Label.json',
   },
@@ -228,10 +231,6 @@ const defaultMetaLocations = {
   // @lowdefy/blocks-color-selectors
   ColorSelector: {
     url: 'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/ColorSelector.json',
-  },
-  // @lowdefy/blocks-antd-icons
-  Icon: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd-icons@^1.0.0/dist/meta/Icon.json',
   },
   // @lowdefy/blocks-markdown
   Markdown: {

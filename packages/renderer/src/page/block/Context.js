@@ -14,14 +14,43 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
+import getContext from '@lowdefy/engine';
 
-import useContext from './useContext';
+import OnEnter from './OnEnter';
+
+const contexts = {};
 
 const Context = ({ block, contextId, pageId, render, rootContext }) => {
-  const { context, loading, error } = useContext({ block, pageId, rootContext, contextId });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const mount = async () => {
+      try {
+        const ctx = await getContext({
+          block,
+          contextId,
+          pageId,
+          rootContext,
+        });
+        if (mounted) {
+          contexts[contextId] = ctx;
+          setLoading(false);
+        }
+      } catch (err) {
+        setError(err);
+      }
+    };
+    mount();
+    return () => {
+      mounted = false;
+    };
+  }, [block, pageId, rootContext, contextId]);
+
   if (loading)
     return (
       <Loading
@@ -31,7 +60,8 @@ const Context = ({ block, contextId, pageId, render, rootContext }) => {
     );
 
   if (error) throw error;
-  return render(context);
+
+  return <OnEnter block={block} context={contexts[contextId]} render={render} />;
 };
 
 export default Context;
