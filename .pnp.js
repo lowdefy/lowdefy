@@ -239,10 +239,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.5", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-52d941277c/0/cache/@apollo-client-npm-3.2.5-98e92bf7a9-0dc20d1c45.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-85dd64646b/0/cache/@apollo-client-npm-3.2.6-4538de3c5d-d60d25b73a.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.5"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6"],
             ["@graphql-typed-document-node/core", "virtual:fb22fcfe3db580733f56ff9124afc3a372e40f6f7d5bbb32b3d7cb1cb55455265609338ffafb54433423e8eda0793941fd2916a6ea4935da0e746b635717c1f3#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -258,8 +258,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.1"],
             ["subscriptions-transport-ws", null],
-            ["symbol-observable", "npm:2.0.3"],
-            ["ts-invariant", "npm:0.4.4"],
+            ["symbol-observable", "npm:3.0.0"],
+            ["ts-invariant", "npm:0.5.1"],
             ["tslib", "npm:1.14.1"],
             ["zen-observable", "npm:0.8.15"]
           ],
@@ -309,7 +309,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -3949,7 +3949,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.5"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -9184,7 +9184,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-npm-3.7.0-53202614cd/node_modules/core-js/",
+          "packageLocation": "./.yarn/cache/core-js-npm-3.7.0-53202614cd-95958cddb7.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.7.0"]
           ],
@@ -9204,7 +9204,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.7.0-213dcef0c2/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.7.0-213dcef0c2-7fdff8bda2.zip/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.7.0"]
           ],
@@ -16389,7 +16389,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["mongodb-memory-server", [
         ["npm:6.6.7", {
-          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.6.7-6b4dc63f77/node_modules/mongodb-memory-server/",
+          "packageLocation": "./.yarn/cache/mongodb-memory-server-npm-6.6.7-6b4dc63f77-267e382d33.zip/node_modules/mongodb-memory-server/",
           "packageDependencies": [
             ["mongodb-memory-server", "npm:6.6.7"],
             ["mongodb-memory-server-core", "npm:6.6.7"]
@@ -16788,7 +16788,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.6", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.6-533efccfd9/node_modules/nodemon/",
+          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.6-533efccfd9-6a4b0d6ba2.zip/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.6"],
             ["chokidar", "npm:3.4.3"],
@@ -21951,6 +21951,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["symbol-observable", "npm:2.0.3"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/symbol-observable-npm-3.0.0-9fa7238745-516cb0a655.zip/node_modules/symbol-observable/",
+          "packageDependencies": [
+            ["symbol-observable", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["symbol-tree", [
@@ -22678,6 +22685,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ts-invariant-npm-0.4.4-9f97371ec3-0280fb0e85.zip/node_modules/ts-invariant/",
           "packageDependencies": [
             ["ts-invariant", "npm:0.4.4"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.5.1", {
+          "packageLocation": "./.yarn/cache/ts-invariant-npm-0.5.1-4c1fbe72bd-efa4a387f7.zip/node_modules/ts-invariant/",
+          "packageDependencies": [
+            ["ts-invariant", "npm:0.5.1"],
             ["tslib", "npm:1.14.1"]
           ],
           "linkType": "HARD",
