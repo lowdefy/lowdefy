@@ -18,11 +18,21 @@
   properties:
     title: Divider title
     orientation: right
+- id: 'properties.orientation: center'
+  type: Divider
+  properties:
+    title: Divider title
+    orientation: center
 - id: 'properties.type: vertical'
   type: Divider
   properties:
     title: Divider title
     type: vertical
+- id: 'properties.type: horizontal'
+  type: Divider
+  properties:
+    title: Divider title
+    type: horizontal
 - id: 'properties.type: true'
   type: Divider
   properties:
