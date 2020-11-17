@@ -134,7 +134,6 @@ test('Reset on primitive array after adding item', () => {
                   {
                     blockId: 'list.$',
                     type: 'TextInput',
-                    defaultValue: '123',
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -169,7 +168,7 @@ test('Reset on primitive array after adding item', () => {
   const { button, list } = context.RootBlocks.map;
 
   list.pushItem();
-  expect(context.state).toEqual({ list: ['init', '123'] });
+  expect(context.state).toEqual({ list: ['init', null] });
   button.callAction({ action: 'onClick' });
   expect(context.state).toEqual({ list: ['init'] });
 });
@@ -235,67 +234,4 @@ test('Reset on object array after removing item', () => {
   expect(context.state).toEqual({ list: [] });
   button.callAction({ action: 'onClick' });
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
-});
-
-test('Reset with requests on page', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    requests: [
-      {
-        requestId: 'req_one',
-      },
-    ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            actions: {
-              onClick: [{ id: 'a', type: 'Reset' }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  expect(context.state).toEqual({ textInput: 'init' });
-  const { button, textInput } = context.RootBlocks.map;
-  await context.Requests.callRequests();
-  expect(context.requests.req_one).toEqual({
-    error: [null],
-    loading: false,
-    response: 1,
-  });
-
-  textInput.setValue('1');
-  expect(context.state).toEqual({ textInput: '1' });
-  await button.callAction({ action: 'onClick' });
-  expect(context.state).toEqual({ textInput: 'init' });
-  expect(context.requests.req_one).toEqual({
-    error: [null, null],
-    loading: false,
-    response: 1,
-  });
 });

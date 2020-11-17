@@ -16,7 +16,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-function getRequestsAndMutationsOnBlock({ block, requests, mutations, pageId }) {
+function getRequestsOnBlock({ block, requests, pageId }) {
   if (!type.isObject(block)) {
     throw new Error(`Block is not an object on page "${pageId}".`);
   }
@@ -29,15 +29,6 @@ function getRequestsAndMutationsOnBlock({ block, requests, mutations, pageId }) 
       delete request.properties;
     });
   }
-  if (!type.isNone(block.mutations)) {
-    if (!type.isArray(block.mutations)) {
-      throw new Error(`Mutations is not an array on page "${pageId}".`);
-    }
-    block.mutations.forEach((mutation) => {
-      mutations.push(serializer.copy(mutation));
-      delete mutation.properties;
-    });
-  }
   if (type.isObject(block.areas)) {
     Object.keys(block.areas).forEach((key) => {
       if (!type.isArray(block.areas[key].blocks)) {
@@ -46,37 +37,25 @@ function getRequestsAndMutationsOnBlock({ block, requests, mutations, pageId }) 
         );
       }
       block.areas[key].blocks.forEach((blk) => {
-        getRequestsAndMutationsOnBlock({ block: blk, requests, mutations, pageId });
+        getRequestsOnBlock({ block: blk, requests, pageId });
       });
     });
   }
 }
 
-async function updateRequestsOnPage({ page, context }) {
+async function writeRequestsOnPage({ page, context }) {
   if (!type.isObject(page)) {
     throw new Error(`Page is not an object.`);
   }
   const requests = [];
-  const mutations = [];
-  getRequestsAndMutationsOnBlock({ block: page, requests, mutations, pageId: page.pageId });
+  getRequestsOnBlock({ block: page, requests, pageId: page.pageId });
 
-  const writeRequestPromises = requests.map(async (request) => {
+  return requests.map(async (request) => {
     await context.artifactSetter.set({
-      filePath: `pages/${page.pageId}/requests/${request.requestId}.json`,
+      filePath: `pages/${page.pageId}/requests/${request.contextId}/${request.requestId}.json`,
       content: JSON.stringify(request, null, 2),
     });
   });
-  const writeMutationPromises = mutations.map(async (mutation) => {
-    await context.artifactSetter.set({
-      filePath: `pages/${page.pageId}/mutations/${mutation.mutationId}.json`,
-      content: JSON.stringify(mutation, null, 2),
-    });
-    await context.logger.info(
-      `Updated mutation "${mutation.mutationId}" on page "${page.pageId}".`
-    );
-  });
-
-  return Promise.all([...writeRequestPromises, ...writeMutationPromises]);
 }
 
 async function writeRequests({ components, context }) {
@@ -84,10 +63,10 @@ async function writeRequests({ components, context }) {
   if (!type.isArray(components.pages)) {
     throw new Error(`Pages is not an array.`);
   }
-  const writePromises = components.pages.map((page) => updateRequestsOnPage({ page, context }));
+  const writePromises = components.pages.map((page) => writeRequestsOnPage({ page, context }));
   return Promise.all(writePromises);
 }
 
-export { getRequestsAndMutationsOnBlock };
+export { getRequestsOnBlock };
 
 export default writeRequests;

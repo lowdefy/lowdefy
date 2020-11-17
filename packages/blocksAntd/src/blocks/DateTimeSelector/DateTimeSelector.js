@@ -24,7 +24,15 @@ import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 import disabledDate from '../../disabledDate';
 
-const DateTimeSelector = ({ blockId, loading, methods, properties, required, validate, value }) => {
+const DateTimeSelector = ({
+  blockId,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   const timeUnit = !type.isString(properties.timeFormat)
     ? 'minute'
     : properties.timeFormat === 'HH:mm:ss'
@@ -36,7 +44,7 @@ const DateTimeSelector = ({ blockId, loading, methods, properties, required, val
     <Label
       blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validate={validate}
+      validation={validation}
       required={required}
       loading={loading}
       methods={methods}
@@ -58,6 +66,7 @@ const DateTimeSelector = ({ blockId, loading, methods, properties, required, val
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
+                    blockId={`${blockId}_suffixIcon`}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />

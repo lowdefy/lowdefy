@@ -34,6 +34,7 @@ const TimelineBlock = ({ blockId, list, methods, properties }) => {
       pendingDot={
         properties.pendingDotIcon && (
           <Icon
+            blockId={`${blockId}_pendingDotIcon`}
             methods={methods}
             properties={mergeObjects([{ style: { fontSize: 16 } }, properties.pendingDotIcon])}
           />
@@ -58,7 +59,11 @@ const TimelineBlock = ({ blockId, list, methods, properties }) => {
             position={get(properties, `data.${i}.${properties.positionField || 'position'}`)}
             dot={
               icon && (
-                <Icon methods={methods} properties={mergeObjects([icon, { style: styleDot }])} />
+                <Icon
+                  blockId={`${blockId}_${i}_icon`}
+                  methods={methods}
+                  properties={mergeObjects([icon, { style: styleDot }])}
+                />
               )
             }
           >

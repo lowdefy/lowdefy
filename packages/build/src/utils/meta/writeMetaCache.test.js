@@ -22,7 +22,7 @@ const cacheDirectory = path.resolve(process.cwd(), 'src/test/fetchMetaCache');
 const writeMetaCache = createWriteMetaCache({ cacheDirectory });
 
 test('writeMetaCache writes to cache', async () => {
-  const filePath = path.resolve(cacheDirectory, 'writemetacache.json');
+  const filePath = path.resolve(cacheDirectory, 'meta/', 'writemetacache.json');
   try {
     fs.unlinkSync(filePath);
   } catch (error) {

@@ -16,10 +16,12 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import AutoComplete from '../src/blocks/AutoComplete/AutoComplete';
 import examples from '../demo/examples/AutoComplete.yaml';
 import meta from '../src/blocks/AutoComplete/AutoComplete.json';
 
-// FIX: TypeError: parentInstance.children.indexOf is not a function
-// runRenderTests({ examples, Block: AutoComplete, meta });
+// FIX Jest: TypeError: parentInstance.children.indexOf is not a function
+// FIX Jest: TypeError: Cannot read property 'removeEventListener' of null
+runRenderTests({ examples, Block: AutoComplete, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

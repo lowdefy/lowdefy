@@ -42,7 +42,10 @@
                 }
               }
             },
-            { "type": "object" }
+            { "type": "object" },
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
           ]
         },
         "layout": {
@@ -53,7 +56,7 @@
         "size": {
           "type": "string",
           "description": "Size of the block.",
-          "enum": ["default", "small", "middle"]
+          "enum": ["default", "small"]
         },
         "title": {
           "type": "string",

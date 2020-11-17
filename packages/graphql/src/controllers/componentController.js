@@ -17,19 +17,13 @@
 import { get } from '@lowdefy/helpers';
 
 class ComponentController {
-  constructor({ getLoader, DEPLOYMENT_ID, DEPLOYMENT_NAME, DOMAIN_NAME }) {
+  constructor({ getLoader }) {
     this.componentLoader = getLoader('component');
-    this.DEPLOYMENT_ID = DEPLOYMENT_ID;
-    this.DEPLOYMENT_NAME = DEPLOYMENT_NAME;
-    this.DOMAIN_NAME = DOMAIN_NAME;
   }
 
   async getLowdefyGlobal() {
     const loadedLowdefyGlobal = await this.componentLoader.load('global');
     const lowdefyGlobal = loadedLowdefyGlobal || {};
-    lowdefyGlobal.deploymentId = this.DEPLOYMENT_ID;
-    lowdefyGlobal.deploymentName = this.DEPLOYMENT_NAME;
-    lowdefyGlobal.domainName = this.DOMAIN_NAME;
     return lowdefyGlobal;
   }
 

@@ -98,6 +98,39 @@ test('del', () => {
   expect(context.state).toEqual({});
 });
 
+test('del remove empty object', () => {
+  const context = {
+    showValidationErrors: false,
+    state: { a: { b: 1 } },
+  };
+  const state = new State(context);
+  context.state = { a: { b: 1 } };
+  state.del('a.b');
+  expect(context.state).toEqual({});
+});
+
+test('del remove nested empty object', () => {
+  const context = {
+    showValidationErrors: false,
+    state: { a: { b: { c: { d: { e: 1 } } } } },
+  };
+  const state = new State(context);
+  context.state = { a: { b: { c: { d: { e: 1 } } } } };
+  state.del('a.b.c.d');
+  expect(context.state).toEqual({});
+});
+
+test('del keep nested objects', () => {
+  const context = {
+    showValidationErrors: false,
+    state: { a: { b: 1, c: 2 } },
+  };
+  const state = new State(context);
+  context.state = { a: { b: 1, c: 2 } };
+  state.del('a.b');
+  expect(context.state).toEqual({ a: { c: 2 } });
+});
+
 test('swapItems', () => {
   const context = {
     showValidationErrors: false,

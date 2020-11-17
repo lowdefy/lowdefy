@@ -100,12 +100,8 @@ test('_regex with nonexistent key', () => {
   const input = { _regex: { pattern: '^a$', key: 'notThere' } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _regex.on must be a string. Received: {"pattern":"^a$","key":"notThere"} at locationId.],
-    ]
-  `);
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_regex with nonexistent key', () => {
@@ -115,7 +111,7 @@ test('_regex with nonexistent key', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _regex.on must be a string. Received: {"pattern":"^a$","key":null} at locationId.],
+      [Error: Operator Error: _regex.key must be a string. Received: {"pattern":"^a$","key":null} at locationId.],
     ]
   `);
 });
@@ -184,12 +180,8 @@ test('_regex with location given to parse not in state', () => {
   const input = { _regex: 'nope' };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'string2', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _regex.on must be a string. Received: "nope" at string2.],
-    ]
-  `);
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_regex with location given, state value is null', () => {

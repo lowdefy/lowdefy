@@ -43,7 +43,7 @@ const UserAvatar = ({ blockId, methods, properties, user }) => {
   if (!user.name || properties.loggedIn === false) {
     return (
       <Button
-        blockId={`${blockId}_Login`}
+        blockId={`${blockId}_button`}
         properties={mergeObjects([
           {
             title: 'Login',
@@ -90,7 +90,7 @@ const UserAvatar = ({ blockId, methods, properties, user }) => {
         {properties.name || user.name}
       </div>
       <Avatar
-        blockId={`${blockId}_Avatar`}
+        blockId={`${blockId}_avatar`}
         properties={mergeObjects([
           {
             size: 'large',
