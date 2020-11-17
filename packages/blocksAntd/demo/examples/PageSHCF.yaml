@@ -2,6 +2,55 @@
   type: PageSHCF
 - id: properties.content
   type: PageSHCF
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.theme: light - dark is default"
+  type: PageSHCF
   properties:
-    content: 
-      content: This is page content
+    header:
+      theme: light
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+# sider.theme not in js or json, but working in example and docs
+- id: "properties.sider.theme: light - dark is default"
+  type: PageSHCF
+  properties:
+    sider:
+      theme: light
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.color: #4432a8 "
+  type: PageSHCF
+  properties:
+    header:
+      color: "#4432a8"
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
