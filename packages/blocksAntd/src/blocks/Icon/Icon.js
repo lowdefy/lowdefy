@@ -32,7 +32,14 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
     className: methods.makeCssClass(properties.style),
     rotate: propertiesCopy.rotate,
     spin: propertiesCopy.spin,
-    ...omit(props, ['registerAction', 'registerMethod', 'loading', 'schemaErrors']),
+    ...omit(props, [
+      'homePageId',
+      'loading',
+      'pageId',
+      'registerAction',
+      'registerMethod',
+      'schemaErrors',
+    ]),
   };
   const IconComp = memo(lazy(() => import(`./icons/${propertiesCopy.name}`)));
   return (
@@ -58,7 +65,16 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
               twoToneColor={propertiesCopy.color}
               rotate={propertiesCopy.rotate}
               spin={propertiesCopy.spin}
-              {...omit(props, ['registerAction', 'registerMethod', 'loading'])} // spread props for Ant design to populate props from parent
+              {...omit(props, [
+                'content',
+                'loading',
+                'registerAction',
+                'registerMethod',
+                'user',
+                'validation',
+                'list',
+                'menus',
+              ])} // spread props for Ant design to populate props from parent
             />
           </Suspense>
         </ErrorBoundary>

@@ -15,6 +15,7 @@
 */
 
 import createPageController from './pageController';
+import { testBootstrapContext } from '../test/testContext';
 
 const mockLoadPage = jest.fn();
 const loaders = {
@@ -23,11 +24,7 @@ const loaders = {
   },
 };
 
-const getLoader = jest.fn((loader) => loaders[loader]);
-
-const context = {
-  getLoader,
-};
+const context = testBootstrapContext({ loaders });
 
 beforeEach(() => {
   mockLoadPage.mockReset();

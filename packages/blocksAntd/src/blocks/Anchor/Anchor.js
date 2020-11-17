@@ -16,55 +16,47 @@
 
 import React from 'react';
 import { get, type } from '@lowdefy/helpers';
-import Icon from '../Icon/Icon';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const AnchorContent = ({ icon, methods, strong, title }) => {
-  if (strong) {
-    return (
-      <b>
-        {icon && <Icon properties={icon} methods={methods} />}
-        {` ${title}`}
-      </b>
-    );
-  }
-  return (
-    <>
-      {icon && <Icon properties={icon} methods={methods} />}
-      {` ${title}`}
-    </>
+import Icon from '../Icon/Icon';
+
+const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
+const Tag = ({ blockId, children, className, disabled, onClick }) =>
+  disabled ? (
+    <span id={blockId} className={className}>
+      {children}
+    </span>
+  ) : (
+    <a id={blockId} className={className} onClick={onClick}>
+      {children}
+    </a>
   );
-};
 
 const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
-  if (properties.disabled || get(actions, 'onClick.loading') || loading) {
-    return (
-      <span className={methods.makeCssClass(properties.style)}>
-        <AnchorContent
-          icon={
-            get(actions, 'onClick.loading') || loading
-              ? { name: 'LoadingOutlined', spin: true }
-              : properties.icon
-          }
-          methods={methods}
-          strong={properties.strong}
-          title={type.isNone(properties.title) ? blockId : properties.title}
-        />
-      </span>
-    );
-  }
+  const title = type.isNone(properties.title) ? blockId : properties.title;
+  const showLoading = get(actions, 'onClick.loading') || loading;
+  const disabled = properties.disabled || showLoading;
   return (
-    <a
-      className={methods.makeCssClass(properties.style)}
+    <Tag
+      blockId={blockId}
+      className={methods.makeCssClass([
+        properties.style,
+        disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
+      ])}
+      disabled={disabled}
       onClick={() => methods.callAction({ action: 'onClick' })}
     >
-      <AnchorContent
-        icon={properties.icon}
-        methods={methods}
-        strong={properties.strong}
-        title={type.isNone(properties.title) ? blockId : properties.title}
-      />
-    </a>
+      <Strong strong={properties.strong}>
+        {properties.icon && (
+          <Icon
+            blockId={`${blockId}_icon`}
+            methods={methods}
+            properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
+          />
+        )}
+        {` ${title}`}
+      </Strong>
+    </Tag>
   );
 };
 

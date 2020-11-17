@@ -4,3 +4,86 @@
   type: Label
   properties:
     title: Label title
+- id: properties.title long
+  type: Label
+  properties:
+    title: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: "properties.align: right"
+  type: Label
+  properties:
+    title: Label title
+    align: right
+- id: "properties.align: left"
+  type: Label
+  properties:
+    title: Label title
+    align: left
+- id: "properties.colon: false"
+  type: Label
+  properties:
+    title: Label title
+    colon: false
+- id: "properties.colon: true"
+  type: Label
+  properties:
+    title: Label title
+    colon: true
+- id: "properties.disabled: true"
+  type: Label
+  properties:
+    title: Label title
+    disabled: true
+- id: "properties.span: 2"
+  type: Label
+  properties:
+    span: 2
+    title: This is the long label title wrapped by short span
+- id: "properties.span: 2 with long work title"
+  type: Label
+  properties:
+    span: 2
+    title: Thisisthelonglabeltitlea 
+- id: "properties.inline: true"
+  type: Label
+  properties:
+    inline: true
+    title: Label title
+- id: "properties.extra: Extra long with inline true"
+  type: Label
+  properties:
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: "properties.extra: Extra text"
+  type: Label
+  properties:
+    extra: Extra text
+    title: Label title
+- id: "properties.extra: Extra long"
+  type: Label
+  properties:
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    title: Label title
+- id: "properties.extra: Extra long with inline = true"
+  type: Label
+  properties:
+    inline: true
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    title: Label title
+- id: "properties.extraStyle: border 1px purple"
+  type: Label
+  properties:
+    title: Label title
+    extra: Extra text
+    extraStyle: 
+      border: 1px solid purple
+- id: "properties.feedbackStyle: border 1px blue"
+  type: Label
+  properties:
+    title: Label title
+    extra: The extra content
+    feedbackStyle: 
+      border: 1px solid blue

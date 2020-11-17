@@ -55,7 +55,7 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
           tab={
             tab.icon ? (
               <span className={methods.makeCssClass(tab.titleStyle)}>
-                <Icon methods={methods} properties={tab.icon} />
+                <Icon blockId={`${blockId}_icon`} methods={methods} properties={tab.icon} />
                 {tab.title || tab.key}
               </span>
             ) : (

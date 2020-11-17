@@ -33,8 +33,7 @@
           "description": "Shape of the avatar."
         },
         "size": {
-          "type": "string",
-          "enum": ["default", "small", "large"],
+          "type": ["string", "number", "object"],
           "default": "default",
           "description": "Size of the avatar."
         },

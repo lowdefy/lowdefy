@@ -23,10 +23,10 @@ function createPageBatchLoader({ CONFIGURATION_BASE_PATH }) {
     const filePath = path.resolve(CONFIGURATION_BASE_PATH, `${id}.json`);
     return readJsonFile({ filePath });
   }
-  async function loader(keys) {
+  async function componentLoader(keys) {
     return keys.map((id) => readPage(id));
   }
-  return loader;
+  return componentLoader;
 }
 
 function createPageLoader({ CONFIGURATION_BASE_PATH }) {
