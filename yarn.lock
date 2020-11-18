@@ -2775,6 +2775,7 @@ __metadata:
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
+    jest-serializer-html: 7.0.0
     js-yaml: 3.14.0
     less: 3.12.2
     less-loader: 7.1.0
@@ -7872,6 +7873,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diffable-html@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "diffable-html@npm:4.0.0"
+  dependencies:
+    htmlparser2: ^3.9.2
+  checksum: d37f5370a13f5a55a621b8b7ee1e77b59ecb1f0d03cad331aa390b33b56d3a816668c1096e31fda9759c2d9525cdea709a0f0f4e489340a969694227b5a91767
+  languageName: node
+  linkType: hard
+
 "dir-glob@npm:^2.2.2":
   version: 2.2.2
   resolution: "dir-glob@npm:2.2.2"
@@ -10395,7 +10405,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"htmlparser2@npm:^3.3.0, htmlparser2@npm:^3.9.1":
+"htmlparser2@npm:^3.3.0, htmlparser2@npm:^3.9.1, htmlparser2@npm:^3.9.2":
   version: 3.10.1
   resolution: "htmlparser2@npm:3.10.1"
   dependencies:
@@ -11887,6 +11897,15 @@ fsevents@^1.2.7:
   bin:
     jest-runtime: bin/jest-runtime.js
   checksum: 5ef4ceaefb0cd8c140d58d2d4f660467cb6581d17622789d1c0bf1576fded6a9e0e831c3bb8b3f528ec81279f3fb38a6fb71e1d1a8960d7cdc8e048d33b71c32
+  languageName: node
+  linkType: hard
+
+"jest-serializer-html@npm:7.0.0":
+  version: 7.0.0
+  resolution: "jest-serializer-html@npm:7.0.0"
+  dependencies:
+    diffable-html: ^4.0.0
+  checksum: 21808d681e5f4ab0246e1eaeaba837637411ddc91823c3a3803da7ce80dc223a192b6091903eedd365224be34acac9fe935353c47711f343044307139efdf437
   languageName: node
   linkType: hard
 
