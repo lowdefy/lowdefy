@@ -15,18 +15,12 @@
 */
 
 import AWS from 'aws-sdk';
-import { get } from '@lowdefy/helpers';
 
 import schema from './AwsS3PresignedPostPolicySchema.json';
-
-function validateConnection({ connection, context }) {
-  if (!get(connection, 'write', { default: false })) {
-    throw new context.ConfigurationError('AWS S3 Bucket does not allow writes.');
-  }
-}
+import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
 function awsS3PresignedPostPolicy({ request, connection, context }) {
-  validateConnection({ connection, context });
+  checkConnectionWrite({ connection, context, connectionType: 'AwsS3Bucket' });
   try {
     const { accessKeyId, secretAccessKey, region, bucket } = connection;
     const { acl, conditions, expires, key } = request;

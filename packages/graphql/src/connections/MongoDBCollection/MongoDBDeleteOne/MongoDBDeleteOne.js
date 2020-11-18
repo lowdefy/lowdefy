@@ -16,12 +16,12 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkWrite from '../checkWrite';
+import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
 import schema from './MongoDBDeleteOneSchema.json';
 
 async function mongodbDeleteOne({ request, connection, context }) {
-  checkWrite({ connection, context });
+  checkConnectionWrite({ connection, context, connectionType: 'MongoDBCollection' });
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection, context });

@@ -16,12 +16,12 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkRead from '../checkRead';
+import checkConnectionRead from '../../../utils/checkConnectionRead';
 
 import schema from './MongoDBFindOneSchema.json';
 
 async function mongodbFindOne({ request, connection, context }) {
-  checkRead({ connection, context });
+  checkConnectionRead({ connection, context, connectionType: 'MongoDBCollection' });
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection, context });

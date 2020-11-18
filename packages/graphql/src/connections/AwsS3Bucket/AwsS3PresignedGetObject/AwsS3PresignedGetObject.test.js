@@ -125,7 +125,7 @@ test('bucket with read false', async () => {
   };
   await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
   await expect(() => resolver({ request, connection, context })).toThrow(
-    'AWS S3 Bucket does not allow reads'
+    'AwsS3Bucket connection does not allow reads.'
   );
 });
 

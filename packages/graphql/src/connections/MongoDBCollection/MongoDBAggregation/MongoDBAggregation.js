@@ -16,12 +16,12 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkRead from '../checkRead';
+import checkConnectionRead from '../../../utils/checkConnectionRead';
 
 import schema from './MongoDBAggregationSchema.json';
 
 async function mongodbAggregation({ request, connection, context }) {
-  checkRead({ connection, context });
+  checkConnectionRead({ connection, context, connectionType: 'MongoDBCollection' });
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection, context });

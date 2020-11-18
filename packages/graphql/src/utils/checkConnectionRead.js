@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-function checkWrite({ connection, context }) {
-  if (connection.write !== true) {
-    throw new context.ConfigurationError('MongoDBCollection connection does not allow writes.');
+function checkConnectionRead({ connection, context, connectionType }) {
+  if (connection.read === false) {
+    throw new context.ConfigurationError(`${connectionType} connection does not allow reads.`);
   }
 }
 
-export default checkWrite;
+export default checkConnectionRead;

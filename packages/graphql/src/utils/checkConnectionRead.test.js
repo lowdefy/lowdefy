@@ -14,24 +14,30 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors';
-import checkRead from './checkRead';
+import { ConfigurationError } from '../context/errors';
+import checkConnectionRead from './checkConnectionRead';
 
 const context = {
   ConfigurationError,
 };
 
+const connectionType = 'TestConnection';
+
 test('Read explicitly true', () => {
-  expect(checkRead({ connection: { read: true }, context })).toBe(undefined);
+  expect(checkConnectionRead({ connection: { read: true }, context, connectionType })).toBe(
+    undefined
+  );
 });
 
 test('Read not set', () => {
-  expect(checkRead({ connection: {}, context })).toBe(undefined);
+  expect(checkConnectionRead({ connection: {}, context, connectionType })).toBe(undefined);
 });
 
 test('Read false', () => {
-  expect(() => checkRead({ connection: { read: false }, context })).toThrow(ConfigurationError);
-  expect(() => checkRead({ connection: { read: false }, context })).toThrow(
-    'MongoDBCollection connection does not allow reads.'
-  );
+  expect(() =>
+    checkConnectionRead({ connection: { read: false }, context, connectionType })
+  ).toThrow(ConfigurationError);
+  expect(() =>
+    checkConnectionRead({ connection: { read: false }, context, connectionType })
+  ).toThrow('TestConnection connection does not allow reads.');
 });

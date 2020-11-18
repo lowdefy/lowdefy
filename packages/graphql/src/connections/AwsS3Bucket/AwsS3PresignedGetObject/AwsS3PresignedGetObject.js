@@ -15,19 +15,13 @@
 */
 
 import AWS from 'aws-sdk';
-import { get } from '@lowdefy/helpers';
 
 import schema from './AwsS3PresignedGetObjectSchema.json';
-
-function validateConnection({ connection, context }) {
-  if (!get(connection, 'read', { default: true })) {
-    throw new context.ConfigurationError('AWS S3 Bucket does not allow reads');
-  }
-}
+import checkConnectionRead from '../../../utils/checkConnectionRead';
 
 function awsS3PresignedGetObject({ request, connection, context }) {
   try {
-    validateConnection({ connection, context });
+    checkConnectionRead({ connection, context, connectionType: 'AwsS3Bucket' });
     const { accessKeyId, secretAccessKey, region, bucket } = connection;
     const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
     const params = {

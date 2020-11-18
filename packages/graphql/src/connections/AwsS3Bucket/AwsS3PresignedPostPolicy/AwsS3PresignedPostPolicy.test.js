@@ -126,7 +126,7 @@ test('bucket with write false', async () => {
   };
   await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
   await expect(() => resolver({ request, connection, context })).toThrow(
-    'AWS S3 Bucket does not allow writes.'
+    'AwsS3Bucket connection does not allow writes.'
   );
 });
 
@@ -140,7 +140,7 @@ test('bucket with no write specified', async () => {
   };
   await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
   await expect(() => resolver({ request, connection, context })).toThrow(
-    'AWS S3 Bucket does not allow writes.'
+    'AwsS3Bucket connection does not allow writes.'
   );
 });
 
