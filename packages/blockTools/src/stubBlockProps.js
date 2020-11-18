@@ -55,11 +55,16 @@ const stubBlockProps = ({ block, meta, logger }) => {
     if (block.blocks) block.areas.content.blocks = block.blocks;
   }
 
+  // memoize registered methods for test purposes
+  block.registeredMethods = {};
   // mock default block methods
   block.methods = {
     callAction: (action) => log(JSON.stringify(action, null, 2)),
     registerAction: (action) => log(JSON.stringify(action, null, 2)),
-    registerMethod: (method) => log(JSON.stringify(method, null, 2)),
+    registerMethod: (method, methodFn) => {
+      block.registeredMethods[method] = methodFn;
+      return;
+    },
     makeCssClass,
   };
 

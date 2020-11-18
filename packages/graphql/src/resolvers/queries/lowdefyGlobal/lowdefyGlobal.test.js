@@ -57,7 +57,7 @@ test('global resolver', async () => {
   });
 });
 
-test('menu graphql', async () => {
+test('lowdefyGlobal graphql', async () => {
   const res = await runTestQuery({
     gqlQuery: GET_GLOBAL,
     loaders,
@@ -67,9 +67,6 @@ test('menu graphql', async () => {
   expect(res.data).toEqual({
     lowdefyGlobal: {
       global: true,
-      deploymentId: 'test',
-      deploymentName: 'Test App',
-      domainName: 'test.com',
     },
   });
 });

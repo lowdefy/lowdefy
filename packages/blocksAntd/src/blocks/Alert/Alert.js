@@ -16,24 +16,34 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import Icon from '../Icon/Icon';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const AlertBlock = ({ blockId, methods, properties }) => (
-  <Alert
-    afterClose={() => methods.callAction({ action: 'afterClose' })}
-    banner={properties.banner}
-    closable={properties.closable}
-    closeText={properties.closeText}
-    description={properties.description}
-    id={blockId}
-    message={properties.message}
-    onClose={() => methods.callAction({ action: 'onClose' })}
-    showIcon={!!properties.icon}
-    type={properties.type}
-    icon={properties.icon && <Icon methods={methods} properties={properties.icon} />}
-  />
-);
+import Icon from '../Icon/Icon';
+
+const AlertBlock = ({ blockId, methods, properties }) => {
+  const additionalProps = {};
+  if (properties.icon) {
+    additionalProps.icon = (
+      <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+    );
+  }
+  return (
+    <Alert
+      afterClose={() => methods.callAction({ action: 'afterClose' })}
+      banner={properties.banner}
+      closable={properties.closable}
+      closeText={properties.closeText}
+      description={properties.description}
+      id={blockId}
+      message={properties.message || <div style={{ height: '1.5175em' }}></div>}
+      description={properties.description}
+      onClose={() => methods.callAction({ action: 'onClose' })}
+      showIcon={properties.showIcon === false ? false : true}
+      type={properties.type}
+      {...additionalProps}
+    />
+  );
+};
 
 AlertBlock.defaultProps = blockDefaultProps;
 

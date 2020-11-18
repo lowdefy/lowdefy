@@ -20,6 +20,7 @@ import { stubBlockProps, blockDefaultProps, BlockSchemaErrors } from '@lowdefy/b
 import yaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import vs2015 from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
+import validationsExamples from './validationExamples.json';
 
 SyntaxHighlighter.registerLanguage('yaml', yaml);
 const logger = console.log;
@@ -61,6 +62,38 @@ const Examples = ({ type, Component }) => {
                 <Component {...props} />
               </div>
             </div>
+            {meta.test && meta.test.validation && (
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {validationsExamples.map((validation, i) => (
+                  <div key={i} style={{ ...{ padding: 20, flex: '0 50%' }, ...block.style }}>
+                    <h3>
+                      {type} validation.status = {validation.status || 'null'}
+                    </h3>
+                    <Component {...props} validation={validation} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {meta.test && meta.test.required && (
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                <div style={{ ...{ padding: 20, flex: '0 50%' }, ...block.style }}>
+                  <h3>{type} required = true</h3>
+                  <Component {...props} required />
+                </div>
+              </div>
+            )}
+            {meta.test &&
+              meta.test.methods &&
+              meta.test.methods.map((method, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    block.registeredMethods[method.name](method.args);
+                  }}
+                >
+                  {method.name}
+                </button>
+              ))}
           </div>
         );
       })}

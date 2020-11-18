@@ -2,6 +2,10 @@
   "valueType": "number",
   "category": "input",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -23,8 +27,8 @@
         },
         "label": {
           "type": "object",
-          "additionalProperties": false,
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -45,10 +49,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -73,6 +90,11 @@
         "placeholder": {
           "type": "string",
           "description": "Placeholder text inside the block to show message before user types input."
+        },
+        "decimalSeparator": {
+          "type": "string",
+          "default": ".",
+          "description": "Separator between number and decimal places."
         },
         "precision": {
           "type": "integer",
