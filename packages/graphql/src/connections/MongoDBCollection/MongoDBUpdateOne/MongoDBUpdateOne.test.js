@@ -16,17 +16,15 @@
 
 import MongoDBUpdateOne from './MongoDBUpdateOne';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBUpdateOne;
+const { resolver, schema, checkRead, checkWrite } = MongoDBUpdateOne;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'updateOne';
 const documents = [{ _id: 'updateOne', v: 'before' }];
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
@@ -43,7 +41,7 @@ test('updateOne', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 1,
     upsertedId: null,
@@ -64,7 +62,7 @@ test('updateOne upsert', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: {
@@ -88,7 +86,7 @@ test('updateOne upsert false', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -108,7 +106,7 @@ test('updateOne upsert default false', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -128,10 +126,7 @@ test('updateOne connection error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('updateOne mongodb error', async () => {
@@ -145,40 +140,15 @@ test('updateOne mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: Unknown modifier: $badOp'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Unknown modifier: $badOp');
 });
 
-test('updateOne write false', async () => {
-  const request = { filter: { _id: 'updateOne_write_false' }, update: { $set: { v: 'after' } } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    write: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
 });
 
-test('updateOne write not specified', async () => {
-  const request = {
-    filter: { _id: 'updateOne_write_not_specified' },
-    update: { $set: { v: 'after' } },
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('request not an object', async () => {
