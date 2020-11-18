@@ -19,15 +19,27 @@ import renderer from 'react-test-renderer';
 import mockBlock from './mockBlock';
 import { MemoryRouter } from 'react-router-dom';
 
-const runRenderTests = ({ examples, Block, meta, logger, validationsExamples }) => {
+const runRenderTests = ({
+  Block,
+  enzyme,
+  examples,
+  logger,
+  meta,
+  reset = () => null,
+  validationsExamples,
+}) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(before);
+  beforeEach(() => {
+    reset();
+    before();
+  });
 
   examples.forEach((ex) => {
     test(`Render ${ex.id}`, () => {
       // create shell to setup react hooks with getProps before render;
-      const Shell = () => <Block {...getProps({ ...ex, methods })} />;
+      const Shell = () => <Block {...getProps(ex)} methods={methods} />;
       const comp = renderer.create(
         <MemoryRouter>
           <Shell />
@@ -42,7 +54,9 @@ const runRenderTests = ({ examples, Block, meta, logger, validationsExamples }) 
       (validationsExamples || []).map((validationEx) => {
         test(`Render validation.status = ${validationEx.status} ${ex.id}`, () => {
           // create shell to setup react hooks with getProps before render;
-          const Shell = () => <Block {...getProps({ ...ex, methods })} validation={validationEx} />;
+          const Shell = () => (
+            <Block {...getProps(ex)} methods={methods} validation={validationEx} />
+          );
           const comp = renderer.create(
             <MemoryRouter>
               <Shell />
@@ -58,7 +72,7 @@ const runRenderTests = ({ examples, Block, meta, logger, validationsExamples }) 
     if (meta.test && meta.test.required) {
       test(`Render required = true ${ex.id}`, () => {
         // create shell to setup react hooks with getProps before render;
-        const Shell = () => <Block {...getProps({ ...ex, methods })} required />;
+        const Shell = () => <Block {...getProps(ex)} methods={methods} required />;
         const comp = renderer.create(
           <MemoryRouter>
             <Shell />
@@ -67,6 +81,32 @@ const runRenderTests = ({ examples, Block, meta, logger, validationsExamples }) 
         const tree = comp.toJSON();
         expect(tree).toMatchSnapshot();
         comp.unmount();
+      });
+    }
+
+    if (meta.test && meta.test.methods) {
+      meta.test.methods.forEach((method) => {
+        test(`Render for method: ${JSON.stringify(method)} - ${ex.id}`, () => {
+          const Shell = () => {
+            const props = getProps(ex);
+            props.methods = { ...methods, registerMethod: props.methods.registerMethod };
+            return (
+              <>
+                <Block {...props} />
+                <button
+                  id={`${ex.id}_button`}
+                  onClick={() => {
+                    props.registeredMethods[method.name](method.args);
+                  }}
+                  data-testid="btn_method"
+                />
+              </>
+            );
+          };
+          const wrapper = enzyme.mount(<Shell />);
+          wrapper.find('[data-testid="btn_method"]').simulate('click');
+          expect(document.body.innerHTML).toMatchSnapshot();
+        });
       });
     }
   });

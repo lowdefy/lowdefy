@@ -978,21 +978,10 @@ exports[`Render properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1095,21 +1084,10 @@ exports[`Render properties.prefixIcon: AccountBookFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1486,21 +1464,10 @@ exports[`Render properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1599,21 +1566,10 @@ exports[`Render properties.suffixIcon: AlertFilled 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2696,21 +2652,10 @@ exports[`Render required = true properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2813,21 +2758,10 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3204,21 +3138,10 @@ exports[`Render required = true properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3317,21 +3240,10 @@ exports[`Render required = true properties.suffixIcon: AlertFilled 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4757,21 +4669,10 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4903,21 +4804,10 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5410,21 +5300,10 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5552,21 +5431,10 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled 1`]
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6707,21 +6575,10 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6824,21 +6681,10 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7215,21 +7061,10 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7328,21 +7163,10 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled 1`] 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8713,21 +8537,10 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8854,21 +8667,10 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9341,21 +9143,10 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 1`] = 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9478,21 +9269,10 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled 1
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -10966,21 +10746,10 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11112,21 +10881,10 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11619,21 +11377,10 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 1`] = 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11761,21 +11508,10 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled 1
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"

@@ -1817,21 +1817,10 @@ exports[`Render property.suffixIcon Red: CalendarOutlined 1`] = `
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -1955,21 +1944,10 @@ exports[`Render property.suffixIcon: CalendarOutlined 1`] = `
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -3812,21 +3790,10 @@ exports[`Render required = true property.suffixIcon Red: CalendarOutlined 1`] = 
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -3950,21 +3917,10 @@ exports[`Render required = true property.suffixIcon: CalendarOutlined 1`] = `
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -6295,21 +6251,10 @@ exports[`Render validation.status = error property.suffixIcon Red: CalendarOutli
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -6462,21 +6407,10 @@ exports[`Render validation.status = error property.suffixIcon: CalendarOutlined 
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -8348,21 +8282,10 @@ exports[`Render validation.status = null property.suffixIcon Red: CalendarOutlin
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -8486,21 +8409,10 @@ exports[`Render validation.status = null property.suffixIcon: CalendarOutlined 1
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -10751,21 +10663,10 @@ exports[`Render validation.status = success property.suffixIcon Red: CalendarOut
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -10913,21 +10814,10 @@ exports[`Render validation.status = success property.suffixIcon: CalendarOutline
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -13282,21 +13172,10 @@ exports[`Render validation.status = warning property.suffixIcon Red: CalendarOut
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"
@@ -13449,21 +13328,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarOutline
             >
               <span
                 aria-label="loading-3-quarters"
-                className="anticon anticon-loading-3-quarters {}"
-                content={Object {}}
+                className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                list={Array []}
-                menus={Array []}
                 required={false}
                 role="img"
-                user={Object {}}
-                validation={
-                  Object {
-                    "errors": Array [],
-                    "status": null,
-                    "warnings": Array [],
-                  }
-                }
               >
                 <svg
                   aria-hidden="true"

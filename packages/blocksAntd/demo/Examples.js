@@ -82,6 +82,18 @@ const Examples = ({ type, Component }) => {
                 </div>
               </div>
             )}
+            {meta.test &&
+              meta.test.methods &&
+              meta.test.methods.map((method, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    block.registeredMethods[method.name](method.args);
+                  }}
+                >
+                  {method.name}
+                </button>
+              ))}
           </div>
         );
       })}

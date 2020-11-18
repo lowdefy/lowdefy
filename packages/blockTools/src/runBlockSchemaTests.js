@@ -18,6 +18,26 @@ import Ajv from 'ajv';
 import AjvErrors from 'ajv-errors';
 import blockSchema from './blockSchema.json';
 
+const testSchemaProperties = {
+  registeredMethods: {
+    type: 'object',
+  },
+  value: {},
+  methods: {
+    type: 'object',
+  },
+  schemaErrors: {},
+  blockId: {
+    type: 'string',
+  },
+  content: {
+    type: 'object',
+  },
+  list: {
+    type: 'array',
+  },
+};
+
 const initAjv = (options) => {
   const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
   AjvErrors(ajv, options);
@@ -26,7 +46,7 @@ const initAjv = (options) => {
 
 const ajvInstance = initAjv();
 const runBlockSchemaTests = ({ examples, meta }) => {
-  blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
+  blockSchema.properties = { ...blockSchema.properties, ...meta.schema, ...testSchemaProperties };
   const validate = ajvInstance.compile(blockSchema);
   examples.forEach((block) => {
     test(`Test Schema ${block.id}`, () => {

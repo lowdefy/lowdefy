@@ -1359,21 +1359,10 @@ exports[`Render properties.suffixIcon: CalendarTwoTone 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -2827,21 +2816,10 @@ exports[`Render required = true properties.suffixIcon: CalendarTwoTone 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -4841,21 +4819,10 @@ exports[`Render validation.status = error properties.suffixIcon: CalendarTwoTone
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -6367,21 +6334,10 @@ exports[`Render validation.status = null properties.suffixIcon: CalendarTwoTone 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -8291,21 +8247,10 @@ exports[`Render validation.status = success properties.suffixIcon: CalendarTwoTo
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"
@@ -10353,21 +10298,10 @@ exports[`Render validation.status = warning properties.suffixIcon: CalendarTwoTo
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {}"
-                  content={Object {}}
+                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  list={Array []}
-                  menus={Array []}
                   required={false}
                   role="img"
-                  user={Object {}}
-                  validation={
-                    Object {
-                      "errors": Array [],
-                      "status": null,
-                      "warnings": Array [],
-                    }
-                  }
                 >
                   <svg
                     aria-hidden="true"

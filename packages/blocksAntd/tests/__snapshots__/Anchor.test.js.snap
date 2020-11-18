@@ -27,21 +27,10 @@ exports[`Render properties.icon and properties.title 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon and properties.title_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -70,21 +59,10 @@ exports[`Render properties.icon object 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
     id="properties.icon object_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -113,21 +91,10 @@ exports[`Render properties.icon string 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon string_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -155,21 +122,10 @@ exports[`Render properties.icon, properties.title and properties.disabled 1`] = 
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon, properties.title and properties.disabled_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -220,21 +176,10 @@ exports[`Render properties.style with icon 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.style with icon_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"

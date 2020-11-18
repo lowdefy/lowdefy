@@ -161,20 +161,9 @@ exports[`Render properties.icon object 1`] = `
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters ant-alert-icon"
-    content={Object {}}
     id="properties.icon object_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -210,20 +199,9 @@ exports[`Render properties.icon string 1`] = `
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters ant-alert-icon"
-    content={Object {}}
     id="properties.icon string_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -768,20 +746,9 @@ exports[`Render with description properties.icon object 1`] = `
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters ant-alert-icon"
-    content={Object {}}
     id="with description properties.icon object_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -819,20 +786,9 @@ exports[`Render with description properties.icon string 1`] = `
   <span
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters ant-alert-icon"
-    content={Object {}}
     id="with description properties.icon string_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
