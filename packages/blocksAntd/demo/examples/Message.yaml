@@ -1,20 +1,9 @@
-# actions:
-#   onInit:
-#     - id: message_button
-#       type: Button 
-#       properties:
-#         title: Press for Message
 - id: default
   type: Message
 - id: properties.content
   type: Message
   properties:
     content: Message content
-- id: 'properties.duration'
-  type: Message
-  properties:
-    content: Message content
-    duration: 5
 - id: 'properties.icon'
   type: Message
   properties:
@@ -40,3 +29,8 @@
   properties:
     content: Message content
     status: loading
+- id: 'properties.duration'
+  type: Message
+  properties:
+    content: Message content
+    duration: 5
