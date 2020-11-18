@@ -16,16 +16,14 @@
 
 import MongoDBInsertMany from './MongoDBInsertMany';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBInsertMany;
+const { resolver, schema, checkRead, checkWrite } = MongoDBInsertMany;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'insertMany';
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return clearTestMongoDb({ collection });
@@ -41,7 +39,7 @@ test('insertMany', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     insertedCount: 3,
     ops: [
@@ -69,7 +67,7 @@ test('insertMany options', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     insertedCount: 2,
     ops: [
@@ -91,10 +89,7 @@ test('insertMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('insertMany mongodb error', async () => {
@@ -105,38 +100,18 @@ test('insertMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await resolver({ request, connection, context });
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'BulkWriteError: E11000 duplicate key error dup key: { : "insertMany9-1" }'
+  await resolver({ request, connection });
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'E11000 duplicate key error dup key: { : "insertMany9-1" }'
   );
 });
 
-test('insertMany write false', async () => {
-  const request = { docs: [{ _id: 'insertMany10-1' }, { _id: 'insertMany10-2' }] };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    write: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
 });
 
-test('insertMany write not specified', async () => {
-  const request = { docs: [{ _id: 'insertMany11-1' }, { _id: 'insertMany11-2' }] };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('request not an object', async () => {

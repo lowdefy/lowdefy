@@ -16,24 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkWrite from '../checkWrite';
+
 import schema from './MongoDBUpdateOneSchema.json';
 
-async function mongodbUpdateOne({ request, connection, context }) {
-  checkWrite({ connection, context });
+async function mongodbUpdateOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.updateOne(filter, update, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(res);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }
 
-export default { resolver: mongodbUpdateOne, schema };
+export default { resolver: mongodbUpdateOne, schema, checkRead: false, checkWrite: true };

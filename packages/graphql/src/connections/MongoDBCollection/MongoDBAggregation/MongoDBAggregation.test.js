@@ -16,10 +16,10 @@
 
 import MongoDBAggregation from './MongoDBAggregation';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBAggregation;
+const { resolver, schema, checkRead, checkWrite } = MongoDBAggregation;
 
 const pipeline = [
   {
@@ -39,8 +39,6 @@ const documents = [
   { _id: 3, date: new Date('2020-03-01') },
 ];
 
-const context = { ConfigurationError, RequestError };
-
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
 });
@@ -53,7 +51,7 @@ test('aggregation', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual([
     {
       _id: 1,
@@ -70,10 +68,7 @@ test('aggregation connection error', async () => {
     collection,
     read: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('aggregation mongodb error', async () => {
@@ -84,40 +79,17 @@ test('aggregation mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
+  await expect(resolver({ request, connection })).rejects.toThrow(
     "Unrecognized pipeline stage name: '$badStage'"
   );
 });
 
-test('aggregation read false', async () => {
-  const request = { pipeline };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    read: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow reads.'
-  );
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
 });
 
-test('aggregation read not specified', async () => {
-  const request = { pipeline };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  const res = await resolver({ request, connection, context });
-  expect(res).toEqual([
-    {
-      _id: 1,
-      c: 3,
-    },
-  ]);
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });
 
 test('aggregation match dates', async () => {
@@ -136,7 +108,7 @@ test('aggregation match dates', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual([
     {
       _id: 2,

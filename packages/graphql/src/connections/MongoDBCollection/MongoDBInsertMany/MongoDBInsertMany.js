@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkWrite from '../checkWrite';
 
 import schema from './MongoDBInsertManySchema.json';
 
-async function mongodbInsertMany({ request, connection, context }) {
-  checkWrite({ connection, context });
+async function mongodbInsertMany({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { docs, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.insertMany(docs, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { insertedCount, ops } = serialize(res);
   return { insertedCount, ops };
 }
 
-export default { resolver: mongodbInsertMany, schema };
+export default { resolver: mongodbInsertMany, schema, checkRead: false, checkWrite: true };

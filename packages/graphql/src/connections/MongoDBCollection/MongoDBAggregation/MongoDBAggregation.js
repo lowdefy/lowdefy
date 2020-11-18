@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkRead from '../checkRead';
 
 import schema from './MongoDBAggregationSchema.json';
 
-async function mongodbAggregation({ request, connection, context }) {
-  checkRead({ connection, context });
+async function mongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     const cursor = await collection.aggregate(pipeline, options);
     res = await cursor.toArray();
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   return serialize(res);
 }
 
-export default { resolver: mongodbAggregation, schema };
+export default { resolver: mongodbAggregation, schema, checkRead: true, checkWrite: false };

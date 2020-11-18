@@ -15,41 +15,29 @@
 */
 
 import AWS from 'aws-sdk';
-import { get } from '@lowdefy/helpers';
 
 import schema from './AwsS3PresignedPostPolicySchema.json';
 
-function validateConnection({ connection, context }) {
-  if (!get(connection, 'write', { default: false })) {
-    throw new context.ConfigurationError('AWS S3 Bucket does not allow writes.');
+function awsS3PresignedPostPolicy({ request, connection }) {
+  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+  const { acl, conditions, expires, key } = request;
+  const params = {
+    Bucket: bucket,
+    Fields: {
+      key,
+    },
+  };
+  if (conditions) {
+    params.Conditions = conditions;
   }
+  if (expires) {
+    params.Expires = expires;
+  }
+  if (acl) {
+    params.Fields.acl = acl;
+  }
+  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
+  return s3.createPresignedPost(params);
 }
 
-function awsS3PresignedPostPolicy({ request, connection, context }) {
-  validateConnection({ connection, context });
-  try {
-    const { accessKeyId, secretAccessKey, region, bucket } = connection;
-    const { acl, conditions, expires, key } = request;
-    const params = {
-      Bucket: bucket,
-      Fields: {
-        key,
-      },
-    };
-    if (conditions) {
-      params.Conditions = conditions;
-    }
-    if (expires) {
-      params.Expires = expires;
-    }
-    if (acl) {
-      params.Fields.acl = acl;
-    }
-    const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-    return s3.createPresignedPost(params);
-  } catch (error) {
-    throw new context.RequestError(error.message);
-  }
-}
-
-export default { resolver: awsS3PresignedPostPolicy, schema };
+export default { resolver: awsS3PresignedPostPolicy, schema, checkRead: false, checkWrite: true };

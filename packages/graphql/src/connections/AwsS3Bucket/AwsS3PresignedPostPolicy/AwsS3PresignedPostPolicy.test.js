@@ -16,12 +16,10 @@
 
 import AWS from 'aws-sdk';
 import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
 jest.mock('aws-sdk');
-
-const context = { ConfigurationError, RequestError };
 
 const mockCreatePresignedPost = jest.fn();
 const createPresignedPostMockImp = () => 'res';
@@ -32,7 +30,7 @@ const s3ConstructorMockImp = () => ({
 
 AWS.S3 = mockS3Constructor;
 
-const { resolver, schema } = AwsS3PresignedPostPolicy;
+const { resolver, schema, checkRead, checkWrite } = AwsS3PresignedPostPolicy;
 
 beforeEach(() => {
   mockCreatePresignedPost.mockReset();
@@ -50,7 +48,7 @@ test('awsS3PresignedPostPolicy', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = resolver({ request, connection, context });
+  const res = resolver({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -88,7 +86,7 @@ test('awsS3PresignedPostPolicy options ', async () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = resolver({ request, connection, context });
+  const res = resolver({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -115,35 +113,6 @@ test('awsS3PresignedPostPolicy options ', async () => {
   expect(res).toEqual('res');
 });
 
-test('bucket with write false', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    write: false,
-    bucket: 'bucket',
-  };
-  await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
-  await expect(() => resolver({ request, connection, context })).toThrow(
-    'AWS S3 Bucket does not allow writes.'
-  );
-});
-
-test('bucket with no write specified', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-  };
-  await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
-  await expect(() => resolver({ request, connection, context })).toThrow(
-    'AWS S3 Bucket does not allow writes.'
-  );
-});
-
 test('Error from s3 client', async () => {
   mockCreatePresignedPost.mockImplementation(() => {
     throw new Error('Test S3 client error.');
@@ -156,8 +125,15 @@ test('Error from s3 client', async () => {
     bucket: 'bucket',
     write: true,
   };
-  await expect(() => resolver({ request, connection, context })).toThrow(RequestError);
-  await expect(() => resolver({ request, connection, context })).toThrow('Test S3 client error.');
+  await expect(() => resolver({ request, connection })).toThrow('Test S3 client error.');
+});
+
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
+});
+
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('Request properties is not an object', async () => {

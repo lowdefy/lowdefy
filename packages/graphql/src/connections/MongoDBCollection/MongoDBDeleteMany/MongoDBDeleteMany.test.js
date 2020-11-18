@@ -16,10 +16,10 @@
 
 import MongoDBDeleteMany from './MongoDBDeleteMany';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBDeleteMany;
+const { resolver, schema, checkRead, checkWrite } = MongoDBDeleteMany;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -33,8 +33,6 @@ const documents = [
   { _id: 'deleteMany_5', f: 'deleteMany' },
   { _id: 'deleteMany_6', f: 'deleteMany' },
 ];
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
@@ -50,7 +48,7 @@ test('deleteMany - Single Document', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     deletedCount: 1,
   });
@@ -66,7 +64,7 @@ test('deleteMany - Multiple Documents', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     deletedCount: 3,
   });
@@ -82,7 +80,7 @@ test('deleteMany - Multiple Documents one field', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     deletedCount: 3,
   });
@@ -98,10 +96,7 @@ test('deleteMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('deleteMany mongodb error', async () => {
@@ -115,39 +110,17 @@ test('deleteMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: w has to be a number or a string'
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'w has to be a number or a string'
   );
 });
 
-test('deleteMany write false', async () => {
-  const request = { filter: { _id: 'test' } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    write: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes'
-  );
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
 });
 
-test('deleteMany write not specified', async () => {
-  const request = {
-    filter: { _id: 'test' },
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('request not an object', async () => {

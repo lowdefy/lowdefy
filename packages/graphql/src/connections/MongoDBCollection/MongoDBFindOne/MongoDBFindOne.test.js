@@ -16,17 +16,15 @@
 
 import MongoDBFindOne from './MongoDBFindOne';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBFindOne;
+const { resolver, schema, checkRead, checkWrite } = MongoDBFindOne;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'findOne';
 const documents = [{ _id: 1 }, { _id: 2 }, { _id: 3 }];
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
@@ -40,7 +38,7 @@ test('findOne', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     _id: 1,
   });
@@ -56,7 +54,7 @@ test('findOne only find one', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     _id: 2,
   });
@@ -73,7 +71,7 @@ test('find options', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     _id: 2,
   });
@@ -87,10 +85,7 @@ test('findOne connection error', async () => {
     collection,
     read: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('findOne mongodb error', async () => {
@@ -101,37 +96,15 @@ test('findOne mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: unknown operator: $badOp'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('unknown operator: $badOp');
 });
 
-test('findOne read false', async () => {
-  const request = { query: { _id: 1 } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    read: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow reads.'
-  );
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
 });
 
-test('findOne read not specified', async () => {
-  const request = { query: { _id: 1 } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  const res = await resolver({ request, connection, context });
-  expect(res).toEqual({
-    _id: 1,
-  });
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });
 
 test('request not an object', async () => {

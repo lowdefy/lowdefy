@@ -20,7 +20,7 @@ import schema from './SendGridMailSendSchema.json';
 // https://sendgrid.api-docs.io/v3.0/how-to-use-the-sendgrid-v3-api/api-authentication
 // https://github.com/sendgrid/sendgrid-nodejs/blob/master/docs/use-cases/README.md#email-use-cases
 
-async function sendGridMailSend({ request, connection, context }) {
+async function sendGridMailSend({ request, connection }) {
   const { apiKey, from, templateId, mailSettings } = connection;
   const {
     to,
@@ -59,11 +59,11 @@ async function sendGridMailSend({ request, connection, context }) {
     await sendgrid.send(msg);
   } catch (error) {
     if (error.response) {
-      throw new context.RequestError(JSON.stringify(error.response.body));
+      throw new Error(JSON.stringify(error.response.body));
     }
-    throw new context.RequestError(error.message);
+    throw error;
   }
   return { response: 'Mail sent successfully' };
 }
 
-export default { resolver: sendGridMailSend, schema };
+export default { resolver: sendGridMailSend, schema, checkRead: false, checkWrite: false };

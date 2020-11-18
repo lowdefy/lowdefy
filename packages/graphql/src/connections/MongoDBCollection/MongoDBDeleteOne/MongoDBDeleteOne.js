@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkWrite from '../checkWrite';
 
 import schema from './MongoDBDeleteOneSchema.json';
 
-async function mongodbDeleteOne({ request, connection, context }) {
-  checkWrite({ connection, context });
+async function mongodbDeleteOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.deleteOne(filter, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { deletedCount } = serialize(res);
   return { deletedCount };
 }
 
-export default { resolver: mongodbDeleteOne, schema };
+export default { resolver: mongodbDeleteOne, schema, checkRead: false, checkWrite: true };

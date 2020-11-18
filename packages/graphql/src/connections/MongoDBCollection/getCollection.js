@@ -16,27 +16,23 @@
 
 import { MongoClient } from 'mongodb';
 
-async function getCollection({ connection, context }) {
+async function getCollection({ connection }) {
   let client;
   const { databaseUri, databaseName, collection } = connection;
-  try {
-    client = new MongoClient(databaseUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    await client.connect();
-  } catch (err) {
-    throw new context.RequestError(`${err.name}: ${err.message}`);
-  }
+  client = new MongoClient(databaseUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  await client.connect();
   try {
     const db = client.db(databaseName);
     return {
       client,
       collection: db.collection(collection),
     };
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
 }
 

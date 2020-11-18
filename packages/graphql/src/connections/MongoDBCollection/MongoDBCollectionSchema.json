@@ -28,7 +28,7 @@
     "read": {
       "type": "boolean",
       "default": true,
-      "description": "Allow reads from the bucket.",
+      "description": "Allow reads from the collection.",
       "errorMessage": {
         "type": "MongoDBCollection connection property \"read\" should be a boolean."
       }
@@ -36,7 +36,7 @@
     "write": {
       "type": "boolean",
       "default": false,
-      "description": "Allow writes to the bucket.",
+      "description": "Allow writes to the collection.",
       "errorMessage": {
         "type": "MongoDBCollection connection property \"write\" should be a boolean."
       }

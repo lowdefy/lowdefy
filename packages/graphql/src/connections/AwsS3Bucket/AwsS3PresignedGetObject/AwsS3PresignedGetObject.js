@@ -15,37 +15,22 @@
 */
 
 import AWS from 'aws-sdk';
-import { get } from '@lowdefy/helpers';
 
 import schema from './AwsS3PresignedGetObjectSchema.json';
 
-function validateConnection({ connection, context }) {
-  if (!get(connection, 'read', { default: true })) {
-    throw new context.ConfigurationError('AWS S3 Bucket does not allow reads');
-  }
+function awsS3PresignedGetObject({ request, connection }) {
+  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+  const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
+  const params = {
+    Bucket: bucket,
+    Key: key,
+    Expires: expires,
+    VersionId: versionId,
+    ResponseContentDisposition: responseContentDisposition,
+    ResponseContentType: responseContentType,
+  };
+  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
+  return s3.getSignedUrl('getObject', params);
 }
 
-function awsS3PresignedGetObject({ request, connection, context }) {
-  try {
-    validateConnection({ connection, context });
-    const { accessKeyId, secretAccessKey, region, bucket } = connection;
-    const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
-    const params = {
-      Bucket: bucket,
-      Key: key,
-      Expires: expires,
-      VersionId: versionId,
-      ResponseContentDisposition: responseContentDisposition,
-      ResponseContentType: responseContentType,
-    };
-    const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-    return s3.getSignedUrl('getObject', params);
-  } catch (error) {
-    if (error instanceof context.ConfigurationError) {
-      throw error;
-    }
-    throw new context.RequestError(error.message);
-  }
-}
-
-export default { resolver: awsS3PresignedGetObject, schema };
+export default { resolver: awsS3PresignedGetObject, schema, checkRead: true, checkWrite: false };
