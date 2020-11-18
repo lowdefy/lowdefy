@@ -45,11 +45,9 @@ class RequestController {
     });
     const connection = await this.loadConnection({ connectionId: request.connectionId });
 
-    // Get resolver early to throw and avoid parsing if request/connection type is invalid
-    const { connectionSchema, requestSchema, resolver } = this.getResolverAndSchemas({
-      connection,
-      request,
-    });
+    // Get definitions early to throw and avoid parsing if request/connection type is invalid
+    const connectionDefinition = this.getConnectionDefinition({ connection, request });
+    const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
 
     const { connectionProperties, requestProperties } = await this.parseOperators({
       args,
@@ -62,13 +60,23 @@ class RequestController {
       urlQuery,
     });
 
-    testSchema({ schema: connectionSchema, object: connectionProperties });
-    testSchema({ schema: requestSchema, object: requestProperties });
+    this.checkConnectionRead({
+      connectionProperties,
+      connection,
+      checkRead: requestDefinition.checkRead,
+    });
+    this.checkConnectionWrite({
+      connectionProperties,
+      connection,
+      checkWrite: requestDefinition.checkWrite,
+    });
+    testSchema({ schema: connectionDefinition.schema, object: connectionProperties });
+    testSchema({ schema: requestDefinition.schema, object: requestProperties });
 
     const response = await this.callResolver({
       connectionProperties,
       requestProperties,
-      resolver,
+      resolver: requestDefinition.resolver,
     });
 
     return {
@@ -99,26 +107,24 @@ class RequestController {
     return connection;
   }
 
-  getResolverAndSchemas({ connection, request }) {
-    // Name ??
-    const connectionObj = resolvers[connection.type];
-    if (!connectionObj) {
+  getConnectionDefinition({ connection, request }) {
+    const connectionDefinition = resolvers[connection.type];
+    if (!connectionDefinition) {
       throw new ConfigurationError(
         `Request "${request.requestId}" has invalid connection type "${connection.type}".`
       );
     }
-    // Name ??
-    const requestObj = connectionObj.requests[request.type];
-    if (!requestObj) {
+    return connectionDefinition;
+  }
+
+  getRequestDefinition({ connectionDefinition, request }) {
+    const requestDefinition = connectionDefinition.requests[request.type];
+    if (!requestDefinition) {
       throw new ConfigurationError(
         `Request "${request.requestId}" has invalid request type "${request.type}".`
       );
     }
-    return {
-      connectionSchema: connectionObj.schema,
-      requestSchema: requestObj.schema,
-      resolver: requestObj.resolver,
-    };
+    return requestDefinition;
   }
 
   async parseOperators({
@@ -163,6 +169,18 @@ class RequestController {
       connectionProperties,
       requestProperties,
     };
+  }
+
+  checkConnectionRead({ connectionProperties, connection, checkRead }) {
+    if (checkRead && connectionProperties.read === false) {
+      throw new ConfigurationError(`${connection.type} connection does not allow reads.`);
+    }
+  }
+
+  checkConnectionWrite({ connectionProperties, connection, checkWrite }) {
+    if (checkWrite && connectionProperties.write !== true) {
+      throw new ConfigurationError(`${connection.type} connection does not allow writes.`);
+    }
   }
 
   async callResolver({ connectionProperties, requestProperties, resolver }) {

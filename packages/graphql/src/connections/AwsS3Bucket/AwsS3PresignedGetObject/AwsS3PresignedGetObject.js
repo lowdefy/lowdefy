@@ -17,29 +17,20 @@
 import AWS from 'aws-sdk';
 
 import schema from './AwsS3PresignedGetObjectSchema.json';
-import checkConnectionRead from '../../../utils/checkConnectionRead';
 
-function awsS3PresignedGetObject({ request, connection, context }) {
-  try {
-    checkConnectionRead({ connection, context, connectionType: 'AwsS3Bucket' });
-    const { accessKeyId, secretAccessKey, region, bucket } = connection;
-    const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
-    const params = {
-      Bucket: bucket,
-      Key: key,
-      Expires: expires,
-      VersionId: versionId,
-      ResponseContentDisposition: responseContentDisposition,
-      ResponseContentType: responseContentType,
-    };
-    const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-    return s3.getSignedUrl('getObject', params);
-  } catch (error) {
-    if (error instanceof context.ConfigurationError) {
-      throw error;
-    }
-    throw new context.RequestError(error.message);
-  }
+function awsS3PresignedGetObject({ request, connection }) {
+  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+  const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
+  const params = {
+    Bucket: bucket,
+    Key: key,
+    Expires: expires,
+    VersionId: versionId,
+    ResponseContentDisposition: responseContentDisposition,
+    ResponseContentType: responseContentType,
+  };
+  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
+  return s3.getSignedUrl('getObject', params);
 }
 
-export default { resolver: awsS3PresignedGetObject, schema };
+export default { resolver: awsS3PresignedGetObject, schema, checkRead: true, checkWrite: false };

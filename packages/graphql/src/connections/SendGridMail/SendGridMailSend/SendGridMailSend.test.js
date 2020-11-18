@@ -15,12 +15,10 @@
 */
 
 import SendGridMailSend from './SendGridMailSend';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema } = SendGridMailSend;
-
-const context = { ConfigurationError, RequestError };
 
 jest.mock('@sendgrid/mail', () => {
   return {
@@ -54,7 +52,7 @@ test('send with valid request and connection', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  const send = await resolver({ request, connection, context });
+  const send = await resolver({ request, connection });
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
@@ -70,7 +68,7 @@ test('send to list of emails', async () => {
     apiKey: 'X',
     from: 'x@y.com',
   };
-  const send = await resolver({ request, connection, context });
+  const send = await resolver({ request, connection });
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
@@ -93,7 +91,7 @@ test('send a list of different emails', async () => {
     apiKey: 'X',
     from: 'x@y.com',
   };
-  const send = await resolver({ request, connection, context });
+  const send = await resolver({ request, connection });
   expect(send).toEqual({
     response: 'Mail sent successfully',
   });
@@ -177,8 +175,7 @@ test('request throws an error', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  await expect(() => resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(() => resolver({ request, connection, context })).rejects.toThrow('Test error');
+  await expect(() => resolver({ request, connection })).rejects.toThrow('Test error.');
 });
 
 test('request throws an error with response body', async () => {
@@ -191,8 +188,7 @@ test('request throws an error with response body', async () => {
     apiKey: 'X',
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
-  await expect(() => resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(() => resolver({ request, connection, context })).rejects.toThrow(
+  await expect(() => resolver({ request, connection })).rejects.toThrow(
     '["Test error 1.","Test error 2."]'
   );
 });

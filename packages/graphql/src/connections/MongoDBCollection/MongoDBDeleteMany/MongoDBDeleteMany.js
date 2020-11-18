@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
 import schema from './MongoDBDeleteManySchema.json';
 
-async function mongodbDeleteMany({ request, connection, context }) {
-  checkConnectionWrite({ connection, context, connectionType: 'MongoDBCollection' });
+async function mongodbDeleteMany({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.deleteMany(filter, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { deletedCount } = serialize(res);
   return { deletedCount };
 }
 
-export default { resolver: mongodbDeleteMany, schema };
+export default { resolver: mongodbDeleteMany, schema, checkRead: false, checkWrite: true };

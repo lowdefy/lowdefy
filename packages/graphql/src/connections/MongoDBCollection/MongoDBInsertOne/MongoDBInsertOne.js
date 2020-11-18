@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
 import schema from './MongoDBInsertOneSchema.json';
 
-async function mongodbInsertOne({ request, connection, context }) {
-  checkConnectionWrite({ connection, context, connectionType: 'MongoDBCollection' });
+async function mongodbInsertOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { doc, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.insertOne(doc, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { insertedCount, insertedId, ops } = serialize(res);
   return { insertedCount, insertedId, ops };
 }
 
-export default { resolver: mongodbInsertOne, schema };
+export default { resolver: mongodbInsertOne, schema, checkRead: false, checkWrite: true };

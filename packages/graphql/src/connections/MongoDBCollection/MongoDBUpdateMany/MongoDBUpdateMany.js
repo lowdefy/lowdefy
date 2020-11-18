@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
 import schema from './MongoDBUpdateManySchema.json';
 
-async function mongodbUpdateMany({ request, connection, context }) {
-  checkConnectionWrite({ connection, context, connectionType: 'MongoDBCollection' });
+async function mongodbUpdateMany({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     res = await collection.updateMany(filter, update, options);
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(res);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }
 
-export default { resolver: mongodbUpdateMany, schema };
+export default { resolver: mongodbUpdateMany, schema, checkRead: false, checkWrite: true };

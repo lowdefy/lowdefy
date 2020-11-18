@@ -16,10 +16,10 @@
 
 import MongoDBFind from './MongoDBFind';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBFind;
+const { resolver, schema, checkRead, checkWrite } = MongoDBFind;
 
 const query = { _id: 1 };
 
@@ -27,8 +27,6 @@ const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'find';
 const documents = [{ _id: 1 }, { _id: 2 }, { _id: 3 }];
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
@@ -42,7 +40,7 @@ test('find', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual([
     {
       _id: 1,
@@ -61,7 +59,7 @@ test('find options', async () => {
     collection,
     read: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual([
     {
       _id: 2,
@@ -77,39 +75,15 @@ test('find mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: unknown operator: $badOp'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('unknown operator: $badOp');
 });
 
-test('find read false', async () => {
-  const request = { query };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    read: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow reads.'
-  );
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
 });
 
-test('find read not specified', async () => {
-  const request = { query };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  const res = await resolver({ request, connection, context });
-  expect(res).toEqual([
-    {
-      _id: 1,
-    },
-  ]);
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });
 
 test('request not an object', async () => {

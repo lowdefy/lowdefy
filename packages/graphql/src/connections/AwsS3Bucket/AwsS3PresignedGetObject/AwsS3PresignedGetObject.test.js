@@ -16,12 +16,10 @@
 
 import AWS from 'aws-sdk';
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
 jest.mock('aws-sdk');
-
-const context = { ConfigurationError, RequestError };
 
 const mockGetSignedUrl = jest.fn();
 const getSignedUrlMockImp = () => 'res';
@@ -32,7 +30,7 @@ const s3ConstructorMockImp = () => ({
 
 AWS.S3 = mockS3Constructor;
 
-const { resolver, schema } = AwsS3PresignedGetObject;
+const { resolver, schema, checkRead, checkWrite } = AwsS3PresignedGetObject;
 
 beforeEach(() => {
   mockGetSignedUrl.mockReset();
@@ -50,7 +48,7 @@ test('awsS3PresignedGetObject', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = resolver({ request, connection, context });
+  const res = resolver({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -87,7 +85,7 @@ test('awsS3PresignedGetObject options ', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  const res = resolver({ request, connection, context });
+  const res = resolver({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -114,82 +112,12 @@ test('awsS3PresignedGetObject options ', async () => {
   expect(res).toEqual('res');
 });
 
-test('bucket with read false', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-    read: false,
-  };
-  await expect(() => resolver({ request, connection, context })).toThrow(ConfigurationError);
-  await expect(() => resolver({ request, connection, context })).toThrow(
-    'AwsS3Bucket connection does not allow reads.'
-  );
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
 });
 
-test('bucket with no read specified', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-  };
-  const res = resolver({ request, connection, context });
-  expect(mockS3Constructor.mock.calls).toEqual([
-    [
-      {
-        accessKeyId: 'accessKeyId',
-        bucket: 'bucket',
-        region: 'region',
-        secretAccessKey: 'secretAccessKey',
-      },
-    ],
-  ]);
-  expect(mockGetSignedUrl.mock.calls).toEqual([
-    [
-      'getObject',
-      {
-        Bucket: 'bucket',
-        Key: 'key',
-      },
-    ],
-  ]);
-  expect(res).toEqual('res');
-});
-
-test('bucket with read true specified', async () => {
-  const request = { key: 'key' };
-  const connection = {
-    accessKeyId: 'accessKeyId',
-    secretAccessKey: 'secretAccessKey',
-    region: 'region',
-    bucket: 'bucket',
-    read: true,
-  };
-  const res = resolver({ request, connection, context });
-  expect(mockS3Constructor.mock.calls).toEqual([
-    [
-      {
-        accessKeyId: 'accessKeyId',
-        bucket: 'bucket',
-        region: 'region',
-        secretAccessKey: 'secretAccessKey',
-      },
-    ],
-  ]);
-  expect(mockGetSignedUrl.mock.calls).toEqual([
-    [
-      'getObject',
-      {
-        Bucket: 'bucket',
-        Key: 'key',
-      },
-    ],
-  ]);
-  expect(res).toEqual('res');
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });
 
 test('Error from s3 client', async () => {
@@ -203,8 +131,7 @@ test('Error from s3 client', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  await expect(() => resolver({ request, connection, context })).toThrow(RequestError);
-  await expect(() => resolver({ request, connection, context })).toThrow('Test S3 client error.');
+  await expect(() => resolver({ request, connection })).toThrow('Test S3 client error.');
 });
 
 test('Request properties is not an object', async () => {

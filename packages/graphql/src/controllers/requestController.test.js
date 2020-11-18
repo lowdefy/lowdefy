@@ -23,11 +23,35 @@ jest.mock('../connections/resolvers', () => {
   const mockTestRequestResolver = jest.fn();
   return {
     TestConnection: {
-      schema: {},
+      schema: {
+        type: 'object',
+        properties: {
+          schemaPropString: {
+            type: 'string',
+          },
+        },
+      },
       requests: {
         TestRequest: {
           resolver: mockTestRequestResolver,
+          schema: {
+            type: 'object',
+            properties: {
+              schemaPropString: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        TestRequestCheckRead: {
+          resolver: mockTestRequestResolver,
           schema: {},
+          checkRead: true,
+        },
+        TestRequestCheckWrite: {
+          resolver: mockTestRequestResolver,
+          schema: {},
+          checkWrite: true,
         },
       },
     },
@@ -529,4 +553,269 @@ test('request resolver throws generic error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow('Test generic error.');
+});
+
+test('connection properties schema error', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {
+          schemaPropString: true,
+        },
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(defaultLoadRequestImp);
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow('should be string');
+});
+
+test('request properties schema error', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {
+          schemaPropString: true,
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow('should be string');
+});
+
+test('checkRead, read explicitly true', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {
+          read: true,
+        },
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckRead',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {
+        read: true,
+      },
+      request: {},
+    },
+    success: true,
+    type: 'TestRequestCheckRead',
+  });
+});
+
+test('checkRead, read explicitly false', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {
+          read: false,
+        },
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckRead',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(
+    'TestConnection connection does not allow reads.'
+  );
+});
+
+test('checkRead, read not set', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckRead',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {},
+      request: {},
+    },
+    success: true,
+    type: 'TestRequestCheckRead',
+  });
+});
+
+test('checkWrite, write explicitly true', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {
+          write: true,
+        },
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckWrite',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {
+        write: true,
+      },
+      request: {},
+    },
+    success: true,
+    type: 'TestRequestCheckWrite',
+  });
+});
+
+test('checkWrite, write explicitly false', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {
+          write: false,
+        },
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckWrite',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(
+    'TestConnection connection does not allow writes.'
+  );
+});
+
+test('checkWrite, write not set', async () => {
+  mockLoadConnection.mockImplementation((id) => {
+    if (id === 'testConnection') {
+      return {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequestCheckWrite',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {},
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(
+    'TestConnection connection does not allow writes.'
+  );
 });

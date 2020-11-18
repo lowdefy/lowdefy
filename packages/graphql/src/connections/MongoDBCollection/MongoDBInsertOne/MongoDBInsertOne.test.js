@@ -17,16 +17,14 @@
 import { MongoClient } from 'mongodb';
 import MongoDBInsertOne from './MongoDBInsertOne';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBInsertOne;
+const { resolver, schema, checkRead, checkWrite } = MongoDBInsertOne;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'insertOne';
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return clearTestMongoDb({ collection });
@@ -40,7 +38,7 @@ test('insertOne', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOne',
@@ -63,7 +61,7 @@ test('insertOne options', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOne_options',
@@ -83,10 +81,7 @@ test('insertOne connection error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('insertOne mongodb error', async () => {
@@ -97,38 +92,18 @@ test('insertOne mongodb error', async () => {
     collection,
     write: true,
   };
-  await resolver({ request, connection, context });
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: E11000 duplicate key error dup key'
+  await resolver({ request, connection });
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'E11000 duplicate key error dup key'
   );
 });
 
-test('insertOne write false', async () => {
-  const request = { doc: { _id: 'insertOne_write_false' } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    write: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
 });
 
-test('insertOne write not specified', async () => {
-  const request = { doc: { _id: 'insertOne_write_not_specified' } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('insertOne insert a date', async () => {
@@ -144,7 +119,7 @@ test('insertOne insert a date', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     insertedCount: 1,
     insertedId: 'insertOneDate',

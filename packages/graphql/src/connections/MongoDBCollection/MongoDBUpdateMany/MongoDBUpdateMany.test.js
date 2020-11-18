@@ -16,10 +16,10 @@
 
 import MongoDBUpdateMany from './MongoDBUpdateMany';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError, RequestError } from '../../../context/errors';
+import { ConfigurationError } from '../../../context/errors';
 import testSchema from '../../../utils/testSchema';
 
-const { resolver, schema } = MongoDBUpdateMany;
+const { resolver, schema, checkRead, checkWrite } = MongoDBUpdateMany;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -33,8 +33,6 @@ const documents = [
   { _id: 'updateMany_5', v: 'before', f: 'updateMany' },
   { _id: 'updateMany_6', v: 'before', f: 'updateMany' },
 ];
-
-const context = { ConfigurationError, RequestError };
 
 beforeAll(() => {
   return populateTestMongoDb({ collection, documents });
@@ -51,7 +49,7 @@ test('updateMany - Single Document', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 1,
     upsertedId: null,
@@ -71,7 +69,7 @@ test('updateMany - Multiple Documents', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 3,
     upsertedId: null,
@@ -91,7 +89,7 @@ test('updateMany - Multiple Documents one field', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 3,
     upsertedId: null,
@@ -112,7 +110,7 @@ test('updateMany upsert', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: {
@@ -136,7 +134,7 @@ test('updateMany upsert false', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -156,7 +154,7 @@ test('updateMany upsert default false', async () => {
     collection,
     write: true,
   };
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -176,10 +174,7 @@ test('updateMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Invalid connection string'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('updateMany mongodb error', async () => {
@@ -193,40 +188,15 @@ test('updateMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoError: Unknown modifier: $badOp'
-  );
+  await expect(resolver({ request, connection })).rejects.toThrow('Unknown modifier: $badOp');
 });
 
-test('updateMany write false', async () => {
-  const request = { filter: { _id: 'updateMany_write_false' }, update: { $set: { v: 'after' } } };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    write: false,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkRead should be false', async () => {
+  expect(checkRead).toBe(false);
 });
 
-test('updateMany write not specified', async () => {
-  const request = {
-    filter: { _id: 'updateMany_write_not_specified' },
-    update: { $set: { v: 'after' } },
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-  };
-  await expect(resolver({ request, connection, context })).rejects.toThrow(ConfigurationError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'MongoDBCollection connection does not allow writes.'
-  );
+test('checkWrite should be true', async () => {
+  expect(checkWrite).toBe(true);
 });
 
 test('request not an object', async () => {

@@ -16,11 +16,6 @@
 import { MongoClient } from 'mongodb';
 
 import getCollection from './getCollection';
-import { RequestError } from '../../context/errors';
-
-const context = {
-  RequestError,
-};
 
 const databaseUri = process.env.MONGO_URL;
 
@@ -30,7 +25,7 @@ test('get collection', async () => {
     databaseName: 'test',
     collection: 'getCollection',
   };
-  const res = await getCollection({ connection, context });
+  const res = await getCollection({ connection });
   expect(res.client).toBeInstanceOf(MongoClient);
   expect(res.collection).toBeInstanceOf(MongoClient.connect.Collection);
   await res.client.close();
@@ -41,7 +36,7 @@ test('get collection, no databaseName, uses databaseUri', async () => {
     databaseUri,
     collection: 'getCollection',
   };
-  const res = await getCollection({ connection, context });
+  const res = await getCollection({ connection });
   expect(res.client).toBeInstanceOf(MongoClient);
   expect(res.collection).toBeInstanceOf(MongoClient.connect.Collection);
   await res.client.close();
@@ -53,10 +48,7 @@ test('invalid databaseUri', async () => {
     databaseName: 'test',
     collection: 'getCollection',
   };
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(RequestError);
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(
-    'MongoParseError: Invalid connection string'
-  );
+  await expect(() => getCollection({ connection })).rejects.toThrow('Invalid connection string');
 });
 
 test('invalid databaseName', async () => {
@@ -65,9 +57,8 @@ test('invalid databaseName', async () => {
     databaseName: {},
     collection: 'getCollection',
   };
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(RequestError);
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(
-    'MongoError: database name must be a string'
+  await expect(() => getCollection({ connection })).rejects.toThrow(
+    'database name must be a string'
   );
 });
 
@@ -77,8 +68,7 @@ test('invalid collection', async () => {
     databaseName: 'test',
     collection: {},
   };
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(RequestError);
-  await expect(() => getCollection({ connection, context })).rejects.toThrow(
-    'MongoError: collection name must be a String'
+  await expect(() => getCollection({ connection })).rejects.toThrow(
+    'collection name must be a String'
   );
 });

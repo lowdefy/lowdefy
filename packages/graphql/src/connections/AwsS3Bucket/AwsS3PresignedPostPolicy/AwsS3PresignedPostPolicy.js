@@ -17,33 +17,27 @@
 import AWS from 'aws-sdk';
 
 import schema from './AwsS3PresignedPostPolicySchema.json';
-import checkConnectionWrite from '../../../utils/checkConnectionWrite';
 
-function awsS3PresignedPostPolicy({ request, connection, context }) {
-  checkConnectionWrite({ connection, context, connectionType: 'AwsS3Bucket' });
-  try {
-    const { accessKeyId, secretAccessKey, region, bucket } = connection;
-    const { acl, conditions, expires, key } = request;
-    const params = {
-      Bucket: bucket,
-      Fields: {
-        key,
-      },
-    };
-    if (conditions) {
-      params.Conditions = conditions;
-    }
-    if (expires) {
-      params.Expires = expires;
-    }
-    if (acl) {
-      params.Fields.acl = acl;
-    }
-    const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
-    return s3.createPresignedPost(params);
-  } catch (error) {
-    throw new context.RequestError(error.message);
+function awsS3PresignedPostPolicy({ request, connection }) {
+  const { accessKeyId, secretAccessKey, region, bucket } = connection;
+  const { acl, conditions, expires, key } = request;
+  const params = {
+    Bucket: bucket,
+    Fields: {
+      key,
+    },
+  };
+  if (conditions) {
+    params.Conditions = conditions;
   }
+  if (expires) {
+    params.Expires = expires;
+  }
+  if (acl) {
+    params.Fields.acl = acl;
+  }
+  const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
+  return s3.createPresignedPost(params);
 }
 
-export default { resolver: awsS3PresignedPostPolicy, schema };
+export default { resolver: awsS3PresignedPostPolicy, schema, checkRead: false, checkWrite: true };

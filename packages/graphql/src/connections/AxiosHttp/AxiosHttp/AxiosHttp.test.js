@@ -15,9 +15,6 @@
 */
 
 import AxiosHTTP from './AxiosHttp';
-import { ConfigurationError, RequestError } from '../../../context/errors';
-
-const context = { ConfigurationError, RequestError };
 
 const { resolver } = AxiosHTTP;
 
@@ -26,7 +23,7 @@ test('get default method,', async () => {
     url: 'https://postman-echo.com/get',
   };
   const connection = {};
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res.status).toBe(200);
   expect(res.statusText).toBe('OK');
   expect(res.method).toBe(undefined);
@@ -54,7 +51,7 @@ test('get specify method', async () => {
     method: 'get',
   };
   const connection = {};
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res.status).toBe(200);
   expect(res.statusText).toBe('OK');
   expect(res.method).toBe(undefined);
@@ -85,7 +82,7 @@ test('get with params', async () => {
     },
   };
   const connection = {};
-  const res = await resolver({ request, connection, context });
+  const res = await resolver({ request, connection });
   expect(res.status).toBe(200);
   expect(res.statusText).toBe('OK');
   expect(res.method).toBe(undefined);
@@ -118,12 +115,13 @@ test('axios error', async () => {
     },
   };
   const connection = {};
-  await expect(resolver({ request, connection, context })).rejects.toThrow(RequestError);
-  await expect(resolver({ request, connection, context })).rejects.toThrow(
-    'Status: 404, Not Found; Data: ""'
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'Request failed with status code 404; Http response "404: Not Found"; Data: "".'
   );
 });
 
 test('other error', async () => {
-  await expect(resolver({ request: '', connection: '', context })).rejects.toThrow();
+  await expect(resolver({ request: { url: true } })).rejects.toThrow(
+    'The "url" argument must be of type string. Received type boolean (true)'
+  );
 });

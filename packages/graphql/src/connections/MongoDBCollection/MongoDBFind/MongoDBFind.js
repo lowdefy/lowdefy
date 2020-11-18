@@ -16,25 +16,23 @@
 
 import getCollection from '../getCollection';
 import { serialize, deserialize } from '../serialize';
-import checkConnectionRead from '../../../utils/checkConnectionRead';
 
 import schema from './MongoDBFindSchema.json';
 
-async function mongodbFind({ request, connection, context }) {
-  checkConnectionRead({ connection, context, connectionType: 'MongoDBCollection' });
+async function mongodbFind({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { query, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection, context });
+  const { collection, client } = await getCollection({ connection });
   let res;
   try {
     const cursor = await collection.find(query, options);
     res = await cursor.toArray();
-  } catch (err) {
+  } catch (error) {
     await client.close();
-    throw new context.RequestError(`${err.name}: ${err.message}`);
+    throw error;
   }
   await client.close();
   return serialize(res);
 }
 
-export default { resolver: mongodbFind, schema };
+export default { resolver: mongodbFind, schema, checkRead: true, checkWrite: false };
