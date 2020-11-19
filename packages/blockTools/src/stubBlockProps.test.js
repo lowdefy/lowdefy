@@ -82,17 +82,7 @@ test('basic display with methods', () => {
         "registerMethod": [Function],
       },
       "registeredMethods": Object {},
-      "schemaErrors": Array [
-        Object {
-          "dataPath": "",
-          "keyword": "additionalProperties",
-          "message": "should NOT have additional properties",
-          "params": Object {
-            "additionalProperty": "methods",
-          },
-          "schemaPath": "#/additionalProperties",
-        },
-      ],
+      "schemaErrors": false,
       "type": "Display",
     }
   `);
