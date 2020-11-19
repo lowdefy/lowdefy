@@ -1,89 +1,89 @@
 - id: default
-  type: Title
+  type: TitleInput
 - id: "properties.title"
-  type: Title
+  type: TitleInput
   properties:
     content: Lorem ipsum dolor sit amet
 - id: "properties. code: true"
-  type: Title
+  type: TitleInput
   properties:
     code: true
     content: Lorem ipsum dolor sit amet
 - id: "properties.color: "
-  type: Title
+  type: TitleInput
   properties:
     color: "#009688"
     content: Lorem ipsum dolor sit amet
 - id: "properties.delete: true "
-  type: Title
+  type: TitleInput
   properties:
     delete: true
     content: Lorem ipsum dolor sit amet
 - id: "properties.disabled: true "
-  type: Title
+  type: TitleInput
   properties:
     disabled: true
     content: Lorem ipsum dolor sit amet
 - id: "properties.level: 2 "
-  type: Title
+  type: TitleInput
   properties:
     level: 2
     content: Lorem ipsum dolor sit amet
 - id: "properties.level: 3 "
-  type: Title
+  type: TitleInput
   properties:
     level: 3
     content: Lorem ipsum dolor sit amet
 - id: "properties.level: 4 "
-  type: Title
+  type: TitleInput
   properties:
     level: 4
     content: Lorem ipsum dolor sit amet
 - id: "properties.mark: true "
-  type: Title
+  type: TitleInput
   properties:
     mark: true
     content: Lorem ipsum dolor sit amet
 - id: "properties.underline: true "
-  type: Title
+  type: TitleInput
   properties:
     underline: true
     content: Lorem ipsum dolor sit amet
 - id: "properties.type: secondary "
-  type: Title
+  type: TitleInput
   properties:
     type: secondary
     content: Lorem ipsum dolor sit amet
 - id: "properties.type: warning "
-  type: Title
+  type: TitleInput
   properties:
     type: warning
     content: Lorem ipsum dolor sit amet
 - id: "properties.type: danger "
-  type: Title
+  type: TitleInput
   properties:
     type: danger
     content: Lorem ipsum dolor sit amet
 
 - id: 'properties.copyable: true'
-  type: Title
+  type: TitleInput
   properties:
     copyable: true
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: text: one'
-  type: Title
+  type: TitleInput
   properties:
     copyable:
       text: one
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: icon'
-  type: Title
+  type: TitleInput
   properties:
     copyable:
       icon: WarningOutlined
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: icon: []'
-  type: Title
+  type: TitleInput
   properties:
     copyable:
       icon: 
@@ -91,7 +91,7 @@
         - RocketOutlined
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: tooltips: []'
-  type: Title
+  type: TitleInput
   properties:
     copyable:
       tooltips: 
@@ -99,7 +99,7 @@
         - Copy done
     content: Lorem ipsum dolor sit amet
 - id: 'properties.ellipsis: true'
-  type: Title
+  type: TitleInput
   style:
     width: 300
   properties:
@@ -107,7 +107,7 @@
     content: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 - id: 'properties.ellipsis: rows'
-  type: Title
+  type: TitleInput
   style:
     width: 300
   properties:
@@ -116,7 +116,7 @@
     content: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 - id: 'properties.ellipsis: expandable, rows'
-  type: Title
+  type: TitleInput
   style:
     width: 300
   properties:
@@ -126,7 +126,7 @@
     content: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 - id: 'properties.ellipsis: rows, suffix'
-  type: Title
+  type: TitleInput
   style:
     width: 300
   properties:
@@ -137,7 +137,7 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 # FIX: not working, might be and antd issue.
 # - id: 'properties.ellipsis: rows, symbol'
-#   type: Title
+#   type: TitleInput
 #   style:
 #     width: 300
 #   properties:
@@ -145,3 +145,40 @@
 #       symbol: '???'
 #     content: |
 #       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- id: 'properties.editable: true'
+  type: TitleInput
+  properties:
+    editable: true
+- id: 'properties.editable.icon'
+  type: TitleInput
+  properties:
+    editable: 
+      icon: PlusOutlined
+- id: 'properties.editable.tooltip'
+  type: TitleInput
+  properties:
+    editable: 
+      tooltip: Change the value
+# FIX: TypeError: Cannot read property 'focus' of null
+# - id: 'properties.editable.editing: true'
+#   type: TitleInput
+#   properties:
+#     editable: 
+#       editing: true
+- id: 'properties.editable.maxLength: 10'
+  type: TitleInput
+  properties:
+    editable: 
+      maxLength: 10
+- id: 'properties.editable.autoSize: true'
+  type: TitleInput
+  properties:
+    editable: 
+      autoSize: true
+- id: 'properties.editable.autoSize: min max'
+  type: TitleInput
+  properties:
+    editable: 
+      autoSize: 
+        minRows: 2
+        maxRows: 4
