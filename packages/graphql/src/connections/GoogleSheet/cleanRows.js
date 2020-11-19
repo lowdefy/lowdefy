@@ -14,18 +14,11 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+function cleanRows(rows) {
+  return rows.map((row) => {
+    const { _sheet, ...rest } = row;
+    return { ...rest };
+  });
+}
 
-const resolvers = {
-  AwsS3bucket,
-  AxiosHttp,
-  GoogleSheet,
-  MongoDBCollection,
-  SendGridMail,
-};
-
-export default resolvers;
+export default cleanRows;

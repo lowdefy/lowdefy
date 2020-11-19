@@ -14,18 +14,34 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import cleanRows from './cleanRows';
 
-const resolvers = {
-  AwsS3bucket,
-  AxiosHttp,
-  GoogleSheet,
-  MongoDBCollection,
-  SendGridMail,
-};
-
-export default resolvers;
+test('cleanRows removes objects with key _sheet', () => {
+  expect(
+    cleanRows([
+      {
+        id: 1,
+        value: 'a',
+        _sheet: {
+          string: 'string',
+        },
+      },
+      {
+        id: 2,
+        value: 'b',
+        _sheet: {
+          string: 'string',
+        },
+      },
+    ])
+  ).toEqual([
+    {
+      id: 1,
+      value: 'a',
+    },
+    {
+      id: 2,
+      value: 'b',
+    },
+  ]);
+});
