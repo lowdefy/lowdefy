@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
   style={
@@ -12,7 +12,7 @@ exports[`Render default 1`] = `
 />
 `;
 
-exports[`Render shapesquare 1`] = `
+exports[`Render shapesquare - value[0] 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":\\"0\\"}}"
   style={
@@ -24,7 +24,7 @@ exports[`Render shapesquare 1`] = `
 />
 `;
 
-exports[`Render sizedefault 1`] = `
+exports[`Render sizedefault - value[0] 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":16}}"
   style={
@@ -36,7 +36,7 @@ exports[`Render sizedefault 1`] = `
 />
 `;
 
-exports[`Render sizelarge 1`] = `
+exports[`Render sizelarge - value[0] 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":20}}"
   style={
@@ -48,7 +48,7 @@ exports[`Render sizelarge 1`] = `
 />
 `;
 
-exports[`Render sizesmall 1`] = `
+exports[`Render sizesmall - value[0] 1`] = `
 <div
   className="skeleton {\\"style\\":{\\"borderRadius\\":12}}"
   style={
