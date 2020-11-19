@@ -14,11 +14,26 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runMethodTests } from '@lowdefy/block-tools';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { Drawer } from 'antd';
 
-import Drawer from '../src/blocks/Drawer/Drawer';
+Enzyme.configure({ adapter: new Adapter() });
+import DrawerBlock from '../src/blocks/Drawer/Drawer';
 import examples from '../demo/examples/Drawer.yaml';
 import meta from '../src/blocks/Drawer/Drawer.json';
 
-runRenderTests({ examples, Block: Drawer, meta });
+jest.mock('antd/lib/drawer', () => {
+  return jest.fn((props) => props.toString());
+});
+
+const mocks = [
+  {
+    name: 'default',
+    fn: Drawer,
+  },
+];
+
+runMethodTests({ examples, Block: DrawerBlock, mocks, meta, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });

@@ -16,22 +16,23 @@
   type: Drawer
   properties:
     maskClosable: false
-- id: "properties.width: 300px"
+- id: "properties.width: 500"
   type: Drawer
   properties:
-    width: 300px
-- id: "properties.height: 320px"
-  type: Drawer
-  properties:
-    height: 320px
-- id: "properties.zIndex: 1100"
-  type: Drawer
-  properties:
-    zIndex: 1100
+    width: 500
 - id: "properties.placement: top"
   type: Drawer
   properties:
     placement: top
+- id: "properties.height: 500 placement: top"
+  type: Drawer
+  properties:
+    placement: top
+    height: 500
+- id: "properties.zIndex: 1100"
+  type: Drawer
+  properties:
+    zIndex: 1100
 - id: "properties.placement: bottom"
   type: Drawer
   properties:
