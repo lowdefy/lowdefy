@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   id="default"
 >
@@ -36,7 +36,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.links 1`] = `
+exports[`Render properties.links - value[0] 1`] = `
 <div
   id="properties.links"
 >

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
   data-show={true}
@@ -42,7 +42,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.closable: true 1`] = `
+exports[`Render properties.closable: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-closable"
   data-show={true}
@@ -105,7 +105,7 @@ exports[`Render properties.closable: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.closeText: Close Text 1`] = `
+exports[`Render properties.closeText: Close Text - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-closable"
   data-show={true}
@@ -153,7 +153,7 @@ exports[`Render properties.closeText: Close Text 1`] = `
 </div>
 `;
 
-exports[`Render properties.icon object 1`] = `
+exports[`Render properties.icon object - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
   data-show={true}
@@ -191,7 +191,7 @@ exports[`Render properties.icon object 1`] = `
 </div>
 `;
 
-exports[`Render properties.icon string 1`] = `
+exports[`Render properties.icon string - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
   data-show={true}
@@ -229,7 +229,7 @@ exports[`Render properties.icon string 1`] = `
 </div>
 `;
 
-exports[`Render properties.message 1`] = `
+exports[`Render properties.message - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
   data-show={true}
@@ -265,7 +265,7 @@ exports[`Render properties.message 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: error 1`] = `
+exports[`Render properties.type: error - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error"
   data-show={true}
@@ -301,7 +301,7 @@ exports[`Render properties.type: error 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: error banner: true 1`] = `
+exports[`Render properties.type: error banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error ant-alert-banner"
   data-show={true}
@@ -337,7 +337,7 @@ exports[`Render properties.type: error banner: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: error showIcon: false 1`] = `
+exports[`Render properties.type: error showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error ant-alert-no-icon"
   data-show={true}
@@ -353,7 +353,7 @@ exports[`Render properties.type: error showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: info 1`] = `
+exports[`Render properties.type: info - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info"
   data-show={true}
@@ -389,7 +389,7 @@ exports[`Render properties.type: info 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: info banner: true 1`] = `
+exports[`Render properties.type: info banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-banner"
   data-show={true}
@@ -425,7 +425,7 @@ exports[`Render properties.type: info banner: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: info showIcon: false 1`] = `
+exports[`Render properties.type: info showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-no-icon"
   data-show={true}
@@ -441,7 +441,7 @@ exports[`Render properties.type: info showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: success 1`] = `
+exports[`Render properties.type: success - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success"
   data-show={true}
@@ -477,7 +477,7 @@ exports[`Render properties.type: success 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: success banner: true 1`] = `
+exports[`Render properties.type: success banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success ant-alert-banner"
   data-show={true}
@@ -513,7 +513,7 @@ exports[`Render properties.type: success banner: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: success showIcon: false 1`] = `
+exports[`Render properties.type: success showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success ant-alert-no-icon"
   data-show={true}
@@ -529,7 +529,7 @@ exports[`Render properties.type: success showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: warning 1`] = `
+exports[`Render properties.type: warning - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning"
   data-show={true}
@@ -565,7 +565,7 @@ exports[`Render properties.type: warning 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: warning banner: true 1`] = `
+exports[`Render properties.type: warning banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning ant-alert-banner"
   data-show={true}
@@ -601,7 +601,7 @@ exports[`Render properties.type: warning banner: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: warning showIcon: false 1`] = `
+exports[`Render properties.type: warning showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning ant-alert-no-icon"
   data-show={true}
@@ -617,7 +617,7 @@ exports[`Render properties.type: warning showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.closable: true 1`] = `
+exports[`Render with description properties.closable: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description ant-alert-closable"
   data-show={true}
@@ -685,7 +685,7 @@ exports[`Render with description properties.closable: true 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.closeText: Close Text 1`] = `
+exports[`Render with description properties.closeText: Close Text - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description ant-alert-closable"
   data-show={true}
@@ -738,7 +738,7 @@ exports[`Render with description properties.closeText: Close Text 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.icon object 1`] = `
+exports[`Render with description properties.icon object - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description"
   data-show={true}
@@ -778,7 +778,7 @@ exports[`Render with description properties.icon object 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.icon string 1`] = `
+exports[`Render with description properties.icon string - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description"
   data-show={true}
@@ -818,7 +818,7 @@ exports[`Render with description properties.icon string 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.message 1`] = `
+exports[`Render with description properties.message - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description"
   data-show={true}
@@ -859,7 +859,7 @@ exports[`Render with description properties.message 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: error 1`] = `
+exports[`Render with description properties.type: error - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error ant-alert-with-description"
   data-show={true}
@@ -900,7 +900,7 @@ exports[`Render with description properties.type: error 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: error banner: true 1`] = `
+exports[`Render with description properties.type: error banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error ant-alert-with-description ant-alert-banner"
   data-show={true}
@@ -941,7 +941,7 @@ exports[`Render with description properties.type: error banner: true 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: error showIcon: false 1`] = `
+exports[`Render with description properties.type: error showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon"
   data-show={true}
@@ -959,7 +959,7 @@ exports[`Render with description properties.type: error showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: info 1`] = `
+exports[`Render with description properties.type: info - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description"
   data-show={true}
@@ -1000,7 +1000,7 @@ exports[`Render with description properties.type: info 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: info banner: true 1`] = `
+exports[`Render with description properties.type: info banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description ant-alert-banner"
   data-show={true}
@@ -1041,7 +1041,7 @@ exports[`Render with description properties.type: info banner: true 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: info showIcon: false 1`] = `
+exports[`Render with description properties.type: info showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description ant-alert-no-icon"
   data-show={true}
@@ -1059,7 +1059,7 @@ exports[`Render with description properties.type: info showIcon: false 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: success 1`] = `
+exports[`Render with description properties.type: success - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success ant-alert-with-description"
   data-show={true}
@@ -1100,7 +1100,7 @@ exports[`Render with description properties.type: success 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: success banner: true 1`] = `
+exports[`Render with description properties.type: success banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success ant-alert-with-description ant-alert-banner"
   data-show={true}
@@ -1141,7 +1141,7 @@ exports[`Render with description properties.type: success banner: true 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: success showIcon: false 1`] = `
+exports[`Render with description properties.type: success showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-success ant-alert-with-description ant-alert-no-icon"
   data-show={true}
@@ -1159,7 +1159,7 @@ exports[`Render with description properties.type: success showIcon: false 1`] = 
 </div>
 `;
 
-exports[`Render with description properties.type: warning 1`] = `
+exports[`Render with description properties.type: warning - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning ant-alert-with-description"
   data-show={true}
@@ -1200,7 +1200,7 @@ exports[`Render with description properties.type: warning 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: warning banner: true 1`] = `
+exports[`Render with description properties.type: warning banner: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning ant-alert-with-description ant-alert-banner"
   data-show={true}
@@ -1241,7 +1241,7 @@ exports[`Render with description properties.type: warning banner: true 1`] = `
 </div>
 `;
 
-exports[`Render with description properties.type: warning showIcon: false 1`] = `
+exports[`Render with description properties.type: warning showIcon: false - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-warning ant-alert-with-description ant-alert-no-icon"
   data-show={true}

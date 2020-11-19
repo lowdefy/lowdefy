@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
@@ -8,6 +8,7 @@ exports[`Render default 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -26,7 +27,7 @@ exports[`Render default 1`] = `
 </span>
 `;
 
-exports[`Render properties.color 1`] = `
+exports[`Render properties.color - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"#9c27b0\\",\\"fontSize\\":25},null]}"
@@ -34,6 +35,7 @@ exports[`Render properties.color 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -52,7 +54,7 @@ exports[`Render properties.color 1`] = `
 </span>
 `;
 
-exports[`Render properties.disableLoadingIcon: true 1`] = `
+exports[`Render properties.disableLoadingIcon: true - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
@@ -60,6 +62,7 @@ exports[`Render properties.disableLoadingIcon: true 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -78,7 +81,7 @@ exports[`Render properties.disableLoadingIcon: true 1`] = `
 </span>
 `;
 
-exports[`Render properties.icon 1`] = `
+exports[`Render properties.icon - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
@@ -86,6 +89,7 @@ exports[`Render properties.icon 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -104,7 +108,7 @@ exports[`Render properties.icon 1`] = `
 </span>
 `;
 
-exports[`Render properties.rotate: 90 1`] = `
+exports[`Render properties.rotate: 90 - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":30},null]}"
@@ -112,6 +116,7 @@ exports[`Render properties.rotate: 90 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -136,7 +141,7 @@ exports[`Render properties.rotate: 90 1`] = `
 </span>
 `;
 
-exports[`Render properties.size: 30 1`] = `
+exports[`Render properties.size: 30 - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":30},null]}"
@@ -144,6 +149,7 @@ exports[`Render properties.size: 30 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -162,7 +168,7 @@ exports[`Render properties.size: 30 1`] = `
 </span>
 `;
 
-exports[`Render properties.spin: true 1`] = `
+exports[`Render properties.spin: true - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":30},null]}"
@@ -170,6 +176,7 @@ exports[`Render properties.spin: true 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"
@@ -188,7 +195,7 @@ exports[`Render properties.spin: true 1`] = `
 </span>
 `;
 
-exports[`Render properties.style: border: 1px solid red 1`] = `
+exports[`Render properties.style: border: 1px solid red - value[0] 1`] = `
 <span
   aria-label="loading-3-quarters"
   className="anticon anticon-loading-3-quarters {\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]}"
@@ -196,6 +203,7 @@ exports[`Render properties.style: border: 1px solid red 1`] = `
   required={false}
   role="img"
   type="Icon"
+  value={null}
 >
   <svg
     aria-hidden="true"

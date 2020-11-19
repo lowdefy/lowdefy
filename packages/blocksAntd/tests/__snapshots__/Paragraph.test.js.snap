@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="default"
@@ -14,7 +14,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.code: true 1`] = `
+exports[`Render properties.code: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.code: true"
@@ -31,7 +31,7 @@ exports[`Render properties.code: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.content"
@@ -46,7 +46,7 @@ exports[`Render properties.content 1`] = `
 </div>
 `;
 
-exports[`Render properties.content short 1`] = `
+exports[`Render properties.content short - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.content short"
@@ -61,7 +61,7 @@ exports[`Render properties.content short 1`] = `
 </div>
 `;
 
-exports[`Render properties.copyable: icon 1`] = `
+exports[`Render properties.copyable: icon - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.copyable: icon"
@@ -119,7 +119,7 @@ exports[`Render properties.copyable: icon 1`] = `
 </div>
 `;
 
-exports[`Render properties.copyable: icon: [] 1`] = `
+exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.copyable: icon: []"
@@ -199,7 +199,7 @@ exports[`Render properties.copyable: icon: [] 1`] = `
 </div>
 `;
 
-exports[`Render properties.copyable: text: one 1`] = `
+exports[`Render properties.copyable: text: one - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.copyable: text: one"
@@ -255,7 +255,7 @@ exports[`Render properties.copyable: text: one 1`] = `
 </div>
 `;
 
-exports[`Render properties.copyable: tooltips: [] 1`] = `
+exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.copyable: tooltips: []"
@@ -311,7 +311,7 @@ exports[`Render properties.copyable: tooltips: [] 1`] = `
 </div>
 `;
 
-exports[`Render properties.copyable: true 1`] = `
+exports[`Render properties.copyable: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.copyable: true"
@@ -367,7 +367,7 @@ exports[`Render properties.copyable: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.delete: true 1`] = `
+exports[`Render properties.delete: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.delete: true"
@@ -384,7 +384,7 @@ exports[`Render properties.delete: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabled: true 1`] = `
+exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-disabled"
   id="properties.disabled: true"
@@ -399,7 +399,7 @@ exports[`Render properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.ellipsis: expandable, rows 1`] = `
+exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-ellipsis"
   id="properties.ellipsis: expandable, rows"
@@ -414,7 +414,7 @@ exports[`Render properties.ellipsis: expandable, rows 1`] = `
 </div>
 `;
 
-exports[`Render properties.ellipsis: rows 1`] = `
+exports[`Render properties.ellipsis: rows - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-ellipsis ant-typography-ellipsis-multiple-line"
   id="properties.ellipsis: rows"
@@ -429,7 +429,7 @@ exports[`Render properties.ellipsis: rows 1`] = `
 </div>
 `;
 
-exports[`Render properties.ellipsis: rows, suffix 1`] = `
+exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-ellipsis"
   id="properties.ellipsis: rows, suffix"
@@ -445,7 +445,7 @@ exports[`Render properties.ellipsis: rows, suffix 1`] = `
 </div>
 `;
 
-exports[`Render properties.ellipsis: true 1`] = `
+exports[`Render properties.ellipsis: true - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-ellipsis ant-typography-ellipsis-single-line"
   id="properties.ellipsis: true"
@@ -460,7 +460,7 @@ exports[`Render properties.ellipsis: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.mark: true 1`] = `
+exports[`Render properties.mark: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.mark: true"
@@ -477,7 +477,7 @@ exports[`Render properties.mark: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.strong: true 1`] = `
+exports[`Render properties.strong: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.strong: true"
@@ -494,7 +494,7 @@ exports[`Render properties.strong: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: danger 1`] = `
+exports[`Render properties.type: danger - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-danger"
   id="properties.type: danger"
@@ -509,7 +509,7 @@ exports[`Render properties.type: danger 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: secondary 1`] = `
+exports[`Render properties.type: secondary - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-secondary"
   id="properties.type: secondary"
@@ -524,7 +524,7 @@ exports[`Render properties.type: secondary 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: warning 1`] = `
+exports[`Render properties.type: warning - value[0] 1`] = `
 <div
   className="ant-typography {} ant-typography-warning"
   id="properties.type: warning"
@@ -539,7 +539,7 @@ exports[`Render properties.type: warning 1`] = `
 </div>
 `;
 
-exports[`Render properties.underline: true 1`] = `
+exports[`Render properties.underline: true - value[0] 1`] = `
 <div
   className="ant-typography {}"
   id="properties.underline: true"

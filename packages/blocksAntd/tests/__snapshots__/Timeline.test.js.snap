@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <ul
   className="ant-timeline {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
   id="default"
 />
 `;
 
-exports[`Render properties.items 1`] = `
+exports[`Render properties.items - value[0] 1`] = `
 <ul
   className="ant-timeline {\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}"
   id="properties.items"

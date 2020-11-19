@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="default"
@@ -23,7 +23,7 @@ exports[`Render default 1`] = `
 </section>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.content"

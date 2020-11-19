@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render properties.disabledDates.dates 1`] = `
+exports[`Render properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -68,7 +68,7 @@ exports[`Render properties.disabledDates.dates 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabledDates.max 1`] = `
+exports[`Render properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -136,7 +136,7 @@ exports[`Render properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabledDates.min 1`] = `
+exports[`Render properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -204,7 +204,7 @@ exports[`Render properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabledDates.ranges 1`] = `
+exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -272,7 +272,7 @@ exports[`Render properties.disabledDates.ranges 1`] = `
 </div>
 `;
 
-exports[`Render properties.inputStyle: CSS style applied 1`] = `
+exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -340,7 +340,7 @@ exports[`Render properties.inputStyle: CSS style applied 1`] = `
 </div>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -408,7 +408,7 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
-exports[`Render property.allowClear: false 1`] = `
+exports[`Render property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -476,7 +476,7 @@ exports[`Render property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render property.autoFocus: true 1`] = `
+exports[`Render property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -545,7 +545,7 @@ exports[`Render property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render property.disabled: true 1`] = `
+exports[`Render property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.disabled: true"
@@ -614,7 +614,7 @@ exports[`Render property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render property.format: YYYY-WW 1`] = `
+exports[`Render property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -682,7 +682,7 @@ exports[`Render property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render property.label align: right 1`] = `
+exports[`Render property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label align: right"
@@ -750,7 +750,7 @@ exports[`Render property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render property.label colon: false 1`] = `
+exports[`Render property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label colon: false"
@@ -818,7 +818,7 @@ exports[`Render property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render property.label disabled: true 1`] = `
+exports[`Render property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -874,7 +874,7 @@ exports[`Render property.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render property.label extra: extra text added 1`] = `
+exports[`Render property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -947,7 +947,7 @@ exports[`Render property.label extra: extra text added 1`] = `
 </div>
 `;
 
-exports[`Render property.label inline: true 1`] = `
+exports[`Render property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -1023,7 +1023,7 @@ exports[`Render property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render property.label span: 5 1`] = `
+exports[`Render property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label span: 5"
@@ -1091,7 +1091,7 @@ exports[`Render property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render property.placeholder: - Select this Week 1`] = `
+exports[`Render property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -1159,7 +1159,7 @@ exports[`Render property.placeholder: - Select this Week 1`] = `
 </div>
 `;
 
-exports[`Render property.size: large 1`] = `
+exports[`Render property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: large"
@@ -1227,7 +1227,7 @@ exports[`Render property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render property.size: small 1`] = `
+exports[`Render property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: small"
@@ -1295,7 +1295,7 @@ exports[`Render property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -1389,7 +1389,7 @@ exports[`Render property.suffixIcon: CalendarFilled 1`] = `
 </div>
 `;
 
-exports[`Render property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
@@ -1483,7 +1483,7 @@ exports[`Render property.suffixIcon: CalendarFilled.blue 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabledDates.dates 1`] = `
+exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -1551,7 +1551,7 @@ exports[`Render required = true properties.disabledDates.dates 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabledDates.max 1`] = `
+exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -1619,7 +1619,7 @@ exports[`Render required = true properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabledDates.min 1`] = `
+exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -1687,7 +1687,7 @@ exports[`Render required = true properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabledDates.ranges 1`] = `
+exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -1755,7 +1755,7 @@ exports[`Render required = true properties.disabledDates.ranges 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
+exports[`Render required = true properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -1823,7 +1823,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.title 1`] = `
+exports[`Render required = true properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -1891,7 +1891,7 @@ exports[`Render required = true properties.title 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.allowClear: false 1`] = `
+exports[`Render required = true property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -1959,7 +1959,7 @@ exports[`Render required = true property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.autoFocus: true 1`] = `
+exports[`Render required = true property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -2028,7 +2028,7 @@ exports[`Render required = true property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.disabled: true 1`] = `
+exports[`Render required = true property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.disabled: true"
@@ -2097,7 +2097,7 @@ exports[`Render required = true property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.format: YYYY-WW 1`] = `
+exports[`Render required = true property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -2165,7 +2165,7 @@ exports[`Render required = true property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label align: right 1`] = `
+exports[`Render required = true property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label align: right"
@@ -2233,7 +2233,7 @@ exports[`Render required = true property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label colon: false 1`] = `
+exports[`Render required = true property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label colon: false"
@@ -2301,7 +2301,7 @@ exports[`Render required = true property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label disabled: true 1`] = `
+exports[`Render required = true property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -2357,7 +2357,7 @@ exports[`Render required = true property.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label extra: extra text added 1`] = `
+exports[`Render required = true property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -2430,7 +2430,7 @@ exports[`Render required = true property.label extra: extra text added 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label inline: true 1`] = `
+exports[`Render required = true property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -2506,7 +2506,7 @@ exports[`Render required = true property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.label span: 5 1`] = `
+exports[`Render required = true property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label span: 5"
@@ -2574,7 +2574,7 @@ exports[`Render required = true property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.placeholder: - Select this Week 1`] = `
+exports[`Render required = true property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -2642,7 +2642,7 @@ exports[`Render required = true property.placeholder: - Select this Week 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.size: large 1`] = `
+exports[`Render required = true property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: large"
@@ -2710,7 +2710,7 @@ exports[`Render required = true property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.size: small 1`] = `
+exports[`Render required = true property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: small"
@@ -2778,7 +2778,7 @@ exports[`Render required = true property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -2872,7 +2872,7 @@ exports[`Render required = true property.suffixIcon: CalendarFilled 1`] = `
 </div>
 `;
 
-exports[`Render required = true property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
@@ -2966,7 +2966,7 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabledDates.dates 1`] = `
+exports[`Render validation.status = error properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -3063,7 +3063,7 @@ exports[`Render validation.status = error properties.disabledDates.dates 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabledDates.max 1`] = `
+exports[`Render validation.status = error properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -3160,7 +3160,7 @@ exports[`Render validation.status = error properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabledDates.min 1`] = `
+exports[`Render validation.status = error properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -3257,7 +3257,7 @@ exports[`Render validation.status = error properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabledDates.ranges 1`] = `
+exports[`Render validation.status = error properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -3354,7 +3354,7 @@ exports[`Render validation.status = error properties.disabledDates.ranges 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = error properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = error properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -3451,7 +3451,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
 </div>
 `;
 
-exports[`Render validation.status = error properties.title 1`] = `
+exports[`Render validation.status = error properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.title"
@@ -3548,7 +3548,7 @@ exports[`Render validation.status = error properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.allowClear: false 1`] = `
+exports[`Render validation.status = error property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -3645,7 +3645,7 @@ exports[`Render validation.status = error property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.autoFocus: true 1`] = `
+exports[`Render validation.status = error property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -3743,7 +3743,7 @@ exports[`Render validation.status = error property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.disabled: true 1`] = `
+exports[`Render validation.status = error property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.disabled: true"
@@ -3841,7 +3841,7 @@ exports[`Render validation.status = error property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.format: YYYY-WW 1`] = `
+exports[`Render validation.status = error property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -3938,7 +3938,7 @@ exports[`Render validation.status = error property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.label align: right 1`] = `
+exports[`Render validation.status = error property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.label align: right"
@@ -4035,7 +4035,7 @@ exports[`Render validation.status = error property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.label colon: false 1`] = `
+exports[`Render validation.status = error property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.label colon: false"
@@ -4132,7 +4132,7 @@ exports[`Render validation.status = error property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.label disabled: true 1`] = `
+exports[`Render validation.status = error property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -4217,7 +4217,7 @@ exports[`Render validation.status = error property.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.label extra: extra text added 1`] = `
+exports[`Render validation.status = error property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -4314,7 +4314,7 @@ exports[`Render validation.status = error property.label extra: extra text added
 </div>
 `;
 
-exports[`Render validation.status = error property.label inline: true 1`] = `
+exports[`Render validation.status = error property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -4419,7 +4419,7 @@ exports[`Render validation.status = error property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.label span: 5 1`] = `
+exports[`Render validation.status = error property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.label span: 5"
@@ -4516,7 +4516,7 @@ exports[`Render validation.status = error property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.placeholder: - Select this Week 1`] = `
+exports[`Render validation.status = error property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -4613,7 +4613,7 @@ exports[`Render validation.status = error property.placeholder: - Select this We
 </div>
 `;
 
-exports[`Render validation.status = error property.size: large 1`] = `
+exports[`Render validation.status = error property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.size: large"
@@ -4710,7 +4710,7 @@ exports[`Render validation.status = error property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.size: small 1`] = `
+exports[`Render validation.status = error property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.size: small"
@@ -4807,7 +4807,7 @@ exports[`Render validation.status = error property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render validation.status = error property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -4930,7 +4930,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled 1`
 </div>
 `;
 
-exports[`Render validation.status = error property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render validation.status = error property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
@@ -5053,7 +5053,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabledDates.dates 1`] = `
+exports[`Render validation.status = null properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -5121,7 +5121,7 @@ exports[`Render validation.status = null properties.disabledDates.dates 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabledDates.max 1`] = `
+exports[`Render validation.status = null properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -5189,7 +5189,7 @@ exports[`Render validation.status = null properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabledDates.min 1`] = `
+exports[`Render validation.status = null properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -5257,7 +5257,7 @@ exports[`Render validation.status = null properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabledDates.ranges 1`] = `
+exports[`Render validation.status = null properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -5325,7 +5325,7 @@ exports[`Render validation.status = null properties.disabledDates.ranges 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = null properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -5393,7 +5393,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
 </div>
 `;
 
-exports[`Render validation.status = null properties.title 1`] = `
+exports[`Render validation.status = null properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -5461,7 +5461,7 @@ exports[`Render validation.status = null properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.allowClear: false 1`] = `
+exports[`Render validation.status = null property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -5529,7 +5529,7 @@ exports[`Render validation.status = null property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.autoFocus: true 1`] = `
+exports[`Render validation.status = null property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -5598,7 +5598,7 @@ exports[`Render validation.status = null property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.disabled: true 1`] = `
+exports[`Render validation.status = null property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.disabled: true"
@@ -5667,7 +5667,7 @@ exports[`Render validation.status = null property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.format: YYYY-WW 1`] = `
+exports[`Render validation.status = null property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -5735,7 +5735,7 @@ exports[`Render validation.status = null property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.label align: right 1`] = `
+exports[`Render validation.status = null property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label align: right"
@@ -5803,7 +5803,7 @@ exports[`Render validation.status = null property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.label colon: false 1`] = `
+exports[`Render validation.status = null property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label colon: false"
@@ -5871,7 +5871,7 @@ exports[`Render validation.status = null property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.label disabled: true 1`] = `
+exports[`Render validation.status = null property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -5927,7 +5927,7 @@ exports[`Render validation.status = null property.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.label extra: extra text added 1`] = `
+exports[`Render validation.status = null property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -6000,7 +6000,7 @@ exports[`Render validation.status = null property.label extra: extra text added 
 </div>
 `;
 
-exports[`Render validation.status = null property.label inline: true 1`] = `
+exports[`Render validation.status = null property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -6076,7 +6076,7 @@ exports[`Render validation.status = null property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.label span: 5 1`] = `
+exports[`Render validation.status = null property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.label span: 5"
@@ -6144,7 +6144,7 @@ exports[`Render validation.status = null property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.placeholder: - Select this Week 1`] = `
+exports[`Render validation.status = null property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -6212,7 +6212,7 @@ exports[`Render validation.status = null property.placeholder: - Select this Wee
 </div>
 `;
 
-exports[`Render validation.status = null property.size: large 1`] = `
+exports[`Render validation.status = null property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: large"
@@ -6280,7 +6280,7 @@ exports[`Render validation.status = null property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.size: small 1`] = `
+exports[`Render validation.status = null property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.size: small"
@@ -6348,7 +6348,7 @@ exports[`Render validation.status = null property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render validation.status = null property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -6442,7 +6442,7 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled 1`]
 </div>
 `;
 
-exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
@@ -6536,7 +6536,7 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabledDates.dates 1`] = `
+exports[`Render validation.status = success properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -6628,7 +6628,7 @@ exports[`Render validation.status = success properties.disabledDates.dates 1`] =
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabledDates.max 1`] = `
+exports[`Render validation.status = success properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -6720,7 +6720,7 @@ exports[`Render validation.status = success properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabledDates.min 1`] = `
+exports[`Render validation.status = success properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -6812,7 +6812,7 @@ exports[`Render validation.status = success properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabledDates.ranges 1`] = `
+exports[`Render validation.status = success properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -6904,7 +6904,7 @@ exports[`Render validation.status = success properties.disabledDates.ranges 1`] 
 </div>
 `;
 
-exports[`Render validation.status = success properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = success properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -6996,7 +6996,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
 </div>
 `;
 
-exports[`Render validation.status = success properties.title 1`] = `
+exports[`Render validation.status = success properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.title"
@@ -7088,7 +7088,7 @@ exports[`Render validation.status = success properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.allowClear: false 1`] = `
+exports[`Render validation.status = success property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -7180,7 +7180,7 @@ exports[`Render validation.status = success property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.autoFocus: true 1`] = `
+exports[`Render validation.status = success property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -7273,7 +7273,7 @@ exports[`Render validation.status = success property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.disabled: true 1`] = `
+exports[`Render validation.status = success property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.disabled: true"
@@ -7366,7 +7366,7 @@ exports[`Render validation.status = success property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.format: YYYY-WW 1`] = `
+exports[`Render validation.status = success property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -7458,7 +7458,7 @@ exports[`Render validation.status = success property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.label align: right 1`] = `
+exports[`Render validation.status = success property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.label align: right"
@@ -7550,7 +7550,7 @@ exports[`Render validation.status = success property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.label colon: false 1`] = `
+exports[`Render validation.status = success property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.label colon: false"
@@ -7642,7 +7642,7 @@ exports[`Render validation.status = success property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.label disabled: true 1`] = `
+exports[`Render validation.status = success property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -7722,7 +7722,7 @@ exports[`Render validation.status = success property.label disabled: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success property.label extra: extra text added 1`] = `
+exports[`Render validation.status = success property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -7819,7 +7819,7 @@ exports[`Render validation.status = success property.label extra: extra text add
 </div>
 `;
 
-exports[`Render validation.status = success property.label inline: true 1`] = `
+exports[`Render validation.status = success property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -7919,7 +7919,7 @@ exports[`Render validation.status = success property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.label span: 5 1`] = `
+exports[`Render validation.status = success property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.label span: 5"
@@ -8011,7 +8011,7 @@ exports[`Render validation.status = success property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.placeholder: - Select this Week 1`] = `
+exports[`Render validation.status = success property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -8103,7 +8103,7 @@ exports[`Render validation.status = success property.placeholder: - Select this 
 </div>
 `;
 
-exports[`Render validation.status = success property.size: large 1`] = `
+exports[`Render validation.status = success property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.size: large"
@@ -8195,7 +8195,7 @@ exports[`Render validation.status = success property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.size: small 1`] = `
+exports[`Render validation.status = success property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.size: small"
@@ -8287,7 +8287,7 @@ exports[`Render validation.status = success property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render validation.status = success property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -8405,7 +8405,7 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
 </div>
 `;
 
-exports[`Render validation.status = success property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render validation.status = success property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
@@ -8523,7 +8523,7 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabledDates.dates 1`] = `
+exports[`Render validation.status = warning properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabledDates.dates"
@@ -8620,7 +8620,7 @@ exports[`Render validation.status = warning properties.disabledDates.dates 1`] =
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabledDates.max 1`] = `
+exports[`Render validation.status = warning properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabledDates.max"
@@ -8717,7 +8717,7 @@ exports[`Render validation.status = warning properties.disabledDates.max 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabledDates.min 1`] = `
+exports[`Render validation.status = warning properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabledDates.min"
@@ -8814,7 +8814,7 @@ exports[`Render validation.status = warning properties.disabledDates.min 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabledDates.ranges 1`] = `
+exports[`Render validation.status = warning properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabledDates.ranges"
@@ -8911,7 +8911,7 @@ exports[`Render validation.status = warning properties.disabledDates.ranges 1`] 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = warning properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -9008,7 +9008,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
 </div>
 `;
 
-exports[`Render validation.status = warning properties.title 1`] = `
+exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.title"
@@ -9105,7 +9105,7 @@ exports[`Render validation.status = warning properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.allowClear: false 1`] = `
+exports[`Render validation.status = warning property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.allowClear: false"
@@ -9202,7 +9202,7 @@ exports[`Render validation.status = warning property.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.autoFocus: true 1`] = `
+exports[`Render validation.status = warning property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.autoFocus: true"
@@ -9300,7 +9300,7 @@ exports[`Render validation.status = warning property.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.disabled: true 1`] = `
+exports[`Render validation.status = warning property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.disabled: true"
@@ -9398,7 +9398,7 @@ exports[`Render validation.status = warning property.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.format: YYYY-WW 1`] = `
+exports[`Render validation.status = warning property.format: YYYY-WW - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.format: YYYY-WW"
@@ -9495,7 +9495,7 @@ exports[`Render validation.status = warning property.format: YYYY-WW 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.label align: right 1`] = `
+exports[`Render validation.status = warning property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.label align: right"
@@ -9592,7 +9592,7 @@ exports[`Render validation.status = warning property.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.label colon: false 1`] = `
+exports[`Render validation.status = warning property.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.label colon: false"
@@ -9689,7 +9689,7 @@ exports[`Render validation.status = warning property.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.label disabled: true 1`] = `
+exports[`Render validation.status = warning property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.label disabled: true"
@@ -9774,7 +9774,7 @@ exports[`Render validation.status = warning property.label disabled: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning property.label extra: extra text added 1`] = `
+exports[`Render validation.status = warning property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.label extra: extra text added"
@@ -9871,7 +9871,7 @@ exports[`Render validation.status = warning property.label extra: extra text add
 </div>
 `;
 
-exports[`Render validation.status = warning property.label inline: true 1`] = `
+exports[`Render validation.status = warning property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="property.label inline: true"
@@ -9976,7 +9976,7 @@ exports[`Render validation.status = warning property.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.label span: 5 1`] = `
+exports[`Render validation.status = warning property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.label span: 5"
@@ -10073,7 +10073,7 @@ exports[`Render validation.status = warning property.label span: 5 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.placeholder: - Select this Week 1`] = `
+exports[`Render validation.status = warning property.placeholder: - Select this Week - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.placeholder: - Select this Week"
@@ -10170,7 +10170,7 @@ exports[`Render validation.status = warning property.placeholder: - Select this 
 </div>
 `;
 
-exports[`Render validation.status = warning property.size: large 1`] = `
+exports[`Render validation.status = warning property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.size: large"
@@ -10267,7 +10267,7 @@ exports[`Render validation.status = warning property.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.size: small 1`] = `
+exports[`Render validation.status = warning property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.size: small"
@@ -10364,7 +10364,7 @@ exports[`Render validation.status = warning property.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 1`] = `
+exports[`Render validation.status = warning property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled"
@@ -10487,7 +10487,7 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
 </div>
 `;
 
-exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.blue 1`] = `
+exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="property.suffixIcon: CalendarFilled.blue"
