@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "default",
+      "percent": undefined,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.gapDegree: 60 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": 60,
+      "gapPosition": undefined,
+      "id": "properties.gapDegree: 60",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.gapPosition: bottom - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": 60,
+      "gapPosition": "bottom",
+      "id": "properties.gapPosition: bottom",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.gapPosition: left - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": 60,
+      "gapPosition": "left",
+      "id": "properties.gapPosition: left",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.gapPosition: right - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": 60,
+      "gapPosition": "right",
+      "id": "properties.gapPosition: right",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.percent - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.percent",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.showInfo: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.showInfo: true",
+      "percent": 30,
+      "showInfo": false,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.status: active - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.status: active",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": "active",
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.status: exception - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.status: exception",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": "exception",
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.status: normal - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.status: normal",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": "normal",
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.status: success - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.status: success",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": "success",
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.strokeColor: '#e91e63'  trailColor: '#ff9800' - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.strokeColor: '#e91e63'  trailColor: '#ff9800'",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": "#e91e63",
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": "#ff9800",
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.strokeColor: '#e91e63' - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.strokeColor: '#e91e63'",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": "#e91e63",
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.strokeLinecap: square  - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.strokeLinecap: square ",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": "square",
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.strokeWidth: 18 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.strokeWidth: 18",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": 18,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.trailColor: '#ff9800' - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.trailColor: '#ff9800'",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": "#ff9800",
+      "type": undefined,
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.type: circle - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.type: circle",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.type: dashboard - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.type: dashboard",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "dashboard",
+      "width": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Render properties.width: 180 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "gapDegree": undefined,
+      "gapPosition": undefined,
+      "id": "properties.width: 180",
+      "percent": 30,
+      "showInfo": undefined,
+      "status": undefined,
+      "steps": undefined,
+      "strokeColor": undefined,
+      "strokeLinecap": undefined,
+      "strokeWidth": undefined,
+      "success": undefined,
+      "trailColor": undefined,
+      "type": "circle",
+      "width": 180,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema properties.gapDegree: 60 1`] = `true`;
+
+exports[`Test Schema properties.gapDegree: 60 2`] = `null`;
+
+exports[`Test Schema properties.gapPosition: bottom 1`] = `true`;
+
+exports[`Test Schema properties.gapPosition: bottom 2`] = `null`;
+
+exports[`Test Schema properties.gapPosition: left 1`] = `true`;
+
+exports[`Test Schema properties.gapPosition: left 2`] = `null`;
+
+exports[`Test Schema properties.gapPosition: right 1`] = `true`;
+
+exports[`Test Schema properties.gapPosition: right 2`] = `null`;
+
+exports[`Test Schema properties.percent 1`] = `true`;
+
+exports[`Test Schema properties.percent 2`] = `null`;
+
+exports[`Test Schema properties.showInfo: true 1`] = `true`;
+
+exports[`Test Schema properties.showInfo: true 2`] = `null`;
+
+exports[`Test Schema properties.status: active 1`] = `true`;
+
+exports[`Test Schema properties.status: active 2`] = `null`;
+
+exports[`Test Schema properties.status: exception 1`] = `true`;
+
+exports[`Test Schema properties.status: exception 2`] = `null`;
+
+exports[`Test Schema properties.status: normal 1`] = `true`;
+
+exports[`Test Schema properties.status: normal 2`] = `null`;
+
+exports[`Test Schema properties.status: success 1`] = `true`;
+
+exports[`Test Schema properties.status: success 2`] = `null`;
+
+exports[`Test Schema properties.strokeColor: '#e91e63'  trailColor: '#ff9800' 1`] = `true`;
+
+exports[`Test Schema properties.strokeColor: '#e91e63'  trailColor: '#ff9800' 2`] = `null`;
+
+exports[`Test Schema properties.strokeColor: '#e91e63' 1`] = `true`;
+
+exports[`Test Schema properties.strokeColor: '#e91e63' 2`] = `null`;
+
+exports[`Test Schema properties.strokeLinecap: square  1`] = `true`;
+
+exports[`Test Schema properties.strokeLinecap: square  2`] = `null`;
+
+exports[`Test Schema properties.strokeWidth: 18 1`] = `true`;
+
+exports[`Test Schema properties.strokeWidth: 18 2`] = `null`;
+
+exports[`Test Schema properties.trailColor: '#ff9800' 1`] = `true`;
+
+exports[`Test Schema properties.trailColor: '#ff9800' 2`] = `null`;
+
+exports[`Test Schema properties.type: circle 1`] = `true`;
+
+exports[`Test Schema properties.type: circle 2`] = `null`;
+
+exports[`Test Schema properties.type: dashboard 1`] = `true`;
+
+exports[`Test Schema properties.type: dashboard 2`] = `null`;
+
+exports[`Test Schema properties.width: 180 1`] = `true`;
+
+exports[`Test Schema properties.width: 180 2`] = `null`;
