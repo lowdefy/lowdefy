@@ -16,13 +16,17 @@
 
 import { type } from '@lowdefy/helpers';
 
-import createPageLoader from '../loaders/pageLoader';
 import createComponentLoader from '../loaders/componentLoader';
+import createConnectionLoader from '../loaders/connectionLoader';
+import createPageLoader from '../loaders/pageLoader';
+import createRequestLoader from '../loaders/requestLoader';
 
-function creatGetLoader(context) {
+function createGetLoader(context) {
   const constructors = {
-    page: createPageLoader,
     component: createComponentLoader,
+    connection: createConnectionLoader,
+    page: createPageLoader,
+    request: createRequestLoader,
   };
   const memoized = {};
 
@@ -38,4 +42,4 @@ function creatGetLoader(context) {
   return getLoader;
 }
 
-export default creatGetLoader;
+export default createGetLoader;

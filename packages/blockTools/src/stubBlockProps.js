@@ -15,22 +15,14 @@
 */
 
 import React, { useState } from 'react';
-import Ajv from 'ajv';
-import AjvErrors from 'ajv-errors';
 import { type } from '@lowdefy/helpers';
 import makeCssClass from './makeCssClass';
-import blockSchema from './blockSchema.json';
+import schemaTest from './schemaTest';
 
-const initAjv = (options) => {
-  const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
-  AjvErrors(ajv, options);
-  return ajv;
-};
-const ajvInstance = initAjv();
 const validate = {};
 
-const stubBlockProps = ({ block, meta, logger }) => {
-  const [value, setState] = useState(type.enforceType(meta.valueType, null));
+const stubBlockProps = ({ block, meta, logger, initialValue }) => {
+  const [value, setState] = useState(type.enforceType(meta.valueType, initialValue));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
   };
@@ -38,9 +30,8 @@ const stubBlockProps = ({ block, meta, logger }) => {
   if (logger) log = logger;
   // evaluate block schema
   if (!validate[block.type]) {
-    blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
     try {
-      validate[block.type] = ajvInstance.compile(blockSchema);
+      validate[block.type] = schemaTest(meta.schema);
     } catch (error) {
       throw new Error(`Schema error in ${block.type} - ${error.message}`);
     }
@@ -55,11 +46,16 @@ const stubBlockProps = ({ block, meta, logger }) => {
     if (block.blocks) block.areas.content.blocks = block.blocks;
   }
 
+  // memoize registered methods for test purposes
+  block.registeredMethods = {};
   // mock default block methods
   block.methods = {
     callAction: (action) => log(JSON.stringify(action, null, 2)),
     registerAction: (action) => log(JSON.stringify(action, null, 2)),
-    registerMethod: (method) => log(JSON.stringify(method, null, 2)),
+    registerMethod: (method, methodFn) => {
+      block.registeredMethods[method] = methodFn;
+      return;
+    },
     makeCssClass,
   };
 

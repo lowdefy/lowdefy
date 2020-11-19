@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `null`;
+exports[`Render default - value[0] 1`] = `null`;
 
-exports[`Render properties.title 1`] = `null`;
+exports[`Render properties.title - value[0] 1`] = `null`;
 
 exports[`Test Schema default 1`] = `true`;
 

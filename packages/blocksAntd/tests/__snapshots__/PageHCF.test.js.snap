@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="default"
 >
   <main
     className="ant-layout-content {}"
-    id="undefined_id"
+    id="default_content"
   >
     <div
       style={
@@ -23,14 +23,14 @@ exports[`Render default 1`] = `
 </section>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"minHeight\\":\\"100vh\\"}}"
   id="properties.content"
 >
   <main
     className="ant-layout-content {}"
-    id="undefined_id"
+    id="properties.content_content"
   >
     <div
       style={

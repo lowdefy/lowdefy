@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render areas.content 1`] = `
+exports[`Render areas.content - value[0] 1`] = `
 <div
   id="areas.content"
 >
@@ -10,7 +10,7 @@ exports[`Render areas.content 1`] = `
 </div>
 `;
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   id="default"
 >
@@ -20,7 +20,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <div
   id="properties.title"
 >

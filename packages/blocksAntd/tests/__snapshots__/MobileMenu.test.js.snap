@@ -1,25 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   id="default"
 >
   <button
     className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
-    id="undefined_id"
+    id="default_button"
     onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
-      id="undefined_id"
-      list={Array []}
-      menus={Array []}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      id="default_button_icon"
+      required={false}
       role="img"
-      user={Object {}}
-      validate={Array []}
     >
       <svg
         aria-hidden="true"
@@ -40,26 +36,22 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.links 1`] = `
+exports[`Render properties.links - value[0] 1`] = `
 <div
   id="properties.links"
 >
   <button
     className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
-    id="undefined_id"
+    id="properties.links_button"
     onClick={[Function]}
     type="button"
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {}"
-      content={Object {}}
-      id="undefined_id"
-      list={Array []}
-      menus={Array []}
+      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      id="properties.links_button_icon"
+      required={false}
       role="img"
-      user={Object {}}
-      validate={Array []}
     >
       <svg
         aria-hidden="true"
