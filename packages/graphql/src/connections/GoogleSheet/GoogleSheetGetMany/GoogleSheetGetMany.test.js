@@ -23,7 +23,7 @@ jest.mock('../getSheet', () => () => ({
   getRows: mockGetRows,
 }));
 
-const { resolver, schema } = GoogleSheetGetMany;
+const { resolver, schema, checkRead, checkWrite } = GoogleSheetGetMany;
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
   const rows = [
     {
@@ -358,4 +358,12 @@ test('pipeline is not an array', () => {
   expect(() => testSchema({ schema, object: request })).toThrow(
     'GoogleSheetGetMany request property "pipeline" should be an array.'
   );
+});
+
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });

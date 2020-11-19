@@ -23,7 +23,7 @@ jest.mock('../getSheet', () => () => ({
   getRows: mockGetRows,
 }));
 
-const { resolver, schema } = GoogleSheetGetOne;
+const { resolver, schema, checkRead, checkWrite } = GoogleSheetGetOne;
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
   const rows = [
     {
@@ -265,4 +265,12 @@ test('filter is not an object', () => {
   expect(() => testSchema({ schema, object: request })).toThrow(
     'GoogleSheetGetOne request property "filter" should be an object.'
   );
+});
+
+test('checkRead should be true', async () => {
+  expect(checkRead).toBe(true);
+});
+
+test('checkWrite should be false', async () => {
+  expect(checkWrite).toBe(false);
 });

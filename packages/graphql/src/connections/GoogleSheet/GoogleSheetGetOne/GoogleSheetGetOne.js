@@ -18,7 +18,6 @@ import schema from './GoogleSheetGetOneSchema.json';
 import cleanRows from '../cleanRows';
 import getSheet from '../getSheet';
 import { transformRead } from '../transformTypes';
-import mingoAggregation from '../../../utils/mingoAggregation';
 import mingoFilter from '../../../utils/mingoFilter';
 
 async function googleSheetGetOne({ request, connection }) {

@@ -16,9 +16,7 @@
 
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
-async function getSheet({ connection }) {
-  const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
-  const doc = new GoogleSpreadsheet(spreadsheetId);
+async function authenticate({ doc, apiKey, client_email, private_key }) {
   if (apiKey) {
     doc.useApiKey(apiKey);
   } else {
@@ -27,6 +25,13 @@ async function getSheet({ connection }) {
       private_key: private_key,
     });
   }
+}
+
+async function getSheet({ connection }) {
+  const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
+  const doc = new GoogleSpreadsheet(spreadsheetId);
+
+  await authenticate({ doc, apiKey, client_email, private_key });
 
   await doc.loadInfo();
   let sheet;
