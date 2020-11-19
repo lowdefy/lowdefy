@@ -4,73 +4,69 @@
   type: Notification
   properties:
     message: Notification message
-    description: Notification description.
-- id: "properties.bottom: 50"
+- id: "properties.description:"
   type: Notification
   properties:
-    bottom: 50
-    message: Notification message
-    description: "Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit pixels)."
-- id: "properties.top: 50"
+    description: "Notification status type."
+- id: "properties.bottom: 250 placement: bottomLeft"
   type: Notification
   properties:
-    top: 50
+    placement: bottomLeft
+    bottom: 250
     message: Notification message
-    description: "Distance from the top of the viewport, when placement is topRight or topLeft (unit pixels)."
-- id: "properties.button: dashed"
+- id: "properties.top: 250 placement: topLeft"
   type: Notification
   properties:
-    button: dashed
+    placement: topLeft
+    top: 250
     message: Notification message
-    description: "Customized close button."
+- id: "properties.button: icon"
+  type: Notification
+  properties:
+    button:
+      icon: SaveOutlined
+      title: Close
+    message: Notification message
 - id: "properties.duration: 6"
   type: Notification
   properties:
     duration: 6
     message: Notification message
-    description: "The content description of notification box."
 - id: "properties.icon"
   type: Notification
   properties:
     icon: AccountBookFilled
     message: Notification message
-    description: ""
 - id: "properties.closeIcon: AlertOutlined"
   type: Notification
   properties:
     closeIcon: AlertOutlined
     message: Notification message
-    description: Customized close icon."
 - id: "properties.placement: topLeft"
   type: Notification
   properties:
     placement: topLeft
     message: Notification message
-    description: "Position of Notification."
 - id: "properties.placement: bottomLeft"
   type: Notification
   properties:
     placement: bottomLeft
     message: Notification message
-    description: "Position of Notification."
 - id: "properties.placement: bottomRight"
   type: Notification
   properties:
     placement: bottomRight
     message: Notification message
-    description: "Position of Notification."
 - id: "properties.status: error"
   type: Notification
   properties:
     status: error
     message: Notification message
-    description: "Notification status type."
 - id: "properties.status: info"
   type: Notification
   properties:
     status: info
     message: Notification message
-    description: "Notification status type."
 - id: "properties.status: warning"
   type: Notification
   properties:

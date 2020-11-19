@@ -1,6 +1,44 @@
 {
   "category": "display",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "error"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "message": "Args message"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "description": "Args description"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,7 +51,7 @@
         },
         "button": {
           "type": "object",
-          "description": "Customized close button."
+          "description": "Button object to customized the close button. Fires onClose action when clicked."
         },
         "description": {
           "type": "string",
