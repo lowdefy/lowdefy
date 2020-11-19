@@ -16,12 +16,6 @@
       {
         "name": "open",
         "args": {
-          "status": "error"
-        }
-      },
-      {
-        "name": "open",
-        "args": {
           "message": "Args message"
         }
       },
