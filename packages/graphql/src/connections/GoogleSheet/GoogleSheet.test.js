@@ -22,6 +22,7 @@ const { schema } = GoogleSheet;
 
 test('All requests are present', () => {
   expect(GoogleSheet.requests.GoogleSheetGetMany).toBeDefined();
+  expect(GoogleSheet.requests.GoogleSheetGetOne).toBeDefined();
 });
 
 test('valid connection schema', () => {

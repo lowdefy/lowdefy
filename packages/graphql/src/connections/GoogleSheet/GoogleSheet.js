@@ -16,10 +16,12 @@
 
 import schema from './GoogleSheetSchema.json';
 import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany';
+import GoogleSheetGetOne from './GoogleSheetGetOne/GoogleSheetGetOne';
 
 export default {
   schema,
   requests: {
     GoogleSheetGetMany,
+    GoogleSheetGetOne,
   },
 };
