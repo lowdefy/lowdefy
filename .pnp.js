@@ -3608,6 +3608,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:65bbdbc833194d48af8b473ccb9eb396af4cb12a8148bcea865208cb4df1306b9afb0a62408cbd348e6f2af9b92764096868c744881c07da8a59708a1c9cb4f4#npm:4.5.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
+            ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:3.14.0"],
             ["less", "npm:3.12.2"],
             ["less-loader", "virtual:65bbdbc833194d48af8b473ccb9eb396af4cb12a8148bcea865208cb4df1306b9afb0a62408cbd348e6f2af9b92764096868c744881c07da8a59708a1c9cb4f4#npm:7.1.0"],
@@ -10179,6 +10180,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["diffable-html", [
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/diffable-html-npm-4.0.0-76090d3045-d37f5370a1.zip/node_modules/diffable-html/",
+          "packageDependencies": [
+            ["diffable-html", "npm:4.0.0"],
+            ["htmlparser2", "npm:3.10.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["dir-glob", [
         ["npm:2.2.2", {
           "packageLocation": "./.yarn/cache/dir-glob-npm-2.2.2-932e08b501-1ee89c351e.zip/node_modules/dir-glob/",
@@ -14866,6 +14877,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-serializer", "npm:26.6.2"],
             ["@types/node", "npm:14.14.7"],
             ["graceful-fs", "npm:4.2.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["jest-serializer-html", [
+        ["npm:7.0.0", {
+          "packageLocation": "./.yarn/cache/jest-serializer-html-npm-7.0.0-2b593bfb63-21808d681e.zip/node_modules/jest-serializer-html/",
+          "packageDependencies": [
+            ["jest-serializer-html", "npm:7.0.0"],
+            ["diffable-html", "npm:4.0.0"]
           ],
           "linkType": "HARD",
         }]

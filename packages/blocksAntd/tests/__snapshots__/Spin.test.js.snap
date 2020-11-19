@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-spin-nested-loading {}"
   id="default"
@@ -45,7 +45,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.spinning 1`] = `
+exports[`Render properties.spinning - value[0] 1`] = `
 <div
   className="ant-spin-nested-loading {}"
   id="properties.spinning"

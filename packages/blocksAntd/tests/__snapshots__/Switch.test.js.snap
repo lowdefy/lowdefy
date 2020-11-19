@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -49,21 +49,10 @@ exports[`Render default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -88,7 +77,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.autoFocus: true 1`] = `
+exports[`Render properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -138,21 +127,10 @@ exports[`Render properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -177,7 +155,7 @@ exports[`Render properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -226,21 +204,10 @@ exports[`Render properties.checkedIcon: CheckCircleOutlined 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -265,7 +232,7 @@ exports[`Render properties.checkedIcon: CheckCircleOutlined 1`] = `
 </div>
 `;
 
-exports[`Render properties.checkedText: Checked 1`] = `
+exports[`Render properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -314,21 +281,10 @@ exports[`Render properties.checkedText: Checked 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -353,7 +309,7 @@ exports[`Render properties.checkedText: Checked 1`] = `
 </div>
 `;
 
-exports[`Render properties.color: # 1`] = `
+exports[`Render properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.color: #"
@@ -402,21 +358,10 @@ exports[`Render properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -441,7 +386,7 @@ exports[`Render properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabled: true 1`] = `
+exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -491,21 +436,10 @@ exports[`Render properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -530,7 +464,7 @@ exports[`Render properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.inputStyle: CSS style applied 1`] = `
+exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -579,21 +513,10 @@ exports[`Render properties.inputStyle: CSS style applied 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -618,7 +541,7 @@ exports[`Render properties.inputStyle: CSS style applied 1`] = `
 </div>
 `;
 
-exports[`Render properties.label align: right 1`] = `
+exports[`Render properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -667,21 +590,10 @@ exports[`Render properties.label align: right 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -706,7 +618,7 @@ exports[`Render properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render properties.label colon: false 1`] = `
+exports[`Render properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -755,21 +667,10 @@ exports[`Render properties.label colon: false 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -794,7 +695,7 @@ exports[`Render properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.label disabled: true 1`] = `
+exports[`Render properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -831,21 +732,10 @@ exports[`Render properties.label disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -870,7 +760,7 @@ exports[`Render properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.label extra: showing extra 1`] = `
+exports[`Render properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -919,21 +809,10 @@ exports[`Render properties.label extra: showing extra 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -963,7 +842,7 @@ exports[`Render properties.label extra: showing extra 1`] = `
 </div>
 `;
 
-exports[`Render properties.label inline: true 1`] = `
+exports[`Render properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -1020,21 +899,10 @@ exports[`Render properties.label inline: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1059,7 +927,7 @@ exports[`Render properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.label span: 4 1`] = `
+exports[`Render properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -1108,21 +976,10 @@ exports[`Render properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1147,7 +1004,7 @@ exports[`Render properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: small 1`] = `
+exports[`Render properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -1196,21 +1053,10 @@ exports[`Render properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1235,7 +1081,7 @@ exports[`Render properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -1284,21 +1130,10 @@ exports[`Render properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1323,7 +1158,7 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
-exports[`Render properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -1372,21 +1207,10 @@ exports[`Render properties.uncheckedIcon: UnlockFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1411,7 +1235,7 @@ exports[`Render properties.uncheckedIcon: UnlockFilled 1`] = `
 </div>
 `;
 
-exports[`Render properties.uncheckedText: Unchecked 1`] = `
+exports[`Render properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"
@@ -1469,7 +1293,7 @@ exports[`Render properties.uncheckedText: Unchecked 1`] = `
 </div>
 `;
 
-exports[`Render required = true default 1`] = `
+exports[`Render required = true default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -1518,21 +1342,10 @@ exports[`Render required = true default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1557,7 +1370,7 @@ exports[`Render required = true default 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.autoFocus: true 1`] = `
+exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -1607,21 +1420,10 @@ exports[`Render required = true properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1646,7 +1448,7 @@ exports[`Render required = true properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render required = true properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -1695,21 +1497,10 @@ exports[`Render required = true properties.checkedIcon: CheckCircleOutlined 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1734,7 +1525,7 @@ exports[`Render required = true properties.checkedIcon: CheckCircleOutlined 1`] 
 </div>
 `;
 
-exports[`Render required = true properties.checkedText: Checked 1`] = `
+exports[`Render required = true properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -1783,21 +1574,10 @@ exports[`Render required = true properties.checkedText: Checked 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1822,7 +1602,7 @@ exports[`Render required = true properties.checkedText: Checked 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.color: # 1`] = `
+exports[`Render required = true properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.color: #"
@@ -1871,21 +1651,10 @@ exports[`Render required = true properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1910,7 +1679,7 @@ exports[`Render required = true properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabled: true 1`] = `
+exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -1960,21 +1729,10 @@ exports[`Render required = true properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1999,7 +1757,7 @@ exports[`Render required = true properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
+exports[`Render required = true properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -2048,21 +1806,10 @@ exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2087,7 +1834,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label align: right 1`] = `
+exports[`Render required = true properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -2136,21 +1883,10 @@ exports[`Render required = true properties.label align: right 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2175,7 +1911,7 @@ exports[`Render required = true properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label colon: false 1`] = `
+exports[`Render required = true properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -2224,21 +1960,10 @@ exports[`Render required = true properties.label colon: false 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2263,7 +1988,7 @@ exports[`Render required = true properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label disabled: true 1`] = `
+exports[`Render required = true properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -2300,21 +2025,10 @@ exports[`Render required = true properties.label disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2339,7 +2053,7 @@ exports[`Render required = true properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label extra: showing extra 1`] = `
+exports[`Render required = true properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -2388,21 +2102,10 @@ exports[`Render required = true properties.label extra: showing extra 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2432,7 +2135,7 @@ exports[`Render required = true properties.label extra: showing extra 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label inline: true 1`] = `
+exports[`Render required = true properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -2489,21 +2192,10 @@ exports[`Render required = true properties.label inline: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2528,7 +2220,7 @@ exports[`Render required = true properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label span: 4 1`] = `
+exports[`Render required = true properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -2577,21 +2269,10 @@ exports[`Render required = true properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2616,7 +2297,7 @@ exports[`Render required = true properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.size: small 1`] = `
+exports[`Render required = true properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -2665,21 +2346,10 @@ exports[`Render required = true properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2704,7 +2374,7 @@ exports[`Render required = true properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.title 1`] = `
+exports[`Render required = true properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -2753,21 +2423,10 @@ exports[`Render required = true properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2792,7 +2451,7 @@ exports[`Render required = true properties.title 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render required = true properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -2841,21 +2500,10 @@ exports[`Render required = true properties.uncheckedIcon: UnlockFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2880,7 +2528,7 @@ exports[`Render required = true properties.uncheckedIcon: UnlockFilled 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.uncheckedText: Unchecked 1`] = `
+exports[`Render required = true properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"
@@ -2938,7 +2586,7 @@ exports[`Render required = true properties.uncheckedText: Unchecked 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error default 1`] = `
+exports[`Render validation.status = error default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="default"
@@ -2987,21 +2635,10 @@ exports[`Render validation.status = error default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3055,7 +2692,7 @@ exports[`Render validation.status = error default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.autoFocus: true 1`] = `
+exports[`Render validation.status = error properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -3105,21 +2742,10 @@ exports[`Render validation.status = error properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3173,7 +2799,7 @@ exports[`Render validation.status = error properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render validation.status = error properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -3222,21 +2848,10 @@ exports[`Render validation.status = error properties.checkedIcon: CheckCircleOut
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3290,7 +2905,7 @@ exports[`Render validation.status = error properties.checkedIcon: CheckCircleOut
 </div>
 `;
 
-exports[`Render validation.status = error properties.checkedText: Checked 1`] = `
+exports[`Render validation.status = error properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -3339,21 +2954,10 @@ exports[`Render validation.status = error properties.checkedText: Checked 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3407,7 +3011,7 @@ exports[`Render validation.status = error properties.checkedText: Checked 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = error properties.color: # 1`] = `
+exports[`Render validation.status = error properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.color: #"
@@ -3456,21 +3060,10 @@ exports[`Render validation.status = error properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3524,7 +3117,7 @@ exports[`Render validation.status = error properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabled: true 1`] = `
+exports[`Render validation.status = error properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -3574,21 +3167,10 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3642,7 +3224,7 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = error properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -3691,21 +3273,10 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3759,7 +3330,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
 </div>
 `;
 
-exports[`Render validation.status = error properties.label align: right 1`] = `
+exports[`Render validation.status = error properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label align: right"
@@ -3808,21 +3379,10 @@ exports[`Render validation.status = error properties.label align: right 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3876,7 +3436,7 @@ exports[`Render validation.status = error properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label colon: false 1`] = `
+exports[`Render validation.status = error properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -3925,21 +3485,10 @@ exports[`Render validation.status = error properties.label colon: false 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3993,7 +3542,7 @@ exports[`Render validation.status = error properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label disabled: true 1`] = `
+exports[`Render validation.status = error properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -4030,21 +3579,10 @@ exports[`Render validation.status = error properties.label disabled: true 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4098,7 +3636,7 @@ exports[`Render validation.status = error properties.label disabled: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = error properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = error properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -4147,21 +3685,10 @@ exports[`Render validation.status = error properties.label extra: showing extra 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4215,7 +3742,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
 </div>
 `;
 
-exports[`Render validation.status = error properties.label inline: true 1`] = `
+exports[`Render validation.status = error properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -4272,21 +3799,10 @@ exports[`Render validation.status = error properties.label inline: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4340,7 +3856,7 @@ exports[`Render validation.status = error properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label span: 4 1`] = `
+exports[`Render validation.status = error properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -4389,21 +3905,10 @@ exports[`Render validation.status = error properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4457,7 +3962,7 @@ exports[`Render validation.status = error properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.size: small 1`] = `
+exports[`Render validation.status = error properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.size: small"
@@ -4506,21 +4011,10 @@ exports[`Render validation.status = error properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4574,7 +4068,7 @@ exports[`Render validation.status = error properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.title 1`] = `
+exports[`Render validation.status = error properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.title"
@@ -4623,21 +4117,10 @@ exports[`Render validation.status = error properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4691,7 +4174,7 @@ exports[`Render validation.status = error properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -4740,21 +4223,10 @@ exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4808,7 +4280,7 @@ exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled
 </div>
 `;
 
-exports[`Render validation.status = error properties.uncheckedText: Unchecked 1`] = `
+exports[`Render validation.status = error properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"
@@ -4895,7 +4367,7 @@ exports[`Render validation.status = error properties.uncheckedText: Unchecked 1`
 </div>
 `;
 
-exports[`Render validation.status = null default 1`] = `
+exports[`Render validation.status = null default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -4944,21 +4416,10 @@ exports[`Render validation.status = null default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4983,7 +4444,7 @@ exports[`Render validation.status = null default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.autoFocus: true 1`] = `
+exports[`Render validation.status = null properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -5033,21 +4494,10 @@ exports[`Render validation.status = null properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5072,7 +4522,7 @@ exports[`Render validation.status = null properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render validation.status = null properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -5121,21 +4571,10 @@ exports[`Render validation.status = null properties.checkedIcon: CheckCircleOutl
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5160,7 +4599,7 @@ exports[`Render validation.status = null properties.checkedIcon: CheckCircleOutl
 </div>
 `;
 
-exports[`Render validation.status = null properties.checkedText: Checked 1`] = `
+exports[`Render validation.status = null properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -5209,21 +4648,10 @@ exports[`Render validation.status = null properties.checkedText: Checked 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5248,7 +4676,7 @@ exports[`Render validation.status = null properties.checkedText: Checked 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.color: # 1`] = `
+exports[`Render validation.status = null properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.color: #"
@@ -5297,21 +4725,10 @@ exports[`Render validation.status = null properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5336,7 +4753,7 @@ exports[`Render validation.status = null properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabled: true 1`] = `
+exports[`Render validation.status = null properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -5386,21 +4803,10 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5425,7 +4831,7 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = null properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -5474,21 +4880,10 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5513,7 +4908,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
 </div>
 `;
 
-exports[`Render validation.status = null properties.label align: right 1`] = `
+exports[`Render validation.status = null properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -5562,21 +4957,10 @@ exports[`Render validation.status = null properties.label align: right 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5601,7 +4985,7 @@ exports[`Render validation.status = null properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label colon: false 1`] = `
+exports[`Render validation.status = null properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -5650,21 +5034,10 @@ exports[`Render validation.status = null properties.label colon: false 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5689,7 +5062,7 @@ exports[`Render validation.status = null properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label disabled: true 1`] = `
+exports[`Render validation.status = null properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -5726,21 +5099,10 @@ exports[`Render validation.status = null properties.label disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5765,7 +5127,7 @@ exports[`Render validation.status = null properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = null properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -5814,21 +5176,10 @@ exports[`Render validation.status = null properties.label extra: showing extra 1
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5858,7 +5209,7 @@ exports[`Render validation.status = null properties.label extra: showing extra 1
 </div>
 `;
 
-exports[`Render validation.status = null properties.label inline: true 1`] = `
+exports[`Render validation.status = null properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -5915,21 +5266,10 @@ exports[`Render validation.status = null properties.label inline: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5954,7 +5294,7 @@ exports[`Render validation.status = null properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label span: 4 1`] = `
+exports[`Render validation.status = null properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -6003,21 +5343,10 @@ exports[`Render validation.status = null properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6042,7 +5371,7 @@ exports[`Render validation.status = null properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.size: small 1`] = `
+exports[`Render validation.status = null properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -6091,21 +5420,10 @@ exports[`Render validation.status = null properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6130,7 +5448,7 @@ exports[`Render validation.status = null properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.title 1`] = `
+exports[`Render validation.status = null properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title"
@@ -6179,21 +5497,10 @@ exports[`Render validation.status = null properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6218,7 +5525,7 @@ exports[`Render validation.status = null properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render validation.status = null properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -6267,21 +5574,10 @@ exports[`Render validation.status = null properties.uncheckedIcon: UnlockFilled 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6306,7 +5602,7 @@ exports[`Render validation.status = null properties.uncheckedIcon: UnlockFilled 
 </div>
 `;
 
-exports[`Render validation.status = null properties.uncheckedText: Unchecked 1`] = `
+exports[`Render validation.status = null properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"
@@ -6364,7 +5660,7 @@ exports[`Render validation.status = null properties.uncheckedText: Unchecked 1`]
 </div>
 `;
 
-exports[`Render validation.status = success default 1`] = `
+exports[`Render validation.status = success default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="default"
@@ -6413,21 +5709,10 @@ exports[`Render validation.status = success default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6476,7 +5761,7 @@ exports[`Render validation.status = success default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.autoFocus: true 1`] = `
+exports[`Render validation.status = success properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -6526,21 +5811,10 @@ exports[`Render validation.status = success properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6589,7 +5863,7 @@ exports[`Render validation.status = success properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render validation.status = success properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -6638,21 +5912,10 @@ exports[`Render validation.status = success properties.checkedIcon: CheckCircleO
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6701,7 +5964,7 @@ exports[`Render validation.status = success properties.checkedIcon: CheckCircleO
 </div>
 `;
 
-exports[`Render validation.status = success properties.checkedText: Checked 1`] = `
+exports[`Render validation.status = success properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -6750,21 +6013,10 @@ exports[`Render validation.status = success properties.checkedText: Checked 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6813,7 +6065,7 @@ exports[`Render validation.status = success properties.checkedText: Checked 1`] 
 </div>
 `;
 
-exports[`Render validation.status = success properties.color: # 1`] = `
+exports[`Render validation.status = success properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.color: #"
@@ -6862,21 +6114,10 @@ exports[`Render validation.status = success properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6925,7 +6166,7 @@ exports[`Render validation.status = success properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabled: true 1`] = `
+exports[`Render validation.status = success properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -6975,21 +6216,10 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7038,7 +6268,7 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = success properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -7087,21 +6317,10 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7150,7 +6369,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
 </div>
 `;
 
-exports[`Render validation.status = success properties.label align: right 1`] = `
+exports[`Render validation.status = success properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label align: right"
@@ -7199,21 +6418,10 @@ exports[`Render validation.status = success properties.label align: right 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7262,7 +6470,7 @@ exports[`Render validation.status = success properties.label align: right 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label colon: false 1`] = `
+exports[`Render validation.status = success properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -7311,21 +6519,10 @@ exports[`Render validation.status = success properties.label colon: false 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7374,7 +6571,7 @@ exports[`Render validation.status = success properties.label colon: false 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label disabled: true 1`] = `
+exports[`Render validation.status = success properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -7411,21 +6608,10 @@ exports[`Render validation.status = success properties.label disabled: true 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7474,7 +6660,7 @@ exports[`Render validation.status = success properties.label disabled: true 1`] 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = success properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -7523,21 +6709,10 @@ exports[`Render validation.status = success properties.label extra: showing extr
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7591,7 +6766,7 @@ exports[`Render validation.status = success properties.label extra: showing extr
 </div>
 `;
 
-exports[`Render validation.status = success properties.label inline: true 1`] = `
+exports[`Render validation.status = success properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -7648,21 +6823,10 @@ exports[`Render validation.status = success properties.label inline: true 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7711,7 +6875,7 @@ exports[`Render validation.status = success properties.label inline: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label span: 4 1`] = `
+exports[`Render validation.status = success properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -7760,21 +6924,10 @@ exports[`Render validation.status = success properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7823,7 +6976,7 @@ exports[`Render validation.status = success properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.size: small 1`] = `
+exports[`Render validation.status = success properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.size: small"
@@ -7872,21 +7025,10 @@ exports[`Render validation.status = success properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7935,7 +7077,7 @@ exports[`Render validation.status = success properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.title 1`] = `
+exports[`Render validation.status = success properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.title"
@@ -7984,21 +7126,10 @@ exports[`Render validation.status = success properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8047,7 +7178,7 @@ exports[`Render validation.status = success properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render validation.status = success properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -8096,21 +7227,10 @@ exports[`Render validation.status = success properties.uncheckedIcon: UnlockFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8159,7 +7279,7 @@ exports[`Render validation.status = success properties.uncheckedIcon: UnlockFill
 </div>
 `;
 
-exports[`Render validation.status = success properties.uncheckedText: Unchecked 1`] = `
+exports[`Render validation.status = success properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"
@@ -8241,7 +7361,7 @@ exports[`Render validation.status = success properties.uncheckedText: Unchecked 
 </div>
 `;
 
-exports[`Render validation.status = warning default 1`] = `
+exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="default"
@@ -8290,21 +7410,10 @@ exports[`Render validation.status = warning default 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8358,7 +7467,7 @@ exports[`Render validation.status = warning default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
+exports[`Render validation.status = warning properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -8408,21 +7517,10 @@ exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8476,7 +7574,7 @@ exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.checkedIcon: CheckCircleOutlined 1`] = `
+exports[`Render validation.status = warning properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.checkedIcon: CheckCircleOutlined"
@@ -8525,21 +7623,10 @@ exports[`Render validation.status = warning properties.checkedIcon: CheckCircleO
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8593,7 +7680,7 @@ exports[`Render validation.status = warning properties.checkedIcon: CheckCircleO
 </div>
 `;
 
-exports[`Render validation.status = warning properties.checkedText: Checked 1`] = `
+exports[`Render validation.status = warning properties.checkedText: Checked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.checkedText: Checked"
@@ -8642,21 +7729,10 @@ exports[`Render validation.status = warning properties.checkedText: Checked 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8710,7 +7786,7 @@ exports[`Render validation.status = warning properties.checkedText: Checked 1`] 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.color: # 1`] = `
+exports[`Render validation.status = warning properties.color: # - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.color: #"
@@ -8759,21 +7835,10 @@ exports[`Render validation.status = warning properties.color: # 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8827,7 +7892,7 @@ exports[`Render validation.status = warning properties.color: # 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabled: true 1`] = `
+exports[`Render validation.status = warning properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -8877,21 +7942,10 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8945,7 +7999,7 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.inputStyle: CSS style applied 1`] = `
+exports[`Render validation.status = warning properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.inputStyle: CSS style applied"
@@ -8994,21 +8048,10 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9062,7 +8105,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label align: right 1`] = `
+exports[`Render validation.status = warning properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label align: right"
@@ -9111,21 +8154,10 @@ exports[`Render validation.status = warning properties.label align: right 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9179,7 +8211,7 @@ exports[`Render validation.status = warning properties.label align: right 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label colon: false 1`] = `
+exports[`Render validation.status = warning properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -9228,21 +8260,10 @@ exports[`Render validation.status = warning properties.label colon: false 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9296,7 +8317,7 @@ exports[`Render validation.status = warning properties.label colon: false 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label disabled: true 1`] = `
+exports[`Render validation.status = warning properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -9333,21 +8354,10 @@ exports[`Render validation.status = warning properties.label disabled: true 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9401,7 +8411,7 @@ exports[`Render validation.status = warning properties.label disabled: true 1`] 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = warning properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -9450,21 +8460,10 @@ exports[`Render validation.status = warning properties.label extra: showing extr
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9518,7 +8517,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label inline: true 1`] = `
+exports[`Render validation.status = warning properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -9575,21 +8574,10 @@ exports[`Render validation.status = warning properties.label inline: true 1`] = 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9643,7 +8631,7 @@ exports[`Render validation.status = warning properties.label inline: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label span: 4 1`] = `
+exports[`Render validation.status = warning properties.label span: 4 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label span: 4"
@@ -9692,21 +8680,10 @@ exports[`Render validation.status = warning properties.label span: 4 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9760,7 +8737,7 @@ exports[`Render validation.status = warning properties.label span: 4 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.size: small 1`] = `
+exports[`Render validation.status = warning properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.size: small"
@@ -9809,21 +8786,10 @@ exports[`Render validation.status = warning properties.size: small 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9877,7 +8843,7 @@ exports[`Render validation.status = warning properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.title 1`] = `
+exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.title"
@@ -9926,21 +8892,10 @@ exports[`Render validation.status = warning properties.title 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9994,7 +8949,7 @@ exports[`Render validation.status = warning properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFilled 1`] = `
+exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.uncheckedIcon: UnlockFilled"
@@ -10043,21 +8998,10 @@ exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -10111,7 +9055,7 @@ exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFill
 </div>
 `;
 
-exports[`Render validation.status = warning properties.uncheckedText: Unchecked 1`] = `
+exports[`Render validation.status = warning properties.uncheckedText: Unchecked - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.uncheckedText: Unchecked"

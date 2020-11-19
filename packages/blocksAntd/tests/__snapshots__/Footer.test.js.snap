@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render areas.content 1`] = `
+exports[`Render areas.content - value[0] 1`] = `
 <footer
   className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
   id="areas.content"
@@ -18,7 +18,7 @@ exports[`Render areas.content 1`] = `
 </footer>
 `;
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <footer
   className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},null]} hide-on-print"
   id="default"
@@ -36,7 +36,7 @@ exports[`Render default 1`] = `
 </footer>
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <footer
   className="ant-layout-footer {\\"style\\":[{\\"margin\\":\\"auto\\"},{\\"border\\":\\"1px solid blue\\"}]} hide-on-print"
   id="properties.style"

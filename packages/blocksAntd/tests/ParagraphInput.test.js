@@ -15,23 +15,11 @@
 */
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
-Enzyme.configure({ adapter: new Adapter() });
-import Message from '../src/blocks/Message/Message';
-import examples from '../demo/examples/Message.yaml';
-import meta from '../src/blocks/Message/Message.json';
+import validationsExamples from '../demo/validationExamples.json';
+import ParagraphInput from '../src/blocks/ParagraphInput/ParagraphInput';
+import examples from '../demo/examples/ParagraphInput.yaml';
+import meta from '../src/blocks/ParagraphInput/ParagraphInput.json';
 
-const reset = () => {
-  document.body.childNodes.forEach((node) => {
-    node.childNodes.forEach((childNode) => {
-      childNode.childNodes.forEach((childChildNode) => {
-        childChildNode.innerHTML = '';
-      });
-    });
-  });
-};
-
-runRenderTests({ examples, Block: Message, meta, reset, enzyme: { mount } });
+runRenderTests({ examples, Block: ParagraphInput, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

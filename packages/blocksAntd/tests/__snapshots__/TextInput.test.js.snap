@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -80,7 +80,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.allowClear: false 1`] = `
+exports[`Render properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -128,7 +128,7 @@ exports[`Render properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.autoFocus: true 1`] = `
+exports[`Render properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -209,7 +209,7 @@ exports[`Render properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.disabled: true 1`] = `
+exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -290,7 +290,7 @@ exports[`Render properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.label align: right 1`] = `
+exports[`Render properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -370,7 +370,7 @@ exports[`Render properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render properties.label colon: false 1`] = `
+exports[`Render properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -450,7 +450,7 @@ exports[`Render properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.label disabled: true 1`] = `
+exports[`Render properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -518,7 +518,7 @@ exports[`Render properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.label extra: showing extra 1`] = `
+exports[`Render properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -603,7 +603,7 @@ exports[`Render properties.label extra: showing extra 1`] = `
 </div>
 `;
 
-exports[`Render properties.label inline: true 1`] = `
+exports[`Render properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -691,7 +691,7 @@ exports[`Render properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.label span: 12 1`] = `
+exports[`Render properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -771,7 +771,7 @@ exports[`Render properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render properties.placeholder: Type your text here 1`] = `
+exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -852,7 +852,7 @@ exports[`Render properties.placeholder: Type your text here 1`] = `
 </div>
 `;
 
-exports[`Render properties.prefix: Prefix to the text 1`] = `
+exports[`Render properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -937,7 +937,7 @@ exports[`Render properties.prefix: Prefix to the text 1`] = `
 </div>
 `;
 
-exports[`Render properties.prefixIcon.size: 24 1`] = `
+exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -978,21 +978,10 @@ exports[`Render properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1054,7 +1043,7 @@ exports[`Render properties.prefixIcon.size: 24 1`] = `
 </div>
 `;
 
-exports[`Render properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -1095,21 +1084,10 @@ exports[`Render properties.prefixIcon: AccountBookFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1171,7 +1149,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: large 1`] = `
+exports[`Render properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: large"
@@ -1251,7 +1229,7 @@ exports[`Render properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: small 1`] = `
+exports[`Render properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -1331,7 +1309,7 @@ exports[`Render properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render properties.suffix: Suffix to the text 1`] = `
+exports[`Render properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -1412,7 +1390,7 @@ exports[`Render properties.suffix: Suffix to the text 1`] = `
 </div>
 `;
 
-exports[`Render properties.suffixIcon.size 24 1`] = `
+exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -1486,21 +1464,10 @@ exports[`Render properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1525,7 +1492,7 @@ exports[`Render properties.suffixIcon.size 24 1`] = `
 </div>
 `;
 
-exports[`Render properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -1599,21 +1566,10 @@ exports[`Render properties.suffixIcon: AlertFilled 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -1638,7 +1594,7 @@ exports[`Render properties.suffixIcon: AlertFilled 1`] = `
 </div>
 `;
 
-exports[`Render properties.title: My TextInput Title 1`] = `
+exports[`Render properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title: My TextInput Title"
@@ -1718,7 +1674,7 @@ exports[`Render properties.title: My TextInput Title 1`] = `
 </div>
 `;
 
-exports[`Render required = true default 1`] = `
+exports[`Render required = true default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -1798,7 +1754,7 @@ exports[`Render required = true default 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.allowClear: false 1`] = `
+exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -1846,7 +1802,7 @@ exports[`Render required = true properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.autoFocus: true 1`] = `
+exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -1927,7 +1883,7 @@ exports[`Render required = true properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.disabled: true 1`] = `
+exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -2008,7 +1964,7 @@ exports[`Render required = true properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label align: right 1`] = `
+exports[`Render required = true properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -2088,7 +2044,7 @@ exports[`Render required = true properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label colon: false 1`] = `
+exports[`Render required = true properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -2168,7 +2124,7 @@ exports[`Render required = true properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label disabled: true 1`] = `
+exports[`Render required = true properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -2236,7 +2192,7 @@ exports[`Render required = true properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label extra: showing extra 1`] = `
+exports[`Render required = true properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -2321,7 +2277,7 @@ exports[`Render required = true properties.label extra: showing extra 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label inline: true 1`] = `
+exports[`Render required = true properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -2409,7 +2365,7 @@ exports[`Render required = true properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.label span: 12 1`] = `
+exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -2489,7 +2445,7 @@ exports[`Render required = true properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.placeholder: Type your text here 1`] = `
+exports[`Render required = true properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -2570,7 +2526,7 @@ exports[`Render required = true properties.placeholder: Type your text here 1`] 
 </div>
 `;
 
-exports[`Render required = true properties.prefix: Prefix to the text 1`] = `
+exports[`Render required = true properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -2655,7 +2611,7 @@ exports[`Render required = true properties.prefix: Prefix to the text 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.prefixIcon.size: 24 1`] = `
+exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -2696,21 +2652,10 @@ exports[`Render required = true properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2772,7 +2717,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render required = true properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -2813,21 +2758,10 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -2889,7 +2823,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.size: large 1`] = `
+exports[`Render required = true properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: large"
@@ -2969,7 +2903,7 @@ exports[`Render required = true properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.size: small 1`] = `
+exports[`Render required = true properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -3049,7 +2983,7 @@ exports[`Render required = true properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.suffix: Suffix to the text 1`] = `
+exports[`Render required = true properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -3130,7 +3064,7 @@ exports[`Render required = true properties.suffix: Suffix to the text 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.suffixIcon.size 24 1`] = `
+exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -3204,21 +3138,10 @@ exports[`Render required = true properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3243,7 +3166,7 @@ exports[`Render required = true properties.suffixIcon.size 24 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -3317,21 +3240,10 @@ exports[`Render required = true properties.suffixIcon: AlertFilled 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -3356,7 +3268,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.title: My TextInput Title 1`] = `
+exports[`Render required = true properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title: My TextInput Title"
@@ -3436,7 +3348,7 @@ exports[`Render required = true properties.title: My TextInput Title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error default 1`] = `
+exports[`Render validation.status = error default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="default"
@@ -3545,7 +3457,7 @@ exports[`Render validation.status = error default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.allowClear: false 1`] = `
+exports[`Render validation.status = error properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -3622,7 +3534,7 @@ exports[`Render validation.status = error properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.autoFocus: true 1`] = `
+exports[`Render validation.status = error properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -3732,7 +3644,7 @@ exports[`Render validation.status = error properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.disabled: true 1`] = `
+exports[`Render validation.status = error properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -3842,7 +3754,7 @@ exports[`Render validation.status = error properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label align: right 1`] = `
+exports[`Render validation.status = error properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label align: right"
@@ -3951,7 +3863,7 @@ exports[`Render validation.status = error properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label colon: false 1`] = `
+exports[`Render validation.status = error properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -4060,7 +3972,7 @@ exports[`Render validation.status = error properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label disabled: true 1`] = `
+exports[`Render validation.status = error properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -4157,7 +4069,7 @@ exports[`Render validation.status = error properties.label disabled: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = error properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = error properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -4266,7 +4178,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
 </div>
 `;
 
-exports[`Render validation.status = error properties.label inline: true 1`] = `
+exports[`Render validation.status = error properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -4383,7 +4295,7 @@ exports[`Render validation.status = error properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.label span: 12 1`] = `
+exports[`Render validation.status = error properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -4492,7 +4404,7 @@ exports[`Render validation.status = error properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.placeholder: Type your text here 1`] = `
+exports[`Render validation.status = error properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -4602,7 +4514,7 @@ exports[`Render validation.status = error properties.placeholder: Type your text
 </div>
 `;
 
-exports[`Render validation.status = error properties.prefix: Prefix to the text 1`] = `
+exports[`Render validation.status = error properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -4716,7 +4628,7 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
 </div>
 `;
 
-exports[`Render validation.status = error properties.prefixIcon.size: 24 1`] = `
+exports[`Render validation.status = error properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -4757,21 +4669,10 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -4862,7 +4763,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render validation.status = error properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -4903,21 +4804,10 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5008,7 +4898,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
 </div>
 `;
 
-exports[`Render validation.status = error properties.size: large 1`] = `
+exports[`Render validation.status = error properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.size: large"
@@ -5117,7 +5007,7 @@ exports[`Render validation.status = error properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.size: small 1`] = `
+exports[`Render validation.status = error properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.size: small"
@@ -5226,7 +5116,7 @@ exports[`Render validation.status = error properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.suffix: Suffix to the text 1`] = `
+exports[`Render validation.status = error properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -5336,7 +5226,7 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
 </div>
 `;
 
-exports[`Render validation.status = error properties.suffixIcon.size 24 1`] = `
+exports[`Render validation.status = error properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -5410,21 +5300,10 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5478,7 +5357,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render validation.status = error properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -5552,21 +5431,10 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled 1`]
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -5620,7 +5488,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled 1`]
 </div>
 `;
 
-exports[`Render validation.status = error properties.title: My TextInput Title 1`] = `
+exports[`Render validation.status = error properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
   id="properties.title: My TextInput Title"
@@ -5729,7 +5597,7 @@ exports[`Render validation.status = error properties.title: My TextInput Title 1
 </div>
 `;
 
-exports[`Render validation.status = null default 1`] = `
+exports[`Render validation.status = null default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="default"
@@ -5809,7 +5677,7 @@ exports[`Render validation.status = null default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.allowClear: false 1`] = `
+exports[`Render validation.status = null properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -5857,7 +5725,7 @@ exports[`Render validation.status = null properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.autoFocus: true 1`] = `
+exports[`Render validation.status = null properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -5938,7 +5806,7 @@ exports[`Render validation.status = null properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.disabled: true 1`] = `
+exports[`Render validation.status = null properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -6019,7 +5887,7 @@ exports[`Render validation.status = null properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label align: right 1`] = `
+exports[`Render validation.status = null properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label align: right"
@@ -6099,7 +5967,7 @@ exports[`Render validation.status = null properties.label align: right 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label colon: false 1`] = `
+exports[`Render validation.status = null properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -6179,7 +6047,7 @@ exports[`Render validation.status = null properties.label colon: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label disabled: true 1`] = `
+exports[`Render validation.status = null properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -6247,7 +6115,7 @@ exports[`Render validation.status = null properties.label disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = null properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -6332,7 +6200,7 @@ exports[`Render validation.status = null properties.label extra: showing extra 1
 </div>
 `;
 
-exports[`Render validation.status = null properties.label inline: true 1`] = `
+exports[`Render validation.status = null properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -6420,7 +6288,7 @@ exports[`Render validation.status = null properties.label inline: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.label span: 12 1`] = `
+exports[`Render validation.status = null properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -6500,7 +6368,7 @@ exports[`Render validation.status = null properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.placeholder: Type your text here 1`] = `
+exports[`Render validation.status = null properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -6581,7 +6449,7 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
 </div>
 `;
 
-exports[`Render validation.status = null properties.prefix: Prefix to the text 1`] = `
+exports[`Render validation.status = null properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -6666,7 +6534,7 @@ exports[`Render validation.status = null properties.prefix: Prefix to the text 1
 </div>
 `;
 
-exports[`Render validation.status = null properties.prefixIcon.size: 24 1`] = `
+exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -6707,21 +6575,10 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6783,7 +6640,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render validation.status = null properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -6824,21 +6681,10 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -6900,7 +6746,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
 </div>
 `;
 
-exports[`Render validation.status = null properties.size: large 1`] = `
+exports[`Render validation.status = null properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: large"
@@ -6980,7 +6826,7 @@ exports[`Render validation.status = null properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.size: small 1`] = `
+exports[`Render validation.status = null properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.size: small"
@@ -7060,7 +6906,7 @@ exports[`Render validation.status = null properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.suffix: Suffix to the text 1`] = `
+exports[`Render validation.status = null properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -7141,7 +6987,7 @@ exports[`Render validation.status = null properties.suffix: Suffix to the text 1
 </div>
 `;
 
-exports[`Render validation.status = null properties.suffixIcon.size 24 1`] = `
+exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -7215,21 +7061,10 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 1`] = `
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7254,7 +7089,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render validation.status = null properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -7328,21 +7163,10 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled 1`] 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -7367,7 +7191,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled 1`] 
 </div>
 `;
 
-exports[`Render validation.status = null properties.title: My TextInput Title 1`] = `
+exports[`Render validation.status = null properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{}}"
   id="properties.title: My TextInput Title"
@@ -7447,7 +7271,7 @@ exports[`Render validation.status = null properties.title: My TextInput Title 1`
 </div>
 `;
 
-exports[`Render validation.status = success default 1`] = `
+exports[`Render validation.status = success default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="default"
@@ -7551,7 +7375,7 @@ exports[`Render validation.status = success default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.allowClear: false 1`] = `
+exports[`Render validation.status = success properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -7623,7 +7447,7 @@ exports[`Render validation.status = success properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.autoFocus: true 1`] = `
+exports[`Render validation.status = success properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -7728,7 +7552,7 @@ exports[`Render validation.status = success properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.disabled: true 1`] = `
+exports[`Render validation.status = success properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -7833,7 +7657,7 @@ exports[`Render validation.status = success properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.label align: right 1`] = `
+exports[`Render validation.status = success properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label align: right"
@@ -7937,7 +7761,7 @@ exports[`Render validation.status = success properties.label align: right 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label colon: false 1`] = `
+exports[`Render validation.status = success properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -8041,7 +7865,7 @@ exports[`Render validation.status = success properties.label colon: false 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label disabled: true 1`] = `
+exports[`Render validation.status = success properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -8133,7 +7957,7 @@ exports[`Render validation.status = success properties.label disabled: true 1`] 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = success properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -8242,7 +8066,7 @@ exports[`Render validation.status = success properties.label extra: showing extr
 </div>
 `;
 
-exports[`Render validation.status = success properties.label inline: true 1`] = `
+exports[`Render validation.status = success properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -8354,7 +8178,7 @@ exports[`Render validation.status = success properties.label inline: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.label span: 12 1`] = `
+exports[`Render validation.status = success properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -8458,7 +8282,7 @@ exports[`Render validation.status = success properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.placeholder: Type your text here 1`] = `
+exports[`Render validation.status = success properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -8563,7 +8387,7 @@ exports[`Render validation.status = success properties.placeholder: Type your te
 </div>
 `;
 
-exports[`Render validation.status = success properties.prefix: Prefix to the text 1`] = `
+exports[`Render validation.status = success properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -8672,7 +8496,7 @@ exports[`Render validation.status = success properties.prefix: Prefix to the tex
 </div>
 `;
 
-exports[`Render validation.status = success properties.prefixIcon.size: 24 1`] = `
+exports[`Render validation.status = success properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -8713,21 +8537,10 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8813,7 +8626,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 1`] =
 </div>
 `;
 
-exports[`Render validation.status = success properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render validation.status = success properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -8854,21 +8667,10 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -8954,7 +8756,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
 </div>
 `;
 
-exports[`Render validation.status = success properties.size: large 1`] = `
+exports[`Render validation.status = success properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.size: large"
@@ -9058,7 +8860,7 @@ exports[`Render validation.status = success properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.size: small 1`] = `
+exports[`Render validation.status = success properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.size: small"
@@ -9162,7 +8964,7 @@ exports[`Render validation.status = success properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.suffix: Suffix to the text 1`] = `
+exports[`Render validation.status = success properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -9267,7 +9069,7 @@ exports[`Render validation.status = success properties.suffix: Suffix to the tex
 </div>
 `;
 
-exports[`Render validation.status = success properties.suffixIcon.size 24 1`] = `
+exports[`Render validation.status = success properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -9341,21 +9143,10 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 1`] = 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9404,7 +9195,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = success properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render validation.status = success properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -9478,21 +9269,10 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled 1
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -9541,7 +9321,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled 1
 </div>
 `;
 
-exports[`Render validation.status = success properties.title: My TextInput Title 1`] = `
+exports[`Render validation.status = success properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
   id="properties.title: My TextInput Title"
@@ -9645,7 +9425,7 @@ exports[`Render validation.status = success properties.title: My TextInput Title
 </div>
 `;
 
-exports[`Render validation.status = warning default 1`] = `
+exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="default"
@@ -9754,7 +9534,7 @@ exports[`Render validation.status = warning default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.allowClear: false 1`] = `
+exports[`Render validation.status = warning properties.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.allowClear: false"
@@ -9831,7 +9611,7 @@ exports[`Render validation.status = warning properties.allowClear: false 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
+exports[`Render validation.status = warning properties.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.autoFocus: true"
@@ -9941,7 +9721,7 @@ exports[`Render validation.status = warning properties.autoFocus: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.disabled: true 1`] = `
+exports[`Render validation.status = warning properties.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.disabled: true"
@@ -10051,7 +9831,7 @@ exports[`Render validation.status = warning properties.disabled: true 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label align: right 1`] = `
+exports[`Render validation.status = warning properties.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label align: right"
@@ -10160,7 +9940,7 @@ exports[`Render validation.status = warning properties.label align: right 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label colon: false 1`] = `
+exports[`Render validation.status = warning properties.label colon: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label colon: false"
@@ -10269,7 +10049,7 @@ exports[`Render validation.status = warning properties.label colon: false 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label disabled: true 1`] = `
+exports[`Render validation.status = warning properties.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label disabled: true"
@@ -10366,7 +10146,7 @@ exports[`Render validation.status = warning properties.label disabled: true 1`] 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label extra: showing extra 1`] = `
+exports[`Render validation.status = warning properties.label extra: showing extra - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label extra: showing extra"
@@ -10475,7 +10255,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label inline: true 1`] = `
+exports[`Render validation.status = warning properties.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
   id="properties.label inline: true"
@@ -10592,7 +10372,7 @@ exports[`Render validation.status = warning properties.label inline: true 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.label span: 12 1`] = `
+exports[`Render validation.status = warning properties.label span: 12 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.label span: 12"
@@ -10701,7 +10481,7 @@ exports[`Render validation.status = warning properties.label span: 12 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.placeholder: Type your text here 1`] = `
+exports[`Render validation.status = warning properties.placeholder: Type your text here - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.placeholder: Type your text here"
@@ -10811,7 +10591,7 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
 </div>
 `;
 
-exports[`Render validation.status = warning properties.prefix: Prefix to the text 1`] = `
+exports[`Render validation.status = warning properties.prefix: Prefix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.prefix: Prefix to the text"
@@ -10925,7 +10705,7 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
 </div>
 `;
 
-exports[`Render validation.status = warning properties.prefixIcon.size: 24 1`] = `
+exports[`Render validation.status = warning properties.prefixIcon.size: 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.prefixIcon.size: 24"
@@ -10966,21 +10746,10 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11071,7 +10840,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 1`] =
 </div>
 `;
 
-exports[`Render validation.status = warning properties.prefixIcon: AccountBookFilled 1`] = `
+exports[`Render validation.status = warning properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.prefixIcon: AccountBookFilled"
@@ -11112,21 +10881,10 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11217,7 +10975,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
 </div>
 `;
 
-exports[`Render validation.status = warning properties.size: large 1`] = `
+exports[`Render validation.status = warning properties.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.size: large"
@@ -11326,7 +11084,7 @@ exports[`Render validation.status = warning properties.size: large 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.size: small 1`] = `
+exports[`Render validation.status = warning properties.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.size: small"
@@ -11435,7 +11193,7 @@ exports[`Render validation.status = warning properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.suffix: Suffix to the text 1`] = `
+exports[`Render validation.status = warning properties.suffix: Suffix to the text - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.suffix: Suffix to the text"
@@ -11545,7 +11303,7 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
 </div>
 `;
 
-exports[`Render validation.status = warning properties.suffixIcon.size 24 1`] = `
+exports[`Render validation.status = warning properties.suffixIcon.size 24 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.suffixIcon.size 24"
@@ -11619,21 +11377,10 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 1`] = 
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11687,7 +11434,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 1`] = 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.suffixIcon: AlertFilled 1`] = `
+exports[`Render validation.status = warning properties.suffixIcon: AlertFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.suffixIcon: AlertFilled"
@@ -11761,21 +11508,10 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled 1
             </span>
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {}"
-              content={Object {}}
+              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
-              list={Array []}
-              menus={Array []}
               required={false}
               role="img"
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
             >
               <svg
                 aria-hidden="true"
@@ -11829,7 +11565,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled 1
 </div>
 `;
 
-exports[`Render validation.status = warning properties.title: My TextInput Title 1`] = `
+exports[`Render validation.status = warning properties.title: My TextInput Title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
   id="properties.title: My TextInput Title"

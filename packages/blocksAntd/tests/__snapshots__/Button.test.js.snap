@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   id="default"
@@ -13,7 +13,7 @@ exports[`Render default 1`] = `
 </button>
 `;
 
-exports[`Render properties.block: true 1`] = `
+exports[`Render properties.block: true - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-block"
   id="properties.block: true"
@@ -26,7 +26,7 @@ exports[`Render properties.block: true 1`] = `
 </button>
 `;
 
-exports[`Render properties.color: #9c27b0 1`] = `
+exports[`Render properties.color: #9c27b0 - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]} ant-btn-primary"
   id="properties.color: #9c27b0"
@@ -39,7 +39,7 @@ exports[`Render properties.color: #9c27b0 1`] = `
 </button>
 `;
 
-exports[`Render properties.danger: true 1`] = `
+exports[`Render properties.danger: true - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-dangerous"
   id="properties.danger: true"
@@ -52,7 +52,7 @@ exports[`Render properties.danger: true 1`] = `
 </button>
 `;
 
-exports[`Render properties.disabled: true 1`] = `
+exports[`Render properties.disabled: true - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   disabled={true}
@@ -66,7 +66,7 @@ exports[`Render properties.disabled: true 1`] = `
 </button>
 `;
 
-exports[`Render properties.ghost: true 1`] = `
+exports[`Render properties.ghost: true - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-background-ghost"
   id="properties.ghost: true"
@@ -79,7 +79,7 @@ exports[`Render properties.ghost: true 1`] = `
 </button>
 `;
 
-exports[`Render properties.hideTitle: true 1`] = `
+exports[`Render properties.hideTitle: true - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-icon-only"
   id="properties.hideTitle: true"
@@ -88,21 +88,10 @@ exports[`Render properties.hideTitle: true 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.hideTitle: true_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -122,7 +111,7 @@ exports[`Render properties.hideTitle: true 1`] = `
 </button>
 `;
 
-exports[`Render properties.href: www.lowdefy.com 1`] = `
+exports[`Render properties.href: www.lowdefy.com - value[0] 1`] = `
 <a
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   href="https://www.lowdefy.com"
@@ -135,7 +124,7 @@ exports[`Render properties.href: www.lowdefy.com 1`] = `
 </a>
 `;
 
-exports[`Render properties.icon object 1`] = `
+exports[`Render properties.icon object - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   id="properties.icon object"
@@ -144,21 +133,10 @@ exports[`Render properties.icon object 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
     id="properties.icon object_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -181,7 +159,7 @@ exports[`Render properties.icon object 1`] = `
 </button>
 `;
 
-exports[`Render properties.icon string 1`] = `
+exports[`Render properties.icon string - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   id="properties.icon string"
@@ -190,21 +168,10 @@ exports[`Render properties.icon string 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters {}"
-    content={Object {}}
+    className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon string_icon"
-    list={Array []}
-    menus={Array []}
     required={false}
     role="img"
-    user={Object {}}
-    validation={
-      Object {
-        "errors": Array [],
-        "status": null,
-        "warnings": Array [],
-      }
-    }
   >
     <svg
       aria-hidden="true"
@@ -227,7 +194,7 @@ exports[`Render properties.icon string 1`] = `
 </button>
 `;
 
-exports[`Render properties.shape: circle 1`] = `
+exports[`Render properties.shape: circle - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-circle"
   id="properties.shape: circle"
@@ -240,7 +207,7 @@ exports[`Render properties.shape: circle 1`] = `
 </button>
 `;
 
-exports[`Render properties.shape: round 1`] = `
+exports[`Render properties.shape: round - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-round"
   id="properties.shape: round"
@@ -253,7 +220,7 @@ exports[`Render properties.shape: round 1`] = `
 </button>
 `;
 
-exports[`Render properties.size: large 1`] = `
+exports[`Render properties.size: large - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
   id="properties.size: large"
@@ -266,7 +233,7 @@ exports[`Render properties.size: large 1`] = `
 </button>
 `;
 
-exports[`Render properties.size: small 1`] = `
+exports[`Render properties.size: small - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
   id="properties.size: small"
@@ -279,7 +246,7 @@ exports[`Render properties.size: small 1`] = `
 </button>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
   id="properties.title"
@@ -292,7 +259,7 @@ exports[`Render properties.title 1`] = `
 </button>
 `;
 
-exports[`Render properties.type: danger 1`] = `
+exports[`Render properties.type: danger - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-danger"
   id="properties.type: danger"
@@ -305,7 +272,7 @@ exports[`Render properties.type: danger 1`] = `
 </button>
 `;
 
-exports[`Render properties.type: dashed 1`] = `
+exports[`Render properties.type: dashed - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
   id="properties.type: dashed"
@@ -318,7 +285,7 @@ exports[`Render properties.type: dashed 1`] = `
 </button>
 `;
 
-exports[`Render properties.type: default 1`] = `
+exports[`Render properties.type: default - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
   id="properties.type: default"
@@ -331,7 +298,7 @@ exports[`Render properties.type: default 1`] = `
 </button>
 `;
 
-exports[`Render properties.type: link 1`] = `
+exports[`Render properties.type: link - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-link"
   id="properties.type: link"
@@ -344,7 +311,7 @@ exports[`Render properties.type: link 1`] = `
 </button>
 `;
 
-exports[`Render properties.type: text 1`] = `
+exports[`Render properties.type: text - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},null]} ant-btn-text"
   id="properties.type: text"
