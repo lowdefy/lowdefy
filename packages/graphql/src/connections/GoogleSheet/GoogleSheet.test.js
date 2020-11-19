@@ -20,6 +20,9 @@ import { ConfigurationError } from '../../context/errors';
 
 const { schema } = GoogleSheet;
 
+test('All requests are present', () => {
+  expect(GoogleSheet.requests.GoogleSheetGetMany).toBeDefined();
+});
 
 test('valid connection schema', () => {
   const connection = {

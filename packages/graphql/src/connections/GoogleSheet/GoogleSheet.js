@@ -15,9 +15,11 @@
 */
 
 import schema from './GoogleSheetSchema.json';
+import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany';
 
 export default {
   schema,
   requests: {
+    GoogleSheetGetMany,
   },
 };
