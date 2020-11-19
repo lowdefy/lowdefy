@@ -1,84 +1,84 @@
 - id: default
-  type: Paragraph
+  type: ParagraphInput
 - id: 'properties.code: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     code: true
 - id: 'properties.delete: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     delete: true
 - id: 'properties.disabled: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     disabled: true
 - id: 'properties.mark: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     mark: true
 - id: 'properties.strong: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     strong: true
 - id: 'properties.underline: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     underline: true
 - id: 'properties.type: secondary'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     type: secondary
 - id: 'properties.type: warning'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     type: warning
 - id: 'properties.type: danger'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     type: danger
 - id: 'properties.copyable: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     copyable: true
 - id: 'properties.copyable: text: one'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     copyable:
       text: one
 - id: 'properties.copyable: icon'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     copyable:
       icon: WarningOutlined
 - id: 'properties.copyable: icon: []'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     copyable:
       icon: 
         - WarningOutlined
         - RocketOutlined
 - id: 'properties.copyable: tooltips: []'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     copyable:
       tooltips: 
         - Click to copy
         - Copy done
 - id: 'properties.ellipsis: true'
-  type: Paragraph
+  type: ParagraphInput
   style:
     width: 300
   properties:
     ellipsis: true
 - id: 'properties.ellipsis: rows'
-  type: Paragraph
+  type: ParagraphInput
   style:
     width: 300
   properties:
     ellipsis: 
       rows: 3
 - id: 'properties.ellipsis: expandable, rows'
-  type: Paragraph
+  type: ParagraphInput
   style:
     width: 300
   properties:
@@ -86,7 +86,7 @@
       rows: 3
       expandable: true
 - id: 'properties.ellipsis: rows, suffix'
-  type: Paragraph
+  type: ParagraphInput
   style:
     width: 300
   properties:
@@ -95,7 +95,7 @@
       suffix: and other
 # FIX Jest: not working, might be and antd issue.
 # - id: 'properties.ellipsis: rows, symbol'
-#   type: Paragraph
+#   type: ParagraphInput
 #   style:
 #     width: 300
 #   properties:
@@ -103,37 +103,37 @@
 #       symbol: '???'
 
 - id: 'properties.editable: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: true
 - id: 'properties.editable.icon'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: 
       icon: PlusOutlined
 - id: 'properties.editable.tooltip'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: 
       tooltip: Change the value
 # FIX: TypeError: Cannot read property 'focus' of null
 # - id: 'properties.editable.editing: true'
-#   type: Paragraph
+#   type: ParagraphInput
 #   properties:
 #     editable: 
 #       editing: true
 - id: 'properties.editable.maxLength: 10'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: 
       maxLength: 10
 - id: 'properties.editable.autoSize: true'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: 
       autoSize: true
 - id: 'properties.editable.autoSize: min max'
-  type: Paragraph
+  type: ParagraphInput
   properties:
     editable: 
       autoSize: 
