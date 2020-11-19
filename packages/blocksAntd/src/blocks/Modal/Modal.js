@@ -34,7 +34,6 @@ const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
   }
   return (
     <div id={blockId}>
-      <div id={`${blockId}_popup`} />
       <Modal
         id={`${blockId}_modal`}
         title={properties.title}
@@ -50,7 +49,6 @@ const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
           setOpen(false);
         }}
         afterClose={() => methods.callAction({ action: 'afterClose' })}
-        getContainer={() => document.getElementById(`${blockId}_popup`)}
         confirmLoading={get(actions, 'onOk.loading')}
         okText={properties.okText || 'Ok'}
         cancelText={properties.cancelText || 'Cancel'}

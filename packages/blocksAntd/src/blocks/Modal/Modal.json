@@ -1,6 +1,20 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleOpen",
+        "args": {}
+      },
+      {
+        "name": "setOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
