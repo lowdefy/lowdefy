@@ -14,10 +14,23 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runMockRenderTests } from '@lowdefy/block-tools';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { Progress } from 'antd';
+
+Enzyme.configure({ adapter: new Adapter() });
 import ProgressBlock from '../src/blocks/Progress/Progress';
 import examples from '../demo/examples/Progress.yaml';
 import meta from '../src/blocks/Progress/Progress.json';
 
-runRenderTests({ examples, Block: ProgressBlock, meta });
-runBlockSchemaTests({ examples, meta });
+jest.mock('antd/lib/progress', () => {
+  return jest.fn((props) => props.toString());
+});
+
+const mock = {
+  name: 'default',
+  fn: Progress,
+};
+
+runMockRenderTests({ examples, Block: ProgressBlock, meta, mock, enzyme: { mount } });
