@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -62,7 +62,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
@@ -144,7 +144,7 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
-exports[`Render required = true default 1`] = `
+exports[`Render required = true default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -206,7 +206,7 @@ exports[`Render required = true default 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties.title 1`] = `
+exports[`Render required = true properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
@@ -288,7 +288,7 @@ exports[`Render required = true properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error default 1`] = `
+exports[`Render validation.status = error default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -350,7 +350,7 @@ exports[`Render validation.status = error default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = error properties.title 1`] = `
+exports[`Render validation.status = error properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
@@ -432,7 +432,7 @@ exports[`Render validation.status = error properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null default 1`] = `
+exports[`Render validation.status = null default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -494,7 +494,7 @@ exports[`Render validation.status = null default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = null properties.title 1`] = `
+exports[`Render validation.status = null properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
@@ -576,7 +576,7 @@ exports[`Render validation.status = null properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success default 1`] = `
+exports[`Render validation.status = success default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -638,7 +638,7 @@ exports[`Render validation.status = success default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = success properties.title 1`] = `
+exports[`Render validation.status = success properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"
@@ -720,7 +720,7 @@ exports[`Render validation.status = success properties.title 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning default 1`] = `
+exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="default"
@@ -782,7 +782,7 @@ exports[`Render validation.status = warning default 1`] = `
 </div>
 `;
 
-exports[`Render validation.status = warning properties.title 1`] = `
+exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
   id="properties.title"

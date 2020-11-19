@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="default_button"
@@ -35,7 +35,7 @@ exports[`Render default 1`] = `
 </button>
 `;
 
-exports[`Render properties.avatar.shape: square 1`] = `
+exports[`Render properties.avatar.shape: square - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.avatar.shape: square_button"
@@ -70,9 +70,9 @@ exports[`Render properties.avatar.shape: square 1`] = `
 </button>
 `;
 
-exports[`Render properties.disabled: true 1`] = `""`;
+exports[`Render properties.disabled: true - value[0] 1`] = `""`;
 
-exports[`Render properties.loggedIn: false 1`] = `
+exports[`Render properties.loggedIn: false - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.loggedIn: false_button"
@@ -107,7 +107,7 @@ exports[`Render properties.loggedIn: false 1`] = `
 </button>
 `;
 
-exports[`Render properties.loginButton 1`] = `
+exports[`Render properties.loginButton - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.loginButton_button"
@@ -142,7 +142,7 @@ exports[`Render properties.loginButton 1`] = `
 </button>
 `;
 
-exports[`Render properties.name 1`] = `
+exports[`Render properties.name - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.name_button"
@@ -177,7 +177,7 @@ exports[`Render properties.name 1`] = `
 </button>
 `;
 
-exports[`Render properties.showName: left 1`] = `
+exports[`Render properties.showName: left - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.showName: left_button"
@@ -212,7 +212,7 @@ exports[`Render properties.showName: left 1`] = `
 </button>
 `;
 
-exports[`Render properties.showName: none 1`] = `
+exports[`Render properties.showName: none - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.showName: none_button"
@@ -247,7 +247,7 @@ exports[`Render properties.showName: none 1`] = `
 </button>
 `;
 
-exports[`Render properties.showName: right 1`] = `
+exports[`Render properties.showName: right - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.showName: right_button"
@@ -282,7 +282,7 @@ exports[`Render properties.showName: right 1`] = `
 </button>
 `;
 
-exports[`Render properties.theme: dark 1`] = `
+exports[`Render properties.theme: dark - value[0] 1`] = `
 <button
   className="ant-btn {\\"style\\":[{},{\\"margin\\":8}]} ant-btn-primary ant-btn-round"
   id="properties.theme: dark_button"

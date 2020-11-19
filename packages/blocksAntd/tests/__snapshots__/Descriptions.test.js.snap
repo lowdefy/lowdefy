@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -14,7 +14,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render default 2`] = `
+exports[`Render default - value[0] 2`] = `
 <div
   className="ant-descriptions"
 >
@@ -33,7 +33,7 @@ exports[`Render default 2`] = `
 </div>
 `;
 
-exports[`Render properties.bordered: true 1`] = `
+exports[`Render properties.bordered: true - value[0] 1`] = `
 <div
   className="ant-descriptions ant-descriptions-bordered"
 >
@@ -88,7 +88,7 @@ exports[`Render properties.bordered: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.colon: false 1`] = `
+exports[`Render properties.colon: false - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -152,7 +152,7 @@ exports[`Render properties.colon: false 1`] = `
 </div>
 `;
 
-exports[`Render properties.column: 2 1`] = `
+exports[`Render properties.column: 2 - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -220,7 +220,7 @@ exports[`Render properties.column: 2 1`] = `
 </div>
 `;
 
-exports[`Render properties.items-list 1`] = `
+exports[`Render properties.items-list - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -293,7 +293,7 @@ exports[`Render properties.items-list 1`] = `
 </div>
 `;
 
-exports[`Render properties.items-list-primitive 1`] = `
+exports[`Render properties.items-list-primitive - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -385,7 +385,7 @@ exports[`Render properties.items-list-primitive 1`] = `
 </div>
 `;
 
-exports[`Render properties.items-object 1`] = `
+exports[`Render properties.items-object - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -454,7 +454,7 @@ exports[`Render properties.items-object 1`] = `
 </div>
 `;
 
-exports[`Render properties.items-object-object 1`] = `
+exports[`Render properties.items-object-object - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -523,7 +523,7 @@ exports[`Render properties.items-object-object 1`] = `
 </div>
 `;
 
-exports[`Render properties.layout: vertical 1`] = `
+exports[`Render properties.layout: vertical - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -606,7 +606,7 @@ exports[`Render properties.layout: vertical 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: default 1`] = `
+exports[`Render properties.size: default - value[0] 1`] = `
 <div
   className="ant-descriptions"
 >
@@ -670,7 +670,7 @@ exports[`Render properties.size: default 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: small 1`] = `
+exports[`Render properties.size: small - value[0] 1`] = `
 <div
   className="ant-descriptions ant-descriptions-small"
 >
@@ -734,7 +734,7 @@ exports[`Render properties.size: small 1`] = `
 </div>
 `;
 
-exports[`Render properties.size: small, properties.bordered: true 1`] = `
+exports[`Render properties.size: small, properties.bordered: true - value[0] 1`] = `
 <div
   className="ant-descriptions ant-descriptions-small ant-descriptions-bordered"
 >

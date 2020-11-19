@@ -15,6 +15,9 @@
     "properties": {
       "type": "object"
     },
+    "style": {
+      "type": "object"
+    },
     "layout": {
       "type": "object"
     },

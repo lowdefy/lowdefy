@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal"
   id="default"
@@ -8,7 +8,7 @@ exports[`Render default 1`] = `
 />
 `;
 
-exports[`Render properties.dashed: true 1`] = `
+exports[`Render properties.dashed: true - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-dashed"
   id="properties.dashed: true"
@@ -16,7 +16,7 @@ exports[`Render properties.dashed: true 1`] = `
 />
 `;
 
-exports[`Render properties.orientation: center 1`] = `
+exports[`Render properties.orientation: center - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.orientation: center"
@@ -30,7 +30,7 @@ exports[`Render properties.orientation: center 1`] = `
 </div>
 `;
 
-exports[`Render properties.orientation: left 1`] = `
+exports[`Render properties.orientation: left - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left"
   id="properties.orientation: left"
@@ -44,7 +44,7 @@ exports[`Render properties.orientation: left 1`] = `
 </div>
 `;
 
-exports[`Render properties.orientation: right 1`] = `
+exports[`Render properties.orientation: right - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-right"
   id="properties.orientation: right"
@@ -58,7 +58,7 @@ exports[`Render properties.orientation: right 1`] = `
 </div>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.title"
@@ -72,7 +72,7 @@ exports[`Render properties.title 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: horizontal 1`] = `
+exports[`Render properties.type: horizontal - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center"
   id="properties.type: horizontal"
@@ -86,7 +86,7 @@ exports[`Render properties.type: horizontal 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: true 1`] = `
+exports[`Render properties.type: true - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-center ant-divider-plain"
   id="properties.type: true"
@@ -100,7 +100,7 @@ exports[`Render properties.type: true 1`] = `
 </div>
 `;
 
-exports[`Render properties.type: vertical 1`] = `
+exports[`Render properties.type: vertical - value[0] 1`] = `
 <div
   className="ant-divider ant-divider-vertical ant-divider-with-text ant-divider-with-text-center"
   id="properties.type: vertical"

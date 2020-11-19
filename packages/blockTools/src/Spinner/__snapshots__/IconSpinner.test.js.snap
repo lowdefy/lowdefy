@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":20,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
@@ -22,7 +22,7 @@ exports[`Render default 1`] = `
 </span>
 `;
 
-exports[`Render sizedefault 1`] = `
+exports[`Render sizedefault - value[0] 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":24,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
@@ -44,7 +44,7 @@ exports[`Render sizedefault 1`] = `
 </span>
 `;
 
-exports[`Render sizelarge 1`] = `
+exports[`Render sizelarge - value[0] 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":32,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >
@@ -66,7 +66,7 @@ exports[`Render sizelarge 1`] = `
 </span>
 `;
 
-exports[`Render sizesmall 1`] = `
+exports[`Render sizesmall - value[0] 1`] = `
 <span
   className="{\\"style\\":{\\"height\\":20,\\"display\\":\\"flex\\",\\"alignItems\\":\\"center\\",\\"justifyContent\\":\\"center\\"}}"
 >

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="{}"
   data-testid="default"
@@ -8,7 +8,7 @@ exports[`Render default 1`] = `
 />
 `;
 
-exports[`Render properties.html 1`] = `
+exports[`Render properties.html - value[0] 1`] = `
 <div
   className="{}"
   data-testid="properties.html"
@@ -16,7 +16,7 @@ exports[`Render properties.html 1`] = `
 />
 `;
 
-exports[`Render properties.html-styled 1`] = `
+exports[`Render properties.html-styled - value[0] 1`] = `
 <div
   className="{\\"style\\":{\\"background\\":\\"yellow\\",\\"padding\\":10}}"
   data-testid="properties.html-styled"
@@ -24,7 +24,7 @@ exports[`Render properties.html-styled 1`] = `
 />
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <div
   className="{\\"style\\":{\\"background\\":\\"yellow\\",\\"padding\\":10}}"
   data-testid="properties.style"

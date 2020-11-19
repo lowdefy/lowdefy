@@ -57,6 +57,7 @@ import PageSHCF from './blocks/PageSHCF/PageSHCF';
 import PageSiderMenu from './blocks/PageSiderMenu/PageSiderMenu';
 import Pagination from './blocks/Pagination/Pagination';
 import Paragraph from './blocks/Paragraph/Paragraph';
+import ParagraphInput from './blocks/ParagraphInput/ParagraphInput';
 import Progress from './blocks/Progress/Progress';
 import RadioSelector from './blocks/RadioSelector/RadioSelector';
 import RatingSlider from './blocks/RatingSlider/RatingSlider';
@@ -119,6 +120,7 @@ export {
   PageSiderMenu,
   Pagination,
   Paragraph,
+  ParagraphInput,
   Progress,
   RadioSelector,
   RatingSlider,
@@ -181,6 +183,7 @@ export default {
   PageSiderMenu,
   Pagination,
   Paragraph,
+  ParagraphInput,
   Progress,
   RadioSelector,
   RatingSlider,

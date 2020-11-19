@@ -1,6 +1,14 @@
 {
-  "category": "display",
+  "valueType": "string",
+  "category": "input",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true,
+    "values": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -51,6 +59,64 @@
           "type": "boolean",
           "default": false,
           "description": "Apply disabled style."
+        },
+        "editable": {
+          "description": "Allow paragraph editing when true, editable settings can be provided with editable object.",
+          "default": false,
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "icon": {
+                  "type": ["string", "object"],
+                  "description": "Edit icon."
+                },
+                "tooltip": {
+                  "type": "string",
+                  "description": "Edit tooltip text."
+                },
+                "editing": {
+                  "type": "boolean",
+                  "description": "Control editing state."
+                },
+                "maxLength": {
+                  "type": "number",
+                  "description": "Max length of text area input."
+                },
+                "autoSize": {
+                  "type": ["boolean", "object"],
+                  "description": "Auto size text area input. Can be boolean or object with max and min rows.",
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "description": "Auto size rows settings.",
+                      "properties": {
+                        "minRows": {
+                          "type": "number",
+                          "description": "Minimum number of rows for text area input."
+                        },
+                        "maxRows": {
+                          "type": "number",
+                          "description": "Maximum number of rows for text area input."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "symbol": {
+                  "type": "string",
+                  "description": "Custom ... symbol of ellipsis content."
+                }
+              }
+            }
+          ]
         },
         "ellipsis": {
           "default": false,
@@ -112,6 +178,10 @@
         "onCopy": {
           "type": "array",
           "description": "Fire action when copy text is clicked."
+        },
+        "onChange": {
+          "type": "array",
+          "description": "Fire action when paragraph is changed."
         }
       }
     }

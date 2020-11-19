@@ -14,17 +14,12 @@
   limitations under the License.
 */
 
-import schemaTest from './schemaTest';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
-const runBlockSchemaTests = ({ examples, meta }) => {
-  const validate = schemaTest(meta.schema);
-  examples.forEach((block) => {
-    test(`Test Schema ${block.id}`, () => {
-      const valid = validate(block);
-      expect(valid).toMatchSnapshot();
-      expect(validate.errors).toMatchSnapshot();
-    });
-  });
-};
+import validationsExamples from '../demo/validationExamples.json';
+import ParagraphInput from '../src/blocks/ParagraphInput/ParagraphInput';
+import examples from '../demo/examples/ParagraphInput.yaml';
+import meta from '../src/blocks/ParagraphInput/ParagraphInput.json';
 
-export default runBlockSchemaTests;
+runRenderTests({ examples, Block: ParagraphInput, meta, validationsExamples });
+runBlockSchemaTests({ examples, meta });

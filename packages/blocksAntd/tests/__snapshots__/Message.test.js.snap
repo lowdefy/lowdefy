@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   id="default"
 />
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - default 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - default - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -41,7 +41,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.content 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.content - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -76,7 +76,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.duration - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -111,7 +111,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.icon - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -147,7 +147,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: error - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -182,7 +182,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: info - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -217,7 +217,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: loading - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -252,7 +252,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning 1`] = `
+exports[`Render for method: {"name":"open","args":{"content":"Args message content"}} - properties.status: warning - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -287,7 +287,7 @@ exports[`Render for method: {"name":"open","args":{"content":"Args message conte
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -322,7 +322,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - default 1`] 
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -357,7 +357,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.c
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -392,7 +392,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.d
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -428,7 +428,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.i
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -463,7 +463,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.s
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -498,7 +498,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.s
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: loading 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: loading - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -533,7 +533,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.s
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning 1`] = `
+exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -568,7 +568,7 @@ exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.s
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -603,7 +603,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - defaul
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -638,7 +638,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -673,7 +673,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -709,7 +709,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -744,7 +744,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -779,7 +779,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: loading - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -814,7 +814,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning 1`] = `
+exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -849,7 +849,7 @@ exports[`Render for method: {"name":"open","args":{"status":"warning"}} - proper
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - default 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - default - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -884,7 +884,7 @@ exports[`Render for method: {"name":"open","args":{}} - default 1`] = `
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -919,7 +919,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.content 1`] =
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.duration 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.duration - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -954,7 +954,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.duration 1`] 
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.icon - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -990,7 +990,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.icon 1`] = `
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -1025,7 +1025,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.status: error
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -1060,7 +1060,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.status: info 
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: loading 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.status: loading - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -1095,7 +1095,7 @@ exports[`Render for method: {"name":"open","args":{}} - properties.status: loadi
 </div>
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning 1`] = `
+exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] 1`] = `
 <div>
   <div class="ant-message">
     <span>
@@ -1130,43 +1130,43 @@ exports[`Render for method: {"name":"open","args":{}} - properties.status: warni
 </div>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <div
   id="properties.content"
 />
 `;
 
-exports[`Render properties.duration 1`] = `
+exports[`Render properties.duration - value[0] 1`] = `
 <div
   id="properties.duration"
 />
 `;
 
-exports[`Render properties.icon 1`] = `
+exports[`Render properties.icon - value[0] 1`] = `
 <div
   id="properties.icon"
 />
 `;
 
-exports[`Render properties.status: error 1`] = `
+exports[`Render properties.status: error - value[0] 1`] = `
 <div
   id="properties.status: error"
 />
 `;
 
-exports[`Render properties.status: info 1`] = `
+exports[`Render properties.status: info - value[0] 1`] = `
 <div
   id="properties.status: info"
 />
 `;
 
-exports[`Render properties.status: loading 1`] = `
+exports[`Render properties.status: loading - value[0] 1`] = `
 <div
   id="properties.status: loading"
 />
 `;
 
-exports[`Render properties.status: warning 1`] = `
+exports[`Render properties.status: warning - value[0] 1`] = `
 <div
   id="properties.status: warning"
 />

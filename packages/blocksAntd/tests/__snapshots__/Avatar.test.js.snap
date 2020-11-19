@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
   id="default"
@@ -18,7 +18,7 @@ exports[`Render default 1`] = `
 </span>
 `;
 
-exports[`Render properties.alt 1`] = `
+exports[`Render properties.alt - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
   id="properties.alt"
@@ -36,7 +36,7 @@ exports[`Render properties.alt 1`] = `
 </span>
 `;
 
-exports[`Render properties.color 1`] = `
+exports[`Render properties.color - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#f12345\\"},null]} ant-avatar-circle"
   id="properties.color"
@@ -54,7 +54,7 @@ exports[`Render properties.color 1`] = `
 </span>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
   id="properties.content"
@@ -74,7 +74,7 @@ exports[`Render properties.content 1`] = `
 </span>
 `;
 
-exports[`Render properties.content 2`] = `
+exports[`Render properties.content - value[0] 2`] = `
 <span
   className="ant-avatar {\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]} ant-avatar-circle"
   id="properties.content"
@@ -94,7 +94,7 @@ exports[`Render properties.content 2`] = `
 </span>
 `;
 
-exports[`Render properties.gap 1`] = `
+exports[`Render properties.gap - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
   id="properties.gap"
@@ -114,7 +114,7 @@ exports[`Render properties.gap 1`] = `
 </span>
 `;
 
-exports[`Render properties.icon object 1`] = `
+exports[`Render properties.icon object - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle ant-avatar-icon"
   id="properties.icon object"
@@ -146,7 +146,7 @@ exports[`Render properties.icon object 1`] = `
 </span>
 `;
 
-exports[`Render properties.icon string 1`] = `
+exports[`Render properties.icon string - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle ant-avatar-icon"
   id="properties.icon string"
@@ -178,7 +178,7 @@ exports[`Render properties.icon string 1`] = `
 </span>
 `;
 
-exports[`Render properties.icon string properties.shape square 1`] = `
+exports[`Render properties.icon string properties.shape square - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-square ant-avatar-icon"
   id="properties.icon string properties.shape square"
@@ -210,7 +210,7 @@ exports[`Render properties.icon string properties.shape square 1`] = `
 </span>
 `;
 
-exports[`Render properties.shape 1`] = `
+exports[`Render properties.shape - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-square"
   id="properties.shape"
@@ -228,7 +228,7 @@ exports[`Render properties.shape 1`] = `
 </span>
 `;
 
-exports[`Render properties.size 40 1`] = `
+exports[`Render properties.size 40 - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
   id="properties.size 40"
@@ -253,7 +253,7 @@ exports[`Render properties.size 40 1`] = `
 </span>
 `;
 
-exports[`Render properties.size large 1`] = `
+exports[`Render properties.size large - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-lg ant-avatar-circle"
   id="properties.size large"
@@ -271,7 +271,7 @@ exports[`Render properties.size large 1`] = `
 </span>
 `;
 
-exports[`Render properties.size small 1`] = `
+exports[`Render properties.size small - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-sm ant-avatar-circle"
   id="properties.size small"
@@ -289,7 +289,7 @@ exports[`Render properties.size small 1`] = `
 </span>
 `;
 
-exports[`Render properties.src 1`] = `
+exports[`Render properties.src - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":false},null]} ant-avatar-circle ant-avatar-image"
   id="properties.src"

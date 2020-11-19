@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render areas.content 1`] = `
+exports[`Render areas.content - value[0] 1`] = `
 <main
   className="ant-layout-content {}"
   id="areas.content"
@@ -18,7 +18,7 @@ exports[`Render areas.content 1`] = `
 </main>
 `;
 
-exports[`Render areas.footer 1`] = `
+exports[`Render areas.footer - value[0] 1`] = `
 <main
   className="ant-layout-content {}"
   id="areas.footer"
@@ -36,7 +36,7 @@ exports[`Render areas.footer 1`] = `
 </main>
 `;
 
-exports[`Render areas.header 1`] = `
+exports[`Render areas.header - value[0] 1`] = `
 <main
   className="ant-layout-content {}"
   id="areas.header"
@@ -54,7 +54,7 @@ exports[`Render areas.header 1`] = `
 </main>
 `;
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <main
   className="ant-layout-content {}"
   id="default"
@@ -72,7 +72,7 @@ exports[`Render default 1`] = `
 </main>
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <main
   className="ant-layout-content {\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
   id="properties.style"

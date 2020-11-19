@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render actions.onClick 1`] = `
+exports[`Render actions.onClick - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
   data-testid="actions.onClick"
@@ -20,7 +20,7 @@ exports[`Render actions.onClick 1`] = `
 </div>
 `;
 
-exports[`Render areas.content 1`] = `
+exports[`Render areas.content - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="areas.content"
@@ -40,7 +40,7 @@ exports[`Render areas.content 1`] = `
 </div>
 `;
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="default"
@@ -60,7 +60,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="properties.content"
@@ -71,7 +71,7 @@ exports[`Render properties.content 1`] = `
 </div>
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},{\\"border\\":\\"1px solid blue\\"}]}"
   data-testid="properties.style"

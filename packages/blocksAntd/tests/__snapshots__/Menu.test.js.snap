@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="default"
@@ -11,7 +11,7 @@ exports[`Render default 1`] = `
 />
 `;
 
-exports[`Render menus: default 1`] = `
+exports[`Render menus: default - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menus: default"
@@ -49,7 +49,7 @@ exports[`Render menus: default 1`] = `
 </ul>
 `;
 
-exports[`Render menus: links[0] 1`] = `
+exports[`Render menus: links[0] - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menus: links[0]"
@@ -127,7 +127,7 @@ exports[`Render menus: links[0] 1`] = `
 </ul>
 `;
 
-exports[`Render menus: properties.menuId: menu_one 1`] = `
+exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menus: properties.menuId: menu_one"
@@ -205,7 +205,7 @@ exports[`Render menus: properties.menuId: menu_one 1`] = `
 </ul>
 `;
 
-exports[`Render menusTitle pageId 1`] = `
+exports[`Render menusTitle pageId - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menusTitle pageId"
@@ -257,7 +257,7 @@ exports[`Render menusTitle pageId 1`] = `
 </ul>
 `;
 
-exports[`Render menusTitle properties.title 1`] = `
+exports[`Render menusTitle properties.title - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menusTitle properties.title"
@@ -309,7 +309,7 @@ exports[`Render menusTitle properties.title 1`] = `
 </ul>
 `;
 
-exports[`Render menusTitle url 1`] = `
+exports[`Render menusTitle url - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="menusTitle url"
@@ -360,7 +360,7 @@ exports[`Render menusTitle url 1`] = `
 </ul>
 `;
 
-exports[`Render mode: inline, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: inline, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},null,null,null]} ant-menu-dark ant-menu-root ant-menu-inline"
   id="mode: inline, backgroundColor: #016e1e"
@@ -491,7 +491,7 @@ exports[`Render mode: inline, backgroundColor: #016e1e 1`] = `
 </ul>
 `;
 
-exports[`Render mode: inline, selectedColor: #f16e1e 1`] = `
+exports[`Render mode: inline, selectedColor: #f16e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]} ant-menu-dark ant-menu-root ant-menu-inline"
   id="mode: inline, selectedColor: #f16e1e"
@@ -622,7 +622,7 @@ exports[`Render mode: inline, selectedColor: #f16e1e 1`] = `
 </ul>
 `;
 
-exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]} ant-menu-dark ant-menu-root ant-menu-inline"
   id="mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e"
@@ -753,7 +753,7 @@ exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e 1
 </ul>
 `;
 
-exports[`Render mode: inline, theme: light 1`] = `
+exports[`Render mode: inline, theme: light - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-light ant-menu-root ant-menu-inline"
   id="mode: inline, theme: light"
@@ -884,7 +884,7 @@ exports[`Render mode: inline, theme: light 1`] = `
 </ul>
 `;
 
-exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB 1`] = `
+exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}}},null]} ant-menu-light ant-menu-root ant-menu-inline"
   id="mode: inline, theme: light, selectedColor: #6C2ACB"
@@ -1015,7 +1015,7 @@ exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB 1`] = `
 </ul>
 `;
 
-exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#91cfcf !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},null]} ant-menu-light ant-menu-root ant-menu-inline"
   id="mode: inline, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e"
@@ -1146,7 +1146,7 @@ exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundCo
 </ul>
 `;
 
-exports[`Render mode: vertical, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: vertical, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="mode: vertical, backgroundColor: #016e1e"
@@ -1264,7 +1264,7 @@ exports[`Render mode: vertical, backgroundColor: #016e1e 1`] = `
 </ul>
 `;
 
-exports[`Render mode: vertical, selectedColor: #f16e1e 1`] = `
+exports[`Render mode: vertical, selectedColor: #f16e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="mode: vertical, selectedColor: #f16e1e"
@@ -1382,7 +1382,7 @@ exports[`Render mode: vertical, selectedColor: #f16e1e 1`] = `
 </ul>
 `;
 
-exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e"
@@ -1500,7 +1500,7 @@ exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e
 </ul>
 `;
 
-exports[`Render mode: vertical, theme: light 1`] = `
+exports[`Render mode: vertical, theme: light - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-light ant-menu-root ant-menu-vertical"
   id="mode: vertical, theme: light"
@@ -1618,7 +1618,7 @@ exports[`Render mode: vertical, theme: light 1`] = `
 </ul>
 `;
 
-exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e 1`] = `
+exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},null]} ant-menu-light ant-menu-root ant-menu-vertical"
   id="mode: vertical, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e"
@@ -1736,7 +1736,7 @@ exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, background
 </ul>
 `;
 
-exports[`Render properties.MenuGroup with MenuLInks 1`] = `
+exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.MenuGroup with MenuLInks"
@@ -1774,7 +1774,7 @@ exports[`Render properties.MenuGroup with MenuLInks 1`] = `
 </ul>
 `;
 
-exports[`Render properties.danger: true 1`] = `
+exports[`Render properties.danger: true - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.danger: true"
@@ -1852,7 +1852,7 @@ exports[`Render properties.danger: true 1`] = `
 </ul>
 `;
 
-exports[`Render properties.icon 1`] = `
+exports[`Render properties.icon - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.icon"
@@ -1944,7 +1944,7 @@ exports[`Render properties.icon 1`] = `
 </ul>
 `;
 
-exports[`Render properties.links 1`] = `
+exports[`Render properties.links - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.links"
@@ -1988,7 +1988,7 @@ exports[`Render properties.links 1`] = `
 </ul>
 `;
 
-exports[`Render properties.subMenuCloseDelay: 3 1`] = `
+exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.subMenuCloseDelay: 3"
@@ -2026,7 +2026,7 @@ exports[`Render properties.subMenuCloseDelay: 3 1`] = `
 </ul>
 `;
 
-exports[`Render properties.subMenuOpenDelay: 3 1`] = `
+exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.subMenuOpenDelay: 3"
@@ -2064,7 +2064,7 @@ exports[`Render properties.subMenuOpenDelay: 3 1`] = `
 </ul>
 `;
 
-exports[`Render properties.title 1`] = `
+exports[`Render properties.title - value[0] 1`] = `
 <ul
   className="ant-menu {\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]} ant-menu-dark ant-menu-root ant-menu-vertical"
   id="properties.title"

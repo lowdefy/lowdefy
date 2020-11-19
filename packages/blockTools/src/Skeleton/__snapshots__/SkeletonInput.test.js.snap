@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -23,7 +23,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render inputHeight80 1`] = `
+exports[`Render inputHeight80 - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -46,7 +46,7 @@ exports[`Render inputHeight80 1`] = `
 </div>
 `;
 
-exports[`Render labelHeight40 1`] = `
+exports[`Render labelHeight40 - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -69,7 +69,7 @@ exports[`Render labelHeight40 1`] = `
 </div>
 `;
 
-exports[`Render labelWidth80 1`] = `
+exports[`Render labelWidth80 - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -92,7 +92,7 @@ exports[`Render labelWidth80 1`] = `
 </div>
 `;
 
-exports[`Render labelfalse 1`] = `
+exports[`Render labelfalse - value[0] 1`] = `
 <div>
   <div
     className="skeleton {}"
@@ -106,7 +106,7 @@ exports[`Render labelfalse 1`] = `
 </div>
 `;
 
-exports[`Render sizedefault 1`] = `
+exports[`Render sizedefault - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -129,7 +129,7 @@ exports[`Render sizedefault 1`] = `
 </div>
 `;
 
-exports[`Render sizelarge 1`] = `
+exports[`Render sizelarge - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
@@ -152,7 +152,7 @@ exports[`Render sizelarge 1`] = `
 </div>
 `;
 
-exports[`Render sizesmall 1`] = `
+exports[`Render sizesmall - value[0] 1`] = `
 <div>
   <div
     className="skeleton {\\"style\\":{\\"marginBottom\\":10}}"
