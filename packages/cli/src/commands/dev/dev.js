@@ -25,6 +25,7 @@ import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
 import getBuildScript from '../build/getBuildScript';
 import getGraphql from './getGraphql';
+import createGetSecretsFromEnv from './createGetSecretsFromEnv';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {
@@ -38,15 +39,9 @@ async function dev(options) {
 
   //Graphql
   const config = {
-    DEPLOYMENT_ID: 'DEPLOYMENT_ID',
-    DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
-    DOMAIN_NAME: 'DOMAIN_NAME',
     CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
     logger: console,
-    getHeadersFromInput: ({ req }) => req.headers,
-    getSecrets: () => ({
-      CONNECTION_SECRETS: {},
-    }),
+    getSecrets: createGetSecretsFromEnv(),
   };
   const { typeDefs, resolvers, createContext: createGqlContext } = context.graphql;
   const gqlContext = createGqlContext(config);

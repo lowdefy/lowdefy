@@ -2,6 +2,10 @@
   "valueType": "boolean",
   "category": "input",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -17,6 +21,10 @@
           "default": "CheckOutlined",
           "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is checked (true)."
         },
+        "checkedText": {
+          "type": "string",
+          "description": "Text to shown when switch is checked (true)."
+        },
         "color": {
           "type": "string",
           "description": "Switch checked color."
@@ -26,19 +34,14 @@
           "default": false,
           "description": "Disable the block if true."
         },
-        "disableIcons": {
-          "type": "boolean",
-          "default": false,
-          "description": "Disables icons for checked and unchecked state."
-        },
         "inputStyle": {
           "type": "object",
           "description": "Css style to applied to input."
         },
         "label": {
           "type": "object",
-          "additionalProperties": false,
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -59,10 +62,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -87,6 +103,10 @@
           "type": ["string", "object"],
           "default": "CloseOutlined",
           "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is unchecked (false)."
+        },
+        "uncheckedText": {
+          "type": "string",
+          "description": "Text to shown when switch is not checked (false)."
         }
       }
     },

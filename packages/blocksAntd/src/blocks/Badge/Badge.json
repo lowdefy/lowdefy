@@ -19,6 +19,10 @@
           "default": false,
           "description": "Whether to display a red dot instead of count"
         },
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in badge."
+        },
         "offset": {
           "type": "array",
           "items": { "type": "number" },
@@ -40,8 +44,7 @@
           "description": "Set Badge as a status dot"
         },
         "text": {
-          "type": "boolean",
-          "default": false,
+          "type": "string",
           "description": "If status is set, text sets the display text of the status dot"
         },
         "title": {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render areas.content 1`] = `
+exports[`Render areas.content - value[0] 1`] = `
 <section
   className="ant-layout {}"
   id="areas.content"
@@ -18,7 +18,7 @@ exports[`Render areas.content 1`] = `
 </section>
 `;
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <section
   className="ant-layout {}"
   id="default"
@@ -36,7 +36,7 @@ exports[`Render default 1`] = `
 </section>
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <section
   className="ant-layout {\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
   id="properties.style"

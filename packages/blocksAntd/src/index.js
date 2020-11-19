@@ -18,6 +18,7 @@ import Affix from './blocks/Affix/Affix';
 import Alert from './blocks/Alert/Alert';
 import Anchor from './blocks/Anchor/Anchor';
 import AutoComplete from './blocks/AutoComplete/AutoComplete';
+import Avatar from './blocks/Avatar/Avatar';
 import Badge from './blocks/Badge/Badge';
 import Breadcrumb from './blocks/Breadcrumb/Breadcrumb';
 import Button from './blocks/Button/Button';
@@ -56,6 +57,7 @@ import PageSHCF from './blocks/PageSHCF/PageSHCF';
 import PageSiderMenu from './blocks/PageSiderMenu/PageSiderMenu';
 import Pagination from './blocks/Pagination/Pagination';
 import Paragraph from './blocks/Paragraph/Paragraph';
+import ParagraphInput from './blocks/ParagraphInput/ParagraphInput';
 import Progress from './blocks/Progress/Progress';
 import RadioSelector from './blocks/RadioSelector/RadioSelector';
 import RatingSlider from './blocks/RatingSlider/RatingSlider';
@@ -79,6 +81,7 @@ export {
   Alert,
   Anchor,
   AutoComplete,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
@@ -117,6 +120,7 @@ export {
   PageSiderMenu,
   Pagination,
   Paragraph,
+  ParagraphInput,
   Progress,
   RadioSelector,
   RatingSlider,
@@ -140,6 +144,7 @@ export default {
   Alert,
   Anchor,
   AutoComplete,
+  Avatar,
   Badge,
   Breadcrumb,
   Button,
@@ -178,6 +183,7 @@ export default {
   PageSiderMenu,
   Pagination,
   Paragraph,
+  ParagraphInput,
   Progress,
   RadioSelector,
   RatingSlider,

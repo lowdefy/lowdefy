@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,16 +39,18 @@
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
+    "@lowdefy/nunjucks": "1.0.0",
     "@lowdefy/operators": "1.0.1",
-    "@sendgrid/mail": "7.3.0",
+    "@sendgrid/mail": "7.4.0",
     "ajv": "6.12.6",
+    "ajv-errors": "1.0.1",
     "apollo-server": "2.19.0",
-    "aws-sdk": "2.784.0",
+    "aws-sdk": "2.790.0",
     "axios": "0.21.0",
     "dataloader": "2.0.0",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
-    "mongodb": "3.6.2"
+    "mongodb": "3.6.3"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",

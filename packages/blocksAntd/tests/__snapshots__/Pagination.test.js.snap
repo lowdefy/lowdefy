@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <ul
   className="ant-pagination"
   style={Object {}}
@@ -200,7 +200,7 @@ exports[`Render default 1`] = `
 </ul>
 `;
 
-exports[`Render properties.total 1`] = `
+exports[`Render properties.total - value[0] 1`] = `
 <ul
   className="ant-pagination"
   style={Object {}}

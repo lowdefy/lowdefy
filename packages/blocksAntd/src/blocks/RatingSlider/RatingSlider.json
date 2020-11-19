@@ -2,6 +2,10 @@
   "valueType": "number",
   "category": "input",
   "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -25,6 +29,10 @@
           "type": "boolean",
           "description": "Hides minimum and maximum icons."
         },
+        "disableNotApplicable": {
+          "type": "boolean",
+          "description": "Disables the N/A option left of slider."
+        },
         "minIcon": {
           "type": ["string", "object"],
           "default": "FrownOutlined",
@@ -42,6 +50,7 @@
         "label": {
           "type": "object",
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -62,10 +71,23 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "defaultValue": true,
               "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
@@ -77,6 +99,7 @@
             }
           }
         },
+
         "min": {
           "type": "number",
           "default": 0,

@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="{} ant-breadcrumb"
   id="default"
 />
 `;
 
-exports[`Render properties.list 1`] = `
+exports[`Render properties.list - value[0] 1`] = `
 <div
   className="{} ant-breadcrumb"
   id="properties.list"

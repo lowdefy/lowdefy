@@ -20,12 +20,12 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 
-const NumberInput = ({ blockId, loading, properties, required, validate, value, methods }) => {
+const NumberInput = ({ blockId, loading, properties, required, validation, value, methods }) => {
   return (
     <Label
       blockId={blockId}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
-      validate={validate}
+      validation={validation}
       required={required}
       loading={loading}
       methods={methods}

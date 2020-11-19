@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <h1
   className="ant-typography {\\"style\\":[null,null]}"
   id="default"
@@ -14,7 +14,7 @@ exports[`Render default 1`] = `
 </h1>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <h1
   className="ant-typography {\\"style\\":[null,null]}"
   id="properties.content"

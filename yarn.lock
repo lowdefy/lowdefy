@@ -60,7 +60,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.5, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.2.6":
+  version: 3.2.6
+  resolution: "@apollo/client@npm:3.2.6"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.2.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.13.0
+    prop-types: ^15.7.2
+    symbol-observable: ^3.0.0
+    ts-invariant: ^0.5.0
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: d60d25b73aef0d0e0ecdec5c573dfdc09c84924497a2a196c801c98f24b27f0b3e13024dcccea778e5f47b2fb599c6fbf66eb026044b25fd25e4f065a62f50da
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.5
   resolution: "@apollo/client@npm:3.2.5"
   dependencies:
@@ -2735,6 +2765,7 @@ __metadata:
     process: 0.11.10
     react: 17.0.1
     react-dom: 17.0.1
+    react-router-dom: 5.2.0
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
@@ -2774,9 +2805,10 @@ __metadata:
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
+    jest-serializer-html: 7.0.0
     js-yaml: 3.14.0
     less: 3.12.2
-    less-loader: 7.0.2
+    less-loader: 7.1.0
     moment: 2.29.1
     rc-animate: 3.1.1
     react: 17.0.1
@@ -2877,6 +2909,7 @@ __metadata:
     css-loader: 5.0.1
     decompress: 4.2.1
     decompress-targz: 4.1.1
+    dotenv: 8.2.0
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
@@ -2908,7 +2941,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@0.0.0-alpha.3, @lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@0.0.0-alpha.4, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
@@ -2937,7 +2970,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/graphql@0.0.0-alpha.3, @lowdefy/graphql@workspace:packages/graphql":
+"@lowdefy/graphql@0.0.0-alpha.4, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/graphql@workspace:packages/graphql"
   dependencies:
@@ -2946,13 +2979,15 @@ __metadata:
     "@babel/preset-env": 7.12.1
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/nunjucks": 1.0.0
     "@lowdefy/operators": 1.0.1
-    "@sendgrid/mail": 7.3.0
+    "@sendgrid/mail": 7.4.0
     "@shelf/jest-mongodb": 1.2.3
     ajv: 6.12.6
+    ajv-errors: 1.0.1
     apollo-server: 2.19.0
     apollo-server-testing: 2.19.0
-    aws-sdk: 2.784.0
+    aws-sdk: 2.790.0
     axios: 0.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.1
@@ -2961,7 +2996,7 @@ __metadata:
     graphql: 15.4.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
-    mongodb: 3.6.2
+    mongodb: 3.6.3
     webpack: 5.4.0
     webpack-cli: 4.2.0
   languageName: unknown
@@ -3004,7 +3039,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 3.14.0
     less: 3.12.2
-    less-loader: 7.0.2
+    less-loader: 7.1.0
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -3089,14 +3124,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.5
+    "@apollo/client": 3.2.6
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
     "@babel/core": 7.12.3
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/engine": 0.0.0-alpha.3
+    "@lowdefy/engine": 0.0.0-alpha.4
     "@lowdefy/helpers": 1.1.0
     "@lowdefy/layout": 1.0.0
     babel-loader: 8.2.1
@@ -3122,18 +3157,21 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
+    "@babel/cli": 7.12.1
     "@babel/core": 7.12.3
+    "@babel/preset-env": 7.12.1
     "@babel/preset-react": 7.12.5
     "@lowdefy/block-tools": 1.0.2
-    "@lowdefy/graphql": 0.0.0-alpha.3
+    "@lowdefy/graphql": 0.0.0-alpha.4
     apollo-server-express: 2.19.0
+    babel-jest: 26.6.3
     babel-loader: 8.2.1
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.0
     css-loader: 5.0.1
     express: 4.17.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
+    jest: 26.6.3
     nodemon: 2.0.6
     react: 17.0.1
     react-dom: 17.0.1
@@ -3415,7 +3453,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/client@npm:^7.3.0":
+"@sendgrid/client@npm:^7.4.0":
   version: 7.4.0
   resolution: "@sendgrid/client@npm:7.4.0"
   dependencies:
@@ -3425,7 +3463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/helpers@npm:^7.3.0, @sendgrid/helpers@npm:^7.4.0":
+"@sendgrid/helpers@npm:^7.4.0":
   version: 7.4.0
   resolution: "@sendgrid/helpers@npm:7.4.0"
   dependencies:
@@ -3434,13 +3472,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/mail@npm:7.3.0":
-  version: 7.3.0
-  resolution: "@sendgrid/mail@npm:7.3.0"
+"@sendgrid/mail@npm:7.4.0":
+  version: 7.4.0
+  resolution: "@sendgrid/mail@npm:7.4.0"
   dependencies:
-    "@sendgrid/client": ^7.3.0
-    "@sendgrid/helpers": ^7.3.0
-  checksum: f5532694c6f83bae9e11571efc3455132ed5bf7184500ac2a4b1531f3601d8ed9b8071e83ac53f71709783a3df885c10d18e5770010bf30b925a49bcaa39bd72
+    "@sendgrid/client": ^7.4.0
+    "@sendgrid/helpers": ^7.4.0
+  checksum: 8412418efb19965d17282860b059147bb35325eb2ba81c8aeea8e8a2e5453ba39a7d441482a54b1cadd4423ffafdf9969d0061ea600b84b8565b816bc90fea76
   languageName: node
   linkType: hard
 
@@ -5506,9 +5544,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.784.0":
-  version: 2.784.0
-  resolution: "aws-sdk@npm:2.784.0"
+"aws-sdk@npm:2.790.0":
+  version: 2.790.0
+  resolution: "aws-sdk@npm:2.790.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -5519,7 +5557,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: a7f3a55ad00f9879ca1f8a59e8bf0b58ad8f498100397303a80d3e6fc69e660c56f90173fb0a8bb5f781f7db6d5df68a815de55e95a61e984ad960941350da7b
+  checksum: 043de331bc89661409316b41433dd943a4752930827a4f77c592f862b765866bdc6f84d9594b353507755c374cdfb6347ad21217b8001e85d655c1252e7e07a1
   languageName: node
   linkType: hard
 
@@ -7867,6 +7905,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diffable-html@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "diffable-html@npm:4.0.0"
+  dependencies:
+    htmlparser2: ^3.9.2
+  checksum: d37f5370a13f5a55a621b8b7ee1e77b59ecb1f0d03cad331aa390b33b56d3a816668c1096e31fda9759c2d9525cdea709a0f0f4e489340a969694227b5a91767
+  languageName: node
+  linkType: hard
+
 "dir-glob@npm:^2.2.2":
   version: 2.2.2
   resolution: "dir-glob@npm:2.2.2"
@@ -8080,6 +8127,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: 76e6693d8803eeff9cb920988446bf223cf1f6e5b1c0c2fe07a66906392134931a481b11e3c0bd852c5cfc97fad65258bcb4359169ad1d8d624cb3f56932be98
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:8.2.0":
+  version: 8.2.0
+  resolution: "dotenv@npm:8.2.0"
+  checksum: 16cb89cbd7b98b053899b8aba8c5044c8fb61a2db8a81fe70360b75035fce5fed53bd7a34d772be717d0880c0321122a4c09423f518025e1b52d96791521b1a7
   languageName: node
   linkType: hard
 
@@ -10383,7 +10437,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"htmlparser2@npm:^3.3.0, htmlparser2@npm:^3.9.1":
+"htmlparser2@npm:^3.3.0, htmlparser2@npm:^3.9.1, htmlparser2@npm:^3.9.2":
   version: 3.10.1
   resolution: "htmlparser2@npm:3.10.1"
   dependencies:
@@ -11878,6 +11932,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"jest-serializer-html@npm:7.0.0":
+  version: 7.0.0
+  resolution: "jest-serializer-html@npm:7.0.0"
+  dependencies:
+    diffable-html: ^4.0.0
+  checksum: 21808d681e5f4ab0246e1eaeaba837637411ddc91823c3a3803da7ce80dc223a192b6091903eedd365224be34acac9fe935353c47711f343044307139efdf437
+  languageName: node
+  linkType: hard
+
 "jest-serializer@npm:^26.6.2":
   version: 26.6.2
   resolution: "jest-serializer@npm:26.6.2"
@@ -12341,9 +12404,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"less-loader@npm:7.0.2":
-  version: 7.0.2
-  resolution: "less-loader@npm:7.0.2"
+"less-loader@npm:7.1.0":
+  version: 7.1.0
+  resolution: "less-loader@npm:7.1.0"
   dependencies:
     klona: ^2.0.4
     loader-utils: ^2.0.0
@@ -12351,7 +12414,7 @@ fsevents@^1.2.7:
   peerDependencies:
     less: ^3.5.0
     webpack: ^4.0.0 || ^5.0.0
-  checksum: e9e294a02ed7c317349a4c10db45b63550ce15a844b690206c1002caf93c735f3719e00588340be6e2689941f895077ecf5d8609196d6d4110490200976358c0
+  checksum: 8b6545b280eca5b92dc5549e7644c213d09c245d0c06f24f35322cc96399e9e33cbadee31fba95afd93d34ebb3f785c3e80545c06d068fca52cb9661102012b9
   languageName: node
   linkType: hard
 
@@ -13418,7 +13481,37 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.6.2, mongodb@npm:^3.5.9":
+"mongodb@npm:3.6.3":
+  version: 3.6.3
+  resolution: "mongodb@npm:3.6.3"
+  dependencies:
+    bl: ^2.2.1
+    bson: ^1.1.4
+    denque: ^1.4.1
+    require_optional: ^1.0.1
+    safe-buffer: ^5.1.2
+    saslprep: ^1.0.0
+  dependenciesMeta:
+    saslprep:
+      optional: true
+  peerDependenciesMeta:
+    aws4:
+      optional: true
+    bson-ext:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    mongodb-extjson:
+      optional: true
+    snappy:
+      optional: true
+  checksum: 85a80641803e75b93e76bb9e84c26429ec2c374e7138114562a25a6272880d1c18cf5dda21b8bd75c7dd110dac997d11572bb2da506c12c99c9faa4c668364c7
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^3.5.9":
   version: 3.6.2
   resolution: "mongodb@npm:3.6.2"
   dependencies:
@@ -18115,6 +18208,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"symbol-observable@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "symbol-observable@npm:3.0.0"
+  checksum: 516cb0a6555624ece67b91be14b15f72a7562a18f15d5058938ee9ced1ef672a87c5fe5d3be72e79df3bb2f7eadba6dd9aae81cd31b6d6e797bdb6075ab9c596
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -18635,6 +18735,15 @@ fsevents@^1.2.7:
   dependencies:
     tslib: ^1.9.3
   checksum: 0280fb0e853db923605d84d83a7587342b2fcf718af5eac858cc461fcaa95837543de5f6d0a9afd8caf84faa01ffcc2a21cf71f5f51894d3e854b8a9504786bc
+  languageName: node
+  linkType: hard
+
+"ts-invariant@npm:^0.5.0":
+  version: 0.5.1
+  resolution: "ts-invariant@npm:0.5.1"
+  dependencies:
+    tslib: ^1.9.3
+  checksum: efa4a387f7b54eeea7dd0b29730cf353f90cc7087bf49dc8e3a0c78c970a348a7a001bea63777f1a8a2422d6910894be2c0cfdd956514ebf16ef963c0a5155d2
   languageName: node
   linkType: hard
 

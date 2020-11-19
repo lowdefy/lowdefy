@@ -15,10 +15,23 @@
 */
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
+Enzyme.configure({ adapter: new Adapter() });
 import Message from '../src/blocks/Message/Message';
 import examples from '../demo/examples/Message.yaml';
 import meta from '../src/blocks/Message/Message.json';
 
-runRenderTests({ examples, Block: Message, meta });
+const reset = () => {
+  document.body.childNodes.forEach((node) => {
+    node.childNodes.forEach((childNode) => {
+      childNode.childNodes.forEach((childChildNode) => {
+        childChildNode.innerHTML = '';
+      });
+    });
+  });
+};
+
+runRenderTests({ examples, Block: Message, meta, reset, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });

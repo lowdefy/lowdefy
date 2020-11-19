@@ -14,20 +14,10 @@
   limitations under the License.
 */
 
-import Ajv from 'ajv';
-import AjvErrors from 'ajv-errors';
-import blockSchema from './blockSchema.json';
+import schemaTest from './schemaTest';
 
-const initAjv = (options) => {
-  const ajv = new Ajv({ allErrors: true, jsonPointers: true, ...options });
-  AjvErrors(ajv, options);
-  return ajv;
-};
-
-const ajvInstance = initAjv();
 const runBlockSchemaTests = ({ examples, meta }) => {
-  blockSchema.properties = { ...blockSchema.properties, ...meta.schema };
-  const validate = ajvInstance.compile(blockSchema);
+  const validate = schemaTest(meta.schema);
   examples.forEach((block) => {
     test(`Test Schema ${block.id}`, () => {
       const valid = validate(block);

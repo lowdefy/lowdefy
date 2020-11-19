@@ -186,7 +186,6 @@ test('two blocks with same field visibility and state', () => {
           {
             type: 'Switch',
             blockId: 'swtch1',
-            defaultValue: true,
             meta: {
               category: 'input',
               valueType: 'boolean',
@@ -195,7 +194,6 @@ test('two blocks with same field visibility and state', () => {
           {
             type: 'Switch',
             blockId: 'swtch2',
-            defaultValue: true,
             meta: {
               category: 'input',
               valueType: 'boolean',
@@ -209,7 +207,7 @@ test('two blocks with same field visibility and state', () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { field: 'field' },
+    initState: { field: 'field', swtch2: true, swtch1: true },
   });
   const { swtch1, swtch2, text1, text2 } = context.RootBlocks.map;
 

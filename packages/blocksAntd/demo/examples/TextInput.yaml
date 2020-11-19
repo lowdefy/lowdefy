@@ -38,6 +38,10 @@
   type: TextInput
   properties:
     size: large
+- id: 'properties.size: small'
+  type: TextInput
+  properties:
+    size: small
 - id: 'properties.suffix: Suffix to the text'
   type: TextInput
   properties:

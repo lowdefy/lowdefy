@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <aside
   className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
   id="default"
@@ -30,7 +30,7 @@ exports[`Render default 1`] = `
 </aside>
 `;
 
-exports[`Render properties.theme 1`] = `
+exports[`Render properties.theme - value[0] 1`] = `
 <aside
   className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
   id="properties.theme"
