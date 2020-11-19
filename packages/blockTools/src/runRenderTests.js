@@ -23,7 +23,6 @@ import mockBlock from './mockBlock';
 
 const runRenderTests = ({
   Block,
-  enzyme,
   examples,
   logger,
   meta,
@@ -32,7 +31,6 @@ const runRenderTests = ({
 }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
-  beforeEach(before);
   beforeEach(() => {
     reset();
     before();
@@ -87,32 +85,6 @@ const runRenderTests = ({
           const tree = comp.toJSON();
           expect(tree).toMatchSnapshot();
           comp.unmount();
-        });
-      }
-
-      if (meta.test && meta.test.methods) {
-        meta.test.methods.forEach((method) => {
-          test(`Render for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}]`, () => {
-            const Shell = () => {
-              const props = getProps(ex);
-              props.methods = { ...methods, registerMethod: props.methods.registerMethod };
-              return (
-                <>
-                  <Block {...props} value={value} />
-                  <button
-                    id={`${ex.id}_button`}
-                    onClick={() => {
-                      props.registeredMethods[method.name](method.args);
-                    }}
-                    data-testid="btn_method"
-                  />
-                </>
-              );
-            };
-            const wrapper = enzyme.mount(<Shell />);
-            wrapper.find('[data-testid="btn_method"]').simulate('click');
-            expect(document.body.innerHTML).toMatchSnapshot();
-          });
         });
       }
     });
