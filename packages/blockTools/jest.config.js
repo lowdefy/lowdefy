@@ -7,6 +7,7 @@ module.exports = {
     '<rootDir>/dist/',
     '<rootDir>/tests/',
     'runRenderTests.js',
+    'runMethodTests.js',
     'runBlockSchemaTests.js',
     'mockBlock.js',
   ],
