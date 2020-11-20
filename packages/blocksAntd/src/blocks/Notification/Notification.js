@@ -25,22 +25,19 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
-        id: blockId,
+        id: `${blockId}_notification`,
         bottom: properties.bottom,
-        btn:
-          properties.button &&
-          (() => (
-            <Button
-              blockId={`${blockId}_button`}
-              properties={properties.button}
-              methods={methods}
-              onClick={properties.button.onClick}
-            />
-          )),
+        btn: properties.button && (
+          <Button
+            blockId={`${blockId}_button`}
+            properties={properties.button}
+            methods={methods}
+            onClick={() => methods.callAction({ action: 'onClose' })}
+          />
+        ),
         className: methods.makeCssClass(properties.notificationStyle),
-        description: args.description || properties.description || blockId,
+        description: args.description || properties.description,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        getContainer: () => document.getElementById(`${blockId}_notification`),
         icon: properties.icon && <Icon properties={properties.icon} methods={methods} />,
         closeIcon: properties.closeIcon && (
           <Icon
@@ -49,7 +46,6 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
             methods={methods}
           />
         ),
-        key: blockId,
         message: args.message || properties.message || blockId,
         onClose: onClose || (() => methods.callAction({ action: 'onClose' })),
         onClick: onClick || (() => methods.callAction({ action: 'onClick' })),
@@ -58,7 +54,7 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
       });
     });
   }, [methods.registerMethod]);
-  return <div id={`${blockId}_notification`} />;
+  return <div id={blockId} />;
 };
 
 NotificationBlock.defaultProps = blockDefaultProps;

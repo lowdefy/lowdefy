@@ -14,11 +14,43 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runMethodTests } from '@lowdefy/block-tools';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { notification } from 'antd';
 
+Enzyme.configure({ adapter: new Adapter() });
 import Notification from '../src/blocks/Notification/Notification';
 import examples from '../demo/examples/Notification.yaml';
 import meta from '../src/blocks/Notification/Notification.json';
 
-runRenderTests({ examples, Block: Notification, meta });
+jest.mock('antd/lib/notification', () => {
+  return {
+    error: jest.fn(),
+    info: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+  };
+});
+
+const mocks = [
+  {
+    name: 'error',
+    fn: notification.error,
+  },
+  {
+    name: 'info',
+    fn: notification.info,
+  },
+  {
+    name: 'success',
+    fn: notification.success,
+  },
+  {
+    name: 'warning',
+    fn: notification.warning,
+  },
+];
+
+runMethodTests({ examples, Block: Notification, meta, mocks, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });
