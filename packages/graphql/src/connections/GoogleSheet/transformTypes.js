@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import moment from 'moment';
 
 const readTransformers = {
   string: (value) => value,
@@ -25,9 +26,9 @@ const readTransformers = {
   },
   boolean: (value) => value === 'TRUE',
   date: (value) => {
-    const date = new Date(value);
-    if (isNaN(date.getTime())) return null;
-    return date;
+    const date = moment.utc(value);
+    if (!date.isValid()) return null;
+    return date.toDate();
   },
   json: (value) => {
     try {

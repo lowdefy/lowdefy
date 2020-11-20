@@ -266,7 +266,7 @@ test('googleSheetGetMany, columnTypes', async () => {
       id: '1',
       name: 'John',
       age: 34,
-      birth_date: new Date('2020/04/26'),
+      birth_date: new Date('2020-04-26T00:00:00.000Z'),
       married: true,
     },
     {
@@ -275,7 +275,7 @@ test('googleSheetGetMany, columnTypes', async () => {
       id: '2',
       name: 'Steve',
       age: 43,
-      birth_date: new Date('2020/04/27'),
+      birth_date: new Date('2020-04-27T00:00:00.000Z'),
       married: false,
     },
     {
@@ -284,7 +284,7 @@ test('googleSheetGetMany, columnTypes', async () => {
       id: '3',
       name: 'Tim',
       age: 34,
-      birth_date: new Date('2020/04/28'),
+      birth_date: new Date('2020-04-28T00:00:00.000Z'),
       married: false,
     },
     {

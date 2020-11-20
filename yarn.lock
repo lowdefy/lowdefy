@@ -2998,6 +2998,7 @@ __metadata:
     graphql-type-json: 0.3.2
     jest: 26.6.3
     mingo: 3.1.0
+    moment: 2.29.1
     mongodb: 3.6.3
     webpack: 5.4.0
     webpack-cli: 4.2.0

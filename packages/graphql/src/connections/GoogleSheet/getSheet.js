@@ -27,13 +27,7 @@ async function authenticate({ doc, apiKey, client_email, private_key }) {
   }
 }
 
-async function getSheet({ connection }) {
-  const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
-  const doc = new GoogleSpreadsheet(spreadsheetId);
-
-  await authenticate({ doc, apiKey, client_email, private_key });
-
-  await doc.loadInfo();
+function getSheetFromDoc({ doc, sheetId, sheetIndex }) {
   let sheet;
   if (sheetId) {
     sheet = doc.sheetsById[sheetId];
@@ -47,6 +41,17 @@ async function getSheet({ connection }) {
     }
   }
   return sheet;
+}
+
+async function getSheet({ connection }) {
+  const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
+  const doc = new GoogleSpreadsheet(spreadsheetId);
+
+  await authenticate({ doc, apiKey, client_email, private_key });
+
+  await doc.loadInfo();
+
+  return getSheetFromDoc({ doc, sheetId, sheetIndex });
 }
 
 export default getSheet;

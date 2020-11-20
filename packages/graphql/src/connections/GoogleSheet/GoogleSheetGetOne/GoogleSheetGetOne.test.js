@@ -211,7 +211,7 @@ test('googleSheetGetOne, columnTypes', async () => {
     id: '1',
     name: 'John',
     age: 34,
-    birth_date: new Date('2020/04/26'),
+    birth_date: new Date('2020-04-26T00:00:00.000Z'),
     married: true,
   });
 });
