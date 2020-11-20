@@ -17,17 +17,7 @@
   properties:
     value: 3.45
     decimalSeparator: ","
-- id: "properties.type: intlNumberFormat"
-  type: Statistic
-  properties:
-    value: 3.45
-    formatter:
-      type: "intlNumberFormat"
-      properties:
-        locale: en-ZA
-        options:
-          style: currency
-          currency: ZAR
+
 - id: "properties.groupSeparator: ','"
   type: Statistic
   properties:
@@ -59,7 +49,19 @@
   properties:
     value: 3.45
     suffixIcon: AccountBookFilled
-
+    
+# Fix: Cannot test intlNumberFormat on server
+- id: "properties.type: intlNumberFormat"
+  type: Statistic
+  properties:
+    value: 3.45
+    formatter:
+      type: "intlNumberFormat"
+      properties:
+        locale: en
+        options:
+          style: currency
+          currency: ZAR
 - id: "properties.type: intlListFormat"
   type: Statistic
   properties:
@@ -70,6 +72,7 @@
     formatter:
       type: intlListFormat
       properties:
+        locale: en
         style: long
         type: conjunction
 - id: "properties.type: intlRelativeTimeFormat"
@@ -79,6 +82,7 @@
     formatter:
       type: intlRelativeTimeFormat
       properties:
+        locale: en
         unit: days
 - id: "properties.type: momentFormat"
   type: Statistic

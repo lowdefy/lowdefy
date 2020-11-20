@@ -336,7 +336,7 @@ exports[`Render properties.type: intlNumberFormat - value[0] 1`] = `
     <span
       className="ant-statistic-content-value"
     >
-      R 3,45
+      ZAR 3.45
     </span>
     
   </div>
