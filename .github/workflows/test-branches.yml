@@ -1,7 +1,6 @@
-name: Test
+name: Test Branches
 
 on:
-  pull_request:
   push:
     branches:
       - main
@@ -23,7 +22,7 @@ jobs:
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Build packages
         run: yarn build
-      # format tests don't pass on node 12 since icu is missing and tests don't work with locals
+      # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
         run: yarn test --ignore='@lowdefy/format'
       - name: Upload coverage to codecov
