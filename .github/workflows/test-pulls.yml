@@ -22,7 +22,7 @@ jobs:
 
       # Make tests fail faster
       - name: Test changes since develop
-        run: yarn test --ignore='@lowdefy/format' --changedSince=develop
+        run: yarn test:since-develop
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
         run: yarn test --ignore='@lowdefy/format'

@@ -31,6 +31,7 @@
     "prepare": "lerna run prepare",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "lerna run test",
+    "test:since-develop": "lerna run test --ignore='@lowdefy/format' -- --changedSince=develop",
     "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"
   },
   "devDependencies": {
