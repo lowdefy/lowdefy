@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -26,13 +26,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -54,13 +54,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -130,13 +130,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -200,13 +200,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -228,13 +228,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.description: - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -256,13 +256,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -326,13 +326,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -354,13 +354,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.message - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -382,13 +382,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -410,13 +410,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -438,9 +438,9 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -462,15 +462,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -492,17 +492,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -524,11 +524,11 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -550,13 +550,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -578,13 +578,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -606,13 +606,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -682,13 +682,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -752,13 +752,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -780,13 +780,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.description: - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -808,13 +808,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -878,13 +878,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -906,13 +906,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.message - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -934,13 +934,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -962,13 +962,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -990,9 +990,9 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -1014,15 +1014,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -1044,17 +1044,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -1076,11 +1076,11 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1102,13 +1102,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1130,13 +1130,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1158,13 +1158,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1234,13 +1234,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1304,13 +1304,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1332,13 +1332,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.description: - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1360,13 +1360,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1430,13 +1430,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1458,13 +1458,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.message - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1486,13 +1486,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1514,13 +1514,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1542,9 +1542,9 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -1566,15 +1566,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -1596,17 +1596,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -1628,11 +1628,11 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1654,565 +1654,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "default_notification",
-      "message": "default",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": 250,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.bottom: 250 placement: bottomLeft_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": "bottomLeft",
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": <ButtonBlock
-        actions={Object {}}
-        blockId="properties.button: icon_button"
-        content={Object {}}
-        list={Array []}
-        menus={Array []}
-        methods={
-          Object {
-            "callAction": [MockFunction],
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "unshiftItem": [MockFunction],
-          }
-        }
-        onClick={[Function]}
-        properties={
-          Object {
-            "icon": "SaveOutlined",
-            "title": "Close",
-          }
-        }
-        required={false}
-        user={Object {}}
-        validation={
-          Object {
-            "errors": Array [],
-            "status": null,
-            "warnings": Array [],
-          }
-        }
-      />,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.button: icon_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": <IconBlock
-        actions={Object {}}
-        blockId="properties.closeIcon: AlertOutlined_closeIcon"
-        content={Object {}}
-        list={Array []}
-        menus={Array []}
-        methods={
-          Object {
-            "callAction": [MockFunction],
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "unshiftItem": [MockFunction],
-          }
-        }
-        properties="AlertOutlined"
-        required={false}
-        user={Object {}}
-        validation={
-          Object {
-            "errors": Array [],
-            "status": null,
-            "warnings": Array [],
-          }
-        }
-      />,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.closeIcon: AlertOutlined_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": "Notification status type.",
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.description:_notification",
-      "message": "properties.description:",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": 6,
-      "icon": undefined,
-      "id": "properties.duration: 6_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": <IconBlock
-        actions={Object {}}
-        blockId="undefined_id"
-        content={Object {}}
-        list={Array []}
-        menus={Array []}
-        methods={
-          Object {
-            "callAction": [MockFunction],
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
-            "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "unshiftItem": [MockFunction],
-          }
-        }
-        properties="AccountBookFilled"
-        required={false}
-        user={Object {}}
-        validation={
-          Object {
-            "errors": Array [],
-            "status": null,
-            "warnings": Array [],
-          }
-        }
-      />,
-      "id": "properties.icon_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.message_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.placement: bottomLeft_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": "bottomLeft",
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.placement: bottomRight_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": "bottomRight",
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.placement: topLeft_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": "topLeft",
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.status: error_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.status: info_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": "Notification status type.",
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.status: warning_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": undefined,
-      "top": undefined,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `
-Array [
-  Array [
-    Object {
-      "bottom": undefined,
-      "btn": undefined,
-      "className": "{}",
-      "closeIcon": undefined,
-      "description": undefined,
-      "duration": undefined,
-      "icon": undefined,
-      "id": "properties.top: 250 placement: topLeft_notification",
-      "message": "Notification message",
-      "onClick": [Function],
-      "onClose": [Function],
-      "placement": "topLeft",
-      "top": 250,
-    },
-  ],
-]
-`;
-
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2234,13 +1684,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2262,13 +1712,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.button: icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.button: icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.button: icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.button: icon - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2338,13 +1788,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2408,13 +1858,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.description: - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.description: - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.description: - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.description: - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2436,13 +1886,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.description: - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.duration: 6 - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2464,13 +1914,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2534,13 +1984,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.message - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.message - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.message - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.message - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2562,13 +2012,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.message - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomLeft - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2590,13 +2040,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: bottomRight - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2618,13 +2068,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.placement: topLeft - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2646,9 +2096,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2670,15 +2124,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2700,17 +2152,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `Array []`;
-
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2732,11 +2180,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2758,7 +2208,557 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "default_notification",
+      "message": "default",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": 250,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.bottom: 250 placement: bottomLeft_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": "bottomLeft",
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.bottom: 250 placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.button: icon - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.button: icon - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.button: icon - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": <ButtonBlock
+        actions={Object {}}
+        blockId="properties.button: icon_button"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [MockFunction],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerAction": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+        onClick={[Function]}
+        properties={
+          Object {
+            "icon": "SaveOutlined",
+            "title": "Close",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.button: icon_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.button: icon - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": <IconBlock
+        actions={Object {}}
+        blockId="properties.closeIcon: AlertOutlined_closeIcon"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [MockFunction],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerAction": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+        properties="AlertOutlined"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.closeIcon: AlertOutlined_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.closeIcon: AlertOutlined - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.description: - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.description: - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.description: - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": "Notification status type.",
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.description:_notification",
+      "message": "properties.description:",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.description: - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": 6,
+      "icon": undefined,
+      "id": "properties.duration: 6_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.duration: 6 - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": <IconBlock
+        actions={Object {}}
+        blockId="undefined_id"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [MockFunction],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
+            "moveItemDown": [MockFunction],
+            "moveItemUp": [MockFunction],
+            "pushItem": [MockFunction],
+            "registerAction": [MockFunction],
+            "registerMethod": [Function],
+            "removeItem": [MockFunction],
+            "setValue": [MockFunction],
+            "unshiftItem": [MockFunction],
+          }
+        }
+        properties="AccountBookFilled"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "id": "properties.icon_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.message - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.message - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.message - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.message_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.message - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.placement: bottomLeft_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": "bottomLeft",
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.placement: bottomRight_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": "bottomRight",
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: bottomRight - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.placement: topLeft_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": "topLeft",
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.placement: topLeft - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.status: error_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.status: info_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": "Notification status type.",
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.status: warning_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": undefined,
+      "top": undefined,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - error 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - info 1`] = `Array []`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - success 1`] = `
+Array [
+  Array [
+    Object {
+      "bottom": undefined,
+      "btn": undefined,
+      "className": "{}",
+      "closeIcon": undefined,
+      "description": undefined,
+      "duration": undefined,
+      "icon": undefined,
+      "id": "properties.top: 250 placement: topLeft_notification",
+      "message": "Notification message",
+      "onClick": [Function],
+      "onClose": [Function],
+      "placement": "topLeft",
+      "top": 250,
+    },
+  ],
+]
+`;
+
+exports[`Mock for method: {"name":"open","args":{}} - properties.top: 250 placement: topLeft - value[0] - warning 1`] = `Array []`;
 
 exports[`Test Schema default 1`] = `true`;
 

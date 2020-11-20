@@ -34,7 +34,7 @@ const runMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
       if (meta.test && meta.test.methods) {
         meta.test.methods.forEach((method) => {
           mocks.forEach((mock) => {
-            test(`Render for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}] - ${
+            test(`Mock for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}] - ${
               mock.name
             }`, () => {
               const Shell = () => {

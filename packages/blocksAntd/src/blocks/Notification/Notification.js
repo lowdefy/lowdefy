@@ -38,10 +38,6 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
         className: methods.makeCssClass(properties.notificationStyle),
         description: args.description || properties.description,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        // getContainer: () => {
-        //   console.log(document.getElementById(blockId));
-        //   return document.getElementById(blockId);
-        // },
         icon: properties.icon && <Icon properties={properties.icon} methods={methods} />,
         closeIcon: properties.closeIcon && (
           <Icon
