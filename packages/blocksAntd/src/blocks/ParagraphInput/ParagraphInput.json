@@ -173,15 +173,15 @@
       "properties": {
         "onExpand": {
           "type": "array",
-          "description": "Fire action when ellipse expand is clicked."
+          "description": "Trigger action when ellipse expand is clicked."
         },
         "onCopy": {
           "type": "array",
-          "description": "Fire action when copy text is clicked."
+          "description": "Trigger action when copy text is clicked."
         },
         "onChange": {
           "type": "array",
-          "description": "Fire action when paragraph is changed."
+          "description": "Trigger action when paragraph is changed."
         }
       }
     }
