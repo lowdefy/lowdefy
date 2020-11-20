@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -33,15 +33,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -74,15 +74,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -115,15 +115,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -156,15 +156,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.content - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -240,15 +240,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -281,15 +281,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -322,15 +322,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -363,15 +363,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -404,17 +404,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -447,17 +447,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -490,17 +490,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -533,17 +533,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: success - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -576,7 +576,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -609,15 +609,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.title - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -650,15 +650,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -691,15 +691,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"description":"Args description"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -732,15 +732,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -773,15 +773,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -814,15 +814,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -855,15 +855,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.content - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -939,15 +939,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -980,15 +980,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1021,15 +1021,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1062,15 +1062,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1103,17 +1103,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -1146,17 +1146,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -1189,17 +1189,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1232,17 +1232,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: success - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -1275,7 +1275,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1308,15 +1308,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.title - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1349,15 +1349,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1390,15 +1390,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"duration":1}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1431,15 +1431,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1472,15 +1472,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1513,15 +1513,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1554,15 +1554,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.content - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1638,15 +1638,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1679,15 +1679,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1720,15 +1720,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1761,15 +1761,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -1802,17 +1802,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -1845,17 +1845,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -1888,17 +1888,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -1931,17 +1931,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: success - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -1974,7 +1974,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2007,15 +2007,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.title - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2048,15 +2048,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2089,23 +2089,23 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"message":"Args message"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - default - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2138,15 +2138,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2179,15 +2179,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.centered: true - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2220,15 +2220,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.content - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2261,15 +2261,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2345,15 +2345,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.mask: false - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2386,15 +2386,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.maskClosable: true - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2427,15 +2427,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.okText: Ok text - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2468,15 +2468,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: confirm - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2509,15 +2509,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: error - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2550,15 +2550,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: info - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2591,15 +2591,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: success - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2632,15 +2632,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2673,15 +2673,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.title - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2714,15 +2714,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.width: 550px - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2755,15 +2755,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{"status":"warning"}} - properties.zIndex: 1100 - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -2796,7 +2796,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2829,15 +2829,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - default - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2870,15 +2870,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.cancelText: Cancel text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.centered: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2911,15 +2911,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.centered: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.centered: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.centered: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.centered: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -2952,15 +2952,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.content - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.content - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3036,15 +3036,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.icon: AndroidFilled - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.mask: false - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3077,15 +3077,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.mask: false - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.mask: false - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.mask: false - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.mask: false - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3118,15 +3118,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.maskClosable: true - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3159,15 +3159,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.okText: Ok text - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3200,17 +3200,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: confirm - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - error 1`] = `
 Array [
   Array [
     Object {
@@ -3243,17 +3243,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: error - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - info 1`] = `
 Array [
   Array [
     Object {
@@ -3286,17 +3286,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: info - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: success - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: success - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: success - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: success - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: success - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: success - value[0] - success 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: success - value[0] - success 1`] = `
 Array [
   Array [
     Object {
@@ -3329,17 +3329,17 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: success - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: success - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - confirm 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.status: warning - value[0] - warning 1`] = `
 Array [
   Array [
     Object {
@@ -3372,7 +3372,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.title - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3405,15 +3405,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.title - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.title - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.title - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.title - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.title - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3446,15 +3446,15 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.width: 550px - value[0] - warning 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
+exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - confirm 1`] = `
 Array [
   Array [
     Object {
@@ -3487,13 +3487,13 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - error 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - info 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - success 1`] = `Array []`;
 
-exports[`Render for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
+exports[`Mock for method: {"name":"open","args":{}} - properties.zIndex: 1100 - value[0] - warning 1`] = `Array []`;
 
 exports[`Test Schema default 1`] = `true`;
 
