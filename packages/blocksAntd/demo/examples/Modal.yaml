@@ -4,10 +4,54 @@
   type: Modal
   properties:
     title: Modal title
-- id: areas.content
+- id: "properties: centered: true"
   type: Modal
-  areas:
-    content:
-      blocks:
-        - id: testArea
-          type: Test
+  properties:
+    centered: true
+- id: "properties: closable: false"
+  type: Modal
+  properties:
+    closable: false
+- id: "properties: footer: false"
+  type: Modal
+  properties:
+    footer: false
+- id: "properties: mask: false"
+  type: Modal
+  properties:
+    mask: false
+- id: "properties: maskClosable: false"
+  type: Modal
+  properties:
+    maskClosable: false
+- id: "properties: okText: Text of the OK button"
+  type: Modal
+  properties:
+    okText: Text of the OK button
+- id: "properties: cancelText: Text of the Cancel button"
+  type: Modal
+  properties:
+    cancelText: Text of the Cancel button
+- id: "properties: width: 350px - 520px is default"
+  type: Modal
+  properties:
+    width: 350
+- id: "properties: zIndex: 1200 - 1000 is the default"
+  type: Modal
+  properties:
+    zIndex: 1200
+- id: "properties: bodyStyle: border: 10px solid blue"
+  type: Modal
+  properties:
+    bodyStyle:
+      border: 10px solid blue
+- id: "properties: maskStyle: border: 10px solid blue"
+  type: Modal
+  properties:
+    maskStyle:
+      border: 10px solid blue
+- id: "properties: wrapperStyle: border: 10px solid blue"
+  type: Modal
+  properties:
+    wrapperStyle:
+      border: 10px solid blue
