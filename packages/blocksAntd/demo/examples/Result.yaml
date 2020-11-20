@@ -4,6 +4,21 @@
   type: Result
   properties:
     title: Result title
+- id: "properties.subTitle: subTitle text"
+  type: Result
+  properties:
+    subTitle: subTitle text
+- id: "areas.extra"
+  type: Result
+  areas:
+    content:
+      blocks:
+        - id: test
+          type: Test
+    extra:
+      blocks:
+        - id: test
+          type: Test
 - id: "properties. icon: ApiFilled"
   type: Result
   properties:
@@ -36,11 +51,5 @@
   type: Result
   properties:
     status: "500"
-- id: "properties. subTitle: subTitle text"
-  type: Result
-  properties:
-    subTitle: subTitle text
-- id: "properties. title: Title text"
-  type: Result
-  properties:
-    title: Title text
+
+
