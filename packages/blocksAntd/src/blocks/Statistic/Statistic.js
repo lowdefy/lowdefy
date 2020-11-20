@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import getFormatter from '@lowdefy/format';
-import { get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
@@ -55,9 +55,8 @@ const StatisticBlock = ({ blockId, properties, methods }) => (
       )
     }
     formatter={
-      get(properties, 'formatter.type')
-        ? getFormatter(get(properties, 'formatter.type'), get(properties, 'formatter.properties'))
-        : undefined
+      properties.formatter &&
+      getFormatter(properties.formatter.type, properties.formatter.properties)
     }
   />
 );

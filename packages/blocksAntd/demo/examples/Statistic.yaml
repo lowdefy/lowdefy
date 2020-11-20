@@ -28,7 +28,6 @@
         options:
           style: currency
           currency: ZAR
-# I dont have access to new Lowdefy formatter options
 - id: "properties.groupSeparator: ','"
   type: Statistic
   properties:
@@ -60,3 +59,57 @@
   properties:
     value: 3.45
     suffixIcon: AccountBookFilled
+
+- id: "properties.type: intlListFormat"
+  type: Statistic
+  properties:
+    value: 
+      - 'Motorcycle'
+      - 'Bus'
+      - 'Car'
+    formatter:
+      type: intlListFormat
+      properties:
+        style: long
+        type: conjunction
+- id: "properties.type: intlRelativeTimeFormat"
+  type: Statistic
+  properties:
+    value: -3
+    formatter:
+      type: intlRelativeTimeFormat
+      properties:
+        unit: days
+- id: "properties.type: momentFormat"
+  type: Statistic
+  properties:
+    value: 2019-06-13T10:20:23+02:00
+    formatter:
+      type: momentFormat
+      properties:
+        format: 'd MMM YYYY'
+- id: "properties.type: momentHumanizeDuration"
+  type: Statistic
+  properties:
+    value: -245923000
+    formatter:
+      type: momentHumanizeDuration
+      properties:
+        withSuffix: true
+# FIX: cannot test intlDateTimeFormat because dates cannot be parsed
+# Uncaught RangeError: Invalid time value
+# - id: "properties.type: intlDateTimeFormat"
+#   type: Statistic
+#   properties:
+#     value: 2019-06-13T10:20:00.000Z
+#     formatter:
+#       type: intlDateTimeFormat
+#       properties:
+#         locale: 'en'
+#         options: 
+#           hour: 'numeric'
+#           minute: 'numeric'
+#           second: 'numeric'
+#           timeZone: 'Australia/Sydney'
+#           timeZoneName: 'short'
+        
