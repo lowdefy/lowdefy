@@ -54,7 +54,7 @@ test('transformRead works on an object', () => {
     stringTransform: 'string',
     numberTransform: 1,
     booleanTransform: true,
-    dateTransform: new Date('2020/01/26'),
+    dateTransform: new Date('2020-01-26T00:00:00.000Z'),
     jsonTransform: { key: 'value' },
   });
 });
@@ -126,7 +126,7 @@ test('transformRead works on an array', () => {
       stringTransform: 'string',
       numberTransform: 1,
       booleanTransform: true,
-      dateTransform: new Date('2020/01/26'),
+      dateTransform: new Date('2020-01-26T00:00:00.000Z'),
       jsonTransform: { key: 'value' },
     },
     {
@@ -138,7 +138,7 @@ test('transformRead works on an array', () => {
       stringTransform: 'string2',
       numberTransform: 2,
       booleanTransform: false,
-      dateTransform: new Date('2020/01/27'),
+      dateTransform: new Date('2020-01-27T00:00:00.000Z'),
       jsonTransform: { key: 'value2' },
     },
   ]);
@@ -440,14 +440,6 @@ test('transformRead dates', () => {
           dateTransform: 'Hello',
           original: 'Hello',
         },
-        {
-          dateTransform: {},
-          original: {},
-        },
-        {
-          dateTransform: [],
-          original: [],
-        },
       ],
       types: {
         dateTransform: 'date',
@@ -455,7 +447,7 @@ test('transformRead dates', () => {
     })
   ).toEqual([
     {
-      dateTransform: new Date('2020-01-26T22:00:00.000Z'),
+      dateTransform: new Date('2020-01-27T00:00:00.000Z'),
       original: '2020/01/27',
     },
     {
@@ -467,7 +459,7 @@ test('transformRead dates', () => {
       original: 1,
     },
     {
-      dateTransform: new Date('2000-12-31T22:00:00.000Z'), // This is weird
+      dateTransform: new Date('2001-01-01T00:00:00.000Z'), // This is weird
       original: '1',
     },
     {
@@ -483,20 +475,12 @@ test('transformRead dates', () => {
       original: NaN,
     },
     {
-      dateTransform: new Date('1970-01-01T00:00:00.000Z'),
+      dateTransform: null,
       original: null,
     },
     {
       dateTransform: null,
       original: 'Hello',
-    },
-    {
-      dateTransform: null,
-      original: {},
-    },
-    {
-      dateTransform: null,
-      original: [],
     },
   ]);
 });
@@ -544,6 +528,14 @@ test('transformRead json', () => {
         {
           jsonTransform: '[1,2,3]',
           original: '[1,2,3]',
+        },
+        {
+          jsonTransform: '{}',
+          original: '{}',
+        },
+        {
+          jsonTransform: '[]',
+          original: '[]',
         },
         {
           jsonTransform: '[1,2,3',
@@ -632,6 +624,14 @@ test('transformRead json', () => {
     {
       jsonTransform: [1, 2, 3],
       original: '[1,2,3]',
+    },
+    {
+      jsonTransform: {},
+      original: '{}',
+    },
+    {
+      jsonTransform: [],
+      original: '[]',
     },
     {
       jsonTransform: null,
