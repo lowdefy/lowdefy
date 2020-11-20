@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -77,7 +77,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -154,7 +154,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -231,7 +231,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -308,7 +308,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: centered: true - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: centered: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -385,7 +385,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: closable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: closable: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -462,7 +462,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: footer: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: footer: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -541,7 +541,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: mask: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: mask: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -618,7 +618,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: maskClosable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskClosable: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -695,7 +695,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -772,7 +772,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -849,7 +849,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -926,7 +926,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1003,7 +1003,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"setOpen","args":{"open":true}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"setOpen","args":{"open":true}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1080,7 +1080,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1157,7 +1157,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1234,7 +1234,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1311,7 +1311,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1388,7 +1388,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: centered: true - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: centered: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1465,7 +1465,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: closable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: closable: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1542,7 +1542,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: footer: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: footer: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1621,7 +1621,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: mask: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: mask: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1698,7 +1698,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: maskClosable: false - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskClosable: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1775,7 +1775,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1852,7 +1852,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: okText: Text of the OK button - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -1929,7 +1929,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: width: 350px - 520px is default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -2006,7 +2006,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -2083,7 +2083,7 @@ Array [
 ]
 `;
 
-exports[`Render for method: {"name":"toggleOpen","args":{}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
+exports[`Mock for method: {"name":"toggleOpen","args":{}} - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
