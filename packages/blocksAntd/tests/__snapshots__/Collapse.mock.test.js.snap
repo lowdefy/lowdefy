@@ -1,0 +1,686 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="content"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "default",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.accordion: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": true,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.accordion: true",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.activeKey: content_two - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "activeKey": "content_two",
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.activeKey: content_two",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": false,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.bordered: false",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.defaultActiveKey: content_two - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_two",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.defaultActiveKey: content_two",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.destroyInactivePanel: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": true,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.destroyInactivePanel: true",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.expandIcon: ArrowRightOutlined - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": [Function],
+      "expandIconPosition": undefined,
+      "id": "properties.expandIcon: ArrowRightOutlined",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.expandIconPosition: right - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": "right",
+      "id": "properties.expandIconPosition: right",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.forceRender: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          forceRender={true}
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          forceRender={true}
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.forceRender: true",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.panels - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor>
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor>
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.panels",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.panels.disabled - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          disabled={true}
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          disabled={true}
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.panels.disabled",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.panels.extraKey - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": true,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          extra={
+            <div
+              style={
+                Object {
+                  "border": "1px solid red",
+                  "padding": 10,
+                }
+              }
+            >
+              content_one_extra
+            </div>
+          }
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          extra={
+            <div
+              style={
+                Object {
+                  "border": "1px solid red",
+                  "padding": 10,
+                }
+              }
+            >
+              content_two_extra
+            </div>
+          }
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.panels.extraKey",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.panels.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.panels.title",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showArrow: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "accordion": undefined,
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          header="Title One"
+          showArrow={false}
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_one
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          header="Title Two"
+          showArrow={false}
+        >
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            content_two
+          </div>
+        </mockConstructor>,
+      ],
+      "defaultActiveKey": "content_one",
+      "destroyInactivePanel": undefined,
+      "expandIcon": undefined,
+      "expandIconPosition": undefined,
+      "id": "properties.showArrow: false",
+      "onChange": [Function],
+    },
+    Object {},
+  ],
+]
+`;
