@@ -25,12 +25,14 @@ import examples from '../demo/examples/Progress.yaml';
 import meta from '../src/blocks/Progress/Progress.json';
 
 jest.mock('antd/lib/progress', () => {
-  return jest.fn((props) => props.toString());
+  return jest.fn(() => 'mocked');
 });
 
-const mock = {
-  name: 'default',
-  fn: Progress,
-};
+const mocks = [
+  {
+    name: 'default',
+    fn: Progress,
+  },
+];
 
-runMockRenderTests({ examples, Block: ProgressBlock, meta, mock, enzyme: { mount } });
+runMockRenderTests({ examples, Block: ProgressBlock, meta, mocks, enzyme: { mount } });

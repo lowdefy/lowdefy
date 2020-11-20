@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import mockBlock from './mockBlock';
 
-const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mock }) => {
+const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
@@ -31,10 +31,12 @@ const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mock }) => 
 
   examples.forEach((ex) => {
     values.forEach((value, v) => {
-      test(`Render ${ex.id} - value[${v}] - ${mock.name}`, () => {
-        const Shell = () => <Block {...getProps(ex)} value={value} />;
-        enzyme.mount(<Shell />);
-        expect(mock.fn.mock.calls).toMatchSnapshot();
+      mocks.forEach((mock) => {
+        test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, () => {
+          const Shell = () => <Block {...getProps(ex)} value={value} />;
+          enzyme.mount(<Shell />);
+          expect(mock.fn.mock.calls).toMatchSnapshot();
+        });
       });
     });
   });
