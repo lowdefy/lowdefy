@@ -1,147 +1,243 @@
 - id: default
   type: Collapse
-# Die style settings in docs werk nie hier nie? Het dit uitgehaal.
 - id: "properties.panels"
   type: Collapse
   properties:
     panels:
-      - disabled: false
-        extraKey: content_one_extra
+      - key: content_one
+      - key: content_two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: "properties.panels.title"
+  type: Collapse
+  properties:
+    panels:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: "properties.panels.disabled"
+  type: Collapse
+  properties:
+    panels:
+      - key: content_one
+        title: Title One
+        disabled: true
+      - key: content_two
+        disabled: true
+        title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: "properties.panels.extraKey"
+  type: Collapse
+  properties:
+    accordion: true
+    panels:
+      - extraKey: content_one_extra
         key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
+      - extraKey: content_two_extra
         key: content_two
         title: Title Two
   areas:
     content_one:
       blocks:
         - id: ex_1_block_1
-          type: Html
-          properties:
-            html: block_1
+          type: Test
     content_two:
       blocks:
         - id: ex_1_block_2
-          type: Html
-          properties:
-            html: block_2
+          type: Test
+    content_one_extra:
+      blocks:
+        - id: ex_1_extra_1
+          type: Test
+    content_two_extra:
+      blocks:
+        - id: ex_1_extra_2
+          type: Test
 - id: "properties.accordion: true"
   type: Collapse
   properties:
     accordion: true
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.activeKey: content_two"
   type: Collapse
   properties:
     activeKey: content_two
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.defaultActiveKey: content_two"
   type: Collapse
   properties:
     defaultActiveKey: content_two
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.bordered: false"
   type: Collapse
   properties:
     bordered: false
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.destroyInactivePanel: true"
   type: Collapse
   properties:
     destroyInactivePanel: true
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.expandIcon: ArrowRightOutlined"
   type: Collapse
   properties:
     expandIcon: ArrowRightOutlined
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.expandIconPosition: right"
   type: Collapse
   properties:
-    expandIcon: ArrowRightOutlined
     expandIconPosition: right
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.forceRender: true"
   type: Collapse
   properties:
     forceRender: true
-    # Nie seker wat hierdie doen nie - kry nie ref daarvoor nie.
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
 - id: "properties.showArrow: false"
   type: Collapse
   properties:
     showArrow: false
     panels:
-      - disabled: false
-        extraKey: content_one_extra
-        key: content_one
+      - key: content_one
         title: Title One
-      - disabled: false
-        extraKey: content_two_extra
-        key: content_two
+      - key: content_two
         title: Title Two
+  areas:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
