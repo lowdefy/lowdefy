@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runMethodTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { notification } from 'antd';
@@ -52,5 +52,5 @@ const mocks = [
   },
 ];
 
-runMethodTests({ examples, Block: Notification, meta, mocks, enzyme: { mount } });
+runMockMethodTests({ examples, Block: Notification, meta, mocks, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });
