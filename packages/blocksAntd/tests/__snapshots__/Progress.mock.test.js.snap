@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default - value[0] - default 1`] = `
+exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -24,7 +24,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.gapDegree: 60 - value[0] - default 1`] = `
+exports[`Mock render - properties.gapDegree: 60 - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -48,7 +48,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.gapPosition: bottom - value[0] - default 1`] = `
+exports[`Mock render - properties.gapPosition: bottom - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -72,7 +72,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.gapPosition: left - value[0] - default 1`] = `
+exports[`Mock render - properties.gapPosition: left - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -96,7 +96,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.gapPosition: right - value[0] - default 1`] = `
+exports[`Mock render - properties.gapPosition: right - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -120,7 +120,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.percent - value[0] - default 1`] = `
+exports[`Mock render - properties.percent - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -144,7 +144,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.showInfo: false - value[0] - default 1`] = `
+exports[`Mock render - properties.showInfo: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -168,7 +168,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.status: active - value[0] - default 1`] = `
+exports[`Mock render - properties.status: active - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -192,7 +192,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.status: exception - value[0] - default 1`] = `
+exports[`Mock render - properties.status: exception - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -216,7 +216,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.status: normal - value[0] - default 1`] = `
+exports[`Mock render - properties.status: normal - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -240,7 +240,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.status: success - value[0] - default 1`] = `
+exports[`Mock render - properties.status: success - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -264,7 +264,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.strokeColor: '#e91e63'  trailColor: '#ff9800' - value[0] - default 1`] = `
+exports[`Mock render - properties.strokeColor: '#e91e63'  trailColor: '#ff9800' - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -288,7 +288,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.strokeColor: '#e91e63' - value[0] - default 1`] = `
+exports[`Mock render - properties.strokeColor: '#e91e63' - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -312,7 +312,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.strokeLinecap: square  - value[0] - default 1`] = `
+exports[`Mock render - properties.strokeLinecap: square  - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -336,7 +336,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.strokeWidth: 18 - value[0] - default 1`] = `
+exports[`Mock render - properties.strokeWidth: 18 - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -360,7 +360,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.trailColor: '#ff9800' - value[0] - default 1`] = `
+exports[`Mock render - properties.trailColor: '#ff9800' - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -384,7 +384,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.type: circle - value[0] - default 1`] = `
+exports[`Mock render - properties.type: circle - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -408,7 +408,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.type: dashboard - value[0] - default 1`] = `
+exports[`Mock render - properties.type: dashboard - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -432,7 +432,7 @@ Array [
 ]
 `;
 
-exports[`Render properties.width: 180 - value[0] - default 1`] = `
+exports[`Mock render - properties.width: 180 - value[0] - default 1`] = `
 Array [
   Array [
     Object {

@@ -17,22 +17,38 @@
 import { runMockRenderTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { Progress } from 'antd';
+import { Skeleton } from 'antd';
 
 Enzyme.configure({ adapter: new Adapter() });
-import ProgressBlock from '../src/blocks/Progress/Progress';
-import examples from '../demo/examples/Progress.yaml';
-import meta from '../src/blocks/Progress/Progress.json';
+import SkeletonBlock from '../src/blocks/Skeleton/Skeleton';
+import examples from '../demo/examples/Skeleton.yaml';
+import meta from '../src/blocks/Skeleton/Skeleton.json';
 
-jest.mock('antd/lib/progress', () => {
-  return jest.fn(() => 'mocked');
+jest.mock('antd/lib/skeleton', () => {
+  const skeleton = jest.fn(() => 'mocked');
+  skeleton.Avatar = jest.fn(() => 'mocked');
+  skeleton.Button = jest.fn(() => 'mocked');
+  skeleton.Input = jest.fn(() => 'mocked');
+  return skeleton;
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Progress,
+    fn: Skeleton,
+  },
+  {
+    name: 'Avatar',
+    fn: Skeleton.Avatar,
+  },
+  {
+    name: 'Button',
+    fn: Skeleton.Button,
+  },
+  {
+    name: 'Input',
+    fn: Skeleton.Input,
   },
 ];
 
-runMockRenderTests({ examples, Block: ProgressBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: SkeletonBlock, meta, mocks, enzyme: { mount } });

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runMethodTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { Modal } from 'antd';
@@ -25,7 +25,7 @@ import examples from '../demo/examples/Modal.yaml';
 import meta from '../src/blocks/Modal/Modal.json';
 
 jest.mock('antd/lib/modal', () => {
-  return jest.fn((props) => props.toString());
+  return jest.fn(() => 'mocked');
 });
 
 const mocks = [
@@ -35,5 +35,5 @@ const mocks = [
   },
 ];
 
-runMethodTests({ examples, Block: ModalBlock, mocks, meta, enzyme: { mount } });
+runMockMethodTests({ examples, Block: ModalBlock, mocks, meta, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });

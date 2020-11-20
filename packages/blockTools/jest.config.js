@@ -8,7 +8,7 @@ module.exports = {
     '<rootDir>/tests/',
     'runRenderTests.js',
     'runMockRenderTests.js',
-    'runMethodTests.js',
+    'runMockMethodTests.js',
     'runBlockSchemaTests.js',
     'mockBlock.js',
   ],

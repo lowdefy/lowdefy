@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import mockBlock from './mockBlock';
 
-const runMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
+const runMockMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
@@ -64,4 +64,4 @@ const runMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
   });
 };
 
-export default runMethodTests;
+export default runMockMethodTests;
