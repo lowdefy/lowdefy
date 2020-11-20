@@ -16,7 +16,7 @@
 
 import cleanRows from './cleanRows';
 
-test('cleanRows removes objects with key _sheet', () => {
+test('cleanRows removes objects with key _sheet from an array of rows', () => {
   expect(
     cleanRows([
       {
@@ -44,4 +44,23 @@ test('cleanRows removes objects with key _sheet', () => {
       value: 'b',
     },
   ]);
+});
+
+test('cleanRows removes objects with key _sheet from a row', () => {
+  expect(
+    cleanRows({
+      id: 1,
+      value: 'a',
+      _sheet: {
+        string: 'string',
+      },
+    })
+  ).toEqual({
+    id: 1,
+    value: 'a',
+  });
+});
+
+test('cleanRows invalid input', () => {
+  expect(() => cleanRows(1)).toThrow('cleanRows received invalid input type number.');
 });

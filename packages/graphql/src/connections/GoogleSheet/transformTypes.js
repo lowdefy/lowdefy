@@ -39,6 +39,23 @@ const readTransformers = {
   },
 };
 
+const writeTransformers = {
+  string: (value) => value,
+  number: (value) => (type.isNumber(value) ? value.toString() : value),
+  boolean: (value) => {
+    if (value === true) return 'TRUE';
+    if (value === false) return 'FALSE';
+    return value;
+  },
+  date: (value) => (type.isDate(value) ? value.toISOString() : value),
+  json: (value) => {
+    try {
+      return JSON.stringify(value);
+    } catch (_) {
+      return value;
+    }
+  },
+};
 
 const transformObject = ({ transformers, types }) => (object) => {
   Object.keys(object).forEach((key) => {
@@ -59,7 +76,14 @@ function transformRead({ input, types = {} }) {
   throw new Error(`transformRead received invalid input type ${type.typeOf(input)}.`);
 }
 
+function transformWrite({ input, types = {} }) {
+  if (type.isObject(input)) {
+    return transformObject({ transformers: writeTransformers, types })(input);
+  }
+  if (type.isArray(input)) {
+    return input.map((obj) => transformObject({ transformers: writeTransformers, types })(obj));
+  }
+  throw new Error(`transformWrite received invalid input type ${type.typeOf(input)}.`);
+}
 
-export {
-  transformRead,
-};
+export { transformRead, transformWrite };

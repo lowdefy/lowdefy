@@ -15,12 +15,16 @@
 */
 
 import schema from './GoogleSheetSchema.json';
+import GoogleSheetAppendMany from './GoogleSheetAppendMany/GoogleSheetAppendMany';
+import GoogleSheetAppendOne from './GoogleSheetAppendOne/GoogleSheetAppendOne';
 import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany';
 import GoogleSheetGetOne from './GoogleSheetGetOne/GoogleSheetGetOne';
 
 export default {
   schema,
   requests: {
+    GoogleSheetAppendMany,
+    GoogleSheetAppendOne,
     GoogleSheetGetMany,
     GoogleSheetGetOne,
   },

@@ -14,22 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import schema from './GoogleSheetAppendOneSchema.json';
+import getSheet from '../getSheet';
+import cleanRows from '../cleanRows';
+import { transformWrite } from '../transformTypes';
 
-function cleanRow(row) {
-  // eslint-disable-next-line no-unused-vars
-  const { _sheet, ...rest } = row;
-  return { ...rest };
+async function googleSheetAppendOne({ request, connection }) {
+  const { row } = request;
+  const sheet = await getSheet({ connection });
+  const insertedRow = await sheet.addRow(
+    transformWrite({ input: row, types: connection.columnTypes })
+  );
+  return cleanRows(insertedRow);
 }
 
-function cleanRows(input) {
-  if (type.isObject(input)) {
-    return cleanRow(input);
-  }
-  if (type.isArray(input)) {
-    return input.map((row) => cleanRow(row));
-  }
-  throw new Error(`cleanRows received invalid input type ${type.typeOf(input)}.`);
-}
-
-export default cleanRows;
+export default { resolver: googleSheetAppendOne, schema, checkRead: false, checkWrite: true };

@@ -58,11 +58,11 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
     },
     {
       _rowNumber: 5,
-      _rawData: ['4', 'Craig', '21', '2020-04-25T22:00:00.000Z', 'TRUE'],
+      _rawData: ['4', 'Craig', '21', '2020-04-26T00:00:00.000Z', 'TRUE'],
       id: '4',
       name: 'Craig',
       age: '120',
-      birth_date: '2020-04-25T22:00:00.000Z',
+      birth_date: '2020-04-26T00:00:00.000Z',
       married: 'TRUE',
       _sheet: {},
     },
@@ -103,11 +103,11 @@ test('googleSheetGetMany, all rows', async () => {
     },
     {
       _rowNumber: 5,
-      _rawData: ['4', 'Craig', '21', '2020-04-25T22:00:00.000Z', 'TRUE'],
+      _rawData: ['4', 'Craig', '21', '2020-04-26T00:00:00.000Z', 'TRUE'],
       id: '4',
       name: 'Craig',
       age: '120',
-      birth_date: '2020-04-25T22:00:00.000Z',
+      birth_date: '2020-04-26T00:00:00.000Z',
       married: 'TRUE',
     },
   ]);
@@ -159,11 +159,11 @@ test('googleSheetGetMany, offset', async () => {
     },
     {
       _rowNumber: 5,
-      _rawData: ['4', 'Craig', '21', '2020-04-25T22:00:00.000Z', 'TRUE'],
+      _rawData: ['4', 'Craig', '21', '2020-04-26T00:00:00.000Z', 'TRUE'],
       id: '4',
       name: 'Craig',
       age: '120',
-      birth_date: '2020-04-25T22:00:00.000Z',
+      birth_date: '2020-04-26T00:00:00.000Z',
       married: 'TRUE',
     },
   ]);
@@ -222,11 +222,11 @@ test('googleSheetGetMany, filter _rowNumber', async () => {
     },
     {
       _rowNumber: 5,
-      _rawData: ['4', 'Craig', '21', '2020-04-25T22:00:00.000Z', 'TRUE'],
+      _rawData: ['4', 'Craig', '21', '2020-04-26T00:00:00.000Z', 'TRUE'],
       id: '4',
       name: 'Craig',
       age: '120',
-      birth_date: '2020-04-25T22:00:00.000Z',
+      birth_date: '2020-04-26T00:00:00.000Z',
       married: 'TRUE',
     },
   ]);
@@ -289,11 +289,11 @@ test('googleSheetGetMany, columnTypes', async () => {
     },
     {
       _rowNumber: 5,
-      _rawData: ['4', 'Craig', '21', '2020-04-25T22:00:00.000Z', 'TRUE'],
+      _rawData: ['4', 'Craig', '21', '2020-04-26T00:00:00.000Z', 'TRUE'],
       id: '4',
       name: 'Craig',
       age: 120,
-      birth_date: new Date('2020-04-25T22:00:00.000Z'),
+      birth_date: new Date('2020-04-26T00:00:00.000Z'),
       married: true,
     },
   ]);
