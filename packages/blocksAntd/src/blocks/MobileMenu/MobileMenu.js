@@ -17,6 +17,7 @@
 import React, { useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { mergeObjects } from '@lowdefy/helpers';
+
 import Button from '../Button/Button';
 import Drawer from '../Drawer/Drawer';
 import Menu from '../Menu/Menu';
@@ -27,6 +28,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
   return (
     <div id={blockId}>
       <Button
+        blockId={`${blockId}_button`}
         properties={{
           title: '',
           type: 'primary',
@@ -40,6 +42,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
         }}
       />
       <Drawer
+        blockId={`${blockId}_drawer`}
         properties={mergeObjects([
           {
             open,
@@ -58,7 +61,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
           content: () => (
             <>
               <UserAvatar
-                blockId={`${blockId}_UserAvatar`}
+                blockId={`${blockId}_user_avatar`}
                 methods={methods}
                 properties={mergeObjects([
                   { showName: 'right', theme: 'light', style: { padding: 16 } },
@@ -67,6 +70,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
                 user={user}
               />
               <Menu
+                blockId={`${blockId}_menu`}
                 methods={methods}
                 menus={menus}
                 pageId={pageId}

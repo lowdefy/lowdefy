@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="default"
@@ -9,7 +9,7 @@ exports[`Render default 1`] = `
 />
 `;
 
-exports[`Render default-two-items 1`] = `
+exports[`Render default-two-items - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="default-two-items"
@@ -39,7 +39,7 @@ exports[`Render default-two-items 1`] = `
 </div>
 `;
 
-exports[`Render properties.style 1`] = `
+exports[`Render properties.style - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},{\\"border\\":\\"1px solid blue\\"}]}"
   data-testid="properties.style"
@@ -48,7 +48,7 @@ exports[`Render properties.style 1`] = `
 />
 `;
 
-exports[`Render properties.style-two-items 1`] = `
+exports[`Render properties.style-two-items - value[0] 1`] = `
 <div
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},{\\"border\\":\\"1px solid blue\\"}]}"
   data-testid="properties.style-two-items"

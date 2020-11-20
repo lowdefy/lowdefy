@@ -154,7 +154,7 @@ test('list block init with non array', () => {
   expect(context.state).toEqual({ list: [] });
 });
 
-test('list block no init push item, no defaultValue', () => {
+test('list block no init push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -303,7 +303,7 @@ test('list block with init move item down', () => {
   expect(context.state).toEqual({ list: [0, 2, 1, 3, 4, 5] });
 });
 
-test('list block no init unshift item to start, no defaultValue', () => {
+test('list block no init unshift item to start', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -376,7 +376,7 @@ test('list block no init unshift item to start, no defaultValue', () => {
   expect(newText0.value).toEqual(null);
 });
 
-test('list block no init unshift item to start, no defaultValue, block id not in array', () => {
+test('list block no init unshift item to start, block id not in array', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -544,7 +544,7 @@ test('list block unshift item clear all previous values', () => {
   });
 });
 
-test('list block with init push item, no defaultValue', () => {
+test('list block with init push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -591,7 +591,7 @@ test('list block with init push item, no defaultValue', () => {
   expect(context.state).toEqual({ list: [{ text: 'a' }, { text: null }] });
 });
 
-test('list block with init including extra data and push item, no defaultValue', () => {
+test('list block with init including extra data and push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -638,7 +638,7 @@ test('list block with init including extra data and push item, no defaultValue',
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }, { b: null }], d: 'd' });
 });
 
-test('list block no init push item, with defaultValue', () => {
+test('list block no init push item, with enforced input type', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -660,7 +660,6 @@ test('list block no init push item, with defaultValue', () => {
                   {
                     type: 'TextInput',
                     blockId: 'list.$.text',
-                    defaultValue: 'default',
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -682,51 +681,7 @@ test('list block no init push item, with defaultValue', () => {
   expect(context.state).toEqual({ list: [] });
   const { list } = context.RootBlocks.map;
   list.pushItem();
-  expect(context.state).toEqual({ list: [{ text: 'default' }] });
-});
-
-test('list block defaultValue', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'array_input',
-            blockId: 'a',
-            defaultValue: [{ b: 'default' }],
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'a.$.b',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  expect(context.state).toEqual({ a: [{ b: 'default' }] });
+  expect(context.state).toEqual({ list: [{ text: null }] });
 });
 
 test('list block with rec visible in parent blocks', () => {
@@ -1126,7 +1081,7 @@ test('primitive list block with init, push item and setValue', () => {
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
 
-test('primitive list block with init and push item with defaultValue', () => {
+test('primitive list block with init and push item with enforced input type', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1146,12 +1101,11 @@ test('primitive list block with init and push item with defaultValue', () => {
               content: {
                 blocks: [
                   {
-                    type: 'NumberInput',
+                    type: 'Switch',
                     blockId: 'list.$',
-                    defaultValue: 10,
                     meta: {
                       category: 'input',
-                      valueType: 'number',
+                      valueType: 'boolean',
                     },
                   },
                 ],
@@ -1166,15 +1120,15 @@ test('primitive list block with init and push item with defaultValue', () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { list: [1, 2, 3] },
+    initState: { list: [true, true, true] },
   });
-  expect(context.state).toEqual({ list: [1, 2, 3] });
+  expect(context.state).toEqual({ list: [true, true, true] });
   const { list } = context.RootBlocks.map;
   list.pushItem();
-  expect(context.state).toEqual({ list: [1, 2, 3, 10] });
+  expect(context.state).toEqual({ list: [true, true, true, false] });
 });
 
-test('list block with nested primitive array with init, push item default on inputs and setValue', () => {
+test('list block with nested primitive array with init, push item enforced type on inputs and setValue', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1204,12 +1158,11 @@ test('list block with nested primitive array with init, push item default on inp
                       content: {
                         blocks: [
                           {
-                            type: 'NumberInput',
+                            type: 'Switch',
                             blockId: 'list.$.innerList.$',
-                            defaultValue: 10,
                             meta: {
                               category: 'input',
-                              valueType: 'number',
+                              valueType: 'boolean',
                             },
                           },
                         ],
@@ -1219,7 +1172,6 @@ test('list block with nested primitive array with init, push item default on inp
                   {
                     type: 'TextInput',
                     blockId: 'list.$.text',
-                    defaultValue: 'text dV',
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -1237,31 +1189,31 @@ test('list block with nested primitive array with init, push item default on inp
     rootContext,
     rootBlock,
     pageId,
-    initState: { list: [{ innerList: [1, 2, 3], text: 'text' }] },
+    initState: { list: [{ innerList: [true, true, true], text: 'text' }] },
   });
-  expect(context.state).toEqual({ list: [{ innerList: [1, 2, 3], text: 'text' }] });
+  expect(context.state).toEqual({ list: [{ innerList: [true, true, true], text: 'text' }] });
   const { list } = context.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({
     list: [
-      { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [], text: 'text dV' },
+      { innerList: [true, true, true], text: 'text' },
+      { innerList: [], text: null },
     ],
   });
   const innerList1 = context.RootBlocks.map['list.1.innerList'];
   innerList1.pushItem();
   expect(context.state).toEqual({
     list: [
-      { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [10], text: 'text dV' },
+      { innerList: [true, true, true], text: 'text' },
+      { innerList: [false], text: null },
     ],
   });
-  const number10 = context.RootBlocks.map['list.1.innerList.0'];
-  number10.setValue(-1);
+  const switch_1_0 = context.RootBlocks.map['list.1.innerList.0'];
+  switch_1_0.setValue(true);
   expect(context.state).toEqual({
     list: [
-      { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [-1], text: 'text dV' },
+      { innerList: [true, true, true], text: 'text' },
+      { innerList: [true], text: null },
     ],
   });
 });
@@ -1288,7 +1240,6 @@ test('list block with nested primitive array with init, push item and setValue',
                   {
                     type: 'List',
                     blockId: 'list.$.innerList',
-                    defaultValue: [-1, 0, 1],
                     meta: {
                       category: 'list',
                       valueType: 'array',
@@ -1299,7 +1250,6 @@ test('list block with nested primitive array with init, push item and setValue',
                           {
                             type: 'NumberInput',
                             blockId: 'list.$.innerList.$',
-                            defaultValue: 10,
                             meta: {
                               category: 'input',
                               valueType: 'number',
@@ -1337,7 +1287,7 @@ test('list block with nested primitive array with init, push item and setValue',
   expect(context.state).toEqual({
     list: [
       { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [-1, 0, 1], text: null },
+      { innerList: [], text: null },
     ],
   });
   const innerList1 = context.RootBlocks.map['list.1.innerList'];
@@ -1345,15 +1295,15 @@ test('list block with nested primitive array with init, push item and setValue',
   expect(context.state).toEqual({
     list: [
       { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [-1, 0, 1, 10], text: null },
+      { innerList: [null], text: null },
     ],
   });
-  const number13 = context.RootBlocks.map['list.1.innerList.3'];
-  number13.setValue(-1);
+  const number_1_0 = context.RootBlocks.map['list.1.innerList.0'];
+  number_1_0.setValue(-1);
   expect(context.state).toEqual({
     list: [
       { innerList: [1, 2, 3], text: 'text' },
-      { innerList: [-1, 0, 1, -1], text: null },
+      { innerList: [-1], text: null },
     ],
   });
 });
@@ -1639,7 +1589,6 @@ test('nested list', () => {
                   {
                     type: 'Switch',
                     blockId: 'list.$.swtch',
-                    defaultValue: true,
                     meta: {
                       category: 'input',
                       valueType: 'boolean',
@@ -1717,36 +1666,37 @@ test('nested list', () => {
     initState: {
       list: [
         { text: 'b0' },
-        { text: 'b1' },
-        { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }] },
+        { text: 'b1', swtch: true },
+        { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }], swtch: true },
         { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }] },
-        { text: 'b4' },
+        { text: 'b4', swtch: false },
       ],
     },
   });
   expect(context.state).toEqual({
     list: [
-      { text: 'b0', innerList: [], swtch: true },
+      { text: 'b0', swtch: false },
       { text: 'b1', innerList: [], swtch: true },
       { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }], swtch: true },
-      { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }], swtch: true },
-      { text: 'b4', innerList: [], swtch: true },
+      { text: 'b3', swtch: false },
+      { text: 'b4', swtch: false },
     ],
   });
 
   const { list } = context.RootBlocks.map;
   const container2 = context.RootBlocks.map['list.2.container'];
   const swtch2 = context.RootBlocks.map['list.2.swtch'];
+  const swtch3 = context.RootBlocks.map['list.3.swtch'];
 
   swtch2.setValue(false);
   expect(container2.visibleEval.output).toEqual(false);
   expect(context.state).toEqual({
     list: [
-      { text: 'b0', innerList: [], swtch: true },
+      { text: 'b0', swtch: false },
       { text: 'b1', innerList: [], swtch: true },
       { text: 'b2', swtch: false },
-      { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }], swtch: true },
-      { text: 'b4', innerList: [], swtch: true },
+      { text: 'b3', swtch: false },
+      { text: 'b4', swtch: false },
     ],
   });
 
@@ -1754,32 +1704,42 @@ test('nested list', () => {
   expect(container2.visibleEval.output).toEqual(true);
   expect(context.state).toEqual({
     list: [
-      { text: 'b0', innerList: [], swtch: true },
+      { text: 'b0', swtch: false },
       { text: 'b1', innerList: [], swtch: true },
       { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }], swtch: true },
-      { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }], swtch: true },
-      { text: 'b4', innerList: [], swtch: true },
+      { text: 'b3', swtch: false },
+      { text: 'b4', swtch: false },
     ],
   });
 
   list.removeItem(2);
   expect(context.state).toEqual({
     list: [
-      { text: 'b0', innerList: [], swtch: true },
+      { text: 'b0', swtch: false },
+      { text: 'b1', innerList: [], swtch: true },
+      { text: 'b3', swtch: false },
+      { text: 'b4', swtch: false },
+    ],
+  });
+
+  swtch3.setValue(true);
+  expect(context.state).toEqual({
+    list: [
+      { text: 'b0', swtch: false },
       { text: 'b1', innerList: [], swtch: true },
       { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }], swtch: true },
-      { text: 'b4', innerList: [], swtch: true },
+      { text: 'b4', swtch: false },
     ],
   });
 
   list.pushItem();
   expect(context.state).toEqual({
     list: [
-      { text: 'b0', innerList: [], swtch: true },
+      { text: 'b0', swtch: false },
       { text: 'b1', innerList: [], swtch: true },
       { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }], swtch: true },
-      { text: 'b4', innerList: [], swtch: true },
-      { text: null, innerList: [], swtch: true },
+      { text: 'b4', swtch: false },
+      { text: null, swtch: false },
     ],
   });
 });

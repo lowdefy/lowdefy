@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",

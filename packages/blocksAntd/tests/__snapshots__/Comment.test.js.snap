@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-comment"
   id="default"
@@ -12,7 +12,7 @@ exports[`Render default 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -49,7 +49,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.author 1`] = `
+exports[`Render properties.author - value[0] 1`] = `
 <div
   className="ant-comment"
   id="properties.author"
@@ -61,7 +61,7 @@ exports[`Render properties.author 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}

@@ -16,10 +16,11 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
+import validationsExamples from '../demo/validationExamples.json';
 import RatingSlider from '../src/blocks/RatingSlider/RatingSlider';
 import examples from '../demo/examples/RatingSlider.yaml';
 import meta from '../src/blocks/RatingSlider/RatingSlider.json';
 
 // FIX: for properties.autoFocus - TypeError: Cannot read property 'focus' of null
-runRenderTests({ examples, Block: RatingSlider, meta });
+runRenderTests({ examples, Block: RatingSlider, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

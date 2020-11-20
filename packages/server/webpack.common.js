@@ -1,5 +1,3 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -12,6 +10,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
+          babelrc: false,
           presets: ['@babel/preset-react'],
         },
       },
@@ -32,14 +31,6 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/shell/index.html',
-    }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: 'src/server.js',
-          to: '../server.js',
-        },
-      ],
     }),
   ],
 };
