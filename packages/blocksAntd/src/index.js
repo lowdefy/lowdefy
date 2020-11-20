@@ -73,6 +73,7 @@ import Timeline from './blocks/Timeline/Timeline';
 import TextArea from './blocks/TextArea/TextArea';
 import TextInput from './blocks/TextInput/TextInput';
 import Title from './blocks/Title/Title';
+import TitleInput from './blocks/TitleInput/TitleInput';
 import UserAvatar from './blocks/UserAvatar/UserAvatar';
 import WeekSelector from './blocks/WeekSelector/WeekSelector';
 
@@ -136,6 +137,7 @@ export {
   TextArea,
   TextInput,
   Title,
+  TitleInput,
   UserAvatar,
   WeekSelector,
 };
@@ -199,6 +201,7 @@ export default {
   TextArea,
   TextInput,
   Title,
+  TitleInput,
   UserAvatar,
   WeekSelector,
 };
