@@ -1,6 +1,38 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "message": "Args message"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "description": "Args description"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -16,7 +48,7 @@
           "description": "Centered Modal"
         },
         "content": {
-          "type": "object",
+          "type": "string",
           "description": "Modal content."
         },
         "icon": {
