@@ -13,19 +13,12 @@ jobs:
           node-version: '12.x'
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.base_ref }}
-          fetch-depth: 0
-      - uses: actions/checkout@v2
-        with:
           fetch-depth: 0
       - name: Check yarn cache integrity
         run: yarn install --immutable --immutable-cache
       - name: Build packages
         run: yarn build
 
-      # Make tests fail faster
-      - name: Test changes since develop
-        run: yarn test --ignore='@lowdefy/format' -- --changedSince=${{ github.base_ref }}
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
         run: yarn test --ignore='@lowdefy/format'
