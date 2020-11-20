@@ -21,48 +21,49 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const TabsBlock = ({ blockId, content, methods, properties }) => {
+  // remove extraAreaKey key area from tabs
   const tabs = (
     properties.tabs ||
     Object.keys(content)
       .sort()
       .map((key) => ({ key, title: key }))
-  ).filter((tab) => tab.key !== 'tabBarExtraContent');
+  ).filter((tab) => tab.key !== properties.extraAreaKey);
   const additionalProps = {};
   if (properties.activeKey) {
     additionalProps.activeKey = properties.activeKey;
   }
+  if (properties.extraAreaKey) {
+    additionalProps.tabBarExtraContent =
+      content[properties.extraAreaKey] && content[properties.extraAreaKey]();
+  }
   return (
     <Tabs
-      id={blockId}
-      defaultActiveKey={properties.defaultActiveKey || tabs[0].key}
       animated={properties.animated !== undefined ? properties.animated : true}
+      defaultActiveKey={properties.defaultActiveKey || tabs[0].key}
+      id={blockId}
+      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
       size={properties.size || 'default'}
+      tabBarStyle={methods.makeCssClass(properties.tabBarStyle, { styleObjectOnly: true })}
       tabPosition={properties.tabPosition || 'top'}
       type={properties.tabType || 'line'}
-      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
       onTabScroll={({ direction }) =>
         methods.callAction({ action: 'onTabScroll', args: { direction } })
       }
       onTabClick={(key) => methods.callAction({ action: 'onTabClick', args: { key } })}
-      tabBarExtraContent={content.extra && content.extra()}
-      tabBarStyle={methods.makeCssClass(properties.tabBarStyle, { styleObjectOnly: true })}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...additionalProps}
     >
       {tabs.map((tab, i) => (
         <Tabs.TabPane
           disabled={tab.disabled}
-          tab={
-            tab.icon ? (
-              <span className={methods.makeCssClass(tab.titleStyle)}>
-                <Icon blockId={`${blockId}_icon`} methods={methods} properties={tab.icon} />
-                {tab.title || tab.key}
-              </span>
-            ) : (
-              <span className={methods.makeCssClass(tab.titleStyle)}>{tab.title || tab.key}</span>
-            )
-          }
           key={tab.key}
+          tab={
+            <span className={methods.makeCssClass(tab.titleStyle)}>
+              {tab.icon && (
+                <Icon blockId={`${blockId}_icon`} methods={methods} properties={tab.icon} />
+              )}
+              {tab.title || tab.key}
+            </span>
+          }
         >
           {content[tab.key] && content[tab.key]()}
         </Tabs.TabPane>
