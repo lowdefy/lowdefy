@@ -4,3 +4,116 @@
   type: Statistic
   properties:
     title: Statistic title
+- id: "properties.value: 3.45 as number"
+  type: Statistic
+  properties:
+    value: 3.45
+- id: "properties.value: '3.45' as string"
+  type: Statistic
+  properties:
+    value: "3.45"
+- id: "properties.decimalSeparator: ','"
+  type: Statistic
+  properties:
+    value: 3.45
+    decimalSeparator: ","
+
+- id: "properties.groupSeparator: ','"
+  type: Statistic
+  properties:
+    value: 3565542.45
+    decimalSeparator: ","
+    groupSeparator: "."
+- id: "properties.precision: 2"
+  type: Statistic
+  properties:
+    value: 3.456
+    precision: 2
+- id: "properties.prefix: R"
+  type: Statistic
+  properties:
+    value: 3.45
+    prefix: R
+- id: "properties.prefixIcon: AccountBookFilled"
+  type: Statistic
+  properties:
+    value: 3.45
+    prefixIcon: AccountBookFilled
+- id: "properties.suffix: Rand"
+  type: Statistic
+  properties:
+    value: 3.45
+    suffix: Rand
+- id: "properties.suffixIcon: AccountBookFilled"
+  type: Statistic
+  properties:
+    value: 3.45
+    suffixIcon: AccountBookFilled
+    
+# Fix: Cannot test intlNumberFormat on server
+- id: "properties.type: intlNumberFormat"
+  type: Statistic
+  properties:
+    value: 3.45
+    formatter:
+      type: "intlNumberFormat"
+      properties:
+        locale: en
+        options:
+          style: currency
+          currency: ZAR
+- id: "properties.type: intlListFormat"
+  type: Statistic
+  properties:
+    value: 
+      - 'Motorcycle'
+      - 'Bus'
+      - 'Car'
+    formatter:
+      type: intlListFormat
+      properties:
+        locale: en
+        style: long
+        type: conjunction
+- id: "properties.type: intlRelativeTimeFormat"
+  type: Statistic
+  properties:
+    value: -3
+    formatter:
+      type: intlRelativeTimeFormat
+      properties:
+        locale: en
+        unit: days
+- id: "properties.type: momentFormat"
+  type: Statistic
+  properties:
+    value: 2019-06-13T10:20:23+02:00
+    formatter:
+      type: momentFormat
+      properties:
+        format: 'd MMM YYYY'
+- id: "properties.type: momentHumanizeDuration"
+  type: Statistic
+  properties:
+    value: -245923000
+    formatter:
+      type: momentHumanizeDuration
+      properties:
+        withSuffix: true
+# FIX: cannot test intlDateTimeFormat because dates cannot be parsed
+# Uncaught RangeError: Invalid time value
+# - id: "properties.type: intlDateTimeFormat"
+#   type: Statistic
+#   properties:
+#     value: 2019-06-13T10:20:00.000Z
+#     formatter:
+#       type: intlDateTimeFormat
+#       properties:
+#         locale: 'en'
+#         options: 
+#           hour: 'numeric'
+#           minute: 'numeric'
+#           second: 'numeric'
+#           timeZone: 'Australia/Sydney'
+#           timeZoneName: 'short'
+        
