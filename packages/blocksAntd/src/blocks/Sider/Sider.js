@@ -51,7 +51,7 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
         properties.style,
       ])} hide-on-print`}
       breakpoint={properties.breakpoint}
-      collapsed={openState}
+      collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
