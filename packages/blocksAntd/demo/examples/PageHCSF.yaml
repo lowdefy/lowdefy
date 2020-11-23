@@ -1,14 +1,23 @@
 - id: default
   type: PageHCSF
-- id: properties.content
+- id: areas.content
   type: PageHCSF
   areas:
     content:
       blocks: []
+- id: areas.footer
+  type: PageHCSF
+  areas:
     footer:
       blocks: []
+- id: areas.header
+  type: PageHCSF
+  areas:
     header:
       blocks: []
+- id: areas.sider
+  type: PageHCSF
+  areas:
     sider:
       blocks: []
 - id: "properties.header.theme: light - dark is default"
@@ -39,12 +48,85 @@
       blocks: []
     sider:
       blocks: []
-# collapsed is not described in js or json, but still works in example and docs?
 - id: "properties.sider.collapsed: true "
   type: PageHCSF
   properties:
     sider:
       collapsed: true
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    style:
+      border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.content.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    content:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    header:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.footer.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    footer:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.sider.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    sider:
+      style:
+        border: 5px solid blue
   areas:
     content:
       blocks: []
