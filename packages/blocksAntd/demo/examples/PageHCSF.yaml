@@ -136,3 +136,18 @@
       blocks: []
     sider:
       blocks: []
+- id: "properties.main.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    main:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
