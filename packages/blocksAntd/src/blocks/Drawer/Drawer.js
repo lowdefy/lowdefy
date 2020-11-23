@@ -16,27 +16,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
-import { type } from '@lowdefy/helpers';
+import { type, get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const triggerSetOpen = ({ state, setOpen, methods }) => {
+const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
   if (!state) {
-    methods.callAction({ action: 'onClose' });
+    methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
   }
   if (state) {
-    methods.callAction({ action: 'onOpen' });
+    methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
   }
   setOpen(state);
 };
 
-const DrawerBlock = ({ blockId, content, properties, methods }) => {
+const DrawerBlock = ({ blockId, content, properties, methods, rename }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod('toggleOpen', () =>
-      triggerSetOpen({ state: !openState, setOpen, methods })
+      triggerSetOpen({ state: !openState, setOpen, methods, rename })
     );
     methods.registerMethod('setOpen', ({ open }) =>
-      triggerSetOpen({ state: !!open, setOpen, methods })
+      triggerSetOpen({ state: !!open, setOpen, methods, rename })
     );
   });
   return (
@@ -53,7 +53,7 @@ const DrawerBlock = ({ blockId, content, properties, methods }) => {
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
-      onClose={() => triggerSetOpen({ state: false, setOpen, methods })}
+      onClose={() => triggerSetOpen({ state: false, setOpen, methods, rename })}
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
