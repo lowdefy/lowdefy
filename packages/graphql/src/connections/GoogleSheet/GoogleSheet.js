@@ -21,6 +21,8 @@ import GoogleSheetDeleteOne from './GoogleSheetDeleteOne/GoogleSheetDeleteOne';
 import GoogleSheetDeleteMany from './GoogleSheetDeleteMany/GoogleSheetDeleteMany';
 import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany';
 import GoogleSheetGetOne from './GoogleSheetGetOne/GoogleSheetGetOne';
+import GoogleSheetUpdateOne from './GoogleSheetUpdateOne/GoogleSheetUpdateOne';
+import GoogleSheetUpdateMany from './GoogleSheetUpdateMany/GoogleSheetUpdateMany';
 
 export default {
   schema,
@@ -31,5 +33,7 @@ export default {
     GoogleSheetDeleteMany,
     GoogleSheetGetMany,
     GoogleSheetGetOne,
+    GoogleSheetUpdateOne,
+    GoogleSheetUpdateMany,
   },
 };

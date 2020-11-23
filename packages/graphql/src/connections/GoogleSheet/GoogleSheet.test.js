@@ -27,6 +27,8 @@ test('All requests are present', () => {
   expect(GoogleSheet.requests.GoogleSheetDeleteMany).toBeDefined();
   expect(GoogleSheet.requests.GoogleSheetGetMany).toBeDefined();
   expect(GoogleSheet.requests.GoogleSheetGetOne).toBeDefined();
+  expect(GoogleSheet.requests.GoogleSheetUpdateOne).toBeDefined();
+  expect(GoogleSheet.requests.GoogleSheetUpdateMany).toBeDefined();
 });
 
 test('valid connection schema', () => {
