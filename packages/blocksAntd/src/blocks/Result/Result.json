@@ -25,9 +25,6 @@
           "description": "Result title or primary text."
         }
       }
-    },
-    "actions": {
-      "type": "object"
     }
   }
 }
