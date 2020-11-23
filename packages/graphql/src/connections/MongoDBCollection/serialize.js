@@ -38,7 +38,6 @@ function replacer(_, value) {
         return { _oid: item.toHexString() };
       }
       if (type.isDate(item)) {
-        // eslint-disable-next-line no-param-reassign
         return { _date: item.valueOf() };
       }
       return item;

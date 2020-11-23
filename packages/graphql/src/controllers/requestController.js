@@ -184,12 +184,10 @@ class RequestController {
   }
 
   async callResolver({ connectionProperties, requestProperties, resolver }) {
-    const context = { ConfigurationError, RequestError };
     try {
       const response = await resolver({
         request: requestProperties,
         connection: connectionProperties,
-        context,
       });
       return response;
     } catch (err) {
