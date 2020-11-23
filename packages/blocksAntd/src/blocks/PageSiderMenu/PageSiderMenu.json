@@ -76,10 +76,6 @@
         "style": {
           "type": "object",
           "description": "Css style object to apply to layout."
-        },
-        "userAvatar": {
-          "type": "object",
-          "description": "User Avatar properties."
         }
       }
     },
@@ -97,15 +93,6 @@
           "type": "array"
         },
         "onClose": {
-          "type": "array"
-        },
-        "onLogin": {
-          "type": "array"
-        },
-        "onBlockLogin": {
-          "type": "array"
-        },
-        "onBlockAvatar": {
           "type": "array"
         },
         "onOpenChange": {
