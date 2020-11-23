@@ -1361,7 +1361,6 @@ exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -1456,7 +1455,6 @@ exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -2846,7 +2844,6 @@ exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -2941,7 +2938,6 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -4877,7 +4873,6 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -5001,7 +4996,6 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -6420,7 +6414,6 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled - v
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -6515,7 +6508,6 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -8361,7 +8353,6 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -8480,7 +8471,6 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -10440,7 +10430,6 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -10564,7 +10553,6 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >

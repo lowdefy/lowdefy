@@ -96,7 +96,6 @@ exports[`Render menus: links[0] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -175,7 +174,6 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -228,7 +226,6 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -281,7 +278,6 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -334,7 +330,6 @@ exports[`Render menusTitle url - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -421,7 +416,6 @@ exports[`Render mode: inline, backgroundColor: #016e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -466,7 +460,6 @@ exports[`Render mode: inline, backgroundColor: #016e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -554,7 +547,6 @@ exports[`Render mode: inline, selectedColor: #f16e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -599,7 +591,6 @@ exports[`Render mode: inline, selectedColor: #f16e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -687,7 +678,6 @@ exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e -
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -732,7 +722,6 @@ exports[`Render mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e -
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -820,7 +809,6 @@ exports[`Render mode: inline, theme: light - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -865,7 +853,6 @@ exports[`Render mode: inline, theme: light - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -953,7 +940,6 @@ exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB - value[0] 1`
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -998,7 +984,6 @@ exports[`Render mode: inline, theme: light, selectedColor: #6C2ACB - value[0] 1`
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1086,7 +1071,6 @@ exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundCo
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1131,7 +1115,6 @@ exports[`Render mode: inline, theme: light, selectedColor: #f16e1e, backgroundCo
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1210,7 +1193,6 @@ exports[`Render mode: vertical, backgroundColor: #016e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1251,7 +1233,6 @@ exports[`Render mode: vertical, backgroundColor: #016e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1330,7 +1311,6 @@ exports[`Render mode: vertical, selectedColor: #f16e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1371,7 +1351,6 @@ exports[`Render mode: vertical, selectedColor: #f16e1e - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1450,7 +1429,6 @@ exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1491,7 +1469,6 @@ exports[`Render mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1570,7 +1547,6 @@ exports[`Render mode: vertical, theme: light - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1611,7 +1587,6 @@ exports[`Render mode: vertical, theme: light - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1690,7 +1665,6 @@ exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, background
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1731,7 +1705,6 @@ exports[`Render mode: vertical, theme: light, selectedColor: #f16e1e, background
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_3_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1848,7 +1821,6 @@ exports[`Render properties.danger: true - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="menu_item_2_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1901,7 +1873,6 @@ exports[`Render properties.icon - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu_item_one_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1942,7 +1913,6 @@ exports[`Render properties.icon - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu Item two_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -2115,7 +2085,6 @@ exports[`Render properties.title - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu_item_one_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -2156,7 +2125,6 @@ exports[`Render properties.title - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="Menu Item two_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >

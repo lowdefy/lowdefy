@@ -2890,7 +2890,6 @@ exports[`Render properties.suffixIcon: DoubleLeftOutlined - value[0] 1`] = `
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -5936,7 +5935,6 @@ exports[`Render required = true properties.suffixIcon: DoubleLeftOutlined - valu
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -9615,7 +9613,6 @@ exports[`Render validation.status = error properties.suffixIcon: DoubleLeftOutli
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -12719,7 +12716,6 @@ exports[`Render validation.status = null properties.suffixIcon: DoubleLeftOutlin
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -16293,7 +16289,6 @@ exports[`Render validation.status = success properties.suffixIcon: DoubleLeftOut
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -20020,7 +20015,6 @@ exports[`Render validation.status = warning properties.suffixIcon: DoubleLeftOut
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >

@@ -1819,7 +1819,6 @@ exports[`Render property.suffixIcon Red: CalendarOutlined - value[0] 1`] = `
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -1947,7 +1946,6 @@ exports[`Render property.suffixIcon: CalendarOutlined - value[0] 1`] = `
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -3794,7 +3792,6 @@ exports[`Render required = true property.suffixIcon Red: CalendarOutlined - valu
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -3922,7 +3919,6 @@ exports[`Render required = true property.suffixIcon: CalendarOutlined - value[0]
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -6257,7 +6253,6 @@ exports[`Render validation.status = error property.suffixIcon Red: CalendarOutli
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -6414,7 +6409,6 @@ exports[`Render validation.status = error property.suffixIcon: CalendarOutlined 
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -8290,7 +8284,6 @@ exports[`Render validation.status = null property.suffixIcon Red: CalendarOutlin
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -8418,7 +8411,6 @@ exports[`Render validation.status = null property.suffixIcon: CalendarOutlined -
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -10673,7 +10665,6 @@ exports[`Render validation.status = success property.suffixIcon Red: CalendarOut
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -10825,7 +10816,6 @@ exports[`Render validation.status = success property.suffixIcon: CalendarOutline
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -13184,7 +13174,6 @@ exports[`Render validation.status = warning property.suffixIcon Red: CalendarOut
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"Red\\"},null]}"
                 id="property.suffixIcon Red: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >
@@ -13341,7 +13330,6 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarOutline
                 aria-label="loading-3-quarters"
                 className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                 id="property.suffixIcon: CalendarOutlined_suffixIcon"
-                rename={Object {}}
                 required={false}
                 role="img"
               >

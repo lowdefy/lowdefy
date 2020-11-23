@@ -79,7 +79,6 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -137,7 +136,6 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >
@@ -160,7 +158,6 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
-      rename={Object {}}
       required={false}
       role="img"
     >

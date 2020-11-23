@@ -11,7 +11,6 @@ exports[`Render default - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="default_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -47,7 +46,6 @@ exports[`Render properties.avatar.shape: square - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.avatar.shape: square_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -85,7 +83,6 @@ exports[`Render properties.loggedIn: false - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.loggedIn: false_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -121,7 +118,6 @@ exports[`Render properties.loginButton - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.loginButton_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -157,7 +153,6 @@ exports[`Render properties.name - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.name_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -193,7 +188,6 @@ exports[`Render properties.showName: left - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.showName: left_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -229,7 +223,6 @@ exports[`Render properties.showName: none - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.showName: none_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -265,7 +258,6 @@ exports[`Render properties.showName: right - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.showName: right_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >
@@ -301,7 +293,6 @@ exports[`Render properties.theme: dark - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.theme: dark_button_icon"
-    rename={Object {}}
     required={false}
     role="img"
   >

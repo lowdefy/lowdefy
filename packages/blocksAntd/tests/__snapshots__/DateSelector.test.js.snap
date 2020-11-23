@@ -1361,7 +1361,6 @@ exports[`Render properties.suffixIcon: CalendarTwoTone - value[0] 1`] = `
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -2819,7 +2818,6 @@ exports[`Render required = true properties.suffixIcon: CalendarTwoTone - value[0
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -4823,7 +4821,6 @@ exports[`Render validation.status = error properties.suffixIcon: CalendarTwoTone
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -6339,7 +6336,6 @@ exports[`Render validation.status = null properties.suffixIcon: CalendarTwoTone 
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -8253,7 +8249,6 @@ exports[`Render validation.status = success properties.suffixIcon: CalendarTwoTo
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >
@@ -10305,7 +10300,6 @@ exports[`Render validation.status = warning properties.suffixIcon: CalendarTwoTo
                   aria-label="loading-3-quarters"
                   className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
                   id="properties.suffixIcon: CalendarTwoTone_suffixIcon"
-                  rename={Object {}}
                   required={false}
                   role="img"
                 >

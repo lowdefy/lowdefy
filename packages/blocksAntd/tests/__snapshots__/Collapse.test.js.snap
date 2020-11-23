@@ -592,7 +592,6 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
         aria-label="loading-3-quarters"
         className="anticon anticon-loading-3-quarters ant-collapse-arrow"
         id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-        rename={Object {}}
         required={false}
         role="img"
       >
@@ -654,7 +653,6 @@ exports[`Render properties.expandIcon: ArrowRightOutlined - value[0] 1`] = `
         aria-label="loading-3-quarters"
         className="anticon anticon-loading-3-quarters ant-collapse-arrow"
         id="properties.expandIcon: ArrowRightOutlined_expandIcon"
-        rename={Object {}}
         required={false}
         role="img"
       >
