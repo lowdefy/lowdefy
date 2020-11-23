@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
 
-const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) => {
+const NotificationBlock = ({ blockId, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
@@ -47,13 +47,13 @@ const NotificationBlock = ({ blockId, properties, methods, onClose, onClick }) =
           />
         ),
         message: args.message || properties.message || blockId,
-        onClose: onClose || (() => methods.callAction({ action: 'onClose' })),
-        onClick: onClick || (() => methods.callAction({ action: 'onClick' })),
+        onClose: () => methods.callAction({ action: 'onClose' }),
+        onClick: () => methods.callAction({ action: 'onClick' }),
         placement: properties.placement,
         top: properties.top,
       });
     });
-  }, [methods.registerMethod]);
+  });
   return <div id={blockId} />;
 };
 

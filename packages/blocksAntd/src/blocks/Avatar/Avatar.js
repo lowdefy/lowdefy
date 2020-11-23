@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { Avatar } from 'antd';
 import Icon from '../Icon/Icon';
 
-const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => (
+const AvatarBlock = ({ actions, blockId, methods, properties }) => (
   <Avatar
     id={blockId}
     alt={properties.alt}
@@ -27,11 +27,11 @@ const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => (
     shape={properties.shape}
     size={properties.size}
     src={properties.src}
-    onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
+    onClick={() => methods.callAction({ action: 'onClick' })}
     className={methods.makeCssClass([
       {
         backgroundColor: !properties.src && properties.color,
-        cursor: (onClick || actions.onClick) && 'pointer',
+        cursor: actions.onClick && 'pointer',
       },
       properties.style,
     ])}

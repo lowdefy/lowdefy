@@ -93,7 +93,12 @@
       "additionalProperties": false,
       "properties": {
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when drawer is closed."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Triggers actions when modal is opened."
         }
       }
     }

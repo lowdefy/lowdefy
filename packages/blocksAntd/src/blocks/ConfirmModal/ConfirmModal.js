@@ -19,7 +19,7 @@ import { Modal } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties }) => {
+const ConfirmModal = ({ blockId, content, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
@@ -28,6 +28,7 @@ const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties })
           <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
         );
       }
+      methods.callAction({ action: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: properties.title,
@@ -42,12 +43,18 @@ const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties })
         maskClosable: properties.maskClosable || false,
         width: properties.width,
         zIndex: properties.zIndex,
-        onOk: onOk || (() => methods.callAction({ action: 'onOk' })),
-        onCancel: onCancel || (() => methods.callAction({ action: 'onCancel' })),
+        onOk: async () => {
+          await methods.callAction({ action: 'onOk' });
+          methods.callAction({ action: 'onClose' });
+        },
+        onCancel: async () => {
+          await methods.callAction({ action: 'onCancel' });
+          methods.callAction({ action: 'onClose' });
+        },
         ...additionalProps,
       });
     });
-  }, [methods.registerMethod]);
+  });
   return <div id={blockId} />;
 };
 
