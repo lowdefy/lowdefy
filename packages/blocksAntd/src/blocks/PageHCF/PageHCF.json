@@ -28,11 +28,25 @@
         },
         "content": {
           "type": "object",
-          "description": "Content properties."
+          "description": "Content properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Content css style object."
+            }
+          }
         },
-        "Footer": {
+        "footer": {
           "type": "object",
-          "description": "Footer properties."
+          "description": "Footer properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Content css style object."
+            }
+          }
         },
         "style": {
           "type": "object",
