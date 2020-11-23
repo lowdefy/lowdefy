@@ -203,6 +203,16 @@ const PageSiderMenu = ({
                           </>
                         ),
                       }}
+                      rename={{
+                        actions: {
+                          onClose: 'onSiderClose',
+                          onOpen: 'onSiderOpen',
+                        },
+                        methods: {
+                          toggleOpen: 'toggleSiderOpen',
+                          setOpen: 'setSiderOpen',
+                        },
+                      }}
                     />
                     <Content
                       blockId={`${blockId}_content`}

@@ -40,6 +40,16 @@ const PageSHCF = ({ blockId, content, properties, methods }) => (
               content={{
                 content: () => content.sider(),
               }}
+              rename={{
+                actions: {
+                  onClose: 'onSiderClose',
+                  onOpen: 'onSiderOpen',
+                },
+                methods: {
+                  toggleOpen: 'toggleSiderOpen',
+                  setOpen: 'setSiderOpen',
+                },
+              }}
             />
           )}
           <Layout
