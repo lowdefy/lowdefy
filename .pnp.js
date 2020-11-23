@@ -127,7 +127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react", "virtual:14dc3c5c29c93a240ee9920d64fd6833645f8d8a02afe23178a1bf927002b564a4b08cf8ebf9743280710b14fd76f4d49a30c662180d631d2b7265cbb3f04552#npm:7.21.5"],
             ["eslint-plugin-react-hooks", "virtual:14dc3c5c29c93a240ee9920d64fd6833645f8d8a02afe23178a1bf927002b564a4b08cf8ebf9743280710b14fd76f4d49a30c662180d631d2b7265cbb3f04552#npm:4.2.0"],
             ["lerna", "npm:3.22.1"],
-            ["prettier", "npm:2.1.2"]
+            ["prettier", "npm:2.2.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -309,7 +309,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -3891,7 +3891,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-react", "virtual:14dc3c5c29c93a240ee9920d64fd6833645f8d8a02afe23178a1bf927002b564a4b08cf8ebf9743280710b14fd76f4d49a30c662180d631d2b7265cbb3f04552#npm:7.21.5"],
             ["eslint-plugin-react-hooks", "virtual:14dc3c5c29c93a240ee9920d64fd6833645f8d8a02afe23178a1bf927002b564a4b08cf8ebf9743280710b14fd76f4d49a30c662180d631d2b7265cbb3f04552#npm:4.2.0"],
             ["lerna", "npm:3.22.1"],
-            ["prettier", "npm:2.1.2"]
+            ["prettier", "npm:2.2.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -9188,7 +9188,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/cache/core-js-npm-3.7.0-53202614cd-95958cddb7.zip/node_modules/core-js/",
+          "packageLocation": "./.yarn/unplugged/core-js-npm-3.7.0-53202614cd/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.7.0"]
           ],
@@ -9208,7 +9208,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.7.0", {
-          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.7.0-213dcef0c2-7fdff8bda2.zip/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.7.0-213dcef0c2/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.7.0"]
           ],
@@ -11013,7 +11013,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/eslint", null],
             ["@types/prettier", null],
             ["eslint", "npm:7.13.0"],
-            ["prettier", "npm:2.1.2"],
+            ["prettier", "npm:2.2.0"],
             ["prettier-linter-helpers", "npm:1.0.0"]
           ],
           "packagePeers": [
@@ -16413,7 +16413,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["mongodb-memory-server", [
         ["npm:6.6.7", {
-          "packageLocation": "./.yarn/cache/mongodb-memory-server-npm-6.6.7-6b4dc63f77-267e382d33.zip/node_modules/mongodb-memory-server/",
+          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.6.7-6b4dc63f77/node_modules/mongodb-memory-server/",
           "packageDependencies": [
             ["mongodb-memory-server", "npm:6.6.7"],
             ["mongodb-memory-server-core", "npm:6.6.7"]
@@ -16812,7 +16812,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.6", {
-          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.6-533efccfd9-6a4b0d6ba2.zip/node_modules/nodemon/",
+          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.6-533efccfd9/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.6"],
             ["chokidar", "npm:3.4.3"],
@@ -18171,10 +18171,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["prettier", [
-        ["npm:2.1.2", {
-          "packageLocation": "./.yarn/cache/prettier-npm-2.1.2-9d456ef3cd-bedc24c568.zip/node_modules/prettier/",
+        ["npm:2.2.0", {
+          "packageLocation": "./.yarn/cache/prettier-npm-2.2.0-9fa8f01d1a-fe7e2ac725.zip/node_modules/prettier/",
           "packageDependencies": [
-            ["prettier", "npm:2.1.2"]
+            ["prettier", "npm:2.2.0"]
           ],
           "linkType": "HARD",
         }]
