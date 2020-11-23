@@ -14,6 +14,7 @@ exports[`Render default - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="default_button_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -50,6 +51,7 @@ exports[`Render properties.links - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.links_button_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >

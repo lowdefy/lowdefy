@@ -980,6 +980,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -1086,6 +1087,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -1466,6 +1468,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -1568,6 +1571,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -2654,6 +2658,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -2760,6 +2765,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -3140,6 +3146,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -3242,6 +3249,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -4671,6 +4679,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -4806,6 +4815,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -5302,6 +5312,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -5433,6 +5444,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -6577,6 +6589,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -6683,6 +6696,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -7063,6 +7077,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -7165,6 +7180,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -8539,6 +8555,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -8669,6 +8686,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -9145,6 +9163,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -9271,6 +9290,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -10748,6 +10768,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.prefixIcon.size: 24_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -10883,6 +10904,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -11379,6 +11401,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"fontSize\\":24},null]}"
               id="properties.suffixIcon.size 24_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >
@@ -11510,6 +11533,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
               aria-label="loading-3-quarters"
               className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
               id="properties.suffixIcon: AlertFilled_suffixIcon"
+              rename={Object {}}
               required={false}
               role="img"
             >

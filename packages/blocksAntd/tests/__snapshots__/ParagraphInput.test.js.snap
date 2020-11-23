@@ -188,6 +188,7 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -286,6 +287,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -308,6 +310,7 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1805,6 +1808,7 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1903,6 +1907,7 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -1925,6 +1930,7 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -3422,6 +3428,7 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -3520,6 +3527,7 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -3542,6 +3550,7 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -5039,6 +5048,7 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -5137,6 +5147,7 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -5159,6 +5170,7 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -6656,6 +6668,7 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -6754,6 +6767,7 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -6776,6 +6790,7 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -8273,6 +8288,7 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon_copyable_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -8371,6 +8387,7 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_before_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >
@@ -8393,6 +8410,7 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
       aria-label="loading-3-quarters"
       className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
       id="properties.copyable: icon: []_copyable_after_icon"
+      rename={Object {}}
       required={false}
       role="img"
     >

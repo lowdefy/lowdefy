@@ -35,6 +35,7 @@ exports[`Render default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -117,6 +118,7 @@ exports[`Render properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -179,6 +181,7 @@ exports[`Render required = true default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -261,6 +264,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -323,6 +327,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -405,6 +410,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -467,6 +473,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -549,6 +556,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -611,6 +619,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -693,6 +702,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -755,6 +765,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="default_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >
@@ -837,6 +848,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
           id="properties.title_add_button_icon"
+          rename={Object {}}
           required={false}
           role="img"
         >

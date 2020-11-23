@@ -29,6 +29,7 @@ exports[`Render properties.icon and properties.title - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon and properties.title_icon"
+    rename={Object {}}
     required={false}
     role="img"
   >
@@ -61,6 +62,7 @@ exports[`Render properties.icon object - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"red\\"},null]}"
     id="properties.icon object_icon"
+    rename={Object {}}
     required={false}
     role="img"
   >
@@ -93,6 +95,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon string_icon"
+    rename={Object {}}
     required={false}
     role="img"
   >
@@ -124,6 +127,7 @@ exports[`Render properties.icon, properties.title and properties.disabled - valu
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.icon, properties.title and properties.disabled_icon"
+    rename={Object {}}
     required={false}
     role="img"
   >
@@ -178,6 +182,7 @@ exports[`Render properties.style with icon - value[0] 1`] = `
     aria-label="loading-3-quarters"
     className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
     id="properties.style with icon_icon"
+    rename={Object {}}
     required={false}
     role="img"
   >

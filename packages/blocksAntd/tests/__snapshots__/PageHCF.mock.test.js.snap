@@ -24,6 +24,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -67,6 +68,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -96,6 +98,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -139,6 +142,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -168,6 +172,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -211,6 +216,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -254,6 +260,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -289,6 +296,7 @@ Array [
               },
             }
           }
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -318,6 +326,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -361,6 +370,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -390,6 +400,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -425,6 +436,7 @@ Array [
               },
             }
           }
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -472,6 +484,7 @@ Array [
               "color": "#4432a8",
             }
           }
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -501,6 +514,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -530,6 +544,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -579,6 +594,7 @@ Array [
               },
             }
           }
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -608,6 +624,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -637,6 +654,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -684,6 +702,7 @@ Array [
               "theme": "light",
             }
           }
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -713,6 +732,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -742,6 +762,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -785,6 +806,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -814,6 +836,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={
@@ -843,6 +866,7 @@ Array [
             }
           }
           properties={Object {}}
+          rename={Object {}}
           required={false}
           user={Object {}}
           validation={

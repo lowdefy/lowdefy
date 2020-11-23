@@ -154,6 +154,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
         aria-label="loading-3-quarters"
         className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+        rename={Object {}}
         required={false}
         role="img"
       >
@@ -255,6 +256,7 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
         aria-label="loading-3-quarters"
         className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
+        rename={Object {}}
         required={false}
         role="img"
       >
