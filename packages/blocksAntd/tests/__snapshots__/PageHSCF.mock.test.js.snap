@@ -1006,6 +1006,107 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.sider.theme: light - dark is default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.sider.theme: light - dark is default_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.sider.theme: light - dark is default_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <FooterBlock
+          actions={Object {}}
+          blockId="properties.sider.theme: light - dark is default_footer"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.sider.theme: light - dark is default",
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.style: border: 5px solid blue - value[0] - default 1`] = `
 Array [
   Array [

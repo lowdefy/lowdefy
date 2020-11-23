@@ -21,9 +21,8 @@ import { mergeObjects } from '@lowdefy/helpers';
 import Button from '../Button/Button';
 import Drawer from '../Drawer/Drawer';
 import Menu from '../Menu/Menu';
-import UserAvatar from '../UserAvatar/UserAvatar';
 
-const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
+const MobileMenu = ({ blockId, methods, menus, pageId, properties }) => {
   const [open, setOpen] = useState(false);
   return (
     <div id={blockId}>
@@ -60,15 +59,6 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
         content={{
           content: () => (
             <>
-              <UserAvatar
-                blockId={`${blockId}_user_avatar`}
-                methods={methods}
-                properties={mergeObjects([
-                  { showName: 'right', theme: 'light', style: { padding: 16 } },
-                  properties.userAvatar,
-                ])}
-                user={user}
-              />
               <Menu
                 blockId={`${blockId}_menu`}
                 methods={methods}

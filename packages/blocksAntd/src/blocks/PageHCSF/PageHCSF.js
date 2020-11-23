@@ -74,7 +74,7 @@ const PageHCSF = ({ blockId, content, properties, methods }) => (
                         },
                         methods: {
                           toggleOpen: 'toggleSiderOpen',
-                          onOpen: 'setSiderOpen',
+                          setOpen: 'setSiderOpen',
                         },
                       }}
                     />

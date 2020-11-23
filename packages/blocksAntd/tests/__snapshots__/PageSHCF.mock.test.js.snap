@@ -77,35 +77,6 @@ Array [
             }
           }
         />
-        <FooterBlock
-          actions={Object {}}
-          blockId="areas.footer_footer"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
       </React.Fragment>,
       "className": "css-vooagt",
       "id": "areas.footer",
@@ -120,35 +91,6 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
-          actions={Object {}}
-          blockId="areas.header_header"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
         <LayoutBlock
           actions={Object {}}
           blockId="areas.header_layout"
@@ -192,6 +134,47 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
+        <SiderBlock
+          actions={Object {}}
+          blockId="areas.sider_sider"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+            }
+          }
+          properties={Object {}}
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
         <LayoutBlock
           actions={Object {}}
           blockId="areas.sider_layout"
@@ -278,9 +261,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.content.style: border: 5px solid blue_header"
+          blockId="properties.content.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -297,6 +280,18 @@ Array [
             }
           }
           properties={Object {}}
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
           required={false}
           user={Object {}}
           validation={
@@ -310,35 +305,6 @@ Array [
         <LayoutBlock
           actions={Object {}}
           blockId="properties.content.style: border: 5px solid blue_layout"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
-        <FooterBlock
-          actions={Object {}}
-          blockId="properties.content.style: border: 5px solid blue_footer"
           content={
             Object {
               "content": [Function],
@@ -379,9 +345,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.footer.style: border: 5px solid blue_header"
+          blockId="properties.footer.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -398,6 +364,18 @@ Array [
             }
           }
           properties={Object {}}
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
           required={false}
           user={Object {}}
           validation={
@@ -437,41 +415,6 @@ Array [
             }
           }
         />
-        <FooterBlock
-          actions={Object {}}
-          blockId="properties.footer.style: border: 5px solid blue_footer"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={
-            Object {
-              "style": Object {
-                "border": "5px solid blue",
-              },
-            }
-          }
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
       </React.Fragment>,
       "className": "css-vooagt",
       "id": "properties.footer.style: border: 5px solid blue",
@@ -486,9 +429,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.header.color: #4432a8 _header"
+          blockId="properties.header.color: #4432a8 _sider"
           content={
             Object {
               "content": [Function],
@@ -504,9 +447,17 @@ Array [
               "registerMethod": [Function],
             }
           }
-          properties={
+          properties={Object {}}
+          rename={
             Object {
-              "color": "#4432a8",
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
             }
           }
           required={false}
@@ -548,9 +499,23 @@ Array [
             }
           }
         />
-        <FooterBlock
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.color: #4432a8 ",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.style: border: 5px solid blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.header.color: #4432a8 _footer"
+          blockId="properties.header.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -567,52 +532,15 @@ Array [
             }
           }
           properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
+          rename={
             Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
-      </React.Fragment>,
-      "className": "css-vooagt",
-      "id": "properties.header.color: #4432a8 ",
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.header.style: border: 5px solid blue - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "children": <React.Fragment>
-        <HeaderBlock
-          actions={Object {}}
-          blockId="properties.header.style: border: 5px solid blue_header"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={
-            Object {
-              "style": Object {
-                "border": "5px solid blue",
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
               },
             }
           }
@@ -655,9 +583,23 @@ Array [
             }
           }
         />
-        <FooterBlock
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.style: border: 5px solid blue",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.theme: light - dark is default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.header.style: border: 5px solid blue_footer"
+          blockId="properties.header.theme: light - dark is default_sider"
           content={
             Object {
               "content": [Function],
@@ -674,51 +616,16 @@ Array [
             }
           }
           properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
+          rename={
             Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
-      </React.Fragment>,
-      "className": "css-vooagt",
-      "id": "properties.header.style: border: 5px solid blue",
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.header.theme: light - dark is default - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "children": <React.Fragment>
-        <HeaderBlock
-          actions={Object {}}
-          blockId="properties.header.theme: light - dark is default_header"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={
-            Object {
-              "theme": "light",
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
             }
           }
           required={false}
@@ -760,35 +667,6 @@ Array [
             }
           }
         />
-        <FooterBlock
-          actions={Object {}}
-          blockId="properties.header.theme: light - dark is default_footer"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
       </React.Fragment>,
       "className": "css-vooagt",
       "id": "properties.header.theme: light - dark is default",
@@ -803,9 +681,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.main.style: border: 5px solid blue_header"
+          blockId="properties.main.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -822,6 +700,18 @@ Array [
             }
           }
           properties={Object {}}
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
           required={false}
           user={Object {}}
           validation={
@@ -867,35 +757,6 @@ Array [
             }
           }
         />
-        <FooterBlock
-          actions={Object {}}
-          blockId="properties.main.style: border: 5px solid blue_footer"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
       </React.Fragment>,
       "className": "css-vooagt",
       "id": "properties.main.style: border: 5px solid blue",
@@ -910,9 +771,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.sider.style: border: 5px solid blue_header"
+          blockId="properties.sider.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -928,7 +789,25 @@ Array [
               "registerMethod": [Function],
             }
           }
-          properties={Object {}}
+          properties={
+            Object {
+              "style": Object {
+                "border": "5px solid blue",
+              },
+            }
+          }
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
           required={false}
           user={Object {}}
           validation={
@@ -968,9 +847,68 @@ Array [
             }
           }
         />
-        <FooterBlock
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.sider.style: border: 5px solid blue",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.sider.theme: light - dark is default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.sider.style: border: 5px solid blue_footer"
+          blockId="properties.sider.theme: light - dark is default_sider"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "theme": "light",
+            }
+          }
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.sider.theme: light - dark is default_layout"
           content={
             Object {
               "content": [Function],
@@ -999,7 +937,7 @@ Array [
         />
       </React.Fragment>,
       "className": "css-vooagt",
-      "id": "properties.sider.style: border: 5px solid blue",
+      "id": "properties.sider.theme: light - dark is default",
     },
     Object {},
   ],
@@ -1011,9 +949,9 @@ Array [
   Array [
     Object {
       "children": <React.Fragment>
-        <HeaderBlock
+        <SiderBlock
           actions={Object {}}
-          blockId="properties.style: border: 5px solid blue_header"
+          blockId="properties.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
@@ -1030,6 +968,18 @@ Array [
             }
           }
           properties={Object {}}
+          rename={
+            Object {
+              "actions": Object {
+                "onClose": "onSiderClose",
+                "onOpen": "onSiderOpen",
+              },
+              "methods": Object {
+                "setOpen": "setSiderOpen",
+                "toggleOpen": "toggleSiderOpen",
+              },
+            }
+          }
           required={false}
           user={Object {}}
           validation={
@@ -1043,35 +993,6 @@ Array [
         <LayoutBlock
           actions={Object {}}
           blockId="properties.style: border: 5px solid blue_layout"
-          content={
-            Object {
-              "content": [Function],
-            }
-          }
-          list={Array []}
-          menus={Array []}
-          methods={
-            Object {
-              "callAction": [Function],
-              "makeCssClass": [Function],
-              "registerAction": [Function],
-              "registerMethod": [Function],
-            }
-          }
-          properties={Object {}}
-          required={false}
-          user={Object {}}
-          validation={
-            Object {
-              "errors": Array [],
-              "status": null,
-              "warnings": Array [],
-            }
-          }
-        />
-        <FooterBlock
-          actions={Object {}}
-          blockId="properties.style: border: 5px solid blue_footer"
           content={
             Object {
               "content": [Function],

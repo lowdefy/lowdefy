@@ -14,10 +14,6 @@
           "type": "object",
           "description": "Menu drawer properties."
         },
-        "userAvatar": {
-          "type": "object",
-          "description": "Menu user avatar properties."
-        },
         "backgroundColor": {
           "type": "string",
           "description": "Menu background color."

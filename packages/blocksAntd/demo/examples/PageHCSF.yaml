@@ -48,20 +48,6 @@
       blocks: []
     sider:
       blocks: []
-- id: "properties.sider.collapsed: true "
-  type: PageHCSF
-  properties:
-    sider:
-      collapsed: true
-  areas:
-    content:
-      blocks: []
-    footer:
-      blocks: []
-    header:
-      blocks: []
-    sider:
-      blocks: []
 - id: "properties.style: border: 5px solid blue"
   type: PageHCSF
   properties:
@@ -125,6 +111,21 @@
   type: PageHCSF
   properties:
     sider:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.main.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    main:
       style:
         border: 5px solid blue
   areas:
