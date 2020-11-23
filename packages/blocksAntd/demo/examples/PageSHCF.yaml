@@ -1,14 +1,23 @@
 - id: default
   type: PageSHCF
-- id: properties.content
+- id: areas.content
   type: PageSHCF
   areas:
     content:
       blocks: []
+- id: areas.footer
+  type: PageSHCF
+  areas:
     footer:
       blocks: []
+- id: areas.header
+  type: PageSHCF
+  areas:
     header:
       blocks: []
+- id: areas.sider
+  type: PageSHCF
+  areas:
     sider:
       blocks: []
 - id: "properties.header.theme: light - dark is default"
@@ -45,6 +54,95 @@
   properties:
     header:
       color: "#4432a8"
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    style:
+      border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.content.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    content:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.header.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    header:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.footer.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    footer:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.sider.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    sider:
+      style:
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+    footer:
+      blocks: []
+    header:
+      blocks: []
+    sider:
+      blocks: []
+- id: "properties.main.style: border: 5px solid blue"
+  type: PageHCSF
+  properties:
+    main:
+      style:
+        border: 5px solid blue
   areas:
     content:
       blocks: []
