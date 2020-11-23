@@ -28,7 +28,7 @@ const logger = console.log;
 
 const Examples = ({ type, Component }) => {
   const [showYaml, toggelYaml] = useState(true);
-  // duplicate imported yaml to be mutabile
+  // duplicate imported yaml to be mutable
   const examples = JSON.parse(JSON.stringify(require(`./examples/${type}.yaml`)));
   const meta = require(`../src/blocks/${type}/${type}.json`);
   const values =

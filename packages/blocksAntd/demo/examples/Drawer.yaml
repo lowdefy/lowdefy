@@ -8,7 +8,7 @@
   type: Drawer
   properties:
     closable: false
-- id: "properties.title"
+- id: "properties.mask"
   type: Drawer
   properties:
     mask: false
