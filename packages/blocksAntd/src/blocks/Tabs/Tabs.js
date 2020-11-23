@@ -20,14 +20,18 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const TabsBlock = ({ blockId, content, methods, properties }) => {
-  // remove extraAreaKey key area from tabs
-  const tabs = (
-    properties.tabs ||
-    Object.keys(content)
+const getTabs = ({ content, properties }) => {
+  let tabs = properties.tabs;
+  if (!tabs) {
+    tabs = Object.keys(content)
       .sort()
-      .map((key) => ({ key, title: key }))
-  ).filter((tab) => tab.key !== properties.extraAreaKey);
+      .map((key) => ({ key, title: key }));
+  }
+  // remove extraAreaKey key area from tabs
+  return tabs.filter((tab) => tab.key !== properties.extraAreaKey);
+};
+
+const getAdditionalProps = ({ content, properties }) => {
   const additionalProps = {};
   if (properties.activeKey) {
     additionalProps.activeKey = properties.activeKey;
@@ -36,6 +40,12 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
     additionalProps.tabBarExtraContent =
       content[properties.extraAreaKey] && content[properties.extraAreaKey]();
   }
+  return additionalProps;
+};
+
+const TabsBlock = ({ blockId, content, methods, properties }) => {
+  const tabs = getTabs({ content, properties });
+  const additionalProps = getAdditionalProps({ content, properties });
   return (
     <Tabs
       animated={properties.animated !== undefined ? properties.animated : true}
