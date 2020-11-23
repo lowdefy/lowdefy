@@ -44,6 +44,22 @@ test('googleSheetAppendOne', async () => {
       married: 'TRUE',
     },
   });
+  expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "age": "34",
+          "birth_date": "2020/04/26",
+          "id": "1",
+          "married": "TRUE",
+          "name": "John",
+        },
+        Object {
+          "raw": undefined,
+        },
+      ],
+    ]
+  `);
 });
 
 test('googleSheetAppendOne, transform types', async () => {
@@ -77,6 +93,61 @@ test('googleSheetAppendOne, transform types', async () => {
       married: 'TRUE',
     },
   });
+  expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "age": "34",
+          "birth_date": "2020-04-26T00:00:00.000Z",
+          "id": "1",
+          "married": "TRUE",
+          "name": "John",
+        },
+        Object {
+          "raw": undefined,
+        },
+      ],
+    ]
+  `);
+});
+
+test('googleSheetAppendOne, raw true', async () => {
+  mockAddRow.mockImplementation(mockAddRowDefaultImp);
+  const res = await resolver({
+    request: {
+      row: { id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
+      options: {
+        raw: true,
+      },
+    },
+    connection: {},
+  });
+  expect(res).toEqual({
+    insertedCount: 1,
+    row: {
+      id: '1',
+      name: 'John',
+      age: '34',
+      birth_date: '2020/04/26',
+      married: 'TRUE',
+    },
+  });
+  expect(mockAddRow.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "age": "34",
+          "birth_date": "2020/04/26",
+          "id": "1",
+          "married": "TRUE",
+          "name": "John",
+        },
+        Object {
+          "raw": true,
+        },
+      ],
+    ]
+  `);
 });
 
 test('valid request schema', () => {

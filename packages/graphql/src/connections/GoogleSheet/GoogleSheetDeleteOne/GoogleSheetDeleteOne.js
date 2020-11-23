@@ -17,6 +17,7 @@
 import schema from './GoogleSheetDeleteOneSchema.json';
 import cleanRows from '../cleanRows';
 import getSheet from '../getSheet';
+import { transformRead } from '../transformTypes';
 import mingoFilter from '../../../utils/mingoFilter';
 
 async function googleSheetDeleteOne({ request, connection }) {
@@ -24,6 +25,7 @@ async function googleSheetDeleteOne({ request, connection }) {
   const { limit, skip } = options;
   const sheet = await getSheet({ connection });
   let rows = await sheet.getRows({ limit, offset: skip });
+  rows = transformRead({ input: rows, types: connection.columnTypes });
   rows = mingoFilter({ input: rows, filter });
   if (rows.length === 0) {
     return {
