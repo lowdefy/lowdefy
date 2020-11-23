@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lowdefy Request Schema - GoogleSheetDeleteMany",
+  "type": "object",
+  "required": ["filter"],
+  "properties": {
+    "filter": {
+      "type": "object",
+      "description": "A MongoDB query expression to filter the data. All rows matched by the filter will be deleted",
+      "errorMessage": {
+        "type": "GoogleSheetDeleteMany request property \"filter\" should be an object."
+      }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "number",
+          "description": "The maximum number of rows to fetch.",
+          "errorMessage": {
+            "type": "GoogleSheetDeleteMany request property \"options.limit\" should be a number."
+          }
+        },
+        "skip": {
+          "type": "number",
+          "description": "The number of rows to skip from the top of the sheet.",
+          "errorMessage": {
+            "type": "GoogleSheetDeleteMany request property \"options.skip\" should be a number."
+          }
+        }
+      }
+    }
+  },
+  "errorMessage": {
+    "type": "GoogleSheetDeleteMany request properties should be an object.",
+    "required": {
+      "filter": "GoogleSheetDeleteMany request should have required property \"filter\"."
+    }
+  }
+}

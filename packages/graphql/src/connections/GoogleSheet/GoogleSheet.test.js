@@ -21,7 +21,10 @@ import { ConfigurationError } from '../../context/errors';
 const { schema } = GoogleSheet;
 
 test('All requests are present', () => {
+  expect(GoogleSheet.requests.GoogleSheetAppendOne).toBeDefined();
   expect(GoogleSheet.requests.GoogleSheetAppendMany).toBeDefined();
+  expect(GoogleSheet.requests.GoogleSheetDeleteOne).toBeDefined();
+  expect(GoogleSheet.requests.GoogleSheetDeleteMany).toBeDefined();
   expect(GoogleSheet.requests.GoogleSheetGetMany).toBeDefined();
   expect(GoogleSheet.requests.GoogleSheetGetOne).toBeDefined();
 });

@@ -17,6 +17,8 @@
 import schema from './GoogleSheetSchema.json';
 import GoogleSheetAppendMany from './GoogleSheetAppendMany/GoogleSheetAppendMany';
 import GoogleSheetAppendOne from './GoogleSheetAppendOne/GoogleSheetAppendOne';
+import GoogleSheetDeleteOne from './GoogleSheetDeleteOne/GoogleSheetDeleteOne';
+import GoogleSheetDeleteMany from './GoogleSheetDeleteMany/GoogleSheetDeleteMany';
 import GoogleSheetGetMany from './GoogleSheetGetMany/GoogleSheetGetMany';
 import GoogleSheetGetOne from './GoogleSheetGetOne/GoogleSheetGetOne';
 
@@ -25,6 +27,8 @@ export default {
   requests: {
     GoogleSheetAppendMany,
     GoogleSheetAppendOne,
+    GoogleSheetDeleteOne,
+    GoogleSheetDeleteMany,
     GoogleSheetGetMany,
     GoogleSheetGetOne,
   },
