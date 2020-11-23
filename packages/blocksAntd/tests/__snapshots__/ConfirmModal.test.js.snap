@@ -190,7 +190,21 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
+            "callAction": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "action": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -889,7 +903,21 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
+            "callAction": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "action": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1588,7 +1616,21 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
+            "callAction": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "action": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2295,7 +2337,21 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
+            "callAction": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "action": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2986,7 +3042,21 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
+            "callAction": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "action": "onOpen",
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": undefined,
+                },
+              ],
+            },
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [

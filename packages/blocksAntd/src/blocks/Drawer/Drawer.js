@@ -19,14 +19,26 @@ import { Drawer } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const DrawerBlock = ({ blockId, content, properties, methods, onClose }) => {
+const triggerSetOpen = ({ state, setOpen, methods }) => {
+  if (!state) {
+    methods.callAction({ action: 'onClose' });
+  }
+  if (state) {
+    methods.callAction({ action: 'onOpen' });
+  }
+  setOpen(state);
+};
+
+const DrawerBlock = ({ blockId, content, properties, methods }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
-    methods.registerMethod('toggleOpen', () => {
-      setOpen(!openState);
-    });
-    methods.registerMethod('setOpen', ({ open }) => setOpen(!!open));
-  }, [methods.registerMethod, setOpen]);
+    methods.registerMethod('toggleOpen', () =>
+      triggerSetOpen({ state: !openState, setOpen, methods })
+    );
+    methods.registerMethod('setOpen', ({ open }) =>
+      triggerSetOpen({ state: !!open, setOpen, methods })
+    );
+  });
   return (
     <Drawer
       id={blockId}
@@ -41,13 +53,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, onClose }) => {
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
-      onClose={
-        onClose ||
-        (() => {
-          methods.callAction({ action: 'onClose' });
-          setOpen(false);
-        })
-      }
+      onClose={() => triggerSetOpen({ state: false, setOpen, methods })}
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}

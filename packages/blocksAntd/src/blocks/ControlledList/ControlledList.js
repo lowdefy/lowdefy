@@ -28,7 +28,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
     methods.registerMethod('removeItem', methods.removeItem);
     methods.registerMethod('moveItemDown', methods.moveItemDown);
     methods.registerMethod('moveItemUp', methods.moveItemUp);
-  }, []);
+  });
   const styles = {
     header: {
       display: 'flex',

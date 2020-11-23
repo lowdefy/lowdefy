@@ -36,7 +36,7 @@ const UserAvatar = ({ blockId, methods, properties, user }) => {
         params: { pageId: 'profile' },
       },
     ]);
-  }, []);
+  });
   if (properties.disabled) {
     return '';
   }

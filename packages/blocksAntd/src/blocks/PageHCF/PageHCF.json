@@ -44,7 +44,7 @@
           "properties": {
             "style": {
               "type": "object",
-              "description": "Content css style object."
+              "description": "Footer css style object."
             }
           }
         },

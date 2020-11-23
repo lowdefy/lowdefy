@@ -62,7 +62,8 @@
       "additionalProperties": false,
       "properties": {
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when message is closed."
         }
       }
     }
