@@ -14,18 +14,22 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import { type } from '@lowdefy/helpers';
 
-const resolvers = {
-  AwsS3bucket,
-  AxiosHttp,
-  GoogleSheet,
-  MongoDBCollection,
-  SendGridMail,
-};
+function cleanRow(row) {
+  // eslint-disable-next-line no-unused-vars
+  const { _sheet, ...rest } = row;
+  return { ...rest };
+}
 
-export default resolvers;
+function cleanRows(input) {
+  if (type.isObject(input)) {
+    return cleanRow(input);
+  }
+  if (type.isArray(input)) {
+    return input.map((row) => cleanRow(row));
+  }
+  throw new Error(`cleanRows received invalid input type ${type.typeOf(input)}.`);
+}
+
+export default cleanRows;

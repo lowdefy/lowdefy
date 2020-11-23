@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import { type } from '@lowdefy/helpers';
+import mingoAggregation from './mingoAggregation';
 
-const resolvers = {
-  AwsS3bucket,
-  AxiosHttp,
-  GoogleSheet,
-  MongoDBCollection,
-  SendGridMail,
-};
+function mingoFilter({ input = [], filter = {} }) {
+  if (!type.isObject(filter)) {
+    throw new Error('Mingo filter error. Argument "filter" should be an object.');
+  }
+  if (!type.isArray(input)) {
+    throw new Error('Mingo filter error. Argument "input" should be an array.');
+  }
+  const pipeline = [{ $match: filter }];
+  return mingoAggregation({ input, pipeline });
+}
 
-export default resolvers;
+export default mingoFilter;

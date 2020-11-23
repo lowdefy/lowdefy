@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import schema from './GoogleSheetAppendManySchema.json';
+import getSheet from '../getSheet';
+import { transformWrite } from '../transformTypes';
 
-const resolvers = {
-  AwsS3bucket,
-  AxiosHttp,
-  GoogleSheet,
-  MongoDBCollection,
-  SendGridMail,
-};
+async function googleSheetAppendMany({ request, connection }) {
+  const { rows, options = {} } = request;
+  const { raw } = options;
+  const sheet = await getSheet({ connection });
+  await sheet.addRows(transformWrite({ input: rows, types: connection.columnTypes }), { raw });
+  return {
+    insertedCount: rows.length,
+  };
+}
 
-export default resolvers;
+export default { resolver: googleSheetAppendMany, schema, checkRead: false, checkWrite: true };
