@@ -72,10 +72,6 @@
               "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
               "description": "Breakpoints of the responsive layout"
             },
-            "collapsed": {
-              "type": "boolean",
-              "description": "Set the current collapsed state"
-            },
             "collapsedWidth": {
               "type": "integer",
               "description": "Width of the collapsed sidebar, by setting to 0 a special trigger will appear"
@@ -108,10 +104,6 @@
             "width": {
               "type": ["string", "number"],
               "description": "width of the sidebar"
-            },
-            "zeroWidthTriggerStyle": {
-              "type": "object",
-              "description": "Css style to applied to zero width trigger."
             }
           }
         },
