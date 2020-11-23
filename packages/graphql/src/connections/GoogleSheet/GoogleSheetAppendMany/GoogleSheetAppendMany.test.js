@@ -26,7 +26,7 @@ jest.mock('../getSheet', () => () => ({
 const { resolver, schema, checkRead, checkWrite } = GoogleSheetAppendMany;
 const mockAddRowsDefaultImp = (rows) => rows.map((row) => ({ ...row, _sheet: {} }));
 
-test('googleSheetAppendMany', async () => {
+test('googleSheetAppendMany, one row', async () => {
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await resolver({
     request: {
@@ -34,15 +34,21 @@ test('googleSheetAppendMany', async () => {
     },
     connection: {},
   });
-  expect(res).toEqual([
-    {
-      id: '1',
-      name: 'John',
-      age: '34',
-      birth_date: '2020/04/26',
-      married: 'TRUE',
+  expect(res).toEqual({ insertedCount: 1 });
+});
+
+test('googleSheetAppendMany, two rows', async () => {
+  mockAddRows.mockImplementation(mockAddRowsDefaultImp);
+  const res = await resolver({
+    request: {
+      rows: [
+        { id: '1', name: 'John', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
+        { id: '2', name: 'Peter', age: '34', birth_date: '2020/04/26', married: 'TRUE' },
+      ],
     },
-  ]);
+    connection: {},
+  });
+  expect(res).toEqual({ insertedCount: 2 });
 });
 
 test('googleSheetAppendMany, rows empty array', async () => {
@@ -53,7 +59,7 @@ test('googleSheetAppendMany, rows empty array', async () => {
     },
     connection: {},
   });
-  expect(res).toEqual([]);
+  expect(res).toEqual({ insertedCount: 0 });
 });
 
 test('googleSheetAppendMany, transform types', async () => {
@@ -79,15 +85,7 @@ test('googleSheetAppendMany, transform types', async () => {
       },
     },
   });
-  expect(res).toEqual([
-    {
-      id: '1',
-      name: 'John',
-      age: '34',
-      birth_date: '2020-04-26T00:00:00.000Z',
-      married: 'TRUE',
-    },
-  ]);
+  expect(res).toEqual({ insertedCount: 1 });
 });
 
 test('valid request schema', () => {
@@ -97,6 +95,20 @@ test('valid request schema', () => {
         name: 'name',
       },
     ],
+  };
+  expect(testSchema({ schema, object: request })).toBe(true);
+});
+
+test('valid request schema, all options', () => {
+  const request = {
+    rows: [
+      {
+        name: 'name',
+      },
+    ],
+    options: {
+      raw: true,
+    },
   };
   expect(testSchema({ schema, object: request })).toBe(true);
 });
@@ -135,6 +147,23 @@ test('rows is missing', () => {
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
     'GoogleSheetAppendMany request should have required property "rows".'
+  );
+});
+
+test('raw is not a boolean', () => {
+  const request = {
+    rows: [
+      {
+        name: 'name',
+      },
+    ],
+    options: {
+      raw: 'raw',
+    },
+  };
+  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: request })).toThrow(
+    'GoogleSheetAppendMany request property "options.raw" should be a boolean.'
   );
 });
 

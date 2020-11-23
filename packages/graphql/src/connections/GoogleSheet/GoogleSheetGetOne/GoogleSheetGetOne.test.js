@@ -70,7 +70,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
   return Promise.resolve(rows.slice(offset).slice(undefined, limit));
 };
 
-test('googleSheetGetOne, all rows returned', async () => {
+test('googleSheetGetOne, first row is returned', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await resolver({ request: {}, connection: {} });
   expect(res).toEqual({
@@ -92,7 +92,7 @@ test('googleSheetGetOne, empty rows returned', async () => {
 
 test('googleSheetGetOne, limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { limit: 2 }, connection: {} });
+  const res = await resolver({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 2,
     _rawData: ['1', 'John', '34', '2020/04/26', 'TRUE'],
@@ -104,9 +104,9 @@ test('googleSheetGetOne, limit', async () => {
   });
 });
 
-test('googleSheetGetOne, offset', async () => {
+test('googleSheetGetOne, skip', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { offset: 2 }, connection: {} });
+  const res = await resolver({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 4,
     _rawData: ['3', 'Tim', '34', '2020/04/28', 'FALSE'],
@@ -118,9 +118,9 @@ test('googleSheetGetOne, offset', async () => {
   });
 });
 
-test('googleSheetGetOne, offset and limit', async () => {
+test('googleSheetGetOne, skip and limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { offset: 2, limit: 1 }, connection: {} });
+  const res = await resolver({ request: { options: { skip: 2, limit: 1 } }, connection: {} });
   expect(res).toEqual({
     _rowNumber: 4,
     _rawData: ['3', 'Tim', '34', '2020/04/28', 'FALSE'],
@@ -149,16 +149,16 @@ test('googleSheetGetOne, filter', async () => {
 test('googleSheetGetOne, limit before filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await resolver({
-    request: { filter: { name: 'Tim' }, limit: 2 },
+    request: { filter: { name: 'Tim' }, options: { limit: 2 } },
     connection: {},
   });
   expect(res).toEqual(null);
 });
 
-test('googleSheetGetOne, offset before filter', async () => {
+test('googleSheetGetOne, skip before filter', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await resolver({
-    request: { filter: { married: 'TRUE' }, offset: 2 },
+    request: { filter: { married: 'TRUE' }, options: { skip: 2 } },
     connection: {},
   });
   expect(res).toEqual({
@@ -223,8 +223,10 @@ test('valid request schema', () => {
 
 test('valid request schema, all properties', () => {
   const request = {
-    limit: 100,
-    offset: 300,
+    options: {
+      limit: 100,
+      skip: 300,
+    },
   };
   expect(testSchema({ schema, object: request })).toBe(true);
 });
@@ -239,21 +241,25 @@ test('request properties is not an object', () => {
 
 test('limit is not a number', () => {
   const request = {
-    limit: true,
+    options: {
+      limit: true,
+    },
   };
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
-    'GoogleSheetGetOne request property "limit" should be a number.'
+    'GoogleSheetGetOne request property "options.limit" should be a number.'
   );
 });
 
-test('offset is not a number', () => {
+test('skip is not a number', () => {
   const request = {
-    offset: true,
+    options: {
+      skip: true,
+    },
   };
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
-    'GoogleSheetGetOne request property "offset" should be a number.'
+    'GoogleSheetGetOne request property "options.skip" should be a number.'
   );
 });
 

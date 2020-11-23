@@ -21,9 +21,10 @@ import { transformRead } from '../transformTypes';
 import mingoFilter from '../../../utils/mingoFilter';
 
 async function googleSheetGetOne({ request, connection }) {
-  const { filter, limit, offset } = request;
+  const { filter, options = {} } = request;
+  const { limit, skip } = options;
   const sheet = await getSheet({ connection });
-  let rows = await sheet.getRows({ limit, offset });
+  let rows = await sheet.getRows({ limit, offset: skip });
   rows = cleanRows(rows);
   rows = transformRead({ input: rows, types: connection.columnTypes });
   if (filter) {

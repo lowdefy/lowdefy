@@ -22,9 +22,10 @@ import mingoAggregation from '../../../utils/mingoAggregation';
 import mingoFilter from '../../../utils/mingoFilter';
 
 async function googleSheetGetMany({ request, connection }) {
-  const { filter, limit, offset, pipeline } = request;
+  const { filter, pipeline, options = {} } = request;
+  const { limit, skip } = options;
   const sheet = await getSheet({ connection });
-  let rows = await sheet.getRows({ limit, offset });
+  let rows = await sheet.getRows({ limit, offset: skip });
   rows = cleanRows(rows);
   rows = transformRead({ input: rows, types: connection.columnTypes });
   if (filter) {

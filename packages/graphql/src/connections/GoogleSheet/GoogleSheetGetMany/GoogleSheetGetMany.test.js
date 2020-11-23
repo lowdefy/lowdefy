@@ -121,7 +121,7 @@ test('googleSheetGetMany, empty rows returned', async () => {
 
 test('googleSheetGetMany, limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { limit: 2 }, connection: {} });
+  const res = await resolver({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 2,
@@ -144,9 +144,9 @@ test('googleSheetGetMany, limit', async () => {
   ]);
 });
 
-test('googleSheetGetMany, offset', async () => {
+test('googleSheetGetMany, skip', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { offset: 2 }, connection: {} });
+  const res = await resolver({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 4,
@@ -169,9 +169,9 @@ test('googleSheetGetMany, offset', async () => {
   ]);
 });
 
-test('googleSheetGetMany, offset and limit', async () => {
+test('googleSheetGetMany, skip and limit', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await resolver({ request: { offset: 2, limit: 1 }, connection: {} });
+  const res = await resolver({ request: { options: { skip: 2, limit: 1 } }, connection: {} });
   expect(res).toEqual([
     {
       _rowNumber: 4,
@@ -306,8 +306,12 @@ test('valid request schema', () => {
 
 test('valid request schema, all properties', () => {
   const request = {
-    limit: 100,
-    offset: 300,
+    filter: { id: 1 },
+    pipeline: [{ $addFields: { a: 1 } }],
+    options: {
+      limit: 100,
+      skip: 300,
+    },
   };
   expect(testSchema({ schema, object: request })).toBe(true);
 });
@@ -322,21 +326,25 @@ test('request properties is not an object', () => {
 
 test('limit is not a number', () => {
   const request = {
-    limit: true,
+    options: {
+      limit: true,
+    },
   };
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
-    'GoogleSheetGetMany request property "limit" should be a number.'
+    'GoogleSheetGetMany request property "options.limit" should be a number.'
   );
 });
 
-test('offset is not a number', () => {
+test('skip is not a number', () => {
   const request = {
-    offset: true,
+    options: {
+      skip: true,
+    },
   };
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
-    'GoogleSheetGetMany request property "offset" should be a number.'
+    'GoogleSheetGetMany request property "options.skip" should be a number.'
   );
 });
 

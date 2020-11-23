@@ -35,11 +35,14 @@ test('googleSheetAppendOne', async () => {
     connection: {},
   });
   expect(res).toEqual({
-    id: '1',
-    name: 'John',
-    age: '34',
-    birth_date: '2020/04/26',
-    married: 'TRUE',
+    insertedCount: 1,
+    row: {
+      id: '1',
+      name: 'John',
+      age: '34',
+      birth_date: '2020/04/26',
+      married: 'TRUE',
+    },
   });
 });
 
@@ -65,11 +68,14 @@ test('googleSheetAppendOne, transform types', async () => {
     },
   });
   expect(res).toEqual({
-    id: '1',
-    name: 'John',
-    age: '34',
-    birth_date: '2020-04-26T00:00:00.000Z',
-    married: 'TRUE',
+    insertedCount: 1,
+    row: {
+      id: '1',
+      name: 'John',
+      age: '34',
+      birth_date: '2020-04-26T00:00:00.000Z',
+      married: 'TRUE',
+    },
   });
 });
 
@@ -77,6 +83,18 @@ test('valid request schema', () => {
   const request = {
     row: {
       name: 'name',
+    },
+  };
+  expect(testSchema({ schema, object: request })).toBe(true);
+});
+
+test('valid request schema, all options', () => {
+  const request = {
+    row: {
+      name: 'name',
+    },
+    options: {
+      raw: true,
     },
   };
   expect(testSchema({ schema, object: request })).toBe(true);
@@ -105,6 +123,21 @@ test('row is missing', () => {
   expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   expect(() => testSchema({ schema, object: request })).toThrow(
     'GoogleSheetAppendOne request should have required property "row".'
+  );
+});
+
+test('raw is not a boolean', () => {
+  const request = {
+    row: {
+      name: 'name',
+    },
+    options: {
+      raw: 'raw',
+    },
+  };
+  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
+  expect(() => testSchema({ schema, object: request })).toThrow(
+    'GoogleSheetAppendOne request property "options.raw" should be a boolean.'
   );
 });
 

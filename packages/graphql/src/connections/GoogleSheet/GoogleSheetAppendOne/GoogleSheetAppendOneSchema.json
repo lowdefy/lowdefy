@@ -10,6 +10,18 @@
       "errorMessage": {
         "type": "GoogleSheetAppendOne request property \"row\" should be an object."
       }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "boolean",
+          "description": "Store raw values instead of converting as if typed into the sheets UI.",
+          "errorMessage": {
+            "type": "GoogleSheetAppendOne request property \"options.raw\" should be a boolean."
+          }
+        }
+      }
     }
   },
   "errorMessage": {

@@ -16,16 +16,16 @@
 
 import schema from './GoogleSheetAppendManySchema.json';
 import getSheet from '../getSheet';
-import cleanRows from '../cleanRows';
 import { transformWrite } from '../transformTypes';
 
 async function googleSheetAppendMany({ request, connection }) {
-  const { rows } = request;
+  const { rows, options = {} } = request;
+  const { raw } = options;
   const sheet = await getSheet({ connection });
-  const insertedRows = await sheet.addRows(
-    transformWrite({ input: rows, types: connection.columnTypes })
-  );
-  return cleanRows(insertedRows);
+  await sheet.addRows(transformWrite({ input: rows, types: connection.columnTypes }), { raw });
+  return {
+    insertedCount: rows.length,
+  };
 }
 
 export default { resolver: googleSheetAppendMany, schema, checkRead: false, checkWrite: true };

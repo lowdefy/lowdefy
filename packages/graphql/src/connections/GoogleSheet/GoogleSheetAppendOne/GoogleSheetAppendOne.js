@@ -20,12 +20,17 @@ import cleanRows from '../cleanRows';
 import { transformWrite } from '../transformTypes';
 
 async function googleSheetAppendOne({ request, connection }) {
-  const { row } = request;
+  const { row, options = {} } = request;
+  const { raw } = options;
   const sheet = await getSheet({ connection });
   const insertedRow = await sheet.addRow(
-    transformWrite({ input: row, types: connection.columnTypes })
+    transformWrite({ input: row, types: connection.columnTypes }),
+    { raw }
   );
-  return cleanRows(insertedRow);
+  return {
+    insertedCount: 1,
+    row: cleanRows(insertedRow),
+  };
 }
 
 export default { resolver: googleSheetAppendOne, schema, checkRead: false, checkWrite: true };

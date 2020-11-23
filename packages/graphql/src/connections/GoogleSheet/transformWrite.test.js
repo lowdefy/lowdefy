@@ -520,6 +520,8 @@ test('transformWrite dates', () => {
 });
 
 test('transformWrite json', () => {
+  const circular = {};
+  circular.reference = circular;
   expect(
     transformWrite({
       input: [
@@ -580,8 +582,9 @@ test('transformWrite json', () => {
           original: NaN,
         },
         {
-          jsonTransform: () => {},
-          original: () => {},
+          // JSON stringify throws on circular references
+          jsonTransform: circular,
+          original: circular,
         },
       ],
       types: {
@@ -642,6 +645,10 @@ test('transformWrite json', () => {
     {
       jsonTransform: 'null',
       original: NaN,
+    },
+    {
+      jsonTransform: circular,
+      original: circular,
     },
   ]);
 });
