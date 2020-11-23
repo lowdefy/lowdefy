@@ -30,6 +30,7 @@ const blockDefaultProps = {
   },
   properties: {},
   user: {},
+  rename: {},
   required: false,
   validation: {
     status: null,

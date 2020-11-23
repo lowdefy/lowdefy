@@ -44,6 +44,7 @@ test('default', () => {
         "registerMethod": [Function],
       },
       "properties": Object {},
+      "rename": Object {},
       "required": false,
       "user": Object {},
       "validation": Object {
