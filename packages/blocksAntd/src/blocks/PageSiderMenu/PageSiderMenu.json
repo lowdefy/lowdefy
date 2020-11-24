@@ -1,19 +1,60 @@
 {
   "category": "context",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleMobileMenuOpen",
+        "args": {}
+      },
+      {
+        "name": "setMobileMenuOpen",
+        "args": {
+          "open": true
+        }
+      },
+      {
+        "name": "toggleSiderOpen",
+        "args": {}
+      },
+      {
+        "name": "setSiderOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "logoSrc": {
-          "type": "string",
-          "description": "Header logo source url."
-        },
-        "logoAlt": {
-          "type": "string",
-          "default": "Lowdefy",
-          "description": "Header logo alternative text."
+        "logo": {
+          "type": "object",
+          "description": "Header logo settings.",
+          "additionalProperties": false,
+          "properties": {
+            "src": {
+              "type": "string",
+              "description": "Header logo source url."
+            },
+            "alt": {
+              "type": "string",
+              "default": "Lowdefy",
+              "description": "Header logo alternative text."
+            },
+            "style": {
+              "type": "object",
+              "description": "Logo properties.",
+              "properties": {
+                "style": {
+                  "type": "object",
+                  "description": "Css style object to apply to logo."
+                }
+              }
+            }
+          }
         },
         "header": {
           "type": "object",
@@ -39,23 +80,21 @@
             }
           }
         },
-        "logo": {
-          "type": "object",
-          "description": "Logo properties.",
-          "properties": {
-            "style": {
-              "type": "object",
-              "description": "Css style object to apply to logo."
-            }
-          }
-        },
         "sider": {
           "type": "object",
           "description": "Sider properties."
         },
+        "toggleSiderButton": {
+          "type": "object",
+          "description": "Toggle sider button properties."
+        },
         "footer": {
           "type": "object",
           "description": "Footer properties."
+        },
+        "content": {
+          "type": "object",
+          "description": "Content properties."
         },
         "breadcrumb": {
           "type": "object",
@@ -83,20 +122,29 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "toggleMenu": {
-          "type": "array"
-        },
-        "onSelect": {
-          "type": "array"
-        },
-        "onClick": {
-          "type": "array"
+        "onToggleDrawer": {
+          "type": "array",
+          "description": "Trigger action when mobile menu drawer is toggled."
         },
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when menu is closed."
         },
-        "onOpenChange": {
-          "type": "array"
+        "onOpen": {
+          "type": "array",
+          "description": "Trigger action when menu is open."
+        },
+        "onMenuItemSelect": {
+          "type": "array",
+          "description": "Trigger action when menu item is selected."
+        },
+        "onMenuItemClick": {
+          "type": "array",
+          "description": "Trigger action when menu item is clicked."
+        },
+        "onToggleMenuGroup": {
+          "type": "array",
+          "description": "Trigger action when mobile menu group is opened."
         }
       }
     }

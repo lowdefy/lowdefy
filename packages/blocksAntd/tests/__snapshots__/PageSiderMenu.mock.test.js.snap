@@ -1,0 +1,1696 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="default_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="default_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "default",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.breadcrumb.list - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.breadcrumb.list_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.breadcrumb.list_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.breadcrumb.list",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.content.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.content.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.content.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.content.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.footer.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.footer.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.footer.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.footer.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.color - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.header.color_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "color": "#3f51b5",
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.header.color_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.color",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.header.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "border": "5px solid blue",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.header.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.theme: light - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.header.theme: light_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+              "theme": "light",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.header.theme: light_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.theme: light",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.logo.alt - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.logo.alt_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.logo.alt_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.logo.alt",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.logo.src - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.logo.src_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.logo.src_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.logo.src",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.logo.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.logo.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.logo.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.logo.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.menu - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.menu_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.menu_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.menu",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.menu.selectedColor - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.menu.selectedColor_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.menu.selectedColor_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.menu.selectedColor",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.sider.color - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.sider.color_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.sider.color_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.sider.color",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.sider.initialCollapsed - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.sider.initialCollapsed_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.sider.initialCollapsed_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.sider.initialCollapsed",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.sider.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.sider.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.sider.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.sider.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.style - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.style_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.style_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-1mli136",
+      "id": "properties.style",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.toggleSiderButton.hide - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.toggleSiderButton.hide_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.toggleSiderButton.hide_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.toggleSiderButton.hide",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.toggleSiderButton.type - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.toggleSiderButton.type_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          actions={Object {}}
+          blockId="properties.toggleSiderButton.type_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "setSiderOpen": [Function],
+              "toggleSiderOpen": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.toggleSiderButton.type",
+    },
+    Object {},
+  ],
+]
+`;

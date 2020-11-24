@@ -124,14 +124,14 @@ exports[`Render areas.sider - value[0] 1`] = `
     id="areas.sider_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="areas.sider_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -222,14 +222,14 @@ exports[`Render properties.content.style: border: 5px solid blue - value[0] 1`] 
     id="properties.content.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.content.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -307,14 +307,14 @@ exports[`Render properties.footer.style: border: 5px solid blue - value[0] 1`] =
     id="properties.footer.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.footer.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -392,14 +392,14 @@ exports[`Render properties.header.color: #4432a8  - value[0] 1`] = `
     id="properties.header.color: #4432a8 _layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.header.color: #4432a8 _sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -477,14 +477,14 @@ exports[`Render properties.header.style: border: 5px solid blue - value[0] 1`] =
     id="properties.header.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.header.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -562,14 +562,14 @@ exports[`Render properties.header.theme: light - dark is default - value[0] 1`] 
     id="properties.header.theme: light - dark is default_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.header.theme: light - dark is default_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -647,14 +647,14 @@ exports[`Render properties.main.style: border: 5px solid blue - value[0] 1`] = `
     id="properties.main.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.main.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -732,14 +732,14 @@ exports[`Render properties.sider.style: border: 5px solid blue - value[0] 1`] = 
     id="properties.sider.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"border\\":\\"5px solid blue\\"}]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},{\\"border\\":\\"5px solid blue\\"}]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.sider.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -817,14 +817,14 @@ exports[`Render properties.sider.theme: light - dark is default - value[0] 1`] =
     id="properties.sider.theme: light - dark is default_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-light ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-light"
       id="properties.sider.theme: light - dark is default_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >
@@ -902,14 +902,14 @@ exports[`Render properties.style: border: 5px solid blue - value[0] 1`] = `
     id="properties.style: border: 5px solid blue_layout"
   >
     <aside
-      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+      className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
       id="properties.style: border: 5px solid blue_sider"
       style={
         Object {
-          "flex": "0 0 80px",
-          "maxWidth": "80px",
-          "minWidth": "80px",
-          "width": "80px",
+          "flex": "0 0 200px",
+          "maxWidth": "200px",
+          "minWidth": "200px",
+          "width": "200px",
         }
       }
     >

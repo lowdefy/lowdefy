@@ -84,7 +84,7 @@
               "type": "string",
               "description": "Sider color"
             },
-            "defaultCollapsed": {
+            "initialCollapsed": {
               "type": "boolean",
               "description": "Set the initial collapsed state"
             },
