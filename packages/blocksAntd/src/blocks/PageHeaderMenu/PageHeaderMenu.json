@@ -56,6 +56,10 @@
               "enum": ["light", "dark"],
               "description": "Header theme color."
             },
+            "contentStyle": {
+              "type": "object",
+              "description": "Header content css style object."
+            },
             "color": {
               "type": "string",
               "description": "Header color."
