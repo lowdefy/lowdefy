@@ -1,0 +1,957 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="default_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="default_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "default",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.color - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.header.color_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "color": "#3f51b5",
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.header.color_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.color",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.header.theme: light - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.header.theme: light_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+              "theme": "light",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.header.theme: light_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.header.theme: light",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.logoAlt - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.logoAlt_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.logoAlt_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.logoAlt",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.logoSrc - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.logoSrc_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.logoSrc_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.logoSrc",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.menu - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.menu_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.menu_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.menu",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.userAvatar.avatar.shape: circle - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.avatar.shape: circle_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.avatar.shape: circle_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.userAvatar.avatar.shape: circle",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.userAvatar.avatar.shape: square - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.avatar.shape: square_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.avatar.shape: square_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.userAvatar.avatar.shape: square",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.userAvatar.disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.disabled: true_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <ContentBlock
+          actions={Object {}}
+          blockId="properties.userAvatar.disabled: true_content"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "safelyCallMethod": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "lg": Object {
+                  "padding": "0 40px 40px 40px",
+                },
+                "md": Object {
+                  "padding": "0 20px 20px 20px",
+                },
+                "padding": "0 40px 40px 40px",
+                "sm": Object {
+                  "padding": "0 10px 10px 10px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "css-vooagt",
+      "id": "properties.userAvatar.disabled: true",
+    },
+    Object {},
+  ],
+]
+`;
