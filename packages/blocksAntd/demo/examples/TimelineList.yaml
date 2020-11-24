@@ -1,15 +1,15 @@
 # Check hierdie example asb soos valk - baie aspekte onseker oor ...
 - id: default
-  type: Timeline
+  type: TimelineList
 - id: "properties.mode: alternate"
-  type: Timeline
+  type: TimelineList
   properties:
     mode: alternate
     data:
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
@@ -31,14 +31,14 @@
         content: >
           Text 3
 - id: "properties.mode: right"
-  type: Timeline
+  type: TimelineList
   properties:
     mode: right
     data:
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
@@ -60,14 +60,14 @@
         content: >
           Text 3
 - id: "properties.mode: left"
-  type: Timeline
+  type: TimelineList
   properties:
     mode: left
     data:
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
@@ -89,14 +89,14 @@
         content: >
           Text 3
 - id: "properties.reverse: true"
-  type: Timeline
+  type: TimelineList
   properties:
     reverse: true
     data:
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
@@ -118,14 +118,14 @@
         content: >
           Text 3
 - id: "properties.pending: true"
-  type: Timeline
+  type: TimelineList
   properties:
     pending: true
     data:
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
@@ -147,7 +147,7 @@
         content: >
           Text 3
 - id: "properties.pendingDotIcon: "
-  type: Timeline
+  type: TimelineList
   properties:
     pending: true
     pendingDotIcon: FireFilled
@@ -155,7 +155,7 @@
       - icon: FireOutlined
         color: red
         position: left
-      - icon: AlibabaOutlined
+      - icon: SettingOutlined
         color: green
         position: right
       - icon: RocketOutlined
