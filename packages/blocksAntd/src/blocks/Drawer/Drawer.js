@@ -39,7 +39,6 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
     methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
       triggerSetOpen({ state: !!open, setOpen, methods, rename })
     );
-    methods.registerMethod(get(rename, 'methods.isOpen', { default: 'isOpen' }), () => openState);
   });
   return (
     <Drawer
