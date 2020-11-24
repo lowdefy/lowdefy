@@ -64,7 +64,7 @@ const getNestedColors = (menuColor, background) => {
   };
 };
 
-const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
+const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',
@@ -114,10 +114,23 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
       selectedKeys={properties.selectedKeys || [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
-      onSelect={(item, key) => methods.callAction({ action: 'onSelect', args: { item, key } })}
-      onClick={(item, key) => methods.callAction({ action: 'onClick', args: { item, key } })}
+      onSelect={(item) =>
+        methods.callAction({
+          action: get(rename, 'actions.onSelect', { default: 'onSelect' }),
+          args: { key: item.key },
+        })
+      }
+      onClick={(item) =>
+        methods.callAction({
+          action: get(rename, 'actions.onClick', { default: 'onClick' }),
+          args: { key: item.key },
+        })
+      }
       onOpenChange={(openKeys) =>
-        methods.callAction({ action: 'onOpenChange', args: { openKeys } })
+        methods.callAction({
+          action: get(rename, 'actions.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
+          args: { openKeys },
+        })
       }
       {...exProps}
     >
