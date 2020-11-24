@@ -29,7 +29,6 @@ const lowdefyProps = [
   'pageId',
   'registerAction',
   'registerAction',
-  'registeredMethods',
   'registerMethod',
   'registerMethod',
   'schemaErrors',

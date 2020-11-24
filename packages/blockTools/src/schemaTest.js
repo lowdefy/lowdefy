@@ -19,9 +19,6 @@ import AjvErrors from 'ajv-errors';
 import blockSchema from './blockSchema.json';
 
 const testSchemaProperties = {
-  registeredMethods: {
-    type: 'object',
-  },
   value: {},
   methods: {
     type: 'object',

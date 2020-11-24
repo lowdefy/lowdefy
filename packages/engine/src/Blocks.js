@@ -110,6 +110,7 @@ class Blocks {
       block.registerMethod = (methodName, method) => {
         block.methods[methodName] = method;
       };
+      // TODO: add callMethod on block to be used by actions and accessible in blocks
 
       if (get(block, 'meta.category') === 'list') {
         // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem

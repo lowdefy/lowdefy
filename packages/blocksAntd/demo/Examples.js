@@ -96,7 +96,7 @@ const Examples = ({ type, Component }) => {
                       <button
                         key={i}
                         onClick={() => {
-                          block.registeredMethods[method.name](method.args);
+                          block.methods[method.name](method.args);
                         }}
                       >
                         {method.name}
