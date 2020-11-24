@@ -1,6 +1,20 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleOpen",
+        "args": {}
+      },
+      {
+        "name": "setOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -10,10 +24,6 @@
           "type": "string",
           "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
           "description": "Breakpoints of the responsive layout"
-        },
-        "collapsed": {
-          "type": "boolean",
-          "description": "Set the current collapsed state"
         },
         "collapsedWidth": {
           "type": "integer",
@@ -27,7 +37,7 @@
           "type": "string",
           "description": "Sider color"
         },
-        "defaultCollapsed": {
+        "initialCollapsed": {
           "type": "boolean",
           "description": "Set the initial collapsed state"
         },
@@ -47,10 +57,6 @@
         "width": {
           "type": ["string", "number"],
           "description": "width of the sidebar"
-        },
-        "zeroWidthTriggerStyle": {
-          "type": "object",
-          "description": "Css style to applied to zero width trigger."
         }
       }
     },
@@ -58,11 +64,17 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "onCollapse": {
-          "type": "array"
+        "onClose": {
+          "type": "array",
+          "description": "Triggers actions when sider is closed."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Triggers actions when sider is opened."
         },
         "onBreakpoint": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers on breakpoint change."
         }
       }
     }

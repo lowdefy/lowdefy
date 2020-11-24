@@ -34,6 +34,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
         <>
           {content.header && (
             <Header
+              blockId={`${blockId}_header`}
               properties={properties.header}
               methods={methods}
               content={{
@@ -42,7 +43,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
             />
           )}
           <Layout
-            blockId={blockId}
+            blockId={`${blockId}_layout`}
             methods={methods}
             properties={properties.main}
             content={{
@@ -50,15 +51,27 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
                 <>
                   {content.sider && (
                     <Sider
+                      blockId={`${blockId}_sider`}
                       properties={properties.sider}
                       methods={methods}
                       content={{
                         content: () => content.sider(),
                       }}
+                      rename={{
+                        actions: {
+                          onClose: 'onSiderClose',
+                          onOpen: 'onSiderOpen',
+                        },
+                        methods: {
+                          toggleOpen: 'toggleSiderOpen',
+                          setOpen: 'setSiderOpen',
+                        },
+                      }}
                     />
                   )}
                   {content.content && (
                     <Content
+                      blockId={`${blockId}_content`}
                       properties={properties.content}
                       methods={methods}
                       content={{
@@ -72,6 +85,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
           />
           {content.footer && (
             <Footer
+              blockId={`${blockId}_footer`}
               properties={properties.footer}
               methods={methods}
               content={{

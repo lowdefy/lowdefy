@@ -14,21 +14,17 @@
   limitations under the License.
 */
 
-const path = require('path');
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const { typeDefs, resolvers, createContext } = require('@lowdefy/graphql');
+import path from 'path';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
+
+import createGetSecretsFromEnv from './createGetSecretsFromEnv';
 
 const config = {
-  DEPLOYMENT_ID: 'DEPLOYMENT_ID',
-  DEPLOYMENT_NAME: 'DEPLOYMENT_NAME',
-  DOMAIN_NAME: 'DOMAIN_NAME',
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   logger: console,
-  getHeadersFromInput: ({ req }) => req.headers,
-  getSecrets: () => ({
-    CONNECTION_SECRETS: {},
-  }),
+  getSecrets: createGetSecretsFromEnv(),
 };
 
 const context = createContext(config);

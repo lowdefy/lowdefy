@@ -1,6 +1,78 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render areas.actions - value[0] 1`] = `
+<div
+  className="ant-comment"
+  id="areas.actions"
+>
+  <div
+    className="ant-comment-inner"
+  >
+    <div
+      className="ant-comment-avatar"
+    >
+      <span
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        id="undefined_id"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="ant-avatar-string"
+          style={
+            Object {
+              "opacity": 0,
+            }
+          }
+        >
+          Co
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-comment-content"
+    >
+      <div
+        className="ant-comment-content-author"
+      >
+        <span
+          className="ant-comment-content-author-name"
+        >
+          Comment author
+        </span>
+        <span
+          className="ant-comment-content-author-time"
+        >
+          This is not the time
+        </span>
+      </div>
+      <div
+        className="ant-comment-content-detail"
+      >
+        Comment content for user
+      </div>
+      <ul
+        className="ant-comment-actions"
+      >
+        <li>
+          <div
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            actions
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render default - value[0] 1`] = `
 <div
   className="ant-comment"
   id="default"
@@ -12,7 +84,7 @@ exports[`Render default 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -44,12 +116,17 @@ exports[`Render default 1`] = `
           content
         </div>
       </div>
+      <ul
+        className="ant-comment-actions"
+      >
+        <li />
+      </ul>
     </div>
   </div>
 </div>
 `;
 
-exports[`Render properties.author 1`] = `
+exports[`Render properties.author - value[0] 1`] = `
 <div
   className="ant-comment"
   id="properties.author"
@@ -61,7 +138,7 @@ exports[`Render properties.author 1`] = `
       className="ant-comment-avatar"
     >
       <span
-        className="ant-avatar {\\"style\\":[{\\"backgroundColor\\":\\"#7fffff\\"},null]} ant-avatar-circle"
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
         id="undefined_id"
         onClick={[Function]}
         style={Object {}}
@@ -104,10 +181,136 @@ exports[`Render properties.author 1`] = `
           content
         </div>
       </div>
+      <ul
+        className="ant-comment-actions"
+      >
+        <li />
+      </ul>
     </div>
   </div>
 </div>
 `;
+
+exports[`Render properties.content - value[0] 1`] = `
+<div
+  className="ant-comment"
+  id="properties.content"
+>
+  <div
+    className="ant-comment-inner"
+  >
+    <div
+      className="ant-comment-avatar"
+    >
+      <span
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        id="undefined_id"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="ant-avatar-string"
+          style={
+            Object {
+              "opacity": 0,
+            }
+          }
+        >
+          Co
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-comment-content"
+    >
+      <div
+        className="ant-comment-content-author"
+      >
+        <span
+          className="ant-comment-content-author-name"
+        >
+          Comment author
+        </span>
+      </div>
+      <div
+        className="ant-comment-content-detail"
+      >
+        Comment content for user
+      </div>
+      <ul
+        className="ant-comment-actions"
+      >
+        <li />
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render properties.datetime - value[0] 1`] = `
+<div
+  className="ant-comment"
+  id="properties.datetime"
+>
+  <div
+    className="ant-comment-inner"
+  >
+    <div
+      className="ant-comment-avatar"
+    >
+      <span
+        className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
+        id="undefined_id"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="ant-avatar-string"
+          style={
+            Object {
+              "opacity": 0,
+            }
+          }
+        >
+          Co
+        </span>
+      </span>
+    </div>
+    <div
+      className="ant-comment-content"
+    >
+      <div
+        className="ant-comment-content-author"
+      >
+        <span
+          className="ant-comment-content-author-name"
+        >
+          Comment author
+        </span>
+        <span
+          className="ant-comment-content-author-time"
+        >
+          2020-01-20T00:00:00.000Z
+        </span>
+      </div>
+      <div
+        className="ant-comment-content-detail"
+      >
+        Comment content for user
+      </div>
+      <ul
+        className="ant-comment-actions"
+      >
+        <li />
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema areas.actions 1`] = `true`;
+
+exports[`Test Schema areas.actions 2`] = `null`;
 
 exports[`Test Schema default 1`] = `true`;
 
@@ -116,3 +319,11 @@ exports[`Test Schema default 2`] = `null`;
 exports[`Test Schema properties.author 1`] = `true`;
 
 exports[`Test Schema properties.author 2`] = `null`;
+
+exports[`Test Schema properties.content 1`] = `true`;
+
+exports[`Test Schema properties.content 2`] = `null`;
+
+exports[`Test Schema properties.datetime 1`] = `true`;
+
+exports[`Test Schema properties.datetime 2`] = `null`;

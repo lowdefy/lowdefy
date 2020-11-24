@@ -20,6 +20,5 @@ import PageSiderMenu from '../src/blocks/PageSiderMenu/PageSiderMenu';
 import examples from '../demo/examples/PageSiderMenu.yaml';
 import meta from '../src/blocks/PageSiderMenu/PageSiderMenu.json';
 
-// FIX: Invariant failed: You should not use <Link> outside a <Router>
-// runRenderTests({ examples, Block: PageSiderMenu, meta });
+runRenderTests({ examples, Block: PageSiderMenu, meta });
 runBlockSchemaTests({ examples, meta });

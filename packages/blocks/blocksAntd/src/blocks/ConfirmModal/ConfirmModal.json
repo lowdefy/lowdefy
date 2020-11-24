@@ -1,6 +1,38 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "message": "Args message"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "description": "Args description"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -16,7 +48,7 @@
           "description": "Centered Modal"
         },
         "content": {
-          "type": "object",
+          "type": "string",
           "description": "Modal content."
         },
         "icon": {
@@ -78,10 +110,20 @@
       "additionalProperties": false,
       "properties": {
         "onOk": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when Ok button is clicked."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Triggers actions when modal is opened."
         },
         "onCancel": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when Cancel button is clicked."
+        },
+        "onClose": {
+          "type": "array",
+          "description": "Triggered after onOk or onCancel actions are completed."
         }
       }
     }

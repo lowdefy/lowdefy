@@ -14,11 +14,48 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
+import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-tools';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { message } from 'antd';
 
+Enzyme.configure({ adapter: new Adapter() });
 import Message from '../src/blocks/Message/Message';
 import examples from '../demo/examples/Message.yaml';
 import meta from '../src/blocks/Message/Message.json';
 
-runRenderTests({ examples, Block: Message, meta });
+jest.mock('antd/lib/message', () => {
+  return {
+    error: jest.fn(),
+    info: jest.fn(),
+    loading: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+  };
+});
+
+const mocks = [
+  {
+    name: 'error',
+    fn: message.error,
+  },
+  {
+    name: 'info',
+    fn: message.info,
+  },
+  {
+    name: 'loading',
+    fn: message.loading,
+  },
+  {
+    name: 'success',
+    fn: message.success,
+  },
+  {
+    name: 'warning',
+    fn: message.warning,
+  },
+];
+
+runMockMethodTests({ examples, Block: Message, meta, mocks, enzyme: { mount } });
 runBlockSchemaTests({ examples, meta });

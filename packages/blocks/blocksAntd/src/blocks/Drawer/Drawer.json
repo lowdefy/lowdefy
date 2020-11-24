@@ -1,6 +1,20 @@
 {
   "category": "container",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleOpen",
+        "args": {}
+      },
+      {
+        "name": "setOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -78,8 +92,17 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "onToggle": {
+          "type": "array",
+          "description": "Triggers actions when drawer is toggled."
+        },
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when drawer is closed."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Triggers actions when modal is opened."
         }
       }
     }

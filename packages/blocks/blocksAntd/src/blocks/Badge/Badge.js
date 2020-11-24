@@ -18,18 +18,24 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import Icon from '../Icon/Icon';
 
-const BadgeBlock = ({ blockId, content, properties }) => (
+const BadgeBlock = ({ blockId, content, properties, methods }) => (
   <Badge
     id={blockId}
     color={properties.color}
-    count={content.count ? content.count() : properties.count}
+    count={
+      (properties.icon && (
+        <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+      )) ||
+      properties.count
+    }
     dot={properties.dot}
     offset={properties.offset}
     overflowCount={type.isNumber(properties.overflowCount) ? properties.overflowCount : 100}
     showZero={properties.showZero}
     status={properties.status}
-    text={content.text ? content.text() : properties.text}
+    text={properties.text}
     title={properties.title}
   >
     {content.content && content.content()}

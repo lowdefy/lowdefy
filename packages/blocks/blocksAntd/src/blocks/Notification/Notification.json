@@ -1,6 +1,38 @@
 {
   "category": "display",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "message": "Args message"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "description": "Args description"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,7 +45,7 @@
         },
         "button": {
           "type": "object",
-          "description": "Customized close button."
+          "description": "Button object to customized the close button. Triggers onClose action when clicked."
         },
         "description": {
           "type": "string",
@@ -63,10 +95,12 @@
       "additionalProperties": false,
       "properties": {
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when notification is closed."
         },
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when notification is clicked."
         }
       }
     }

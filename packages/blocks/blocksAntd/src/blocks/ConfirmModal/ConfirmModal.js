@@ -16,19 +16,21 @@
 
 import React, { useEffect } from 'react';
 import { Modal } from 'antd';
-import { type, serializer } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties }) => {
-  let propertiesIcon = serializer.copy(properties.icon);
-  if (type.isString(properties.icon)) {
-    propertiesIcon = { name: propertiesIcon };
-  }
+const ConfirmModal = ({ blockId, content, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
+      const additionalProps = {};
+      if (properties.icon) {
+        additionalProps.icon = (
+          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+        );
+      }
+      methods.callAction({ action: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
-        id: blockId,
+        id: `${blockId}_confirm_modal`,
         title: properties.title,
         content: (content.content && content.content()) || properties.content,
         className: methods.makeCssClass(properties.modalStyle),
@@ -37,26 +39,23 @@ const ConfirmModal = ({ blockId, content, methods, onCancel, onOk, properties })
         cancelButtonProps: properties.cancelButton,
         cancelText: properties.cancelText || 'Cancel',
         centered: properties.centered || false,
-        getContainer: () => document.getElementById(`${blockId}_popup`),
-        icon: properties.icon && (
-          <Icon
-            properties={{
-              name: 'QuestionCircleOutlined',
-              ...propertiesIcon,
-            }}
-            methods={methods}
-          />
-        ),
         mask: properties.mask !== undefined ? properties.mask : true,
         maskClosable: properties.maskClosable || false,
         width: properties.width,
         zIndex: properties.zIndex,
-        onOk: onOk || (() => methods.callAction({ action: 'onOk' })),
-        onCancel: onCancel || (() => methods.callAction({ action: 'onCancel' })),
+        onOk: async () => {
+          await methods.callAction({ action: 'onOk' });
+          methods.callAction({ action: 'onClose' });
+        },
+        onCancel: async () => {
+          await methods.callAction({ action: 'onCancel' });
+          methods.callAction({ action: 'onClose' });
+        },
+        ...additionalProps,
       });
     });
-  }, [methods.registerMethod, propertiesIcon]);
-  return <div id={`${blockId}_popup`} />;
+  });
+  return <div id={blockId} />;
 };
 
 ConfirmModal.defaultProps = blockDefaultProps;

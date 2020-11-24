@@ -43,9 +43,6 @@ test('getLowdefyGlobal', async () => {
   const res = await controller.getLowdefyGlobal();
   expect(res).toEqual({
     x: 'value',
-    deploymentId: 'test',
-    deploymentName: 'Test App',
-    domainName: 'test.com',
   });
 });
 
@@ -55,11 +52,7 @@ test('getLowdefyGlobal, global not found', async () => {
   });
   const controller = createComponentController(context);
   const res = await controller.getLowdefyGlobal();
-  expect(res).toEqual({
-    deploymentId: 'test',
-    deploymentName: 'Test App',
-    domainName: 'test.com',
-  });
+  expect(res).toEqual({});
 });
 
 test('getMenus, menus not found', async () => {

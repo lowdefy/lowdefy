@@ -1,7 +1,130 @@
 - id: default
   type: PageHeaderMenu
-- id: properties.content
+- id: "properties.menu"
   type: PageHeaderMenu
   properties:
-    content: 
-      content: This is page content
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.logo.src"
+  type: PageHeaderMenu
+  properties:
+    logo:
+      src: "https://lowdefy.com/logos/name_250.png"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.logo.alt"
+  type: PageHeaderMenu
+  properties:
+    logo:
+      alt: "Header logo alt text"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.logo.style"
+  type: PageHeaderMenu
+  properties:
+    logo:
+      style: 
+        border: 5px solid blue
+- id: "properties.header.color"
+  type: PageHeaderMenu
+  properties:
+    header:
+      color: "#3f51b5"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.header.theme: light"
+  type: PageHeaderMenu
+  properties:
+    header:
+      theme: light
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.breadcrumb.list"
+  type: PageHeaderMenu
+  properties:
+    breadcrumb:
+      list: 
+        - Link one
+        - Link two
+- id: "properties.footer.style"
+  type: PageHeaderMenu
+  properties:
+    footer:
+      style: 
+        border: 5px solid blue
+  areas:
+    footer:
+      blocks: []
+- id: "properties.content.style"
+  type: PageHeaderMenu
+  properties:
+    content:
+      style: 
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+- id: "properties.header.style"
+  type: PageHeaderMenu
+  properties:
+    header:
+      style: 
+        border: 5px solid blue
+  areas:
+    header:
+      blocks: []
+- id: "properties.style"
+  type: PageHeaderMenu
+  properties:
+    style: 
+      border: 5px solid blue

@@ -21,7 +21,7 @@
           "description": "Show paragraph and title radius when true."
         },
         "avatar": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "boolean",
               "default": false,
@@ -55,7 +55,7 @@
           ]
         },
         "button": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "boolean",
               "default": false,
@@ -81,7 +81,7 @@
           ]
         },
         "paragraph": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "boolean",
               "default": true,
@@ -103,7 +103,7 @@
           ]
         },
         "title": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "boolean",
               "default": true,

@@ -26,18 +26,8 @@ import Header from '../Header/Header';
 import Layout from '../Layout/Layout';
 import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
-import UserAvatar from '../UserAvatar/UserAvatar';
 
-const PageHeaderMenu = ({
-  blockId,
-  content,
-  homePageId,
-  menus,
-  methods,
-  pageId,
-  properties,
-  user,
-}) => {
+const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, properties }) => {
   const styles = {
     layout: {
       minHeight: '100vh',
@@ -77,9 +67,6 @@ const PageHeaderMenu = ({
       md: { display: 'flex' },
       lg: { display: 'none' },
     },
-    userAvatar: {
-      flex: '0 1 auto',
-    },
     desktop: {
       display: 'none',
       lg: { display: 'block' },
@@ -109,6 +96,7 @@ const PageHeaderMenu = ({
         content: () => (
           <>
             <Header
+              blockId={`${blockId}_header`}
               methods={methods}
               properties={mergeObjects([
                 {
@@ -122,12 +110,12 @@ const PageHeaderMenu = ({
                     <Link to={`/${homePageId}`}>
                       <img
                         src={
-                          properties.logoSrc ||
+                          (properties.logo && properties.logo.src) ||
                           (get(properties, 'header.theme') === 'light'
                             ? 'https://lowdefy.com/logos/name_250.png'
                             : 'https://lowdefy.com/logos/box_white_250.png')
                         }
-                        alt={properties.logoAlt || 'Lowdefy'}
+                        alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
                         className={methods.makeCssClass([
                           styles.logo,
                           properties.logo && properties.logo.style,
@@ -137,6 +125,7 @@ const PageHeaderMenu = ({
                     <div className={methods.makeCssClass(styles.headerContent)}>
                       <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
                         <Menu
+                          blockId={`${blockId}_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -159,32 +148,13 @@ const PageHeaderMenu = ({
                             properties.header && properties.header.contentStyle,
                           ])
                         )}
-                      <div className={methods.makeCssClass([styles.desktop, styles.userAvatar])}>
-                        <UserAvatar
-                          methods={methods}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              showName: 'left',
-                              theme: get(properties, 'header.theme') || 'dark',
-                            },
-                            properties.userAvatar,
-                          ])}
-                        />
-                      </div>
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
+                          blockId={`${blockId}_mobile_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              userAvatar: properties.userAvatar,
-                            },
-                            properties.menu,
-                            properties.menuMd,
-                          ])}
+                          properties={mergeObjects([properties.menu, properties.menuMd])}
                         />
                       </div>
                     </div>
@@ -193,6 +163,7 @@ const PageHeaderMenu = ({
               }}
             />
             <Content
+              blockId={`${blockId}_content`}
               methods={methods}
               properties={mergeObjects([properties.content, { style: styles.body }])}
               content={{
@@ -200,6 +171,7 @@ const PageHeaderMenu = ({
                   <>
                     {!type.isNone(properties.breadcrumb) ? (
                       <Breadcrumb
+                        blockId={`${blockId}_breadcrumb`}
                         methods={methods}
                         properties={mergeObjects([
                           properties.breadcrumb,
@@ -216,6 +188,7 @@ const PageHeaderMenu = ({
             />
             {content.footer && (
               <Footer
+                blockId={`${blockId}_footer`}
                 methods={methods}
                 properties={properties.footer}
                 content={{

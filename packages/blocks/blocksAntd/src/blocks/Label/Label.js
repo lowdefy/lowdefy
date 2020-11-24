@@ -20,7 +20,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
 import { Col, Row } from 'antd';
 import CSSMotion from 'rc-animate/lib/CSSMotion';
 import {
@@ -41,28 +40,29 @@ const iconMap = {
   validating: LoadingOutlined,
 };
 
-const Label = ({ blockId, content, methods, properties, required, validate, validated }) => {
+const Label = ({ blockId, content, methods, properties, required, validation }) => {
   const {
     extraClassName,
+    feedbackClassName,
     label,
     labelClassName,
     labelCol,
     labelColClassName,
     rowClassName,
-    validateStatus,
+    showExtra,
+    showFeedback,
     wrapperCol,
-  } = labelLogic({ blockId, content, methods, properties, required, validate, validated });
-  // Should provides additional icon if `hasFeedback`
-  const IconNode = validateStatus && iconMap[validateStatus];
+  } = labelLogic({ blockId, content, methods, properties, required, validation });
+  const IconNode = validation.status && iconMap[validation.status];
   const icon =
-    validateStatus && IconNode ? (
+    validation.status && IconNode ? (
       <span className="ant-form-item-children-icon">
         <IconNode />
       </span>
     ) : null;
 
   return (
-    <Row className={rowClassName} style={{ marginBottom: 0 }}>
+    <Row id={blockId} className={rowClassName} style={{ marginBottom: 0 }}>
       {label && (
         <Col {...labelCol} className={labelColClassName}>
           <label htmlFor={`${blockId}_input`} className={labelClassName} title={label}>
@@ -77,21 +77,18 @@ const Label = ({ blockId, content, methods, properties, required, validate, vali
           </div>
           {icon}
         </div>
-        <CSSMotion visible={!!validateStatus} motionName="show-help" motionAppear removeOnLeave>
+        <CSSMotion visible={showFeedback} motionName="show-help" motionAppear removeOnLeave>
           {({ className: motionClassName }) => (
-            <div
-              className={classNames(
-                validateStatus && `ant-form-item-explain`,
-                motionClassName,
-                methods.makeCssClass(properties.feedbackStyle)
-              )}
-              key="help"
-            >
-              <div key={0}>{get({ v: validate }, 'v.0.message')}</div>
+            <div className={classNames(feedbackClassName, motionClassName)}>
+              {validation.errors.length > 0
+                ? validation.errors[0]
+                : validation.warnings.length > 0
+                ? validation.warnings[0]
+                : ''}
             </div>
           )}
         </CSSMotion>
-        {properties.extra && <div className={extraClassName}>{properties.extra}</div>}
+        {showExtra && <div className={extraClassName}>{properties.extra}</div>}
       </Col>
     </Row>
   );

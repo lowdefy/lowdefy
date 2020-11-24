@@ -134,7 +134,6 @@ test('Reset on primitive array after adding item', () => {
                   {
                     blockId: 'list.$',
                     type: 'TextInput',
-                    defaultValue: '123',
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -169,7 +168,7 @@ test('Reset on primitive array after adding item', () => {
   const { button, list } = context.RootBlocks.map;
 
   list.pushItem();
-  expect(context.state).toEqual({ list: ['init', '123'] });
+  expect(context.state).toEqual({ list: ['init', null] });
   button.callAction({ action: 'onClick' });
   expect(context.state).toEqual({ list: ['init'] });
 });

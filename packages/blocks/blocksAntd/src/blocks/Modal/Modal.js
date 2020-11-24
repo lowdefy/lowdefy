@@ -19,12 +19,26 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { get, type } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
+const triggerSetOpen = ({ state, setOpen, methods }) => {
+  if (!state) {
+    methods.callAction({ action: 'onClose' });
+  }
+  if (state) {
+    methods.callAction({ action: 'onOpen' });
+  }
+  setOpen(state);
+};
+
 const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
-    methods.registerMethod('toggleOpen', () => setOpen(!openState));
-    methods.registerMethod('setOpen', ({ open }) => setOpen(!!open));
-  }, [methods.registerMethod, setOpen]);
+    methods.registerMethod('toggleOpen', () =>
+      triggerSetOpen({ state: !openState, setOpen, methods })
+    );
+    methods.registerMethod('setOpen', ({ open }) =>
+      triggerSetOpen({ state: !!open, setOpen, methods })
+    );
+  });
   const extraProps = {};
   if (content.footer) {
     extraProps.footer = content.footer();
@@ -34,7 +48,6 @@ const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
   }
   return (
     <div id={blockId}>
-      <div id={`${blockId}_popup`} />
       <Modal
         id={`${blockId}_modal`}
         title={properties.title}
@@ -43,14 +56,13 @@ const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
         onOk={async () => {
           await methods.callAction({ action: 'onOk' });
           // the visible should only close if actions finished successfully
-          setOpen(false);
+          triggerSetOpen({ state: false, setOpen, methods });
         }}
         onCancel={async () => {
           await methods.callAction({ action: 'onCancel' });
-          setOpen(false);
+          triggerSetOpen({ state: false, setOpen, methods });
         }}
         afterClose={() => methods.callAction({ action: 'afterClose' })}
-        getContainer={() => document.getElementById(`${blockId}_popup`)}
         confirmLoading={get(actions, 'onOk.loading')}
         okText={properties.okText || 'Ok'}
         cancelText={properties.cancelText || 'Cancel'}

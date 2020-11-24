@@ -22,56 +22,49 @@ import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import Icon from '../Icon/Icon';
 
-const getDefaultMenu = (menus, menuId, links) => {
+const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
-  if (menuId) {
-    return (menus.find((item) => item.menuId === menuId) || {}).links;
-  }
-  return (menus.find((item) => item.menuId === 'default') || {}).links || (menus[0] || {}).links;
+  if (!type.isArray(menus)) return [];
+  const menu = menus.find((item) => item.menuId === menuId) || menus[0] || {};
+  return menu.links || [];
 };
 
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ id, methods, menuId, pageId, properties, url, linkStyle }) => {
-  if (type.isString(pageId)) {
-    return (
-      <Link to={`/${pageId}`} className={methods.makeCssClass([linkStyle])}>
-        {getTitle(id, properties, pageId)}
-      </Link>
-    );
-  }
-  if (type.isString(url)) {
-    return (
-      <a href={url} className={methods.makeCssClass([linkStyle])}>
-        {getTitle(id, properties, url)}
-      </a>
-    );
-  }
-  return (
-    <span className={methods.makeCssClass([linkStyle])}>{getTitle(id, properties, menuId)}</span>
+const MenuTitle = ({ id, methods, pageId, properties, url, linkStyle }) =>
+  type.isString(pageId) ? (
+    <Link to={`/${pageId}`} className={methods.makeCssClass([linkStyle])}>
+      {getTitle(id, properties, pageId)}
+    </Link>
+  ) : type.isString(url) ? (
+    <a href={url} className={methods.makeCssClass([linkStyle])}>
+      {getTitle(id, properties, url)}
+    </a>
+  ) : (
+    <span className={methods.makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>
   );
+
+const getNestedColors = (menuColor, background) => {
+  const fontColor = color(menuColor, 6);
+  const bgColor = color(menuColor, 3);
+  return {
+    backgroundColor: background && `${bgColor} !important`,
+    color: `${fontColor} !important`,
+    '& > *': {
+      color: `${fontColor} !important`,
+    },
+    '& > * > *': {
+      color: `${fontColor} !important`,
+    },
+    borderColor: `${fontColor} !important`,
+    '&:after': {
+      borderColor: `${fontColor} !important`,
+    },
+  };
 };
 
-const getRootId = (menu, pageId) => {
-  let root = pageId;
-  menu.forEach((item) => {
-    if (item.type === 'MenuGroup') {
-      item.links.forEach((subItem) => {
-        if (subItem.type === 'MenuGroup') {
-          subItem.links.forEach((subSubItem) => {
-            if (subSubItem.pageId === pageId) root = item.id;
-          });
-        }
-        if (subItem.pageId === pageId) root = item.id;
-      });
-    }
-    if (item.pageId === pageId) root = item.id;
-  });
-  return root;
-};
-
-const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
+const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',
@@ -81,96 +74,63 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
     exProps.inlineCollapsed = properties.inlineCollapsed;
     exProps.inlineIndent = properties.inlineIndent;
   }
-  const menu = getDefaultMenu(menus, properties.menuId, properties.links) || [];
+  const menu = getDefaultMenu(menus, properties.menuId, properties.links);
+  const theme = properties.theme || 'dark';
+  const nestedColors = getNestedColors(properties.selectedColor);
+  const nestedColorsBg = getNestedColors(properties.selectedColor, true);
+  const bgColorDarker = {
+    backgroundColor:
+      properties.backgroundColor && `${color(properties.backgroundColor, 7)} !important`,
+  };
+  const bgColor = {
+    backgroundColor: properties.backgroundColor && `${properties.backgroundColor} !important`,
+  };
   return (
     <Menu
       id={blockId}
       mode={properties.mode}
       className={methods.makeCssClass([
         styles,
-        properties.backgroundColor && {
-          backgroundColor: `${properties.backgroundColor} !important`,
-          '& > li.ant-menu-submenu > ul': {
-            backgroundColor: `${color(properties.backgroundColor, 8)} !important`,
+        properties.backgroundColor && bgColor,
+        properties.selectedColor &&
+          theme === 'dark' && {
+            '& > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
           },
-        },
-        properties.color &&
-          properties.theme === 'dark' && {
-            '& > li.ant-menu-item-selected': {
-              backgroundColor: `${color(properties.color, 4)} !important`,
-              '&:after': {
-                borderColor: `${color(properties.color, 3)} !important`,
-              },
-            },
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': {
-              backgroundColor: `${color(properties.color, 4)} !important`,
-              '&:after': {
-                borderColor: `${color(properties.color, 6)} !important`,
-              },
-            },
-          },
-        properties.color &&
-          properties.theme === 'light' && {
-            '& > li.ant-menu-item-selected': {
-              backgroundColor: `${color(properties.color, 1)} !important`,
-              borderColor: `${color(properties.color, 6)} !important`,
-              '&:after': {
-                borderColor: `${color(properties.color, 6)} !important`,
-              },
-            },
-            '& > li.ant-menu-item-selected > *': {
-              color: `${color(properties.color, 6)} !important`,
-            },
-            '& > li.ant-menu-submenu-selected': {
-              color: `${color(properties.color, 6)} !important`,
-              borderColor: `${color(properties.color, 6)} !important`,
-            },
-            '& > li.ant-menu-item:hover': {
-              borderColor: `${color(properties.color, 6)} !important`,
-            },
-            '& > li.ant-menu-submenu:hover': {
-              borderColor: `${color(properties.color, 6)} !important`,
-            },
-            '& > li.ant-menu-item:hover > *': {
-              color: `${color(properties.color, 6)} !important`,
-              '& > *': {
-                color: `${color(properties.color, 6)} !important`,
-              },
-            },
-            '& > li.ant-menu-submenu > .ant-menu-submenu-title:hover': {
-              color: `${color(properties.color, 6)} !important`,
-            },
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item:hover': {
-              color: `${color(properties.color, 6)} !important`,
-              '& > *': {
-                color: `${color(properties.color, 6)} !important`,
-              },
-            },
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': {
-              backgroundColor: `${color(properties.color, 1)} !important`,
-              color: `${color(properties.color, 6)} !important`,
-              '& > *': {
-                color: `${color(properties.color, 6)} !important`,
-              },
-              '&:after': {
-                borderColor: `${color(properties.color, 6)} !important`,
-              },
-            },
+        properties.selectedColor &&
+          theme === 'light' && {
+            '& > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu-selected': nestedColors,
+            '& > li.ant-menu-item:hover': nestedColors,
+            '& > li.ant-menu-submenu:hover': nestedColors,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item:hover': nestedColors,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
+            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
           },
         properties.style,
       ])}
-      theme={properties.theme || 'dark'}
-      selectable={properties.selectable}
+      theme={theme}
       selectedKeys={properties.selectedKeys || [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
-      defaultOpenKeys={
-        properties.mode === 'inline' && getRootId(menu, pageId) ? [getRootId(menu, pageId)] : []
+      onSelect={(item) =>
+        methods.callAction({
+          action: get(rename, 'actions.onSelect', { default: 'onSelect' }),
+          args: { key: item.key },
+        })
       }
-      onSelect={(item, key) => methods.callAction({ action: 'onSelect', args: { item, key } })}
-      onClick={(item, key) => methods.callAction({ action: 'onClick', args: { item, key } })}
+      onClick={(item) =>
+        methods.callAction({
+          action: get(rename, 'actions.onClick', { default: 'onClick' }),
+          args: { key: item.key },
+        })
+      }
       onOpenChange={(openKeys) =>
-        methods.callAction({ action: 'onOpenChange', args: { openKeys } })
+        methods.callAction({
+          action: get(rename, 'actions.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
+          args: { openKeys },
+        })
       }
       {...exProps}
     >
@@ -179,32 +139,25 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
           case 'MenuGroup':
             return (
               <Menu.SubMenu
+                className={methods.makeCssClass([
+                  {
+                    '& > ul': bgColorDarker,
+                  },
+                ])}
                 popupClassName={methods.makeCssClass([
                   properties.backgroundColor && {
-                    '& > ul.ant-menu-sub': {
-                      backgroundColor: `${properties.backgroundColor} !important`,
-                    },
+                    '& > ul': bgColorDarker,
                   },
-                  properties.color &&
-                    properties.theme === 'dark' &&
-                    properties.mode !== 'inline' && {
-                      '& > ul.ant-menu-sub > li.ant-menu-item-selected': {
-                        backgroundColor: `${color(properties.color, 4)} !important`,
-                        color: `${color(properties.color, 6)} !important`,
-                      },
+                  properties.selectedColor &&
+                    theme === 'dark' && {
+                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
                     },
-                  properties.color &&
-                    properties.theme === 'light' &&
-                    properties.mode !== 'inline' && {
-                      '& > ul.ant-menu-sub > li.ant-menu-item-selected': {
-                        backgroundColor: `${color(properties.color, 1)} !important`,
-                      },
-                      '& > ul.ant-menu-sub > li.ant-menu-item-selected > *': {
-                        color: `${color(properties.color, 6)} !important`,
-                      },
-                      '& > ul.ant-menu-sub > li.ant-menu-item:hover': {
-                        color: `${color(properties.color, 6)} !important`,
-                      },
+                  properties.selectedColor &&
+                    theme === 'light' && {
+                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
+                      '& > ul > li.ant-menu-item:hover': nestedColors,
+                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
                     },
                 ])}
                 key={link.id}
@@ -213,16 +166,17 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                     linkStyle={link.style}
                     id={link.id}
                     methods={methods}
-                    menuId={link.menuId}
-                    pageId={link.pageId}
                     properties={link.properties}
-                    url={link.url}
                   />
                 }
                 icon={
                   link.properties &&
                   link.properties.icon && (
-                    <Icon methods={methods} properties={link.properties.icon} />
+                    <Icon
+                      blockId={`${link.id}_icon`}
+                      methods={methods}
+                      properties={link.properties.icon}
+                    />
                   )
                 }
               >
@@ -237,21 +191,19 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                               linkStyle={subLink.style}
                               id={subLink.id}
                               methods={methods}
-                              menuId={subLink.menuId}
                               properties={subLink.properties}
-                              url={subLink.url}
-                              pageId={subLink.pageId}
                             />
                           }
                         >
-                          {(subLink.links || []).map((subLinkGroup) => (
+                          {subLink.links.map((subLinkGroup) => (
                             <Menu.Item
-                              key={subLinkGroup.pageId || subLinkGroup.id}
+                              key={subLinkGroup.id}
                               danger={get(subLinkGroup, 'properties.danger')}
                               icon={
                                 subLinkGroup.properties &&
                                 subLinkGroup.properties.icon && (
                                   <Icon
+                                    blockId={`${subLinkGroup.id}_icon`}
                                     methods={methods}
                                     properties={subLinkGroup.properties.icon}
                                   />
@@ -262,7 +214,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                                 linkStyle={subLinkGroup.style}
                                 id={subLinkGroup.id}
                                 methods={methods}
-                                menuId={subLinkGroup.menuId}
                                 pageId={subLinkGroup.pageId}
                                 properties={subLinkGroup.properties}
                                 url={subLinkGroup.url}
@@ -275,12 +226,16 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                     default:
                       return (
                         <Menu.Item
-                          key={subLink.pageId || subLink.id}
+                          key={subLink.id}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
                             subLink.properties.icon && (
-                              <Icon methods={methods} properties={subLink.properties.icon} />
+                              <Icon
+                                blockId={`${subLink.id}_icon`}
+                                methods={methods}
+                                properties={subLink.properties.icon}
+                              />
                             )
                           }
                         >
@@ -288,7 +243,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                             linkStyle={subLink.style}
                             id={subLink.id}
                             methods={methods}
-                            menuId={subLink.menuId}
                             pageId={subLink.pageId}
                             properties={subLink.properties}
                             url={subLink.url}
@@ -303,12 +257,16 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
           default:
             return (
               <Menu.Item
-                key={link.pageId || link.id}
+                key={link.id}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
                   link.properties.icon && (
-                    <Icon methods={methods} properties={link.properties.icon} />
+                    <Icon
+                      blockId={`${link.id}_icon`}
+                      methods={methods}
+                      properties={link.properties.icon}
+                    />
                   )
                 }
               >
@@ -316,7 +274,6 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties }) => {
                   linkStyle={link.style}
                   id={link.id}
                   methods={methods}
-                  menuId={link.menuId}
                   pageId={link.pageId}
                   properties={link.properties}
                   url={link.url}

@@ -20,6 +20,7 @@ import PageHeaderMenu from '../src/blocks/PageHeaderMenu/PageHeaderMenu';
 import examples from '../demo/examples/PageHeaderMenu.yaml';
 import meta from '../src/blocks/PageHeaderMenu/PageHeaderMenu.json';
 
-// FIX: Invariant failed: You should not use <Link> outside a <Router>
+// FIX: TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+// due to inline menu
 // runRenderTests({ examples, Block: PageHeaderMenu, meta });
 runBlockSchemaTests({ examples, meta });

@@ -14,17 +14,35 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { get } from '@lowdefy/helpers';
 
 const Sider = Layout.Sider;
 
-const SiderBlock = ({ blockId, properties, content, methods }) => {
-  const additionalProps = {};
-  if (properties.collapsed === true || properties.collapsed === false) {
-    additionalProps.collapsed = properties.collapsed;
+const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
+  if (!state) {
+    await methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
   }
+  if (state) {
+    await methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
+  }
+  setOpen(state);
+};
+
+const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
+  const [openState, setOpen] = useState(!properties.initialCollapsed);
+  useEffect(() => {
+    methods.registerMethod(
+      get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }),
+      async () => await triggerSetOpen({ state: !openState, setOpen, methods, rename })
+    );
+    methods.registerMethod(
+      get(rename, 'methods.setOpen', { default: 'setOpen' }),
+      async ({ open }) => await triggerSetOpen({ state: !!open, setOpen, methods, rename })
+    );
+  });
   return (
     <Sider
       id={blockId}
@@ -33,21 +51,13 @@ const SiderBlock = ({ blockId, properties, content, methods }) => {
         properties.style,
       ])} hide-on-print`}
       breakpoint={properties.breakpoint}
-      collapsed={properties.collapsed}
+      collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
-      defaultCollapsed={properties.defaultCollapsed}
       reverseArrow={properties.reverseArrow}
       theme={properties.theme}
-      trigger={properties.trigger}
       width={properties.width}
-      onCollapse={() => methods.callAction({ action: 'onCollapse' })}
       onBreakpoint={() => methods.callAction({ action: 'onBreakpoint' })}
-      zeroWidthTriggerStyle={methods.makeCssClass(properties.zeroWidthTriggerStyle, {
-        styleObjectOnly: true,
-        react: true,
-      })}
-      {...additionalProps}
     >
       {content.content && content.content()}
     </Sider>

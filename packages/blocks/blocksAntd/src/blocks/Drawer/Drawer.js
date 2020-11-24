@@ -16,17 +16,30 @@
 
 import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
-import { type } from '@lowdefy/helpers';
+import { type, get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const DrawerBlock = ({ blockId, content, properties, methods, onClose }) => {
+const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
+  if (!state) {
+    methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
+  }
+  if (state) {
+    methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
+  }
+  methods.callAction({ action: get(rename, 'actions.onToggle', { default: 'onToggle' }) });
+  setOpen(state);
+};
+
+const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
-    methods.registerMethod('toggleOpen', () => {
-      setOpen(!openState);
-    });
-    methods.registerMethod('setOpen', ({ open }) => setOpen(!!open));
-  }, [methods.registerMethod, setOpen]);
+    methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
+      triggerSetOpen({ state: !openState, setOpen, methods, rename })
+    );
+    methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
+      triggerSetOpen({ state: !!open, setOpen, methods, rename })
+    );
+  });
   return (
     <Drawer
       id={blockId}
@@ -41,13 +54,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, onClose }) => {
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
-      onClose={
-        onClose ||
-        (() => {
-          methods.callAction({ action: 'onClose' });
-          setOpen(false);
-        })
-      }
+      onClose={onClose || (() => triggerSetOpen({ state: false, setOpen, methods, rename }))}
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}

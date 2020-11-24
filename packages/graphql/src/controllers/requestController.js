@@ -1,40 +1,30 @@
-/* eslint-disable no-underscore-dangle */
-import { get, serializer } from '@lowdefy/helpers';
+/*
+  Copyright 2020 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { serializer } from '@lowdefy/helpers';
 import { NodeParser } from '@lowdefy/operators';
 import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
-
-function validateRequest(requestData, requestId) {
-  if (!requestData) {
-    throw new ConfigurationError(`Request "${requestId}" does not exist.`);
-  }
-  if (!requestData.connectionId) {
-    throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
-  }
-  if (!Object.keys(resolvers).includes(requestData.type)) {
-    throw new ConfigurationError(
-      `Request "${requestId}" has invalid request type "${requestData.type}".`
-    );
-  }
-}
-
-function validateConnection(connectionData, requestData) {
-  if (!connectionData) {
-    throw new ConfigurationError(`Connection "${requestData.connectionId}" does not exist.`);
-  }
-  if (resolvers[requestData.type].connectionType !== connectionData.type) {
-    throw new ConfigurationError(
-      `Connection "${requestData.connectionId}" is not of type required by request "${requestData.requestId}".`
-    );
-  }
-}
+import testSchema from '../utils/testSchema';
 
 class RequestController {
-  constructor({ getController, getLoader, getConnectionSecrets }) {
-    this.getConnectionSecrets = getConnectionSecrets;
+  constructor({ getLoader, getSecrets }) {
+    this.getSecrets = getSecrets;
     this.requestLoader = getLoader('request');
     this.connectionLoader = getLoader('connection');
-    this.pageController = getController('page');
   }
 
   async callRequest({
@@ -48,59 +38,158 @@ class RequestController {
     state,
     urlQuery,
   }) {
-    const requestData = await this.requestLoader.load({ pageId, contextId: blockId, requestId });
+    const request = await this.loadRequest({
+      pageId,
+      contextId: blockId,
+      requestId,
+    });
+    const connection = await this.loadConnection({ connectionId: request.connectionId });
 
-    validateRequest(requestData, requestId);
+    // Get definitions early to throw and avoid parsing if request/connection type is invalid
+    const connectionDefinition = this.getConnectionDefinition({ connection, request });
+    const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
 
-    const connectionData = await this.connectionLoader.load(requestData.connectionId);
-
-    validateConnection(connectionData, requestData);
-
-    const requestType = get(requestData, 'type');
-
-    const operatorsParser = new NodeParser({
+    const { connectionProperties, requestProperties } = await this.parseOperators({
+      args,
       arrayIndices,
+      connection,
       input,
       lowdefyGlobal,
-      secrets: this.getConnectionSecrets(),
+      request,
       state,
       urlQuery,
     });
 
-    const { output: request, errors: requestParseErrors } = operatorsParser.parse({
-      input: get(requestData, 'properties', { default: {} }),
-      args,
-      location: requestId,
+    this.checkConnectionRead({
+      connectionProperties,
+      connection,
+      checkRead: requestDefinition.checkRead,
+    });
+    this.checkConnectionWrite({
+      connectionProperties,
+      connection,
+      checkWrite: requestDefinition.checkWrite,
+    });
+    testSchema({ schema: connectionDefinition.schema, object: connectionProperties });
+    testSchema({ schema: requestDefinition.schema, object: requestProperties });
+
+    const response = await this.callResolver({
+      connectionProperties,
+      requestProperties,
+      resolver: requestDefinition.resolver,
     });
 
-    if (requestParseErrors.length > 0) {
-      throw new RequestError(requestParseErrors[0]);
+    return {
+      id: request.id,
+      success: true,
+      type: request.type,
+      response: serializer.serialize(response),
+    };
+  }
+
+  async loadRequest({ pageId, contextId, requestId }) {
+    const request = await this.requestLoader.load({ pageId, contextId, requestId });
+    if (!request) {
+      throw new ConfigurationError(`Request "${requestId}" does not exist.`);
+    }
+    if (!request.connectionId) {
+      throw new ConfigurationError(`Request "${requestId}" does not specify a connection.`);
     }
 
-    const { output: connection, errors: connectionParseErrors } = operatorsParser.parse({
-      input: get(connectionData, 'properties', { default: {} }),
-      args,
-      location: connectionData.connectionId,
+    return request;
+  }
+
+  async loadConnection({ connectionId }) {
+    const connection = await this.connectionLoader.load(connectionId);
+    if (!connection) {
+      throw new ConfigurationError(`Connection "${connectionId}" does not exist.`);
+    }
+    return connection;
+  }
+
+  getConnectionDefinition({ connection, request }) {
+    const connectionDefinition = resolvers[connection.type];
+    if (!connectionDefinition) {
+      throw new ConfigurationError(
+        `Request "${request.requestId}" has invalid connection type "${connection.type}".`
+      );
+    }
+    return connectionDefinition;
+  }
+
+  getRequestDefinition({ connectionDefinition, request }) {
+    const requestDefinition = connectionDefinition.requests[request.type];
+    if (!requestDefinition) {
+      throw new ConfigurationError(
+        `Request "${request.requestId}" has invalid request type "${request.type}".`
+      );
+    }
+    return requestDefinition;
+  }
+
+  async parseOperators({
+    args,
+    arrayIndices,
+    connection,
+    input,
+    lowdefyGlobal,
+    request,
+    state,
+    urlQuery,
+  }) {
+    const secrets = await this.getSecrets();
+    const operatorsParser = new NodeParser({
+      arrayIndices,
+      input,
+      lowdefyGlobal,
+      secrets,
+      state,
+      urlQuery,
     });
 
-    if (connectionParseErrors.length > 0) {
-      throw new RequestError(connectionParseErrors[0]);
+    const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+      input: connection.properties || {},
+      location: connection.connectionId,
+      args,
+    });
+    if (connectionErrors.length > 0) {
+      throw new RequestError(connectionErrors[0]);
     }
 
-    const context = { ConfigurationError, RequestError };
+    const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+      input: request.properties || {},
+      location: request.requestId,
+      args,
+    });
+    if (requestErrors.length > 0) {
+      throw new RequestError(requestErrors[0]);
+    }
 
+    return {
+      connectionProperties,
+      requestProperties,
+    };
+  }
+
+  checkConnectionRead({ connectionProperties, connection, checkRead }) {
+    if (checkRead && connectionProperties.read === false) {
+      throw new ConfigurationError(`${connection.type} connection does not allow reads.`);
+    }
+  }
+
+  checkConnectionWrite({ connectionProperties, connection, checkWrite }) {
+    if (checkWrite && connectionProperties.write !== true) {
+      throw new ConfigurationError(`${connection.type} connection does not allow writes.`);
+    }
+  }
+
+  async callResolver({ connectionProperties, requestProperties, resolver }) {
     try {
-      const response = await resolvers[requestType].resolver({
-        request,
-        connection,
-        context,
+      const response = await resolver({
+        request: requestProperties,
+        connection: connectionProperties,
       });
-      return {
-        id: requestData.id,
-        success: true,
-        type: requestType,
-        response: serializer.serialize(response),
-      };
+      return response;
     } catch (err) {
       if (err instanceof ConfigurationError || err instanceof RequestError) {
         throw err;
@@ -114,6 +203,6 @@ function createRequestController(context) {
   return new RequestController(context);
 }
 
-export { RequestController };
+export { RequestController, testSchema };
 
 export default createRequestController;

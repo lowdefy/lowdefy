@@ -35,7 +35,7 @@ const CommentBlock = ({ blockId, content, properties, methods }) => {
   return (
     <Comment
       id={blockId}
-      actions={content.actions && content.actions()}
+      actions={[content.actions && content.actions()]}
       author={properties.author || (content.author && content.author())}
       content={properties.content || (content.content && content.content())}
       datetime={properties.datetime}

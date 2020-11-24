@@ -10,18 +10,18 @@
           "type": "string",
           "description": "Menu background color."
         },
-        "color": {
+        "selectedColor": {
           "type": "string",
-          "description": "Menu primary color."
+          "description": "Menu primary selected color."
+        },
+        "menuId": {
+          "type": "string",
+          "description": "App menu id used to get menu links."
         },
         "mode": {
           "type": "string",
           "enum": ["vertical", "horizontal", "inline"],
           "description": "Type of menu to render."
-        },
-        "selectable": {
-          "type": "boolean",
-          "description": "Allows selecting menu items."
         },
         "selectedKeys": {
           "type": "array",
@@ -93,7 +93,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": ["MenuLink"],
+                      "enum": ["MenuLink", "MenuGroup"],
                       "description": "Menu item type."
                     },
                     "style": {
@@ -116,6 +116,46 @@
                           "type": "boolean",
                           "description": "Apply danger style to menu item."
                         }
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["id", "type"],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "Menu item id."
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": ["MenuLink"],
+                              "description": "Menu item type."
+                            },
+                            "style": {
+                              "type": "object",
+                              "description": "Css style to applied to sub-link."
+                            },
+                            "pageId": {
+                              "type": "string",
+                              "description": "Page to link to."
+                            },
+                            "properties": {
+                              "type": "object",
+                              "description": "properties from menu item.",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "description": "Menu item title."
+                                },
+                                "danger": {
+                                  "type": "boolean",
+                                  "description": "Apply danger style to menu item."
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                   }
@@ -131,13 +171,16 @@
       "additionalProperties": false,
       "properties": {
         "onSelect": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when menu item is selected."
         },
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when menu item is clicked."
         },
-        "onOpenChange": {
-          "type": "array"
+        "onToggleMenuGroup": {
+          "type": "array",
+          "description": "Trigger action when mobile menu group is opened."
         }
       }
     }

@@ -68,7 +68,7 @@
           "description": "Title to describe the input component, if no title is specified the block id is displayed."
         },
         "value": {
-          "type": ["number", "string", "object"],
+          "type": ["number", "string", "object", "array"],
           "description": "Value to display."
         },
         "valueStyle": {

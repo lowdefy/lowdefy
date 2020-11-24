@@ -87,6 +87,7 @@ class Actions {
   }
 
   async callMethod(params, successMessage, errorMessage, _, arrayIndices) {
+    // TODO: add callMethod on block and use instead
     try {
       const { blockId, method, args } = params;
       const blockMethod = this.context.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)]
@@ -336,15 +337,20 @@ class Actions {
     return Promise.resolve({ successMessage });
   }
 
-  validate(blockId, successMessage, errorMessage) {
+  validate(params, successMessage, errorMessage) {
     try {
+      if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
+        throw new Error('Invalid validate params.');
+      }
       this.context.showValidationErrors = true;
       let validationErrors = this.context.RootBlocks.validate();
-      if (type.isString(blockId)) {
+      if (params) {
+        const blockIds = type.isString(params) ? [params] : params;
         validationErrors = validationErrors.filter((block) => {
-          return block.blockId === blockId;
+          return blockIds.includes(block.blockId);
         });
       }
+
       if (validationErrors.length > 0) {
         return Promise.reject({
           errorMessage:

@@ -1,6 +1,32 @@
 {
   "category": "display",
   "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "content": "Args message content"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -36,7 +62,8 @@
       "additionalProperties": false,
       "properties": {
         "onClose": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when message is closed."
         }
       }
     }

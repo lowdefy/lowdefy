@@ -20,9 +20,31 @@
           "description": "Title text content."
         },
         "copyable": {
-          "type": "boolean",
+          "description": "Provide copy text button.",
           "default": false,
-          "description": "Provide copy text button."
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "Paragraph text to copy when clicked."
+                },
+                "icon": {
+                  "type": ["string", "object", "array"],
+                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                },
+                "tooltips": {
+                  "type": ["string", "array"],
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                }
+              }
+            }
+          ]
         },
         "delete": {
           "type": "boolean",
@@ -35,9 +57,31 @@
           "description": "Apply disabled style."
         },
         "ellipsis": {
-          "type": "boolean",
           "default": false,
-          "description": "Display ellipsis when text overflows."
+          "description": "Display ellipsis when text overflows a single line.",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "rows": {
+                  "type": "number",
+                  "description": "Max rows of content."
+                },
+                "expandable": {
+                  "type": "boolean",
+                  "description": "Expand hidden content when clicked."
+                },
+                "suffix": {
+                  "type": "string",
+                  "description": "Suffix of ellipses content."
+                }
+              }
+            }
+          ]
         },
         "level": {
           "type": "number",
@@ -59,6 +103,20 @@
           "type": "boolean",
           "default": false,
           "description": "Apply underline style."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onExpand": {
+          "type": "array",
+          "description": "Trigger action when ellipse expand is clicked."
+        },
+        "onCopy": {
+          "type": "array",
+          "description": "Trigger action when copy text is clicked."
         }
       }
     }

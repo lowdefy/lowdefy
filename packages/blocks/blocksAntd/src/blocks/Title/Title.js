@@ -17,6 +17,9 @@
 import React from 'react';
 import { Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { type } from '@lowdefy/helpers';
+
+import Icon from '../Icon/Icon';
 
 const Title = Typography.Title;
 
@@ -28,10 +31,67 @@ const TitleBlock = ({ blockId, properties, methods }) => (
       properties.style,
     ])}
     code={properties.code}
-    copyable={properties.copyable}
+    copyable={
+      type.isObject(properties.copyable)
+        ? {
+            text: properties.copyable.text,
+            onCopy: () => {
+              methods.callAction({
+                action: 'onCopy',
+                args: { value: properties.copyable.text },
+              });
+            },
+            icon:
+              properties.copyable.icon &&
+              (type.isArray(properties.copyable.icon) ? (
+                [
+                  <Icon
+                    key="copy-icon"
+                    blockId={`${blockId}_copyable_before_icon`}
+                    methods={methods}
+                    properties={properties.copyable.icon[0]}
+                  />,
+                  <Icon
+                    key="copied-icon"
+                    blockId={`${blockId}_copyable_after_icon`}
+                    methods={methods}
+                    properties={properties.copyable.icon[1]}
+                  />,
+                ]
+              ) : (
+                <Icon
+                  blockId={`${blockId}_copyable_icon`}
+                  methods={methods}
+                  properties={properties.copyable.icon}
+                />
+              )),
+            tooltips: properties.copyable.tooltips,
+          }
+        : properties.copyable
+    }
     delete={properties.delete}
     disabled={properties.disabled}
-    ellipsis={properties.ellipsis}
+    ellipsis={
+      type.isObject(properties.ellipsis)
+        ? {
+            rows: properties.ellipsis.rows,
+            expandable: properties.ellipsis.expandable,
+            suffix: properties.ellipsis.suffix,
+            // FIX: not working, might be and antd issue.
+            // symbol: properties.ellipsis.symbol && <span>{properties.ellipsis.symbol}</span>,
+            // "symbol": {
+            //   "type": "string",
+            //   "description": "Custom ... symbol of ellipsis content."
+            // }
+            onExpand: (ellipsis) => {
+              methods.callAction({
+                action: 'onExpand',
+                args: { ellipsis },
+              });
+            },
+          }
+        : properties.ellipsis
+    }
     level={properties.level}
     mark={properties.mark}
     type={properties.type}

@@ -1,6 +1,47 @@
 - id: default
   type: Card
-- id: properties.title
+- id: "properties.title"
   type: Card
   properties:
     title: Card block
+- id: "properties.size: small"
+  type: Card
+  properties:
+    size: small
+    title: Card block small
+- id: "properties.bordered: false"
+  type: Card
+  properties:
+    title: Card block
+    bordered: false
+- id: "properties.hoverable: true"
+  type: Card
+  properties:
+    title: Card block
+    hoverable: true
+- id: "properties.inner: true"
+  type: Card
+  properties:
+    title: Card block
+    inner: true
+- id: "properties.bodyStyle: border: 5px solid blue"
+  type: Card
+  properties:
+    title: Card block
+    bodyStyle: 
+      border: 5px solid blue
+- id: "properties.headerStyle: border: 5px solid blue"
+  type: Card
+  properties:
+    title: Card block
+    headerStyle: 
+      border: 5px solid blue
+- id: "areas.extra:"
+  type: Card
+  properties:
+    title: Card block
+  areas:
+    extra:
+      blocks:
+        - id: test
+          type: Test

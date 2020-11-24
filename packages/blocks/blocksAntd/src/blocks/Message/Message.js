@@ -18,23 +18,25 @@ import React, { useEffect } from 'react';
 import { message } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+
 import Icon from '../Icon/Icon';
 
-const MessageBlock = ({ blockId, properties, methods, onClose }) => {
+const MessageBlock = ({ blockId, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       message[args.status || properties.status || 'success']({
-        id: blockId,
+        id: `${blockId}_message`,
         content: args.content || properties.content || blockId,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        onClose: onClose || (() => methods.callAction({ action: 'onClose' })),
-        icon: properties.icon && <Icon properties={properties.icon} methods={methods} />,
-        key: blockId,
+        onClose: () => methods.callAction({ action: 'onClose' }),
+        icon: properties.icon && (
+          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+        ),
         className: methods.makeCssClass(properties.messageStyle),
       });
     });
-  }, [methods.registerMethod]);
-  return <div id={`${blockId}_message`} />;
+  });
+  return <div id={blockId} />;
 };
 
 MessageBlock.defaultProps = blockDefaultProps;

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import getFormatter from '@lowdefy/format';
-import { get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
@@ -34,22 +34,29 @@ const StatisticBlock = ({ blockId, properties, methods }) => (
     valueStyle={properties.valueStyle}
     prefix={
       properties.prefixIcon ? (
-        <Icon methods={methods} properties={properties.prefixIcon} />
+        <Icon
+          blockId={`${blockId}_prefixIcon`}
+          methods={methods}
+          properties={properties.prefixIcon}
+        />
       ) : (
         properties.prefix || ''
       )
     }
     suffix={
       properties.suffixIcon ? (
-        <Icon methods={methods} properties={properties.suffixIcon} />
+        <Icon
+          blockId={`${blockId}_suffixIcon`}
+          methods={methods}
+          properties={properties.suffixIcon}
+        />
       ) : (
         properties.suffix || ''
       )
     }
     formatter={
-      get(properties, 'formatter.type')
-        ? getFormatter(get(properties, 'formatter.type'), get(properties, 'formatter.properties'))
-        : undefined
+      properties.formatter &&
+      getFormatter(properties.formatter.type, properties.formatter.properties)
     }
   />
 );

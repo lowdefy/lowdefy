@@ -88,11 +88,7 @@ const mockBlock = ({ meta, logger }) => {
     }
   };
   const getProps = (block) => {
-    const props = stubBlockProps({ block, meta, logger });
-    return {
-      ...props,
-      methods,
-    };
+    return stubBlockProps({ block, meta, logger });
   };
 
   return { before, methods, getProps };

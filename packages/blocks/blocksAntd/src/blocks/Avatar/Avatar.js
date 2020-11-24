@@ -16,43 +16,34 @@
 
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { type, serializer } from '@lowdefy/helpers';
 import { Avatar } from 'antd';
 import Icon from '../Icon/Icon';
 
-const AvatarBlock = ({ actions, blockId, methods, onClick, properties }) => {
-  let propertiesIcon = serializer.copy(properties.icon);
-  if (type.isString(propertiesIcon)) {
-    propertiesIcon = { name: propertiesIcon };
-  }
-  return (
-    <Avatar
-      alt={properties.alt}
-      id={blockId}
-      gap={properties.gap}
-      shape={properties.shape}
-      size={properties.size}
-      src={properties.src}
-      onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
-      className={methods.makeCssClass([
-        {
-          backgroundColor:
-            !properties.src &&
-            (properties.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`),
-          cursor: (onClick || actions.onClick) && 'pointer',
-        },
-        properties.style,
-      ])}
-      icon={
-        propertiesIcon && (
-          <Icon properties={{ size: properties.size, ...propertiesIcon }} methods={methods} />
-        )
-      }
-    >
-      {properties.content}
-    </Avatar>
-  );
-};
+const AvatarBlock = ({ actions, blockId, methods, properties }) => (
+  <Avatar
+    id={blockId}
+    alt={properties.alt}
+    gap={properties.gap}
+    shape={properties.shape}
+    size={properties.size}
+    src={properties.src}
+    onClick={() => methods.callAction({ action: 'onClick' })}
+    className={methods.makeCssClass([
+      {
+        backgroundColor: !properties.src && properties.color,
+        cursor: actions.onClick && 'pointer',
+      },
+      properties.style,
+    ])}
+    icon={
+      properties.icon && (
+        <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+      )
+    }
+  >
+    {properties.content}
+  </Avatar>
+);
 
 AvatarBlock.defaultProps = blockDefaultProps;
 
