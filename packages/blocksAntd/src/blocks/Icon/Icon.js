@@ -57,7 +57,7 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
       {actions.onClick && actions.onClick.loading && !propertiesObj.disableLoadingIcon ? (
         <Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />
       ) : (
-        <ErrorBoundary fallback={<ExclamationCircleOutlined {...iconProps} />}>
+        <ErrorBoundary fallback={() => <ExclamationCircleOutlined {...iconProps} />}>
           <Suspense fallback={<Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />}>
             <IconComp
               id={blockId}

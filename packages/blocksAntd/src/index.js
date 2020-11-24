@@ -69,7 +69,7 @@ import Spin from './blocks/Spin/Spin';
 import Statistic from './blocks/Statistic/Statistic';
 import Switch from './blocks/Switch/Switch';
 import Tabs from './blocks/Tabs/Tabs';
-import Timeline from './blocks/Timeline/Timeline';
+import TimelineList from './blocks/TimelineList/TimelineList';
 import TextArea from './blocks/TextArea/TextArea';
 import TextInput from './blocks/TextInput/TextInput';
 import Title from './blocks/Title/Title';
@@ -132,7 +132,7 @@ export {
   Statistic,
   Switch,
   Tabs,
-  Timeline,
+  TimelineList,
   TextArea,
   TextInput,
   Title,
@@ -195,7 +195,7 @@ export default {
   Statistic,
   Switch,
   Tabs,
-  Timeline,
+  TimelineList,
   TextArea,
   TextInput,
   Title,

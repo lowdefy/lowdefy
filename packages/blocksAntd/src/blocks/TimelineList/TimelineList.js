@@ -21,7 +21,7 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
 
-const TimelineBlock = ({ blockId, list, methods, properties }) => {
+const TimelineList = ({ blockId, list, methods, properties }) => {
   const other = {};
   if (properties.mode) {
     other.mode = properties.mode;
@@ -75,6 +75,6 @@ const TimelineBlock = ({ blockId, list, methods, properties }) => {
   );
 };
 
-TimelineBlock.defaultProps = blockDefaultProps;
+TimelineList.defaultProps = blockDefaultProps;
 
-export default TimelineBlock;
+export default TimelineList;
