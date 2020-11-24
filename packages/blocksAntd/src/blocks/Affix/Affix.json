@@ -25,7 +25,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggered when container affix status changes."
         }
       }
     }
