@@ -25,7 +25,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -80,7 +79,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -226,7 +224,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -281,7 +278,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -359,7 +355,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -472,7 +467,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -550,7 +544,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -640,7 +633,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -718,7 +710,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -831,7 +822,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -910,7 +900,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -982,7 +971,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1060,7 +1048,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1133,7 +1120,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1211,7 +1197,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1283,7 +1268,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1361,7 +1345,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1416,7 +1399,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1521,7 +1503,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1576,7 +1557,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1691,7 +1671,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1746,7 +1725,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1842,7 +1820,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -1897,7 +1874,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -1987,7 +1963,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2042,7 +2017,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -2148,7 +2122,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2203,7 +2176,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -2309,7 +2281,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2364,7 +2335,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -2462,7 +2432,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2517,7 +2486,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -2663,7 +2631,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2718,7 +2685,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -2865,7 +2831,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -2920,7 +2885,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -3065,7 +3029,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -3120,7 +3083,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }
@@ -3266,7 +3228,6 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
-            "safelyCallMethod": [Function],
             "setOpen": [Function],
             "toggleOpen": [Function],
           }
@@ -3321,7 +3282,6 @@ Array [
               "makeCssClass": [Function],
               "registerAction": [Function],
               "registerMethod": [Function],
-              "safelyCallMethod": [Function],
               "setOpen": [Function],
               "toggleOpen": [Function],
             }

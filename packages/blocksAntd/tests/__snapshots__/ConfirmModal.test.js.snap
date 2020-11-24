@@ -225,7 +225,6 @@ Array [
             "registerAction": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
-            "safelyCallMethod": [MockFunction],
             "setValue": [MockFunction],
             "unshiftItem": [MockFunction],
           }
@@ -940,7 +939,6 @@ Array [
             "registerAction": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
-            "safelyCallMethod": [MockFunction],
             "setValue": [MockFunction],
             "unshiftItem": [MockFunction],
           }
@@ -1655,7 +1653,6 @@ Array [
             "registerAction": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
-            "safelyCallMethod": [MockFunction],
             "setValue": [MockFunction],
             "unshiftItem": [MockFunction],
           }
@@ -2378,7 +2375,6 @@ Array [
             "registerAction": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
-            "safelyCallMethod": [MockFunction],
             "setValue": [MockFunction],
             "unshiftItem": [MockFunction],
           }
@@ -3085,7 +3081,6 @@ Array [
             "registerAction": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
-            "safelyCallMethod": [MockFunction],
             "setValue": [MockFunction],
             "unshiftItem": [MockFunction],
           }
