@@ -110,12 +110,12 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
                     <Link to={`/${homePageId}`}>
                       <img
                         src={
-                          properties.logoSrc ||
+                          (properties.logo && properties.logo.src) ||
                           (get(properties, 'header.theme') === 'light'
                             ? 'https://lowdefy.com/logos/name_250.png'
                             : 'https://lowdefy.com/logos/box_white_250.png')
                         }
-                        alt={properties.logoAlt || 'Lowdefy'}
+                        alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
                         className={methods.makeCssClass([
                           styles.logo,
                           properties.logo && properties.logo.style,

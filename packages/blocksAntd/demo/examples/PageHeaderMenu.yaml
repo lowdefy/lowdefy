@@ -15,10 +15,11 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.logoSrc"
+- id: "properties.logo.src"
   type: PageHeaderMenu
   properties:
-    logoSrc: "https://avatars1.githubusercontent.com/u/25385065?s=200&v=4"
+    logo:
+      src: "https://lowdefy.com/logos/name_250.png"
     menu:
       links:
         - id: Introduction
@@ -31,10 +32,11 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.logoAlt"
+- id: "properties.logo.alt"
   type: PageHeaderMenu
   properties:
-    logoAlt: "Header logo alt text"
+    logo:
+      alt: "Header logo alt text"
     menu:
       links:
         - id: Introduction
@@ -47,6 +49,12 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
+- id: "properties.logo.style"
+  type: PageHeaderMenu
+  properties:
+    logo:
+      style: 
+        border: 5px solid blue
 - id: "properties.header.color"
   type: PageHeaderMenu
   properties:
@@ -81,75 +89,42 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-# Nie seker waar  hoe menu color 'n verskil maak nie'
-# - id: "properties.menu.color"
-#   type: PageHeaderMenu
-#   properties:
-#     menu:
-#       color: "#4432a8"
-#       properties:
-#         color: "#e91e63"
-#       links:
-#         - id: Introduction
-#           pageId: introduction
-#           properties:
-#             icon: RocketOutlined
-#             title: Introduction
-#         - id: alert
-#           pageId: Alert
-#           properties:
-#             icon: ExclamationCircleOutlined
-#             title: Alert
-- id: "properties.userAvatar.disabled: true"
+- id: "properties.breadcrumb.list"
   type: PageHeaderMenu
   properties:
-    userAvatar:
-      disabled: true
-    menu:
-      links:
-        - id: Introduction
-          pageId: introduction
-          properties:
-            icon: RocketOutlined
-            title: Introduction
-        - id: alert
-          pageId: Alert
-          properties:
-            icon: ExclamationCircleOutlined
-            title: Alert
-- id: "properties.userAvatar.avatar.shape: circle"
+    breadcrumb:
+      list: 
+        - Link one
+        - Link two
+- id: "properties.footer.style"
   type: PageHeaderMenu
   properties:
-    userAvatar:
-      avatar:
-        shape: circle
-    menu:
-      links:
-        - id: Introduction
-          pageId: introduction
-          properties:
-            icon: RocketOutlined
-            title: Introduction
-        - id: alert
-          pageId: Alert
-          properties:
-            icon: ExclamationCircleOutlined
-            title: Alert
-- id: "properties.userAvatar.avatar.shape: square"
+    footer:
+      style: 
+        border: 5px solid blue
+  areas:
+    footer:
+      blocks: []
+- id: "properties.content.style"
   type: PageHeaderMenu
   properties:
-    userAvatar:
-      avatar:
-        shape: square
-    menu:
-      links:
-        - id: Introduction
-          pageId: introduction
-          properties:
-            icon: RocketOutlined
-            title: Introduction
-        - id: alert
-          pageId: Alert
-          properties:
-            icon: ExclamationCircleOutlined
-            title: Alert
+    content:
+      style: 
+        border: 5px solid blue
+  areas:
+    content:
+      blocks: []
+- id: "properties.header.style"
+  type: PageHeaderMenu
+  properties:
+    header:
+      style: 
+        border: 5px solid blue
+  areas:
+    header:
+      blocks: []
+- id: "properties.style"
+  type: PageHeaderMenu
+  properties:
+    style: 
+      border: 5px solid blue
