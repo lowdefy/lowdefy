@@ -8,3 +8,8 @@
   type: Affix
   properties:
     offsetBottom: 15
+- id: "properties.style"
+  type: Affix
+  properties:
+    style: 
+      border: 5px solid blue
