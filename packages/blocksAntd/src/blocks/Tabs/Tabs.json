@@ -34,7 +34,7 @@
         "tabType": {
           "type": "string",
           "default": "line",
-          "enum": ["line", "card", "editable-card"],
+          "enum": ["line", "card"],
           "description": "Type of tabs."
         },
         "tabs": {
@@ -65,6 +65,10 @@
         "tabBarStyle": {
           "type": "object",
           "description": "Css style to apply to the tab bar."
+        },
+        "extraAreaKey": {
+          "type": "string",
+          "description": "Area key for the extra area blocks."
         }
       }
     }
@@ -73,13 +77,16 @@
     "type": "object",
     "properties": {
       "onChange": {
-        "type": "array"
+        "type": "array",
+        "description": "Trigger action on tab change."
       },
       "onTabScroll": {
-        "type": "array"
+        "type": "array",
+        "description": "Trigger action on tab scroll."
       },
       "onTabClick": {
-        "type": "array"
+        "type": "array",
+        "description": "Trigger action on tab click."
       }
     }
   }

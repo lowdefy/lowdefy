@@ -52,7 +52,6 @@ test('basic display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Display",
     }
@@ -81,7 +80,6 @@ test('basic display with methods', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Display",
     }
@@ -112,7 +110,6 @@ test('basic input', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Input",
       "value": null,
@@ -141,7 +138,6 @@ test('input setState', () => {
         "registerMethod": [Function],
         "setValue": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Input",
       "value": null,
@@ -175,7 +171,6 @@ test('basic container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -206,7 +201,6 @@ test('basic context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Context",
     }
@@ -240,7 +234,6 @@ test('basic list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -275,7 +268,6 @@ test('list methods', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -332,7 +324,6 @@ test('blocks container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -395,7 +386,6 @@ test('blocks areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -445,7 +435,6 @@ test('areas container', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Container",
     }
@@ -495,7 +484,6 @@ test('areas context', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Context",
     }
@@ -552,7 +540,6 @@ test('areas list', () => {
         "removeItem": [Function],
         "unshiftItem": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "List",
     }
@@ -595,7 +582,6 @@ test('actions display', () => {
         "registerAction": [Function],
         "registerMethod": [Function],
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "Display",
     }
@@ -641,7 +627,6 @@ test('provide schema errors', () => {
       "properties": Object {
         "mistake": true,
       },
-      "registeredMethods": Object {},
       "schemaErrors": false,
       "type": "DisplayError",
     }
@@ -666,7 +651,6 @@ test('provide schema errors', () => {
       "properties": Object {
         "mistake": 1,
       },
-      "registeredMethods": Object {},
       "schemaErrors": Array [
         Object {
           "dataPath": "/properties/mistake",
@@ -710,7 +694,7 @@ test('throw schema error', () => {
   );
 });
 
-test('registeredMethods for test purposes', () => {
+test('register and call methods', () => {
   const block = {
     id: 'a',
     type: 'Display',
@@ -721,7 +705,7 @@ test('registeredMethods for test purposes', () => {
   const res = stubBlockProps({ block, meta });
   const mockMethod = jest.fn();
   res.methods.registerMethod('methodsName', mockMethod);
-  expect(res.registeredMethods.methodsName).toBeDefined();
-  res.registeredMethods.methodsName({ test: 1 });
+  expect(res.methods.methodsName).toBeDefined();
+  res.methods.methodsName({ test: 1 });
   expect(mockMethod).toBeCalledWith({ test: 1 });
 });

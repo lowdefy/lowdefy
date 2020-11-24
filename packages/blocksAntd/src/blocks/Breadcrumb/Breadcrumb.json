@@ -19,8 +19,7 @@
           "type": "array",
           "description": "List of breadcrumb links.",
           "items": {
-            "type": "object",
-            "required": ["label"],
+            "type": ["object", "string"],
             "properties": {
               "label": {
                 "type": "string",
@@ -34,12 +33,26 @@
                 "type": "string",
                 "description": "External url link."
               },
-              "linkStyle": {
+              "style": {
                 "type": "object",
                 "description": "Css style to apply to link."
+              },
+              "icon": {
+                "type": ["string", "object"],
+                "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link."
               }
             }
           }
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClick": {
+          "type": "array",
+          "description": "Triggered when breadcrumb item is clicked. Provides clicked link and index as args."
         }
       }
     }

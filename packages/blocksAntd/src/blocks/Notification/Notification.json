@@ -45,7 +45,7 @@
         },
         "button": {
           "type": "object",
-          "description": "Button object to customized the close button. Fires onClose action when clicked."
+          "description": "Button object to customized the close button. Triggers onClose action when clicked."
         },
         "description": {
           "type": "string",

@@ -14,17 +14,26 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { mergeObjects } from '@lowdefy/helpers';
+import { mergeObjects, get } from '@lowdefy/helpers';
 
 import Button from '../Button/Button';
 import Drawer from '../Drawer/Drawer';
 import Menu from '../Menu/Menu';
-import UserAvatar from '../UserAvatar/UserAvatar';
 
-const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
-  const [open, setOpen] = useState(false);
+const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => {
+  const [openState, setOpen] = useState(false);
+  useEffect(() => {
+    methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () => {
+      methods._setOpen({ open: !openState });
+      setOpen(!openState);
+    });
+    methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) => {
+      methods._setOpen({ open });
+      setOpen(open);
+    });
+  });
   return (
     <div id={blockId}>
       <Button
@@ -32,43 +41,41 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
         properties={{
           title: '',
           type: 'primary',
-          icon: { name: open ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined' },
+          icon: {
+            name: openState ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined',
+          },
           ...(properties.toggleMenuButton || {}),
         }}
         methods={methods}
-        onClick={() => {
-          setOpen(!open);
-          methods.callAction({ action: 'toggleMenu', hideLoading: true });
+        onClick={() => methods.toggleOpen()}
+        rename={{
+          actions: {
+            onClick: 'onToggleDrawer',
+          },
         }}
       />
       <Drawer
         blockId={`${blockId}_drawer`}
         properties={mergeObjects([
           {
-            open,
-            bodyStyle: { padding: 0 },
+            bodyStyle: { padding: '3.1em 0 0 0', backgroundColor: properties.backgroundColor },
           },
           properties.drawer,
         ])}
-        methods={{
-          ...methods,
-          callAction: (op) => {
-            if (op.action === 'onClose') setOpen(!open);
-            methods.callAction(op);
+        rename={{
+          actions: {
+            onToggle: 'onToggleDrawer',
+          },
+          methods: {
+            setOpen: '_setOpen',
+            toggleOpen: '_toggleOpen',
           },
         }}
+        methods={methods}
+        onClose={() => methods.toggleOpen()}
         content={{
           content: () => (
             <>
-              <UserAvatar
-                blockId={`${blockId}_user_avatar`}
-                methods={methods}
-                properties={mergeObjects([
-                  { showName: 'right', theme: 'light', style: { padding: 16 } },
-                  properties.userAvatar,
-                ])}
-                user={user}
-              />
               <Menu
                 blockId={`${blockId}_menu`}
                 methods={methods}
@@ -76,9 +83,15 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, user }) => {
                 pageId={pageId}
                 properties={{
                   collapsed: false,
-                  mode: 'inline',
                   theme: 'light',
                   ...(mergeObjects(properties, { style: { marginTop: 24 } }) || {}),
+                  mode: 'inline',
+                }}
+                rename={{
+                  actions: {
+                    onClick: 'onMenuItemClick',
+                    onSelect: 'onMenuItemSelect',
+                  },
                 }}
               />
             </>

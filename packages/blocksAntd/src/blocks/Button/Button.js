@@ -21,7 +21,8 @@ import { get, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties }) => {
+const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties, rename }) => {
+  const onClickActionName = get(rename, 'actions.onClick', { actions: 'onClick' });
   return (
     <Button
       block={properties.block}
@@ -40,12 +41,12 @@ const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties }
         },
         properties.style,
       ])}
-      disabled={properties.disabled || get(actions, 'onClick.loading')}
+      disabled={properties.disabled || get(actions, `${onClickActionName}.loading`)}
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
       id={blockId}
-      loading={loading || get(actions, 'onClick.loading')}
+      loading={loading || get(actions, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
       type={get(properties, 'type', { default: 'primary' })}
@@ -54,7 +55,7 @@ const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties }
           <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
         )
       }
-      onClick={onClick || (() => methods.callAction({ action: 'onClick' }))}
+      onClick={onClick || (() => methods.callAction({ action: onClickActionName }))}
     >
       {properties.hideTitle ? '' : type.isNone(properties.title) ? blockId : properties.title}
     </Button>

@@ -92,6 +92,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "onToggle": {
+          "type": "array",
+          "description": "Triggers actions when drawer is toggled."
+        },
         "onClose": {
           "type": "array",
           "description": "Triggers actions when drawer is closed."

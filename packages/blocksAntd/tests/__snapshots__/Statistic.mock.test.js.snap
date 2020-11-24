@@ -127,6 +127,7 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
+            "safelyCallMethod": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -194,6 +195,7 @@ Array [
             "makeCssClass": [Function],
             "registerAction": [Function],
             "registerMethod": [Function],
+            "safelyCallMethod": [Function],
           }
         }
         properties="AccountBookFilled"

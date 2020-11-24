@@ -26,18 +26,8 @@ import Header from '../Header/Header';
 import Layout from '../Layout/Layout';
 import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
-import UserAvatar from '../UserAvatar/UserAvatar';
 
-const PageHeaderMenu = ({
-  blockId,
-  content,
-  homePageId,
-  menus,
-  methods,
-  pageId,
-  properties,
-  user,
-}) => {
+const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, properties }) => {
   const styles = {
     layout: {
       minHeight: '100vh',
@@ -76,9 +66,6 @@ const PageHeaderMenu = ({
       sm: { display: 'flex' },
       md: { display: 'flex' },
       lg: { display: 'none' },
-    },
-    userAvatar: {
-      flex: '0 1 auto',
     },
     desktop: {
       display: 'none',
@@ -161,34 +148,13 @@ const PageHeaderMenu = ({
                             properties.header && properties.header.contentStyle,
                           ])
                         )}
-                      <div className={methods.makeCssClass([styles.desktop, styles.userAvatar])}>
-                        <UserAvatar
-                          blockId={`${blockId}_user_avatar`}
-                          methods={methods}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              showName: 'left',
-                              theme: get(properties, 'header.theme') || 'dark',
-                            },
-                            properties.userAvatar,
-                          ])}
-                        />
-                      </div>
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              userAvatar: properties.userAvatar,
-                            },
-                            properties.menu,
-                            properties.menuMd,
-                          ])}
+                          properties={mergeObjects([properties.menu, properties.menuMd])}
                         />
                       </div>
                     </div>

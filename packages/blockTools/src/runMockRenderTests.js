@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
+import { MemoryRouter } from 'react-router-dom';
 
 import mockBlock from './mockBlock';
 
@@ -34,7 +35,11 @@ const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) =>
       mocks.forEach((mock) => {
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, () => {
           const Shell = () => <Block {...getProps(ex)} value={value} />;
-          enzyme.mount(<Shell />);
+          enzyme.mount(
+            <MemoryRouter>
+              <Shell />
+            </MemoryRouter>
+          );
           expect(mock.fn.mock.calls).toMatchSnapshot();
         });
       });

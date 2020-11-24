@@ -87,6 +87,7 @@ class Actions {
   }
 
   async callMethod(params, successMessage, errorMessage, _, arrayIndices) {
+    // TODO: add callMethod on block and use instead
     try {
       const { blockId, method, args } = params;
       const blockMethod = this.context.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)]

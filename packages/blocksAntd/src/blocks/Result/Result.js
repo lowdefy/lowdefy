@@ -31,8 +31,10 @@ const ResultBlock = ({ blockId, content, methods, properties }) => (
         <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
       )
     }
-    extra={content.content && content.content({ justifyContent: 'center' })}
-  />
+    extra={content.extra && content.extra({ justifyContent: 'center' })}
+  >
+    {content.content && content.content({ justifyContent: 'center' })}
+  </Result>
 );
 
 ResultBlock.defaultProps = blockDefaultProps;

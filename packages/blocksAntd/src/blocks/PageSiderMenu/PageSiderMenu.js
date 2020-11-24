@@ -27,18 +27,8 @@ import Layout from '../Layout/Layout';
 import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
 import Sider from '../Sider/Sider';
-import UserAvatar from '../UserAvatar/UserAvatar';
 
-const PageSiderMenu = ({
-  blockId,
-  content,
-  homePageId,
-  menus,
-  methods,
-  pageId,
-  properties,
-  user,
-}) => {
+const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, properties }) => {
   const styles = {
     layout: { minHeight: '100vh' },
     header: {
@@ -119,28 +109,7 @@ const PageSiderMenu = ({
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              userAvatar: properties.userAvatar,
-                            },
-                            properties.menu,
-                            properties.menuMd,
-                          ])}
-                        />
-                      </div>
-                      <div className={methods.makeCssClass(styles.desktop)}>
-                        <UserAvatar
-                          blockId={`${blockId}_user_avatar`}
-                          methods={methods}
-                          user={user}
-                          properties={mergeObjects([
-                            {
-                              showName: 'left',
-                              theme: get(properties, 'header.theme') || 'dark',
-                            },
-                            properties.userAvatar,
-                          ])}
+                          properties={mergeObjects([properties.menu, properties.menuMd])}
                         />
                       </div>
                     </div>
