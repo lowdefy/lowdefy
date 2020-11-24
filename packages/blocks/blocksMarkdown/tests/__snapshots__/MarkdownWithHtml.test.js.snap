@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render default 1`] = `
+exports[`Render default - value[0] 1`] = `
 <div
   className="{}"
   id="default"
@@ -11,7 +11,7 @@ exports[`Render default 1`] = `
 </div>
 `;
 
-exports[`Render properties.allowDangerousHtml = false 1`] = `
+exports[`Render properties.allowDangerousHtml = false - value[0] 1`] = `
 <div
   className="{}"
   id="properties.allowDangerousHtml = false"
@@ -50,7 +50,7 @@ exports[`Render properties.allowDangerousHtml = false 1`] = `
 </div>
 `;
 
-exports[`Render properties.allowDangerousHtml = true 1`] = `
+exports[`Render properties.allowDangerousHtml = true - value[0] 1`] = `
 <div
   className="{}"
   id="properties.allowDangerousHtml = true"
@@ -119,7 +119,7 @@ exports[`Render properties.allowDangerousHtml = true 1`] = `
 </div>
 `;
 
-exports[`Render properties.content = table 1`] = `
+exports[`Render properties.content = table - value[0] 1`] = `
 <div
   className="{}"
   id="properties.content = table"
@@ -256,7 +256,7 @@ exports[`Render properties.content = table 1`] = `
 </div>
 `;
 
-exports[`Render properties.content 1`] = `
+exports[`Render properties.content - value[0] 1`] = `
 <div
   className="{}"
   id="properties.content"
@@ -336,7 +336,7 @@ exports[`Render properties.content 1`] = `
 </div>
 `;
 
-exports[`Render properties.content with code 1`] = `
+exports[`Render properties.content with code - value[0] 1`] = `
 <div
   className="{}"
   id="properties.content with code"
@@ -674,7 +674,7 @@ exports[`Render properties.content with code 1`] = `
 </div>
 `;
 
-exports[`Render properties.style and headings 1`] = `
+exports[`Render properties.style and headings - value[0] 1`] = `
 <div
   className="{\\"style\\":{\\"border\\":\\"1px solid blue\\"}}"
   id="properties.style and headings"
