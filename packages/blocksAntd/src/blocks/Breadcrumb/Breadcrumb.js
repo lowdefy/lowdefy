@@ -19,34 +19,62 @@ import { type } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import Icon from '../Icon/Icon';
 
-const itemLink = (item, methods) => {
-  if (type.isString(item.pageId)) {
+const ItemLink = ({ link, children, className }) => {
+  if (type.isString(link.pageId)) {
     return (
-      <Link to={`/${item.pageId}`} className={methods.makeCssClass(item.linkStyle)}>
-        {item.label || item.pageId}
+      <Link to={`/${link.pageId}`} className={className}>
+        {children}
       </Link>
     );
   }
-  if (type.isString(item.url)) {
+  if (type.isString(link.url)) {
     return (
-      <a href={item.url} className={methods.makeCssClass(item.linkStyle)}>
-        {item.label || item.url}
+      <a href={link.url} className={className}>
+        {children}
       </a>
     );
   }
-  return item.label;
+  return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ blockId, properties, methods }) => (
+const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
   <Breadcrumb
     id={blockId}
     separator={properties.separator}
     className={methods.makeCssClass(properties.style)}
   >
-    {(properties.list || []).map((item, i) => (
-      <Breadcrumb.Item key={i}>
-        {type.isString(item) ? item : itemLink(item, methods)}
+    {(properties.list || []).map((link, index) => (
+      <Breadcrumb.Item
+        key={index}
+        onClick={
+          actions.onClick &&
+          (() => methods.callAction({ action: 'onClick', args: { link, index } }))
+        }
+      >
+        <ItemLink
+          className={methods.makeCssClass([
+            {
+              cursor: actions.onClick && 'pointer',
+            },
+            link.style,
+          ])}
+          link={link}
+        >
+          {link.icon && (
+            <Icon
+              blockId={`${blockId}_${index}_icon`}
+              properties={{
+                name: type.isString(link.icon) && link.icon,
+                ...(type.isObject(link.icon) ? link.icon : {}),
+                style: { paddingRight: 8, ...(link.icon.style || {}) },
+              }}
+              methods={methods}
+            />
+          )}
+          {type.isString(link) ? link : link.label || link.pageId || link.url || `Link ${index}`}
+        </ItemLink>
       </Breadcrumb.Item>
     ))}
   </Breadcrumb>
