@@ -960,6 +960,7 @@ Array [
                     "makeCssClass": [Function],
                     "registerAction": [Function],
                     "registerMethod": [Function],
+                    "safelyCallMethod": [Function],
                   }
                 }
                 properties="WarningOutlined"
@@ -1025,6 +1026,7 @@ Array [
                     "makeCssClass": [Function],
                     "registerAction": [Function],
                     "registerMethod": [Function],
+                    "safelyCallMethod": [Function],
                   }
                 }
                 properties="SaveOutlined"
