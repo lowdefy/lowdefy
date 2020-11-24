@@ -2,14 +2,14 @@
 
 exports[`Render default - value[0] 1`] = `
 <aside
-  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
   id="default"
   style={
     Object {
-      "flex": "0 0 80px",
-      "maxWidth": "80px",
-      "minWidth": "80px",
-      "width": "80px",
+      "flex": "0 0 200px",
+      "maxWidth": "200px",
+      "minWidth": "200px",
+      "width": "200px",
     }
   }
 >
@@ -32,14 +32,14 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.theme - value[0] 1`] = `
 <aside
-  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark ant-layout-sider-collapsed"
+  className="{\\"style\\":[{\\"overflow\\":\\"auto\\"},null]} hide-on-print ant-layout-sider ant-layout-sider-dark"
   id="properties.theme"
   style={
     Object {
-      "flex": "0 0 80px",
-      "maxWidth": "80px",
-      "minWidth": "80px",
-      "width": "80px",
+      "flex": "0 0 200px",
+      "maxWidth": "200px",
+      "minWidth": "200px",
+      "width": "200px",
     }
   }
 >
