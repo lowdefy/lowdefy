@@ -21,7 +21,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -72,8 +72,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -124,8 +124,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -176,7 +176,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.mode: alternate",
@@ -195,7 +195,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -246,8 +246,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -298,8 +298,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -350,7 +350,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.mode: left",
@@ -369,7 +369,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -420,8 +420,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -472,8 +472,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -524,7 +524,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.mode: right",
@@ -543,7 +543,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -594,8 +594,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -646,8 +646,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -698,7 +698,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.pending: true",
@@ -716,7 +716,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -767,8 +767,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -819,8 +819,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -871,7 +871,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.pendingDotIcon: ",
@@ -924,7 +924,7 @@ Array [
   Array [
     Object {
       "children": Array [
-        <UNDEFINED
+        <mockConstructor
           color="red"
           dot={
             <IconBlock
@@ -975,8 +975,8 @@ Array [
           >
             Title 1
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="green"
           dot={
             <IconBlock
@@ -1027,8 +1027,8 @@ Array [
           >
             Text 2
           </div>
-        </UNDEFINED>,
-        <UNDEFINED
+        </mockConstructor>,
+        <mockConstructor
           color="blue"
           dot={
             <IconBlock
@@ -1079,7 +1079,7 @@ Array [
           >
             Text 3
           </div>
-        </UNDEFINED>,
+        </mockConstructor>,
       ],
       "className": "css-10gcgov",
       "id": "properties.reverse: true",

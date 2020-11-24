@@ -25,7 +25,9 @@ import examples from '../demo/examples/TimelineList.yaml';
 import meta from '../src/blocks/TimelineList/TimelineList.json';
 
 jest.mock('antd/lib/timeline', () => {
-  return jest.fn((props) => props.toString());
+  const timeline = jest.fn((props) => props.toString());
+  timeline.Item = jest.fn((props) => props.toString());
+  return timeline;
 });
 
 const mocks = [
