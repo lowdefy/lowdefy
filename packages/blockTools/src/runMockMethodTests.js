@@ -46,7 +46,7 @@ const runMockMethodTests = ({ Block, enzyme, examples, logger, meta, mocks }) =>
                     <button
                       id={`${ex.id}_button`}
                       onClick={() => {
-                        props.registeredMethods[method.name](method.args);
+                        props.methods[method.name](method.args);
                       }}
                       data-testid="btn_method"
                     />

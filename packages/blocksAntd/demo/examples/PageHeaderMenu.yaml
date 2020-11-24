@@ -1,2 +1,155 @@
 - id: default
   type: PageHeaderMenu
+- id: "properties.menu"
+  type: PageHeaderMenu
+  properties:
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.logoSrc"
+  type: PageHeaderMenu
+  properties:
+    logoSrc: "https://avatars1.githubusercontent.com/u/25385065?s=200&v=4"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.logoAlt"
+  type: PageHeaderMenu
+  properties:
+    logoAlt: "Header logo alt text"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.header.color"
+  type: PageHeaderMenu
+  properties:
+    header:
+      color: "#3f51b5"
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.header.theme: light"
+  type: PageHeaderMenu
+  properties:
+    header:
+      theme: light
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+# Nie seker waar  hoe menu color 'n verskil maak nie'
+# - id: "properties.menu.color"
+#   type: PageHeaderMenu
+#   properties:
+#     menu:
+#       color: "#4432a8"
+#       properties:
+#         color: "#e91e63"
+#       links:
+#         - id: Introduction
+#           pageId: introduction
+#           properties:
+#             icon: RocketOutlined
+#             title: Introduction
+#         - id: alert
+#           pageId: Alert
+#           properties:
+#             icon: ExclamationCircleOutlined
+#             title: Alert
+- id: "properties.userAvatar.disabled: true"
+  type: PageHeaderMenu
+  properties:
+    userAvatar:
+      disabled: true
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.userAvatar.avatar.shape: circle"
+  type: PageHeaderMenu
+  properties:
+    userAvatar:
+      avatar:
+        shape: circle
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: "properties.userAvatar.avatar.shape: square"
+  type: PageHeaderMenu
+  properties:
+    userAvatar:
+      avatar:
+        shape: square
+    menu:
+      links:
+        - id: Introduction
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert

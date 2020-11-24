@@ -26,16 +26,17 @@ const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
   if (state) {
     methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
   }
+  methods.callAction({ action: get(rename, 'actions.onToggle', { default: 'onToggle' }) });
   setOpen(state);
 };
 
-const DrawerBlock = ({ blockId, content, properties, methods, rename }) => {
+const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
-    methods.registerMethod('toggleOpen', () =>
+    methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
       triggerSetOpen({ state: !openState, setOpen, methods, rename })
     );
-    methods.registerMethod('setOpen', ({ open }) =>
+    methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
       triggerSetOpen({ state: !!open, setOpen, methods, rename })
     );
   });
@@ -53,7 +54,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename }) => {
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
-      onClose={() => triggerSetOpen({ state: false, setOpen, methods, rename })}
+      onClose={onClose || (() => triggerSetOpen({ state: false, setOpen, methods, rename }))}
       drawerStyle={methods.makeCssClass(properties.drawerStyle, { styleObjectOnly: true })}
       headerStyle={methods.makeCssClass(properties.headerStyle, { styleObjectOnly: true })}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
