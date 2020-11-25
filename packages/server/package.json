@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "0.0.0-alpha.4",
+  "version": "0.0.0-alpha.5",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,8 +43,8 @@
     "webpack:dev": "webpack --config webpack.dev.js"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.2",
-    "@lowdefy/graphql": "0.0.0-alpha.4",
+    "@lowdefy/block-tools": "1.0.3",
+    "@lowdefy/graphql": "0.0.0-alpha.5",
     "apollo-server-express": "2.19.0",
     "express": "4.17.1",
     "graphql": "15.4.0",
