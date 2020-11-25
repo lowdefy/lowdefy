@@ -8,20 +8,20 @@
       "properties": {
         "delay": {
           "type": "number",
-          "description": "Specifies a delay in milliseconds for loading state (prevent flush)"
+          "description": "Specifies a delay in milliseconds for loading state (prevent flush)."
         },
         "size": {
           "type": "string",
           "enum": ["small", "default", "large"],
-          "description": "Size of the spinner"
+          "description": "Size of the spinner."
         },
         "spinning": {
           "type": "boolean",
-          "description": "Whether Spin is spinning"
+          "description": "Whether Spin is spinning."
         },
         "tip": {
           "type": "string",
-          "description": "Customize description content when Spin has children"
+          "description": "Customize description content when Spin has children."
         },
         "wrapperStyle": {
           "type": "object",
