@@ -1,0 +1,580 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "default_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties.title_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": "Modal title",
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {
+        "border": "10px solid blue",
+      },
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: bodyStyle: border: 10px solid blue_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Text of the Cancel button",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: cancelText: Text of the Cancel button_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: centered: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": true,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: centered: true_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: closable: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": false,
+      "confirmLoading": undefined,
+      "id": "properties: closable: false_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: footer: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "footer": null,
+      "id": "properties: footer: false_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: mask: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: mask: false_modal",
+      "mask": false,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: maskClosable: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: maskClosable: false_modal",
+      "mask": true,
+      "maskClosable": false,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: maskStyle: border: 10px solid blue_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {
+        "border": "10px solid blue",
+      },
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: okText: Text of the OK button - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: okText: Text of the OK button_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Text of the OK button",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: width: 350px - 520px is default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: width: 350px - 520px is default_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": 350,
+      "wrapClassName": "css-0",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: wrapperStyle: border: 10px solid blue_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-qry0x6",
+      "zIndex": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "bodyStyle": Object {},
+      "cancelButtonProps": undefined,
+      "cancelText": "Cancel",
+      "centered": false,
+      "children": <div
+        style={
+          Object {
+            "border": "1px solid red",
+            "padding": 10,
+          }
+        }
+      >
+        content
+      </div>,
+      "closable": true,
+      "confirmLoading": undefined,
+      "id": "properties: zIndex: 1200 - 1000 is the default_modal",
+      "mask": true,
+      "maskClosable": true,
+      "maskStyle": Object {},
+      "okButtonProps": undefined,
+      "okText": "Ok",
+      "okType": "primary",
+      "onCancel": [Function],
+      "onOk": [Function],
+      "title": undefined,
+      "visible": false,
+      "width": undefined,
+      "wrapClassName": "css-0",
+      "zIndex": 1200,
+    },
+    Object {},
+  ],
+]
+`;

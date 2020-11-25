@@ -1,0 +1,512 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "default_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowClear: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": false,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.allowClear: false_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.allowClear: false_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.allowClear: false_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": true,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.autoFocus: true_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.autoFocus: true_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.autoFocus: true_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.backfill: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": true,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.backfill: true_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.backfill: true_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.backfill: true_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.inputStyle: CSS style applied - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.inputStyle: CSS style applied_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.inputStyle: CSS style applied_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-1t3g54r",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.inputStyle: CSS style applied_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.align_right - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.align_right_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.colon_false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.colon_false_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.disabled_true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.disabled_true_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.extra_showingextra - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.extra_showingextra_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.inline_true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.inline_true_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label.span_12 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.label.span_12_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-string - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.options-string_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.options-string_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.options-string_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.optionsStyle: CSS style applied - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-14ksm7b"
+          id="properties.optionsStyle: CSS style applied_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-14ksm7b"
+          id="properties.optionsStyle: CSS style applied_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.optionsStyle: CSS style applied_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placeholder_Text_inside_block - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.placeholder_Text_inside_block_input",
+      "onChange": [Function],
+      "placeholder": "Text inside block",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: large - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.size: large_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.size: large_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.size: large_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": "large",
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.size: small_0"
+          value="Option 1"
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.size: small_1"
+          value="Option 2"
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.size: small_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": "small",
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "backfill": undefined,
+      "children": Array [],
+      "className": "css-0",
+      "defaultOpen": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "id": "properties.title_input",
+      "onChange": [Function],
+      "placeholder": "Type or select item",
+      "size": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
