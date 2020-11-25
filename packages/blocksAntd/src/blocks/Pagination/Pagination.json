@@ -40,7 +40,7 @@
           "type": "array",
           "description": "Specify the page size changer options.",
           "items": {
-            "type": "string"
+            "type": "number"
           }
         },
         "hideOnSinglePage": {
@@ -50,14 +50,6 @@
         "disabled": {
           "type": "boolean",
           "description": "Disable pager."
-        },
-        "pageSize": {
-          "type": "number",
-          "description": "Number of data items per page."
-        },
-        "current": {
-          "type": "number",
-          "description": "Current page number."
         }
       }
     },
@@ -65,11 +57,13 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "onShowSizeChange": {
-          "type": "array"
+        "onSizeChange": {
+          "type": "array",
+          "description": "Triggered when page size is changed."
         },
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggered when current page is changed."
         }
       }
     }
