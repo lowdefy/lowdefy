@@ -1,6 +1,0 @@
-- id: default
-  type: ControlledList
-- id: properties.title
-  type: ControlledList
-  properties:
-    title: ControlledList block

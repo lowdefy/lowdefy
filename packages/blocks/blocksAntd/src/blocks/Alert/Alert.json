@@ -1,0 +1,59 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "banner": {
+          "type": "boolean",
+          "description": "Style as banner at top of application window."
+        },
+        "closable": {
+          "type": "boolean",
+          "description": "Allow alert to be closed."
+        },
+        "closeText": {
+          "type": "string",
+          "description": "Close text to show."
+        },
+        "description": {
+          "type": "string",
+          "description": "Content description of alert."
+        },
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize alert icon."
+        },
+        "message": {
+          "type": "string",
+          "description": "Content message of alert."
+        },
+        "showIcon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show type default icon."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["success", "info", "warning", "error"],
+          "default": "info",
+          "description": "Alert style type."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClose": {
+          "type": "array"
+        },
+        "afterClose": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

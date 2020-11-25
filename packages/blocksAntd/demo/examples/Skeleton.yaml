@@ -1,6 +1,0 @@
-- id: default
-  type: Skeleton
-- id: properties.active
-  type: Skeleton
-  properties:
-    active: true

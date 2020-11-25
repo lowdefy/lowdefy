@@ -1,6 +1,0 @@
-- id: default
-  type: Card
-- id: properties.title
-  type: Card
-  properties:
-    title: Card block

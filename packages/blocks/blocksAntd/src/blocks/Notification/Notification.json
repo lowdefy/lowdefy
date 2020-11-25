@@ -1,0 +1,108 @@
+{
+  "category": "display",
+  "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "open",
+        "args": {}
+      },
+      {
+        "name": "open",
+        "args": {
+          "status": "warning"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "message": "Args message"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "description": "Args description"
+        }
+      },
+      {
+        "name": "open",
+        "args": {
+          "duration": 1
+        }
+      }
+    ]
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bottom": {
+          "type": "number",
+          "default": 24,
+          "description": "Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels)."
+        },
+        "button": {
+          "type": "object",
+          "description": "Button object to customized the close button. Triggers onClose action when clicked."
+        },
+        "description": {
+          "type": "string",
+          "description": "The content of notification box."
+        },
+        "duration": {
+          "type": "number",
+          "default": 4.5,
+          "description": "Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically."
+        },
+        "icon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize notification icon."
+        },
+        "closeIcon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize close icon."
+        },
+        "message": {
+          "type": "string",
+          "description": "The title of notification box."
+        },
+        "notificationStyle": {
+          "type": "object",
+          "description": "Css style to applied to notification."
+        },
+        "placement": {
+          "type": "string",
+          "enum": ["topLeft", "topRight", "bottomLeft", "bottomRight"],
+          "default": "topRight",
+          "description": "Position of Notification."
+        },
+        "top": {
+          "type": "number",
+          "default": 24,
+          "description": "Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels)."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["success", "error", "info", "warning"],
+          "description": "Notification status type."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onClose": {
+          "type": "array",
+          "description": "Triggers actions when notification is closed."
+        },
+        "onClick": {
+          "type": "array",
+          "description": "Triggers actions when notification is clicked."
+        }
+      }
+    }
+  }
+}

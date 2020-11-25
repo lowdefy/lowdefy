@@ -1,0 +1,145 @@
+{
+  "category": "context",
+  "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleSiderOpen",
+        "args": {}
+      },
+      {
+        "name": "setSiderOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "header": {
+          "type": "object",
+          "description": "Header properties.",
+          "additionalProperties": false,
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark"],
+              "description": "Header theme color."
+            },
+            "color": {
+              "type": "string",
+              "description": "Header color."
+            },
+            "style": {
+              "type": "object",
+              "description": "Header css style object."
+            }
+          }
+        },
+        "main": {
+          "type": "object",
+          "description": "Main layout properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Main css style object."
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "description": "Content properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Content css style object."
+            }
+          }
+        },
+        "sider": {
+          "type": "object",
+          "description": "Sider properties.",
+          "additionalProperties": false,
+          "properties": {
+            "breakpoint": {
+              "type": "string",
+              "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
+              "description": "Breakpoints of the responsive layout"
+            },
+            "collapsedWidth": {
+              "type": "integer",
+              "description": "Width of the collapsed sidebar, by setting to 0 a special trigger will appear"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Whether can be collapsed"
+            },
+            "color": {
+              "type": "string",
+              "description": "Sider color"
+            },
+            "initialCollapsed": {
+              "type": "boolean",
+              "description": "Set the initial collapsed state"
+            },
+            "reverseArrow": {
+              "type": "boolean",
+              "description": "Direction of arrow, for a sider that expands from the right"
+            },
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark"],
+              "description": "Color theme of the sidebar"
+            },
+            "style": {
+              "type": "object",
+              "description": "Css style object to apply to sider."
+            },
+            "width": {
+              "type": ["string", "number"],
+              "description": "width of the sidebar"
+            }
+          }
+        },
+        "footer": {
+          "type": "object",
+          "description": "Footer properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Footer css style object."
+            }
+          }
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to apply to layout."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onSiderClose": {
+          "type": "array",
+          "description": "Triggers actions when sider is closed."
+        },
+        "onSiderOpen": {
+          "type": "array",
+          "description": "Triggers actions when sider is opened."
+        },
+        "onBreakpoint": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ import { ApolloServer } from 'apollo-server';
 import { createTestClient } from 'apollo-server-testing';
 import typeDefs from '../schema';
 import resolvers from '../resolvers/resolvers';
-import testContext from './testContext';
+import { testContext } from './testContext';
 
 async function runTestQuery({ gqlQuery, variables, loaders, setters }) {
   const context = await testContext({ loaders, setters });

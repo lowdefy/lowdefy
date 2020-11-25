@@ -162,3 +162,16 @@ test('_url_query param object with no default', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_url_query replace key arrayIndices', () => {
+  const input = { a: { _url_query: 'arr.$.a' } };
+  const parser = new NodeParser({
+    urlQuery,
+    arrayIndices: [1],
+  });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: 'a2',
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

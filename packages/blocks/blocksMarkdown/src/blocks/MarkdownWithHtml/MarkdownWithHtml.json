@@ -1,0 +1,25 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "Content in markdown format."
+        },
+        "allowDangerousHtml": {
+          "type": "boolean",
+          "default": false,
+          "description": "Rendering HTML in markdown is dangerous for security reasons. However, if you trust the markdown environment or source, you can render HTML in markdown by setting this field as true. It is not recommended."
+        },
+        "style": {
+          "type": "object",
+          "description": "Style to apply to Markdown div."
+        }
+      }
+    }
+  }
+}

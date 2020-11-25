@@ -1,0 +1,71 @@
+{
+  "valueType": "object",
+  "category": "input",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total number of items to be displayed in pagination."
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default"],
+          "description": "Pagination element size."
+        },
+        "simple": {
+          "type": "boolean",
+          "description": "Use simplified pagination display."
+        },
+        "showTotal": {
+          "type": "boolean",
+          "description": "Show pagination total number and range."
+        },
+        "showTitle": {
+          "type": "boolean",
+          "description": "Show page item's title."
+        },
+        "showSizeChanger": {
+          "type": "boolean",
+          "description": "Determine whether to show page size select, it will be true when total > 50."
+        },
+        "showQuickJumper": {
+          "type": "boolean",
+          "description": "Determine whether you can jump to pages directly."
+        },
+        "pageSizeOptions": {
+          "type": "array",
+          "description": "Specify the page size changer options.",
+          "items": {
+            "type": "number"
+          }
+        },
+        "hideOnSinglePage": {
+          "type": "boolean",
+          "description": "Hide pager on short list of a single page."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable pager."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onSizeChange": {
+          "type": "array",
+          "description": "Triggered when page size is changed."
+        },
+        "onChange": {
+          "type": "array",
+          "description": "Triggered when current page is changed."
+        }
+      }
+    }
+  }
+}

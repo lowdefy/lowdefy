@@ -23,6 +23,8 @@ import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import mockBlock from './mockBlock';
 import runBlockSchemaTests from './runBlockSchemaTests';
+import runMockMethodTests from './runMockMethodTests';
+import runMockRenderTests from './runMockRenderTests';
 import runRenderTests from './runRenderTests';
 import Skeleton from './Skeleton/Skeleton';
 import SkeletonAvatar from './Skeleton/SkeletonAvatar';
@@ -43,6 +45,8 @@ export {
   mediaToCssObject,
   mockBlock,
   runBlockSchemaTests,
+  runMockMethodTests,
+  runMockRenderTests,
   runRenderTests,
   Skeleton,
   SkeletonAvatar,

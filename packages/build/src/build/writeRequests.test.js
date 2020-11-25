@@ -39,11 +39,11 @@ test('writeRequests write request', async () => {
           {
             id: 'request:page1:page1:request1',
             requestId: 'request1',
+            contextId: 'page1',
             connectionId: 'connection1',
             properties: { key: 'value' },
           },
         ],
-        mutations: [],
       },
     ],
   };
@@ -51,10 +51,11 @@ test('writeRequests write request', async () => {
   expect(mockSet.mock.calls).toEqual([
     [
       {
-        filePath: 'pages/page1/requests/request1.json',
+        filePath: 'pages/page1/requests/page1/request1.json',
         content: `{
   "id": "request:page1:page1:request1",
   "requestId": "request1",
+  "contextId": "page1",
   "connectionId": "connection1",
   "properties": {
     "key": "value"
@@ -81,6 +82,7 @@ test('writeRequests write nested request', async () => {
                   {
                     id: 'request:page1:page1:request1',
                     requestId: 'request1',
+                    contextId: 'page1',
                     connectionId: 'connection1',
                     properties: { key: 'value' },
                   },
@@ -89,7 +91,6 @@ test('writeRequests write nested request', async () => {
             ],
           },
         },
-        mutations: [],
       },
     ],
   };
@@ -97,91 +98,11 @@ test('writeRequests write nested request', async () => {
   expect(mockSet.mock.calls).toEqual([
     [
       {
-        filePath: 'pages/page1/requests/request1.json',
+        filePath: 'pages/page1/requests/page1/request1.json',
         content: `{
   "id": "request:page1:page1:request1",
   "requestId": "request1",
-  "connectionId": "connection1",
-  "properties": {
-    "key": "value"
-  }
-}`,
-      },
-    ],
-  ]);
-});
-
-test('writeRequests add mutation', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        requests: [],
-        mutations: [
-          {
-            id: 'mutation:page1:page1:mutation1',
-            mutationId: 'mutation1',
-            connectionId: 'connection1',
-            properties: { key: 'value' },
-          },
-        ],
-      },
-    ],
-  };
-  await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([
-    [
-      {
-        filePath: 'pages/page1/mutations/mutation1.json',
-        content: `{
-  "id": "mutation:page1:page1:mutation1",
-  "mutationId": "mutation1",
-  "connectionId": "connection1",
-  "properties": {
-    "key": "value"
-  }
-}`,
-      },
-    ],
-  ]);
-});
-
-test('writeRequests add nested mutation', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:block1',
-                blockId: 'block1',
-                mutations: [
-                  {
-                    id: 'mutation:page1:page1:mutation1',
-                    mutationId: 'mutation1',
-                    connectionId: 'connection1',
-                    properties: { key: 'value' },
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ],
-  };
-  await writeRequests({ components, context });
-  expect(mockSet.mock.calls).toEqual([
-    [
-      {
-        filePath: 'pages/page1/mutations/mutation1.json',
-        content: `{
-  "id": "mutation:page1:page1:mutation1",
-  "mutationId": "mutation1",
+  "contextId": "page1",
   "connectionId": "connection1",
   "properties": {
     "key": "value"
@@ -204,21 +125,6 @@ test('writeRequests requests is not an array', async () => {
   };
   await expect(writeRequests({ components, context })).rejects.toThrow(
     'Requests is not an array on page "page1"'
-  );
-});
-
-test('writeRequests mutations is not an array', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        mutations: 'mutations',
-      },
-    ],
-  };
-  await expect(writeRequests({ components, context })).rejects.toThrow(
-    'Mutations is not an array on page "page1"'
   );
 });
 
@@ -348,76 +254,6 @@ test('writeRequests deletes request properties', async () => {
                   {
                     id: 'request:request2',
                     requestId: 'request1',
-                    connectionId: 'connection1',
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
-test('writeRequests deletes mutation properties', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        mutations: [
-          {
-            id: 'mutation:page1:page1:mutation1',
-            mutationId: 'mutation1',
-            connectionId: 'connection1',
-            properties: { key: 'value' },
-          },
-        ],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:block1',
-                blockId: 'block1',
-                mutations: [
-                  {
-                    id: 'mutation:mutation2',
-                    mutationId: 'mutation2',
-                    connectionId: 'connection1',
-                    properties: { key: 'value' },
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      },
-    ],
-  };
-  await writeRequests({ components, context });
-  expect(components).toEqual({
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        mutations: [
-          {
-            id: 'mutation:page1:page1:mutation1',
-            mutationId: 'mutation1',
-            connectionId: 'connection1',
-          },
-        ],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:block1',
-                blockId: 'block1',
-                mutations: [
-                  {
-                    id: 'mutation:mutation2',
-                    mutationId: 'mutation2',
                     connectionId: 'connection1',
                   },
                 ],

@@ -1,0 +1,114 @@
+{
+  "category": "container",
+  "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleOpen",
+        "args": {}
+      },
+      {
+        "name": "setOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bodyStyle": {
+          "type": "object",
+          "description": "Css style to applied to modal body."
+        },
+        "centered": {
+          "type": "boolean",
+          "default": false,
+          "description": "Center the modal vertically."
+        },
+        "closable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether a close (x) button is visible on top right of the modal dialog or not."
+        },
+        "title": {
+          "type": "string",
+          "description": "The modal dialog's title."
+        },
+        "footer": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show footer area."
+        },
+        "mask": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether show mask or not."
+        },
+        "maskStyle": {
+          "type": "object",
+          "description": "Css style to applied to modal mask."
+        },
+        "maskClosable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked."
+        },
+        "open": {
+          "type": "boolean",
+          "default": false,
+          "description": "Set the modal as open or closed using a property instead of actions."
+        },
+        "okText": {
+          "type": "string",
+          "default": "Ok",
+          "description": "Text of the Ok button."
+        },
+        "cancelText": {
+          "type": "string",
+          "default": "Cancel",
+          "description": "Text of the Cancel button."
+        },
+        "width": {
+          "type": ["string", "number"],
+          "default": 520,
+          "description": "Width of the modal dialog."
+        },
+        "wrapperStyle": {
+          "type": "object",
+          "description": "Css style to applied to modal wrapper."
+        },
+        "zIndex": {
+          "type": "number",
+          "default": 1000,
+          "description": "The z-index of the modal. Useful when displaying two modals simultaneously."
+        }
+      },
+      "actions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onOk": {
+            "type": "array",
+            "description": "Triggers actions when Ok button is clicked."
+          },
+          "onOpen": {
+            "type": "array",
+            "description": "Triggers actions when modal is opened."
+          },
+          "onCancel": {
+            "type": "array",
+            "description": "Triggers actions when Cancel button is clicked."
+          },
+          "onClose": {
+            "type": "array",
+            "description": "Triggers after onOk or onCancel is completed."
+          }
+        }
+      }
+    }
+  }
+}

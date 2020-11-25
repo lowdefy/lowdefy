@@ -1,0 +1,126 @@
+{
+  "category": "display",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show animation effect."
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to apply to skeleton."
+        },
+        "round": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show paragraph and title radius when true."
+        },
+        "avatar": {
+          "oneOf": [
+            {
+              "type": "boolean",
+              "default": false,
+              "description": "Show avatar."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "shape": {
+                  "type": "string",
+                  "enum": ["circle", "square"],
+                  "default": "circle",
+                  "description": "The shape of the avatar."
+                },
+                "size": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": ["small", "default", "large"],
+                      "default": "large",
+                      "description": "The size of the avatar."
+                    },
+                    {
+                      "type": "number",
+                      "description": "The size of the avatar."
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "button": {
+          "oneOf": [
+            {
+              "type": "boolean",
+              "default": false,
+              "description": "Show button."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "shape": {
+                  "type": "string",
+                  "enum": ["circle", "round", "default"],
+                  "default": "default",
+                  "description": "The shape of the button."
+                },
+                "size": {
+                  "type": "string",
+                  "enum": ["small", "default", "large"],
+                  "default": "large",
+                  "description": "The size of the button."
+                }
+              }
+            }
+          ]
+        },
+        "paragraph": {
+          "oneOf": [
+            {
+              "type": "boolean",
+              "default": true,
+              "description": "Show paragraph placeholder."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "rows": {
+                  "type": "number",
+                  "description": "The number of rows in the skeleton paragraph."
+                },
+                "width": {
+                  "type": ["number", "string", "array"],
+                  "description": "Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width. Can be numbers or strings."
+                }
+              }
+            }
+          ]
+        },
+        "title": {
+          "oneOf": [
+            {
+              "type": "boolean",
+              "default": true,
+              "description": "Show title placeholder."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": ["number", "string"],
+                  "description": "Set the width of title. Can be a number or string."
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

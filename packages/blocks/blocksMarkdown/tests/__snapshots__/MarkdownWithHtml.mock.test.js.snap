@@ -1,0 +1,223 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": undefined,
+      "children": undefined,
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowDangerousHtml = false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": false,
+      "children": "### Link 
+
+<a href=\\"https://lowdefy.com\\">Lowdefy link</a>
+
+<font size=\\"+10\\">Description</font>
+
+### Bad HTML 
+
+<div onmouseover=\\"alert('alpha')\\">
+  <a href=\\"javascript:alert('bravo')\\">delta</a>
+  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
+  <iframe src=\\"javascript:alert('delta')\\"></iframe>
+  <math>
+    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
+  </math>
+</div>
+<script>
+  alert('script tag');
+</script>
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowDangerousHtml = true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": true,
+      "children": "### Link 
+
+<a href=\\"https://lowdefy.com\\">Lowdefy link</a>
+
+<font size=\\"+10\\">Description</font>
+
+### Bad HTML 
+
+<div onmouseover=\\"alert('alpha')\\">
+  <a href=\\"javascript:alert('bravo')\\">delta</a>
+  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
+  <iframe src=\\"javascript:alert('delta')\\"></iframe>
+  <math>
+    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
+  </math>
+</div>
+<script>
+  alert('script tag');
+</script>
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.content = table - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": undefined,
+      "children": "### Table 
+
+| A | B | C |
+|---:|:---:|:---|
+| one | two | three |
+| 123 | 345 | 34892 |
+| true | false | none |
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.content - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": undefined,
+      "children": "# One Heading
+
+A paragraph with *emphasis* and **strong importance**.
+
+> A block quote with ~strikethrough~ and a URL: https://reactjs.org.
+
+# Two
+
+* Lists
+* [ ] todo
+* [x] done
+
+A table:
+
+| a | b |
+| - | - |
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.content with code - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": undefined,
+      "children": "### Code 
+
+Default
+\`\`\`
+  <a href=\\"\\">Default style</a>
+\`\`\`
+
+Html
+\`\`\`html
+  <a href=\\"\\">html style</a>
+\`\`\`
+
+Json
+\`\`\`json
+  {
+    \\"obj\\": \\"one\\",
+    \\"list\\": [
+      1,
+      2
+    ]
+  }
+\`\`\`
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.style and headings - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowDangerousHtml": undefined,
+      "children": "# One
+## Two
+### Three
+#### Four
+##### Five
+###### Six
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
+    },
+    Object {},
+  ],
+]
+`;

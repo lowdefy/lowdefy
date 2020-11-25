@@ -1,6 +1,0 @@
-- id: default
-  type: Message
-- id: properties.content
-  type: Message
-  properties:
-    content: Message content

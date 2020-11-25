@@ -1,0 +1,438 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": false,
+      "colon": undefined,
+      "column": undefined,
+      "id": "default",
+      "layout": undefined,
+      "size": undefined,
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - default - value[0] - default 2`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": false,
+      "colon": undefined,
+      "column": undefined,
+      "id": "default",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Descriptions title",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.bordered: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.bordered: true",
+      "layout": undefined,
+      "size": undefined,
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.colon: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": false,
+      "column": undefined,
+      "id": "properties.colon: false",
+      "layout": undefined,
+      "size": undefined,
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.column: 2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": 2,
+      "id": "properties.column: 2",
+      "layout": undefined,
+      "size": undefined,
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.items-list - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+          span={1}
+        >
+          1
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+          span={1}
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+          span={2}
+        >
+          3
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": 2,
+      "id": "properties.items-list",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Title",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.items-list-primitive - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label={1}
+          span={1}
+        >
+          1
+        </mockConstructor>,
+        <mockConstructor
+          label={2}
+          span={2}
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label={3}
+          span={3}
+        >
+          3
+        </mockConstructor>,
+        <mockConstructor
+          label={4}
+          span={4}
+        >
+          4
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.items-list-primitive",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Title",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.items-object - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.items-object",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Title",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.items-object-object - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="one"
+        >
+          {"two":3}
+        </mockConstructor>,
+        <mockConstructor
+          label="four"
+        >
+          {"five":"six"}
+        </mockConstructor>,
+        <mockConstructor
+          label="seven"
+        >
+          {"eight":[9,"ten"]}
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.items-object-object",
+      "layout": undefined,
+      "size": undefined,
+      "title": "Title",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.layout: vertical - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.layout: vertical",
+      "layout": "vertical",
+      "size": undefined,
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.size: default",
+      "layout": undefined,
+      "size": "default",
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": undefined,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.size: small",
+      "layout": undefined,
+      "size": "small",
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small, properties.bordered: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "children": Array [
+        <mockConstructor
+          label="field_one"
+        >
+          value one
+        </mockConstructor>,
+        <mockConstructor
+          label="field_two"
+        >
+          2
+        </mockConstructor>,
+        <mockConstructor
+          label="field_three"
+        >
+          value three
+        </mockConstructor>,
+        <mockConstructor
+          label="field_4"
+        >
+          value 4
+        </mockConstructor>,
+        <mockConstructor
+          label="field_5"
+        >
+          5
+        </mockConstructor>,
+        <mockConstructor
+          label="field_6"
+        >
+          value 6
+        </mockConstructor>,
+      ],
+      "colon": undefined,
+      "column": undefined,
+      "id": "properties.size: small, properties.bordered: true",
+      "layout": undefined,
+      "size": "small",
+      "title": undefined,
+    },
+    Object {},
+  ],
+]
+`;

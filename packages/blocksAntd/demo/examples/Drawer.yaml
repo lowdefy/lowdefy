@@ -1,6 +1,0 @@
-- id: default
-  type: Drawer
-- id: properties.title
-  type: Drawer
-  properties:
-    title: Drawer title

@@ -1,0 +1,130 @@
+{
+  "valueType": "string",
+  "category": "input",
+  "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowClear": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow the user to clear their input."
+        },
+        "autoFocus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Autofocus to the block on page load."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the block if true."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text inside the block before user types input."
+        },
+        "prefix": {
+          "type": "string",
+          "description": "Prefix text for the block, priority over $prefix_con."
+        },
+        "prefixIcon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to prefix the text input."
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input."
+        },
+        "label": {
+          "type": "object",
+          "description": "Label properties.",
+          "additionalProperties": false,
+          "properties": {
+            "align": {
+              "type": "string",
+              "enum": ["left", "right"],
+              "defaultValue": "right",
+              "description": "Align label left or right when inline."
+            },
+            "colon": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Append label with colon."
+            },
+            "extra": {
+              "type": "string",
+              "description": "Extra text to display beneath the content."
+            },
+            "title": {
+              "type": "string",
+              "description": "Label title."
+            },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
+            "hasFeedback": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
+            },
+            "extraStyle": {
+              "type": "object",
+              "description": "Css style to applied to label extra."
+            },
+            "feedbackStyle": {
+              "type": "object",
+              "description": "Css style to applied to label feedback."
+            }
+          }
+        },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default", "large"],
+          "default": "default",
+          "description": "Size of the block."
+        },
+        "suffix": {
+          "type": "string",
+          "description": "Suffix text for the block, priority over suffixIcon."
+        },
+        "suffixIcon": {
+          "type": ["string", "object"],
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to suffix the text input."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onChange": {
+          "type": "array"
+        },
+        "onPressEnter": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,0 @@
-- id: default
-  type: Statistic
-- id: properties.title
-  type: Statistic
-  properties:
-    title: Statistic title

@@ -1,6 +1,0 @@
-- id: default
-  type: Progress
-- id: properties.percent
-  type: Progress
-  properties:
-    percent: 30

@@ -1,0 +1,49 @@
+- id: default
+  type: Pagination
+- id: properties.total
+  type: Pagination
+  properties:
+    total: 500
+- id: "properties.size: small"
+  type: Pagination
+  properties:
+    size: small
+- id: "properties.size: default"
+  type: Pagination
+  properties:
+    size: default
+- id: "properties.simple: true"
+  type: Pagination
+  properties:
+    simple: true
+- id: "properties.showTotal: true"
+  type: Pagination
+  properties:
+    showTotal: true
+- id: "properties.showSizeChanger: true"
+  type: Pagination
+  properties:
+    showSizeChanger: true
+- id: "properties.showQuickJumper: true"
+  type: Pagination
+  properties:
+    showQuickJumper: true
+- id: "properties.pageSizeOptions: [100, 200, 500]"
+  type: Pagination
+  properties:
+    pageSizeOptions: [100, 200, 500]
+    total: 6000
+- id: "properties.hideOnSinglePage: true, total: 1"
+  type: Pagination
+  properties:
+    hideOnSinglePage: true
+    total: 1
+- id: "properties.hideOnSinglePage: true, total: 100"
+  type: Pagination
+  properties:
+    hideOnSinglePage: true
+    total: 100
+- id: "properties.disabled: true"
+  type: Pagination
+  properties:
+    disabled: true

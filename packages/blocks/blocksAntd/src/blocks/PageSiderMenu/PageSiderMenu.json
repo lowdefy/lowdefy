@@ -1,0 +1,152 @@
+{
+  "category": "context",
+  "loading": false,
+  "test": {
+    "methods": [
+      {
+        "name": "toggleMobileMenuOpen",
+        "args": {}
+      },
+      {
+        "name": "setMobileMenuOpen",
+        "args": {
+          "open": true
+        }
+      },
+      {
+        "name": "toggleSiderOpen",
+        "args": {}
+      },
+      {
+        "name": "setSiderOpen",
+        "args": {
+          "open": true
+        }
+      }
+    ]
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logo": {
+          "type": "object",
+          "description": "Header logo settings.",
+          "additionalProperties": false,
+          "properties": {
+            "src": {
+              "type": "string",
+              "description": "Header logo source url."
+            },
+            "alt": {
+              "type": "string",
+              "default": "Lowdefy",
+              "description": "Header logo alternative text."
+            },
+            "style": {
+              "type": "object",
+              "description": "Logo properties.",
+              "properties": {
+                "style": {
+                  "type": "object",
+                  "description": "Css style object to apply to logo."
+                }
+              }
+            }
+          }
+        },
+        "header": {
+          "type": "object",
+          "description": "Header properties.",
+          "additionalProperties": false,
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark"],
+              "description": "Header theme color."
+            },
+            "contentStyle": {
+              "type": "object",
+              "description": "Header content css style object."
+            },
+            "color": {
+              "type": "string",
+              "description": "Header color."
+            },
+            "style": {
+              "type": "object",
+              "description": "Header css style object."
+            }
+          }
+        },
+        "sider": {
+          "type": "object",
+          "description": "Sider properties."
+        },
+        "toggleSiderButton": {
+          "type": "object",
+          "description": "Toggle sider button properties."
+        },
+        "footer": {
+          "type": "object",
+          "description": "Footer properties."
+        },
+        "content": {
+          "type": "object",
+          "description": "Content properties."
+        },
+        "breadcrumb": {
+          "type": "object",
+          "description": "Breadcrumb properties."
+        },
+        "menu": {
+          "type": "object",
+          "description": "Menu properties."
+        },
+        "menuLg": {
+          "type": "object",
+          "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes."
+        },
+        "menuMd": {
+          "type": "object",
+          "description": "Mobile menu properies. Overwrites menu properties on mobile screen sizes."
+        },
+        "style": {
+          "type": "object",
+          "description": "Css style object to apply to layout."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onToggleDrawer": {
+          "type": "array",
+          "description": "Trigger action when mobile menu drawer is toggled."
+        },
+        "onClose": {
+          "type": "array",
+          "description": "Trigger action when menu is closed."
+        },
+        "onOpen": {
+          "type": "array",
+          "description": "Trigger action when menu is open."
+        },
+        "onMenuItemSelect": {
+          "type": "array",
+          "description": "Trigger action when menu item is selected."
+        },
+        "onMenuItemClick": {
+          "type": "array",
+          "description": "Trigger action when menu item is clicked."
+        },
+        "onToggleMenuGroup": {
+          "type": "array",
+          "description": "Trigger action when mobile menu group is opened."
+        }
+      }
+    }
+  }
+}

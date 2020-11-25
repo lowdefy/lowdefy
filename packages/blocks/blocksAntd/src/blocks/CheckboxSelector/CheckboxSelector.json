@@ -1,0 +1,142 @@
+{
+  "valueType": "array",
+  "category": "input",
+  "loading": false,
+  "test": {
+    "validation": true,
+    "required": true
+  },
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string",
+          "description": "Selected checkbox color."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable the block if true."
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input."
+        },
+        "options": {
+          "type": "array",
+          "default": [],
+          "description": "Selector options can either be an array of primitive values, on an array of label, value pairs.",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "required": ["value"],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Value label shown to user."
+                  },
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "description": "Value selected."
+                  },
+                  "disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable the option if true."
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "label": {
+          "type": "object",
+          "description": "Label properties.",
+          "additionalProperties": false,
+          "properties": {
+            "align": {
+              "type": "string",
+              "enum": ["left", "right"],
+              "defaultValue": "right",
+              "description": "Align label left or right when inline."
+            },
+            "colon": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Append label with colon."
+            },
+            "extra": {
+              "type": "string",
+              "description": "Extra text to display beneath the content."
+            },
+            "title": {
+              "type": "string",
+              "description": "Label title."
+            },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Hide input label."
+            },
+            "hasFeedback": {
+              "type": "boolean",
+              "defaultValue": true,
+              "description": "Display feedback extra from validation, this does not disable validation."
+            },
+            "inline": {
+              "type": "boolean",
+              "defaultValue": false,
+              "description": "Render input and label inline."
+            },
+            "extraStyle": {
+              "type": "object",
+              "description": "Css style to applied to label extra."
+            },
+            "feedbackStyle": {
+              "type": "object",
+              "description": "Css style to applied to label feedback."
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "onChange": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}

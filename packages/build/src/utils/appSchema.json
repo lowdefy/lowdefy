@@ -43,6 +43,10 @@
         "layout": {
           "type": "object"
         },
+        "style": {
+          "type": "object"
+        },
+        "visible": {},
         "blocks": {
           "type": "array",
           "items": {
@@ -55,20 +59,23 @@
             "$ref": "#/definitions/request"
           }
         },
-        "required": {
-          "type": [
-            "boolean",
-            "object"
-          ]
-        },
-        "mutations": {
+        "required": {},
+        "validate": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/mutation"
+            "type": "object"
           }
         },
         "actions": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/action"
+              }
+            }
+          }
         },
         "areas": {
           "type": "object",
@@ -89,29 +96,6 @@
       }
     },
     "request": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type",
-        "connectionId"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "connectionId": {
-          "type": "string"
-        },
-        "properties": {
-          "type": "object"
-        }
-      }
-    },
-    "mutation": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -214,9 +198,36 @@
           }
         }
       }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "success": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "skip": {},
+        "params": {}
+      }
     }
   },
   "properties": {
+    "version": {
+      "type": "string"
+    },
     "global": {
       "type": "object"
     },

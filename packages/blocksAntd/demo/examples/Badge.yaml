@@ -1,6 +1,0 @@
-- id: default
-  type: Badge
-- id: properties.count
-  type: Badge
-  properties:
-    count: 50

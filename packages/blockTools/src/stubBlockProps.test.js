@@ -44,6 +44,8 @@ test('basic display', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "blockId": "a",
       "id": "a",
       "methods": Object {
@@ -58,49 +60,6 @@ test('basic display', () => {
   `);
 });
 
-test('basic display with methods', () => {
-  const realAlert = global.alert;
-  global.alert = jest.fn();
-  const block = {
-    id: 'a',
-    type: 'Display',
-    methods: { fn: 'test' },
-  };
-  const meta = {
-    category: 'display',
-  };
-  const res = stubBlockProps({ block, meta });
-  expect(res).toMatchInlineSnapshot(`
-    Object {
-      "blockId": "a",
-      "id": "a",
-      "methods": Object {
-        "callAction": [Function],
-        "makeCssClass": [Function],
-        "registerAction": [Function],
-        "registerMethod": [Function],
-      },
-      "schemaErrors": Array [
-        Object {
-          "dataPath": "",
-          "keyword": "additionalProperties",
-          "message": "should NOT have additional properties",
-          "params": Object {
-            "additionalProperty": "methods",
-          },
-          "schemaPath": "#/additionalProperties",
-        },
-      ],
-      "type": "Display",
-    }
-  `);
-  res.methods.callAction();
-  res.methods.registerAction();
-  res.methods.registerMethod();
-  expect(global.alert).toBeCalledTimes(3);
-  global.alert = realAlert;
-});
-
 test('basic input', () => {
   const block = {
     id: 'a',
@@ -111,6 +70,8 @@ test('basic input', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "blockId": "a",
       "id": "a",
       "methods": Object {
@@ -139,6 +100,8 @@ test('input setState', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "blockId": "a",
       "id": "a",
       "methods": Object {
@@ -167,6 +130,8 @@ test('basic container', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -197,6 +162,8 @@ test('basic context', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -227,6 +194,8 @@ test('basic list', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -261,6 +230,8 @@ test('list methods', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -307,6 +278,8 @@ test('blocks container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -369,6 +342,8 @@ test('blocks areas container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -424,6 +399,8 @@ test('areas container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -473,6 +450,8 @@ test('areas context', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -522,6 +501,8 @@ test('areas list', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -576,6 +557,7 @@ test('actions display', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
       "actions": Object {
         "onClick": Array [
           Object {
@@ -596,10 +578,6 @@ test('actions display', () => {
       "type": "Display",
     }
   `);
-  res.methods.callAction({ action: 'click' });
-  res.methods.registerAction({ action: 'onClick' });
-  res.methods.registerMethod({ action: 'open' });
-  expect(logger).toBeCalledTimes(3);
 });
 
 test('provide schema errors', () => {
@@ -626,6 +604,8 @@ test('provide schema errors', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "blockId": "a",
       "id": "a",
       "methods": Object {
@@ -650,6 +630,8 @@ test('provide schema errors', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
+      "actionLog": Array [],
+      "actions": Object {},
       "blockId": "a",
       "id": "a",
       "methods": Object {
@@ -702,4 +684,42 @@ test('throw schema error', () => {
   expect(() => stubBlockProps({ block, meta })).toThrowErrorMatchingInlineSnapshot(
     `"Schema error in Error - schema is invalid: data/properties/properties/type should be equal to one of the allowed values, data/properties/properties/type should be array, data/properties/properties/type should match some schema in anyOf"`
   );
+});
+
+test('register and call methods', () => {
+  const block = {
+    id: 'a',
+    type: 'Display',
+  };
+  const meta = {
+    category: 'display',
+  };
+  const res = stubBlockProps({ block, meta });
+  const mockMethod = jest.fn();
+  res.methods.registerMethod('methodsName', mockMethod);
+  expect(res.methods.methodsName).toBeDefined();
+  res.methods.methodsName({ test: 1 });
+  expect(mockMethod).toBeCalledWith({ test: 1 });
+});
+
+test('register and call actions', () => {
+  const block = {
+    id: 'a',
+    type: 'Display',
+  };
+  const meta = {
+    category: 'display',
+  };
+  const res = stubBlockProps({ block, meta });
+  res.methods.registerAction('actionsName', [{ id: 'reset', type: 'Reset' }]);
+  expect(res.actions).toEqual({
+    actionsName: [{ id: 'reset', type: 'Reset' }],
+  });
+  res.methods.callAction({ action: 'actionsName', args: { a: 1 } });
+  expect(res.actionLog).toEqual([{ action: 'actionsName', args: { a: 1 } }]);
+  res.methods.callAction({ action: 'actionsName', args: { a: 2 } });
+  expect(res.actionLog).toEqual([
+    { action: 'actionsName', args: { a: 2 } },
+    { action: 'actionsName', args: { a: 1 } },
+  ]);
 });

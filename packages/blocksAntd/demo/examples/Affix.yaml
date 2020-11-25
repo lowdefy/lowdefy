@@ -1,6 +1,0 @@
-- id: default
-  type: Affix
-- id: properties.top
-  type: Affix
-  properties:
-    offsetTop: 15

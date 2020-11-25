@@ -1,7 +1,0 @@
-- id: default
-  type: Avatar
-- id: properties.color
-  type: Avatar
-  properties:
-    color: '#f12345'
-

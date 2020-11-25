@@ -1,6 +1,0 @@
-- id: default
-  type: Icon
-- id: properties.icon
-  type: Icon
-  properties:
-    name: RocketOutlined
