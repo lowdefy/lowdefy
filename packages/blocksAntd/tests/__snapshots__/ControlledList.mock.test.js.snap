@@ -1,0 +1,587 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="default_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "default",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.addItemButton: title: Add new Item - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.addItemButton: title: Add new Item_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add new Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.addItemButton: title: Add new Item",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.addToFront: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": false,
+      "header": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="undefined_id"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "id": "properties.addToFront: true",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.hideAddButton: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": false,
+      "header": undefined,
+      "id": "properties.hideAddButton: true",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.noDataTitle: No title display - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.noDataTitle: No title display_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.noDataTitle: No title display",
+      "locale": Object {
+        "emptyText": "No title display",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.removeItemButton: shape: round - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.removeItemButton: shape: round_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.removeItemButton: shape: round",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.removeItemButton: shape: square - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.removeItemButton: shape: square_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.removeItemButton: shape: square",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: large - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.size: large_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": "large",
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.size: large",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": "large",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.size: small_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": "small",
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": undefined,
+      "id": "properties.size: small",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": "small",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "bordered": true,
+      "dataSource": Array [],
+      "footer": <div
+        className="css-dam5ev"
+      >
+        <br />
+        <ButtonBlock
+          actions={Object {}}
+          blockId="properties.title_add_button"
+          content={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "callAction": [Function],
+              "makeCssClass": [Function],
+              "moveItemDown": [Function],
+              "moveItemUp": [Function],
+              "pushItem": [Function],
+              "registerAction": [Function],
+              "registerMethod": [Function],
+              "removeItem": [Function],
+              "unshiftItem": [Function],
+            }
+          }
+          onClick={[Function]}
+          properties={
+            Object {
+              "icon": "PlusOutlined",
+              "size": undefined,
+              "title": "Add Item",
+              "type": "primary",
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </div>,
+      "header": <div
+        className="css-dam5ev"
+      >
+        <Text
+          strong={true}
+        >
+          ControlledList block
+        </Text>
+      </div>,
+      "id": "properties.title",
+      "locale": Object {
+        "emptyText": "No Items",
+      },
+      "renderItem": [Function],
+      "size": undefined,
+    },
+    Object {},
+  ],
+]
+`;
