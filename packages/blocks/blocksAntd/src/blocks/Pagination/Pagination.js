@@ -19,21 +19,30 @@ import { Pagination } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { type } from '@lowdefy/helpers';
 
+const getPageSize = ({ properties, value }) => {
+  if (type.isObject(value) && type.isNumber(value.pageSize)) {
+    return value.pageSize;
+  }
+  if (type.isArray(properties.pageSizeOptions)) {
+    return properties.pageSizeOptions[0];
+  }
+  return 10;
+};
+
+const changeValue = ({ current, pageSize, methods }) => {
+  methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
+  methods.callAction({
+    action: 'onSizeChange',
+    args: { current, pageSize, skip: current * pageSize },
+  });
+};
+
 const PaginationBlock = ({ blockId, methods, properties, value }) => {
   return (
     <Pagination
       id={blockId}
-      onShowSizeChange={(page, pageSize) => {
-        methods.setValue({ page, pageSize, skip: (page - 1) * pageSize });
-        methods.callAction({
-          action: 'onShowSizeChange',
-          args: { page, pageSize, skip: page * pageSize },
-        });
-      }}
-      onChange={(page, pageSize) => {
-        methods.setValue({ page, pageSize, skip: (page - 1) * pageSize });
-        methods.callAction({ action: 'onChange', args: { page, pageSize, skip: page * pageSize } });
-      }}
+      onShowSizeChange={(current, pageSize) => changeValue({ current, pageSize, methods })}
+      onChange={(current, pageSize) => changeValue({ current, pageSize, methods })}
       total={properties.total !== undefined ? properties.total : 100}
       size={properties.size}
       simple={!!properties.simple}
@@ -41,18 +50,14 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
         properties.showTotal && ((total, range) => `${range[0]}-${range[1]} of ${total} items`)
       }
       showTitle={properties.showTitle !== undefined ? properties.showTitle : true}
-      showSizeChanger={!!properties.showSizeChanger}
+      showSizeChanger={!!properties.showSizeChanger || !!properties.pageSizeOptions}
       showQuickJumper={properties.showQuickJumper}
-      pageSizeOptions={properties.pageSizeOptions || ['10', '20', '30', '40']}
+      pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       hideOnSinglePage={properties.hideOnSinglePage}
       disabled={properties.disabled}
-      pageSize={
-        type.isNone(value) || !type.isObject(value) || type.isNumber(value.pageSize)
-          ? 10
-          : value.pageSize
-      }
+      pageSize={getPageSize({ properties, value })}
       current={
-        type.isNone(value) || !type.isObject(value) || type.isNumber(value.current)
+        type.isNone(value) || !type.isObject(value) || !type.isNumber(value.current)
           ? 1
           : value.current
       }
