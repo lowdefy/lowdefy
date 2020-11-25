@@ -89,7 +89,7 @@ const S3UploadButtonBlock = ({ blockId, methods, properties, value }) => {
       {
         id: `${blockId}__getS3PostPolicy`,
         type: 'Request',
-        params: properties.s3PostPolicyMutationId,
+        params: properties.s3PostPolicyRequestId,
       },
     ]);
     customRequest = getCustomRequest({ methods, setS3Parameters });

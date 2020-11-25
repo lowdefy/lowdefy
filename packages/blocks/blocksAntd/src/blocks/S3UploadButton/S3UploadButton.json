@@ -17,9 +17,9 @@
           "type": "boolean",
           "description": "Disable the file input."
         },
-        "s3PostPolicyMutationId": {
+        "s3PostPolicyRequestId": {
           "type": "string",
-          "description": "Id of a mutation of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+          "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
         },
         "showUploadList": {
           "type": "boolean",

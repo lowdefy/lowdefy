@@ -12,10 +12,10 @@ Array [
       "onShowSizeChange": [Function],
       "pageSize": 10,
       "pageSizeOptions": Array [
-        "10",
-        "20",
-        "30",
-        "40",
+        10,
+        20,
+        30,
+        40,
       ],
       "showQuickJumper": undefined,
       "showSizeChanger": false,
@@ -23,6 +23,305 @@ Array [
       "showTotal": undefined,
       "simple": false,
       "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": true,
+      "hideOnSinglePage": undefined,
+      "id": "properties.disabled: true",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.hideOnSinglePage: true, total: 1 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": true,
+      "id": "properties.hideOnSinglePage: true, total: 1",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 1,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.hideOnSinglePage: true, total: 100 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": true,
+      "id": "properties.hideOnSinglePage: true, total: 100",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.pageSizeOptions: [100, 200, 500] - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.pageSizeOptions: [100, 200, 500]",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 100,
+      "pageSizeOptions": Array [
+        100,
+        200,
+        500,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": true,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 6000,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showQuickJumper: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.showQuickJumper: true",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": true,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showSizeChanger: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.showSizeChanger: true",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": true,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showTotal: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.showTotal: true",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": [Function],
+      "simple": false,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.simple: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.simple: true",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": true,
+      "size": undefined,
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.size: default",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": "default",
+      "total": 100,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "current": 1,
+      "disabled": undefined,
+      "hideOnSinglePage": undefined,
+      "id": "properties.size: small",
+      "onChange": [Function],
+      "onShowSizeChange": [Function],
+      "pageSize": 10,
+      "pageSizeOptions": Array [
+        10,
+        20,
+        30,
+        40,
+      ],
+      "showQuickJumper": undefined,
+      "showSizeChanger": false,
+      "showTitle": true,
+      "showTotal": undefined,
+      "simple": false,
+      "size": "small",
       "total": 100,
     },
     Object {},
@@ -42,10 +341,10 @@ Array [
       "onShowSizeChange": [Function],
       "pageSize": 10,
       "pageSizeOptions": Array [
-        "10",
-        "20",
-        "30",
-        "40",
+        10,
+        20,
+        30,
+        40,
       ],
       "showQuickJumper": undefined,
       "showSizeChanger": false,
