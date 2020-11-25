@@ -1,0 +1,48 @@
+{
+  "valueType": "object",
+  "category": "input",
+  "schema": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "accept": {
+          "type": "string",
+          "description": "File types accepted by the input. See html file type input [accept property](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)."
+        },
+        "button": {
+          "type": "object",
+          "description": "Button block properties."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disable the file input."
+        },
+        "s3PostPolicyRequestId": {
+          "type": "string",
+          "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+        },
+        "showUploadList": {
+          "type": "boolean",
+          "description": "Whether to show default upload list."
+        },
+        "singleFile": {
+          "type": "boolean",
+          "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt and the upload button is disabled after a file is uploaded."
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "properties": {
+        "onChange": {
+          "type": "array",
+          "description": "Triggered when the upload state is changing."
+        },
+        "onClick": {
+          "type": "array",
+          "description": "Triggered when the upload button is clicked."
+        }
+      }
+    }
+  }
+}

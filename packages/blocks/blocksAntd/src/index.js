@@ -62,6 +62,7 @@ import Progress from './blocks/Progress/Progress';
 import RadioSelector from './blocks/RadioSelector/RadioSelector';
 import RatingSlider from './blocks/RatingSlider/RatingSlider';
 import Result from './blocks/Result/Result';
+import S3UploadButton from './blocks/S3UploadButton/S3UploadButton';
 import Selector from './blocks/Selector/Selector';
 import Sider from './blocks/Sider/Sider';
 import Skeleton from './blocks/Skeleton/Skeleton';
@@ -125,6 +126,7 @@ export {
   RadioSelector,
   RatingSlider,
   Result,
+  S3UploadButton,
   Selector,
   Sider,
   Skeleton,
@@ -188,6 +190,7 @@ export default {
   RadioSelector,
   RatingSlider,
   Result,
+  S3UploadButton,
   Selector,
   Sider,
   Skeleton,

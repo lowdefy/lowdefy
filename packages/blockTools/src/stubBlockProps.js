@@ -45,11 +45,15 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
     if (!block.areas.content) block.areas.content = {};
     if (block.blocks) block.areas.content.blocks = block.blocks;
   }
-
+  block.actions = block.actions || {};
+  block.actionLog = [];
   // mock default block methods
   block.methods = {
-    callAction: (action) => log(action),
-    registerAction: (action) => log(action),
+    callAction: (action) => block.actionLog.unshift(action),
+    registerAction: (actionName, actions) => {
+      block.actions[actionName] = actions;
+      return;
+    },
     registerMethod: (method, methodFn) => {
       block.methods[method] = methodFn;
       return;
