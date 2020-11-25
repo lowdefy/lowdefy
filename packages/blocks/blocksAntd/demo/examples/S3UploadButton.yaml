@@ -1,0 +1,23 @@
+- id: default
+  type: S3UploadButton
+- id: properties.accept
+  type: S3UploadButton
+  properties:
+    accept: '.png,.jpg'
+- id: properties.button
+  type: S3UploadButton
+  properties:
+    button:
+      type: primary
+- id: properties.disabled
+  type: S3UploadButton
+  properties:
+    disabled: true
+- id: properties.showUploadList
+  type: S3UploadButton
+  properties:
+    showUploadList: true
+- id: properties.singleFile
+  type: S3UploadButton
+  properties:
+    singleFile: true
