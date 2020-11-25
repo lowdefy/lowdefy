@@ -17,24 +17,23 @@
 import { runMockRenderTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { Collapse } from 'antd';
+import { DatePicker } from 'antd';
 
 Enzyme.configure({ adapter: new Adapter() });
-import CollapseBlock from '../src/blocks/Collapse/Collapse';
-import examples from '../demo/examples/Collapse.yaml';
-import meta from '../src/blocks/Collapse/Collapse.json';
+import DateSelectorBlock from '../src/blocks/DateSelector/DateSelector';
+import examples from '../demo/examples/DateSelector.yaml';
+import meta from '../src/blocks/DateSelector/DateSelector.json';
 
-jest.mock('antd/lib/collapse', () => {
-  const collapse = jest.fn(() => 'mocked');
-  collapse.Panel = jest.fn(() => 'mocked');
-  return collapse;
+jest.mock('antd/lib/date-picker', () => {
+  const comp = jest.fn(() => 'mocked');
+  return comp;
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Collapse,
+    fn: DatePicker,
   },
 ];
 
-runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: DateSelectorBlock, meta, mocks, enzyme: { mount } });

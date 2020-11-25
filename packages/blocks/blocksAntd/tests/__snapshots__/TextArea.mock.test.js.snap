@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.allowClear: false - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.autoSize: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label align: right - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label colon: false - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label extra: showing extra - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label inline: true - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.label span: 12 - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.minRows: 2  maxRows: 6 - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.placeholder: Type your text here - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.rows: 5 - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.title: My TextArea Title - value[0] - default 1`] = `Array []`;

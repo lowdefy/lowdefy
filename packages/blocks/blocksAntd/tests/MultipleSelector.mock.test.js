@@ -17,24 +17,24 @@
 import { runMockRenderTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { Collapse } from 'antd';
+import { Select } from 'antd';
 
 Enzyme.configure({ adapter: new Adapter() });
-import CollapseBlock from '../src/blocks/Collapse/Collapse';
-import examples from '../demo/examples/Collapse.yaml';
-import meta from '../src/blocks/Collapse/Collapse.json';
+import Block from '../src/blocks/MultipleSelector/MultipleSelector';
+import examples from '../demo/examples/MultipleSelector.yaml';
+import meta from '../src/blocks/MultipleSelector/MultipleSelector.json';
 
-jest.mock('antd/lib/collapse', () => {
-  const collapse = jest.fn(() => 'mocked');
-  collapse.Panel = jest.fn(() => 'mocked');
-  return collapse;
+jest.mock('antd/lib/select', () => {
+  const comp = jest.fn(() => 'mocked');
+  comp.Option = jest.fn(() => 'mocked');
+  return comp;
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Collapse,
+    fn: Select,
   },
 ];
 
-runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block, meta, mocks, enzyme: { mount } });

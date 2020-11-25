@@ -1,0 +1,873 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mock render - default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "default_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.allowClear: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": false,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.allowClear: false_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.allowClear: false_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.allowClear: false_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.autoFocus: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": true,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.autoFocus: true_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.autoFocus: true_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.autoFocus: true_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.clearIcon: ChromeFilled - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.clearIcon: ChromeFilled_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.clearIcon: ChromeFilled_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": <IconBlock
+        actions={Object {}}
+        blockId="properties.clearIcon: ChromeFilled_clearIcon"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [Function],
+            "makeCssClass": [Function],
+            "registerAction": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+          }
+        }
+        properties="ChromeFilled"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.clearIcon: ChromeFilled_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.clearIcon-object: ChromeFilled - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.clearIcon-object: ChromeFilled_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.clearIcon-object: ChromeFilled_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": <IconBlock
+        actions={Object {}}
+        blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [Function],
+            "makeCssClass": [Function],
+            "registerAction": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+          }
+        }
+        properties={
+          Object {
+            "color": "red",
+            "name": "ChromeFilled",
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.clearIcon-object: ChromeFilled_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": true,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.disabled: true_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: left - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label align: left_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label align: right - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label align: right_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label colon: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label colon: false_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label disabled: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label disabled: true_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label extra: showing extra - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label extra: showing extra_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label inline: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label inline: true_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.label span: 12 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.label span: 12_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-number - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.options-number_0"
+          value={0}
+        >
+          10
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.options-number_1"
+          value={1}
+        >
+          12
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options-number_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-object - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.options-object_0"
+          value={0}
+        >
+          one
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.options-object_1"
+          value={1}
+        >
+          two
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options-object_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.options-string - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.options-string_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.options-string_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.options-string_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.placeholder: Find item in list - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.placeholder: Find item in list_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Find item in list",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showArrow: false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.showArrow: false_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": false,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.showSearch: true - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [
+        <mockConstructor
+          className="css-0"
+          id="properties.showSearch: true_0"
+          value={0}
+        >
+          Option 1
+        </mockConstructor>,
+        <mockConstructor
+          className="css-0"
+          id="properties.showSearch: true_1"
+          value={1}
+        >
+          Option 2
+        </mockConstructor>,
+      ],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.showSearch: true_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": true,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: default - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.size: default_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": "default",
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: large - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.size: large_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": "large",
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.size: small - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.size: small_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": "small",
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.suffixIcon: DoubleLeftOutlined - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.suffixIcon: DoubleLeftOutlined_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": <IconBlock
+        actions={Object {}}
+        blockId="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
+        content={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "callAction": [Function],
+            "makeCssClass": [Function],
+            "registerAction": [Function],
+            "registerMethod": [Function],
+            "setValue": [Function],
+          }
+        }
+        properties="DoubleLeftOutlined"
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.title: My Selector Title - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "allowClear": true,
+      "autoFocus": undefined,
+      "children": Array [],
+      "className": "css-8atqhb",
+      "clearIcon": undefined,
+      "disabled": undefined,
+      "filterOption": [Function],
+      "getPopupContainer": [Function],
+      "id": "properties.title: My Selector Title_input",
+      "mode": "single",
+      "notFoundContent": "Not found",
+      "onChange": [Function],
+      "placeholder": "Select item",
+      "showArrow": undefined,
+      "showSearch": undefined,
+      "size": undefined,
+      "suffixIcon": undefined,
+      "value": undefined,
+    },
+    Object {},
+  ],
+]
+`;

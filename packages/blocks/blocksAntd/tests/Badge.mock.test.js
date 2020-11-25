@@ -17,24 +17,22 @@
 import { runMockRenderTests } from '@lowdefy/block-tools';
 import Enzyme, { mount } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import { Collapse } from 'antd';
+import { Badge } from 'antd';
 
 Enzyme.configure({ adapter: new Adapter() });
-import CollapseBlock from '../src/blocks/Collapse/Collapse';
-import examples from '../demo/examples/Collapse.yaml';
-import meta from '../src/blocks/Collapse/Collapse.json';
+import BadgeBlock from '../src/blocks/Badge/Badge';
+import examples from '../demo/examples/Badge.yaml';
+import meta from '../src/blocks/Badge/Badge.json';
 
-jest.mock('antd/lib/collapse', () => {
-  const collapse = jest.fn(() => 'mocked');
-  collapse.Panel = jest.fn(() => 'mocked');
-  return collapse;
+jest.mock('antd/lib/badge', () => {
+  return jest.fn(() => 'mocked');
 });
 
 const mocks = [
   {
     name: 'default',
-    fn: Collapse,
+    fn: Badge,
   },
 ];
 
-runMockRenderTests({ examples, Block: CollapseBlock, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: BadgeBlock, meta, mocks, enzyme: { mount } });
