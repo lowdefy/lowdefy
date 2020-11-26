@@ -3843,7 +3843,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["antd", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.2"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.6.3"],
             ["babel-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:8.2.1"],
-            ["babel-plugin-import", "npm:1.13.1"],
+            ["babel-plugin-import", "npm:1.13.3"],
             ["buffer", "npm:6.0.2"],
             ["classnames", "npm:2.2.6"],
             ["clean-webpack-plugin", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:3.0.0"],
@@ -4139,7 +4139,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["antd", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.2"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.6.3"],
             ["babel-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.2.1"],
-            ["babel-plugin-import", "npm:1.13.1"],
+            ["babel-plugin-import", "npm:1.13.3"],
             ["buffer", "npm:6.0.2"],
             ["clean-webpack-plugin", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:3.0.0"],
             ["css-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.0.1"],
@@ -7695,10 +7695,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["babel-plugin-import", [
-        ["npm:1.13.1", {
-          "packageLocation": "./.yarn/cache/babel-plugin-import-npm-1.13.1-8bb8103eed-3420f0d46c.zip/node_modules/babel-plugin-import/",
+        ["npm:1.13.3", {
+          "packageLocation": "./.yarn/cache/babel-plugin-import-npm-1.13.3-498736f60a-4a21b12990.zip/node_modules/babel-plugin-import/",
           "packageDependencies": [
-            ["babel-plugin-import", "npm:1.13.1"],
+            ["babel-plugin-import", "npm:1.13.3"],
             ["@babel/helper-module-imports", "npm:7.12.5"],
             ["@babel/runtime", "npm:7.12.5"]
           ],
