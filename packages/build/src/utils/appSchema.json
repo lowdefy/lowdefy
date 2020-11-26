@@ -225,8 +225,14 @@
     }
   },
   "properties": {
+    "name": {
+      "type": "string"
+    },
     "version": {
       "type": "string"
+    },
+    "config": {
+      "type": "object"
     },
     "global": {
       "type": "object"
