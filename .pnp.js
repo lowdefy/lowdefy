@@ -244,10 +244,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-85dd64646b/0/cache/@apollo-client-npm-3.2.6-4538de3c5d-d60d25b73a.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-8ebd22a7a9/0/cache/@apollo-client-npm-3.2.9-c09eb32ed6-d271b371cb.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9"],
             ["@graphql-typed-document-node/core", "virtual:fb22fcfe3db580733f56ff9124afc3a372e40f6f7d5bbb32b3d7cb1cb55455265609338ffafb54433423e8eda0793941fd2916a6ea4935da0e746b635717c1f3#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -263,7 +263,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.1"],
             ["subscriptions-transport-ws", null],
-            ["symbol-observable", "npm:3.0.0"],
+            ["symbol-observable", "npm:2.0.3"],
             ["ts-invariant", "npm:0.5.1"],
             ["tslib", "npm:1.14.1"],
             ["zen-observable", "npm:0.8.15"]
@@ -4243,7 +4243,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.6"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -22853,13 +22853,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/symbol-observable-npm-2.0.3-d54dcee558-c022177891.zip/node_modules/symbol-observable/",
           "packageDependencies": [
             ["symbol-observable", "npm:2.0.3"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/symbol-observable-npm-3.0.0-9fa7238745-516cb0a655.zip/node_modules/symbol-observable/",
-          "packageDependencies": [
-            ["symbol-observable", "npm:3.0.0"]
           ],
           "linkType": "HARD",
         }]

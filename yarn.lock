@@ -60,9 +60,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.6":
-  version: 3.2.6
-  resolution: "@apollo/client@npm:3.2.6"
+"@apollo/client@npm:3.2.9":
+  version: 3.2.9
+  resolution: "@apollo/client@npm:3.2.9"
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
@@ -73,7 +73,7 @@ __metadata:
     hoist-non-react-statics: ^3.3.2
     optimism: ^0.13.0
     prop-types: ^15.7.2
-    symbol-observable: ^3.0.0
+    symbol-observable: ^2.0.0
     ts-invariant: ^0.5.0
     tslib: ^1.10.0
     zen-observable: ^0.8.14
@@ -86,7 +86,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: d60d25b73aef0d0e0ecdec5c573dfdc09c84924497a2a196c801c98f24b27f0b3e13024dcccea778e5f47b2fb599c6fbf66eb026044b25fd25e4f065a62f50da
+  checksum: d271b371cb5793c08badd02132b80ff50bfbac02570cb2898e90de4fb49a3983246cda9d58830980f6d7d304c1eff01fa792a6ab7cbe1c3385114b7e1e34877a
   languageName: node
   linkType: hard
 
@@ -3244,7 +3244,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.6
+    "@apollo/client": 3.2.9
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -18667,13 +18667,6 @@ fsevents@^1.2.7:
   version: 2.0.3
   resolution: "symbol-observable@npm:2.0.3"
   checksum: c022177891e0aa3169bbaaed68d928ff7a2b5f5b1b2bf655b99804ecfabe280a6f1042dd3bda609475e637c57141d39b33e692b6f6b5fdb29ce7f61cf77be57f
-  languageName: node
-  linkType: hard
-
-"symbol-observable@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "symbol-observable@npm:3.0.0"
-  checksum: 516cb0a6555624ece67b91be14b15f72a7562a18f15d5058938ee9ced1ef672a87c5fe5d3be72e79df3bb2f7eadba6dd9aae81cd31b6d6e797bdb6075ab9c596
   languageName: node
   linkType: hard
 
