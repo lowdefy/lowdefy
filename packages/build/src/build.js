@@ -26,6 +26,7 @@ import buildPages from './build/buildPages';
 import buildRefs from './build/buildRefs';
 import cleanOutputDirectory from './build/cleanOutputDirectory';
 import testSchema from './build/testSchema';
+import writeConfig from './build/writeConfig';
 import writeConnections from './build/writeConnections';
 import writeGlobal from './build/writeGlobal';
 import writeMenus from './build/writeMenus';
@@ -57,6 +58,7 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
+    await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeMenus({ components, context });
   } catch (error) {
