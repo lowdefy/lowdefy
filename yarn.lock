@@ -2876,7 +2876,7 @@ __metadata:
     buffer: 6.0.2
     classnames: 2.2.6
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.0
+    copy-webpack-plugin: 6.3.2
     css-loader: 5.0.1
     enzyme: 3.11.0
     enzyme-to-json: 3.6.1
@@ -2919,7 +2919,7 @@ __metadata:
     babel-loader: 8.2.1
     buffer: 6.0.2
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.0
+    copy-webpack-plugin: 6.3.2
     css-loader: 5.0.1
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
@@ -2954,7 +2954,7 @@ __metadata:
     babel-loader: 8.2.1
     buffer: 6.0.1
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.0
+    copy-webpack-plugin: 6.3.2
     css-loader: 5.0.1
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
@@ -7380,9 +7380,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-webpack-plugin@npm:6.3.0":
-  version: 6.3.0
-  resolution: "copy-webpack-plugin@npm:6.3.0"
+"copy-webpack-plugin@npm:6.3.2":
+  version: 6.3.2
+  resolution: "copy-webpack-plugin@npm:6.3.2"
   dependencies:
     cacache: ^15.0.5
     fast-glob: ^3.2.4
@@ -7397,7 +7397,7 @@ __metadata:
     webpack-sources: ^1.4.3
   peerDependencies:
     webpack: ^4.37.0 || ^5.0.0
-  checksum: edca6ec5cd079eb6bdb16ff0c0d964951396fdbd5af2970110119dafaf9f98843af7738f8b68ef87383b3917a16c397a2162f2a66940dc0b2e08f041e128ffc9
+  checksum: 10d873d3e914fec8394077681b7ec37c0b38e8a8d412a31e71a4fe37ac70d52473603c558400c57b3bdd2bd7ed8eead363201919d59351b20751c2f5ccb971c7
   languageName: node
   linkType: hard
 
