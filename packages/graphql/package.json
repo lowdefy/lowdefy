@@ -62,7 +62,7 @@
     "@shelf/jest-mongodb": "1.2.3",
     "apollo-server-testing": "2.19.0",
     "babel-jest": "26.6.3",
-    "babel-loader": "8.2.1",
+    "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
     "jest": "26.6.3",
     "webpack": "5.4.0",
