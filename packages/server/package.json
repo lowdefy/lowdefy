@@ -64,7 +64,7 @@
     "jest": "26.6.3",
     "nodemon": "2.0.6",
     "style-loader": "2.0.0",
-    "webpack": "5.4.0",
+    "webpack": "5.9.0",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.3.0"
