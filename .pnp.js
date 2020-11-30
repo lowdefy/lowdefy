@@ -4095,7 +4095,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.0.0"],
             ["dataloader", "npm:2.0.0"],
-            ["google-spreadsheet", "npm:3.0.13"],
+            ["google-spreadsheet", "npm:3.0.14"],
             ["graphql", "npm:15.4.0"],
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
             ["jest", "npm:26.6.3"],
@@ -12970,10 +12970,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["google-spreadsheet", [
-        ["npm:3.0.13", {
-          "packageLocation": "./.yarn/cache/google-spreadsheet-npm-3.0.13-24a1bc4961-595e2598fa.zip/node_modules/google-spreadsheet/",
+        ["npm:3.0.14", {
+          "packageLocation": "./.yarn/cache/google-spreadsheet-npm-3.0.14-0906d7377a-ee3aa22fa5.zip/node_modules/google-spreadsheet/",
           "packageDependencies": [
-            ["google-spreadsheet", "npm:3.0.13"],
+            ["google-spreadsheet", "npm:3.0.14"],
             ["axios", "npm:0.19.2"],
             ["google-auth-library", "npm:6.1.3"],
             ["lodash", "npm:4.17.20"]
