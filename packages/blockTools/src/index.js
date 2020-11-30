@@ -19,6 +19,7 @@ import BlockSchemaErrors from './BlockSchemaErrors';
 import ErrorBoundary from './ErrorBoundary';
 import IconSpinner from './Spinner/IconSpinner';
 import Loading from './Loading';
+import loadWebpackFederatedModule from './loadWebpackFederatedModule';
 import makeCssClass from './makeCssClass.js';
 import mediaToCssObject from './mediaToCssObject.js';
 import mockBlock from './mockBlock';
@@ -33,6 +34,7 @@ import SkeletonInput from './Skeleton/SkeletonInput';
 import SkeletonParagraph from './Skeleton/SkeletonParagraph';
 import Spinner from './Spinner/Spinner';
 import stubBlockProps from './stubBlockProps';
+import useDynamicScript from './useDynamicScript';
 import useRunAfterUpdate from './useRunAfterUpdate';
 
 export {
@@ -41,6 +43,7 @@ export {
   ErrorBoundary,
   IconSpinner,
   Loading,
+  loadWebpackFederatedModule,
   makeCssClass,
   mediaToCssObject,
   mockBlock,
@@ -55,5 +58,6 @@ export {
   SkeletonParagraph,
   Spinner,
   stubBlockProps,
+  useDynamicScript,
   useRunAfterUpdate,
 };

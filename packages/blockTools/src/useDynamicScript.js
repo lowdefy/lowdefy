@@ -16,42 +16,44 @@
 
 import React from 'react';
 
-const useDynamicScript = (args) => {
+const scripts = new Set();
+
+const useDynamicScript = ({ src }) => {
   const [ready, setReady] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
-    if (!args.url) {
+    console.log(scripts);
+
+    if (!src) return;
+
+    // Check if script is already added to DOM
+    if (scripts.has(src)) {
+      setReady(true);
       return;
     }
 
     const element = document.createElement('script');
 
-    element.src = args.url;
+    element.src = src;
     element.type = 'text/javascript';
     element.async = true;
 
-    setReady(false);
-    setFailed(false);
-
     element.onload = () => {
-      console.log(`Dynamic Script Loaded: ${args.url}`);
+      scripts.add(src);
       setReady(true);
     };
 
-    element.onerror = () => {
-      console.error(`Dynamic Script Error: ${args.url}`);
+    element.onerror = (error) => {
+      console.error(`Dynamic Script Error: ${src}`, error);
       setReady(false);
       setFailed(true);
     };
 
     document.head.appendChild(element);
 
-    return () => {
-      console.log(`Dynamic Script Removed: ${args.url}`);
-      document.head.removeChild(element);
-    };
-  }, [args.url]);
+    return () => {};
+  }, [src]);
 
   return {
     ready,
