@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/cli",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.2",
+    "@lowdefy/block-tools": "1.0.3",
     "@lowdefy/helpers": "1.1.0",
     "@lowdefy/node-utils": "1.0.0",
     "apollo-server-express": "2.19.0",

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-antd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "description": "Lowdefy Ant Design Blocks",
   "homepage": "https://lowdefy.com",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.2.2",
-    "@lowdefy/block-tools": "1.0.2",
+    "@lowdefy/block-tools": "1.0.3",
     "@lowdefy/color": "1.0.0",
     "@lowdefy/format": "1.0.0",
     "@lowdefy/helpers": "1.1.0",

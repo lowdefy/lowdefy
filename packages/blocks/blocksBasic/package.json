@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-basic",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "license": "Apache-2.0",
   "description": "Basic html Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
@@ -40,7 +40,7 @@
     "version:major": "yarn version major -d"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.2",
+    "@lowdefy/block-tools": "1.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
