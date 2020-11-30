@@ -23,8 +23,6 @@ const useDynamicScript = ({ src }) => {
   const [failed, setFailed] = React.useState(false);
 
   React.useEffect(() => {
-    console.log(scripts);
-
     if (!src) return;
 
     // Check if script is already added to DOM

@@ -20,6 +20,7 @@ plugins:
   - react-hooks
 rules:
   prettier/prettier: error
+  no-console: warn
   no-underscore-dangle: 'off'
   no-param-reassign: warn
   no-nested-ternary: warn
