@@ -17,7 +17,7 @@
 import path from 'path';
 import getLowdefyVersion from './getLowdefyVersion';
 import createPrint from './print';
-import { cacheDirectoryPath } from './directories';
+import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 
 async function createContext(options = {}) {
   const context = {
@@ -25,6 +25,13 @@ async function createContext(options = {}) {
     print: createPrint({ timestamp: true }),
   };
   context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
+
+  if (options.outputDirectory) {
+    context.outputDirectory = path.resolve(options.outputDirectory);
+  } else {
+    context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
+  }
+
   context.version = await getLowdefyVersion(context);
   return context;
 }

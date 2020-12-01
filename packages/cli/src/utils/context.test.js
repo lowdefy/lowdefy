@@ -29,6 +29,7 @@ test('createContext, options undefined', async () => {
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     version: 'lowdefy-version',
     print: 'print',
   });
@@ -39,16 +40,43 @@ test('createContext, options empty', async () => {
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     version: 'lowdefy-version',
     print: 'print',
   });
 });
 
-test('createContext, options baseDir', async () => {
-  const context = await createContext({ baseDirectory: 'baseDir' });
+test('createContext, options baseDirectory', async () => {
+  const context = await createContext({ baseDirectory: './baseDirectory' });
   expect(context).toEqual({
-    baseDirectory: path.resolve(process.cwd(), 'baseDir'),
-    cacheDirectory: path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache'),
+    baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
+    cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
+    version: 'lowdefy-version',
+    print: 'print',
+  });
+});
+
+test('createContext, options outputDirectory', async () => {
+  const context = await createContext({ outputDirectory: './outputDirectory' });
+  expect(context).toEqual({
+    baseDirectory: path.resolve(process.cwd()),
+    cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
+    outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
+    version: 'lowdefy-version',
+    print: 'print',
+  });
+});
+
+test('createContext, options baseDirectory and outputDirectory', async () => {
+  const context = await createContext({
+    baseDirectory: './baseDirectory',
+    outputDirectory: './outputDirectory',
+  });
+  expect(context).toEqual({
+    baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
+    cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     version: 'lowdefy-version',
     print: 'print',
   });

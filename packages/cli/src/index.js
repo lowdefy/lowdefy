@@ -36,6 +36,10 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .option(
+    '--output-directory <output-directory>',
+    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
+  )
   .passCommandToAction(false)
   .action(errorHandler(build));
 

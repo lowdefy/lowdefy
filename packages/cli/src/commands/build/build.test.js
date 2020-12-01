@@ -15,6 +15,7 @@
 */
 import path from 'path';
 import build from './build';
+// eslint-disable-next-line no-unused-vars
 import getBuildScript from './getBuildScript';
 import createContext from '../../utils/context';
 
@@ -47,29 +48,9 @@ test('build', async () => {
     },
     baseDirectory,
     cacheDirectory,
+    outputDirectory,
   }));
   await build({});
-  const context = createContext.mock.results[0].value;
-  const { buildScript } = context;
-  expect(createContext).toHaveBeenCalledTimes(1);
-  expect(buildScript).toHaveBeenCalledTimes(1);
-  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
-  expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual(cacheDirectory);
-  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
-});
-
-test('build with base directory', async () => {
-  const baseDirectory = path.resolve(process.cwd(), 'baseDirectory');
-  const cacheDirectory = path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache');
-  const outputDirectory = path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build');
-  createContext.mockImplementation(() => ({
-    print: {
-      info,
-    },
-    baseDirectory,
-    cacheDirectory,
-  }));
-  await build({ baseDirectory: 'baseDirectory' });
   const context = createContext.mock.results[0].value;
   const { buildScript } = context;
   expect(createContext).toHaveBeenCalledTimes(1);
