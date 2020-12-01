@@ -14,7 +14,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-0",
+      "className": "{}",
       "id": "areas.content",
     },
     Object {},
@@ -36,7 +36,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-0",
+      "className": "{}",
       "id": "default",
     },
     Object {},
@@ -58,7 +58,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-1r0rfp",
+      "className": "{\\"style\\":{\\"border\\":\\"1px solid blue\\"}}",
       "id": "properties.style",
     },
     Object {},

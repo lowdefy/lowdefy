@@ -6,7 +6,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -37,7 +37,7 @@ Array [
     Object {
       "allowClear": false,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -68,7 +68,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": true,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -99,7 +99,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": true,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -130,7 +130,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -161,7 +161,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -192,7 +192,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -223,7 +223,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -254,7 +254,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MMM-DD HH:mm:ss",
@@ -285,7 +285,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -316,7 +316,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-1fbym5b",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\"}]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -347,7 +347,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -378,7 +378,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -409,7 +409,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -440,7 +440,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -471,7 +471,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -502,7 +502,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -533,7 +533,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -564,7 +564,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -595,7 +595,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -626,7 +626,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -657,7 +657,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -688,7 +688,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -719,7 +719,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",
@@ -745,7 +745,90 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Object {
+                    "width": "100%",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "width": "100%",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -775,7 +858,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "HH:mm:ss",
@@ -806,7 +889,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "disabled": undefined,
       "disabledDate": [Function],
       "format": "YYYY-MM-DD HH:mm",

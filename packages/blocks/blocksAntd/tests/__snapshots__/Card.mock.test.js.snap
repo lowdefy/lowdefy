@@ -4,7 +4,7 @@ exports[`Mock render - areas.extra: - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -26,7 +26,7 @@ Array [
       >
         extra
       </div>,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "areas.extra:",
       "size": undefined,
@@ -42,7 +42,7 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -55,7 +55,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "default",
       "size": undefined,
@@ -71,9 +71,7 @@ exports[`Mock render - properties.bodyStyle: border: 5px solid blue - value[0] -
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "border": "5px solid blue",
-      },
+      "bodyStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -86,7 +84,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.bodyStyle: border: 5px solid blue",
       "size": undefined,
@@ -102,7 +100,7 @@ exports[`Mock render - properties.bordered: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": false,
       "children": <div
         style={
@@ -115,7 +113,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.bordered: false",
       "size": undefined,
@@ -131,7 +129,7 @@ exports[`Mock render - properties.headerStyle: border: 5px solid blue - value[0]
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -144,9 +142,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {
-        "border": "5px solid blue",
-      },
+      "headStyle": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.headerStyle: border: 5px solid blue",
       "size": undefined,
@@ -162,7 +158,7 @@ exports[`Mock render - properties.hoverable: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -175,7 +171,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": true,
       "id": "properties.hoverable: true",
       "size": undefined,
@@ -191,7 +187,7 @@ exports[`Mock render - properties.inner: true - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -204,7 +200,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.inner: true",
       "size": undefined,
@@ -220,7 +216,7 @@ exports[`Mock render - properties.size: small - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -233,7 +229,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.size: small",
       "size": "small",
@@ -249,7 +245,7 @@ exports[`Mock render - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "bordered": undefined,
       "children": <div
         style={
@@ -262,7 +258,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "headStyle": Object {},
+      "headStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "hoverable": undefined,
       "id": "properties.title",
       "size": undefined,
