@@ -35,7 +35,7 @@
     "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"
   },
   "devDependencies": {
-    "@yarnpkg/pnpify": "2.3.3",
+    "@yarnpkg/pnpify": "2.4.0",
     "eslint": "7.14.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-import-resolver-node": "0.3.4",
