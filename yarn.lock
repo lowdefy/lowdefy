@@ -3154,6 +3154,35 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/server-dev@workspace:packages/servers/serverDev":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-dev@workspace:packages/servers/serverDev"
+  dependencies:
+    "@babel/cli": 7.12.8
+    "@babel/core": 7.12.9
+    "@babel/preset-env": 7.12.7
+    "@babel/preset-react": 7.12.7
+    "@lowdefy/block-tools": 1.0.3
+    "@lowdefy/graphql": 0.0.0-alpha.5
+    "@lowdefy/node-utils": 1.0.0
+    apollo-server-express: 2.19.0
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    clean-webpack-plugin: 3.0.0
+    css-loader: 5.0.1
+    express: 4.17.1
+    graphql: 15.4.0
+    html-webpack-plugin: 4.5.0
+    jest: 26.6.3
+    nodemon: 2.0.6
+    react: 17.0.1
+    react-dom: 17.0.1
+    style-loader: 2.0.0
+    webpack: 5.9.0
+    webpack-cli: 4.2.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
