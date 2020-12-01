@@ -29,10 +29,7 @@ const cache = new InMemoryCache({
 });
 const retryLink = new RetryLink();
 
-// TODO: make uri configurable
-const httpLink = new HttpLink({
-  uri: process.env.GRAPHQL_URI,
-});
+const httpLink = ({ uri = 'api/graphql' }) => new HttpLink({ uri });
 
 // TODO: Handle errors
 const errorHandler = ({ graphQLErrors, networkError }) => {
@@ -40,11 +37,11 @@ const errorHandler = ({ graphQLErrors, networkError }) => {
   console.log('networkError', networkError);
 };
 
-const useGqlClient = () => {
+const useGqlClient = ({ gqlUri }) => {
   const [client, setClient] = useState(null);
   if (!client) {
     const clt = new ApolloClient({
-      link: ApolloLink.from([retryLink, onError(errorHandler), httpLink]),
+      link: ApolloLink.from([retryLink, onError(errorHandler), httpLink({ uri: gqlUri })]),
       cache,
       resolvers,
       typeDefs,
