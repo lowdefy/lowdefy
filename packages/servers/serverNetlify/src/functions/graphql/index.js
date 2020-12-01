@@ -14,17 +14,23 @@
   limitations under the License.
 */
 
-import cleanDirectory from './cleanDirectory';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
-import getFileExtension, { getFileSubExtension } from './getFileExtension';
-import readFile from './readFile';
-import writeFile from './writeFile';
+import path from 'path';
+import { ApolloServer } from 'apollo-server-lambda';
+import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
+import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
-export {
-  cleanDirectory,
-  createGetSecretsFromEnv,
-  getFileExtension,
-  getFileSubExtension,
-  readFile,
-  writeFile,
+const config = {
+  CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
+  logger: console,
+  getSecrets: createGetSecretsFromEnv(),
 };
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: createContext(config),
+});
+
+const handler = server.createHandler();
+
+export { handler };

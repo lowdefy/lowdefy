@@ -24,7 +24,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/blocks/*"
+    "packages/blocks/*",
+    "packages/servers/*"
   ],
   "scripts": {
     "build": "lerna run build",

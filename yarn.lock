@@ -3154,9 +3154,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/server@workspace:packages/server":
+"@lowdefy/server-dev@workspace:packages/servers/serverDev":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/server@workspace:packages/server"
+  resolution: "@lowdefy/server-dev@workspace:packages/servers/serverDev"
   dependencies:
     "@babel/cli": 7.12.8
     "@babel/core": 7.12.9
@@ -3164,6 +3164,7 @@ __metadata:
     "@babel/preset-react": 7.12.7
     "@lowdefy/block-tools": 1.0.3
     "@lowdefy/graphql": 0.0.0-alpha.5
+    "@lowdefy/node-utils": 1.0.0
     apollo-server-express: 2.19.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3179,8 +3180,63 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.9.0
     webpack-cli: 4.2.0
-    webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/server-docker@workspace:packages/servers/serverDocker":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-docker@workspace:packages/servers/serverDocker"
+  dependencies:
+    "@babel/cli": 7.12.8
+    "@babel/core": 7.12.9
+    "@babel/preset-env": 7.12.7
+    "@babel/preset-react": 7.12.7
+    "@lowdefy/block-tools": 1.0.3
+    "@lowdefy/graphql": 0.0.0-alpha.5
+    "@lowdefy/node-utils": 1.0.0
+    apollo-server-express: 2.19.0
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    clean-webpack-plugin: 3.0.0
+    css-loader: 5.0.1
+    express: 4.17.1
+    graphql: 15.4.0
+    html-webpack-plugin: 4.5.0
+    jest: 26.6.3
+    nodemon: 2.0.6
+    react: 17.0.1
+    react-dom: 17.0.1
+    style-loader: 2.0.0
+    webpack: 5.9.0
+    webpack-cli: 4.2.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/server-netlify@workspace:packages/servers/serverNetlify":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/server-netlify@workspace:packages/servers/serverNetlify"
+  dependencies:
+    "@babel/cli": 7.12.8
+    "@babel/core": 7.12.9
+    "@babel/preset-env": 7.12.7
+    "@babel/preset-react": 7.12.7
+    "@lowdefy/block-tools": 1.0.3
+    "@lowdefy/graphql": 0.0.0-alpha.5
+    "@lowdefy/node-utils": 1.0.0
+    apollo-server-lambda: 2.19.0
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    clean-webpack-plugin: 3.0.0
+    copy-webpack-plugin: 6.3.2
+    css-loader: 5.0.1
+    graphql: 15.4.0
+    html-webpack-plugin: 4.5.0
+    jest: 26.6.3
+    react: 17.0.1
+    react-dom: 17.0.1
+    style-loader: 2.0.0
+    webpack: 5.9.0
+    webpack-cli: 4.2.0
   languageName: unknown
   linkType: soft
 
@@ -3569,6 +3625,13 @@ __metadata:
   version: 1.3.1
   resolution: "@types/anymatch@npm:1.3.1"
   checksum: 1647865e528a168f66f57a077e9651c10a4c172b656cc3686fddf176555d42ca0a1647bfc626ea2fceb68fc7701426ab708224be1762b4a5216fe8368ffdba3c
+  languageName: node
+  linkType: hard
+
+"@types/aws-lambda@npm:^8.10.31":
+  version: 8.10.64
+  resolution: "@types/aws-lambda@npm:8.10.64"
+  checksum: 5511ed41369f4c3268cfb3f2e3293dbde0734ff47e1c46c38f73680f0501229e397f2b275302d7c7c7203e947ff9d0d8fd957c35fe2561b1443d4f5b503f0ece
   languageName: node
   linkType: hard
 
@@ -5175,6 +5238,22 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: d1633fe6d951b95945ffc9afcefd520611a399251e1ee81de707c4f8f9006fe627a41a550f9603fba618b0068ccb3a83f92758a5fc0ca46765effc4bdc98820c
+  languageName: node
+  linkType: hard
+
+"apollo-server-lambda@npm:2.19.0":
+  version: 2.19.0
+  resolution: "apollo-server-lambda@npm:2.19.0"
+  dependencies:
+    "@apollographql/graphql-playground-html": 1.6.26
+    "@types/aws-lambda": ^8.10.31
+    apollo-server-core: ^2.19.0
+    apollo-server-env: ^2.4.5
+    apollo-server-types: ^0.6.1
+    graphql-tools: ^4.0.0
+  peerDependencies:
+    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: b76bd66b9d21f6f523daeb3dc33ff6c123553632c6536d653544d005e3bfed38ac49ed98528a5c1da7d30ff8b3c50e35d33c6241009b2e5c1fe09a2672f894ba
   languageName: node
   linkType: hard
 
