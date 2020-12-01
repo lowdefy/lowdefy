@@ -21,7 +21,7 @@ import { MemoryRouter } from 'react-router-dom';
 import mockBlock from './mockBlock';
 
 const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger });
+  const { before, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
     before();
