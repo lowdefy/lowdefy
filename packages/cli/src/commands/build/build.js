@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import getBuildScript from './getBuildScript';
 import createContext from '../../utils/context';
+import getBuildScript from '../../utils/getBuildScript';
 
 async function build(options) {
   const context = await createContext(options);

@@ -24,7 +24,7 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
-import getBuildScript from '../build/getBuildScript';
+import getBuildScript from '../../utils/getBuildScript';
 import getGraphql from './getGraphql';
 import { outputDirectoryPath } from '../../utils/directories';
 

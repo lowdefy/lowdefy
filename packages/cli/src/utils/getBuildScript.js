@@ -16,8 +16,8 @@
 
 import fs from 'fs';
 import path from 'path';
-import fetchNpmTarball from '../../utils/fetchNpmTarball';
-import loadModule from '../../utils/loadModule';
+import fetchNpmTarball from './fetchNpmTarball';
+import loadModule from './loadModule';
 
 async function getBuildScript(context) {
   const cleanVersion = context.version.replace(/[-.]/g, '_');
