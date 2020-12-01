@@ -1,5 +1,5 @@
 {
-  "name": "@lowdefy/server-dev",
+  "name": "@lowdefy/server-docker",
   "version": "0.0.0-alpha.5",
   "license": "Apache-2.0",
   "description": "",
@@ -27,7 +27,9 @@
   "scripts": {
     "babel": "babel src --out-dir dist",
     "build": "yarn webpack && yarn babel",
+    "build:docker": "docker build --tag lowdefy/lowdefy .",
     "clean": "rm -rf dist && rm -rf dev",
+    "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
     "start": "nodemon dist/server.js",
     "version:prerelease": "yarn version prerelease",
