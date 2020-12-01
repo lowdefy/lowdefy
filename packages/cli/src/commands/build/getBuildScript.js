@@ -16,14 +16,18 @@
 
 import fs from 'fs';
 import path from 'path';
-import loadBuildScriptToCache from './loadBuildScriptToCache';
+import fetchNpmTarball from '../../utils/fetchNpmTarball';
 import loadModule from '../../utils/loadModule';
 
 async function getBuildScript(context) {
   const cleanVersion = context.version.replace(/[-.]/g, '_');
   const cachePath = path.resolve(context.cacheDirectory, `scripts/build_${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
-    await loadBuildScriptToCache(context, cachePath);
+    await fetchNpmTarball({
+      name: '@lowdefy/build',
+      version: context.version,
+      directory: cachePath,
+    });
   }
   const buildScript = await loadModule(path.resolve(cachePath, 'package/dist'), './build');
   context.buildScript = buildScript.default;

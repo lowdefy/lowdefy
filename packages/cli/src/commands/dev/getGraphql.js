@@ -16,14 +16,18 @@
 
 import fs from 'fs';
 import path from 'path';
-import loadGraphqlToCache from './loadGraphqlToCache';
+import fetchNpmTarball from '../../utils/fetchNpmTarball';
 import loadModule from '../../utils/loadModule';
 
 async function getGraphql(context) {
   const cleanVersion = context.version.replace(/[-.]/g, '_');
   const cachePath = path.resolve(context.cacheDirectory, `scripts/graphql_${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
-    await loadGraphqlToCache(context, cachePath);
+    await fetchNpmTarball({
+      name: '@lowdefy/graphql',
+      version: context.version,
+      directory: cachePath,
+    });
   }
   context.graphql = await loadModule(
     path.resolve(cachePath, 'package/dist/moduleFederation'),
