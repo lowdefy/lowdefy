@@ -18,8 +18,7 @@ import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
+import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),

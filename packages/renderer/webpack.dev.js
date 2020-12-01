@@ -15,7 +15,6 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
-      'window.GRAPHQL_URI': JSON.stringify('http://localhost:3000/api/graphql'),
     }),
   ],
 });

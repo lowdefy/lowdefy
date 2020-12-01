@@ -1,5 +1,5 @@
 {
-  "name": "@lowdefy/server",
+  "name": "@lowdefy/server-docker",
   "version": "0.0.0-alpha.5",
   "license": "Apache-2.0",
   "description": "",
@@ -26,25 +26,22 @@
   ],
   "scripts": {
     "babel": "babel src --out-dir dist",
-    "babel:dev": "babel src --out-dir dev",
     "build": "yarn webpack && yarn babel",
-    "build:dev": "yarn webpack:dev && yarn babel:dev",
     "build:docker": "docker build --tag lowdefy/lowdefy .",
     "clean": "rm -rf dist && rm -rf dev",
     "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
-    "start": "nodemon dev/server.js",
-    "test": "jest --coverage",
+    "start": "nodemon dist/server.js",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch -d",
     "version:minor": "yarn version minor -d",
     "version:major": "yarn version major -d",
-    "webpack": "webpack --config webpack.prod.js",
-    "webpack:dev": "webpack --config webpack.dev.js"
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@lowdefy/block-tools": "1.0.3",
     "@lowdefy/graphql": "0.0.0-alpha.5",
+    "@lowdefy/node-utils": "1.0.0",
     "apollo-server-express": "2.19.0",
     "express": "4.17.1",
     "graphql": "15.4.0",
@@ -65,8 +62,6 @@
     "nodemon": "2.0.6",
     "style-loader": "2.0.0",
     "webpack": "5.9.0",
-    "webpack-cli": "4.2.0",
-    "webpack-dev-server": "3.11.0",
-    "webpack-merge": "5.4.0"
+    "webpack-cli": "4.2.0"
   }
 }

@@ -1,18 +1,46 @@
 const path = require('path');
 const webpack = require('webpack');
-const { merge } = require('webpack-merge');
 const { ModuleFederationPlugin } = require('webpack').container;
-
-const common = require('./webpack.common.js');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const packageJson = require('./package.json');
 
-module.exports = merge(common, {
+module.exports = {
+  entry: './src/shell/index',
   mode: 'development',
   devtool: 'eval-source-map',
   output: {
-    path: path.resolve(__dirname, 'dev/shell'),
+    path: path.resolve(__dirname, 'dist/shell'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        options: {
+          babelrc: false,
+          presets: ['@babel/preset-react'],
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+        ],
+      },
+    ],
   },
   plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/shell/index.html',
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
@@ -36,4 +64,4 @@ module.exports = merge(common, {
       },
     }),
   ],
-});
+};
