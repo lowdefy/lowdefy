@@ -115,8 +115,8 @@ const Home = ({ rootContext }) => {
   return <Redirect to="/404" />;
 };
 
-const Root = () => {
-  const client = useGqlClient();
+const Root = ({ gqlUri }) => {
+  const client = useGqlClient({ gqlUri });
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
@@ -143,9 +143,9 @@ const Root = () => {
   );
 };
 
-const Engine = () => (
+const Engine = ({ gqlUri }) => (
   <BrowserRouter>
-    <Root />
+    <Root gqlUri={gqlUri} />
   </BrowserRouter>
 );
 
