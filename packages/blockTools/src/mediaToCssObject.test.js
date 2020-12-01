@@ -20,6 +20,11 @@ test('no object', () => {
   expect(mediaToCssObject()).toEqual({});
 });
 
+test('object with null obj to pass', () => {
+  const obj = null;
+  expect(mediaToCssObject(obj)).toEqual({});
+});
+
 test('object with no media unchanged', () => {
   const obj = {
     a: 'a',

@@ -56,11 +56,11 @@ export const mq = [
   },
 ];
 
-const mediaToCssObject = (obj = {}, options = {}) => {
+const mediaToCssObject = (obj, options) => {
   // ES2015 key order matters.
   const result = [];
-  const media = options.react ? 'mediaReact' : 'media';
-  Object.keys(obj).forEach((key) => {
+  const media = (options || {}).react ? 'mediaReact' : 'media';
+  Object.keys(obj || {}).forEach((key) => {
     switch (key) {
       case 'xs':
         result.push({ key: mq[0][media], value: obj.xs });
