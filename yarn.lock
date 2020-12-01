@@ -3212,36 +3212,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/server@workspace:packages/server":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/server@workspace:packages/server"
-  dependencies:
-    "@babel/cli": 7.12.8
-    "@babel/core": 7.12.9
-    "@babel/preset-env": 7.12.7
-    "@babel/preset-react": 7.12.7
-    "@lowdefy/block-tools": 1.0.3
-    "@lowdefy/graphql": 0.0.0-alpha.5
-    apollo-server-express: 2.19.0
-    babel-jest: 26.6.3
-    babel-loader: 8.2.2
-    clean-webpack-plugin: 3.0.0
-    css-loader: 5.0.1
-    express: 4.17.1
-    graphql: 15.4.0
-    html-webpack-plugin: 4.5.0
-    jest: 26.6.3
-    nodemon: 2.0.6
-    react: 17.0.1
-    react-dom: 17.0.1
-    style-loader: 2.0.0
-    webpack: 5.9.0
-    webpack-cli: 4.2.0
-    webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.0
-  languageName: unknown
-  linkType: soft
-
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
   resolution: "@mrmlnc/readdir-enhanced@npm:2.2.1"
