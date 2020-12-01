@@ -8,7 +8,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -88,7 +88,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -168,7 +168,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label css-vqci06"
+          className="ant-form-item-label css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -248,7 +248,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -328,7 +328,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -468,7 +468,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -554,7 +554,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left css-vojaof"
           flex="0 1 auto"
         >
           <label
@@ -614,6 +614,142 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left css-1t11uxw"
+          flex="0 1 auto"
+        >
+          <label
+            className="css-t32tv0"
+            htmlFor="properties.extra: Extra long with inline = true, size = large_input"
+            title="Label title"
+          >
+            Label title
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          flex="1 1 auto"
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+          <div
+            className="ant-form-item-explain ant-form-item-extra css-8kn4zf"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item css-1lhwz6e",
+      "id": "properties.extra: Extra long with inline = true, size = large",
+      "style": Object {
+        "marginBottom": 0,
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left css-1008kns"
+          flex="0 1 auto"
+        >
+          <label
+            className="css-t32tv0"
+            htmlFor="properties.extra: Extra long with inline = true, size = small_input"
+            title="Label title"
+          >
+            Label title
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          flex="1 1 auto"
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+          <div
+            className="ant-form-item-explain ant-form-item-extra css-1wm4age"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item css-1lhwz6e",
+      "id": "properties.extra: Extra long with inline = true, size = small",
+      "style": Object {
+        "marginBottom": 0,
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Col 1`] = `Array []`;
 
 exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Row 1`] = `
@@ -622,7 +758,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left css-vojaof"
           flex="0 1 auto"
         >
           <label
@@ -686,7 +822,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -771,7 +907,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -856,7 +992,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -941,7 +1077,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left css-vojaof"
           flex="0 1 auto"
         >
           <label
@@ -1003,7 +1139,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           md={
             Object {
               "span": 2,
@@ -1093,7 +1229,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           md={
             Object {
               "span": 2,
@@ -1183,7 +1319,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,
@@ -1263,7 +1399,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left css-8f15sn"
           sm={
             Object {
               "span": 24,

@@ -11,7 +11,7 @@ exports[`Render default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -99,7 +99,7 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -187,7 +187,7 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -276,7 +276,7 @@ exports[`Render properties.backfill: true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -364,7 +364,7 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -452,7 +452,7 @@ exports[`Render properties.label.align_right - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -540,7 +540,7 @@ exports[`Render properties.label.colon_false - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -704,7 +704,7 @@ exports[`Render properties.label.extra_showingextra - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -797,7 +797,7 @@ exports[`Render properties.label.inline_true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -893,7 +893,7 @@ exports[`Render properties.label.span_12 - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -981,7 +981,7 @@ exports[`Render properties.options-string - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1069,7 +1069,7 @@ exports[`Render properties.optionsStyle: CSS style applied - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1157,7 +1157,7 @@ exports[`Render properties.placeholder_Text_inside_block - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1245,7 +1245,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1333,7 +1333,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1421,7 +1421,7 @@ exports[`Render properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1509,7 +1509,7 @@ exports[`Render required = true default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1597,7 +1597,7 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1685,7 +1685,7 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1774,7 +1774,7 @@ exports[`Render required = true properties.backfill: true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1862,7 +1862,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -1950,7 +1950,7 @@ exports[`Render required = true properties.label.align_right - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2038,7 +2038,7 @@ exports[`Render required = true properties.label.colon_false - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2202,7 +2202,7 @@ exports[`Render required = true properties.label.extra_showingextra - value[0] 1
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2295,7 +2295,7 @@ exports[`Render required = true properties.label.inline_true - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -2391,7 +2391,7 @@ exports[`Render required = true properties.label.span_12 - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -2479,7 +2479,7 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2567,7 +2567,7 @@ exports[`Render required = true properties.optionsStyle: CSS style applied - val
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2655,7 +2655,7 @@ exports[`Render required = true properties.placeholder_Text_inside_block - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2743,7 +2743,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2831,7 +2831,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -2919,7 +2919,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3007,7 +3007,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3124,7 +3124,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3241,7 +3241,7 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3359,7 +3359,7 @@ exports[`Render validation.status = error properties.backfill: true - value[0] 1
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3476,7 +3476,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3593,7 +3593,7 @@ exports[`Render validation.status = error properties.label.align_right - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3710,7 +3710,7 @@ exports[`Render validation.status = error properties.label.colon_false - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -3932,7 +3932,7 @@ exports[`Render validation.status = error properties.label.extra_showingextra - 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4049,7 +4049,7 @@ exports[`Render validation.status = error properties.label.inline_true - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -4174,7 +4174,7 @@ exports[`Render validation.status = error properties.label.span_12 - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -4291,7 +4291,7 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4408,7 +4408,7 @@ exports[`Render validation.status = error properties.optionsStyle: CSS style app
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4525,7 +4525,7 @@ exports[`Render validation.status = error properties.placeholder_Text_inside_blo
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4642,7 +4642,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4759,7 +4759,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4876,7 +4876,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -4993,7 +4993,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5081,7 +5081,7 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5169,7 +5169,7 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5258,7 +5258,7 @@ exports[`Render validation.status = null properties.backfill: true - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5346,7 +5346,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5434,7 +5434,7 @@ exports[`Render validation.status = null properties.label.align_right - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5522,7 +5522,7 @@ exports[`Render validation.status = null properties.label.colon_false - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5686,7 +5686,7 @@ exports[`Render validation.status = null properties.label.extra_showingextra - v
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -5779,7 +5779,7 @@ exports[`Render validation.status = null properties.label.inline_true - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -5875,7 +5875,7 @@ exports[`Render validation.status = null properties.label.span_12 - value[0] 1`]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -5963,7 +5963,7 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6051,7 +6051,7 @@ exports[`Render validation.status = null properties.optionsStyle: CSS style appl
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6139,7 +6139,7 @@ exports[`Render validation.status = null properties.placeholder_Text_inside_bloc
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6227,7 +6227,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6315,7 +6315,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6403,7 +6403,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6491,7 +6491,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6603,7 +6603,7 @@ exports[`Render validation.status = success properties.allowClear: false - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6715,7 +6715,7 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6828,7 +6828,7 @@ exports[`Render validation.status = success properties.backfill: true - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -6940,7 +6940,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7052,7 +7052,7 @@ exports[`Render validation.status = success properties.label.align_right - value
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7164,7 +7164,7 @@ exports[`Render validation.status = success properties.label.colon_false - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7376,7 +7376,7 @@ exports[`Render validation.status = success properties.label.extra_showingextra 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7493,7 +7493,7 @@ exports[`Render validation.status = success properties.label.inline_true - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -7613,7 +7613,7 @@ exports[`Render validation.status = success properties.label.span_12 - value[0] 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -7725,7 +7725,7 @@ exports[`Render validation.status = success properties.options-string - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7837,7 +7837,7 @@ exports[`Render validation.status = success properties.optionsStyle: CSS style a
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -7949,7 +7949,7 @@ exports[`Render validation.status = success properties.placeholder_Text_inside_b
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8061,7 +8061,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8173,7 +8173,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8285,7 +8285,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8397,7 +8397,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8514,7 +8514,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8631,7 +8631,7 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8749,7 +8749,7 @@ exports[`Render validation.status = warning properties.backfill: true - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8866,7 +8866,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -8983,7 +8983,7 @@ exports[`Render validation.status = warning properties.label.align_right - value
   }
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -9100,7 +9100,7 @@ exports[`Render validation.status = warning properties.label.colon_false - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -9322,7 +9322,7 @@ exports[`Render validation.status = warning properties.label.extra_showingextra 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -9439,7 +9439,7 @@ exports[`Render validation.status = warning properties.label.inline_true - value
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -9564,7 +9564,7 @@ exports[`Render validation.status = warning properties.label.span_12 - value[0] 
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     style={Object {}}
   >
     <label
@@ -9681,7 +9681,7 @@ exports[`Render validation.status = warning properties.options-string - value[0]
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -9798,7 +9798,7 @@ exports[`Render validation.status = warning properties.optionsStyle: CSS style a
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -9915,7 +9915,7 @@ exports[`Render validation.status = warning properties.placeholder_Text_inside_b
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -10032,7 +10032,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":\\"40\\"}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -10149,7 +10149,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
@@ -10266,7 +10266,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
   }
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
