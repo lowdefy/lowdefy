@@ -9,7 +9,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               content
             </span>
@@ -33,7 +33,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -51,7 +51,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -71,7 +71,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -91,7 +91,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -115,7 +115,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "card",
     },
@@ -134,7 +134,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -154,7 +154,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -174,7 +174,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -198,7 +198,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -216,7 +216,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -236,7 +236,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -256,7 +256,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -280,7 +280,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -298,7 +298,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -318,7 +318,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -338,7 +338,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -362,7 +362,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -380,7 +380,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -400,7 +400,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -434,7 +434,7 @@ Array [
       >
         content_two
       </div>,
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -452,7 +452,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -472,7 +472,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -492,7 +492,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -516,7 +516,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "large",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -534,7 +534,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -554,7 +554,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -574,7 +574,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -598,7 +598,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "small",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -616,7 +616,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -636,7 +636,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -656,7 +656,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -680,7 +680,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "bottom",
       "type": "line",
     },
@@ -698,7 +698,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -718,7 +718,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -738,7 +738,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -762,7 +762,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "left",
       "type": "line",
     },
@@ -780,7 +780,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -800,7 +800,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -820,7 +820,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -844,7 +844,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "right",
       "type": "line",
     },
@@ -863,7 +863,7 @@ Array [
           disabled={true}
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -883,7 +883,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -904,7 +904,7 @@ Array [
           disabled={true}
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -928,7 +928,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -946,7 +946,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               <IconBlock
                 actions={Object {}}
@@ -957,7 +957,43 @@ Array [
                 methods={
                   Object {
                     "callAction": [Function],
-                    "makeCssClass": [Function],
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          undefined,
+                          Object {
+                            "styleObjectOnly": true,
+                          },
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                      ],
+                    },
                     "registerAction": [Function],
                     "registerMethod": [Function],
                   }
@@ -991,7 +1027,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -1011,7 +1047,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               <IconBlock
                 actions={Object {}}
@@ -1022,7 +1058,43 @@ Array [
                 methods={
                   Object {
                     "callAction": [Function],
-                    "makeCssClass": [Function],
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          undefined,
+                          Object {
+                            "styleObjectOnly": true,
+                          },
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                        Array [
+                          undefined,
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{}",
+                        },
+                      ],
+                    },
                     "registerAction": [Function],
                     "registerMethod": [Function],
                   }
@@ -1060,7 +1132,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -1078,7 +1150,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               content_one
             </span>
@@ -1098,7 +1170,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               content_two
             </span>
@@ -1118,7 +1190,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               content_three
             </span>
@@ -1142,7 +1214,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },
@@ -1160,7 +1232,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title One
             </span>
@@ -1180,7 +1252,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Two
             </span>
@@ -1200,7 +1272,7 @@ Array [
         <mockConstructor
           tab={
             <span
-              className="css-0"
+              className="{}"
             >
               Title Three
             </span>
@@ -1224,7 +1296,7 @@ Array [
       "onTabClick": [Function],
       "onTabScroll": [Function],
       "size": "default",
-      "tabBarStyle": Object {},
+      "tabBarStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "tabPosition": "top",
       "type": "line",
     },

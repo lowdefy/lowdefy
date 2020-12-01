@@ -15,7 +15,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -36,7 +108,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "default_input",
       "loading": undefined,
@@ -51,7 +123,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -93,7 +237,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -114,7 +330,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.autoFocus: true_input",
       "loading": undefined,
@@ -129,7 +345,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -171,7 +459,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -192,7 +552,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.checkedIcon: CheckCircleOutlined_input",
       "loading": undefined,
@@ -207,7 +567,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -243,7 +675,7 @@ Array [
       "checkedChildren": <span>
         Checked
       </span>,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.checkedText: Checked_input",
       "loading": undefined,
@@ -258,7 +690,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -300,7 +804,83 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "&.ant-switch-checked": Object {
+                        "backgroundColor": "#f44336 !important",
+                      },
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -321,7 +901,7 @@ Array [
           }
         }
       />,
-      "className": "css-1h6psuh",
+      "className": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
       "disabled": undefined,
       "id": "properties.color: #_input",
       "loading": undefined,
@@ -336,7 +916,83 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "&.ant-switch-checked": Object {
+                        "backgroundColor": "#f44336 !important",
+                      },
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -378,7 +1034,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -399,7 +1127,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": true,
       "id": "properties.disabled: true_input",
       "loading": undefined,
@@ -414,7 +1142,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -456,7 +1256,81 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "border": "2px solid red",
+                    },
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -477,7 +1351,7 @@ Array [
           }
         }
       />,
-      "className": "css-1cwxxfp",
+      "className": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
       "disabled": undefined,
       "id": "properties.inputStyle: CSS style applied_input",
       "loading": undefined,
@@ -492,7 +1366,81 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    Object {
+                      "border": "2px solid red",
+                    },
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -534,7 +1482,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -555,7 +1575,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label align: right_input",
       "loading": undefined,
@@ -570,7 +1590,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -612,7 +1704,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -633,7 +1797,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label colon: false_input",
       "loading": undefined,
@@ -648,7 +1812,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -690,7 +1926,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -711,7 +2019,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label disabled: true_input",
       "loading": undefined,
@@ -726,7 +2034,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -768,7 +2148,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -789,7 +2241,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label extra: showing extra_input",
       "loading": undefined,
@@ -804,7 +2256,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -846,7 +2370,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": "inherit",
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": "inherit",
+                    "whiteSpace": false,
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -867,7 +2463,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label inline: true_input",
       "loading": undefined,
@@ -882,7 +2478,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": "inherit",
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": "inherit",
+                    "whiteSpace": false,
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -924,7 +2592,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -945,7 +2685,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.label span: 4_input",
       "loading": undefined,
@@ -960,7 +2700,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1002,7 +2814,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 22,
+                    "marginBottom": 0,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": -4,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": -4,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1023,7 +2907,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.size: small_input",
       "loading": undefined,
@@ -1038,7 +2922,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 22,
+                    "marginBottom": 0,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": -4,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": -4,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0,\\"height\\":22}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1080,7 +3036,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1101,7 +3129,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.title_input",
       "loading": undefined,
@@ -1116,7 +3144,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1158,7 +3258,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1179,7 +3351,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.uncheckedIcon: UnlockFilled_input",
       "loading": undefined,
@@ -1194,7 +3366,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1236,7 +3480,79 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    undefined,
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[null,null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -1257,7 +3573,7 @@ Array [
           }
         }
       />,
-      "className": "css-0",
+      "className": "{\\"style\\":[null,null]}",
       "disabled": undefined,
       "id": "properties.uncheckedText: Unchecked_input",
       "loading": undefined,

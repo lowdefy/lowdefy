@@ -21,7 +21,7 @@ import { MemoryRouter } from 'react-router-dom';
 import mockBlock from './mockBlock';
 
 const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
-  const { before, getProps } = mockBlock({ meta, logger });
+  const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
     before();
@@ -34,7 +34,16 @@ const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) =>
     values.forEach((value, v) => {
       mocks.forEach((mock) => {
         test(`Mock render - ${ex.id} - value[${v}] - ${mock.name}`, () => {
-          const Shell = () => <Block {...getProps(ex)} value={value} />;
+          const Shell = () => {
+            const props = getProps(ex);
+            return (
+              <Block
+                {...props}
+                methods={{ ...props.methods, makeCssClass: methods.makeCssClass }}
+                value={value}
+              />
+            );
+          };
           enzyme.mount(
             <MemoryRouter>
               <Shell />

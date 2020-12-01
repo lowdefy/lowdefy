@@ -4,7 +4,7 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -16,15 +16,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "default",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -41,7 +41,7 @@ exports[`Mock render - properties.closable: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -53,15 +53,15 @@ Array [
         content
       </div>,
       "closable": false,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.closable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -78,7 +78,7 @@ exports[`Mock render - properties.height: 500 placement: top - value[0] - defaul
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -90,15 +90,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": 500,
       "id": "properties.height: 500 placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -115,7 +115,7 @@ exports[`Mock render - properties.keyboard: false - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -127,15 +127,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.keyboard: false",
       "keyboard": false,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -152,7 +152,7 @@ exports[`Mock render - properties.mask - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -164,15 +164,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.mask",
       "keyboard": undefined,
       "mask": false,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -189,7 +189,7 @@ exports[`Mock render - properties.maskClosable: false - value[0] - default 1`] =
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -201,15 +201,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.maskClosable: false",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": false,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -226,7 +226,7 @@ exports[`Mock render - properties.placement: bottom - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -238,15 +238,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.placement: bottom",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": "bottom",
       "title": undefined,
@@ -263,7 +263,7 @@ exports[`Mock render - properties.placement: left - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -275,15 +275,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.placement: left",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": "left",
       "title": undefined,
@@ -300,7 +300,7 @@ exports[`Mock render - properties.placement: top - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -312,15 +312,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.placement: top",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": "top",
       "title": undefined,
@@ -337,7 +337,7 @@ exports[`Mock render - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -349,15 +349,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.title",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": "Drawer title",
@@ -374,7 +374,7 @@ exports[`Mock render - properties.width: 500 - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -386,15 +386,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.width: 500",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -411,7 +411,7 @@ exports[`Mock render - properties.zIndex: 1100 - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {},
+      "bodyStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <div
         style={
           Object {
@@ -423,15 +423,15 @@ Array [
         content
       </div>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.zIndex: 1100",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,

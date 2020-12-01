@@ -8,7 +8,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -32,21 +32,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.allowClear: false_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.allowClear: false_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -70,21 +70,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.autoFocus: true_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.autoFocus: true_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -108,21 +108,21 @@ Array [
       "backfill": true,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.backfill: true_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.backfill: true_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -146,21 +146,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.inputStyle: CSS style applied_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.inputStyle: CSS style applied_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-1t3g54r",
+      "className": "{\\"style\\":{\\"border\\":\\"1px solid red\\"}}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -183,7 +183,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -206,7 +206,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -229,7 +229,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -252,7 +252,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -275,7 +275,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -298,7 +298,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -322,21 +322,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-string_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-string_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -360,21 +360,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-14ksm7b"
+          className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-14ksm7b"
+          className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -397,7 +397,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -421,21 +421,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.size: large_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.size: large_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -459,21 +459,21 @@ Array [
       "backfill": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.size: small_0"
           value="Option 1"
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.size: small_1"
           value="Option 2"
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -496,7 +496,7 @@ Array [
       "autoFocus": undefined,
       "backfill": undefined,
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "defaultOpen": undefined,
       "disabled": undefined,
       "filterOption": [Function],

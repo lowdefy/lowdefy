@@ -12,7 +12,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "default",
       "paragraph": undefined,
       "round": undefined,
@@ -35,7 +35,7 @@ Array [
     Object {
       "active": true,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.active",
       "paragraph": undefined,
       "round": undefined,
@@ -51,7 +51,7 @@ Array [
   Array [
     Object {
       "active": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.avatar boolean",
       "shape": undefined,
       "size": undefined,
@@ -72,7 +72,7 @@ Array [
   Array [
     Object {
       "active": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.avatar object circle",
       "shape": "circle",
       "size": "large",
@@ -93,7 +93,7 @@ Array [
   Array [
     Object {
       "active": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.avatar object square",
       "shape": "square",
       "size": "small",
@@ -116,7 +116,7 @@ Array [
   Array [
     Object {
       "active": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.button object circle",
       "shape": "circle",
       "size": "large",
@@ -137,7 +137,7 @@ Array [
   Array [
     Object {
       "active": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.button object round",
       "shape": "round",
       "size": "small",
@@ -163,7 +163,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.paragraph boolean",
       "paragraph": false,
       "round": undefined,
@@ -186,7 +186,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.paragraph object width all",
       "paragraph": Object {
         "rows": 3,
@@ -212,7 +212,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.paragraph object width array",
       "paragraph": Object {
         "rows": 3,
@@ -242,7 +242,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.title boolean",
       "paragraph": undefined,
       "round": undefined,
@@ -265,7 +265,7 @@ Array [
     Object {
       "active": undefined,
       "avatar": undefined,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.title object",
       "paragraph": undefined,
       "round": undefined,

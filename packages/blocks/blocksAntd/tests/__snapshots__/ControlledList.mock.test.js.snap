@@ -7,7 +7,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -19,7 +19,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -69,7 +89,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -81,7 +101,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -132,7 +172,7 @@ Array [
       "dataSource": Array [],
       "footer": false,
       "header": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -144,7 +184,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -213,7 +273,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -225,7 +285,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -275,7 +355,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -287,7 +367,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -337,7 +437,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -349,7 +449,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -399,7 +519,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -411,7 +531,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -461,7 +601,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -473,7 +613,27 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -523,7 +683,7 @@ Array [
       "bordered": true,
       "dataSource": Array [],
       "footer": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <br />
         <ButtonBlock
@@ -535,7 +695,42 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "flexWrap": "nowrap",
+                        "justifyContent": "space-between",
+                      },
+                      undefined,
+                    ],
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
+                  },
+                ],
+              },
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
@@ -566,7 +761,7 @@ Array [
         />
       </div>,
       "header": <div
-        className="css-dam5ev"
+        className="{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}"
       >
         <Text
           strong={true}

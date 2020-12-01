@@ -18,7 +18,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -35,7 +49,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "areas.content",
     },
     Object {},
@@ -61,7 +75,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -90,7 +118,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -107,7 +149,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "areas.footer",
     },
     Object {},
@@ -133,7 +175,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -162,7 +218,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -179,7 +249,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "areas.header",
     },
     Object {},
@@ -205,7 +275,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -222,7 +306,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "areas.sider",
     },
     Object {},
@@ -248,7 +332,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -265,7 +363,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "default",
     },
     Object {},
@@ -291,7 +389,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -320,7 +432,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -349,7 +475,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -366,7 +506,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.content.style: border: 5px solid blue",
     },
     Object {},
@@ -392,7 +532,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -421,7 +575,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -450,7 +618,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -473,7 +655,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.footer.style: border: 5px solid blue",
     },
     Object {},
@@ -499,7 +681,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -532,7 +728,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -561,7 +771,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -578,7 +802,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.header.color: #4432a8 ",
     },
     Object {},
@@ -604,7 +828,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -639,7 +877,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -668,7 +920,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -685,7 +951,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.header.style: border: 5px solid blue",
     },
     Object {},
@@ -711,7 +977,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -744,7 +1024,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -773,7 +1067,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -790,7 +1098,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.header.theme: light - dark is default",
     },
     Object {},
@@ -816,7 +1124,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -845,7 +1167,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -880,7 +1216,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -897,7 +1247,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.main.style: border: 5px solid blue",
     },
     Object {},
@@ -923,7 +1273,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -952,7 +1316,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -981,7 +1359,21 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -998,7 +1390,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-vooagt",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
       "id": "properties.sider.style: border: 5px solid blue",
     },
     Object {},
@@ -1024,7 +1416,22 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "border": "5px solid blue",
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -1053,7 +1460,22 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "border": "5px solid blue",
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -1082,7 +1504,22 @@ Array [
           methods={
             Object {
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "border": "5px solid blue",
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
             }
@@ -1099,7 +1536,7 @@ Array [
           }
         />
       </React.Fragment>,
-      "className": "css-1mli136",
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\",\\"border\\":\\"5px solid blue\\"}}",
       "id": "properties.style: border: 5px solid blue",
     },
     Object {},

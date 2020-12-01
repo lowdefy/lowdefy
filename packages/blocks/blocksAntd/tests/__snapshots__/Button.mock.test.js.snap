@@ -6,7 +6,7 @@ Array [
     Object {
       "block": undefined,
       "children": "default",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -30,7 +30,7 @@ Array [
     Object {
       "block": true,
       "children": "properties.block: true",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -54,7 +54,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.color: #9c27b0",
-      "className": "css-2tuiwk",
+      "className": "{\\"style\\":[{\\"backgroundColor\\":\\"#9c27b0\\",\\"borderColor\\":\\"#9c27b0\\",\\"&:active\\":{\\"backgroundColor\\":\\"#75178a\\",\\"borderColor\\":\\"#75178a\\"},\\"&:hover\\":{\\"backgroundColor\\":\\"#af48bd\\",\\"borderColor\\":\\"#af48bd\\"}},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -78,7 +78,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.danger: true",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": true,
       "disabled": undefined,
       "ghost": undefined,
@@ -102,7 +102,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.disabled: true",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": true,
       "ghost": undefined,
@@ -126,7 +126,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.ghost: true",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": true,
@@ -150,7 +150,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -164,7 +164,27 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -198,7 +218,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.href: www.lowdefy.com",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -222,7 +242,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.icon object",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -236,7 +256,27 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -275,7 +315,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.icon string",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -289,7 +329,27 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -323,7 +383,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.shape: circle",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -347,7 +407,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.shape: round",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -371,7 +431,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.size: large",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -395,7 +455,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.size: small",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -419,7 +479,7 @@ Array [
     Object {
       "block": undefined,
       "children": "Button title",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -443,7 +503,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.type: danger",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -467,7 +527,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.type: dashed",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -491,7 +551,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.type: default",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -515,7 +575,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.type: link",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -539,7 +599,7 @@ Array [
     Object {
       "block": undefined,
       "children": "properties.type: text",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
