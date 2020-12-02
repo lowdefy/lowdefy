@@ -82,6 +82,17 @@ async function buildNetlify(options) {
     message: 'Failed to move publish artifacts.',
   });
 
+  proccessOutput = spawnSync('cp', [
+    '-r',
+    path.resolve(netlifyDir, 'package/node_modules'),
+    path.resolve('./node_modules'),
+  ]);
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to move node_modules.',
+  });
+
   context.print.info(`Netlify build completed successfully.`);
 }
 
