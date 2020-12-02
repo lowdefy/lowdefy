@@ -14,7 +14,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-0",
+      "className": "{}",
       "id": "default",
       "offsetBottom": undefined,
       "offsetTop": undefined,
@@ -39,7 +39,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.offsetBottom",
       "offsetBottom": 15,
       "offsetTop": undefined,
@@ -64,7 +64,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.offsetTop",
       "offsetBottom": undefined,
       "offsetTop": 15,
@@ -89,7 +89,7 @@ Array [
       >
         content
       </div>,
-      "className": "css-1dcnkry",
+      "className": "{\\"style\\":{\\"border\\":\\"5px solid blue\\"}}",
       "id": "properties.style",
       "offsetBottom": undefined,
       "offsetTop": undefined,

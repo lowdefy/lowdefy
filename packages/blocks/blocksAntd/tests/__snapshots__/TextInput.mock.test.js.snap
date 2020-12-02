@@ -6,7 +6,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "default_input",
       "onChange": [Function],
@@ -28,7 +28,7 @@ Array [
     Object {
       "allowClear": false,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.allowClear: false_input",
       "onChange": [Function],
@@ -50,7 +50,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": true,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.autoFocus: true_input",
       "onChange": [Function],
@@ -72,7 +72,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": true,
       "id": "properties.disabled: true_input",
       "onChange": [Function],
@@ -94,7 +94,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label align: right_input",
       "onChange": [Function],
@@ -116,7 +116,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label colon: false_input",
       "onChange": [Function],
@@ -138,7 +138,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label disabled: true_input",
       "onChange": [Function],
@@ -160,7 +160,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label extra: showing extra_input",
       "onChange": [Function],
@@ -182,7 +182,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label inline: true_input",
       "onChange": [Function],
@@ -204,7 +204,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.label span: 12_input",
       "onChange": [Function],
@@ -226,7 +226,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.placeholder: Type your text here_input",
       "onChange": [Function],
@@ -248,7 +248,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.prefix: Prefix to the text_input",
       "onChange": [Function],
@@ -270,7 +270,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.prefixIcon.size: 24_input",
       "onChange": [Function],
@@ -285,7 +285,76 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -322,7 +391,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.prefixIcon: AccountBookFilled_input",
       "onChange": [Function],
@@ -337,7 +406,76 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -369,7 +507,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.size: large_input",
       "onChange": [Function],
@@ -391,7 +529,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.size: small_input",
       "onChange": [Function],
@@ -413,7 +551,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.suffix: Suffix to the text_input",
       "onChange": [Function],
@@ -435,7 +573,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.suffixIcon.size 24_input",
       "onChange": [Function],
@@ -452,7 +590,76 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -487,7 +694,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.suffixIcon: AlertFilled_input",
       "onChange": [Function],
@@ -504,7 +711,76 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -534,7 +810,7 @@ Array [
     Object {
       "allowClear": true,
       "autoFocus": undefined,
-      "className": "css-0",
+      "className": "{}",
       "disabled": undefined,
       "id": "properties.title: My TextInput Title_input",
       "onChange": [Function],

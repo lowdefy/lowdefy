@@ -73,6 +73,22 @@
     extra: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
     title: Label title
+- id: "properties.extra: Extra long with inline = true, size = small"
+  type: Label
+  properties:
+    inline: true
+    size: small
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    title: Label title
+- id: "properties.extra: Extra long with inline = true, size = large"
+  type: Label
+  properties:
+    inline: true
+    size: large
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    title: Label title
 - id: "properties.extraStyle: border 1px purple"
   type: Label
   properties:

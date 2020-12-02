@@ -7,7 +7,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -36,21 +36,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.allowClear: false_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.allowClear: false_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -79,21 +79,21 @@ Array [
       "autoFocus": true,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.autoFocus: true_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.autoFocus: true_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -122,21 +122,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.clearIcon: ChromeFilled_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.clearIcon: ChromeFilled_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
         actions={Object {}}
         blockId="properties.clearIcon: ChromeFilled_clearIcon"
@@ -146,7 +146,104 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Object {
+                    "width": "100%",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "width": "100%",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -190,21 +287,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.clearIcon-object: ChromeFilled_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.clearIcon-object: ChromeFilled_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
         actions={Object {}}
         blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
@@ -214,7 +311,104 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Object {
+                    "width": "100%",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "width": "100%",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                ],
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -262,7 +456,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": true,
       "filterOption": [Function],
@@ -290,7 +484,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-1fbym5b",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\"}]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -318,7 +512,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -346,7 +540,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -374,7 +568,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -402,7 +596,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -430,7 +624,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -458,7 +652,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -486,7 +680,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -515,21 +709,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-boolean_0"
           value={0}
         >
           true
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-boolean_1"
           value={1}
         >
           false
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -558,21 +752,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-number_0"
           value={0}
         >
           10
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-number_1"
           value={1}
         >
           12
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -601,21 +795,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-object_0"
           value={0}
         >
           one
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-object_1"
           value={1}
         >
           two
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -644,21 +838,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-string_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-0"
+          className="{}"
           id="properties.options-string_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -687,21 +881,21 @@ Array [
       "autoFocus": undefined,
       "children": Array [
         <mockConstructor
-          className="css-14ksm7b"
+          className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_0"
           value={0}
         >
           Option 1
         </mockConstructor>,
         <mockConstructor
-          className="css-14ksm7b"
+          className="{\\"style\\":{\\"color\\":\\"blue\\"}}"
           id="properties.optionsStyle: CSS style applied_1"
           value={1}
         >
           Option 2
         </mockConstructor>,
       ],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -729,7 +923,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -757,7 +951,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -785,7 +979,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -813,7 +1007,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -841,7 +1035,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -869,7 +1063,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],
@@ -891,7 +1085,90 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "flexWrap": undefined,
+                  },
+                ],
+                Array [
+                  Object {
+                    "height": 30,
+                    "marginBottom": 8,
+                    "overflow": undefined,
+                    "whiteSpace": "normal",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "height": "100% !important",
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "marginTop": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  Object {
+                    "width": "100%",
+                  },
+                ],
+                Array [
+                  Array [
+                    Object {
+                      "width": "100%",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
@@ -922,7 +1199,7 @@ Array [
       "allowClear": true,
       "autoFocus": undefined,
       "children": Array [],
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": undefined,
       "disabled": undefined,
       "filterOption": [Function],

@@ -4,7 +4,7 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -25,7 +25,7 @@ exports[`Mock render - properties.decimalSeparator: ',' - value[0] - default 1`]
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": ",",
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -46,7 +46,7 @@ exports[`Mock render - properties.groupSeparator: ',' - value[0] - default 1`] =
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": ",",
       "formatter": undefined,
       "groupSeparator": ".",
@@ -67,7 +67,7 @@ exports[`Mock render - properties.precision: 2 - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -88,7 +88,7 @@ exports[`Mock render - properties.prefix: R - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -109,7 +109,7 @@ exports[`Mock render - properties.prefixIcon: AccountBookFilled - value[0] - def
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -124,7 +124,19 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -154,7 +166,7 @@ exports[`Mock render - properties.suffix: Rand - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -175,7 +187,7 @@ exports[`Mock render - properties.suffixIcon: AccountBookFilled - value[0] - def
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -191,7 +203,19 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  undefined,
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -220,7 +244,7 @@ exports[`Mock render - properties.title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -241,7 +265,7 @@ exports[`Mock render - properties.type: intlListFormat - value[0] - default 1`] 
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": [Function],
       "groupSeparator": undefined,
@@ -266,7 +290,7 @@ exports[`Mock render - properties.type: intlNumberFormat - value[0] - default 1`
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": [Function],
       "groupSeparator": undefined,
@@ -287,7 +311,7 @@ exports[`Mock render - properties.type: intlRelativeTimeFormat - value[0] - defa
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": [Function],
       "groupSeparator": undefined,
@@ -308,7 +332,7 @@ exports[`Mock render - properties.type: momentFormat - value[0] - default 1`] = 
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": [Function],
       "groupSeparator": undefined,
@@ -329,7 +353,7 @@ exports[`Mock render - properties.type: momentHumanizeDuration - value[0] - defa
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": [Function],
       "groupSeparator": undefined,
@@ -350,7 +374,7 @@ exports[`Mock render - properties.value: '3.45' as string - value[0] - default 1
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,
@@ -371,7 +395,7 @@ exports[`Mock render - properties.value: 3.45 as number - value[0] - default 1`]
 Array [
   Array [
     Object {
-      "className": "css-0",
+      "className": "{}",
       "decimalSeparator": undefined,
       "formatter": undefined,
       "groupSeparator": undefined,

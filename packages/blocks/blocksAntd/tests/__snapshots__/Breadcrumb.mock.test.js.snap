@@ -5,7 +5,7 @@ Array [
   Array [
     Object {
       "children": Array [],
-      "className": "css-0",
+      "className": "{}",
       "id": "default",
       "separator": undefined,
     },
@@ -21,7 +21,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "icon": "SaveOutlined",
@@ -38,7 +38,43 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": undefined,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": undefined,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{},null]}",
+                      },
+                    ],
+                  },
                   "registerAction": [Function],
                   "registerMethod": [Function],
                 }
@@ -66,7 +102,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "icon": "DeleteOutlined",
@@ -83,7 +119,43 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": undefined,
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": undefined,
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{},null]}",
+                      },
+                    ],
+                  },
                   "registerAction": [Function],
                   "registerMethod": [Function],
                 }
@@ -110,7 +182,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.icon",
       "separator": undefined,
     },
@@ -128,7 +200,7 @@ Array [
           onClick={[Function]}
         >
           <ItemLink
-            className="css-4g6ai3"
+            className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
             link={
               Object {
                 "icon": "SaveOutlined",
@@ -145,7 +217,43 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": "pointer",
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": "pointer",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}",
+                      },
+                    ],
+                  },
                   "registerAction": [Function],
                   "registerMethod": [Function],
                 }
@@ -175,7 +283,7 @@ Array [
           onClick={[Function]}
         >
           <ItemLink
-            className="css-4g6ai3"
+            className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
             link={
               Object {
                 "icon": "DeleteOutlined",
@@ -192,7 +300,43 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        undefined,
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": "pointer",
+                          },
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "cursor": "pointer",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}",
+                      },
+                    ],
+                  },
                   "registerAction": [Function],
                   "registerMethod": [Function],
                 }
@@ -219,7 +363,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.icon with onClick",
       "separator": undefined,
     },
@@ -235,7 +379,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link="Page One"
           >
             Page One
@@ -243,14 +387,14 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link="Page two"
           >
             Page two
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.label strings",
       "separator": undefined,
     },
@@ -266,7 +410,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "pageId": "page1",
@@ -278,7 +422,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "pageId": "page2",
@@ -289,7 +433,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.pageId",
       "separator": undefined,
     },
@@ -305,7 +449,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "pageId": "page1",
@@ -318,7 +462,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "label url",
@@ -331,7 +475,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "label pageId",
@@ -344,7 +488,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "pageId": "page3",
@@ -357,7 +501,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "label4",
@@ -368,7 +512,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.pageId label and url",
       "separator": undefined,
     },
@@ -384,7 +528,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-14ksm7b"
+            className="{\\"style\\":[{},{\\"color\\":\\"blue\\"}]}"
             link={
               Object {
                 "label": "Page One",
@@ -399,7 +543,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-tokvmb"
+            className="{\\"style\\":[{},{\\"color\\":\\"red\\"}]}"
             link={
               Object {
                 "label": "Page two",
@@ -413,7 +557,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.style",
       "separator": undefined,
     },
@@ -429,7 +573,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "url": "https://www.url.com",
@@ -441,7 +585,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "url": "https://docs.url.com",
@@ -452,7 +596,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.list.url",
       "separator": undefined,
     },
@@ -468,7 +612,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "Page One",
@@ -480,7 +624,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "Page two",
@@ -491,7 +635,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-0",
+      "className": "{}",
       "id": "properties.separator",
       "separator": "->",
     },
@@ -507,7 +651,7 @@ Array [
       "children": Array [
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "Page One",
@@ -519,7 +663,7 @@ Array [
         </mockConstructor>,
         <mockConstructor>
           <ItemLink
-            className="css-0"
+            className="{\\"style\\":[{},null]}"
             link={
               Object {
                 "label": "Page two",
@@ -530,7 +674,7 @@ Array [
           </ItemLink>
         </mockConstructor>,
       ],
-      "className": "css-1flyc9m",
+      "className": "{\\"style\\":{\\"fontSize\\":18}}",
       "id": "properties.style: fontSize: 18",
       "separator": undefined,
     },

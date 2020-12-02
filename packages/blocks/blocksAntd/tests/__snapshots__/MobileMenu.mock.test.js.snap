@@ -6,7 +6,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -19,14 +19,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": "#016e1e",
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -60,10 +119,7 @@ exports[`Mock render - backgroundColor: #016e1e - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": "#016e1e",
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -73,14 +129,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": "#016e1e",
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -178,15 +293,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -205,7 +320,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -218,14 +333,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -259,10 +433,7 @@ exports[`Mock render - default - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -272,14 +443,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -309,15 +539,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "default_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -336,7 +566,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -349,14 +579,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -390,10 +679,7 @@ exports[`Mock render - menus: default - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -461,14 +747,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -498,15 +843,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menus: default_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -525,7 +870,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -538,14 +883,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -579,10 +983,7 @@ exports[`Mock render - menus: links[0] - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -627,14 +1028,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -664,15 +1124,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menus: links[0]_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -691,7 +1151,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -704,14 +1164,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -745,10 +1264,7 @@ exports[`Mock render - menus: properties.menuId: menu_one - value[0] - Drawer 1`
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -816,14 +1332,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -854,15 +1429,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menus: properties.menuId: menu_one_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -881,7 +1456,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -894,14 +1469,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -935,10 +1569,7 @@ exports[`Mock render - menusTitle pageId - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -965,14 +1596,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1002,15 +1692,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menusTitle pageId_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1029,7 +1719,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1042,14 +1732,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1083,10 +1832,7 @@ exports[`Mock render - menusTitle properties.title - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1114,14 +1860,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1151,15 +1956,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menusTitle properties.title_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1178,7 +1983,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1191,14 +1996,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1232,10 +2096,7 @@ exports[`Mock render - menusTitle url - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1262,14 +2123,73 @@ Array [
           }
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1299,15 +2219,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "menusTitle url_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1326,7 +2246,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1339,14 +2259,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1380,10 +2359,7 @@ exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - Drawer 1
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1393,14 +2369,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1457,15 +2492,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.MenuGroup with MenuLInks_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1484,7 +2519,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1497,14 +2532,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1538,10 +2632,7 @@ exports[`Mock render - properties.danger: true - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1551,14 +2642,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1625,15 +2775,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.danger: true_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1652,7 +2802,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1665,14 +2815,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1706,10 +2915,7 @@ exports[`Mock render - properties.icon - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1719,14 +2925,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1774,15 +3039,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.icon_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1801,7 +3066,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1814,14 +3079,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1855,10 +3179,7 @@ exports[`Mock render - properties.links - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -1868,14 +3189,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -1917,15 +3297,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.links_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -1944,7 +3324,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -1957,14 +3337,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -1998,10 +3437,7 @@ exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - Drawer 1`] =
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2011,14 +3447,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2076,15 +3571,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.subMenuCloseDelay: 3_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2103,7 +3598,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -2116,14 +3611,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -2157,10 +3711,7 @@ exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - Drawer 1`] = 
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2170,14 +3721,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2235,15 +3845,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.subMenuOpenDelay: 3_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2262,7 +3872,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -2275,14 +3885,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -2316,10 +3985,7 @@ exports[`Mock render - properties.title - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2329,14 +3995,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2386,15 +4111,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "properties.title_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2413,7 +4138,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -2426,14 +4151,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -2467,10 +4251,7 @@ exports[`Mock render - selectedColor: #f16e1e - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2480,14 +4261,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2585,15 +4425,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "selectedColor: #f16e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2612,7 +4452,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -2625,14 +4465,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": "#016e1e",
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -2666,10 +4565,7 @@ exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": "#016e1e",
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2679,14 +4575,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": "#016e1e",
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2785,15 +4740,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "selectedColor: #f16e1e, backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -2812,7 +4767,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -2825,14 +4780,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -2866,10 +4880,7 @@ exports[`Mock render - theme: light - value[0] - Drawer 1`] = `
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -2879,14 +4890,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -2983,15 +5053,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "theme: light_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3010,7 +5080,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -3023,14 +5093,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": undefined,
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -3064,10 +5193,7 @@ exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - Drawer 
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": undefined,
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -3077,14 +5203,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -3182,15 +5367,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "theme: light, selectedColor: #6C2ACB_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,
@@ -3209,7 +5394,7 @@ Array [
     Object {
       "block": undefined,
       "children": "",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "danger": undefined,
       "disabled": undefined,
       "ghost": undefined,
@@ -3222,14 +5407,73 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "_setOpen": [Function],
-            "_toggleOpen": [Function],
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "&:active": undefined,
+                      "&:hover": undefined,
+                      "backgroundColor": undefined,
+                      "borderColor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  Object {
+                    "backgroundColor": "#91cfcf",
+                    "padding": "3.1em 0 0 0",
+                  },
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+                Array [
+                  undefined,
+                  Object {
+                    "styleObjectOnly": true,
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+                Object {
+                  "type": "return",
+                  "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
-            "setOpen": [Function],
-            "toggleOpen": [Function],
           }
         }
         properties={
@@ -3263,10 +5507,7 @@ exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #0
 Array [
   Array [
     Object {
-      "bodyStyle": Object {
-        "backgroundColor": "#91cfcf",
-        "padding": "3.1em 0 0 0",
-      },
+      "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
           actions={Object {}}
@@ -3276,14 +5517,73 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "_setOpen": [Function],
-              "_toggleOpen": [Function],
               "callAction": [Function],
-              "makeCssClass": [Function],
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Array [
+                      Object {
+                        "&:active": undefined,
+                        "&:hover": undefined,
+                        "backgroundColor": undefined,
+                        "borderColor": undefined,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    Object {
+                      "backgroundColor": "#91cfcf",
+                      "padding": "3.1em 0 0 0",
+                    },
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                  Array [
+                    undefined,
+                    Object {
+                      "styleObjectOnly": true,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":[{},null]}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                  Object {
+                    "type": "return",
+                    "value": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
+                  },
+                ],
+              },
               "registerAction": [Function],
               "registerMethod": [Function],
-              "setOpen": [Function],
-              "toggleOpen": [Function],
             }
           }
           properties={
@@ -3382,15 +5682,15 @@ Array [
         />
       </React.Fragment>,
       "closable": undefined,
-      "drawerStyle": Object {},
+      "drawerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "getContainer": undefined,
-      "headerStyle": Object {},
+      "headerStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "height": undefined,
       "id": "theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_drawer",
       "keyboard": undefined,
       "mask": undefined,
       "maskClosable": undefined,
-      "maskStyle": Object {},
+      "maskStyle": "{\\"options\\":{\\"styleObjectOnly\\":true}}",
       "onClose": [Function],
       "placement": undefined,
       "title": undefined,

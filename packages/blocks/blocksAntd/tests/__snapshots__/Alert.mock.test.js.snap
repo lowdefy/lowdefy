@@ -84,7 +84,7 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction],
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -135,7 +135,7 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction],
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -480,7 +480,7 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction],
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -531,7 +531,7 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction],
             "registerAction": [Function],
             "registerMethod": [Function],
           }
