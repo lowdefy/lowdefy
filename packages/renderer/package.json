@@ -45,7 +45,7 @@
     "@lowdefy/block-tools": "1.0.4",
     "@lowdefy/engine": "0.0.0-alpha.5",
     "@lowdefy/helpers": "1.1.0",
-    "@lowdefy/layout": "1.0.1",
+    "@lowdefy/layout": "1.0.2",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
     "react": "17.0.1",

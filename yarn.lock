@@ -3018,7 +3018,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/layout@1.0.1, @lowdefy/layout@workspace:packages/layout":
+"@lowdefy/layout@1.0.2, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
   dependencies:
@@ -3134,7 +3134,7 @@ __metadata:
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/engine": 0.0.0-alpha.5
     "@lowdefy/helpers": 1.1.0
-    "@lowdefy/layout": 1.0.1
+    "@lowdefy/layout": 1.0.2
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     css-loader: 5.0.1
