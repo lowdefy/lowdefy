@@ -7,7 +7,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "default_input",
@@ -140,7 +140,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-1t3g54r",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {\\"style\\":{\\"border\\":\\"1px solid red\\"}}",
       "disabled": false,
       "dots": true,
       "id": "properties.inputStyle: CSS style applied_input",
@@ -273,7 +273,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "properties.title_input",
@@ -406,7 +406,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-k4pdw5 css-ljjwvb css-0",
+      "className": "{\\"style\\":[{\\"& > div.ant-slider-track\\":{\\"backgroundColor\\":\\"#f44336 !important\\"},\\"& > div.ant-slider-handle\\":{\\"borderColor\\":\\"#f44336 !important\\"},\\"& > div.ant-slider-step > span.ant-slider-dot-active\\":{\\"borderColor\\":\\"#f44336 !important\\"}},null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.color: #_input",
@@ -539,7 +539,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.disableIcons: true_input",
@@ -672,7 +672,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.disableNotApplicable: true_input",
@@ -805,7 +805,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": true,
       "dots": true,
       "id": "property.disabled: true_input",
@@ -938,7 +938,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label align: right_input",
@@ -1071,7 +1071,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label colon: false_input",
@@ -1204,7 +1204,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label disabled: true_input",
@@ -1337,7 +1337,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label extra: extra text added_input",
@@ -1470,7 +1470,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label inline: true_input",
@@ -1603,7 +1603,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.label span: 5_input",
@@ -1736,7 +1736,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.max: 14_input",
@@ -1905,7 +1905,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.maxIcon: SmileTwoTone_input",
@@ -2038,7 +2038,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.min: 3_input",
@@ -2144,7 +2144,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.minIcon: MehTwoTone_input",
@@ -2277,7 +2277,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.notApplicableLabel: Not Applicable_input",
@@ -2410,7 +2410,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": false,
       "id": "property.showDots: false_input",
@@ -2436,7 +2436,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.showMarks: false_input",
@@ -2462,7 +2462,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.step: 2_input",
@@ -2550,7 +2550,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.tooltipVisible: always_input",
@@ -2683,7 +2683,7 @@ Array [
   Array [
     Object {
       "autoFocus": undefined,
-      "className": "css-0 css-ljjwvb css-0",
+      "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
       "id": "property.tooltipVisible: never_input",

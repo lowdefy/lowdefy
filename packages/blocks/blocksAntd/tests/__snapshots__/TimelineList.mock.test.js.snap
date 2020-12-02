@@ -5,7 +5,7 @@ Array [
   Array [
     Object {
       "children": Array [],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "default",
       "pending": undefined,
       "pendingDot": undefined,
@@ -33,7 +33,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -85,7 +102,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -137,7 +171,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -178,7 +229,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.mode: alternate",
       "mode": "alternate",
       "pending": undefined,
@@ -207,7 +258,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -259,7 +327,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -311,7 +396,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -352,7 +454,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.mode: left",
       "mode": "left",
       "pending": undefined,
@@ -381,7 +483,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -433,7 +552,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -485,7 +621,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -526,7 +679,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.mode: right",
       "mode": "right",
       "pending": undefined,
@@ -555,7 +708,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -607,7 +777,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -659,7 +846,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -700,7 +904,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.pending: true",
       "pending": true,
       "pendingDot": undefined,
@@ -728,7 +932,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -780,7 +1001,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -832,7 +1070,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -873,7 +1128,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.pendingDotIcon: ",
       "pending": true,
       "pendingDot": <IconBlock
@@ -885,7 +1140,24 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "padding": "5px 0px 0px 5px",
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                },
+              ],
+            },
             "moveItemDown": [Function],
             "moveItemUp": [Function],
             "pushItem": [Function],
@@ -936,7 +1208,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -988,7 +1277,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -1040,7 +1346,24 @@ Array [
               methods={
                 Object {
                   "callAction": [Function],
-                  "makeCssClass": [Function],
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "padding": "5px 0px 0px 5px",
+                          },
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+                      },
+                    ],
+                  },
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
@@ -1081,7 +1404,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "css-10gcgov",
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.reverse: true",
       "pending": undefined,
       "pendingDot": undefined,

@@ -6,7 +6,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "default",
@@ -26,7 +26,7 @@ Array [
     Object {
       "alt": "Alt text",
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.alt",
@@ -46,7 +46,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-drmmfb",
+      "className": "{\\"style\\":[{\\"backgroundColor\\":\\"#f12345\\"},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.color",
@@ -66,7 +66,7 @@ Array [
     Object {
       "alt": undefined,
       "children": "Avatar",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.content",
@@ -86,7 +86,7 @@ Array [
     Object {
       "alt": undefined,
       "children": "Avatar",
-      "className": "css-1t3g54r",
+      "className": "{\\"style\\":[{},{\\"border\\":\\"1px solid red\\"}]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.content",
@@ -106,7 +106,7 @@ Array [
     Object {
       "alt": undefined,
       "children": "Avatar",
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": 40,
       "icon": undefined,
       "id": "properties.gap",
@@ -126,7 +126,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
         actions={Object {}}
@@ -137,7 +137,25 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "cursor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -175,7 +193,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
         actions={Object {}}
@@ -186,7 +204,25 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "cursor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -219,7 +255,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
         actions={Object {}}
@@ -230,7 +266,25 @@ Array [
         methods={
           Object {
             "callAction": [Function],
-            "makeCssClass": [Function],
+            "makeCssClass": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Array [
+                    Object {
+                      "backgroundColor": undefined,
+                      "cursor": undefined,
+                    },
+                    undefined,
+                  ],
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "type": "return",
+                  "value": "{\\"style\\":[{},null]}",
+                },
+              ],
+            },
             "registerAction": [Function],
             "registerMethod": [Function],
           }
@@ -263,7 +317,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.shape",
@@ -283,7 +337,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.size 40",
@@ -303,7 +357,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.size large",
@@ -323,7 +377,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.size small",
@@ -343,7 +397,7 @@ Array [
     Object {
       "alt": undefined,
       "children": undefined,
-      "className": "css-0",
+      "className": "{\\"style\\":[{\\"backgroundColor\\":false},null]}",
       "gap": undefined,
       "icon": undefined,
       "id": "properties.src",

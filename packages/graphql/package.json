@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -32,23 +32,23 @@
     "test": "jest --coverage",
     "webpack": "webpack --config webpack.config.js",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
-    "@lowdefy/node-utils": "1.0.0",
+    "@lowdefy/node-utils": "1.0.1",
     "@lowdefy/nunjucks": "1.0.0",
     "@lowdefy/operators": "1.0.2",
     "@sendgrid/mail": "7.4.0",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
     "apollo-server": "2.19.0",
-    "aws-sdk": "2.797.0",
+    "aws-sdk": "2.799.0",
     "axios": "0.21.0",
     "dataloader": "2.0.0",
-    "google-spreadsheet": "3.0.13",
+    "google-spreadsheet": "3.0.14",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
     "mingo": "3.1.0",
@@ -56,16 +56,16 @@
     "mongodb": "3.6.3"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.1",
-    "@babel/core": "7.12.3",
-    "@babel/preset-env": "7.12.1",
+    "@babel/cli": "7.12.8",
+    "@babel/core": "7.12.9",
+    "@babel/preset-env": "7.12.7",
     "@shelf/jest-mongodb": "1.2.3",
     "apollo-server-testing": "2.19.0",
     "babel-jest": "26.6.3",
-    "babel-loader": "8.2.1",
+    "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
     "jest": "26.6.3",
-    "webpack": "5.4.0",
+    "webpack": "5.9.0",
     "webpack-cli": "4.2.0"
   }
 }

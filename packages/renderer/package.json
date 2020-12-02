@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/renderer",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -33,19 +33,19 @@
     "serve": "serve dist -p 3001",
     "start": "webpack serve --config webpack.dev.js",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
-    "@apollo/client": "3.2.6",
+    "@apollo/client": "3.2.9",
     "@apollo/link-context": "2.0.0-beta.3",
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
-    "@lowdefy/block-tools": "1.0.3",
-    "@lowdefy/engine": "0.0.0-alpha.5",
+    "@lowdefy/block-tools": "1.0.4",
+    "@lowdefy/engine": "0.0.0-alpha.6",
     "@lowdefy/helpers": "1.1.0",
-    "@lowdefy/layout": "1.0.1",
+    "@lowdefy/layout": "1.0.2",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
     "react": "17.0.1",
@@ -54,17 +54,17 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.12.3",
-    "@babel/preset-react": "7.12.5",
-    "babel-loader": "8.2.1",
+    "@babel/core": "7.12.9",
+    "@babel/preset-react": "7.12.7",
+    "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "5.0.1",
     "html-webpack-plugin": "4.5.0",
     "serve": "11.3.2",
     "style-loader": "2.0.0",
-    "webpack": "5.4.0",
+    "webpack": "5.9.0",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "5.3.0"
+    "webpack-merge": "5.4.0"
   }
 }

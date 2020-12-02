@@ -15,18 +15,15 @@
 */
 
 import React, { lazy } from 'react';
-import { Loading } from '@lowdefy/block-tools';
+import { Loading, loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
-
-import useDynamicScript from '../../utils/useDynamicScript';
-import loadComponent from '../../utils/loadComponent';
 
 const Components = {};
 
 const LoadBlock = ({ meta, render }) => {
   const typeId = `${meta.moduleFederation.scope}:${meta.moduleFederation.module}`;
   const { ready, failed } = useDynamicScript({
-    url: meta.moduleFederation.remoteEntryUrl,
+    src: meta.moduleFederation.remoteEntryUrl,
   });
   if (!Components[typeId]) {
     if (!ready) {
@@ -39,7 +36,7 @@ const LoadBlock = ({ meta, render }) => {
       return <h2>Failed to load dynamic script: {meta.moduleFederation.remoteEntryUrl}</h2>;
     }
     Components[typeId] = lazy(
-      loadComponent(meta.moduleFederation.scope, meta.moduleFederation.module)
+      loadWebpackFederatedModule(meta.moduleFederation.scope, meta.moduleFederation.module)
     );
   }
   return render(Components[typeId]);

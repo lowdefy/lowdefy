@@ -6,7 +6,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "default_input",
@@ -31,7 +31,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": true,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.autoFocus: true_input",
@@ -56,7 +56,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": true,
       "id": "properties.disabled: true_input",
@@ -81,7 +81,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-l28vdh",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},{\\"border\\":\\"1px solid red\\",\\"fontSize\\":\\"25px\\"}]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.inputStyle: CSS style applied_input",
@@ -106,7 +106,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label align: right_input",
@@ -131,7 +131,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label colon: false_input",
@@ -156,7 +156,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label disabled: true_input",
@@ -181,7 +181,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label extra: showing extra_input",
@@ -206,7 +206,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label inline: true_input",
@@ -231,7 +231,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.label span: 5_input",
@@ -256,7 +256,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.placeholder: Please enter a number between 10 and 250_input",
@@ -281,7 +281,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.size: large_input",
@@ -306,7 +306,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.size: small_input",
@@ -331,7 +331,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "properties.title_input",
@@ -356,7 +356,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": ",",
       "disabled": undefined,
       "id": "property.decimalSeparator: \\",\\"_input",
@@ -381,7 +381,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "property.max: 250_input",
@@ -406,7 +406,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "property.min: 10_input",
@@ -431,7 +431,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "property.precision: 1_input",
@@ -456,7 +456,7 @@ Array [
     Object {
       "autoComplete": "off",
       "autoFocus": undefined,
-      "className": "css-8atqhb",
+      "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "decimalSeparator": undefined,
       "disabled": undefined,
       "id": "property.step: 3_input",

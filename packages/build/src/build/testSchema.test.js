@@ -93,7 +93,6 @@ data:
 
 test('multiple schema errors', async () => {
   const components = {
-    config: 'config',
     pages: [
       {
         blocks: [

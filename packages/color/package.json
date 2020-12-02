@@ -33,17 +33,17 @@
     "prepublishOnly": "yarn build",
     "npm-publish": "npm publish --access public",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "tinycolor2": "1.4.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.1",
-    "@babel/core": "7.12.3",
-    "@babel/preset-env": "7.12.1",
+    "@babel/cli": "7.12.8",
+    "@babel/core": "7.12.9",
+    "@babel/preset-env": "7.12.7",
     "babel-jest": "26.6.3",
     "jest": "26.6.3"
   }

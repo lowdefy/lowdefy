@@ -30,6 +30,12 @@
           "type": "string",
           "description": "Extra text to display beneath the content."
         },
+        "size": {
+          "type": "string",
+          "enum": ["small", "default", "large"],
+          "default": "default",
+          "description": "Size of the block."
+        },
         "title": {
           "type": "string",
           "description": "Label title."

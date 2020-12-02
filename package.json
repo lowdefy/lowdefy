@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -24,7 +24,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/blocks/*"
+    "packages/blocks/*",
+    "packages/servers/*"
   ],
   "scripts": {
     "build": "lerna run build",
@@ -35,8 +36,8 @@
     "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"
   },
   "devDependencies": {
-    "@yarnpkg/pnpify": "2.3.3",
-    "eslint": "7.13.0",
+    "@yarnpkg/pnpify": "2.4.0",
+    "eslint": "7.14.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-import-resolver-node": "0.3.4",
     "eslint-plugin-import": "2.22.1",
@@ -45,6 +46,6 @@
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
     "lerna": "3.22.1",
-    "prettier": "2.2.0"
+    "prettier": "2.2.1"
   }
 }

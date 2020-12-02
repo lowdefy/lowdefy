@@ -20,12 +20,12 @@ import express from 'express';
 import reload from 'reload';
 import opener from 'opener';
 import { ApolloServer } from 'apollo-server-express';
+import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
-import getBuildScript from '../build/getBuildScript';
+import getBuildScript from '../../utils/getBuildScript';
 import getGraphql from './getGraphql';
-import createGetSecretsFromEnv from './createGetSecretsFromEnv';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {

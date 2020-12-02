@@ -22,7 +22,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const ButtonBlock = ({ actions, blockId, loading, methods, onClick, properties, rename }) => {
-  const onClickActionName = get(rename, 'actions.onClick', { actions: 'onClick' });
+  const onClickActionName = get(rename, 'actions.onClick', { default: 'onClick' });
   return (
     <Button
       block={properties.block}

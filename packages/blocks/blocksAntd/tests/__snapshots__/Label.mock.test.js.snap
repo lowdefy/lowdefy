@@ -8,7 +8,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -21,7 +21,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="default_input"
             title="default"
           >
@@ -69,7 +69,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "default",
       "style": Object {
         "marginBottom": 0,
@@ -88,7 +88,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -101,7 +101,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.align: left_input"
             title="Label title"
           >
@@ -149,7 +149,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.align: left",
       "style": Object {
         "marginBottom": 0,
@@ -168,7 +168,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label css-vqci06"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -181,7 +181,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.align: right_input"
             title="Label title"
           >
@@ -229,7 +229,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.align: right",
       "style": Object {
         "marginBottom": 0,
@@ -248,7 +248,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -261,7 +261,7 @@ Array [
           }
         >
           <label
-            className="ant-form-item-no-colon css-t32tv0"
+            className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.colon: false_input"
             title="Label title"
           >
@@ -309,7 +309,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.colon: false",
       "style": Object {
         "marginBottom": 0,
@@ -328,7 +328,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -341,7 +341,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.colon: true_input"
             title="Label title"
           >
@@ -389,7 +389,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.colon: true",
       "style": Object {
         "marginBottom": 0,
@@ -449,7 +449,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.disabled: true",
       "style": Object {
         "marginBottom": 0,
@@ -468,7 +468,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -481,7 +481,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.extra: Extra long_input"
             title="Label title"
           >
@@ -528,14 +528,14 @@ Array [
             [Function]
           </ForwardRef>
           <div
-            className="ant-form-item-explain ant-form-item-extra css-8kn4zf"
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.extra: Extra long",
       "style": Object {
         "marginBottom": 0,
@@ -554,11 +554,11 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
           flex="0 1 auto"
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.extra: Extra long with inline = true_input"
             title="Label title"
           >
@@ -596,15 +596,151 @@ Array [
             [Function]
           </ForwardRef>
           <div
-            className="ant-form-item-explain ant-form-item-extra css-8kn4zf"
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-1lhwz6e",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
       "id": "properties.extra: Extra long with inline = true",
+      "style": Object {
+        "marginBottom": 0,
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":\\"40\\"}}"
+          flex="0 1 auto"
+        >
+          <label
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+            htmlFor="properties.extra: Extra long with inline = true, size = large_input"
+            title="Label title"
+          >
+            Label title
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          flex="1 1 auto"
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+          <div
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "id": "properties.extra: Extra long with inline = true, size = large",
+      "style": Object {
+        "marginBottom": 0,
+      },
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Col 1`] = `Array []`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Row 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0,\\"height\\":22}}"
+          flex="0 1 auto"
+        >
+          <label
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+            htmlFor="properties.extra: Extra long with inline = true, size = small_input"
+            title="Label title"
+          >
+            Label title
+          </label>
+        </mockConstructor>,
+        <mockConstructor
+          className="ant-form-item-control"
+          flex="1 1 auto"
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                style={
+                  Object {
+                    "border": "1px solid red",
+                    "padding": 10,
+                  }
+                }
+              >
+                content
+              </div>
+            </div>
+          </div>
+          <ForwardRef
+            motionAppear={true}
+            motionName="show-help"
+            removeOnLeave={true}
+            visible={false}
+          >
+            [Function]
+          </ForwardRef>
+          <div
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
+          >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "id": "properties.extra: Extra long with inline = true, size = small",
       "style": Object {
         "marginBottom": 0,
       },
@@ -622,11 +758,11 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
           flex="0 1 auto"
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.extra: Extra long with inline true_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -667,7 +803,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-1lhwz6e",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
       "id": "properties.extra: Extra long with inline true",
       "style": Object {
         "marginBottom": 0,
@@ -686,7 +822,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -699,7 +835,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.extra: Extra text_input"
             title="Label title"
           >
@@ -746,13 +882,13 @@ Array [
             [Function]
           </ForwardRef>
           <div
-            className="ant-form-item-explain ant-form-item-extra css-8kn4zf"
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
             Extra text
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.extra: Extra text",
       "style": Object {
         "marginBottom": 0,
@@ -771,7 +907,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -784,7 +920,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.extraStyle: border 1px purple_input"
             title="Label title"
           >
@@ -831,13 +967,13 @@ Array [
             [Function]
           </ForwardRef>
           <div
-            className="ant-form-item-explain ant-form-item-extra css-zgv5pj"
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
           >
             Extra text
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.extraStyle: border 1px purple",
       "style": Object {
         "marginBottom": 0,
@@ -856,7 +992,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -869,7 +1005,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.feedbackStyle: border 1px blue_input"
             title="Label title"
           >
@@ -916,13 +1052,13 @@ Array [
             [Function]
           </ForwardRef>
           <div
-            className="ant-form-item-explain ant-form-item-extra css-8kn4zf"
+            className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
             The extra content
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.feedbackStyle: border 1px blue",
       "style": Object {
         "marginBottom": 0,
@@ -941,11 +1077,11 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-jz43lg"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
           flex="0 1 auto"
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.inline: true_input"
             title="Label title"
           >
@@ -984,7 +1120,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-1lhwz6e",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
       "id": "properties.inline: true",
       "style": Object {
         "marginBottom": 0,
@@ -1003,7 +1139,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           md={
             Object {
               "span": 2,
@@ -1021,7 +1157,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.span: 2_input"
             title="This is the long label title wrapped by short span"
           >
@@ -1074,7 +1210,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.span: 2",
       "style": Object {
         "marginBottom": 0,
@@ -1093,7 +1229,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           md={
             Object {
               "span": 2,
@@ -1111,7 +1247,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.span: 2 with long work title_input"
             title="Thisisthelonglabeltitlea"
           >
@@ -1164,7 +1300,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.span: 2 with long work title",
       "style": Object {
         "marginBottom": 0,
@@ -1183,7 +1319,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -1196,7 +1332,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.title_input"
             title="Label title"
           >
@@ -1244,7 +1380,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.title",
       "style": Object {
         "marginBottom": 0,
@@ -1263,7 +1399,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left css-vqci06"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}"
           sm={
             Object {
               "span": 24,
@@ -1276,7 +1412,7 @@ Array [
           }
         >
           <label
-            className="css-t32tv0"
+            className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
             htmlFor="properties.title long_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -1326,7 +1462,7 @@ Array [
           </ForwardRef>
         </mockConstructor>,
       ],
-      "className": "ant-form-item css-0",
+      "className": "ant-form-item {\\"style\\":{}}",
       "id": "properties.title long",
       "style": Object {
         "marginBottom": 0,

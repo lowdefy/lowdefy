@@ -14,23 +14,20 @@
   limitations under the License.
 */
 
-import path from 'path';
-import getBuildScript from './getBuildScript';
 import createContext from '../../utils/context';
-import { outputDirectoryPath } from '../../utils/directories';
+import getBuildScript from '../../utils/getBuildScript';
 
 async function build(options) {
   const context = await createContext(options);
   await getBuildScript(context);
-  const outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   context.print.info('Starting build.');
   await context.buildScript({
     logger: context.print,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
-    outputDirectory,
+    outputDirectory: context.outputDirectory,
   });
-  context.print.info(`Build artifacts saved at ${outputDirectory}.`);
+  context.print.info(`Build artifacts saved at ${context.outputDirectory}.`);
 }
 
 export default build;
