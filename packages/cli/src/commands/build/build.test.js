@@ -16,12 +16,12 @@
 import path from 'path';
 import build from './build';
 // eslint-disable-next-line no-unused-vars
-import getBuildScript from './getBuildScript';
+import getBuildScript from '../../utils/getBuildScript';
 import createContext from '../../utils/context';
 
 const info = jest.fn();
 
-jest.mock('./getBuildScript', () => {
+jest.mock('../../utils/getBuildScript', () => {
   const buildScript = jest.fn();
   return (context) => {
     context.buildScript = buildScript;
