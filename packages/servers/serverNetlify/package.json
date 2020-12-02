@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server-netlify",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,7 +37,7 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "0.0.0-alpha.5",
+    "@lowdefy/graphql": "0.0.0-alpha.6",
     "@lowdefy/node-utils": "1.0.1",
     "apollo-server-lambda": "2.19.0",
     "graphql": "15.4.0"
