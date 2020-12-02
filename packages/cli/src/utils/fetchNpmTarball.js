@@ -20,12 +20,14 @@ import decompressTargz from 'decompress-targz';
 
 async function fetchNpmTarball({ name, version, directory }) {
   const registryUrl = `https://registry.npmjs.org/${name}`;
-  const packageInfo = await axios.get(registryUrl);
-  if (!packageInfo || !packageInfo.data) {
-    // TODO: Check if user has internet connection.
-    throw new Error(
-      `Package "${name}" could not be found at ${registryUrl}. Check internet connection.`
-    );
+  let packageInfo;
+  try {
+    packageInfo = await axios.get(registryUrl);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      throw new Error(`Package "${name}" could not be found at ${registryUrl}.`);
+    }
+    throw error;
   }
   if (!packageInfo.data.versions[version]) {
     throw new Error(`Invalid version. "${name}" does not have version "${version}".`);

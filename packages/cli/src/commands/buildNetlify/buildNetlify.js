@@ -17,6 +17,7 @@
 import path from 'path';
 import { spawnSync } from 'child_process';
 
+import checkChildProcessError from '../../utils/checkChildProcessError';
 import createContext from '../../utils/context';
 import getBuildScript from '../../utils/getBuildScript';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
@@ -33,16 +34,17 @@ async function buildNetlify(options) {
   });
 
   context.print.info('npm install production.');
-  const npmInstall = spawnSync('npm', ['install', '--production', '--legacy-peer-deps'], {
+  let proccessOutput = spawnSync('npm', ['install', '--production', '--legacy-peer-deps'], {
     cwd: path.resolve(netlifyDir, 'package'),
   });
 
-  if (npmInstall.status === 1) {
-    context.print.error(npmInstall.stderr.toString('utf8'));
-    throw new Error('Failed to npm install netlify server.');
-  }
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to npm install netlify server.',
+  });
 
-  context.print.info(npmInstall.stdout.toString('utf8'));
+  context.print.info(proccessOutput.stdout.toString('utf8'));
 
   context.print.info('Fetching lowdefy build script.');
   await getBuildScript(context);
@@ -56,25 +58,30 @@ async function buildNetlify(options) {
     outputDirectory,
   });
   context.print.info(`Build artifacts saved at ${outputDirectory}.`);
+
   context.print.info(`Moving output artifacts.`);
-  let cpOut = spawnSync('cp', [
+  proccessOutput = spawnSync('cp', [
     '-r',
     path.resolve(netlifyDir, 'package/dist/functions'),
     path.resolve('./.lowdefy/functions'),
   ]);
-  if (cpOut.status === 1) {
-    context.print.error(cpOut.stderr.toString('utf8'));
-    throw new Error('Failed to move functions artifacts.');
-  }
-  cpOut = spawnSync('cp', [
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to move functions artifacts.',
+  });
+
+  proccessOutput = spawnSync('cp', [
     '-r',
     path.resolve(netlifyDir, 'package/dist/shell'),
     path.resolve('./.lowdefy/publish'),
   ]);
-  if (cpOut.status === 1) {
-    context.print.error(cpOut.stderr.toString('utf8'));
-    throw new Error('Failed to move publish artifacts.');
-  }
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to move publish artifacts.',
+  });
+
   context.print.info(`Netlify build completed successfully.`);
 }
 
