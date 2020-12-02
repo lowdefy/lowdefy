@@ -22,7 +22,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "bin": {
-    "lowdefy": "./dist/index.js"
+    "lowdefy": "dist/index.js"
   },
   "files": [
     "dist/*"

@@ -14,20 +14,11 @@
   limitations under the License.
 */
 
-import createContext from '../../utils/context';
-import getBuildScript from '../../utils/getBuildScript';
-
-async function build(options) {
-  const context = await createContext(options);
-  await getBuildScript(context);
-  context.print.info('Starting build.');
-  await context.buildScript({
-    logger: context.print,
-    cacheDirectory: context.cacheDirectory,
-    configDirectory: context.baseDirectory,
-    outputDirectory: context.outputDirectory,
-  });
-  context.print.info(`Build artifacts saved at ${context.outputDirectory}.`);
+function checkChildProcessError({ context, proccessOutput, message }) {
+  if (proccessOutput.status === 1) {
+    context.print.error(proccessOutput.stderr.toString('utf8'));
+    throw new Error(message);
+  }
 }
 
-export default build;
+export default checkChildProcessError;

@@ -18,6 +18,7 @@ import dotenv from 'dotenv';
 import program from 'commander';
 import packageJson from '../package.json';
 import build from './commands/build/build.js';
+import buildNetlify from './commands/buildNetlify/buildNetlify.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
 import dev from './commands/dev/dev.js';
 import errorHandler from './utils/errorHandler';
@@ -36,8 +37,23 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
+  .option(
+    '--output-directory <output-directory>',
+    'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
+  )
   .passCommandToAction(false)
   .action(errorHandler(build));
+
+program
+  .command('build-netlify')
+  .description('Build a Lowdefy deployment to deply in netlify.')
+  .usage(`[options]`)
+  .option(
+    '--base-directory <base-directory>',
+    'Change base directory. Default is the current working directory.'
+  )
+  .passCommandToAction(false)
+  .action(errorHandler(buildNetlify));
 
 program
   .command('clean-cache')
