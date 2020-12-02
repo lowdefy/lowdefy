@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.2.2",
-    "@lowdefy/block-tools": "1.0.3",
+    "@lowdefy/block-tools": "1.0.4",
     "@lowdefy/color": "1.0.0",
     "@lowdefy/format": "1.0.0",
     "@lowdefy/helpers": "1.1.0",
