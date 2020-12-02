@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-basic",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "license": "Apache-2.0",
   "description": "Basic html Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
@@ -35,12 +35,12 @@
     "start:dev": "webpack serve --config webpack.dev.js",
     "test": "jest --coverage --config jest.config.js --no-cache",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "1.0.3",
+    "@lowdefy/block-tools": "1.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.0-alpha.6",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -32,13 +32,13 @@
     "test": "jest --coverage",
     "webpack": "webpack --config webpack.config.js",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
-    "@lowdefy/node-utils": "1.0.0",
+    "@lowdefy/node-utils": "1.0.1",
     "@lowdefy/nunjucks": "1.0.0",
     "@lowdefy/operators": "1.0.2",
     "@sendgrid/mail": "7.4.0",

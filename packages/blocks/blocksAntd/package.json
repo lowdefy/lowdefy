@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-antd",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Apache-2.0",
   "description": "Lowdefy Ant Design Blocks",
   "homepage": "https://lowdefy.com",
@@ -36,13 +36,13 @@
     "start:dev": "webpack serve --config webpack.dev.js",
     "test": "jest --coverage --config jest.config.js",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "@ant-design/icons": "4.2.2",
-    "@lowdefy/block-tools": "1.0.3",
+    "@lowdefy/block-tools": "1.0.4",
     "@lowdefy/color": "1.0.0",
     "@lowdefy/format": "1.0.0",
     "@lowdefy/helpers": "1.1.0",

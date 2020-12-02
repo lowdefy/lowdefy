@@ -33,9 +33,9 @@
     "prepublishOnly": "yarn build",
     "npm-publish": "npm publish --access public",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "@lowdefy/helpers": "1.1.0",
