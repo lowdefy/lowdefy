@@ -2868,7 +2868,7 @@ __metadata:
     "@babel/core": 7.12.9
     "@babel/preset-env": 7.12.7
     "@lowdefy/helpers": 1.1.0
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     "@lowdefy/nunjucks": 1.0.0
     ajv: 6.12.6
     axios: 0.21.0
@@ -2895,7 +2895,7 @@ __metadata:
     "@babel/preset-react": 7.12.7
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/helpers": 1.1.0
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     apollo-server-express: 2.19.0
     axios: 0.21.0
     babel-jest: 26.6.3
@@ -2976,7 +2976,7 @@ __metadata:
     "@babel/core": 7.12.9
     "@babel/preset-env": 7.12.7
     "@lowdefy/helpers": 1.1.0
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     "@lowdefy/nunjucks": 1.0.0
     "@lowdefy/operators": 1.0.2
     "@sendgrid/mail": 7.4.0
@@ -3075,7 +3075,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@1.0.0, @lowdefy/node-utils@workspace:packages/nodeUtils":
+"@lowdefy/node-utils@1.0.1, @lowdefy/node-utils@workspace:packages/nodeUtils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
   dependencies:
@@ -3164,7 +3164,7 @@ __metadata:
     "@babel/preset-react": 7.12.7
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/graphql": 0.0.0-alpha.5
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     apollo-server-express: 2.19.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3193,7 +3193,7 @@ __metadata:
     "@babel/preset-react": 7.12.7
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/graphql": 0.0.0-alpha.5
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     apollo-server-express: 2.19.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3222,7 +3222,7 @@ __metadata:
     "@babel/preset-react": 7.12.7
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/graphql": 0.0.0-alpha.5
-    "@lowdefy/node-utils": 1.0.0
+    "@lowdefy/node-utils": 1.0.1
     apollo-server-lambda: 2.19.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
