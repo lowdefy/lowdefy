@@ -35,9 +35,9 @@
     "start:dev": "webpack serve --config webpack.dev.js",
     "test": "jest --coverage --config jest.config.js --no-cache",
     "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "version:patch": "yarn version patch",
+    "version:minor": "yarn version minor",
+    "version:major": "yarn version major"
   },
   "dependencies": {
     "@lowdefy/block-tools": "1.0.3",
