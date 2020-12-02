@@ -2922,7 +2922,7 @@ __metadata:
     webpack: 5.9.0
     webpack-cli: 4.2.0
   bin:
-    lowdefy: ./dist/index.js
+    lowdefy: dist/index.js
   languageName: unknown
   linkType: soft
 
