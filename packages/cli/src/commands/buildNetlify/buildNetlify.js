@@ -23,6 +23,11 @@ import getBuildScript from '../../utils/getBuildScript';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
 async function buildNetlify(options) {
+  if (process.env.NETLIFY === 'true') {
+    options.printTimestamp = false;
+    options.printColor = false;
+  }
+
   const context = await createContext(options);
   const netlifyDir = path.resolve(context.baseDirectory, './.lowdefy/netlify');
 

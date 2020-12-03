@@ -20,12 +20,15 @@ import createPrint from './print';
 import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 
 async function createContext(options = {}) {
-  const context = {
-    baseDirectory: path.resolve(options.baseDirectory || process.cwd()),
-    print: createPrint({ timestamp: true }),
-  };
-  context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
+  const context = {};
 
+  context.print = createPrint({
+    timestamp: options.printTimestamp != null ? options.printTimestamp : true,
+    color: options.printColor != null ? options.color : true,
+  });
+
+  context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
+  context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
   if (options.outputDirectory) {
     context.outputDirectory = path.resolve(options.outputDirectory);
   } else {

@@ -17,16 +17,17 @@
 import chalk from 'chalk';
 
 const printToTerminal = (color, options = {}) => (text) => {
-  let message;
+  let message = text;
+  if (options.color) {
+    message = color(message);
+  }
   if (options.timestamp) {
     const time = new Date(Date.now());
     const h = time.getHours();
     const m = time.getMinutes();
     const s = time.getSeconds();
     const timeString = `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
-    message = `${chalk.dim(timeString)} - ${color(text)}`;
-  } else {
-    message = color(text);
+    message = `${chalk.dim(timeString)} - ${message}`;
   }
   // eslint-disable-next-line no-console
   console.log(message);
