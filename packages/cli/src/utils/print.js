@@ -14,30 +14,48 @@
   limitations under the License.
 */
 
+import ora from 'ora';
 import chalk from 'chalk';
 
-const printToTerminal = (color, options = {}) => (text) => {
-  let message = text;
-  if (options.color) {
-    message = color(message);
-  }
-  if (options.timestamp) {
-    const time = new Date(Date.now());
-    const h = time.getHours();
-    const m = time.getMinutes();
-    const s = time.getSeconds();
-    const timeString = `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
-    message = `${chalk.dim(timeString)} - ${message}`;
-  }
-  // eslint-disable-next-line no-console
-  console.log(message);
-};
+function getTime() {
+  const time = new Date(Date.now());
+  const h = time.getHours();
+  const m = time.getMinutes();
+  const s = time.getSeconds();
+  return `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
+}
 
-const createPrint = (options) => ({
-  info: printToTerminal(chalk.blue, options),
-  log: printToTerminal(chalk.green, options),
-  warn: printToTerminal(chalk.yellow, options),
-  error: printToTerminal(chalk.red, options),
-});
+function createOraPrint() {
+  const spinner = ora({
+    spinner: 'random',
+    prefixText: () => chalk.dim(getTime()),
+    color: 'blue',
+  });
+  return {
+    error: (text) => spinner.fail(chalk.red(text)),
+    info: (text) => spinner.info(text),
+    log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
+    spin: (text) => spinner.start(text),
+    succeed: (text) => spinner.succeed(chalk.green(text)),
+    warn: (text) => spinner.warn(chalk.yellow(text)),
+  };
+}
+
+function createBasicPrint() {
+  const { info, warn, error, log } = console;
+  return {
+    error,
+    info,
+    log,
+    spin: log,
+    succeed: log,
+    warn,
+  };
+}
+
+function createPrint({ basic } = {}) {
+  if (basic) return createBasicPrint();
+  return createOraPrint();
+}
 
 export default createPrint;

@@ -23,8 +23,7 @@ async function createContext(options = {}) {
   const context = {};
 
   context.print = createPrint({
-    timestamp: options.printTimestamp != null ? options.printTimestamp : true,
-    color: options.printColor != null ? options.color : true,
+    basic: options.basicPrint,
   });
 
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());

@@ -24,8 +24,7 @@ import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
 async function buildNetlify(options) {
   if (process.env.NETLIFY === 'true') {
-    options.printTimestamp = false;
-    options.printColor = false;
+    options.basicPrint = true;
   }
 
   const context = await createContext(options);
