@@ -2859,9 +2859,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-color-selector@workspace:packages/blocks/blocksColorSelectors":
+"@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocksColorSelectors":
   version: 0.0.0-use.local
-  resolution: "@lowdefy/blocks-color-selector@workspace:packages/blocks/blocksColorSelectors"
+  resolution: "@lowdefy/blocks-color-selectors@workspace:packages/blocks/blocksColorSelectors"
   dependencies:
     "@babel/cli": 7.12.8
     "@babel/core": 7.12.9
