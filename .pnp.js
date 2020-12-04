@@ -259,17 +259,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-8ebd22a7a9/0/cache/@apollo-client-npm-3.2.9-c09eb32ed6-d271b371cb.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-9050d1d99e/0/cache/@apollo-client-npm-3.3.3-6f9bfacdb1-d2560f0d3a.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3"],
             ["@graphql-typed-document-node/core", "virtual:4b2805353c1017e36cb96d12202f04b4f8e7b29febf10836943bb2e41acdb7e2fafd98e46ee37e92d4fbb4d3a527eff17d93829beaaf997faccfaa837f684439#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
             ["@types/subscriptions-transport-ws", null],
             ["@types/zen-observable", "npm:0.8.1"],
             ["@wry/context", "npm:0.5.2"],
-            ["@wry/equality", "npm:0.2.0"],
+            ["@wry/equality", "npm:0.3.0"],
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.4.0"],
             ["graphql-tag", "virtual:6d4867ee4fb8830f03b424335e168bbaaf3cc73c4f5842fe2e15e2018196f3c7a36bd76c13a330d9b1a581291f12312b2f6cbc93927d93207d728fdabaec0bea#npm:2.11.0"],
@@ -329,7 +329,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["@apollo/protobufjs", [
         ["npm:1.0.5", {
-          "packageLocation": "./.yarn/unplugged/@apollo-protobufjs-npm-1.0.5-a95d547915/node_modules/@apollo/protobufjs/",
+          "packageLocation": "./.yarn/cache/@apollo-protobufjs-npm-1.0.5-a95d547915-593f898542.zip/node_modules/@apollo/protobufjs/",
           "packageDependencies": [
             ["@apollo/protobufjs", "npm:1.0.5"],
             ["@protobufjs/aspromise", "npm:1.1.2"],
@@ -4062,7 +4062,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.2.9"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -6005,6 +6005,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@wry-equality-npm-0.2.0-db7d0ba29d-ddd217fbef.zip/node_modules/@wry/equality/",
           "packageDependencies": [
             ["@wry/equality", "npm:0.2.0"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.3.0", {
+          "packageLocation": "./.yarn/cache/@wry-equality-npm-0.3.0-fe42532354-75428e9c7e.zip/node_modules/@wry/equality/",
+          "packageDependencies": [
+            ["@wry/equality", "npm:0.3.0"],
             ["tslib", "npm:1.14.1"]
           ],
           "linkType": "HARD",
@@ -9759,7 +9767,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js", [
         ["npm:3.8.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-npm-3.8.0-eea5a054e7/node_modules/core-js/",
+          "packageLocation": "./.yarn/cache/core-js-npm-3.8.0-eea5a054e7-d2356e6e0d.zip/node_modules/core-js/",
           "packageDependencies": [
             ["core-js", "npm:3.8.0"]
           ],
@@ -9779,7 +9787,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["core-js-pure", [
         ["npm:3.8.0", {
-          "packageLocation": "./.yarn/unplugged/core-js-pure-npm-3.8.0-66a7f45d5f/node_modules/core-js-pure/",
+          "packageLocation": "./.yarn/cache/core-js-pure-npm-3.8.0-66a7f45d5f-34d1213cf6.zip/node_modules/core-js-pure/",
           "packageDependencies": [
             ["core-js-pure", "npm:3.8.0"]
           ],
@@ -13552,7 +13560,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }],
         ["npm:9.18.5", {
-          "packageLocation": "./.yarn/unplugged/highlight.js-npm-9.18.5-571500f48d/node_modules/highlight.js/",
+          "packageLocation": "./.yarn/cache/highlight.js-npm-9.18.5-571500f48d-dea74c216c.zip/node_modules/highlight.js/",
           "packageDependencies": [
             ["highlight.js", "npm:9.18.5"]
           ],
@@ -17475,7 +17483,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["mongodb-memory-server", [
         ["npm:6.6.7", {
-          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.6.7-6b4dc63f77/node_modules/mongodb-memory-server/",
+          "packageLocation": "./.yarn/cache/mongodb-memory-server-npm-6.6.7-6b4dc63f77-267e382d33.zip/node_modules/mongodb-memory-server/",
           "packageDependencies": [
             ["mongodb-memory-server", "npm:6.6.7"],
             ["mongodb-memory-server-core", "npm:6.6.7"]
@@ -17874,7 +17882,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["nodemon", [
         ["npm:2.0.6", {
-          "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.6-533efccfd9/node_modules/nodemon/",
+          "packageLocation": "./.yarn/cache/nodemon-npm-2.0.6-533efccfd9-6a4b0d6ba2.zip/node_modules/nodemon/",
           "packageDependencies": [
             ["nodemon", "npm:2.0.6"],
             ["chokidar", "npm:3.4.3"],
