@@ -12,11 +12,11 @@
         },
         "circleSize": {
           "type": "number",
-          "description": "Pixel value for circle size, only available for type circle."
+          "description": "Pixel value for circle size."
         },
         "circleSpacing": {
           "type": "number",
-          "description": "Pixel value for spacing between circles, only available for type circle."
+          "description": "Pixel value for spacing between circles."
         },
         "colors": {
           "type": "array",
