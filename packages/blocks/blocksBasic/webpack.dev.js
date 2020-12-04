@@ -7,9 +7,9 @@ const packageJson = require('./package.json');
 
 const sanitizeName = (name) => {
   return name
-    .replace('@', '_at_')
-    .replace('/', '_slash_')
-    .replace('-', '_dash_')
+    .replace(/@/g, '_at_')
+    .replace(/\//g, '_slash_')
+    .replace(/-/g, '_dash_')
     .replace(/^[a-zA-Z0-9_]/g, '_');
 };
 
