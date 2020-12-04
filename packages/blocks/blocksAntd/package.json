@@ -21,24 +21,27 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "browser": "dist/remoteEntry.js",
   "files": [
-    "dist/*"
+    "dist/*",
+    "es/*"
   ],
+  "main": "es/index.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "build:es": "babel src --copy-files --out-dir es",
+    "build": "yarn build:es && yarn build:moduleFederation",
     "clean": "rm -rf dist",
-    "npm-publish": "npm publish --access public",
     "generate-icons": "yarn node ./src/blocks/Icon/generateIcons.js",
+    "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "start": "webpack serve --config webpack.demo.js",
     "start:dev": "webpack serve --config webpack.dev.js",
+    "start": "webpack serve --config webpack.demo.js",
     "test": "jest --coverage --config jest.config.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
+    "version:major": "yarn version major",
     "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "version:patch": "yarn version patch",
+    "version:prerelease": "yarn version prerelease",
+    "build:moduleFederation": "webpack --config webpack.prod.js"
   },
   "dependencies": {
     "@ant-design/icons": "4.2.2",
@@ -78,7 +81,6 @@
     "less-loader": "7.1.0",
     "react-markdown": "5.0.2",
     "react-syntax-highlighter": "15.3.1",
-    "react-test-renderer": "17.0.1",
     "style-loader": "2.0.0",
     "webpack": "5.9.0",
     "webpack-cli": "4.2.0",
