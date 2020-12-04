@@ -23,11 +23,13 @@ async function getBuildScript(context) {
   const cleanVersion = context.version.replace(/[-.]/g, '_');
   const cachePath = path.resolve(context.cacheDirectory, `scripts/build_${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
+    context.print.spin(`Fetching @lowdefy/build@${context.version} to cache.`);
     await fetchNpmTarball({
       name: '@lowdefy/build',
       version: context.version,
       directory: cachePath,
     });
+    context.print.log(`Fetched @lowdefy/build@${context.version} to cache.`);
   }
   const buildScript = await loadModule(path.resolve(cachePath, 'package/dist'), './build');
   context.buildScript = buildScript.default;

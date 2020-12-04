@@ -33,7 +33,7 @@ function createOraPrint() {
   });
   return {
     error: (text) => spinner.fail(chalk.red(text)),
-    info: (text) => spinner.info(text),
+    info: (text) => spinner.info(chalk.blue(text)),
     log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
     spin: (text) => spinner.start(text),
     succeed: (text) => spinner.succeed(chalk.green(text)),
