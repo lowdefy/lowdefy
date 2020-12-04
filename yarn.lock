@@ -60,7 +60,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.2.9, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.3.3":
+  version: 3.3.3
+  resolution: "@apollo/client@npm:3.3.3"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.3.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.13.1
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    ts-invariant: ^0.5.1
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: d2560f0d3ae938eeca3f0a4ca625d467ceed1fa2d013ca56faf50c9762a3ddceeafe61896ed8efd236a175079ce94fed61a748c3cc4be5e89572d35e97685221
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.2.9
   resolution: "@apollo/client@npm:3.2.9"
   dependencies:
@@ -3125,7 +3155,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.2.9
+    "@apollo/client": 3.3.3
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -4506,6 +4536,15 @@ __metadata:
   dependencies:
     tslib: ^1.9.3
   checksum: ddd217fbefd8f105174abe099450e0ac1b813e19451b8525d2143098b23c42b30dd5042f38c5c92ba55017f9efab2ae4ce18d66a83d0e329de8523691a8bf60e
+  languageName: node
+  linkType: hard
+
+"@wry/equality@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@wry/equality@npm:0.3.0"
+  dependencies:
+    tslib: ^1.9.3
+  checksum: 75428e9c7e270f807a762204de203eaaf25d6b6e7ef3cff88a9c8b3b982e35e2a1838b68d8c09f932de6ef139142716ca00d8a87c86059d0b9cbda0706a9f93b
   languageName: node
   linkType: hard
 
@@ -14706,7 +14745,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"optimism@npm:^0.13.0":
+"optimism@npm:^0.13.0, optimism@npm:^0.13.1":
   version: 0.13.1
   resolution: "optimism@npm:0.13.1"
   dependencies:
@@ -19120,7 +19159,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ts-invariant@npm:^0.5.0":
+"ts-invariant@npm:^0.5.0, ts-invariant@npm:^0.5.1":
   version: 0.5.1
   resolution: "ts-invariant@npm:0.5.1"
   dependencies:
