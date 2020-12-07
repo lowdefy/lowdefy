@@ -27,7 +27,8 @@ async function build(options) {
     configDirectory: context.baseDirectory,
     outputDirectory: context.outputDirectory,
   });
-  context.print.succeed(`Build artifacts saved at ${context.outputDirectory}.`);
+  context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
+  context.print.succeed(`Build successful.`);
 }
 
 export default build;

@@ -42,7 +42,7 @@ function createOraPrint() {
 }
 
 function createBasicPrint() {
-  const { info, warn, error, log } = console;
+  const { error, info, log, warn } = console;
   return {
     error,
     info,
