@@ -23,8 +23,6 @@ async function testSchema({ components, context }) {
     await context.logger.warn('Schema not valid.');
     const promises = errors.map((err) => context.logger.warn(formatErrorMessage(err, components)));
     await promises;
-  } else {
-    await context.logger.log('Schema valid.');
   }
 }
 

@@ -23,11 +23,13 @@ async function getGraphql(context) {
   const cleanVersion = context.version.replace(/[-.]/g, '_');
   const cachePath = path.resolve(context.cacheDirectory, `scripts/graphql_${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
+    context.print.spin(`Fetching @lowdefy/graphql@${context.version} to cache.`);
     await fetchNpmTarball({
       name: '@lowdefy/graphql',
       version: context.version,
       directory: cachePath,
     });
+    context.print.log(`Fetched @lowdefy/build@${context.version} to cache.`);
   }
   context.graphql = await loadModule(
     path.resolve(cachePath, 'package/dist/moduleFederation'),

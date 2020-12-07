@@ -35,7 +35,7 @@ async function dev(options) {
   await getBuildScript(context);
   await getGraphql(context);
 
-  context.print.info('Starting development server.');
+  context.print.log('Starting Lowdefy development server.');
 
   //Graphql
   const config = {
@@ -62,13 +62,14 @@ async function dev(options) {
 
   // File watcher
   const fn = async () => {
-    context.print.info('Building configuration.');
+    context.print.log('Building configuration.');
     await context.buildScript({
       logger: context.print,
       cacheDirectory: context.cacheDirectory,
       configDirectory: context.baseDirectory,
       outputDirectory: path.resolve(context.baseDirectory, outputDirectoryPath),
     });
+    context.print.succeed('Built succesfully.');
     reloadReturned.reload();
   };
   const batchChanges = new BatchChanges({ fn, context });
@@ -83,7 +84,7 @@ async function dev(options) {
 
   // Start server
   app.listen(app.get('port'), function () {
-    context.print.log(`Development server listening on port ${options.port}`);
+    context.print.info(`Development server listening on port ${options.port}`);
   });
   opener(`http://localhost:${options.port}`);
 }

@@ -18,11 +18,19 @@
 import axios from 'axios';
 import fetchMetaUrl from './fetchMetaUrl';
 
+const type = 'Type';
+
 jest.mock('axios', () => {
   return {
     get: (url) => {
       if (url === 'valid-url') {
         return Promise.resolve({ data: { key: 'value' } });
+      }
+      if (url === '404') {
+        const error = new Error('Test 404');
+        error.response = {};
+        error.response.status = 404;
+        throw error;
       }
       throw new Error('Invalid url');
     },
@@ -31,7 +39,10 @@ jest.mock('axios', () => {
 
 test('fetchMetaUrl fetches from url', async () => {
   const meta = await fetchMetaUrl({
-    url: 'valid-url',
+    type,
+    location: {
+      url: 'valid-url',
+    },
   });
   expect(meta).toEqual({ key: 'value' });
 });
@@ -39,17 +50,42 @@ test('fetchMetaUrl fetches from url', async () => {
 test('fetchMetaUrl request errors', async () => {
   await expect(
     fetchMetaUrl({
-      url: 'invalid-url',
+      type,
+      location: {
+        url: 'invalid-url',
+      },
     })
   ).rejects.toThrow('Invalid url');
 });
 
-test('fetchMetaUrl throws if location is undefined', async () => {
+test('fetchMetaUrl throws if args are undefined', async () => {
   await expect(fetchMetaUrl()).rejects.toThrow('Failed to fetch meta, location is undefined.');
 });
 
 test('fetchMetaUrl throws if location is undefined', async () => {
-  await expect(fetchMetaUrl({ url: 1 })).rejects.toThrow(
-    'Location url definition should be a string.'
+  await expect(fetchMetaUrl({ type })).rejects.toThrow(
+    'Failed to fetch meta, location is undefined.'
   );
+});
+
+test('fetchMetaUrl throws if location is not a string', async () => {
+  await expect(
+    fetchMetaUrl({
+      type,
+      location: {
+        url: 1,
+      },
+    })
+  ).rejects.toThrow('Block type "Type" url definition should be a string.');
+});
+
+test('fetchMetaUrl throws if response returns a 404 not found', async () => {
+  await expect(
+    fetchMetaUrl({
+      type,
+      location: {
+        url: '404',
+      },
+    })
+  ).rejects.toThrow('Meta for type "Type" could not be found at {"url":"404"}.');
 });

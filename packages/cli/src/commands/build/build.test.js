@@ -20,6 +20,8 @@ import getBuildScript from '../../utils/getBuildScript';
 import createContext from '../../utils/context';
 
 const info = jest.fn();
+const succeed = jest.fn();
+const log = jest.fn();
 
 jest.mock('../../utils/getBuildScript', () => {
   const buildScript = jest.fn();
@@ -45,6 +47,8 @@ test('build', async () => {
   createContext.mockImplementation(() => ({
     print: {
       info,
+      succeed,
+      log,
     },
     baseDirectory,
     cacheDirectory,

@@ -29,16 +29,32 @@ async function fetchNpmTarball({ name, version, directory }) {
     }
     throw error;
   }
+
+  if (!packageInfo || !packageInfo.data) {
+    throw new Error(`Package "${name}" could not be found at ${registryUrl}.`);
+  }
+
   if (!packageInfo.data.versions[version]) {
     throw new Error(`Invalid version. "${name}" does not have version "${version}".`);
   }
-  const tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
-    responseType: 'arraybuffer',
-  });
+  let tarball;
+
+  try {
+    tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
+      responseType: 'arraybuffer',
+    });
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      throw new Error(
+        `Package "${name}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
+      );
+    }
+    throw error;
+  }
+
   if (!tarball || !tarball.data) {
-    /// TODO: Check if user has internet connection.
     throw new Error(
-      `Tarball could not be fetched from "${packageInfo.data.versions[version].dist.tarball}". Check internet connection.`
+      `Package "${name}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
     );
   }
   await decompress(tarball.data, directory, {

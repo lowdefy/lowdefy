@@ -100,7 +100,6 @@ class RefBuilder {
   constructor({ context }) {
     this.rootPath = 'lowdefy.yaml';
     this.configLoader = context.configLoader;
-    this.logger = context.logger;
     this.refContent = {};
     this.MAX_RECURSION_DEPTH = context.MAX_RECURSION_DEPTH || 20;
   }
