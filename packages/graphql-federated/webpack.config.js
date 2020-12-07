@@ -1,6 +1,7 @@
 const path = require('path');
+const { ModuleFederationPlugin } = require('webpack').container;
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { dependencies, devDependencies } = require('./package.json');
+const { dependencies } = require('./package.json');
 
 module.exports = {
   entry: './src/index.js',
@@ -12,7 +13,7 @@ module.exports = {
   mode: 'production',
   target: 'node',
   node: false,
-  externals: [...Object.keys(dependencies), ...Object.keys(devDependencies)],
+  externals: ['fs', 'path', 'chokidar'],
   module: {
     rules: [
       {
@@ -35,5 +36,16 @@ module.exports = {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new ModuleFederationPlugin({
+      name: 'graphql',
+      library: { type: 'commonjs' },
+      filename: 'remoteEntry.js',
+      exposes: {
+        './graphql': './src/index.js',
+      },
+      shared: dependencies,
+    }),
+  ],
 };
