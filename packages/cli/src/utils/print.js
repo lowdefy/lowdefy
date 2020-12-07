@@ -53,9 +53,17 @@ function createBasicPrint() {
   };
 }
 
+// Memoise print so that error handler can get the same spinner object
+let print;
+
 function createPrint({ basic } = {}) {
-  if (basic) return createBasicPrint();
-  return createOraPrint();
+  if (print) return print;
+  if (basic) {
+    print = createBasicPrint();
+    return print;
+  }
+  print = createOraPrint();
+  return print;
 }
 
 export default createPrint;

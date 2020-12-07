@@ -19,7 +19,7 @@ import { spawnSync } from 'child_process';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
 import createContext from '../../utils/context';
-import getBuildScript from '../../utils/getBuildScript';
+import getFederatedModule from '../../utils/getFederatedModule';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
 async function buildNetlify(options) {
@@ -33,7 +33,7 @@ async function buildNetlify(options) {
 
   context.print.spin('Fetching Lowdefy Netlify server.');
   await fetchNpmTarball({
-    name: '@lowdefy/server-netlify',
+    packageName: '@lowdefy/server-netlify',
     version: context.version,
     directory: netlifyDir,
   });
@@ -49,15 +49,21 @@ async function buildNetlify(options) {
     message: 'Failed to npm install Netlify server.',
   });
 
+  context.print.log('npm install successful.');
   context.print.log(proccessOutput.stdout.toString('utf8'));
 
   context.print.spin('Fetching Lowdefy build script.');
-  await getBuildScript(context);
+  const { default: buildScript } = await getFederatedModule({
+    module: 'build',
+    packageName: '@lowdefy/build',
+    version: context.version,
+    context,
+  });
   context.print.log('Fetched Lowdefy build script.');
 
   context.print.spin('Starting Lowdefy build.');
   const outputDirectory = path.resolve(netlifyDir, './package/dist/functions/graphql/build');
-  await context.buildScript({
+  await buildScript({
     logger: context.print,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,

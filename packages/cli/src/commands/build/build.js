@@ -15,13 +15,18 @@
 */
 
 import createContext from '../../utils/context';
-import getBuildScript from '../../utils/getBuildScript';
+import getFederatedModule from '../../utils/getFederatedModule';
 
 async function build(options) {
   const context = await createContext(options);
-  await getBuildScript(context);
+  const { default: buildScript } = await getFederatedModule({
+    module: 'build',
+    packageName: '@lowdefy/build',
+    version: context.version,
+    context,
+  });
   context.print.info('Starting build.');
-  await context.buildScript({
+  await buildScript({
     logger: context.print,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,

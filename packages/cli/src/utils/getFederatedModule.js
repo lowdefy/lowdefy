@@ -16,26 +16,26 @@
 
 import fs from 'fs';
 import path from 'path';
-import fetchNpmTarball from '../../utils/fetchNpmTarball';
-import loadModule from '../../utils/loadModule';
+import fetchNpmTarball from './fetchNpmTarball';
+import loadModule from './loadModule';
 
-async function getGraphql(context) {
-  const cleanVersion = context.version.replace(/[-.]/g, '_');
-  const cachePath = path.resolve(context.cacheDirectory, `scripts/graphql_${cleanVersion}`);
+async function getFederatedModule({ module, packageName, version, context }) {
+  const cleanVersion = version.replace(/[-.]/g, '_');
+  const cachePath = path.resolve(context.cacheDirectory, `scripts/${module}/${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
-    context.print.spin(`Fetching @lowdefy/graphql@${context.version} to cache.`);
+    context.print.spin(`Fetching ${packageName}@${version} to cache.`);
+    console.log('start fetch tarball');
     await fetchNpmTarball({
-      name: '@lowdefy/graphql',
-      version: context.version,
+      packageName,
+      version,
       directory: cachePath,
     });
-    context.print.log(`Fetched @lowdefy/build@${context.version} to cache.`);
+    context.print.log(`Fetched ${packageName}@${version} to cache.`);
   }
-  context.graphql = await loadModule(
-    path.resolve(cachePath, 'package/dist/moduleFederation'),
-    './graphql'
-  );
-  return context;
+  return loadModule({
+    directory: path.resolve(cachePath, 'package/dist'),
+    module: `./${module}`,
+  });
 }
 
-export default getGraphql;
+export default getFederatedModule;

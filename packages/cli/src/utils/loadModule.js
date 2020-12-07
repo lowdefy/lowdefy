@@ -18,7 +18,7 @@
 
 import path from 'path';
 
-async function loadModule(dir, moduleName, remoteEntry = 'remoteEntry.js') {
+async function loadModule({ directory, module, remoteEntry = 'remoteEntry.js' }) {
   const importRemote = async (remoteEntryFile) => {
     if (__webpack_share_scopes__.default) {
       await __webpack_init_sharing__('default');
@@ -39,9 +39,9 @@ async function loadModule(dir, moduleName, remoteEntry = 'remoteEntry.js') {
     });
   };
 
-  const container = await importRemote(path.resolve(`${dir}/${remoteEntry}`));
+  const container = await importRemote(path.resolve(`${directory}/${remoteEntry}`));
 
-  return container.get(moduleName).then((factory) => factory());
+  return container.get(module).then((factory) => factory());
 }
 
 export default loadModule;
