@@ -92,6 +92,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -117,6 +120,9 @@ exports[`Render properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -186,6 +192,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -212,6 +221,9 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -280,6 +292,9 @@ exports[`Render properties.inputStyle. CSS style - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -305,6 +320,9 @@ exports[`Render properties.inputStyle. CSS style - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -373,6 +391,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -398,6 +419,9 @@ exports[`Render properties.label.colon: false - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -454,6 +478,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -479,6 +506,9 @@ exports[`Render properties.label.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -547,6 +577,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -572,6 +605,9 @@ exports[`Render properties.label.extra: showingextra - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -645,6 +681,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -670,6 +709,9 @@ exports[`Render properties.label: align_right - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -746,6 +788,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -771,6 +816,9 @@ exports[`Render properties.label: inline_true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -839,6 +887,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -864,6 +915,9 @@ exports[`Render properties.label: span_12 - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -932,6 +986,9 @@ exports[`Render properties.options-boolean - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -957,6 +1014,9 @@ exports[`Render properties.options-boolean - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1025,6 +1085,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1050,6 +1113,9 @@ exports[`Render properties.options-number - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1118,6 +1184,9 @@ exports[`Render properties.options-object - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1143,6 +1212,9 @@ exports[`Render properties.options-object - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1211,6 +1283,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1236,6 +1311,9 @@ exports[`Render properties.options-string - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1304,6 +1382,9 @@ exports[`Render properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1329,6 +1410,9 @@ exports[`Render properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1439,6 +1523,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1464,6 +1551,9 @@ exports[`Render required = true properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1533,6 +1623,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1559,6 +1652,9 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1627,6 +1723,9 @@ exports[`Render required = true properties.inputStyle. CSS style - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1652,6 +1751,9 @@ exports[`Render required = true properties.inputStyle. CSS style - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1720,6 +1822,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1745,6 +1850,9 @@ exports[`Render required = true properties.label.colon: false - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1801,6 +1909,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1826,6 +1937,9 @@ exports[`Render required = true properties.label.disabled: true - value[0] 1`] =
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1894,6 +2008,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -1919,6 +2036,9 @@ exports[`Render required = true properties.label.extra: showingextra - value[0] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -1992,6 +2112,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2017,6 +2140,9 @@ exports[`Render required = true properties.label: align_right - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2093,6 +2219,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2118,6 +2247,9 @@ exports[`Render required = true properties.label: inline_true - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2186,6 +2318,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2211,6 +2346,9 @@ exports[`Render required = true properties.label: span_12 - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2279,6 +2417,9 @@ exports[`Render required = true properties.options-boolean - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2304,6 +2445,9 @@ exports[`Render required = true properties.options-boolean - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2372,6 +2516,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2397,6 +2544,9 @@ exports[`Render required = true properties.options-number - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2465,6 +2615,9 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2490,6 +2643,9 @@ exports[`Render required = true properties.options-object - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2558,6 +2714,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2583,6 +2742,9 @@ exports[`Render required = true properties.options-string - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2651,6 +2813,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2676,6 +2841,9 @@ exports[`Render required = true properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2815,6 +2983,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2840,6 +3011,9 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -2938,6 +3112,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -2964,6 +3141,9 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3061,6 +3241,9 @@ exports[`Render validation.status = error properties.inputStyle. CSS style - val
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3086,6 +3269,9 @@ exports[`Render validation.status = error properties.inputStyle. CSS style - val
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3183,6 +3369,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3208,6 +3397,9 @@ exports[`Render validation.status = error properties.label.colon: false - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3293,6 +3485,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3318,6 +3513,9 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3415,6 +3613,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3440,6 +3641,9 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3537,6 +3741,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3562,6 +3769,9 @@ exports[`Render validation.status = error properties.label: align_right - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3667,6 +3877,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3692,6 +3905,9 @@ exports[`Render validation.status = error properties.label: inline_true - value[
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3789,6 +4005,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3814,6 +4033,9 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -3911,6 +4133,9 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -3936,6 +4161,9 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4033,6 +4261,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4058,6 +4289,9 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4155,6 +4389,9 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4180,6 +4417,9 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4277,6 +4517,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4302,6 +4545,9 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4399,6 +4645,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4424,6 +4673,9 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4563,6 +4815,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4588,6 +4843,9 @@ exports[`Render validation.status = null properties.color_red - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4657,6 +4915,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4683,6 +4944,9 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4751,6 +5015,9 @@ exports[`Render validation.status = null properties.inputStyle. CSS style - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4776,6 +5043,9 @@ exports[`Render validation.status = null properties.inputStyle. CSS style - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4844,6 +5114,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4869,6 +5142,9 @@ exports[`Render validation.status = null properties.label.colon: false - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -4925,6 +5201,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -4950,6 +5229,9 @@ exports[`Render validation.status = null properties.label.disabled: true - value
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5018,6 +5300,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5043,6 +5328,9 @@ exports[`Render validation.status = null properties.label.extra: showingextra - 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5116,6 +5404,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5141,6 +5432,9 @@ exports[`Render validation.status = null properties.label: align_right - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5217,6 +5511,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5242,6 +5539,9 @@ exports[`Render validation.status = null properties.label: inline_true - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5310,6 +5610,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5335,6 +5638,9 @@ exports[`Render validation.status = null properties.label: span_12 - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5403,6 +5709,9 @@ exports[`Render validation.status = null properties.options-boolean - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5428,6 +5737,9 @@ exports[`Render validation.status = null properties.options-boolean - value[0] 1
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5496,6 +5808,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5521,6 +5836,9 @@ exports[`Render validation.status = null properties.options-number - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5589,6 +5907,9 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5614,6 +5935,9 @@ exports[`Render validation.status = null properties.options-object - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5682,6 +6006,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5707,6 +6034,9 @@ exports[`Render validation.status = null properties.options-string - value[0] 1`
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5775,6 +6105,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5800,6 +6133,9 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -5934,6 +6270,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -5959,6 +6298,9 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6052,6 +6394,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6078,6 +6423,9 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6170,6 +6518,9 @@ exports[`Render validation.status = success properties.inputStyle. CSS style - v
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6195,6 +6546,9 @@ exports[`Render validation.status = success properties.inputStyle. CSS style - v
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6287,6 +6641,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6312,6 +6669,9 @@ exports[`Render validation.status = success properties.label.colon: false - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6392,6 +6752,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6417,6 +6780,9 @@ exports[`Render validation.status = success properties.label.disabled: true - va
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6509,6 +6875,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6534,6 +6903,9 @@ exports[`Render validation.status = success properties.label.extra: showingextra
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6631,6 +7003,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6656,6 +7031,9 @@ exports[`Render validation.status = success properties.label: align_right - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6756,6 +7134,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6781,6 +7162,9 @@ exports[`Render validation.status = success properties.label: inline_true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6873,6 +7257,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -6898,6 +7285,9 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -6990,6 +7380,9 @@ exports[`Render validation.status = success properties.options-boolean - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7015,6 +7408,9 @@ exports[`Render validation.status = success properties.options-boolean - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7107,6 +7503,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7132,6 +7531,9 @@ exports[`Render validation.status = success properties.options-number - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7224,6 +7626,9 @@ exports[`Render validation.status = success properties.options-object - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7249,6 +7654,9 @@ exports[`Render validation.status = success properties.options-object - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7341,6 +7749,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7366,6 +7777,9 @@ exports[`Render validation.status = success properties.options-string - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7458,6 +7872,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7483,6 +7900,9 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7646,6 +8066,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7671,6 +8094,9 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7769,6 +8195,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7795,6 +8224,9 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -7892,6 +8324,9 @@ exports[`Render validation.status = warning properties.inputStyle. CSS style - v
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -7917,6 +8352,9 @@ exports[`Render validation.status = warning properties.inputStyle. CSS style - v
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8014,6 +8452,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8039,6 +8480,9 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8124,6 +8568,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8149,6 +8596,9 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8246,6 +8696,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8271,6 +8724,9 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8368,6 +8824,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8393,6 +8852,9 @@ exports[`Render validation.status = warning properties.label: align_right - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8498,6 +8960,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8523,6 +8988,9 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8620,6 +9088,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8645,6 +9116,9 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8742,6 +9216,9 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8767,6 +9244,9 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8864,6 +9344,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -8889,6 +9372,9 @@ exports[`Render validation.status = warning properties.options-number - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -8986,6 +9472,9 @@ exports[`Render validation.status = warning properties.options-object - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -9011,6 +9500,9 @@ exports[`Render validation.status = warning properties.options-object - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -9108,6 +9600,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -9133,6 +9628,9 @@ exports[`Render validation.status = warning properties.options-string - value[0]
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />
@@ -9230,6 +9728,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={0}
               />
@@ -9255,6 +9756,9 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyPress={[Function]}
+                onKeyUp={[Function]}
                 type="radio"
                 value={1}
               />

@@ -24,16 +24,26 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
-import getBuildScript from '../../utils/getBuildScript';
-import getGraphql from './getGraphql';
+import getFederatedModule from '../../utils/getFederatedModule';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {
   // Setup
   if (!options.port) options.port = 3000;
   const context = await createContext(options);
-  await getBuildScript(context);
-  await getGraphql(context);
+  const { default: buildScript } = await getFederatedModule({
+    module: 'build',
+    packageName: '@lowdefy/build',
+    version: context.version,
+    context,
+  });
+
+  const { typeDefs, resolvers, createContext: createGqlContext } = await getFederatedModule({
+    module: 'graphql',
+    packageName: '@lowdefy/graphql-federated',
+    version: context.version,
+    context,
+  });
 
   context.print.log('Starting Lowdefy development server.');
 
@@ -43,7 +53,6 @@ async function dev(options) {
     logger: console,
     getSecrets: createGetSecretsFromEnv(),
   };
-  const { typeDefs, resolvers, createContext: createGqlContext } = context.graphql;
   const gqlContext = createGqlContext(config);
   const server = new ApolloServer({ typeDefs, resolvers, context: gqlContext });
 
@@ -63,7 +72,7 @@ async function dev(options) {
   // File watcher
   const fn = async () => {
     context.print.log('Building configuration.');
-    await context.buildScript({
+    await buildScript({
       logger: context.print,
       cacheDirectory: context.cacheDirectory,
       configDirectory: context.baseDirectory,
