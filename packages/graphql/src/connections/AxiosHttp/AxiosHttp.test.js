@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import AxiosHttp from './AxiosHttp';
-import testSchema from '../../utils/testSchema';
-import { ConfigurationError } from '../../context/errors';
 
 const { schema } = AxiosHttp;
 
@@ -28,7 +27,7 @@ test('valid connection schema', () => {
   const connection = {
     url: 'https://example.com/api',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -59,15 +58,14 @@ test('valid connection schema, all properties', () => {
       port: 4030,
     },
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
 });
 
 test('url is not a string', () => {
   const connection = {
     url: true,
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, object: connection })).toThrow(
     'AxiosHttp property "url" should be a string.'
   );
 });

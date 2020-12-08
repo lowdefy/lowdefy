@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import SendGridMail from './SendGridMail';
-import testSchema from '../../utils/testSchema';
-import { ConfigurationError } from '../../context/errors';
 
 const { schema } = SendGridMail;
 
@@ -29,12 +28,12 @@ test('valid connection schema', () => {
     apiKey: 'API_KEY',
     from: 'someone@example.com',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: 'Some One <someone@example.com>',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: {
@@ -42,7 +41,7 @@ test('valid connection schema', () => {
       email: 'someone@example.com',
     },
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all email variations', () => {
@@ -50,12 +49,12 @@ test('valid connection schema, all email variations', () => {
     apiKey: 'API_KEY',
     from: 'someone@example.com',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: 'Some One <someone@example.com>',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: {
@@ -67,12 +66,12 @@ test('valid connection schema, all email variations', () => {
     apiKey: 'API_KEY',
     from: ['someone@example.com', 'someoneelse@example.com'],
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: ['Some One <someone@example.com>', 'Some One Else <someoneelse@example.com>'],
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: [
@@ -86,7 +85,7 @@ test('valid connection schema, all email variations', () => {
       },
     ],
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -103,15 +102,14 @@ test('valid connection schema, all properties', () => {
       },
     },
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, object: connection })).toEqual({ valid: true });
 });
 
 test('property apiKey is missing', () => {
   const connection = {
     from: 'someone@example.com',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, object: connection })).toThrow(
     'SendGridMail connection should have required property "apiKey".'
   );
 });
@@ -121,8 +119,7 @@ test('property apiKey is not a string', () => {
     apiKey: true,
     from: 'someone@example.com',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, object: connection })).toThrow(
     'SendGridMail connection property "apiKey" should be a string.'
   );
 });
@@ -131,8 +128,7 @@ test('property from is missing', () => {
   const connection = {
     apiKey: 'API_KEY',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, object: connection })).toThrow(
     'SendGridMail connection should have required property "from".'
   );
 });
@@ -142,8 +138,7 @@ test('property from is not a string', () => {
     apiKey: 'API_KEY',
     from: true,
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, object: connection })).toThrow(
     'SendGridMail connection property "/from" should be a string.; SendGridMail connection property "/from" should be an email address, or a list of email addresses'
   );
 });

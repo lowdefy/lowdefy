@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
 import AwsS3PresignedGetObject from './AwsS3PresignedGetObject';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 jest.mock('aws-sdk');
 
@@ -136,56 +135,49 @@ test('Error from s3 client', async () => {
 
 test('Request properties is not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request properties should be an object.'
   );
 });
 
 test('Request key missing', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request should have required property "key".'
   );
 });
 
 test('Request expires property not a number', async () => {
   const request = { key: 'key', expires: 'expires' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request property "expires" should be a number.'
   );
 });
 
 test('Request key not a string', async () => {
   const request = { key: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request property "key" should be a string.'
   );
 });
 
 test('Request responseContentDisposition not a string', async () => {
   const request = { key: 'key', responseContentDisposition: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request property "responseContentDisposition" should be a string.'
   );
 });
 
 test('Request responseContentType not a string', async () => {
   const request = { key: 'key', responseContentType: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request property "responseContentType" should be a string.'
   );
 });
 
 test('Request versionId not a string', async () => {
   const request = { key: 'key', versionId: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'AwsS3PresignedGetObject request property "versionId" should be a string.'
   );
 });

@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import GoogleSheetAppendOne from './GoogleSheetAppendOne';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const mockAddRow = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -156,7 +155,7 @@ test('valid request schema', () => {
       name: 'name',
     },
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, object: request })).toEqual({ valid: true });
 });
 
 test('valid request schema, all options', () => {
@@ -168,13 +167,12 @@ test('valid request schema, all options', () => {
       raw: true,
     },
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, object: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetAppendOne request properties should be an object.'
   );
 });
@@ -183,16 +181,14 @@ test('row is not an object', () => {
   const request = {
     row: true,
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetAppendOne request property "row" should be an object.'
   );
 });
 
 test('row is missing', () => {
   const request = {};
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetAppendOne request should have required property "row".'
   );
 });
@@ -206,8 +202,7 @@ test('raw is not a boolean', () => {
       raw: 'raw',
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetAppendOne request property "options.raw" should be a boolean.'
   );
 });

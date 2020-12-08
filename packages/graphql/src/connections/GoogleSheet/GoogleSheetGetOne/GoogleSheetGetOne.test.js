@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import GoogleSheetGetOne from './GoogleSheetGetOne';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const mockGetRows = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -218,7 +217,7 @@ test('googleSheetGetOne, columnTypes', async () => {
 
 test('valid request schema', () => {
   const request = {};
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, object: request })).toEqual({ valid: true });
 });
 
 test('valid request schema, all properties', () => {
@@ -228,13 +227,12 @@ test('valid request schema, all properties', () => {
       skip: 300,
     },
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, object: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetGetOne request properties should be an object.'
   );
 });
@@ -245,8 +243,7 @@ test('limit is not a number', () => {
       limit: true,
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetGetOne request property "options.limit" should be a number.'
   );
 });
@@ -257,8 +254,7 @@ test('skip is not a number', () => {
       skip: true,
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetGetOne request property "options.skip" should be a number.'
   );
 });
@@ -267,8 +263,7 @@ test('filter is not an object', () => {
   const request = {
     filter: true,
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, object: request })).toThrow(
     'GoogleSheetGetOne request property "filter" should be an object.'
   );
 });
