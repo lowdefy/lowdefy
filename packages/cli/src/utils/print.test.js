@@ -16,7 +16,7 @@
 
 // eslint-disable-next-line no-unused-vars
 import ora from 'ora';
-import createPrint from './print';
+import { createOraPrint, createBasicPrint } from './print';
 
 jest.mock('ora', () => {
   const mockOraConstructor = jest.fn();
@@ -76,9 +76,38 @@ beforeEach(() => {
 //   Date.now = realNow;
 // });
 
+describe('memoise', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
+  test('memoise print', () => {
+    const createPrint = require('./print').default;
+    const print1 = createPrint();
+    const print2 = createPrint();
+    expect(print1).toBe(print2);
+  });
+
+  test('createOraPrint', () => {
+    let createPrint;
+    jest.isolateModules(() => {
+      createPrint = require('./print').default;
+    });
+    const print = createPrint();
+    expect(print.type).toEqual('ora');
+  });
+
+  test('createBasicPrint', () => {
+    let createPrint;
+    jest.isolateModules(() => {
+      createPrint = require('./print').default;
+    });
+    const print = createPrint({ basic: true });
+    expect(print.type).toEqual('basic');
+  });
+});
 describe('ora print', () => {
   test('create print', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     expect(print).toMatchInlineSnapshot(`
       Object {
         "error": [Function],
@@ -86,6 +115,7 @@ describe('ora print', () => {
         "log": [Function],
         "spin": [Function],
         "succeed": [Function],
+        "type": "ora",
         "warn": [Function],
       }
     `);
@@ -106,7 +136,7 @@ describe('ora print', () => {
     mockGetHours.mockImplementation(() => 1);
     mockGetMinutes.mockImplementation(() => 2);
     mockGetSeconds.mockImplementation(() => 3);
-    createPrint();
+    createOraPrint();
     const prefixTextFn = ora.mock.calls[0][0].prefixText;
     const res = prefixTextFn();
     expect(res).toEqual('[2m01:02:03[22m');
@@ -116,45 +146,45 @@ describe('ora print', () => {
     mockGetHours.mockImplementation(() => 11);
     mockGetMinutes.mockImplementation(() => 22);
     mockGetSeconds.mockImplementation(() => 33);
-    createPrint();
+    createOraPrint();
     const prefixTextFn = ora.mock.calls[0][0].prefixText;
     const res = prefixTextFn();
     expect(res).toEqual('[2m11:22:33[22m');
   });
 
   test('print error', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.error('Test error');
     expect(mockOraFail.mock.calls).toEqual([['[31mTest error[39m']]);
   });
 
   test('print info', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.info('Test info');
     expect(mockOraInfo.mock.calls).toEqual([['[34mTest info[39m']]);
   });
 
   test('print log', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.log('Test log');
     expect(mockOraStart.mock.calls).toEqual([['Test log']]);
     expect(mockOraStopAndPersist.mock.calls).toEqual([[{ symbol: '∙' }]]);
   });
 
   test('print spin', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.spin('Test spin');
     expect(mockOraStart.mock.calls).toEqual([['Test spin']]);
   });
 
   test('print succeed', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.succeed('Test succeed');
     expect(mockOraSucceed.mock.calls).toEqual([['[32mTest succeed[39m']]);
   });
 
   test('print warn', () => {
-    const print = createPrint();
+    const print = createOraPrint();
     print.warn('Test warn');
     expect(mockOraWarn.mock.calls).toEqual([['[33mTest warn[39m']]);
   });
@@ -162,51 +192,52 @@ describe('ora print', () => {
 
 describe('basic print', () => {
   test('create print', () => {
-    const print = createPrint();
+    const print = createBasicPrint();
     expect(print).toMatchInlineSnapshot(`
       Object {
-        "error": [Function],
-        "info": [Function],
-        "log": [Function],
-        "spin": [Function],
-        "succeed": [Function],
-        "warn": [Function],
+        "error": [MockFunction],
+        "info": [MockFunction],
+        "log": [MockFunction],
+        "spin": [MockFunction],
+        "succeed": [MockFunction],
+        "type": "basic",
+        "warn": [MockFunction],
       }
     `);
   });
 
   test('print error', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.error('Test error');
     expect(mockConsoleError.mock.calls).toEqual([['Test error']]);
   });
 
   test('print info', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.info('Test info');
     expect(mockConsoleInfo.mock.calls).toEqual([['Test info']]);
   });
 
   test('print log', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.log('Test log');
     expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
   });
 
   test('print spin', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.spin('Test spin');
     expect(mockConsoleLog.mock.calls).toEqual([['Test spin']]);
   });
 
   test('print succeed', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.succeed('Test succeed');
     expect(mockConsoleLog.mock.calls).toEqual([['Test succeed']]);
   });
 
   test('print warn', () => {
-    const print = createPrint({ basic: true });
+    const print = createBasicPrint();
     print.warn('Test warn');
     expect(mockConsoleWarn.mock.calls).toEqual([['Test warn']]);
   });

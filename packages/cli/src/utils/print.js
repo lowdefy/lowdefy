@@ -32,6 +32,7 @@ function createOraPrint() {
     color: 'blue',
   });
   return {
+    type: 'ora',
     error: (text) => spinner.fail(chalk.red(text)),
     info: (text) => spinner.info(chalk.blue(text)),
     log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
@@ -44,6 +45,7 @@ function createOraPrint() {
 function createBasicPrint() {
   const { error, info, log, warn } = console;
   return {
+    type: 'basic',
     error,
     info,
     log,
@@ -65,5 +67,7 @@ function createPrint({ basic } = {}) {
   print = createOraPrint();
   return print;
 }
+
+export { createOraPrint, createBasicPrint };
 
 export default createPrint;

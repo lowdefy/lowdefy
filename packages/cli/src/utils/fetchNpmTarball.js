@@ -25,7 +25,6 @@ async function fetchNpmTarball({ packageName, version, directory }) {
     packageInfo = await axios.get(registryUrl);
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      console.log('404');
       throw new Error(`Package "${packageName}" could not be found at ${registryUrl}.`);
     }
     throw error;
