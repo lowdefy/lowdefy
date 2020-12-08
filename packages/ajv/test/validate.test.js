@@ -28,7 +28,7 @@ test('Object matches schema', () => {
   const object = {
     string: 'value',
   };
-  expect(validate({ schema, object })).toBe(true);
+  expect(validate({ schema, object })).toEqual({ valid: true });
 });
 
 test('Object does not match schema, one error', () => {
@@ -208,4 +208,127 @@ test('Nunjucks template in error message', () => {
   expect(() => validate({ schema, object })).toThrow(
     'errorMessage:/string:#/properties/string/errorMessage:{{ keyword }}:{{ dataPath }}:{{ schemaPath }}:{{ message }}; errorMessage:/number:#/properties/number/errorMessage:{{ keyword }}:{{ dataPath }}:{{ schemaPath }}:{{ message }}'
   );
+});
+
+test('Object does not match schema, one error, returnErrors true', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      string: {
+        type: 'string',
+      },
+    },
+  };
+  const object = {
+    string: 7,
+  };
+  expect(validate({ schema, object, returnErrors: true })).toEqual({
+    errors: [
+      {
+        dataPath: '/string',
+        keyword: 'type',
+        message: 'should be string',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/string/type',
+      },
+    ],
+    valid: false,
+  });
+});
+
+test('Object does not match schema, three errors, returnErrors true', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      string: {
+        type: 'string',
+      },
+      number: {
+        type: 'number',
+      },
+      boolean: {
+        type: 'boolean',
+      },
+    },
+  };
+  const object = {
+    string: 7,
+    number: '7',
+    boolean: 7,
+  };
+  expect(validate({ schema, object, returnErrors: true })).toEqual({
+    errors: [
+      {
+        dataPath: '/string',
+        keyword: 'type',
+        message: 'should be string',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/string/type',
+      },
+      {
+        dataPath: '/number',
+        keyword: 'type',
+        message: 'should be number',
+        params: {
+          type: 'number',
+        },
+        schemaPath: '#/properties/number/type',
+      },
+      {
+        dataPath: '/boolean',
+        keyword: 'type',
+        message: 'should be boolean',
+        params: {
+          type: 'boolean',
+        },
+        schemaPath: '#/properties/boolean/type',
+      },
+    ],
+    valid: false,
+  });
+});
+
+test('Object does not match schema, one error, error message, returnErrors true', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      string: {
+        type: 'string',
+        errorMessage: {
+          type: 'Custom error message.',
+        },
+      },
+    },
+  };
+  const object = {
+    string: 7,
+  };
+  expect(validate({ schema, object, returnErrors: true })).toEqual({
+    errors: [
+      {
+        dataPath: '/string',
+        keyword: 'errorMessage',
+        message: 'Custom error message.',
+        params: {
+          errors: [
+            {
+              dataPath: '/string',
+              keyword: 'type',
+              message: 'should be string',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/string/type',
+            },
+          ],
+        },
+        schemaPath: '#/properties/string/errorMessage',
+      },
+    ],
+    valid: false,
+  });
 });
