@@ -2706,6 +2706,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lowdefy/ajv@workspace:packages/ajv":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/ajv@workspace:packages/ajv"
+  dependencies:
+    "@babel/cli": 7.12.8
+    "@babel/core": 7.12.9
+    "@babel/preset-env": 7.12.7
+    "@lowdefy/nunjucks": 1.0.0
+    ajv: 6.12.6
+    ajv-errors: 1.0.1
+    babel-jest: 26.6.3
+    jest: 26.6.3
+    jest-diff: 26.6.2
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/block-tools@1.0.4, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
