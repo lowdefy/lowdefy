@@ -310,7 +310,7 @@ class Blocks {
         repeat = true;
       }
       // only evaluate visible blocks
-      if (block.visibleEval.output) {
+      if (block.visibleEval.output !== false) {
         block.propertiesEval = this.context.parser.parse({
           input: block.properties,
           location: block.blockId,
