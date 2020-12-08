@@ -34,8 +34,8 @@
       "errorMessage": {
         "type": "Connection should be an object.",
         "required": {
-          "id": "Connection should have required property \"id\"",
-          "type": "Connection should have required property \"type\""
+          "id": "Connection should have required property \"id\".",
+          "type": "Connection should have required property \"type\"."
         }
       }
     },
@@ -149,8 +149,8 @@
       "errorMessage": {
         "type": "Block should be an object.",
         "required": {
-          "id": "Block should have required property \"id\"",
-          "type": "Block should have required property \"type\""
+          "id": "Block should have required property \"id\".",
+          "type": "Block should have required property \"type\"."
         }
       }
     },
@@ -191,9 +191,9 @@
       "errorMessage": {
         "type": "Request should be an object.",
         "required": {
-          "id": "Request should have required property \"id\"",
-          "type": "Request should have required property \"type\"",
-          "connectionId": "Request should have required property \"connectionId\""
+          "id": "Request should have required property \"id\".",
+          "type": "Request should have required property \"type\".",
+          "connectionId": "Request should have required property \"connectionId\"."
         }
       }
     },
@@ -239,8 +239,8 @@
       "errorMessage": {
         "type": "MenuLink should be an object.",
         "required": {
-          "id": "MenuLink should have required property \"id\"",
-          "type": "MenuLink should have required property \"type\""
+          "id": "MenuLink should have required property \"id\".",
+          "type": "MenuLink should have required property \"type\"."
         }
       }
     },
@@ -283,8 +283,8 @@
       "errorMessage": {
         "type": "MenuGroup should be an object.",
         "required": {
-          "id": "MenuGroup should have required property \"id\"",
-          "type": "MenuGroup should have required property \"type\""
+          "id": "MenuGroup should have required property \"id\".",
+          "type": "MenuGroup should have required property \"type\"."
         }
       }
     },
@@ -330,7 +330,7 @@
       "errorMessage": {
         "type": "Menu should be an object.",
         "required": {
-          "id": "Menu should have required property \"id\""
+          "id": "Menu should have required property \"id\"."
         }
       }
     },
@@ -372,8 +372,8 @@
       "errorMessage": {
         "type": "Action should be an object.",
         "required": {
-          "id": "Action should have required property \"id\"",
-          "type": "Action should have required property \"type\""
+          "id": "Action should have required property \"id\".",
+          "type": "Action should have required property \"type\"."
         }
       }
     }
@@ -437,7 +437,7 @@
   "errorMessage": {
     "type": "Lowdefy configuration should be an object.",
     "required": {
-      "version": "Lowdefy configuration should have required property \"version\"",
+      "version": "Lowdefy configuration should have required property \"version\"."
     }
   }
 }

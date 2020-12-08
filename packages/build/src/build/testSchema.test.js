@@ -30,13 +30,16 @@ beforeEach(() => {
 });
 
 test('empty components', async () => {
-  const components = {};
+  const components = {
+    version: '1.0.0',
+  };
   await testSchema({ components, context });
   expect().toBe();
 });
 
 test('app schema', async () => {
   const components = {
+    version: '1.0.0',
     connections: [
       {
         id: 'postman',
@@ -72,6 +75,7 @@ test('app schema', async () => {
 
 test('invalid schema', async () => {
   const components = {
+    version: '1.0.0',
     global: 'global',
   };
   await testSchema({ components, context });
@@ -79,7 +83,7 @@ test('invalid schema', async () => {
     ['Schema not valid.'],
     [
       `--------- Schema Error ---------
-message: should be object
+message: global should be an object.
 path: /global
 --------------------------------`,
     ],
@@ -88,6 +92,7 @@ path: /global
 
 test('multiple schema errors', async () => {
   const components = {
+    version: '1.0.0',
     pages: [
       {
         blocks: [
@@ -107,25 +112,25 @@ test('multiple schema errors', async () => {
     ['Schema not valid.'],
     [
       `--------- Schema Error ---------
-message: should have required property 'id'
+message: Block should have required property "id".
 path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should have required property 'type'
+message: Block should have required property "type".
 path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should be string
+message: Block id should be a string.
 path: /pages/1/id
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should have required property 'type'
+message: Block should have required property "type".
 path: /pages/1
 --------------------------------`,
     ],
