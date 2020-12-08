@@ -2781,7 +2781,7 @@ __metadata:
     rc-animate: 3.1.1
     react: 17.0.1
     react-dom: 17.0.1
-    react-markdown: 5.0.2
+    react-markdown: 5.0.3
     react-router-dom: 5.2.0
     react-syntax-highlighter: 15.3.1
     style-loader: 2.0.0
@@ -2817,7 +2817,7 @@ __metadata:
     js-yaml: 3.14.0
     react: 17.0.1
     react-dom: 17.0.1
-    react-markdown: 5.0.2
+    react-markdown: 5.0.3
     react-syntax-highlighter: 15.3.1
     style-loader: 2.0.0
     webpack: 5.10.0
@@ -2859,7 +2859,7 @@ __metadata:
     react: 17.0.1
     react-color: 2.19.3
     react-dom: 17.0.1
-    react-markdown: 5.0.2
+    react-markdown: 5.0.3
     react-syntax-highlighter: 15.3.1
     style-loader: 2.0.0
     webpack: 5.10.0
@@ -2897,7 +2897,7 @@ __metadata:
     process: 0.11.10
     react: 17.0.1
     react-dom: 17.0.1
-    react-markdown: 5.0.2
+    react-markdown: 5.0.3
     react-syntax-highlighter: 15.3.1
     remark-gfm: 1.0.0
     style-loader: 2.0.0
@@ -3111,7 +3111,7 @@ __metadata:
     process: 0.11.10
     react: 17.0.1
     react-dom: 17.0.1
-    react-markdown: 5.0.2
+    react-markdown: 5.0.3
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
@@ -13338,14 +13338,15 @@ fsevents@^1.2.7:
   linkType: hard
 
 "mdast-util-from-markdown@npm:^0.8.0":
-  version: 0.8.2
-  resolution: "mdast-util-from-markdown@npm:0.8.2"
+  version: 0.8.3
+  resolution: "mdast-util-from-markdown@npm:0.8.3"
   dependencies:
     "@types/mdast": ^3.0.0
     mdast-util-to-string: ^2.0.0
     micromark: ~2.10.0
     parse-entities: ^2.0.0
-  checksum: 8b008c5b47bd57ebd1bb17133cc2b6d64ff310bcf9f2f7439c85656b8f628fd16e0740774e2353ee62ff102ad6679a64056e1a45ca8a6ab66768414081072116
+    unist-util-stringify-position: ^2.0.0
+  checksum: 77c3c7e17b3c25cca689c1f83990b0f09a094a961947abfc8c6e0e87059b6db9ce5e156f18f6422712e7937a7de2793ee57b9101783ce99c501eea4af60a0bfd
   languageName: node
   linkType: hard
 
@@ -16634,9 +16635,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-markdown@npm:5.0.2":
-  version: 5.0.2
-  resolution: "react-markdown@npm:5.0.2"
+"react-markdown@npm:5.0.3":
+  version: 5.0.3
+  resolution: "react-markdown@npm:5.0.3"
   dependencies:
     "@types/mdast": ^3.0.3
     "@types/unist": ^2.0.3
@@ -16649,9 +16650,9 @@ fsevents@^1.2.7:
     unist-util-visit: ^2.0.0
     xtend: ^4.0.1
   peerDependencies:
-    "@types/react": ^15.0.0 || ^16.0.0
-    react: ^15.0.0 || ^16.0.0
-  checksum: c3e8aec12f3c99b5dc45eefc28cf30a060a419ff18aadb90e39d2ebb413c4054791b383250c827bebd2a8b9157c331f6b39fd0651c411d37839b27fa40961c2d
+    "@types/react": ">=16"
+    react: ">=16"
+  checksum: 9e27eb9efd9288777210a7195720e8eb01880baa3ae3b5e1c7f40e324c052dc68594b62a70e4370b1b1180b6fa8e3e7486dea2d2d182f6fd66a05373164c18a6
   languageName: node
   linkType: hard
 
