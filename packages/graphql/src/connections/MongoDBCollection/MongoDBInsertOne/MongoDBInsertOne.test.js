@@ -153,28 +153,28 @@ test('insertOne insert a date', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request properties should be an object.'
   );
 });
 
 test('request no doc', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request should have required property "doc".'
   );
 });
 
 test('request doc not an object', async () => {
   const request = { doc: 'doc' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request property "doc" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { doc: {}, options: 'options' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request property "options" should be an object.'
   );
 });

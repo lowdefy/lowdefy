@@ -182,12 +182,12 @@ test('valid request schema', () => {
       name: 'New',
     },
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request properties should be an object.'
   );
 });
@@ -199,7 +199,7 @@ test('filter is not an object', () => {
       name: 'New',
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request property "filter" should be an object.'
   );
 });
@@ -209,7 +209,7 @@ test('update is not an object', () => {
     filter: { id: '1' },
     update: 'update',
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request property "update" should be an object.'
   );
 });
@@ -220,7 +220,7 @@ test('filter is missing', () => {
       name: 'New',
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request should have required property "filter".'
   );
 });
@@ -229,7 +229,7 @@ test('update is missing', () => {
   const request = {
     filter: { id: '1' },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request should have required property "update".'
   );
 });
@@ -244,7 +244,7 @@ test('options.raw is not a boolean', () => {
       raw: 'raw',
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateMany request property "options.raw" should be a boolean.'
   );
 });

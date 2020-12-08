@@ -21,7 +21,7 @@ import formatErrorMessage from '../utils/formatErrorMessage';
 async function testSchema({ components, context }) {
   const { valid, errors } = validate({
     schema: lowdefySchema,
-    object: components,
+    data: components,
     returnErrors: true,
   });
   if (!valid) {

@@ -28,12 +28,12 @@ test('valid connection schema', () => {
     apiKey: 'API_KEY',
     from: 'someone@example.com',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: 'Some One <someone@example.com>',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: {
@@ -41,7 +41,7 @@ test('valid connection schema', () => {
       email: 'someone@example.com',
     },
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all email variations', () => {
@@ -49,12 +49,12 @@ test('valid connection schema, all email variations', () => {
     apiKey: 'API_KEY',
     from: 'someone@example.com',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: 'Some One <someone@example.com>',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: {
@@ -66,12 +66,12 @@ test('valid connection schema, all email variations', () => {
     apiKey: 'API_KEY',
     from: ['someone@example.com', 'someoneelse@example.com'],
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: ['Some One <someone@example.com>', 'Some One Else <someoneelse@example.com>'],
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
   connection = {
     apiKey: 'API_KEY',
     from: [
@@ -85,7 +85,7 @@ test('valid connection schema, all email variations', () => {
       },
     ],
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -102,14 +102,14 @@ test('valid connection schema, all properties', () => {
       },
     },
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('property apiKey is missing', () => {
   const connection = {
     from: 'someone@example.com',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'SendGridMail connection should have required property "apiKey".'
   );
 });
@@ -119,7 +119,7 @@ test('property apiKey is not a string', () => {
     apiKey: true,
     from: 'someone@example.com',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'SendGridMail connection property "apiKey" should be a string.'
   );
 });
@@ -128,7 +128,7 @@ test('property from is missing', () => {
   const connection = {
     apiKey: 'API_KEY',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'SendGridMail connection should have required property "from".'
   );
 });
@@ -138,7 +138,7 @@ test('property from is not a string', () => {
     apiKey: 'API_KEY',
     from: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'SendGridMail connection property "/from" should be a string.; SendGridMail connection property "/from" should be an email address, or a list of email addresses'
   );
 });

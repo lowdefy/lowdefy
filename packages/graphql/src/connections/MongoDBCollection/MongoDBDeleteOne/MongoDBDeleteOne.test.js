@@ -84,28 +84,28 @@ test('deleteOne catch invalid options', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request properties should be an object.'
   );
 });
 
 test('request no filter', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request should have required property "filter".'
   );
 });
 
 test('request filter not an object', async () => {
   const request = { filter: 'filter' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request property "filter" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { filter: { _id: 'test' }, options: 'options' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request property "options" should be an object.'
   );
 });

@@ -115,35 +115,35 @@ test('checkWrite should be true', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request properties should be an object.'
   );
 });
 
 test('request no docs', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request should have required property "docs".'
   );
 });
 
 test('request docs not an array', async () => {
   const request = { docs: 'docs' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "docs" should be an array.'
   );
 });
 
 test('request docs not an array of objects', async () => {
   const request = { docs: [1, 2, 3] };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "docs" should be an array of documents to insert.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { docs: [], options: 'options' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "options" should be an object.'
   );
 });

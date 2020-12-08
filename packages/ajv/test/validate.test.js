@@ -25,10 +25,10 @@ test('Object matches schema', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 'value',
   };
-  expect(validate({ schema, object })).toEqual({ valid: true });
+  expect(validate({ schema, data })).toEqual({ valid: true });
 });
 
 test('Object does not match schema, one error', () => {
@@ -40,10 +40,10 @@ test('Object does not match schema, one error', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
   };
-  expect(() => validate({ schema, object })).toThrow('should be string');
+  expect(() => validate({ schema, data })).toThrow('should be string');
 });
 
 test('Object does not match schema, two errors', () => {
@@ -58,11 +58,11 @@ test('Object does not match schema, two errors', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
   };
-  expect(() => validate({ schema, object })).toThrow('should be string; should be number');
+  expect(() => validate({ schema, data })).toThrow('should be string; should be number');
 });
 
 test('Object does not match schema, three errors', () => {
@@ -80,12 +80,12 @@ test('Object does not match schema, three errors', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
     boolean: 7,
   };
-  expect(() => validate({ schema, object })).toThrow('should be string; should be boolean');
+  expect(() => validate({ schema, data })).toThrow('should be string; should be boolean');
 });
 
 test('Object does not match schema, one error, error message', () => {
@@ -100,10 +100,10 @@ test('Object does not match schema, one error, error message', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
   };
-  expect(() => validate({ schema, object })).toThrow('Custom error message.');
+  expect(() => validate({ schema, data })).toThrow('Custom error message.');
 });
 
 test('Object does not match schema, two errors, error messages', () => {
@@ -124,11 +124,11 @@ test('Object does not match schema, two errors, error messages', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
   };
-  expect(() => validate({ schema, object })).toThrow('Custom error string.; Custom error number.');
+  expect(() => validate({ schema, data })).toThrow('Custom error string.; Custom error number.');
 });
 
 test('Object does not match schema, three errors, error messages', () => {
@@ -155,12 +155,12 @@ test('Object does not match schema, three errors, error messages', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
     boolean: 7,
   };
-  expect(() => validate({ schema, object })).toThrow('Custom error string.; Custom error boolean.');
+  expect(() => validate({ schema, data })).toThrow('Custom error string.; Custom error boolean.');
 });
 
 test('Nunjucks template in error message', () => {
@@ -175,10 +175,10 @@ test('Nunjucks template in error message', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
   };
-  expect(() => validate({ schema, object })).toThrow(
+  expect(() => validate({ schema, data })).toThrow(
     'errorMessage:/string:#/properties/string/errorMessage:{{ keyword }}:{{ dataPath }}:{{ schemaPath }}:{{ message }}'
   );
 });
@@ -201,11 +201,11 @@ test('Nunjucks template in error message', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
   };
-  expect(() => validate({ schema, object })).toThrow(
+  expect(() => validate({ schema, data })).toThrow(
     'errorMessage:/string:#/properties/string/errorMessage:{{ keyword }}:{{ dataPath }}:{{ schemaPath }}:{{ message }}; errorMessage:/number:#/properties/number/errorMessage:{{ keyword }}:{{ dataPath }}:{{ schemaPath }}:{{ message }}'
   );
 });
@@ -219,10 +219,10 @@ test('Object does not match schema, one error, returnErrors true', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
   };
-  expect(validate({ schema, object, returnErrors: true })).toEqual({
+  expect(validate({ schema, data, returnErrors: true })).toEqual({
     errors: [
       {
         dataPath: '/string',
@@ -253,12 +253,12 @@ test('Object does not match schema, three errors, returnErrors true', () => {
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
     number: '7',
     boolean: 7,
   };
-  expect(validate({ schema, object, returnErrors: true })).toEqual({
+  expect(validate({ schema, data, returnErrors: true })).toEqual({
     errors: [
       {
         dataPath: '/string',
@@ -304,10 +304,10 @@ test('Object does not match schema, one error, error message, returnErrors true'
       },
     },
   };
-  const object = {
+  const data = {
     string: 7,
   };
-  expect(validate({ schema, object, returnErrors: true })).toEqual({
+  expect(validate({ schema, data, returnErrors: true })).toEqual({
     errors: [
       {
         dataPath: '/string',

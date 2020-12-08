@@ -152,42 +152,42 @@ test('checkWrite should be true', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request properties should be an object.'
   );
 });
 
 test('request no filter', async () => {
   const request = { update: {} };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request should have required property "filter".'
   );
 });
 
 test('request no update', async () => {
   const request = { filter: {} };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request should have required property "update".'
   );
 });
 
 test('request update not an object', async () => {
   const request = { update: 'update', filter: {} };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request property "update" should be an object.'
   );
 });
 
 test('request filter not an object', async () => {
   const request = { update: {}, filter: 'filter' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request property "filter" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { update: {}, filter: {}, options: 'options' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request property "options" should be an object.'
   );
 });

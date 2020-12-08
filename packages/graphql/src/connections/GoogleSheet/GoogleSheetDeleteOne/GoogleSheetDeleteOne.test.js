@@ -141,12 +141,12 @@ test('valid request schema', () => {
   const request = {
     filter: { id: '1' },
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request properties should be an object.'
   );
 });
@@ -155,14 +155,14 @@ test('filter is not an object', () => {
   const request = {
     filter: true,
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "filter" should be an object.'
   );
 });
 
 test('filter is missing', () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request should have required property "filter".'
   );
 });
@@ -173,7 +173,7 @@ test('limit is not a number', () => {
       limit: true,
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "options.limit" should be a number.'
   );
 });
@@ -184,7 +184,7 @@ test('skip is not a number', () => {
       skip: true,
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "options.skip" should be a number.'
   );
 });

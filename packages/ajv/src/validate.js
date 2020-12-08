@@ -25,8 +25,8 @@ const ajv = new Ajv({
 
 ajvErrors(ajv);
 
-function validate({ schema, object, returnErrors = false }) {
-  const valid = ajv.validate(schema, object);
+function validate({ schema, data, returnErrors = false }) {
+  const valid = ajv.validate(schema, data);
   if (!valid) {
     if (returnErrors) {
       return {

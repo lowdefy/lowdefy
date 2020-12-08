@@ -35,7 +35,7 @@ test('valid connection schema', () => {
     sheetIndex: 0,
     spreadsheetId: 'spreadsheetId',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -47,19 +47,19 @@ test('valid connection schema, all properties', () => {
     sheetIndex: 0,
     spreadsheetId: 'spreadsheetId',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('connection properties is not an object', () => {
   const connection = 'connection';
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection properties should be an object.'
   );
 });
 
 test('spreadsheetId missing', () => {
   const connection = {};
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection should have required property "spreadsheetId".'
   );
 });
@@ -68,7 +68,7 @@ test('spreadsheetId is not a string', () => {
   const connection = {
     spreadsheetId: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "spreadsheetId" should be a string.'
   );
 });
@@ -78,7 +78,7 @@ test('apiKey is not a string', () => {
     spreadsheetId: 'spreadsheetId',
     apiKey: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "apiKey" should be a string.'
   );
 });
@@ -88,7 +88,7 @@ test('client_email is not a string', () => {
     spreadsheetId: 'spreadsheetId',
     client_email: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "client_email" should be a string.'
   );
 });
@@ -98,7 +98,7 @@ test('private_key is not a string', () => {
     spreadsheetId: 'spreadsheetId',
     private_key: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "private_key" should be a string.'
   );
 });
@@ -108,7 +108,7 @@ test('sheetId is not a string', () => {
     spreadsheetId: 'spreadsheetId',
     sheetId: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "sheetId" should be a string.'
   );
 });
@@ -118,7 +118,7 @@ test('sheetIndex is not a number', () => {
     spreadsheetId: 'spreadsheetId',
     sheetIndex: '',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "sheetIndex" should be a number.'
   );
 });
@@ -128,7 +128,7 @@ test('columnTypes is not an object', () => {
     spreadsheetId: 'spreadsheetId',
     columnTypes: '',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "columnTypes" should be an object.'
   );
 });
@@ -140,7 +140,7 @@ test('columnTypes type is invalid', () => {
       column: 'invalid',
     },
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "/columnTypes/column" should be one of "string", "number", "boolean", "date", or "json".'
   );
 });
@@ -150,7 +150,7 @@ test('read is not a boolean', () => {
     spreadsheetId: 'spreadsheetId',
     read: 'read',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "read" should be a boolean.'
   );
 });
@@ -160,7 +160,7 @@ test('write is not a boolean', () => {
     spreadsheetId: 'spreadsheetId',
     write: 'write',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'GoogleSheet connection property "write" should be a boolean.'
   );
 });

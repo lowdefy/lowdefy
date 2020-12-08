@@ -122,28 +122,28 @@ test('aggregation match dates', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request properties should be an object.'
   );
 });
 
 test('aggregation no pipeline', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request should have required property "pipeline".'
   );
 });
 
 test('aggregation pipeline not an array', async () => {
   const request = { pipeline: 'pipeline' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request property "pipeline" should be an array.'
   );
 });
 
 test('aggregation options not an object', async () => {
   const request = { pipeline, options: 'options' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request property "options" should be an object.'
   );
 });

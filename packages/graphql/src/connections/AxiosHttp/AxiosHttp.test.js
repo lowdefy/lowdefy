@@ -27,7 +27,7 @@ test('valid connection schema', () => {
   const connection = {
     url: 'https://example.com/api',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -58,14 +58,14 @@ test('valid connection schema, all properties', () => {
       port: 4030,
     },
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('url is not a string', () => {
   const connection = {
     url: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AxiosHttp property "url" should be a string.'
   );
 });

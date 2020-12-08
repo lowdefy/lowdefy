@@ -36,7 +36,7 @@ test('valid connection schema', () => {
     databaseUri: 'databaseUri',
     collection: 'collection',
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -47,12 +47,12 @@ test('valid connection schema, all properties', () => {
     read: true,
     write: true,
   };
-  expect(validate({ schema, object: connection })).toEqual({ valid: true });
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('connection properties is not an object', () => {
   const connection = 'connection';
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection properties should be an object.'
   );
 });
@@ -61,7 +61,7 @@ test('databaseUri missing', () => {
   const connection = {
     collection: 'collection',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection should have required property "databaseUri".'
   );
 });
@@ -71,7 +71,7 @@ test('databaseUri is not a string', () => {
     databaseUri: true,
     collection: 'collection',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection property "databaseUri" should be a string.'
   );
 });
@@ -80,7 +80,7 @@ test('collection missing', () => {
   const connection = {
     databaseUri: 'databaseUri',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection should have required property "collection".'
   );
 });
@@ -90,7 +90,7 @@ test('collection is not a string', () => {
     databaseUri: 'databaseUri',
     collection: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection property "collection" should be a string.'
   );
 });
@@ -101,7 +101,7 @@ test('databaseName is not a string', () => {
     collection: 'collection',
     databaseName: true,
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection property "databaseName" should be a string.'
   );
 });
@@ -112,7 +112,7 @@ test('read is not a boolean', () => {
     collection: 'collection',
     read: 'read',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection property "read" should be a boolean.'
   );
 });
@@ -123,7 +123,7 @@ test('write is not a boolean', () => {
     collection: 'collection',
     write: 'write',
   };
-  expect(() => validate({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'MongoDBCollection connection property "write" should be a boolean.'
   );
 });

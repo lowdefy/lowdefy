@@ -137,49 +137,49 @@ test('checkWrite should be true', async () => {
 
 test('Request properties is not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request properties should be an object.'
   );
 });
 
 test('Request property key missing', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request should have required property "key".'
   );
 });
 
 test('Request property key not a string', async () => {
   const request = { key: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "key" should be a string.'
   );
 });
 
 test('Request property acl not a string', async () => {
   const request = { key: 'key', acl: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 
 test('Request property acl not an allowed value', async () => {
   const request = { key: 'key', acl: 'acl' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 
 test('Request property conditions not an array', async () => {
   const request = { key: 'key', conditions: 'conditions' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "conditions" should be a array.'
   );
 });
 
 test('Request property expires not a number', async () => {
   const request = { key: 'key', expires: 'expires' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "expires" should be a number.'
   );
 });

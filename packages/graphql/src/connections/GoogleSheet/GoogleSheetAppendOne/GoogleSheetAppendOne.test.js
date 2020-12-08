@@ -155,7 +155,7 @@ test('valid request schema', () => {
       name: 'name',
     },
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('valid request schema, all options', () => {
@@ -167,12 +167,12 @@ test('valid request schema, all options', () => {
       raw: true,
     },
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request properties should be an object.'
   );
 });
@@ -181,14 +181,14 @@ test('row is not an object', () => {
   const request = {
     row: true,
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request property "row" should be an object.'
   );
 });
 
 test('row is missing', () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request should have required property "row".'
   );
 });
@@ -202,7 +202,7 @@ test('raw is not a boolean', () => {
       raw: 'raw',
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request property "options.raw" should be a boolean.'
   );
 });

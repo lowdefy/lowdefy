@@ -198,7 +198,7 @@ test('valid request schema', () => {
       },
     ],
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('valid request schema, all options', () => {
@@ -212,12 +212,12 @@ test('valid request schema, all options', () => {
       raw: true,
     },
   };
-  expect(validate({ schema, object: request })).toEqual({ valid: true });
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request properties should be an object.'
   );
 });
@@ -226,7 +226,7 @@ test('rows is not an array', () => {
   const request = {
     rows: true,
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "rows" should be an array.'
   );
 });
@@ -236,14 +236,14 @@ test('rows is not an array of objects', () => {
     rows: [1, 2, 3],
   };
   // Gives an error message for each item in array
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "rows" should be an array of objects.; GoogleSheetAppendMany request property "rows" should be an array of objects.'
   );
 });
 
 test('rows is missing', () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request should have required property "rows".'
   );
 });
@@ -259,7 +259,7 @@ test('raw is not a boolean', () => {
       raw: 'raw',
     },
   };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "options.raw" should be a boolean.'
   );
 });

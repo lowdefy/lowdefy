@@ -135,49 +135,49 @@ test('Error from s3 client', async () => {
 
 test('Request properties is not an object', async () => {
   const request = 'request';
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request properties should be an object.'
   );
 });
 
 test('Request key missing', async () => {
   const request = {};
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request should have required property "key".'
   );
 });
 
 test('Request expires property not a number', async () => {
   const request = { key: 'key', expires: 'expires' };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request property "expires" should be a number.'
   );
 });
 
 test('Request key not a string', async () => {
   const request = { key: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request property "key" should be a string.'
   );
 });
 
 test('Request responseContentDisposition not a string', async () => {
   const request = { key: 'key', responseContentDisposition: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request property "responseContentDisposition" should be a string.'
   );
 });
 
 test('Request responseContentType not a string', async () => {
   const request = { key: 'key', responseContentType: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request property "responseContentType" should be a string.'
   );
 });
 
 test('Request versionId not a string', async () => {
   const request = { key: 'key', versionId: true };
-  expect(() => validate({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedGetObject request property "versionId" should be a string.'
   );
 });
