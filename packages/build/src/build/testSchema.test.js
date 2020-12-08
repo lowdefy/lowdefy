@@ -80,9 +80,7 @@ test('invalid schema', async () => {
     [
       `--------- Schema Error ---------
 message: should be object
-path: global
-data:
-"global"
+path: /global
 --------------------------------`,
     ],
   ]);
@@ -110,39 +108,25 @@ test('multiple schema errors', async () => {
     [
       `--------- Schema Error ---------
 message: should have required property 'id'
-path: pages > 0
-data:
-{
-  "blocks": [...]
-}
+path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
 message: should have required property 'type'
-path: pages > 0
-data:
-{
-  "blocks": [...]
-}
+path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
 message: should be string
-path: pages > 1 > id
-data:
-1
+path: /pages/1/id
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
 message: should have required property 'type'
-path: pages > 1
-data:
-{
-  "id": 1
-}
+path: /pages/1
 --------------------------------`,
     ],
   ]);

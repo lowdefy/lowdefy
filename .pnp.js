@@ -3811,6 +3811,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.8"],
             ["@babel/core", "npm:7.12.9"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.7"],
+            ["@lowdefy/ajv", "workspace:packages/ajv"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/nodeUtils"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
