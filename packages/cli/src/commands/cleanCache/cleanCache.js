@@ -26,9 +26,9 @@ async function cleanCache(program) {
   }
   const print = createPrint();
   const cacheDir = path.resolve(baseDirectory, cacheDirectoryPath);
-  print.info(`Cleaning cache at "${cacheDir}".`);
+  print.log(`Cleaning cache at "${cacheDir}".`);
   await cleanDirectory(cacheDir);
-  print.info(`Cache cleaned.`);
+  print.succeed(`Cache cleaned.`);
 }
 
 export default cleanCache;

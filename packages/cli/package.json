@@ -59,6 +59,7 @@
     "inquirer": "7.3.3",
     "js-yaml": "3.14.0",
     "opener": "1.5.2",
+    "ora": "5.1.0",
     "reload": "3.1.1"
   },
   "devDependencies": {
@@ -76,7 +77,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "style-loader": "2.0.0",
-    "webpack": "5.9.0",
+    "webpack": "5.10.0",
     "webpack-cli": "4.2.0"
   }
 }

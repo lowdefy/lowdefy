@@ -27,7 +27,7 @@ dotenv.config({ silent: true });
 
 const { description, version } = packageJson;
 
-program.description(description).version(version, '-v, --version');
+program.name('lowdefy').description(description).version(version, '-v, --version');
 
 program
   .command('build')
@@ -75,6 +75,6 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .passCommandToAction(false)
-  .action(errorHandler(dev, { stayAlive: true }));
+  .action(errorHandler(dev));
 
 program.parse(process.argv);

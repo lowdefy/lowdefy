@@ -25,6 +25,7 @@ Steps to fetch meta
     - return
 */
 
+import { type as typeHelper } from '@lowdefy/helpers';
 import createFetchMetaCache from './fetchMetaCache';
 import createWriteMetaCache from './writeMetaCache';
 import defaultMetaLocations from './defaultMetaLocations';
@@ -38,13 +39,14 @@ function createGetMeta({ types, cacheDirectory }) {
   const fetchMetaCache = createFetchMetaCache({ cacheDirectory });
   const writeMetaCache = createWriteMetaCache({ cacheDirectory });
   async function getMeta(type) {
-    if (!metaLocations[type]) {
+    const location = metaLocations[type];
+    if (!location) {
       throw new Error(
-        `Type ${JSON.stringify(type)} is not defined. Specify type url in types array.`
+        `Block type ${JSON.stringify(type)} is not defined. Specify type url in types array.`
       );
     }
     let meta;
-    const location = metaLocations[type];
+
     meta = await fetchMetaCache(location);
 
     if (meta)
@@ -52,16 +54,17 @@ function createGetMeta({ types, cacheDirectory }) {
         type,
         meta,
       };
-    meta = await fetchMetaUrl(location);
-    if (meta) {
-      await writeMetaCache({ location, meta });
+    meta = await fetchMetaUrl({ location, type });
+    await writeMetaCache({ location, meta });
+    // TODO: implement Ajv schema check. Use testAjvSchema func from @lowdefy/graphql
+    if (meta && typeHelper.isString(meta.category) && meta.moduleFederation) {
       return {
         type,
         meta,
       };
     }
     throw new Error(
-      `Meta for type ${type} could not be found at location ${JSON.stringify(location)}.`
+      `Block type ${JSON.stringify(type)} has invalid block meta at ${JSON.stringify(location)}.`
     );
   }
 

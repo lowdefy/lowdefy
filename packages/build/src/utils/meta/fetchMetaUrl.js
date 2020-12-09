@@ -15,16 +15,26 @@
 */
 
 import axios from 'axios';
-import { type } from '@lowdefy/helpers';
+import { type as typeHelper } from '@lowdefy/helpers';
 
-async function fetchMetaUrl(location) {
-  if (type.isNone(location)) {
+async function fetchMetaUrl({ location, type } = {}) {
+  if (typeHelper.isNone(location)) {
     throw new Error('Failed to fetch meta, location is undefined.');
   }
-  if (!type.isString(location.url)) {
-    throw new Error('Location url definition should be a string.');
+  if (!typeHelper.isString(location.url)) {
+    throw new Error(`Block type ${JSON.stringify(type)} url definition should be a string.`);
   }
-  const res = await axios.get(location.url);
+  let res;
+  try {
+    res = await axios.get(location.url);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      throw new Error(
+        `Meta for type ${JSON.stringify(type)} could not be found at ${JSON.stringify(location)}.`
+      );
+    }
+    throw error;
+  }
   return res.data;
 }
 

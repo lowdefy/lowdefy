@@ -24,9 +24,11 @@ jest.mock('@lowdefy/node-utils', () => {
 });
 
 jest.mock('../../utils/print', () => {
-  const info = jest.fn();
+  const log = jest.fn();
+  const succeed = jest.fn();
   return () => ({
-    info,
+    log,
+    succeed,
   });
 });
 
@@ -40,18 +42,14 @@ test('cleanCache', async () => {
   await cleanCache({});
   const cachePath = path.resolve(process.cwd(), './.lowdefy/.cache');
   expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
-  expect(print.info.mock.calls).toEqual([
-    [`Cleaning cache at "${cachePath}".`],
-    ['Cache cleaned.'],
-  ]);
+  expect(print.log.mock.calls).toEqual([[`Cleaning cache at "${cachePath}".`]]);
+  expect(print.succeed.mock.calls).toEqual([['Cache cleaned.']]);
 });
 
 test('cleanCache baseDir', async () => {
   await cleanCache({ baseDirectory: 'baseDir' });
   const cachePath = path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache');
   expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
-  expect(print.info.mock.calls).toEqual([
-    [`Cleaning cache at "${cachePath}".`],
-    ['Cache cleaned.'],
-  ]);
+  expect(print.log.mock.calls).toEqual([[`Cleaning cache at "${cachePath}".`]]);
+  expect(print.succeed.mock.calls).toEqual([['Cache cleaned.']]);
 });

@@ -18,27 +18,43 @@ import axios from 'axios';
 import decompress from 'decompress';
 import decompressTargz from 'decompress-targz';
 
-async function fetchNpmTarball({ name, version, directory }) {
-  const registryUrl = `https://registry.npmjs.org/${name}`;
+async function fetchNpmTarball({ packageName, version, directory }) {
+  const registryUrl = `https://registry.npmjs.org/${packageName}`;
   let packageInfo;
   try {
     packageInfo = await axios.get(registryUrl);
   } catch (error) {
     if (error.response && error.response.status === 404) {
-      throw new Error(`Package "${name}" could not be found at ${registryUrl}.`);
+      throw new Error(`Package "${packageName}" could not be found at ${registryUrl}.`);
     }
     throw error;
   }
-  if (!packageInfo.data.versions[version]) {
-    throw new Error(`Invalid version. "${name}" does not have version "${version}".`);
+
+  if (!packageInfo || !packageInfo.data) {
+    throw new Error(`Package "${packageName}" could not be found at ${registryUrl}.`);
   }
-  const tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
-    responseType: 'arraybuffer',
-  });
+
+  if (!packageInfo.data.versions[version]) {
+    throw new Error(`Invalid version. "${packageName}" does not have version "${version}".`);
+  }
+  let tarball;
+
+  try {
+    tarball = await axios.get(packageInfo.data.versions[version].dist.tarball, {
+      responseType: 'arraybuffer',
+    });
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      throw new Error(
+        `Package "${packageName}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
+      );
+    }
+    throw error;
+  }
+
   if (!tarball || !tarball.data) {
-    /// TODO: Check if user has internet connection.
     throw new Error(
-      `Tarball could not be fetched from "${packageInfo.data.versions[version].dist.tarball}". Check internet connection.`
+      `Package "${packageName}" tarball could not be found at ${packageInfo.data.versions[version].dist.tarball}.`
     );
   }
   await decompress(tarball.data, directory, {

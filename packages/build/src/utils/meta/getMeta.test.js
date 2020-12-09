@@ -45,6 +45,16 @@ const types = {
   },
 };
 
+const defaultMeta = {
+  category: 'input',
+  moduleFederation: {
+    module: 'Module',
+    scope: 'scope',
+    version: '1.0.0',
+    remoteEntryUrl: `http://localhost:3002/remoteEntry.js`,
+  },
+};
+
 const getMeta = createGetMeta({ types, cacheDirectory: 'cacheDirectory' });
 
 beforeEach(() => {
@@ -56,36 +66,28 @@ beforeEach(() => {
 test('getMeta cache returns from cache', async () => {
   mockFetchMetaCache.mockImplementation((location) => {
     if (location && location.url === 'type1Url') {
-      return {
-        key: 'value',
-      };
+      return defaultMeta;
     }
     return null;
   });
   const res = await getMeta('Type1');
   expect(res).toEqual({
     type: 'Type1',
-    meta: {
-      key: 'value',
-    },
+    meta: defaultMeta,
   });
 });
 
 test('getMeta fetches from url and writes to cache', async () => {
-  mockFetchMetaUrl.mockImplementation((location) => {
+  mockFetchMetaUrl.mockImplementation(({ location }) => {
     if (location && location.url === 'type1Url') {
-      return {
-        key: 'value',
-      };
+      return defaultMeta;
     }
     return null;
   });
   const res = await getMeta('Type1');
   expect(res).toEqual({
     type: 'Type1',
-    meta: {
-      key: 'value',
-    },
+    meta: defaultMeta,
   });
   expect(mockWriteMetaCache.mock.calls).toEqual([
     [
@@ -93,9 +95,7 @@ test('getMeta fetches from url and writes to cache', async () => {
         location: {
           url: 'type1Url',
         },
-        meta: {
-          key: 'value',
-        },
+        meta: defaultMeta,
       },
     ],
   ]);
@@ -103,18 +103,25 @@ test('getMeta fetches from url and writes to cache', async () => {
 
 test('getMeta type not in types', async () => {
   await expect(getMeta('Undefined')).rejects.toThrow(
-    'Type "Undefined" is not defined. Specify type url in types array.'
+    'Block type "Undefined" is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta undefined type', async () => {
   await expect(getMeta()).rejects.toThrow(
-    'Type undefined is not defined. Specify type url in types array.'
+    'Block type undefined is not defined. Specify type url in types array.'
   );
 });
 
 test('getMeta meta not found in cache or url', async () => {
   await expect(getMeta('Type2')).rejects.toThrow(
-    'Meta for type Type2 could not be found at location {"url":"type2Url"}.'
+    'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
+  );
+});
+
+test('getMeta invalid meta', async () => {
+  mockFetchMetaUrl.mockImplementation(() => ({ invalidMeta: true }));
+  await expect(getMeta('Type2')).rejects.toThrow(
+    'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
   );
 });

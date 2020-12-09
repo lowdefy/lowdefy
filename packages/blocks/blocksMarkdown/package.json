@@ -43,7 +43,7 @@
     "@lowdefy/block-tools": "1.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-markdown": "5.0.2",
+    "react-markdown": "5.0.3",
     "react-syntax-highlighter": "15.3.1",
     "remark-gfm": "1.0.0"
   },
@@ -68,7 +68,7 @@
     "path-browserify": "1.0.1",
     "process": "0.11.10",
     "style-loader": "2.0.0",
-    "webpack": "5.9.0",
+    "webpack": "5.10.0",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.4.0",
