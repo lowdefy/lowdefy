@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import MongoDBFind from './MongoDBFind';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBFind;
 
@@ -88,32 +87,28 @@ test('checkWrite should be false', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBFind request properties should be an object.'
   );
 });
 
 test('request no query', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBFind request should have required property "query".'
   );
 });
 
 test('request query not an object', async () => {
   const request = { query: 'query' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBFind request property "query" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { query: { _id: 'test' }, options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBFind request property "options" should be an object.'
   );
 });

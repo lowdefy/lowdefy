@@ -14,11 +14,29 @@
   limitations under the License.
 */
 
-function formatErrorMessage(error) {
-  return `--------- Schema Error ---------
-message: ${error.message}
-path: ${error.dataPath}
---------------------------------`;
+import Ajv from 'ajv';
+import ajvErrors from 'ajv-errors';
+import createErrorMessage from './createErrorMessage';
+
+const ajv = new Ajv({
+  allErrors: true,
+  jsonPointers: true,
+});
+
+ajvErrors(ajv);
+
+function validate({ schema, data, returnErrors = false }) {
+  const valid = ajv.validate(schema, data);
+  if (!valid) {
+    if (returnErrors) {
+      return {
+        valid: false,
+        errors: ajv.errors,
+      };
+    }
+    throw new Error(createErrorMessage(ajv.errors));
+  }
+  return { valid: true };
 }
 
-export default formatErrorMessage;
+export default validate;

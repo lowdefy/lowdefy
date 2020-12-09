@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import MongoDBUpdateMany from './MongoDBUpdateMany';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBUpdateMany;
 
@@ -201,48 +200,42 @@ test('checkWrite should be true', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request properties should be an object.'
   );
 });
 
 test('request no filter', async () => {
   const request = { update: {} };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request should have required property "filter".'
   );
 });
 
 test('request no update', async () => {
   const request = { filter: {} };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request should have required property "update".'
   );
 });
 
 test('request update not an object', async () => {
   const request = { update: 'update', filter: {} };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request property "update" should be an object.'
   );
 });
 
 test('request filter not an object', async () => {
   const request = { update: {}, filter: 'filter' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request property "filter" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { update: {}, filter: {}, options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateMany request property "options" should be an object.'
   );
 });

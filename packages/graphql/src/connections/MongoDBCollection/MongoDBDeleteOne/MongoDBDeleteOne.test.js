@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteOne from './MongoDBDeleteOne';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBDeleteOne;
 
@@ -85,32 +84,28 @@ test('deleteOne catch invalid options', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request properties should be an object.'
   );
 });
 
 test('request no filter', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request should have required property "filter".'
   );
 });
 
 test('request filter not an object', async () => {
   const request = { filter: 'filter' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request property "filter" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { filter: { _id: 'test' }, options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBDeleteOne request property "options" should be an object.'
   );
 });

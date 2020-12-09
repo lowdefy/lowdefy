@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import MongoDBAggregation from './MongoDBAggregation';
 import populateTestMongoDb from '../../../test/populateTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBAggregation;
 
@@ -123,32 +122,28 @@ test('aggregation match dates', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request properties should be an object.'
   );
 });
 
 test('aggregation no pipeline', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request should have required property "pipeline".'
   );
 });
 
 test('aggregation pipeline not an array', async () => {
   const request = { pipeline: 'pipeline' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request property "pipeline" should be an array.'
   );
 });
 
 test('aggregation options not an object', async () => {
   const request = { pipeline, options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request property "options" should be an object.'
   );
 });
