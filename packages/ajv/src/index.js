@@ -14,23 +14,6 @@
   limitations under the License.
 */
 
-import Ajv from 'ajv';
-import appSchema from './appSchema.json';
+import validate from './validate';
 
-function testAppSchema(app) {
-  const ajv = new Ajv({
-    allErrors: true,
-  });
-  const valid = ajv.validate(appSchema, app);
-  if (!valid) {
-    return {
-      valid: false,
-      errors: ajv.errors,
-    };
-  }
-  return {
-    valid: true,
-  };
-}
-
-export default testAppSchema;
+export { validate };

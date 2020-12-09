@@ -22,7 +22,7 @@ test('global incorrect type', async () => {
   };
   const error = {
     keyword: 'type',
-    dataPath: '.global',
+    dataPath: '/global',
     schemaPath: '#/properties/global/type',
     params: {
       type: 'object',
@@ -33,9 +33,7 @@ test('global incorrect type', async () => {
   const res = formatErrorMessage(error, app);
   expect(res).toEqual(`--------- Schema Error ---------
 message: should be object
-path: global
-data:
-"global"
+path: /global
 --------------------------------`);
 });
 
@@ -55,7 +53,7 @@ test('page id missing', async () => {
   };
   const error = {
     keyword: 'required',
-    dataPath: '.pages[0]',
+    dataPath: '/pages/0',
     schemaPath: '#/required',
     params: {
       missingProperty: 'id',
@@ -74,12 +72,7 @@ test('page id missing', async () => {
   const res = formatErrorMessage(error, app);
   expect(res).toEqual(`--------- Schema Error ---------
 message: should have required property 'id'
-path: pages > 0
-data:
-{
-  "type": "PageHeaderMenu",
-  "blocks": [...]
-}
+path: /pages/0
 --------------------------------`);
 });
 
@@ -94,7 +87,7 @@ test('page type missing', async () => {
   };
   const error = {
     keyword: 'required',
-    dataPath: '.pages[0]',
+    dataPath: '/pages/0',
     schemaPath: '#/required',
     params: {
       missingProperty: 'type',
@@ -108,12 +101,7 @@ test('page type missing', async () => {
   const res = formatErrorMessage(error, app);
   expect(res).toEqual(`--------- Schema Error ---------
 message: should have required property 'type'
-path: pages > page1
-data:
-{
-  "id": "page1",
-  "blocks": [...]
-}
+path: /pages/0
 --------------------------------`);
 });
 
@@ -128,7 +116,7 @@ test('id incorrect type', async () => {
   };
   const error = {
     keyword: 'type',
-    dataPath: '.pages[0].id',
+    dataPath: '/pages/0/id',
     schemaPath: '#/properties/id/type',
     params: {
       type: 'string',
@@ -139,86 +127,6 @@ test('id incorrect type', async () => {
   const res = formatErrorMessage(error, app);
   expect(res).toEqual(`--------- Schema Error ---------
 message: should be string
-path: pages > 1 > id
-data:
-1
---------------------------------`);
-});
-
-test('replace arrays', async () => {
-  const app = {
-    config: 'config',
-    pages: [
-      {
-        type: 'PageHeaderMenu',
-        blocks: {
-          Content: [
-            {
-              id: 'b1',
-              type: 'TextInput',
-            },
-          ],
-          Footer: [
-            {
-              id: 'b2',
-              type: 'TextInput',
-            },
-          ],
-        },
-      },
-    ],
-  };
-  const error = {
-    keyword: 'required',
-    dataPath: '.pages[0]',
-    schemaPath: '#/required',
-    params: {
-      missingProperty: 'id',
-    },
-    message: "should have required property 'id'",
-    data: {
-      type: 'PageHeaderMenu',
-      blocks: [
-        {
-          id: 'b1',
-          type: 'TextInput',
-        },
-      ],
-    },
-  };
-  const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
-message: should have required property 'id'
-path: pages > 0
-data:
-{
-  "type": "PageHeaderMenu",
-  "blocks": {
-    "Content": [...],
-    "Footer": [...]
-  }
-}
---------------------------------`);
-});
-
-// Not sure if this will ever happen, but testing for coverage
-test('dataPath not found in app', async () => {
-  const app = {};
-  const error = {
-    keyword: 'type',
-    dataPath: '.global',
-    schemaPath: '#/properties/global/type',
-    params: {
-      type: 'object',
-    },
-    message: 'should be object',
-    data: 'global',
-  };
-  const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
-message: should be object
-path: global
-data:
-
+path: /pages/0/id
 --------------------------------`);
 });

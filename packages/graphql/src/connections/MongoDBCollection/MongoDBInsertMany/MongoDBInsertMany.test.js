@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import MongoDBInsertMany from './MongoDBInsertMany';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBInsertMany;
 
@@ -116,40 +115,35 @@ test('checkWrite should be true', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request properties should be an object.'
   );
 });
 
 test('request no docs', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request should have required property "docs".'
   );
 });
 
 test('request docs not an array', async () => {
   const request = { docs: 'docs' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "docs" should be an array.'
   );
 });
 
 test('request docs not an array of objects', async () => {
   const request = { docs: [1, 2, 3] };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "docs" should be an array of documents to insert.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { docs: [], options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "options" should be an object.'
   );
 });

@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
 import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 jest.mock('aws-sdk');
 
@@ -138,56 +137,49 @@ test('checkWrite should be true', async () => {
 
 test('Request properties is not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request properties should be an object.'
   );
 });
 
 test('Request property key missing', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request should have required property "key".'
   );
 });
 
 test('Request property key not a string', async () => {
   const request = { key: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "key" should be a string.'
   );
 });
 
 test('Request property acl not a string', async () => {
   const request = { key: 'key', acl: true };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 
 test('Request property acl not an allowed value', async () => {
   const request = { key: 'key', acl: 'acl' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "acl" is not one of "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read", "bucket-owner-read", "bucket-owner-full-control".'
   );
 });
 
 test('Request property conditions not an array', async () => {
   const request = { key: 'key', conditions: 'conditions' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "conditions" should be a array.'
   );
 });
 
 test('Request property expires not a number', async () => {
   const request = { key: 'key', expires: 'expires' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'AwsS3PresignedPostPolicy request property "expires" should be a number.'
   );
 });

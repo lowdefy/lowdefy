@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import { MongoClient } from 'mongodb';
 import MongoDBInsertOne from './MongoDBInsertOne';
 import clearTestMongoDb from '../../../test/clearTestMongoDb';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema, checkRead, checkWrite } = MongoDBInsertOne;
 
@@ -154,32 +153,28 @@ test('insertOne insert a date', async () => {
 
 test('request not an object', async () => {
   const request = 'request';
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request properties should be an object.'
   );
 });
 
 test('request no doc', async () => {
   const request = {};
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request should have required property "doc".'
   );
 });
 
 test('request doc not an object', async () => {
   const request = { doc: 'doc' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request property "doc" should be an object.'
   );
 });
 
 test('request options not an object', async () => {
   const request = { doc: {}, options: 'options' };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request property "options" should be an object.'
   );
 });

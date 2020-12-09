@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import SendGridMailSend from './SendGridMailSend';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const { resolver, schema } = SendGridMailSend;
 
@@ -102,8 +101,7 @@ test('Error request with no to', async () => {
     subject: 'A',
     text: 'B',
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
@@ -114,8 +112,7 @@ test('Error request with to is not a email address', async () => {
     text: 'B',
     to: true,
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
@@ -126,8 +123,7 @@ test('Error request with subject is not a string', async () => {
     text: 'B',
     to: 'a@b.com',
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request property "subject" should be a string.; SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
@@ -137,8 +133,7 @@ test('Error request with text is not a string', async () => {
     text: true,
     to: 'a@b.com',
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
@@ -148,8 +143,7 @@ test('Error request with html is not a string', async () => {
     html: true,
     to: 'a@b.com',
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });
@@ -159,8 +153,7 @@ test('Error request with dynamicTemplateData is not an object', async () => {
     dynamicTemplateData: true,
     to: 'a@b.com',
   };
-  await expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  await expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'SendGridMailSend request properties should be an object or a array describing emails to send.'
   );
 });

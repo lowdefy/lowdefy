@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import GoogleSheetDeleteOne from './GoogleSheetDeleteOne';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const mockGetRows = jest.fn();
 const mockDelete = jest.fn();
@@ -142,13 +141,12 @@ test('valid request schema', () => {
   const request = {
     filter: { id: '1' },
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request properties should be an object.'
   );
 });
@@ -157,16 +155,14 @@ test('filter is not an object', () => {
   const request = {
     filter: true,
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "filter" should be an object.'
   );
 });
 
 test('filter is missing', () => {
   const request = {};
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request should have required property "filter".'
   );
 });
@@ -177,8 +173,7 @@ test('limit is not a number', () => {
       limit: true,
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "options.limit" should be a number.'
   );
 });
@@ -189,8 +184,7 @@ test('skip is not a number', () => {
       skip: true,
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request property "options.skip" should be a number.'
   );
 });

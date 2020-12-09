@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import AwsS3Bucket from './AwsS3Bucket';
-import testSchema from '../../utils/testSchema';
-import { ConfigurationError } from '../../context/errors';
 
 const { schema } = AwsS3Bucket;
 
@@ -32,7 +31,7 @@ test('valid connection schema', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('valid connection schema, all properties', () => {
@@ -44,7 +43,7 @@ test('valid connection schema, all properties', () => {
     read: true,
     write: true,
   };
-  expect(testSchema({ schema, object: connection })).toBe(true);
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('accessKeyId missing', () => {
@@ -53,8 +52,7 @@ test('accessKeyId missing', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection should have required property "accessKeyId".'
   );
 });
@@ -66,8 +64,7 @@ test('accessKeyId is not a string', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "accessKeyId" should be a string.'
   );
 });
@@ -78,8 +75,7 @@ test('secretAccessKey missing', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection should have required property "secretAccessKey".'
   );
 });
@@ -91,8 +87,7 @@ test('secretAccessKey is not a string', () => {
     region: 'region',
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "secretAccessKey" should be a string.'
   );
 });
@@ -103,8 +98,7 @@ test('region missing', () => {
     secretAccessKey: 'secretAccessKey',
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection should have required property "region".'
   );
 });
@@ -116,8 +110,7 @@ test('region is not a string', () => {
     region: true,
     bucket: 'bucket',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "region" should be a string.'
   );
 });
@@ -128,8 +121,7 @@ test('bucket missing', () => {
     secretAccessKey: 'secretAccessKey',
     region: 'region',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection should have required property "bucket".'
   );
 });
@@ -141,8 +133,7 @@ test('bucket is not a string', () => {
     region: 'region',
     bucket: true,
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "bucket" should be a string.'
   );
 });
@@ -155,8 +146,7 @@ test('read is not a boolean', () => {
     bucket: 'bucket',
     read: 'read',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "read" should be a boolean.'
   );
 });
@@ -169,8 +159,7 @@ test('write is not a boolean', () => {
     bucket: 'bucket',
     write: 'write',
   };
-  expect(() => testSchema({ schema, object: connection })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: connection })).toThrow(
+  expect(() => validate({ schema, data: connection })).toThrow(
     'AwsS3Bucket connection property "write" should be a boolean.'
   );
 });
