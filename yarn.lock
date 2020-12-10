@@ -2706,7 +2706,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/helpers": 1.1.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 26.6.3
@@ -2749,7 +2749,7 @@ __metadata:
     "@lowdefy/color": 1.0.0
     "@lowdefy/format": 1.0.0
     "@lowdefy/helpers": 1.1.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     antd: 4.4.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2794,7 +2794,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -2830,7 +2830,7 @@ __metadata:
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/blocks-antd": 1.0.2
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     babel-plugin-import: 1.13.3
@@ -2871,7 +2871,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -4545,9 +4545,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wojtekmaj/enzyme-adapter-react-17@npm:0.3.1":
-  version: 0.3.1
-  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.3.1"
+"@wojtekmaj/enzyme-adapter-react-17@npm:0.3.2":
+  version: 0.3.2
+  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.3.2"
   dependencies:
     enzyme-adapter-utils: ^1.13.1
     enzyme-shallow-equal: ^1.0.4
@@ -4562,7 +4562,7 @@ __metadata:
     enzyme: ^3.0.0
     react: ^17.0.0-0
     react-dom: ^17.0.0-0
-  checksum: 419f7fd492ed2770d5001085fc9ad0019de88e6acd72e91b39119aa974a0cf9b87be60dc75629f0ffaebe7bc692665732d8d9aa6352061edd1687778cf912508
+  checksum: 859a1237a0b878100fd9f41c6e0a33780aa4c494fea797b073e8e81b82a14747ee7744d99b8abafeef45654409f210da26b2fd1cd1faa3dd72fbbefe4e86db6b
   languageName: node
   linkType: hard
 
