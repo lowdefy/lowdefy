@@ -2946,7 +2946,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 3.14.0
     json5: 2.1.3
-    uuid: 8.3.1
+    uuid: 8.3.2
     webpack: 5.10.0
     webpack-cli: 4.2.0
   languageName: unknown
@@ -19843,12 +19843,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"uuid@npm:8.3.1, uuid@npm:^8.0.0, uuid@npm:^8.2.0, uuid@npm:^8.3.0":
-  version: 8.3.1
-  resolution: "uuid@npm:8.3.1"
+"uuid@npm:8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
   bin:
     uuid: dist/bin/uuid
-  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
+  checksum: aed2bcef341f95635f308fea8831fb9038b18c485fe7e71feb89d2e05602dfecad0cb6f2246fae096d4da425cca6e8a71056f28abd97ad98cf770a2018853248
   languageName: node
   linkType: hard
 
@@ -19858,6 +19858,15 @@ fsevents@^1.2.7:
   bin:
     uuid: ./bin/uuid
   checksum: 1ce3f37e214d6d0dc94a6a9663a0365013ace66bc3fd5b203e6f5d2eeb978aaee1192367222386345d30b4c6a447928c501121aa84c637724bf105ef57284949
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.0.0, uuid@npm:^8.2.0, uuid@npm:^8.3.0":
+  version: 8.3.1
+  resolution: "uuid@npm:8.3.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
   languageName: node
   linkType: hard
 
