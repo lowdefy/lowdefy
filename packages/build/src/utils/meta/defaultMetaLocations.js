@@ -232,6 +232,34 @@ const defaultMetaLocations = {
   ColorSelector: {
     url: 'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/ColorSelector.json',
   },
+  ChromeColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/ChromeColorSelector.json',
+  },
+  CircleColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/CircleColorSelector.json',
+  },
+  CompactColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/CompactColorSelector.json',
+  },
+  GithubColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/GithubColorSelector.json',
+  },
+  SliderColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/SliderColorSelector.json',
+  },
+  SwatchesColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/SwatchesColorSelector.json',
+  },
+  TwitterColorSelector: {
+    url:
+      'https://unpkg.com/@lowdefy/blocks-color-selectors@^1.0.0/dist/meta/TwitterColorSelector.json',
+  },
   // @lowdefy/blocks-markdown
   Markdown: {
     url: 'https://unpkg.com/@lowdefy/blocks-markdown@^1.0.0/dist/meta/Markdown.json',

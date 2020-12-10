@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import GoogleSheetAppendMany from './GoogleSheetAppendMany';
-import { ConfigurationError } from '../../../context/errors';
-import testSchema from '../../../utils/testSchema';
 
 const mockAddRows = jest.fn();
 jest.mock('../getSheet', () => () => ({
@@ -199,7 +198,7 @@ test('valid request schema', () => {
       },
     ],
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('valid request schema, all options', () => {
@@ -213,13 +212,12 @@ test('valid request schema, all options', () => {
       raw: true,
     },
   };
-  expect(testSchema({ schema, object: request })).toBe(true);
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('request properties is not an object', () => {
   const request = 'request';
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request properties should be an object.'
   );
 });
@@ -228,8 +226,7 @@ test('rows is not an array', () => {
   const request = {
     rows: true,
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "rows" should be an array.'
   );
 });
@@ -238,17 +235,15 @@ test('rows is not an array of objects', () => {
   const request = {
     rows: [1, 2, 3],
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
   // Gives an error message for each item in array
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "rows" should be an array of objects.; GoogleSheetAppendMany request property "rows" should be an array of objects.'
   );
 });
 
 test('rows is missing', () => {
   const request = {};
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request should have required property "rows".'
   );
 });
@@ -264,8 +259,7 @@ test('raw is not a boolean', () => {
       raw: 'raw',
     },
   };
-  expect(() => testSchema({ schema, object: request })).toThrow(ConfigurationError);
-  expect(() => testSchema({ schema, object: request })).toThrow(
+  expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request property "options.raw" should be a boolean.'
   );
 });

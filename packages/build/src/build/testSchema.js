@@ -14,17 +14,20 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
+import lowdefySchema from '../lowdefySchema.json';
 import formatErrorMessage from '../utils/formatErrorMessage';
-import testAppSchema from '../utils/testAppSchema';
 
 async function testSchema({ components, context }) {
-  const { valid, errors } = testAppSchema(components);
+  const { valid, errors } = validate({
+    schema: lowdefySchema,
+    data: components,
+    returnErrors: true,
+  });
   if (!valid) {
     await context.logger.warn('Schema not valid.');
     const promises = errors.map((err) => context.logger.warn(formatErrorMessage(err, components)));
     await promises;
-  } else {
-    await context.logger.log('Schema valid.');
   }
 }
 

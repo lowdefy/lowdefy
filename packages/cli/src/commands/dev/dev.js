@@ -24,18 +24,28 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
-import getBuildScript from '../../utils/getBuildScript';
-import getGraphql from './getGraphql';
+import getFederatedModule from '../../utils/getFederatedModule';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {
   // Setup
   if (!options.port) options.port = 3000;
   const context = await createContext(options);
-  await getBuildScript(context);
-  await getGraphql(context);
+  const { default: buildScript } = await getFederatedModule({
+    module: 'build',
+    packageName: '@lowdefy/build',
+    version: context.version,
+    context,
+  });
 
-  context.print.info('Starting development server.');
+  const { typeDefs, resolvers, createContext: createGqlContext } = await getFederatedModule({
+    module: 'graphql',
+    packageName: '@lowdefy/graphql-federated',
+    version: context.version,
+    context,
+  });
+
+  context.print.log('Starting Lowdefy development server.');
 
   //Graphql
   const config = {
@@ -43,7 +53,6 @@ async function dev(options) {
     logger: console,
     getSecrets: createGetSecretsFromEnv(),
   };
-  const { typeDefs, resolvers, createContext: createGqlContext } = context.graphql;
   const gqlContext = createGqlContext(config);
   const server = new ApolloServer({ typeDefs, resolvers, context: gqlContext });
 
@@ -62,13 +71,14 @@ async function dev(options) {
 
   // File watcher
   const fn = async () => {
-    context.print.info('Building configuration.');
-    await context.buildScript({
+    context.print.log('Building configuration.');
+    await buildScript({
       logger: context.print,
       cacheDirectory: context.cacheDirectory,
       configDirectory: context.baseDirectory,
       outputDirectory: path.resolve(context.baseDirectory, outputDirectoryPath),
     });
+    context.print.succeed('Built succesfully.');
     reloadReturned.reload();
   };
   const batchChanges = new BatchChanges({ fn, context });
@@ -83,7 +93,7 @@ async function dev(options) {
 
   // Start server
   app.listen(app.get('port'), function () {
-    context.print.log(`Development server listening on port ${options.port}`);
+    context.print.info(`Development server listening on port ${options.port}`);
   });
   opener(`http://localhost:${options.port}`);
 }

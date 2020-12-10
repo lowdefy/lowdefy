@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
 import { serializer } from '@lowdefy/helpers';
 import { NodeParser } from '@lowdefy/operators';
 import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
-import testSchema from '../utils/testSchema';
 
 class RequestController {
   constructor({ getLoader, getSecrets }) {
@@ -70,8 +70,13 @@ class RequestController {
       connection,
       checkWrite: requestDefinition.checkWrite,
     });
-    testSchema({ schema: connectionDefinition.schema, object: connectionProperties });
-    testSchema({ schema: requestDefinition.schema, object: requestProperties });
+
+    try {
+      validate({ schema: connectionDefinition.schema, data: connectionProperties });
+      validate({ schema: requestDefinition.schema, data: requestProperties });
+    } catch (error) {
+      throw new ConfigurationError(error);
+    }
 
     const response = await this.callResolver({
       connectionProperties,
@@ -203,6 +208,6 @@ function createRequestController(context) {
   return new RequestController(context);
 }
 
-export { RequestController, testSchema };
+export { RequestController };
 
 export default createRequestController;

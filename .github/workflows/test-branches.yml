@@ -15,9 +15,6 @@ jobs:
         with:
           node-version: '12.x'
       - uses: actions/checkout@v2
-        with:
-          # needed for yarn version check, checks out entire repo
-          fetch-depth: 0
       - name: Check yarn cache integrity
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Build packages
@@ -28,7 +25,7 @@ jobs:
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v2.7.4
+        uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         with:

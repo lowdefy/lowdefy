@@ -18,28 +18,28 @@ import testSchema from './testSchema';
 import testContext from '../test/testContext';
 
 const mockLogWarn = jest.fn();
-const mockLog = jest.fn();
 
 const logger = {
   warn: mockLogWarn,
-  log: mockLog,
 };
 
 const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
-  mockLog.mockReset();
 });
 
 test('empty components', async () => {
-  const components = {};
+  const components = {
+    version: '1.0.0',
+  };
   await testSchema({ components, context });
-  expect(mockLog.mock.calls).toEqual([['Schema valid.']]);
+  expect().toBe();
 });
 
 test('app schema', async () => {
   const components = {
+    version: '1.0.0',
     connections: [
       {
         id: 'postman',
@@ -70,11 +70,12 @@ test('app schema', async () => {
     ],
   };
   testSchema({ components, context });
-  expect(mockLog.mock.calls).toEqual([['Schema valid.']]);
+  expect().toBe();
 });
 
 test('invalid schema', async () => {
   const components = {
+    version: '1.0.0',
     global: 'global',
   };
   await testSchema({ components, context });
@@ -82,10 +83,8 @@ test('invalid schema', async () => {
     ['Schema not valid.'],
     [
       `--------- Schema Error ---------
-message: should be object
-path: global
-data:
-"global"
+message: global should be an object.
+path: /global
 --------------------------------`,
     ],
   ]);
@@ -93,6 +92,7 @@ data:
 
 test('multiple schema errors', async () => {
   const components = {
+    version: '1.0.0',
     pages: [
       {
         blocks: [
@@ -112,40 +112,26 @@ test('multiple schema errors', async () => {
     ['Schema not valid.'],
     [
       `--------- Schema Error ---------
-message: should have required property 'id'
-path: pages > 0
-data:
-{
-  "blocks": [...]
-}
+message: Block should have required property "id".
+path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should have required property 'type'
-path: pages > 0
-data:
-{
-  "blocks": [...]
-}
+message: Block should have required property "type".
+path: /pages/0
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should be string
-path: pages > 1 > id
-data:
-1
+message: Block id should be a string.
+path: /pages/1/id
 --------------------------------`,
     ],
     [
       `--------- Schema Error ---------
-message: should have required property 'type'
-path: pages > 1
-data:
-{
-  "id": 1
-}
+message: Block should have required property "type".
+path: /pages/1
 --------------------------------`,
     ],
   ]);

@@ -14,26 +14,10 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
-import getIdPath from './getIdPath';
-
-function arrayReplacer(key, value) {
-  if (type.isArray(value)) {
-    return '_ARRAY_PLACEHOLDER_';
-  }
-  return value;
-}
-
-function formatErrorMessage(error, app) {
-  const path = error.dataPath.substring(1).replace('[', '.').replace(']', '');
+function formatErrorMessage(error) {
   return `--------- Schema Error ---------
 message: ${error.message}
-path: ${getIdPath(path, app)}
-data:
-${(JSON.stringify(get(app, path), arrayReplacer, 2) || '').replace(
-  /"_ARRAY_PLACEHOLDER_"/g,
-  '[...]'
-)}
+path: ${error.dataPath}
 --------------------------------`;
 }
 

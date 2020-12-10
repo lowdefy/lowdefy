@@ -1,0 +1,443 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://lowdefy.com/appSchema.json",
+  "type": "object",
+  "title": "Lowdefy App Schema",
+  "definitions": {
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Connection id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Connection type should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Connection properties should be an object."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Connection should be an object.",
+        "required": {
+          "id": "Connection should have required property \"id\".",
+          "type": "Connection should have required property \"type\"."
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Block id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Block type should be a string."
+          }
+        },
+        "properties": {
+          "type": "object"
+        },
+        "layout": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Block layout should be an object."
+          }
+        },
+        "style": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Block style should be an object."
+          }
+        },
+        "visible": {},
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/block"
+          },
+          "errorMessage": {
+            "type": "Block blocks should be an array."
+          }
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/request"
+          },
+          "errorMessage": {
+            "type": "Block requests should be an array."
+          }
+        },
+        "required": {},
+        "validate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "errorMessage": {
+              "type": "Block validate should be an array of objects."
+            }
+          },
+          "errorMessage": {
+            "type": "Block validate should be an array."
+          }
+        },
+        "actions": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/action"
+              }
+            }
+          },
+          "errorMessage": {
+            "type": "Block actions should be an object."
+          }
+        },
+        "areas": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/block"
+                  },
+                  "errorMessage": {
+                    "type": "Block areas.{areaKey}.blocks should be an array."
+                  }
+                }
+              },
+              "errorMessage": {
+                "type": "Block areas.{areaKey} should be an object."
+              }
+            }
+          },
+          "errorMessage": {
+            "type": "Block areas should be an object."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Block should be an object.",
+        "required": {
+          "id": "Block should have required property \"id\".",
+          "type": "Block should have required property \"type\"."
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "connectionId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request type should be a string."
+          }
+        },
+        "connectionId": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request connectionId should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Request properties should be an object."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Request should be an object.",
+        "required": {
+          "id": "Request should have required property \"id\".",
+          "type": "Request should have required property \"type\".",
+          "connectionId": "Request should have required property \"connectionId\"."
+        }
+      }
+    },
+    "menuLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink type should be a string."
+          }
+        },
+        "pageId": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink pageId should be a string."
+          }
+        },
+        "url": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink url should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "MenuLink properties should be an object."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "MenuLink should be an object.",
+        "required": {
+          "id": "MenuLink should have required property \"id\".",
+          "type": "MenuLink should have required property \"type\"."
+        }
+      }
+    },
+    "menuGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuGroup id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuGroup type should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "MenuGroup properties should be an object."
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/menuItem"
+          },
+          "errorMessage": {
+            "type": "MenuGroup links should be an array."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "MenuGroup should be an object.",
+        "required": {
+          "id": "MenuGroup should have required property \"id\".",
+          "type": "MenuGroup should have required property \"type\"."
+        }
+      }
+    },
+    "menuItem": {
+      "$anyOf": [
+        {
+          "$ref": "#/definitions/menuGroup"
+        },
+        {
+          "$ref": "#/definitions/menuLink"
+        }
+      ]
+    },
+    "menu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Menu id should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Menu properties should be an object."
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/menuItem"
+          },
+          "errorMessage": {
+            "type": "Menu links should be an array."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Menu should be an object.",
+        "required": {
+          "id": "Menu should have required property \"id\"."
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Action id should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Action type should be a string."
+          }
+        },
+        "success": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Action success should be a string."
+          }
+        },
+        "error": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Action error should be a string."
+          }
+        },
+        "skip": {},
+        "params": {}
+      },
+      "errorMessage": {
+        "type": "Action should be an object.",
+        "required": {
+          "id": "Action should have required property \"id\".",
+          "type": "Action should have required property \"type\"."
+        }
+      }
+    }
+  },
+  "required": [
+    "version"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "errorMessage": {
+        "type": "Lowdefy name should be a string."
+      }
+    },
+    "version": {
+      "type": "string",
+      "errorMessage": {
+        "type": "version should be a string."
+      }
+    },
+    "config": {
+      "type": "object",
+      "errorMessage": {
+        "type": "config should be an object."
+      }
+    },
+    "global": {
+      "type": "object",
+      "errorMessage": {
+        "type": "global should be an object."
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/connection"
+      },
+      "errorMessage": {
+        "type": "connections should be an array."
+      }
+    },
+    "menus": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/menu"
+      },
+      "errorMessage": {
+        "type": "menus should be an array."
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/block"
+      },
+      "errorMessage": {
+        "type": "pages should be an array."
+      }
+    }
+  },
+  "errorMessage": {
+    "type": "Lowdefy configuration should be an object.",
+    "required": {
+      "version": "Lowdefy configuration should have required property \"version\"."
+    }
+  }
+}

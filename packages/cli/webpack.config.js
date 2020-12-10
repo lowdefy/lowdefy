@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const { dependencies, devDependencies } = require('./package.json');
@@ -42,7 +43,7 @@ module.exports = [
       ],
     },
     plugins: [
-      // new CleanWebpackPlugin(),
+      new CleanWebpackPlugin(),
       new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
       new ModuleFederationPlugin({
         name: 'cli',
@@ -107,6 +108,14 @@ module.exports = [
       }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: './src/commands/dev/shell/public',
+            to: 'public',
+          },
+        ],
       }),
     ],
   },

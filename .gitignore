@@ -3,6 +3,7 @@
 .yarn/install-state.gz
 
 **/dist/*
+**/es/*
 **/coverage/*
 **/.lowdefy/*
 **/lowdefy.yaml

@@ -158,8 +158,8 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                         src={
                           (properties.logo && properties.logo.src) ||
                           (get(properties, 'header.theme') === 'light'
-                            ? 'https://lowdefy.com/logos/name_250.png'
-                            : 'https://lowdefy.com/logos/box_white_250.png')
+                            ? '/public/logo-light-theme.png'
+                            : '/public/logo-dark-theme.png')
                         }
                         alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
                         className={methods.makeCssClass([

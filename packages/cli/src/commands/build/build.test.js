@@ -16,16 +16,17 @@
 import path from 'path';
 import build from './build';
 // eslint-disable-next-line no-unused-vars
-import getBuildScript from '../../utils/getBuildScript';
+import getFederatedModule from '../../utils/getFederatedModule';
 import createContext from '../../utils/context';
 
 const info = jest.fn();
+const succeed = jest.fn();
+const log = jest.fn();
 
-jest.mock('../../utils/getBuildScript', () => {
+jest.mock('../../utils/getFederatedModule', () => {
   const buildScript = jest.fn();
-  return (context) => {
-    context.buildScript = buildScript;
-    return context;
+  return () => {
+    return { default: buildScript };
   };
 });
 
@@ -45,6 +46,8 @@ test('build', async () => {
   createContext.mockImplementation(() => ({
     print: {
       info,
+      succeed,
+      log,
     },
     baseDirectory,
     cacheDirectory,
@@ -52,7 +55,7 @@ test('build', async () => {
   }));
   await build({});
   const context = createContext.mock.results[0].value;
-  const { buildScript } = context;
+  const { default: buildScript } = getFederatedModule();
   expect(createContext).toHaveBeenCalledTimes(1);
   expect(buildScript).toHaveBeenCalledTimes(1);
   expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);

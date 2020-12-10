@@ -57,7 +57,7 @@ exports[`Render default - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -215,7 +215,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -407,7 +407,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -565,7 +565,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -738,7 +738,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -995,7 +995,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -1153,7 +1153,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/name_250.png"
+        src="/public/logo-light-theme.png"
       />
     </a>
   </header>
@@ -1400,7 +1400,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
       <img
         alt="Header logo alt text"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -1894,7 +1894,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},{\\"border\\":\\"5px solid blue\\"}]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -2052,7 +2052,7 @@ exports[`Render properties.menu - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -2299,7 +2299,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -2546,7 +2546,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -2793,7 +2793,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -2962,7 +2962,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -3131,7 +3131,7 @@ exports[`Render properties.style - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -3289,7 +3289,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>
@@ -3429,7 +3429,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
       <img
         alt="Lowdefy"
         className="{\\"style\\":[{\\"width\\":130,\\"margin\\":\\"0 30px 0 0\\",\\"flex\\":\\"0 1 auto\\",\\"sm\\":{\\"margin\\":\\"0 10px 0 0\\"},\\"md\\":{\\"margin\\":\\"0 15px 0 0\\"}},null]}"
-        src="https://lowdefy.com/logos/box_white_250.png"
+        src="/public/logo-dark-theme.png"
       />
     </a>
   </header>

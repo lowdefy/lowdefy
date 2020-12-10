@@ -443,6 +443,252 @@ test('block should only not be visible when visible === false', () => {
   });
 });
 
+test('block should only not be evaluated when visible === false', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'a',
+            visible: false,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'b',
+            visible: true,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'c',
+            visible: 0,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'd',
+            visible: 1,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'e',
+            visible: 42,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'f',
+            visible: '',
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'g',
+            visible: 'hello',
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'h',
+            visible: [],
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'i',
+            visible: ['a'],
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'j',
+            visible: {},
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'k',
+            visible: { k: 'k' },
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'l',
+            visible: null,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'm',
+            visible: undefined,
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+          {
+            type: 'TextInput',
+            blockId: 'n',
+            properties: {
+              title: {
+                _state: 'title',
+              },
+            },
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+    initState: {
+      title: 'test',
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      d: 'd',
+      e: 'e',
+      f: 'f',
+      g: 'g',
+      h: 'h',
+      i: 'i',
+      j: 'j',
+      k: 'k',
+      l: 'l',
+      m: 'm',
+      n: 'n',
+    },
+  });
+  expect(context.RootBlocks.map.a.eval.properties).toEqual();
+  expect(context.RootBlocks.map.b.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.c.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.d.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.e.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.f.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.g.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.h.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.i.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.j.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.k.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.l.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.m.eval.properties).toEqual({ title: 'test' });
+  expect(context.RootBlocks.map.n.eval.properties).toEqual({ title: 'test' });
+});
+
 test('set value from block', () => {
   const rootBlock = {
     blockId: 'root',
