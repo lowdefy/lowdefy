@@ -58,10 +58,10 @@
     "react-router-dom": "5.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.8",
-    "@babel/core": "7.12.9",
-    "@babel/preset-env": "7.12.7",
-    "@babel/preset-react": "7.12.7",
+    "@babel/cli": "7.12.10",
+    "@babel/core": "7.12.10",
+    "@babel/preset-env": "7.12.10",
+    "@babel/preset-react": "7.12.10",
     "@wojtekmaj/enzyme-adapter-react-17": "0.3.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
