@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "0.0.0-alpha.6",
+  "version": "0.0.0-alpha.7",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,8 +39,8 @@
     "version:major": "yarn version major"
   },
   "dependencies": {
-    "@lowdefy/helpers": "1.1.0",
-    "@lowdefy/operators": "1.0.2",
+    "@lowdefy/helpers": "1.2.0",
+    "@lowdefy/operators": "1.1.0",
     "graphql": "15.4.0",
     "graphql-tag": "2.11.0"
   },
