@@ -2,5 +2,15 @@
   "packages": ["src/packages/*", "src/packages/blocks/*", "src/packages/servers/*"],
   "version": "independent",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "changelogPreset": "angular",
+  "command": {
+    "version": {
+      "allowBranch": "main",
+      "conventionalCommits": true,
+      "createRelease": "github",
+      "exact": true,
+      "message": "chore(release): publish"
+    }
+  }
 }
