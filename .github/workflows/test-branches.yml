@@ -15,9 +15,6 @@ jobs:
         with:
           node-version: '12.x'
       - uses: actions/checkout@v2
-        with:
-          # needed for yarn version check, checks out entire repo
-          fetch-depth: 0
       - name: Check yarn cache integrity
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Build packages
