@@ -2782,7 +2782,7 @@ __metadata:
     buffer: 6.0.3
     classnames: 2.2.6
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.2
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     enzyme: 3.11.0
     enzyme-to-json: 3.6.1
@@ -2824,7 +2824,7 @@ __metadata:
     babel-loader: 8.2.2
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.2
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
@@ -2861,7 +2861,7 @@ __metadata:
     babel-plugin-import: 1.13.3
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.2
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     enzyme: 3.11.0
     enzyme-to-json: 3.6.1
@@ -2901,7 +2901,7 @@ __metadata:
     babel-loader: 8.2.2
     buffer: 6.0.3
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.2
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.0
@@ -2971,6 +2971,7 @@ __metadata:
     chokidar: 3.4.3
     clean-webpack-plugin: 3.0.0
     commander: 6.2.0
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     decompress: 4.2.1
     decompress-targz: 4.1.1
@@ -3253,6 +3254,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     express: 4.17.1
     graphql: 15.4.0
@@ -3282,6 +3284,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     express: 4.17.1
     graphql: 15.4.0
@@ -3311,7 +3314,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    copy-webpack-plugin: 6.3.2
+    copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     graphql: 15.4.0
     html-webpack-plugin: 4.5.0
@@ -7431,9 +7434,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-webpack-plugin@npm:6.3.2":
-  version: 6.3.2
-  resolution: "copy-webpack-plugin@npm:6.3.2"
+"copy-webpack-plugin@npm:6.4.0":
+  version: 6.4.0
+  resolution: "copy-webpack-plugin@npm:6.4.0"
   dependencies:
     cacache: ^15.0.5
     fast-glob: ^3.2.4
@@ -7448,7 +7451,7 @@ __metadata:
     webpack-sources: ^1.4.3
   peerDependencies:
     webpack: ^4.37.0 || ^5.0.0
-  checksum: 10d873d3e914fec8394077681b7ec37c0b38e8a8d412a31e71a4fe37ac70d52473603c558400c57b3bdd2bd7ed8eead363201919d59351b20751c2f5ccb971c7
+  checksum: 47728eeb9c7988a95a88bb41935a7650bbe66058bd96880278e60df5cbc96e9b8945f1e7c8e71876628de923a692791195c47d6b1cd1daf55adbf0863bda4803
   languageName: node
   linkType: hard
 

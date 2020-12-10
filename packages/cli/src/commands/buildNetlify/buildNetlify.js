@@ -107,6 +107,26 @@ async function buildNetlify(options) {
     message: 'Failed to move node_modules.',
   });
 
+  context.print.log(`Moving public assets.`);
+  // Make dir if it does not exist since cp will error
+  proccessOutput = spawnSync('mkdir', ['-p', path.resolve('./public')]);
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to move public assets.',
+  });
+  proccessOutput = spawnSync('cp', [
+    '-r',
+    path.resolve('./public'),
+    path.resolve('./.lowdefy/publish/public'),
+  ]);
+  checkChildProcessError({
+    context,
+    proccessOutput,
+    message: 'Failed to move public assets.',
+  });
+  context.print.log(`Public assets moved to "./lowdefy/publish/public".`);
+
   context.print.succeed(`Netlify build completed successfully.`);
 }
 
