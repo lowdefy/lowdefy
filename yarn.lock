@@ -2706,7 +2706,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/helpers": 1.1.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 26.6.3
@@ -2749,7 +2749,7 @@ __metadata:
     "@lowdefy/color": 1.0.0
     "@lowdefy/format": 1.0.0
     "@lowdefy/helpers": 1.1.0
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     antd: 4.4.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2774,12 +2774,12 @@ __metadata:
     react-dom: 17.0.1
     react-markdown: 5.0.3
     react-router-dom: 5.2.0
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2794,7 +2794,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -2809,12 +2809,12 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2830,7 +2830,7 @@ __metadata:
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
     "@lowdefy/blocks-antd": 1.0.2
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     babel-plugin-import: 1.13.3
@@ -2851,12 +2851,12 @@ __metadata:
     react-color: 2.19.3
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2871,7 +2871,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.0.4
-    "@wojtekmaj/enzyme-adapter-react-17": 0.3.1
+    "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     buffer: 6.0.3
@@ -2889,13 +2889,13 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -3210,7 +3210,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
   languageName: unknown
   linkType: soft
 
@@ -4545,9 +4545,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wojtekmaj/enzyme-adapter-react-17@npm:0.3.1":
-  version: 0.3.1
-  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.3.1"
+"@wojtekmaj/enzyme-adapter-react-17@npm:0.3.2":
+  version: 0.3.2
+  resolution: "@wojtekmaj/enzyme-adapter-react-17@npm:0.3.2"
   dependencies:
     enzyme-adapter-utils: ^1.13.1
     enzyme-shallow-equal: ^1.0.4
@@ -4562,7 +4562,7 @@ __metadata:
     enzyme: ^3.0.0
     react: ^17.0.0-0
     react-dom: ^17.0.0-0
-  checksum: 419f7fd492ed2770d5001085fc9ad0019de88e6acd72e91b39119aa974a0cf9b87be60dc75629f0ffaebe7bc692665732d8d9aa6352061edd1687778cf912508
+  checksum: 859a1237a0b878100fd9f41c6e0a33780aa4c494fea797b073e8e81b82a14747ee7744d99b8abafeef45654409f210da26b2fd1cd1faa3dd72fbbefe4e86db6b
   languageName: node
   linkType: hard
 
@@ -10600,7 +10600,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"highlight.js@npm:^10.1.1, highlight.js@npm:~10.4.0":
+"highlight.js@npm:^10.4.1, highlight.js@npm:~10.4.0":
   version: 10.4.1
   resolution: "highlight.js@npm:10.4.1"
   checksum: 067a8cc822a4bfe3ae9cab8b827a64e059052b27606fcc91f06304b2518e0b8c6ff8875b19f2989ff329f1f07f5989dd52aee67eae005d63c77591ca08e419ec
@@ -13179,7 +13179,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lowlight@npm:^1.14.0":
+"lowlight@npm:^1.17.0":
   version: 1.17.0
   resolution: "lowlight@npm:1.17.0"
   dependencies:
@@ -16757,18 +16757,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:15.3.1":
-  version: 15.3.1
-  resolution: "react-syntax-highlighter@npm:15.3.1"
+"react-syntax-highlighter@npm:15.4.3":
+  version: 15.4.3
+  resolution: "react-syntax-highlighter@npm:15.4.3"
   dependencies:
     "@babel/runtime": ^7.3.1
-    highlight.js: ^10.1.1
-    lowlight: ^1.14.0
+    highlight.js: ^10.4.1
+    lowlight: ^1.17.0
     prismjs: ^1.22.0
     refractor: ^3.2.0
   peerDependencies:
     react: ">= 0.14.0"
-  checksum: 32e5b2480f7ce0360c0c1dfd5564f36df66d164a6ea9a1cf2bc45f0a8cab1db381b8a8100dfd05804c342cdcc680c22cb05de8ccaa3e03750ee8cd1b8e335898
+  checksum: 99866d865279aebc93946c07bf9ff471c890adcd6b620ffea84bb57e6efabba3b06c815e47b1064d05e0038f7827e032e47670cd005cbfb4cc96af60950699e6
   languageName: node
   linkType: hard
 
@@ -20152,13 +20152,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:5.4.1":
-  version: 5.4.1
-  resolution: "webpack-merge@npm:5.4.1"
+"webpack-merge@npm:5.5.0":
+  version: 5.5.0
+  resolution: "webpack-merge@npm:5.5.0"
   dependencies:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
-  checksum: c6c11151f294617a9c3e2fed2a84328b0955e661fd020fc186e1d86aebe6de2195e811fc10632d2ac0f54b803ed59309c09edab13b5397551c5a5d7d18fff32b
+  checksum: de65f8394a065efd5e13d728fdbe343b3cceffa39cd0f7abda7275f8bbfc64f6ff23154de925e7ca58d787bfa2e745e077f923aa2722720e2bae84f03ab2f9db
   languageName: node
   linkType: hard
 

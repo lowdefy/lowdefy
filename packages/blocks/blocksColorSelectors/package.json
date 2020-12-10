@@ -51,7 +51,7 @@
     "@babel/core": "7.12.10",
     "@babel/preset-env": "7.12.10",
     "@babel/preset-react": "7.12.10",
-    "@wojtekmaj/enzyme-adapter-react-17": "0.3.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "0.3.2",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "babel-plugin-import": "1.13.3",
@@ -69,12 +69,12 @@
     "less": "3.12.2",
     "less-loader": "7.1.0",
     "react-markdown": "5.0.3",
-    "react-syntax-highlighter": "15.3.1",
+    "react-syntax-highlighter": "15.4.3",
     "style-loader": "2.0.0",
     "webpack": "5.10.0",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "5.4.1",
+    "webpack-merge": "5.5.0",
     "yaml-jest": "1.0.5",
     "yaml-loader": "0.6.0"
   }
