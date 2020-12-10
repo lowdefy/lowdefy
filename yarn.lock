@@ -60,7 +60,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.3.3, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.3.4":
+  version: 3.3.4
+  resolution: "@apollo/client@npm:3.3.4"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.3.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.11.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.13.1
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    ts-invariant: ^0.6.0
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: aa40047a30e6862ba4c40054c76d8850f3eb2622fa0d9b8f097a1b8a5af75bc31db7607bb6729d941725450c5961d74e1830e20134325b1abd4219dbbc1039b3
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.3.3
   resolution: "@apollo/client@npm:3.3.3"
   dependencies:
@@ -3277,7 +3307,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.3.3
+    "@apollo/client": 3.3.4
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -4348,6 +4378,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ungap__global-this@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@types/ungap__global-this@npm:0.3.1"
+  checksum: c000b1f7792fa96def1e976d54bf23a127c99fa0bb0ee713e9792f9cf8fc97f4dba3313df9f9295e33f6461a54bd41279bb89ba1add1fb86d309b08e3a95f260
+  languageName: node
+  linkType: hard
+
 "@types/unist@npm:*, @types/unist@npm:^2.0.0, @types/unist@npm:^2.0.2, @types/unist@npm:^2.0.3":
   version: 2.0.3
   resolution: "@types/unist@npm:2.0.3"
@@ -4416,6 +4453,13 @@ __metadata:
   version: 0.8.1
   resolution: "@types/zen-observable@npm:0.8.1"
   checksum: 4a58609be82674418755e6c41137e55e5466f662f41410f5bcdf56c1e606bc37519c8d1d1ca7bb8d184f77533d7bf5f629b895c2f6c3afe7ebdbcc1085f031f2
+  languageName: node
+  linkType: hard
+
+"@ungap/global-this@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@ungap/global-this@npm:0.4.2"
+  checksum: 378b34fb5f06d5e433f164c09fbc6d4d2537ab26bc68e354f511a9a9fa36d4018b13d8e1b58290d58e18853e514d16f34fb05ab75657eb5023447ccff8c1da38
   languageName: node
   linkType: hard
 
@@ -19376,6 +19420,17 @@ fsevents@^1.2.7:
   dependencies:
     tslib: ^1.9.3
   checksum: efa4a387f7b54eeea7dd0b29730cf353f90cc7087bf49dc8e3a0c78c970a348a7a001bea63777f1a8a2422d6910894be2c0cfdd956514ebf16ef963c0a5155d2
+  languageName: node
+  linkType: hard
+
+"ts-invariant@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "ts-invariant@npm:0.6.0"
+  dependencies:
+    "@types/ungap__global-this": ^0.3.1
+    "@ungap/global-this": ^0.4.2
+    tslib: ^1.9.3
+  checksum: 5dd4579516d6ae78e8ebb231e0e80c48cd44109a7d5161d99c80a85e678a1920b642b1de8ce22f6fb05d617347fcedf84893159fa23e2b2aa9f364891d4fe5c4
   languageName: node
   linkType: hard
 

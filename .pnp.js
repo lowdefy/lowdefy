@@ -269,10 +269,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-9050d1d99e/0/cache/@apollo-client-npm-3.3.3-6f9bfacdb1-d2560f0d3a.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.4", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-0de20dd8e5/0/cache/@apollo-client-npm-3.3.4-1eef4fa0fc-aa40047a30.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.4"],
             ["@graphql-typed-document-node/core", "virtual:3921aec80398036c2a2cb9ca642002dc801bafd57f2adf3bab765dc23e0e13d029f67f041a16802f67090f7786547f7f4dd9f628bc9af6bc547d6e7d5eeca978#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -289,7 +289,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["subscriptions-transport-ws", null],
             ["symbol-observable", "npm:2.0.3"],
-            ["ts-invariant", "npm:0.5.1"],
+            ["ts-invariant", "npm:0.6.0"],
             ["tslib", "npm:1.14.1"],
             ["zen-observable", "npm:0.8.15"]
           ],
@@ -4330,7 +4330,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.3"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.4"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -5561,6 +5561,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/ungap__global-this", [
+        ["npm:0.3.1", {
+          "packageLocation": "./.yarn/cache/@types-ungap__global-this-npm-0.3.1-d6b2fe1a40-c000b1f779.zip/node_modules/@types/ungap__global-this/",
+          "packageDependencies": [
+            ["@types/ungap__global-this", "npm:0.3.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/unist", [
         ["npm:2.0.3", {
           "packageLocation": "./.yarn/cache/@types-unist-npm-2.0.3-4b26dedfde-42e0dc4ac7.zip/node_modules/@types/unist/",
@@ -5640,6 +5649,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-zen-observable-npm-0.8.1-6bd035023b-4a58609be8.zip/node_modules/@types/zen-observable/",
           "packageDependencies": [
             ["@types/zen-observable", "npm:0.8.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@ungap/global-this", [
+        ["npm:0.4.2", {
+          "packageLocation": "./.yarn/cache/@ungap-global-this-npm-0.4.2-e9259958c6-378b34fb5f.zip/node_modules/@ungap/global-this/",
+          "packageDependencies": [
+            ["@ungap/global-this", "npm:0.4.2"]
           ],
           "linkType": "HARD",
         }]
@@ -24517,6 +24535,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ts-invariant-npm-0.5.1-4c1fbe72bd-efa4a387f7.zip/node_modules/ts-invariant/",
           "packageDependencies": [
             ["ts-invariant", "npm:0.5.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.6.0", {
+          "packageLocation": "./.yarn/cache/ts-invariant-npm-0.6.0-688b29c496-5dd4579516.zip/node_modules/ts-invariant/",
+          "packageDependencies": [
+            ["ts-invariant", "npm:0.6.0"],
+            ["@types/ungap__global-this", "npm:0.3.1"],
+            ["@ungap/global-this", "npm:0.4.2"],
             ["tslib", "npm:1.14.1"]
           ],
           "linkType": "HARD",
