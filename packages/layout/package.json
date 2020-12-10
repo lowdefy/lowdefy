@@ -46,10 +46,10 @@
     "react-dom": "17.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.8",
-    "@babel/core": "7.12.9",
-    "@babel/preset-env": "7.12.7",
-    "@babel/preset-react": "7.12.7",
+    "@babel/cli": "7.12.10",
+    "@babel/core": "7.12.10",
+    "@babel/preset-env": "7.12.10",
+    "@babel/preset-react": "7.12.10",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "babel-plugin-import": "1.13.3",
