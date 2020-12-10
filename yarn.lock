@@ -2719,7 +2719,7 @@ __metadata:
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -2765,7 +2765,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     less: 3.12.2
     less-loader: 7.1.0
     moment: 2.29.1
@@ -2805,7 +2805,7 @@ __metadata:
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
@@ -2844,7 +2844,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     less: 3.12.2
     less-loader: 7.1.0
     react: 17.0.1
@@ -2883,7 +2883,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     imports-loader: 1.2.0
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -2919,7 +2919,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     json5: 2.1.3
     uuid: 8.3.2
     webpack: 5.10.0
@@ -2956,7 +2956,7 @@ __metadata:
     html-webpack-plugin: 4.5.0
     inquirer: 7.3.3
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     opener: 1.5.2
     ora: 5.1.0
     react: 17.0.1
@@ -3098,7 +3098,7 @@ __metadata:
     html-webpack-plugin: 4.5.0
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     less: 3.12.2
     less-loader: 7.1.0
     path-browserify: 1.0.1
@@ -3176,7 +3176,7 @@ __metadata:
     "@lowdefy/nunjucks": 1.0.0
     babel-jest: 26.6.3
     jest: 26.6.3
-    js-yaml: 3.14.0
+    js-yaml: 3.14.1
     mingo: 3.1.0
   languageName: unknown
   linkType: soft
@@ -12391,7 +12391,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:3.14.0, js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.7.0":
+"js-yaml@npm:3.14.1":
+  version: 3.14.1
+  resolution: "js-yaml@npm:3.14.1"
+  dependencies:
+    argparse: ^1.0.7
+    esprima: ^4.0.0
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 46b61f889796a20d16b0b64580a01b6a02b2e45c1a2744906346da54d07e14cde764e887ab6d1512d8b2541c63711bd4b75859c28eb99605baf59fa173fc38c2
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.7.0":
   version: 3.14.0
   resolution: "js-yaml@npm:3.14.0"
   dependencies:
