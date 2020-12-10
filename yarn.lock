@@ -2779,7 +2779,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2814,7 +2814,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2856,7 +2856,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2895,7 +2895,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -3210,7 +3210,7 @@ __metadata:
     webpack: 5.10.0
     webpack-cli: 4.2.0
     webpack-dev-server: 3.11.0
-    webpack-merge: 5.4.1
+    webpack-merge: 5.5.0
   languageName: unknown
   linkType: soft
 
@@ -20152,13 +20152,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:5.4.1":
-  version: 5.4.1
-  resolution: "webpack-merge@npm:5.4.1"
+"webpack-merge@npm:5.5.0":
+  version: 5.5.0
+  resolution: "webpack-merge@npm:5.5.0"
   dependencies:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
-  checksum: c6c11151f294617a9c3e2fed2a84328b0955e661fd020fc186e1d86aebe6de2195e811fc10632d2ac0f54b803ed59309c09edab13b5397551c5a5d7d18fff32b
+  checksum: de65f8394a065efd5e13d728fdbe343b3cceffa39cd0f7abda7275f8bbfc64f6ff23154de925e7ca58d787bfa2e745e077f923aa2722720e2bae84f03ab2f9db
   languageName: node
   linkType: hard
 
