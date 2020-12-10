@@ -2774,7 +2774,7 @@ __metadata:
     react-dom: 17.0.1
     react-markdown: 5.0.3
     react-router-dom: 5.2.0
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
@@ -2809,7 +2809,7 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
@@ -2851,7 +2851,7 @@ __metadata:
     react-color: 2.19.3
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.10.0
     webpack-cli: 4.2.0
@@ -2889,7 +2889,7 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-syntax-highlighter: 15.3.1
+    react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
     webpack: 5.10.0
@@ -10600,7 +10600,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"highlight.js@npm:^10.1.1, highlight.js@npm:~10.4.0":
+"highlight.js@npm:^10.4.1, highlight.js@npm:~10.4.0":
   version: 10.4.1
   resolution: "highlight.js@npm:10.4.1"
   checksum: 067a8cc822a4bfe3ae9cab8b827a64e059052b27606fcc91f06304b2518e0b8c6ff8875b19f2989ff329f1f07f5989dd52aee67eae005d63c77591ca08e419ec
@@ -13179,7 +13179,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lowlight@npm:^1.14.0":
+"lowlight@npm:^1.17.0":
   version: 1.17.0
   resolution: "lowlight@npm:1.17.0"
   dependencies:
@@ -16757,18 +16757,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:15.3.1":
-  version: 15.3.1
-  resolution: "react-syntax-highlighter@npm:15.3.1"
+"react-syntax-highlighter@npm:15.4.3":
+  version: 15.4.3
+  resolution: "react-syntax-highlighter@npm:15.4.3"
   dependencies:
     "@babel/runtime": ^7.3.1
-    highlight.js: ^10.1.1
-    lowlight: ^1.14.0
+    highlight.js: ^10.4.1
+    lowlight: ^1.17.0
     prismjs: ^1.22.0
     refractor: ^3.2.0
   peerDependencies:
     react: ">= 0.14.0"
-  checksum: 32e5b2480f7ce0360c0c1dfd5564f36df66d164a6ea9a1cf2bc45f0a8cab1db381b8a8100dfd05804c342cdcc680c22cb05de8ccaa3e03750ee8cd1b8e335898
+  checksum: 99866d865279aebc93946c07bf9ff471c890adcd6b620ffea84bb57e6efabba3b06c815e47b1064d05e0038f7827e032e47670cd005cbfb4cc96af60950699e6
   languageName: node
   linkType: hard
 

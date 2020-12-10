@@ -3634,7 +3634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
             ["react-router-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.2.0"],
-            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1"],
+            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["style-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:2.0.0"],
             ["webpack", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.10.0"],
             ["webpack-cli", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.2.0"],
@@ -3671,7 +3671,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
-            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1"],
+            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["style-loader", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:2.0.0"],
             ["webpack", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:5.10.0"],
             ["webpack-cli", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:4.2.0"],
@@ -3715,7 +3715,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-color", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:2.19.3"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
-            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1"],
+            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["style-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:2.0.0"],
             ["webpack", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.10.0"],
             ["webpack-cli", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:4.2.0"],
@@ -3755,7 +3755,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
-            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1"],
+            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["remark-gfm", "npm:1.0.0"],
             ["style-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:2.0.0"],
             ["webpack", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.10.0"],
@@ -21062,10 +21062,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-syntax-highlighter", [
-        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1", {
-          "packageLocation": "./.yarn/$$virtual/react-syntax-highlighter-virtual-6676d22798/0/cache/react-syntax-highlighter-npm-15.3.1-d18b3fbab2-32e5b2480f.zip/node_modules/react-syntax-highlighter/",
+        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3", {
+          "packageLocation": "./.yarn/$$virtual/react-syntax-highlighter-virtual-ac6517c686/0/cache/react-syntax-highlighter-npm-15.4.3-97655b48c8-99866d8652.zip/node_modules/react-syntax-highlighter/",
           "packageDependencies": [
-            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.3.1"],
+            ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
             ["highlight.js", "npm:10.4.1"],
