@@ -30,6 +30,8 @@
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",
+    "lerna:version": "lerna version",
+    "lerna:publish": "lerna publish from-git",
     "prepare": "lerna run prepare",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "lerna run test",
