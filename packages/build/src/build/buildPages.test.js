@@ -1255,3 +1255,78 @@ describe('build requests', () => {
     });
   });
 });
+
+test('add user defined loading to meta', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Context',
+        loading: {
+          custom: true,
+        },
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            loading: {
+              custom: true,
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Context',
+        loading: {
+          custom: true,
+        },
+        meta: {
+          category: 'context',
+          moduleFederation: {
+            scope: 'blocks',
+            module: 'Context',
+            url: 'https://example.com/remoteEntry.js',
+          },
+          loading: {
+            custom: true,
+          },
+        },
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block_1',
+                blockId: 'block_1',
+                type: 'Input',
+                loading: {
+                  custom: true,
+                },
+                meta: {
+                  category: 'input',
+                  moduleFederation: {
+                    scope: 'blocks',
+                    module: 'Input',
+                    url: 'https://example.com/remoteEntry.js',
+                  },
+                  valueType: 'string',
+                  loading: {
+                    custom: true,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
+});
