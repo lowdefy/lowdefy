@@ -14,20 +14,13 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { cleanDirectory } from '@lowdefy/node-utils';
-import createPrint from '../../utils/print';
-import { cacheDirectoryPath } from '../../utils/directories';
+import startUp from '../../utils/startUp';
 
-async function cleanCache(program) {
-  let baseDirectory = process.cwd();
-  if (program.baseDirectory) {
-    baseDirectory = path.resolve(program.baseDirectory);
-  }
-  const print = createPrint();
-  const cacheDir = path.resolve(baseDirectory, cacheDirectoryPath);
-  print.log(`Cleaning cache at "${cacheDir}".`);
-  await cleanDirectory(cacheDir);
+async function cleanCache(options) {
+  const context = startUp(options);
+  print.log(`Cleaning cache at "${context.cacheDirectory}".`);
+  await cleanDirectory(context.cacheDirectory);
   print.succeed(`Cache cleaned.`);
 }
 

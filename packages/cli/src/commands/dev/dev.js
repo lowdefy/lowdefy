@@ -24,7 +24,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { createGetSecretsFromEnv, cleanDirectory } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
-import createContext from '../../utils/context';
+import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 import { outputDirectoryPath } from '../../utils/directories';
 
@@ -32,7 +32,7 @@ async function dev(options) {
   dotenv.config({ silent: true });
   // Setup
   if (!options.port) options.port = 3000;
-  const context = await createContext(options);
+  const context = await startUp(options);
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',

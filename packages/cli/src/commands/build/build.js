@@ -16,11 +16,11 @@
 
 import path from 'path';
 import { cleanDirectory } from '@lowdefy/node-utils';
-import createContext from '../../utils/context';
+import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 
 async function build(options) {
-  const context = await createContext(options);
+  const context = await startUp(options);
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
