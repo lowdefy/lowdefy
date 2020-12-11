@@ -5,7 +5,9 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 const packageJson = require('./package.json');
 
-const port = process.argv[process.argv.findIndex((val) => val === '--port') + 1] || 3002;
+const port = type.isNumber(process.argv[process.argv.findIndex((val) => val === '--port') + 1])
+  ? process.argv[process.argv.findIndex((val) => val === '--port') + 1]
+  : 3002;
 
 const sanitizeName = (name) => {
   return name
