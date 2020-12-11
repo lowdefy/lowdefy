@@ -62,5 +62,8 @@
     "style-loader": "2.0.0",
     "webpack": "5.10.0",
     "webpack-cli": "4.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
