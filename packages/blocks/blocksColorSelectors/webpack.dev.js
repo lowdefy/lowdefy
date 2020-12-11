@@ -1,4 +1,5 @@
 const CopyPlugin = require('copy-webpack-plugin');
+const type = require('@lowdefy/helpers').type;
 const path = require('path');
 const { merge } = require('webpack-merge');
 
