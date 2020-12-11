@@ -16,11 +16,17 @@
 
 import path from 'path';
 import getLowdefyVersion from './getLowdefyVersion';
+import getSendTelemetry from './getSendTelemetry';
 import createPrint from './print';
 import { cacheDirectoryPath, outputDirectoryPath } from './directories';
+import packageJson from '../../package.json';
 
-async function createContext(options = {}) {
-  const context = {};
+const { version: cliVersion } = packageJson;
+
+async function startUp(options = {}) {
+  const context = {
+    cliVersion,
+  };
 
   context.print = createPrint({
     basic: options.basicPrint,
@@ -28,14 +34,15 @@ async function createContext(options = {}) {
 
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
   context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
+
   if (options.outputDirectory) {
     context.outputDirectory = path.resolve(options.outputDirectory);
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
-
-  context.version = await getLowdefyVersion(context);
+  context.lowdefyVersion = await getLowdefyVersion(context);
+  context.sendTelemetry = getSendTelemetry(context);
   return context;
 }
 
-export default createContext;
+export default startUp;

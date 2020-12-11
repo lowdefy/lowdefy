@@ -14,19 +14,28 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
-import startUp from '../../utils/startUp';
-
-async function cleanCache(options) {
-  const context = await startUp(options);
-  context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
-  await cleanDirectory(context.cacheDirectory);
-  await context.sendTelemetry({
-    data: {
-      command: 'clean-cache',
-    },
-  });
-  context.print.succeed(`Cache cleaned.`);
+import axios from 'axios';
+function getSendTelemetry({ lowdefyVersion, cliVersion }) {
+  async function sendTelemetry({ data }) {
+    try {
+      await axios.request({
+        method: 'post',
+        url: 'https://api.lowdefy.net/telemetry/cli',
+        headers: {
+          'User-Agent': `Lowdefy CLI v${lowdefyVersion}`,
+        },
+        data: {
+          ...data,
+          cliVersion,
+          lowdefyVersion,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      // pass
+    }
+  }
+  return sendTelemetry;
 }
 
-export default cleanCache;
+export default getSendTelemetry;

@@ -34,7 +34,7 @@ async function buildNetlify(options) {
   context.print.spin('Fetching Lowdefy Netlify server.');
   await fetchNpmTarball({
     packageName: '@lowdefy/server-netlify',
-    version: context.version,
+    version: context.lowdefyVersion,
     directory: netlifyDir,
   });
   context.print.log('Fetched Lowdefy Netlify server.');
@@ -56,7 +56,7 @@ async function buildNetlify(options) {
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
   context.print.log('Fetched Lowdefy build script.');
@@ -127,6 +127,12 @@ async function buildNetlify(options) {
     message: 'Failed to move public assets.',
   });
   context.print.log(`Public assets moved to "./lowdefy/publish/public".`);
+  await context.sendTelemetry({
+    data: {
+      command: 'build-netlify',
+      netlify: process.env.NETLIFY === 'true',
+    },
+  });
   context.print.succeed(`Netlify build completed successfully.`);
 }
 

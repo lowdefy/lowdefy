@@ -24,7 +24,7 @@ async function build(options) {
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
   context.print.log(
@@ -37,6 +37,11 @@ async function build(options) {
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
     outputDirectory: context.outputDirectory,
+  });
+  await context.sendTelemetry({
+    data: {
+      command: 'build',
+    },
   });
   context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
   context.print.succeed(`Build successful.`);

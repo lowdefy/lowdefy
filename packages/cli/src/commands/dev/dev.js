@@ -36,14 +36,14 @@ async function dev(options) {
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
 
   const { typeDefs, resolvers, createContext: createGqlContext } = await getFederatedModule({
     module: 'graphql',
     packageName: '@lowdefy/graphql-federated',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
   context.print.log(
@@ -68,7 +68,7 @@ async function dev(options) {
   const reloadReturned = await reload(app, { route: '/api/dev/reload.js' });
   app.use(express.static(path.join(__dirname, 'shell')));
   app.use('/api/dev/version', (req, res) => {
-    res.json(context.version);
+    res.json(context.lowdefyVersion);
   });
   app.use((req, res) => {
     res.sendFile(path.resolve(__dirname, 'shell/index.html'));
@@ -111,6 +111,12 @@ async function dev(options) {
   // Start server
   app.listen(app.get('port'), function () {
     context.print.info(`Development server listening on port ${options.port}`);
+  });
+  await context.sendTelemetry({
+    data: {
+      command: 'dev',
+      type: 'startup',
+    },
   });
   opener(`http://localhost:${options.port}`);
 }
