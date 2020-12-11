@@ -16,6 +16,7 @@
 
 import path from 'path';
 import chokidar from 'chokidar';
+import dotenv from 'dotenv';
 import express from 'express';
 import reload from 'reload';
 import opener from 'opener';
@@ -28,6 +29,7 @@ import getFederatedModule from '../../utils/getFederatedModule';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {
+  dotenv.config({ silent: true });
   // Setup
   if (!options.port) options.port = 3000;
   const context = await createContext(options);
@@ -73,7 +75,7 @@ async function dev(options) {
   });
 
   // File watcher
-  const fn = async () => {
+  const build = async () => {
     context.print.log('Building configuration.');
     await buildScript({
       logger: context.print,
@@ -84,15 +86,27 @@ async function dev(options) {
     context.print.succeed('Built succesfully.');
     reloadReturned.reload();
   };
-  const batchChanges = new BatchChanges({ fn, context });
+  const buildBatchChanges = new BatchChanges({ fn: build, context });
 
-  const watcher = chokidar.watch('.', {
+  const changeEnv = async () => {
+    context.print.warn('.env file changed. You should restart your development server.');
+    process.exit();
+  };
+
+  const changeEnvBatchChanges = new BatchChanges({ fn: changeEnv, context });
+
+  const buildWatcher = chokidar.watch('.', {
     ignored: /(^|[/\\])\../, // ignore dotfiles
     persistent: true,
   });
-  watcher.on('add', () => batchChanges.newChange());
-  watcher.on('change', () => batchChanges.newChange());
-  watcher.on('unlink', () => batchChanges.newChange());
+  buildWatcher.on('add', () => buildBatchChanges.newChange());
+  buildWatcher.on('change', () => buildBatchChanges.newChange());
+  buildWatcher.on('unlink', () => buildBatchChanges.newChange());
+
+  const envWatcher = chokidar.watch('./.env', {
+    persistent: true,
+  });
+  envWatcher.on('change', () => changeEnvBatchChanges.newChange());
 
   // Start server
   app.listen(app.get('port'), function () {
