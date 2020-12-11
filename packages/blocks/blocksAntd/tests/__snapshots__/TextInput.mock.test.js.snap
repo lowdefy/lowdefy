@@ -294,7 +294,7 @@ Array [
                 ],
                 Array [
                   Object {
-                    "height": 30,
+                    "height": undefined,
                     "marginBottom": 8,
                     "overflow": undefined,
                     "whiteSpace": "normal",
@@ -335,7 +335,7 @@ Array [
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
                 },
                 Object {
                   "type": "return",
@@ -415,7 +415,7 @@ Array [
                 ],
                 Array [
                   Object {
-                    "height": 30,
+                    "height": undefined,
                     "marginBottom": 8,
                     "overflow": undefined,
                     "whiteSpace": "normal",
@@ -456,7 +456,7 @@ Array [
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
                 },
                 Object {
                   "type": "return",
@@ -599,7 +599,7 @@ Array [
                 ],
                 Array [
                   Object {
-                    "height": 30,
+                    "height": undefined,
                     "marginBottom": 8,
                     "overflow": undefined,
                     "whiteSpace": "normal",
@@ -640,7 +640,7 @@ Array [
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
                 },
                 Object {
                   "type": "return",
@@ -720,7 +720,7 @@ Array [
                 ],
                 Array [
                   Object {
-                    "height": 30,
+                    "height": undefined,
                     "marginBottom": 8,
                     "overflow": undefined,
                     "whiteSpace": "normal",
@@ -761,7 +761,7 @@ Array [
                 },
                 Object {
                   "type": "return",
-                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8,\\"height\\":30}}",
+                  "value": "{\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
                 },
                 Object {
                   "type": "return",

@@ -103,3 +103,29 @@
     extra: The extra content
     feedbackStyle: 
       border: 1px solid blue
+- id: inline and long extra default size
+  type: Label
+  properties:
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: inline and long extra small size
+  type: Label
+  properties:
+    size: small
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: inline and long extra large size
+  type: Label
+  properties:
+    size: large
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
