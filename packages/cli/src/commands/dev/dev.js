@@ -20,7 +20,7 @@ import express from 'express';
 import reload from 'reload';
 import opener from 'opener';
 import { ApolloServer } from 'apollo-server-express';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, cleanDirectory } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
 import createContext from '../../utils/context';
@@ -44,7 +44,10 @@ async function dev(options) {
     version: context.version,
     context,
   });
-
+  context.print.log(
+    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
+  );
+  await cleanDirectory(path.resolve(context.cacheDirectory, './meta'));
   context.print.log('Starting Lowdefy development server.');
 
   //Graphql

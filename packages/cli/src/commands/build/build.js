@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+import { cleanDirectory } from '@lowdefy/node-utils';
 import createContext from '../../utils/context';
 import getFederatedModule from '../../utils/getFederatedModule';
 
@@ -25,6 +27,10 @@ async function build(options) {
     version: context.version,
     context,
   });
+  context.print.log(
+    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
+  );
+  await cleanDirectory(path.resolve(context.cacheDirectory, './meta'));
   context.print.info('Starting build.');
   await buildScript({
     logger: context.print,
