@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
 
@@ -51,7 +51,10 @@ async function getLowdefyVersion(context = {}) {
       )}.`
     );
   }
-  return lowdefy.version;
+  return {
+    lowdefyVersion: lowdefy.version,
+    disableTelemetry: get(lowdefy, 'cli.disableTelemetry'),
+  };
 }
 
 export default getLowdefyVersion;

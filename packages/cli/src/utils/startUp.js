@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import getLowdefyVersion from './getLowdefyVersion';
+import getConfig from './getConfig';
 import getSendTelemetry from './getSendTelemetry';
 import createPrint from './print';
 import { cacheDirectoryPath, outputDirectoryPath } from './directories';
@@ -40,7 +40,9 @@ async function startUp(options = {}) {
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
-  context.lowdefyVersion = await getLowdefyVersion(context);
+  const { lowdefyVersion, disableTelemetry } = await getConfig(context);
+  context.lowdefyVersion = lowdefyVersion;
+  context.disableTelemetry = disableTelemetry;
   context.sendTelemetry = getSendTelemetry(context);
   return context;
 }
