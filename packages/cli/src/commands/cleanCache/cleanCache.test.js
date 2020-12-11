@@ -19,8 +19,14 @@ import cleanCache from './cleanCache';
 import createPrint from '../../utils/print';
 
 jest.mock('@lowdefy/node-utils', () => {
+  const readFile = jest.fn(
+    () => `
+  version: 1.0.0
+  `
+  );
+  const writeFile = jest.fn();
   const cleanDirectory = jest.fn();
-  return { cleanDirectory };
+  return { cleanDirectory, readFile, writeFile };
 });
 
 jest.mock('../../utils/print', () => {

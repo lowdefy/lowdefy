@@ -17,7 +17,7 @@ import path from 'path';
 import build from './build';
 // eslint-disable-next-line no-unused-vars
 import getFederatedModule from '../../utils/getFederatedModule';
-import createContext from '../../utils/context';
+import startUp from '../../utils/startUp';
 
 const info = jest.fn();
 const succeed = jest.fn();
@@ -30,20 +30,20 @@ jest.mock('../../utils/getFederatedModule', () => {
   };
 });
 
-jest.mock('../../utils/context', () => {
-  const createContext = jest.fn();
-  return createContext;
+jest.mock('../../utils/startUp', () => {
+  const startUp = jest.fn();
+  return startUp;
 });
 
 beforeEach(() => {
-  createContext.mockReset();
+  startUp.mockReset();
 });
 
 test('build', async () => {
   const baseDirectory = process.cwd();
   const cacheDirectory = path.resolve(process.cwd(), '.lowdefy/.cache');
   const outputDirectory = path.resolve(process.cwd(), '.lowdefy/build');
-  createContext.mockImplementation(() => ({
+  startUp.mockImplementation(() => ({
     print: {
       info,
       succeed,
@@ -54,9 +54,9 @@ test('build', async () => {
     outputDirectory,
   }));
   await build({});
-  const context = createContext.mock.results[0].value;
+  const context = startUp.mock.results[0].value;
   const { default: buildScript } = getFederatedModule();
-  expect(createContext).toHaveBeenCalledTimes(1);
+  expect(startUp).toHaveBeenCalledTimes(1);
   expect(buildScript).toHaveBeenCalledTimes(1);
   expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
   expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual(cacheDirectory);

@@ -15,17 +15,22 @@
 */
 
 import path from 'path';
-import createContext from './context';
+import startUp from './startUp';
 // eslint-disable-next-line no-unused-vars
-import getLowdefyVersion from './getLowdefyVersion';
+import getConfig from './getConfig';
 // eslint-disable-next-line no-unused-vars
 import createPrint from './print';
+// eslint-disable-next-line no-unused-vars
+import packageJson from '../../package.json';
 
-jest.mock('./getLowdefyVersion', () => async () => Promise.resolve('lowdefy-version'));
+jest.mock('./getConfig', () => async () =>
+  Promise.resolve({ appId: 'appId', disableTelemetry: true, lowdefyVersion: 'lowdefyVersion' })
+);
 jest.mock('./print', () => () => 'print');
+jest.mock('../../package.json', () => ({ version: '1.0.0' }));
 
-test('createContext, options undefined', async () => {
-  const context = await createContext();
+test('startUp, options undefined', async () => {
+  const context = await startUp();
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
@@ -35,8 +40,8 @@ test('createContext, options undefined', async () => {
   });
 });
 
-test('createContext, options empty', async () => {
-  const context = await createContext({});
+test('startUp, options empty', async () => {
+  const context = await startUp({});
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
@@ -46,8 +51,8 @@ test('createContext, options empty', async () => {
   });
 });
 
-test('createContext, options baseDirectory', async () => {
-  const context = await createContext({ baseDirectory: './baseDirectory' });
+test('startUp, options baseDirectory', async () => {
+  const context = await startUp({ baseDirectory: './baseDirectory' });
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
     cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
@@ -57,8 +62,8 @@ test('createContext, options baseDirectory', async () => {
   });
 });
 
-test('createContext, options outputDirectory', async () => {
-  const context = await createContext({ outputDirectory: './outputDirectory' });
+test('startUp, options outputDirectory', async () => {
+  const context = await startUp({ outputDirectory: './outputDirectory' });
   expect(context).toEqual({
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
@@ -68,8 +73,8 @@ test('createContext, options outputDirectory', async () => {
   });
 });
 
-test('createContext, options baseDirectory and outputDirectory', async () => {
-  const context = await createContext({
+test('startUp, options baseDirectory and outputDirectory', async () => {
+  const context = await startUp({
     baseDirectory: './baseDirectory',
     outputDirectory: './outputDirectory',
   });

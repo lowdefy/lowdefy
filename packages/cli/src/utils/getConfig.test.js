@@ -20,8 +20,10 @@ import getConfig from './getConfig';
 
 jest.mock('@lowdefy/node-utils', () => {
   const readFile = jest.fn();
+  const writeFile = jest.fn();
   return {
     readFile,
+    writeFile,
   };
 });
 
@@ -38,20 +40,7 @@ test('get version from yaml file', async () => {
     }
     return null;
   });
-  const config = await getConfig({});
-  expect(config).toEqual({ lowdefyVersion: '1.0.0' });
-});
-
-test('get version from yaml file, context default value', async () => {
-  readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
-      return `
-      version: 1.0.0
-      `;
-    }
-    return null;
-  });
-  const config = await getConfig();
+  const config = await getConfig({ baseDirectory: process.cwd() });
   expect(config).toEqual({ lowdefyVersion: '1.0.0' });
 });
 
@@ -64,7 +53,7 @@ test('get version from yaml file, base dir specified', async () => {
     }
     return null;
   });
-  const config = await getConfig({ baseDirectory: './baseDir' });
+  const config = await getConfig({ baseDirectory: path.resolve(process.cwd(), './baseDir') });
   expect(config).toEqual({ lowdefyVersion: '1.0.0' });
 });
 

@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-function getSendTelemetry({ lowdefyVersion, cliVersion, disableTelemetry }) {
+function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion, machineId }) {
   if (disableTelemetry) {
     return () => {};
   }
@@ -29,8 +29,10 @@ function getSendTelemetry({ lowdefyVersion, cliVersion, disableTelemetry }) {
         },
         data: {
           ...data,
+          appId,
           cliVersion,
           lowdefyVersion,
+          machineId,
         },
       });
     } catch (error) {
