@@ -31,7 +31,6 @@
     "build": "yarn build:es && yarn build:moduleFederation",
     "clean": "rm -rf dist",
     "generate-icons": "yarn node ./src/blocks/Icon/generateIcons.js",
-    "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "start:dev": "webpack serve --config webpack.dev.js",
@@ -82,11 +81,14 @@
     "react-markdown": "5.0.3",
     "react-syntax-highlighter": "15.4.3",
     "style-loader": "2.0.0",
-    "webpack": "5.10.0",
+    "webpack": "5.10.1",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "5.5.0",
+    "webpack-merge": "5.7.0",
     "yaml-jest": "1.0.5",
     "yaml-loader": "0.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

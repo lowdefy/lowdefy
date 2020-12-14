@@ -28,7 +28,6 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
-    "npm-publish": "npm publish --access public",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "start": "webpack serve",
@@ -68,10 +67,13 @@
     "react-syntax-highlight": "15.3.1",
     "react-test-renderer": "17.0.1",
     "style-loader": "2.0.0",
-    "webpack": "5.10.0",
+    "webpack": "5.10.1",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
     "yaml-jest": "1.0.5",
     "yaml-loader": "0.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

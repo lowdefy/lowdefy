@@ -28,7 +28,6 @@
   "scripts": {
     "build": "yarn webpack",
     "clean": "rm -rf dist",
-    "npm-publish": "npm publish --access public",
     "webpack": "webpack --config webpack.config.js",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch",
@@ -44,7 +43,10 @@
     "@babel/preset-env": "7.12.10",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
-    "webpack": "5.10.0",
+    "webpack": "5.10.1",
     "webpack-cli": "4.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

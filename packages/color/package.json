@@ -31,7 +31,6 @@
     "test": "jest --coverage",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "npm-publish": "npm publish --access public",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch",
     "version:minor": "yarn version minor",
@@ -46,5 +45,8 @@
     "@babel/preset-env": "7.12.10",
     "babel-jest": "26.6.3",
     "jest": "26.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
