@@ -3626,7 +3626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:3.14.1"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.1.0"],
             ["moment", "npm:2.29.1"],
             ["rc-animate", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:3.1.1"],
@@ -3709,7 +3709,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:3.14.1"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.1.0"],
             ["react", "npm:17.0.1"],
             ["react-color", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:2.19.3"],
@@ -3983,7 +3983,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:3.14.1"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.1.0"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
@@ -16389,10 +16389,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["less", [
-        ["npm:3.12.2", {
-          "packageLocation": "./.yarn/cache/less-npm-3.12.2-913236d621-a9b1b74c1f.zip/node_modules/less/",
+        ["npm:3.13.0", {
+          "packageLocation": "./.yarn/cache/less-npm-3.13.0-93c0c187ca-b294e1d467.zip/node_modules/less/",
           "packageDependencies": [
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["errno", "npm:0.1.7"],
             ["graceful-fs", "npm:4.2.4"],
             ["image-size", "npm:0.5.5"],
@@ -16413,7 +16413,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["loader-utils", "npm:2.0.0"],
             ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.10.1"]
@@ -16433,7 +16433,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["loader-utils", "npm:2.0.0"],
             ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.10.1"]
@@ -16453,7 +16453,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:3.12.2"],
+            ["less", "npm:3.13.0"],
             ["loader-utils", "npm:2.0.0"],
             ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.10.1"]
