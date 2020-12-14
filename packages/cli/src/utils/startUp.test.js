@@ -17,9 +17,13 @@
 import path from 'path';
 import startUp from './startUp';
 // eslint-disable-next-line no-unused-vars
+import createPrint from './print';
+// eslint-disable-next-line no-unused-vars
 import getConfig from './getConfig';
 // eslint-disable-next-line no-unused-vars
-import createPrint from './print';
+import getMachineId from './getMachineId';
+// eslint-disable-next-line no-unused-vars
+import getSendTelemetry from './getSendTelemetry';
 // eslint-disable-next-line no-unused-vars
 import packageJson from '../../package.json';
 
@@ -27,15 +31,22 @@ jest.mock('./getConfig', () => async () =>
   Promise.resolve({ appId: 'appId', disableTelemetry: true, lowdefyVersion: 'lowdefyVersion' })
 );
 jest.mock('./print', () => () => 'print');
-jest.mock('../../package.json', () => ({ version: '1.0.0' }));
+jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
+jest.mock('./getMachineId', () => () => 'machineId');
+jest.mock('./getSendTelemetry', () => () => 'sendTelemetry');
 
 test('startUp, options undefined', async () => {
   const context = await startUp();
   expect(context).toEqual({
+    appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    disableTelemetry: true,
+    lowdefyVersion: 'lowdefyVersion',
+    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
-    version: 'lowdefy-version',
+    sendTelemetry: 'sendTelemetry',
     print: 'print',
   });
 });
@@ -43,10 +54,15 @@ test('startUp, options undefined', async () => {
 test('startUp, options empty', async () => {
   const context = await startUp({});
   expect(context).toEqual({
+    appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    disableTelemetry: true,
+    lowdefyVersion: 'lowdefyVersion',
+    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
-    version: 'lowdefy-version',
+    sendTelemetry: 'sendTelemetry',
     print: 'print',
   });
 });
@@ -54,10 +70,15 @@ test('startUp, options empty', async () => {
 test('startUp, options baseDirectory', async () => {
   const context = await startUp({ baseDirectory: './baseDirectory' });
   expect(context).toEqual({
+    appId: 'appId',
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
     cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    disableTelemetry: true,
+    lowdefyVersion: 'lowdefyVersion',
+    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
-    version: 'lowdefy-version',
+    sendTelemetry: 'sendTelemetry',
     print: 'print',
   });
 });
@@ -65,10 +86,15 @@ test('startUp, options baseDirectory', async () => {
 test('startUp, options outputDirectory', async () => {
   const context = await startUp({ outputDirectory: './outputDirectory' });
   expect(context).toEqual({
+    appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
-    cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
+    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    disableTelemetry: true,
+    lowdefyVersion: 'lowdefyVersion',
+    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
-    version: 'lowdefy-version',
+    sendTelemetry: 'sendTelemetry',
     print: 'print',
   });
 });
@@ -79,10 +105,15 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
     outputDirectory: './outputDirectory',
   });
   expect(context).toEqual({
+    appId: 'appId',
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
     cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    disableTelemetry: true,
+    lowdefyVersion: 'lowdefyVersion',
+    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
-    version: 'lowdefy-version',
+    sendTelemetry: 'sendTelemetry',
     print: 'print',
   });
 });

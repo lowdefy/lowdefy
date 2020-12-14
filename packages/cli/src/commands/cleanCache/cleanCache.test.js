@@ -16,29 +16,15 @@
 import path from 'path';
 import { cleanDirectory } from '@lowdefy/node-utils';
 import cleanCache from './cleanCache';
-import createPrint from '../../utils/print';
+// eslint-disable-next-line no-unused-vars
+import startUp from '../../utils/startUp';
 
 jest.mock('@lowdefy/node-utils', () => {
-  const readFile = jest.fn(
-    () => `
-  version: 1.0.0
-  `
-  );
-  const writeFile = jest.fn();
   const cleanDirectory = jest.fn();
-  return { cleanDirectory, readFile, writeFile };
+  return { cleanDirectory };
 });
 
-jest.mock('../../utils/print', () => {
-  const log = jest.fn();
-  const succeed = jest.fn();
-  return () => ({
-    log,
-    succeed,
-  });
-});
-
-const print = createPrint();
+jest.mock('../../utils/startUp');
 
 beforeEach(() => {
   cleanDirectory.mockReset();
@@ -48,14 +34,10 @@ test('cleanCache', async () => {
   await cleanCache({});
   const cachePath = path.resolve(process.cwd(), './.lowdefy/.cache');
   expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
-  expect(print.log.mock.calls).toEqual([[`Cleaning cache at "${cachePath}".`]]);
-  expect(print.succeed.mock.calls).toEqual([['Cache cleaned.']]);
 });
 
 test('cleanCache baseDir', async () => {
   await cleanCache({ baseDirectory: 'baseDir' });
   const cachePath = path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache');
   expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
-  expect(print.log.mock.calls).toEqual([[`Cleaning cache at "${cachePath}".`]]);
-  expect(print.succeed.mock.calls).toEqual([['Cache cleaned.']]);
 });
