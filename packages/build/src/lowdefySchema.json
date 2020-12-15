@@ -68,6 +68,12 @@
             "type": "Block layout should be an object."
           }
         },
+        "loading": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Block loading should be an object."
+          }
+        },
         "style": {
           "type": "object",
           "errorMessage": {

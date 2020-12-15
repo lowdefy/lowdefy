@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
-import startUp from '../../utils/startUp';
+import keytar from 'keytar';
+import { v4 as uuid } from 'uuid';
 
-async function cleanCache(options) {
-  const context = await startUp(options);
-  context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
-  await cleanDirectory(context.cacheDirectory);
-  await context.sendTelemetry({
-    data: {
-      command: 'clean-cache',
-    },
-  });
-  context.print.succeed(`Cache cleaned.`);
+async function getMachineId() {
+  try {
+    let machineId = await keytar.getPassword('com.lowdefy.cli', 'machineId');
+    if (!machineId) {
+      machineId = uuid();
+      await keytar.setPassword('com.lowdefy.cli', 'machineId', machineId);
+    }
+    return machineId;
+  } catch (error) {
+    return;
+  }
 }
 
-export default cleanCache;
+export default getMachineId;

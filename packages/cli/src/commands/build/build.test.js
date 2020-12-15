@@ -13,15 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import path from 'path';
 import build from './build';
 // eslint-disable-next-line no-unused-vars
 import getFederatedModule from '../../utils/getFederatedModule';
-import createContext from '../../utils/context';
-
-const info = jest.fn();
-const succeed = jest.fn();
-const log = jest.fn();
+// eslint-disable-next-line no-unused-vars
+import startUp from '../../utils/startUp';
 
 jest.mock('../../utils/getFederatedModule', () => {
   const buildScript = jest.fn();
@@ -30,35 +28,14 @@ jest.mock('../../utils/getFederatedModule', () => {
   };
 });
 
-jest.mock('../../utils/context', () => {
-  const createContext = jest.fn();
-  return createContext;
-});
-
-beforeEach(() => {
-  createContext.mockReset();
-});
+jest.mock('../../utils/startUp');
 
 test('build', async () => {
-  const baseDirectory = process.cwd();
   const cacheDirectory = path.resolve(process.cwd(), '.lowdefy/.cache');
   const outputDirectory = path.resolve(process.cwd(), '.lowdefy/build');
-  createContext.mockImplementation(() => ({
-    print: {
-      info,
-      succeed,
-      log,
-    },
-    baseDirectory,
-    cacheDirectory,
-    outputDirectory,
-  }));
   await build({});
-  const context = createContext.mock.results[0].value;
   const { default: buildScript } = getFederatedModule();
-  expect(createContext).toHaveBeenCalledTimes(1);
   expect(buildScript).toHaveBeenCalledTimes(1);
   expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
   expect(buildScript.mock.calls[0][0].cacheDirectory).toEqual(cacheDirectory);
-  expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);
 });

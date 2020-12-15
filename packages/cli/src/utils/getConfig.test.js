@@ -16,18 +16,26 @@
 
 import path from 'path';
 import { readFile } from '@lowdefy/node-utils';
-import getLowdefyVersion from './getLowdefyVersion';
+import getConfig from './getConfig';
+// eslint-disable-next-line no-unused-vars
+import getCliJson from './getCliJson';
+
+jest.mock('./getCliJson', () => () => ({ appId: 'appId' }));
 
 jest.mock('@lowdefy/node-utils', () => {
   const readFile = jest.fn();
+  const writeFile = jest.fn();
   return {
     readFile,
+    writeFile,
   };
 });
 
 beforeEach(() => {
   readFile.mockReset();
 });
+
+const baseDirectory = process.cwd();
 
 test('get version from yaml file', async () => {
   readFile.mockImplementation((filePath) => {
@@ -38,21 +46,8 @@ test('get version from yaml file', async () => {
     }
     return null;
   });
-  const version = await getLowdefyVersion({});
-  expect(version).toEqual('1.0.0');
-});
-
-test('get version from yaml file, context default value', async () => {
-  readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
-      return `
-      version: 1.0.0
-      `;
-    }
-    return null;
-  });
-  const version = await getLowdefyVersion();
-  expect(version).toEqual('1.0.0');
+  const config = await getConfig({ baseDirectory });
+  expect(config).toEqual({ lowdefyVersion: '1.0.0', appId: 'appId' });
 });
 
 test('get version from yaml file, base dir specified', async () => {
@@ -64,8 +59,8 @@ test('get version from yaml file, base dir specified', async () => {
     }
     return null;
   });
-  const version = await getLowdefyVersion({ baseDirectory: './baseDir' });
-  expect(version).toEqual('1.0.0');
+  const config = await getConfig({ baseDirectory: path.resolve(process.cwd(), './baseDir') });
+  expect(config).toEqual({ lowdefyVersion: '1.0.0', appId: 'appId' });
 });
 
 test('could not find lowdefy.yaml in cwd', async () => {
@@ -77,8 +72,8 @@ test('could not find lowdefy.yaml in cwd', async () => {
     version: 1.0.0
     `;
   });
-  await expect(getLowdefyVersion({})).rejects.toThrow(
-    'Could not find "lowdefy.yaml" file in current working directory. Change directory to a Lowdefy project, or specify a base directory.'
+  await expect(getConfig({ baseDirectory })).rejects.toThrow(
+    'Could not find "lowdefy.yaml" file in specified base directory'
   );
 });
 
@@ -91,9 +86,9 @@ test('could not find lowdefy.yaml in base dir', async () => {
     version: 1.0.0
     `;
   });
-  await expect(getLowdefyVersion({ baseDirectory: './baseDir' })).rejects.toThrow(
-    'Could not find "lowdefy.yaml" file in specified base directory'
-  );
+  await expect(
+    getConfig({ baseDirectory: path.resolve(process.cwd(), './baseDir') })
+  ).rejects.toThrow('Could not find "lowdefy.yaml" file in specified base directory');
 });
 
 test('lowdefy.yaml is invalid yaml', async () => {
@@ -107,7 +102,7 @@ test('lowdefy.yaml is invalid yaml', async () => {
     }
     return null;
   });
-  await expect(getLowdefyVersion({})).rejects.toThrow(
+  await expect(getConfig({ baseDirectory })).rejects.toThrow(
     'Could not parse "lowdefy.yaml" file. Received error '
   );
 });
@@ -123,7 +118,7 @@ test('No version specified', async () => {
     }
     return null;
   });
-  await expect(getLowdefyVersion({})).rejects.toThrow(
+  await expect(getConfig({ baseDirectory })).rejects.toThrow(
     'No version specified in "lowdefy.yaml" file. Specify a version in the "version field".'
   );
 });
@@ -137,7 +132,7 @@ test('Version is not a string', async () => {
     }
     return null;
   });
-  await expect(getLowdefyVersion({})).rejects.toThrow(
+  await expect(getConfig({ baseDirectory })).rejects.toThrow(
     'Version number specified in "lowdefy.yaml" file is not valid. Received 1.'
   );
 });
@@ -151,7 +146,22 @@ test('Version is not a valid version number', async () => {
     }
     return null;
   });
-  await expect(getLowdefyVersion({})).rejects.toThrow(
+  await expect(getConfig({ baseDirectory })).rejects.toThrow(
     'Version number specified in "lowdefy.yaml" file is not valid. Received "v1-0-3".'
   );
+});
+
+test('get disabled telemetry', async () => {
+  readFile.mockImplementation((filePath) => {
+    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
+      return `
+      version: 1.0.0
+      cli:
+        disableTelemetry: true
+      `;
+    }
+    return null;
+  });
+  const config = await getConfig({ baseDirectory });
+  expect(config).toEqual({ lowdefyVersion: '1.0.0', disableTelemetry: true, appId: 'appId' });
 });

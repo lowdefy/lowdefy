@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
-import startUp from '../../utils/startUp';
+import path from 'path';
+import { readFile, writeFile } from '@lowdefy/node-utils';
+import { v4 as uuid } from 'uuid';
 
-async function cleanCache(options) {
-  const context = await startUp(options);
-  context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
-  await cleanDirectory(context.cacheDirectory);
-  await context.sendTelemetry({
-    data: {
-      command: 'clean-cache',
-    },
-  });
-  context.print.succeed(`Cache cleaned.`);
+async function getCliJson({ baseDirectory }) {
+  const filePath = path.resolve(baseDirectory, './.lowdefy/cli.json');
+  const cliJson = await readFile(filePath);
+  if (!cliJson) {
+    const appId = uuid();
+    await writeFile({ filePath, content: JSON.stringify({ appId }, null, 2) });
+    return { appId };
+  }
+  return JSON.parse(cliJson);
 }
 
-export default cleanCache;
+export default getCliJson;

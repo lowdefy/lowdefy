@@ -15,27 +15,33 @@
 */
 
 import path from 'path';
-import getLowdefyVersion from './getLowdefyVersion';
-import createPrint from './print';
-import { cacheDirectoryPath, outputDirectoryPath } from './directories';
+import { cacheDirectoryPath, outputDirectoryPath } from '../directories';
 
-async function createContext(options = {}) {
-  const context = {};
-
-  context.print = createPrint({
-    basic: options.basicPrint,
-  });
+async function mockStartUp(options = {}) {
+  const context = {
+    cliVersion: 'cliVersion',
+    machineId: 'machineId',
+    appId: 'appId',
+    disableTelemetry: false,
+    lowdefyVersion: 'lowdefyVersion',
+    sendTelemetry: jest.fn(),
+    print: {
+      info: jest.fn(),
+      succeed: jest.fn(),
+      log: jest.fn(),
+    },
+  };
 
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
   context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
+
   if (options.outputDirectory) {
     context.outputDirectory = path.resolve(options.outputDirectory);
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
 
-  context.version = await getLowdefyVersion(context);
   return context;
 }
 
-export default createContext;
+export default mockStartUp;
