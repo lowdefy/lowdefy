@@ -2,20 +2,16 @@
 
 exports[`Render colors - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="colors"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="colors_input"
       title="colors"
     >
@@ -408,20 +404,16 @@ exports[`Render colors - value[0] 1`] = `
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -2281,20 +2273,16 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render defaultColor - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="defaultColor"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
@@ -4154,20 +4142,16 @@ exports[`Render defaultColor - value[0] 1`] = `
 
 exports[`Render inputStyle - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="inputStyle"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="inputStyle_input"
       title="inputStyle"
     >
@@ -6027,13 +6011,9 @@ exports[`Render inputStyle - value[0] 1`] = `
 
 exports[`Render label-disabled - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="label-disabled"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -7888,20 +7868,16 @@ exports[`Render label-disabled - value[0] 1`] = `
 
 exports[`Render title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="title_input"
       title="The color selector"
     >

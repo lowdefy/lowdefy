@@ -45,6 +45,8 @@ const labelLogic = ({
     label = label.replace(/[:|：]\s*$/, '');
   }
   const rowClassName = classNames({
+    [`ant-form-small`]: properties.size === 'small',
+    [`ant-form-large`]: properties.size === 'large',
     [`ant-form-item`]: true,
     [`ant-form-item-with-help`]: false,
     // Status
@@ -55,6 +57,7 @@ const labelLogic = ({
     [`ant-form-item-is-validating`]: validation.status === 'validating',
     [methods.makeCssClass({
       flexWrap: properties.inline && 'inherit', // wrap extra content below input
+      marginBottom: 0,
     })]: true,
   });
 
@@ -65,16 +68,14 @@ const labelLogic = ({
       overflow: properties.inline && 'inherit', // wrap label content below input
       whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
       marginBottom: properties.size === 'small' ? 0 : 8,
-      height:
-        properties.inline &&
-        (properties.size === 'small' ? 22 : properties.size === 'large' ? '40' : 30),
+      overflow: 'visible',
     })]: true,
   });
 
   const labelClassName = classNames({
     [`ant-form-item-required`]: required,
     [`ant-form-item-no-colon`]: properties.colon === false,
-    [methods.makeCssClass([{ height: '100% !important' }, properties.style])]: true, // change antd's label height = 32 to text height
+    [methods.makeCssClass(properties.style)]: true,
   });
 
   const extraClassName = classNames(

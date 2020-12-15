@@ -145,7 +145,7 @@ test('label default', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -154,8 +154,8 @@ test('label default', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -176,7 +176,7 @@ test('label default logic title undefined', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -185,8 +185,8 @@ test('label default logic title undefined', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -207,7 +207,7 @@ test('label default logic with required', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -216,8 +216,8 @@ test('label default logic with required', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -247,7 +247,7 @@ test('label default logic with validation.status = error', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -256,8 +256,8 @@ test('label default logic with validation.status = error', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -286,7 +286,7 @@ test('label default logic with validation.status = warning', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -295,8 +295,8 @@ test('label default logic with validation.status = warning', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -326,7 +326,7 @@ test('label default logic with validation.status = success', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -335,8 +335,8 @@ test('label default logic with validation.status = success', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -362,7 +362,7 @@ test('label default logic with required', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "ant-form-item-required {}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -371,8 +371,8 @@ test('label default logic with required', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -400,7 +400,7 @@ test('label default logic with required', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "ant-form-item-required {}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -409,8 +409,8 @@ test('label default logic with required', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -438,7 +438,7 @@ test('label default logic with required', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "ant-form-item-required {}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -447,8 +447,8 @@ test('label default logic with required', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -476,7 +476,7 @@ test('label default logic with required', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "ant-form-item-required {}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -485,8 +485,8 @@ test('label default logic with required', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -512,7 +512,7 @@ test('label default logic properties.align = right', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -521,8 +521,8 @@ test('label default logic properties.align = right', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -550,7 +550,7 @@ test('label default logic properties.align = right', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -559,8 +559,8 @@ test('label default logic properties.align = right', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -588,7 +588,7 @@ test('label default logic properties.align = right', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -597,8 +597,8 @@ test('label default logic properties.align = right', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -626,7 +626,7 @@ test('label default logic properties.align = right', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -635,8 +635,8 @@ test('label default logic properties.align = right', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -662,7 +662,7 @@ test('label default logic properties.align = left', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -671,8 +671,8 @@ test('label default logic properties.align = left', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -700,7 +700,7 @@ test('label default logic properties.align = left', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -709,8 +709,8 @@ test('label default logic properties.align = left', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -738,7 +738,7 @@ test('label default logic properties.align = left', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -747,8 +747,8 @@ test('label default logic properties.align = left', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -776,7 +776,7 @@ test('label default logic properties.align = left', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -785,8 +785,8 @@ test('label default logic properties.align = left', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -812,12 +812,12 @@ test('label default logic properties.inline = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -840,12 +840,12 @@ test('label default logic properties.inline = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -868,12 +868,12 @@ test('label default logic properties.inline = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -896,12 +896,12 @@ test('label default logic properties.inline = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -922,7 +922,7 @@ test('label default logic properties.colon = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -931,8 +931,8 @@ test('label default logic properties.colon = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -960,7 +960,7 @@ test('label default logic properties.colon = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -969,8 +969,8 @@ test('label default logic properties.colon = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -998,7 +998,7 @@ test('label default logic properties.colon = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1007,8 +1007,8 @@ test('label default logic properties.colon = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1036,7 +1036,7 @@ test('label default logic properties.colon = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1045,8 +1045,8 @@ test('label default logic properties.colon = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1072,7 +1072,7 @@ test('label default logic properties.title = title_1', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1081,8 +1081,8 @@ test('label default logic properties.title = title_1', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1110,7 +1110,7 @@ test('label default logic properties.title = title_1', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1119,8 +1119,8 @@ test('label default logic properties.title = title_1', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1148,7 +1148,7 @@ test('label default logic properties.title = title_1', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1157,8 +1157,8 @@ test('label default logic properties.title = title_1', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1186,7 +1186,7 @@ test('label default logic properties.title = title_1', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "title_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1195,8 +1195,8 @@ test('label default logic properties.title = title_1', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1225,7 +1225,7 @@ test('label default logic properties.title = long', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1234,8 +1234,8 @@ test('label default logic properties.title = long', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1266,7 +1266,7 @@ test('label default logic properties.title = long', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1275,8 +1275,8 @@ test('label default logic properties.title = long', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1307,7 +1307,7 @@ test('label default logic properties.title = long', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1316,8 +1316,8 @@ test('label default logic properties.title = long', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1348,7 +1348,7 @@ test('label default logic properties.title = long', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1357,8 +1357,8 @@ test('label default logic properties.title = long', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1388,12 +1388,12 @@ test('label default logic properties.title = long and properties.inline = true',
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1420,12 +1420,12 @@ test('label default logic properties.title = long and properties.inline = true',
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1452,12 +1452,12 @@ test('label default logic properties.title = long and properties.inline = true',
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1484,12 +1484,12 @@ test('label default logic properties.title = long and properties.inline = true',
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "flex": "0 1 auto",
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1510,7 +1510,7 @@ test('label default logic properties.size = small', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1519,8 +1519,8 @@ test('label default logic properties.size = small', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+      "rowClassName": "ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1548,7 +1548,7 @@ test('label default logic properties.size = small', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1557,8 +1557,8 @@ test('label default logic properties.size = small', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+      "rowClassName": "ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1586,7 +1586,7 @@ test('label default logic properties.size = small', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1595,8 +1595,8 @@ test('label default logic properties.size = small', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+      "rowClassName": "ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1624,7 +1624,7 @@ test('label default logic properties.size = small', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1633,8 +1633,8 @@ test('label default logic properties.size = small', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
+      "rowClassName": "ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1660,7 +1660,7 @@ test('label default logic properties.size = large', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1669,8 +1669,8 @@ test('label default logic properties.size = large', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1698,7 +1698,7 @@ test('label default logic properties.size = large', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1707,8 +1707,8 @@ test('label default logic properties.size = large', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1736,7 +1736,7 @@ test('label default logic properties.size = large', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1745,8 +1745,8 @@ test('label default logic properties.size = large', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1774,7 +1774,7 @@ test('label default logic properties.size = large', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1783,8 +1783,8 @@ test('label default logic properties.size = large', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1810,7 +1810,7 @@ test('label default logic properties.disabled = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1819,8 +1819,8 @@ test('label default logic properties.disabled = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1848,7 +1848,7 @@ test('label default logic properties.disabled = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1857,8 +1857,8 @@ test('label default logic properties.disabled = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1886,7 +1886,7 @@ test('label default logic properties.disabled = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1895,8 +1895,8 @@ test('label default logic properties.disabled = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -1924,7 +1924,7 @@ test('label default logic properties.disabled = true', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": false,
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1933,8 +1933,8 @@ test('label default logic properties.disabled = true', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -1964,7 +1964,7 @@ test('label default logic properties.style', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelClassName": "{\\"style\\":{\\"border\\":\\"1px solid yellow\\"}}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -1973,8 +1973,8 @@ test('label default logic properties.style', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2006,7 +2006,7 @@ test('label default logic properties.style', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelClassName": "{\\"style\\":{\\"border\\":\\"1px solid yellow\\"}}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2015,8 +2015,8 @@ test('label default logic properties.style', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2048,7 +2048,7 @@ test('label default logic properties.style', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelClassName": "{\\"style\\":{\\"border\\":\\"1px solid yellow\\"}}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2057,8 +2057,8 @@ test('label default logic properties.style', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2090,7 +2090,7 @@ test('label default logic properties.style', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},{\\"border\\":\\"1px solid yellow\\"}]}",
+      "labelClassName": "{\\"style\\":{\\"border\\":\\"1px solid yellow\\"}}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2099,8 +2099,8 @@ test('label default logic properties.style', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2130,7 +2130,7 @@ test('label default logic properties.extraStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2139,8 +2139,8 @@ test('label default logic properties.extraStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2172,7 +2172,7 @@ test('label default logic properties.extraStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2181,8 +2181,8 @@ test('label default logic properties.extraStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2214,7 +2214,7 @@ test('label default logic properties.extraStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2223,8 +2223,8 @@ test('label default logic properties.extraStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2256,7 +2256,7 @@ test('label default logic properties.extraStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2265,8 +2265,8 @@ test('label default logic properties.extraStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2296,7 +2296,7 @@ test('label default logic properties.feedbackStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2305,8 +2305,8 @@ test('label default logic properties.feedbackStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2338,7 +2338,7 @@ test('label default logic properties.feedbackStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2347,8 +2347,8 @@ test('label default logic properties.feedbackStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2380,7 +2380,7 @@ test('label default logic properties.feedbackStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2389,8 +2389,8 @@ test('label default logic properties.feedbackStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2422,7 +2422,7 @@ test('label default logic properties.feedbackStyle', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid yellow\\"}]}",
       "label": "label_1",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2431,8 +2431,8 @@ test('label default logic properties.feedbackStyle', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2458,7 +2458,7 @@ test('label default logic content.content = () => one', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2467,8 +2467,8 @@ test('label default logic content.content = () => one', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {
@@ -2496,7 +2496,7 @@ test('label default logic content.content = () => one', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2505,8 +2505,8 @@ test('label default logic content.content = () => one', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2534,7 +2534,7 @@ test('label default logic content.content = () => one', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2543,8 +2543,8 @@ test('label default logic content.content = () => one', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": true,
       "wrapperCol": Object {
@@ -2572,7 +2572,7 @@ test('label default logic content.content = () => one', () => {
       "extraClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "feedbackClassName": "ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}",
       "label": "Test title",
-      "labelClassName": "{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}",
+      "labelClassName": "{}",
       "labelCol": Object {
         "sm": Object {
           "span": 24,
@@ -2581,8 +2581,8 @@ test('label default logic content.content = () => one', () => {
           "span": 24,
         },
       },
-      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}",
+      "labelColClassName": "ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
+      "rowClassName": "ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}",
       "showExtra": false,
       "showFeedback": false,
       "wrapperCol": Object {

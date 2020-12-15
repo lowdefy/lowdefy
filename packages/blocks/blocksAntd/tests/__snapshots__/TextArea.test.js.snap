@@ -2,20 +2,16 @@
 
 exports[`Render default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -74,20 +70,16 @@ exports[`Render default - value[0] 1`] = `
 
 exports[`Render properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -120,20 +112,16 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
 
 exports[`Render properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -193,20 +181,16 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
 
 exports[`Render properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -265,20 +249,16 @@ exports[`Render properties.autoSize: true - value[0] 1`] = `
 
 exports[`Render properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -338,20 +318,16 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
 
 exports[`Render properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -410,20 +386,16 @@ exports[`Render properties.label align: right - value[0] 1`] = `
 
 exports[`Render properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -482,13 +454,9 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
 
 exports[`Render properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -542,20 +510,16 @@ exports[`Render properties.label disabled: true - value[0] 1`] = `
 
 exports[`Render properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -619,16 +583,12 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
 
 exports[`Render properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -636,7 +596,7 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -699,20 +659,16 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
 
 exports[`Render properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -771,20 +727,16 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
 
 exports[`Render properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -843,20 +795,16 @@ exports[`Render properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 
 exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -916,20 +864,16 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
 
 exports[`Render properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -988,20 +932,16 @@ exports[`Render properties.rows: 5 - value[0] 1`] = `
 
 exports[`Render properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -1060,20 +1000,16 @@ exports[`Render properties.title: My TextArea Title - value[0] 1`] = `
 
 exports[`Render required = true default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="default_input"
       title="default"
     >
@@ -1132,20 +1068,16 @@ exports[`Render required = true default - value[0] 1`] = `
 
 exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -1178,20 +1110,16 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
 
 exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -1251,20 +1179,16 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
 
 exports[`Render required = true properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -1323,20 +1247,16 @@ exports[`Render required = true properties.autoSize: true - value[0] 1`] = `
 
 exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -1396,20 +1316,16 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
 
 exports[`Render required = true properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -1468,20 +1384,16 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
 
 exports[`Render required = true properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -1540,13 +1452,9 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
 
 exports[`Render required = true properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -1600,20 +1508,16 @@ exports[`Render required = true properties.label disabled: true - value[0] 1`] =
 
 exports[`Render required = true properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -1677,16 +1581,12 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
 
 exports[`Render required = true properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -1694,7 +1594,7 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -1757,20 +1657,16 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
 
 exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -1829,20 +1725,16 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
 
 exports[`Render required = true properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -1901,20 +1793,16 @@ exports[`Render required = true properties.minRows: 2  maxRows: 6 - value[0] 1`]
 
 exports[`Render required = true properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -1974,20 +1862,16 @@ exports[`Render required = true properties.placeholder: Type your text here - va
 
 exports[`Render required = true properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -2046,20 +1930,16 @@ exports[`Render required = true properties.rows: 5 - value[0] 1`] = `
 
 exports[`Render required = true properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-required {}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -2118,20 +1998,16 @@ exports[`Render required = true properties.title: My TextArea Title - value[0] 1
 
 exports[`Render validation.status = error default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -2219,20 +2095,16 @@ exports[`Render validation.status = error default - value[0] 1`] = `
 
 exports[`Render validation.status = error properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -2294,20 +2166,16 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
 
 exports[`Render validation.status = error properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -2396,20 +2264,16 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
 
 exports[`Render validation.status = error properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -2497,20 +2361,16 @@ exports[`Render validation.status = error properties.autoSize: true - value[0] 1
 
 exports[`Render validation.status = error properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -2599,20 +2459,16 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
 
 exports[`Render validation.status = error properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -2700,20 +2556,16 @@ exports[`Render validation.status = error properties.label align: right - value[
 
 exports[`Render validation.status = error properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -2801,13 +2653,9 @@ exports[`Render validation.status = error properties.label colon: false - value[
 
 exports[`Render validation.status = error properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -2890,20 +2738,16 @@ exports[`Render validation.status = error properties.label disabled: true - valu
 
 exports[`Render validation.status = error properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -2991,16 +2835,12 @@ exports[`Render validation.status = error properties.label extra: showing extra 
 
 exports[`Render validation.status = error properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -3008,7 +2848,7 @@ exports[`Render validation.status = error properties.label inline: true - value[
     }
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -3100,20 +2940,16 @@ exports[`Render validation.status = error properties.label inline: true - value[
 
 exports[`Render validation.status = error properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -3201,20 +3037,16 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
 
 exports[`Render validation.status = error properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -3302,20 +3134,16 @@ exports[`Render validation.status = error properties.minRows: 2  maxRows: 6 - va
 
 exports[`Render validation.status = error properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -3404,20 +3232,16 @@ exports[`Render validation.status = error properties.placeholder: Type your text
 
 exports[`Render validation.status = error properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -3505,20 +3329,16 @@ exports[`Render validation.status = error properties.rows: 5 - value[0] 1`] = `
 
 exports[`Render validation.status = error properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -3606,20 +3426,16 @@ exports[`Render validation.status = error properties.title: My TextArea Title - 
 
 exports[`Render validation.status = null default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -3678,20 +3494,16 @@ exports[`Render validation.status = null default - value[0] 1`] = `
 
 exports[`Render validation.status = null properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -3724,20 +3536,16 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
 
 exports[`Render validation.status = null properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -3797,20 +3605,16 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
 
 exports[`Render validation.status = null properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -3869,20 +3673,16 @@ exports[`Render validation.status = null properties.autoSize: true - value[0] 1`
 
 exports[`Render validation.status = null properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -3942,20 +3742,16 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
 
 exports[`Render validation.status = null properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -4014,20 +3810,16 @@ exports[`Render validation.status = null properties.label align: right - value[0
 
 exports[`Render validation.status = null properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -4086,13 +3878,9 @@ exports[`Render validation.status = null properties.label colon: false - value[0
 
 exports[`Render validation.status = null properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -4146,20 +3934,16 @@ exports[`Render validation.status = null properties.label disabled: true - value
 
 exports[`Render validation.status = null properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -4223,16 +4007,12 @@ exports[`Render validation.status = null properties.label extra: showing extra -
 
 exports[`Render validation.status = null properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -4240,7 +4020,7 @@ exports[`Render validation.status = null properties.label inline: true - value[0
     }
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -4303,20 +4083,16 @@ exports[`Render validation.status = null properties.label inline: true - value[0
 
 exports[`Render validation.status = null properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -4375,20 +4151,16 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
 
 exports[`Render validation.status = null properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -4447,20 +4219,16 @@ exports[`Render validation.status = null properties.minRows: 2  maxRows: 6 - val
 
 exports[`Render validation.status = null properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -4520,20 +4288,16 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
 
 exports[`Render validation.status = null properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -4592,20 +4356,16 @@ exports[`Render validation.status = null properties.rows: 5 - value[0] 1`] = `
 
 exports[`Render validation.status = null properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item {\\"style\\":{}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -4664,20 +4424,16 @@ exports[`Render validation.status = null properties.title: My TextArea Title - v
 
 exports[`Render validation.status = success default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -4760,20 +4516,16 @@ exports[`Render validation.status = success default - value[0] 1`] = `
 
 exports[`Render validation.status = success properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -4830,20 +4582,16 @@ exports[`Render validation.status = success properties.allowClear: false - value
 
 exports[`Render validation.status = success properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -4927,20 +4675,16 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
 
 exports[`Render validation.status = success properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -5023,20 +4767,16 @@ exports[`Render validation.status = success properties.autoSize: true - value[0]
 
 exports[`Render validation.status = success properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -5120,20 +4860,16 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
 
 exports[`Render validation.status = success properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -5216,20 +4952,16 @@ exports[`Render validation.status = success properties.label align: right - valu
 
 exports[`Render validation.status = success properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -5312,13 +5044,9 @@ exports[`Render validation.status = success properties.label colon: false - valu
 
 exports[`Render validation.status = success properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -5396,20 +5124,16 @@ exports[`Render validation.status = success properties.label disabled: true - va
 
 exports[`Render validation.status = success properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -5497,16 +5221,12 @@ exports[`Render validation.status = success properties.label extra: showing extr
 
 exports[`Render validation.status = success properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -5514,7 +5234,7 @@ exports[`Render validation.status = success properties.label inline: true - valu
     }
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -5601,20 +5321,16 @@ exports[`Render validation.status = success properties.label inline: true - valu
 
 exports[`Render validation.status = success properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -5697,20 +5413,16 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
 
 exports[`Render validation.status = success properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -5793,20 +5505,16 @@ exports[`Render validation.status = success properties.minRows: 2  maxRows: 6 - 
 
 exports[`Render validation.status = success properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -5890,20 +5598,16 @@ exports[`Render validation.status = success properties.placeholder: Type your te
 
 exports[`Render validation.status = success properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -5986,20 +5690,16 @@ exports[`Render validation.status = success properties.rows: 5 - value[0] 1`] = 
 
 exports[`Render validation.status = success properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -6082,20 +5782,16 @@ exports[`Render validation.status = success properties.title: My TextArea Title 
 
 exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="default"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="default_input"
       title="default"
     >
@@ -6183,20 +5879,16 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
 
 exports[`Render validation.status = warning properties.allowClear: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.allowClear: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -6258,20 +5950,16 @@ exports[`Render validation.status = warning properties.allowClear: false - value
 
 exports[`Render validation.status = warning properties.autoFocus: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoFocus: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -6360,20 +6048,16 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
 
 exports[`Render validation.status = warning properties.autoSize: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.autoSize: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -6461,20 +6145,16 @@ exports[`Render validation.status = warning properties.autoSize: true - value[0]
 
 exports[`Render validation.status = warning properties.disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -6563,20 +6243,16 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
 
 exports[`Render validation.status = warning properties.label align: right - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label align: right"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -6664,20 +6340,16 @@ exports[`Render validation.status = warning properties.label align: right - valu
 
 exports[`Render validation.status = warning properties.label colon: false - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label colon: false"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="ant-form-item-no-colon {}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -6765,13 +6437,9 @@ exports[`Render validation.status = warning properties.label colon: false - valu
 
 exports[`Render validation.status = warning properties.label disabled: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label disabled: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
     className="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
@@ -6854,20 +6522,16 @@ exports[`Render validation.status = warning properties.label disabled: true - va
 
 exports[`Render validation.status = warning properties.label extra: showing extra - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label extra: showing extra"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -6955,16 +6619,12 @@ exports[`Render validation.status = warning properties.label extra: showing extr
 
 exports[`Render validation.status = warning properties.label inline: true - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\"}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
   id="properties.label inline: true"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8,\\"height\\":30}}"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
     style={
       Object {
         "flex": "0 1 auto",
@@ -6972,7 +6632,7 @@ exports[`Render validation.status = warning properties.label inline: true - valu
     }
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -7064,20 +6724,16 @@ exports[`Render validation.status = warning properties.label inline: true - valu
 
 exports[`Render validation.status = warning properties.label span: 12 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.label span: 12"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -7165,20 +6821,16 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
 
 exports[`Render validation.status = warning properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.minRows: 2  maxRows: 6"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -7266,20 +6918,16 @@ exports[`Render validation.status = warning properties.minRows: 2  maxRows: 6 - 
 
 exports[`Render validation.status = warning properties.placeholder: Type your text here - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.placeholder: Type your text here"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -7368,20 +7016,16 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
 
 exports[`Render validation.status = warning properties.rows: 5 - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.rows: 5"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -7469,20 +7113,16 @@ exports[`Render validation.status = warning properties.rows: 5 - value[0] 1`] = 
 
 exports[`Render validation.status = warning properties.title: My TextArea Title - value[0] 1`] = `
 <div
-  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.title: My TextArea Title"
-  style={
-    Object {
-      "marginBottom": 0,
-    }
-  }
+  style={Object {}}
 >
   <div
-    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
+    className="ant-col ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}} ant-col-xs-24 ant-col-sm-24"
     style={Object {}}
   >
     <label
-      className="{\\"style\\":[{\\"height\\":\\"100% !important\\"},null]}"
+      className="{}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
