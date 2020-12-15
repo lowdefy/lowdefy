@@ -57,7 +57,7 @@ test('send telemetry', async () => {
           x: 1,
         },
         headers: {
-          'User-Agent': 'Lowdefy CLI vlowdefyVersion',
+          'User-Agent': 'Lowdefy CLI vcliVersion',
         },
         method: 'post',
         url: 'https://api.lowdefy.net/telemetry/cli',
