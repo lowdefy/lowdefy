@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/lowdefy/lowdefy/compare/@lowdefy/cli@3.0.0-alpha.7...@lowdefy/cli@3.1.0) (2020-12-15)
+
+
+### Bug Fixes
+
+* **cli:** Use startUp function in clean-cache command ([cc6ffa0](https://github.com/lowdefy/lowdefy/commit/cc6ffa07930792a574ee76f657b61eefcf9d1156))
+* **deps:** update dependency commander to v6.2.1 ([71d62c9](https://github.com/lowdefy/lowdefy/commit/71d62c9e69024139043ee6aab3c6903c0a643c35))
+
+
+### Features
+
+* **cli:** add app and machine ids to telemetry ([a3a2bc0](https://github.com/lowdefy/lowdefy/commit/a3a2bc0e1500e9bb0f9feed507d54d356d7a1859))
+* **cli:** add disable telemetry flag ([c97cde4](https://github.com/lowdefy/lowdefy/commit/c97cde45117a3bcc0dc11711a81cc7f5f5e5f275))
+* **cli:** add telemetry ([3ce6dc5](https://github.com/lowdefy/lowdefy/commit/3ce6dc5b5b0f50733fffb92d6f4f0a9fa7b8c560))
+* **cli:** Clean block meta cache on build and dev commands. ([4fb5fbd](https://github.com/lowdefy/lowdefy/commit/4fb5fbd3c35aeaab75238298e95b88676d63e2b6))
+* **cli:** Log cli errors to lowdefy api. ([4e8ef7b](https://github.com/lowdefy/lowdefy/commit/4e8ef7b34615de4c3da7015721188b5d5bfa3224))
+* **cli:** Shutdown development server if .env file changed. ([1a89a11](https://github.com/lowdefy/lowdefy/commit/1a89a11a3bf75c1c311f03bd00ebe3974274f240))
+
+
+
+
+
 # [3.0.0](https://github.com/lowdefy/lowdefy/compare/@lowdefy/cli@3.0.0-alpha.7...@lowdefy/cli@3.0.0) (2020-12-15)
 
 

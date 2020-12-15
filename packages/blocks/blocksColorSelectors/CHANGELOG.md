@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/lowdefy/lowdefy/compare/@lowdefy/blocks-color-selectors@1.1.0...@lowdefy/blocks-color-selectors@1.1.2) (2020-12-15)
+
+
+### Bug Fixes
+
+* **blocks:** webpack --port setting should default to 3002 if no port provided ([ec1f5e8](https://github.com/lowdefy/lowdefy/commit/ec1f5e8a85bd2d326ecdb55a9a5ee628ff9034fa))
+* **blocksAntd:** apply ant-form-small and ant-form-large classes to Label. ([1771590](https://github.com/lowdefy/lowdefy/commit/1771590d654a8a638a88ae7daa4d70b02f37fa0c))
+* **blocksAntd:** Chagne Label height to 'fit-content' and apply min-height to solve long label overflow. ([69d131a](https://github.com/lowdefy/lowdefy/commit/69d131a76d62982e2bedb2a1b284fd56d39cffed))
+* **blocksColorSelectors:** update tests for Label height change ([efbd265](https://github.com/lowdefy/lowdefy/commit/efbd2658cde6242fac71ea399fc760263947ac33))
+
+
+
+
+
 ## [1.1.1](https://github.com/lowdefy/lowdefy/compare/@lowdefy/blocks-color-selectors@1.1.0...@lowdefy/blocks-color-selectors@1.1.1) (2020-12-15)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0](https://github.com/lowdefy/lowdefy/compare/@lowdefy/build@0.0.0-alpha.7...@lowdefy/build@0.1.0) (2020-12-15)
+
+
+### Features
+
+* **build:** Add user defined loading property to blocks. ([bc87408](https://github.com/lowdefy/lowdefy/commit/bc87408edfb12b71286da9c2cf678b101dae9bd3))
+
+
+
+
+
 # [0.0.0](https://github.com/lowdefy/lowdefy/compare/@lowdefy/build@0.0.0-alpha.7...@lowdefy/build@0.0.0) (2020-12-15)
 
 

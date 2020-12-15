@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/lowdefy/lowdefy/compare/@lowdefy/blocks-markdown@1.1.0...@lowdefy/blocks-markdown@1.1.2) (2020-12-15)
+
+
+### Bug Fixes
+
+* **blocks:** webpack --port setting should default to 3002 if no port provided ([ec1f5e8](https://github.com/lowdefy/lowdefy/commit/ec1f5e8a85bd2d326ecdb55a9a5ee628ff9034fa))
+
+
+
+
+
 ## [1.1.1](https://github.com/lowdefy/lowdefy/compare/@lowdefy/blocks-markdown@1.1.0...@lowdefy/blocks-markdown@1.1.1) (2020-12-15)
 
 
