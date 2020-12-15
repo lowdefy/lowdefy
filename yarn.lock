@@ -2794,6 +2794,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.1.0
+    "@lowdefy/helpers": 1.2.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2830,6 +2831,7 @@ __metadata:
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.1.0
     "@lowdefy/blocks-antd": 1.1.0
+    "@lowdefy/helpers": 1.2.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2871,6 +2873,7 @@ __metadata:
     "@babel/preset-env": 7.12.10
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 1.1.0
+    "@lowdefy/helpers": 1.2.0
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2

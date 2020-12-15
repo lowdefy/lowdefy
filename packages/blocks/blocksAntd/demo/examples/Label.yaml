@@ -34,16 +34,6 @@
   properties:
     title: Label title
     disabled: true
-- id: "properties.span: 2"
-  type: Label
-  properties:
-    span: 2
-    title: This is the long label title wrapped by short span
-- id: "properties.span: 2 with long work title"
-  type: Label
-  properties:
-    span: 2
-    title: Thisisthelonglabeltitlea 
 - id: "properties.inline: true"
   type: Label
   properties:
@@ -103,3 +93,97 @@
     extra: The extra content
     feedbackStyle: 
       border: 1px solid blue
+- id: "properties.span: 2"
+  type: Label
+  properties:
+    span: 2
+    title: This is the long label title wrapped by short span
+- id: "properties.span: 2 with long work title"
+  type: Label
+  properties:
+    span: 2
+    title: Thisisthelonglabeltitlea 
+- id: inline and long extra default size
+  type: Label
+  properties:
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: inline and long extra small size
+  type: Label
+  properties:
+    size: small
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: inline and long extra large size
+  type: Label
+  properties:
+    size: large
+    inline: true
+    title: |
+      Lorem ipsum dolor sit amet
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right and long extra for default size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    title: |
+      Lorem
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right and long extra for small size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    size: small
+    title: |
+      Lorem
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right and long extra for large size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    size: large
+    title: |
+      Lorem
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right, long title and long extra for default size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    title: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right, long title and long extra for small size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    size: small
+    title: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+- id: span, align right, long title and long extra for large size
+  type: Label
+  properties:
+    span: 8
+    align: right
+    size: large
+    title: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
+    extra: |
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
