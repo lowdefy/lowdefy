@@ -3047,7 +3047,7 @@ __metadata:
     ajv-errors: 1.0.1
     apollo-server: 2.19.0
     apollo-server-testing: 2.19.0
-    aws-sdk: 2.807.0
+    aws-sdk: 2.809.0
     axios: 0.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -5920,9 +5920,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.807.0":
-  version: 2.807.0
-  resolution: "aws-sdk@npm:2.807.0"
+"aws-sdk@npm:2.809.0":
+  version: 2.809.0
+  resolution: "aws-sdk@npm:2.809.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -5933,7 +5933,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 4c42c27a063d631fa94d0d120c2908be0678d59805a4c79fdf3b2aaddcbec06b789d1e799c7d4a3beecfa8234119f0f2bbe45b48987beaeac1e01e7dc8d69d05
+  checksum: 5b47eac9d231f194bf92d634a791270a897b0f9fcf5b326deb1bc6d32b0a73da20ca0901f53126a8e254e3c1dfcd104565fcaeb7e8efd122b83ee5ecf22a18d6
   languageName: node
   linkType: hard
 
