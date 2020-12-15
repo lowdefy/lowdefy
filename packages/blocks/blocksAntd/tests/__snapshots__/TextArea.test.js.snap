@@ -11,7 +11,7 @@ exports[`Render default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -79,7 +79,7 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -121,7 +121,7 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -190,7 +190,7 @@ exports[`Render properties.autoSize: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -258,7 +258,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -327,7 +327,7 @@ exports[`Render properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -395,7 +395,7 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -519,7 +519,7 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -596,7 +596,7 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -668,7 +668,7 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -736,7 +736,7 @@ exports[`Render properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -804,7 +804,7 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -873,7 +873,7 @@ exports[`Render properties.rows: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -941,7 +941,7 @@ exports[`Render properties.title: My TextArea Title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -1009,7 +1009,7 @@ exports[`Render required = true default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -1077,7 +1077,7 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -1119,7 +1119,7 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -1188,7 +1188,7 @@ exports[`Render required = true properties.autoSize: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -1256,7 +1256,7 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -1325,7 +1325,7 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -1393,7 +1393,7 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required ant-form-item-no-colon {}"
+      className="ant-form-item-required ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -1517,7 +1517,7 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -1594,7 +1594,7 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -1666,7 +1666,7 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -1734,7 +1734,7 @@ exports[`Render required = true properties.minRows: 2  maxRows: 6 - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -1802,7 +1802,7 @@ exports[`Render required = true properties.placeholder: Type your text here - va
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -1871,7 +1871,7 @@ exports[`Render required = true properties.rows: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -1939,7 +1939,7 @@ exports[`Render required = true properties.title: My TextArea Title - value[0] 1
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -2007,7 +2007,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -2104,7 +2104,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -2175,7 +2175,7 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -2273,7 +2273,7 @@ exports[`Render validation.status = error properties.autoSize: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -2370,7 +2370,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -2468,7 +2468,7 @@ exports[`Render validation.status = error properties.label align: right - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -2565,7 +2565,7 @@ exports[`Render validation.status = error properties.label colon: false - value[
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -2747,7 +2747,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -2848,7 +2848,7 @@ exports[`Render validation.status = error properties.label inline: true - value[
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -2949,7 +2949,7 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -3046,7 +3046,7 @@ exports[`Render validation.status = error properties.minRows: 2  maxRows: 6 - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -3143,7 +3143,7 @@ exports[`Render validation.status = error properties.placeholder: Type your text
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -3241,7 +3241,7 @@ exports[`Render validation.status = error properties.rows: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -3338,7 +3338,7 @@ exports[`Render validation.status = error properties.title: My TextArea Title - 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -3435,7 +3435,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -3503,7 +3503,7 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -3545,7 +3545,7 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -3614,7 +3614,7 @@ exports[`Render validation.status = null properties.autoSize: true - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -3682,7 +3682,7 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -3751,7 +3751,7 @@ exports[`Render validation.status = null properties.label align: right - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -3819,7 +3819,7 @@ exports[`Render validation.status = null properties.label colon: false - value[0
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -3943,7 +3943,7 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -4020,7 +4020,7 @@ exports[`Render validation.status = null properties.label inline: true - value[0
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -4092,7 +4092,7 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -4160,7 +4160,7 @@ exports[`Render validation.status = null properties.minRows: 2  maxRows: 6 - val
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -4228,7 +4228,7 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -4297,7 +4297,7 @@ exports[`Render validation.status = null properties.rows: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -4365,7 +4365,7 @@ exports[`Render validation.status = null properties.title: My TextArea Title - v
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -4433,7 +4433,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -4525,7 +4525,7 @@ exports[`Render validation.status = success properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -4591,7 +4591,7 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -4684,7 +4684,7 @@ exports[`Render validation.status = success properties.autoSize: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -4776,7 +4776,7 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -4869,7 +4869,7 @@ exports[`Render validation.status = success properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -4961,7 +4961,7 @@ exports[`Render validation.status = success properties.label colon: false - valu
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -5133,7 +5133,7 @@ exports[`Render validation.status = success properties.label extra: showing extr
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -5234,7 +5234,7 @@ exports[`Render validation.status = success properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -5330,7 +5330,7 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -5422,7 +5422,7 @@ exports[`Render validation.status = success properties.minRows: 2  maxRows: 6 - 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -5514,7 +5514,7 @@ exports[`Render validation.status = success properties.placeholder: Type your te
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -5607,7 +5607,7 @@ exports[`Render validation.status = success properties.rows: 5 - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -5699,7 +5699,7 @@ exports[`Render validation.status = success properties.title: My TextArea Title 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >
@@ -5791,7 +5791,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -5888,7 +5888,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -5959,7 +5959,7 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -6057,7 +6057,7 @@ exports[`Render validation.status = warning properties.autoSize: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoSize: true_input"
       title="properties.autoSize: true"
     >
@@ -6154,7 +6154,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -6252,7 +6252,7 @@ exports[`Render validation.status = warning properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -6349,7 +6349,7 @@ exports[`Render validation.status = warning properties.label colon: false - valu
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -6531,7 +6531,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -6632,7 +6632,7 @@ exports[`Render validation.status = warning properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -6733,7 +6733,7 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -6830,7 +6830,7 @@ exports[`Render validation.status = warning properties.minRows: 2  maxRows: 6 - 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minRows: 2  maxRows: 6_input"
       title="properties.minRows: 2  maxRows: 6"
     >
@@ -6927,7 +6927,7 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -7025,7 +7025,7 @@ exports[`Render validation.status = warning properties.rows: 5 - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.rows: 5_input"
       title="properties.rows: 5"
     >
@@ -7122,7 +7122,7 @@ exports[`Render validation.status = warning properties.title: My TextArea Title 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextArea Title_input"
       title="My TextArea Title"
     >

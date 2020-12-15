@@ -11,7 +11,7 @@ exports[`Render default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -87,7 +87,7 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -131,7 +131,7 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -208,7 +208,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -285,7 +285,7 @@ exports[`Render properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -361,7 +361,7 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -501,7 +501,7 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -586,7 +586,7 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -666,7 +666,7 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -742,7 +742,7 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -819,7 +819,7 @@ exports[`Render properties.prefix: Prefix to the text - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -900,7 +900,7 @@ exports[`Render properties.prefixIcon.size: 24 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -1002,7 +1002,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -1095,7 +1095,7 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
 
 exports[`Render properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -1104,7 +1104,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -1171,7 +1171,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
 
 exports[`Render properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -1180,7 +1180,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -1256,7 +1256,7 @@ exports[`Render properties.suffix: Suffix to the text - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -1333,7 +1333,7 @@ exports[`Render properties.suffixIcon.size 24 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -1431,7 +1431,7 @@ exports[`Render properties.suffixIcon: AlertFilled - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -1529,7 +1529,7 @@ exports[`Render properties.title: My TextInput Title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
@@ -1605,7 +1605,7 @@ exports[`Render required = true default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -1681,7 +1681,7 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -1725,7 +1725,7 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -1802,7 +1802,7 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -1879,7 +1879,7 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -1955,7 +1955,7 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required ant-form-item-no-colon {}"
+      className="ant-form-item-required ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -2095,7 +2095,7 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -2180,7 +2180,7 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -2260,7 +2260,7 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -2336,7 +2336,7 @@ exports[`Render required = true properties.placeholder: Type your text here - va
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -2413,7 +2413,7 @@ exports[`Render required = true properties.prefix: Prefix to the text - value[0]
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -2494,7 +2494,7 @@ exports[`Render required = true properties.prefixIcon.size: 24 - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -2596,7 +2596,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -2689,7 +2689,7 @@ exports[`Render required = true properties.prefixIcon: AccountBookFilled - value
 
 exports[`Render required = true properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -2698,7 +2698,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -2765,7 +2765,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
 
 exports[`Render required = true properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -2774,7 +2774,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -2850,7 +2850,7 @@ exports[`Render required = true properties.suffix: Suffix to the text - value[0]
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -2927,7 +2927,7 @@ exports[`Render required = true properties.suffixIcon.size 24 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -3025,7 +3025,7 @@ exports[`Render required = true properties.suffixIcon: AlertFilled - value[0] 1`
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -3123,7 +3123,7 @@ exports[`Render required = true properties.title: My TextInput Title - value[0] 
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
@@ -3199,7 +3199,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -3304,7 +3304,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -3377,7 +3377,7 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -3483,7 +3483,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -3589,7 +3589,7 @@ exports[`Render validation.status = error properties.label align: right - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -3694,7 +3694,7 @@ exports[`Render validation.status = error properties.label colon: false - value[
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -3892,7 +3892,7 @@ exports[`Render validation.status = error properties.label extra: showing extra 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -4001,7 +4001,7 @@ exports[`Render validation.status = error properties.label inline: true - value[
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -4110,7 +4110,7 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -4215,7 +4215,7 @@ exports[`Render validation.status = error properties.placeholder: Type your text
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -4321,7 +4321,7 @@ exports[`Render validation.status = error properties.prefix: Prefix to the text 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -4431,7 +4431,7 @@ exports[`Render validation.status = error properties.prefixIcon.size: 24 - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -4562,7 +4562,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -4684,7 +4684,7 @@ exports[`Render validation.status = error properties.prefixIcon: AccountBookFill
 
 exports[`Render validation.status = error properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -4693,7 +4693,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -4789,7 +4789,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
 
 exports[`Render validation.status = error properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -4798,7 +4798,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -4903,7 +4903,7 @@ exports[`Render validation.status = error properties.suffix: Suffix to the text 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -5009,7 +5009,7 @@ exports[`Render validation.status = error properties.suffixIcon.size 24 - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -5136,7 +5136,7 @@ exports[`Render validation.status = error properties.suffixIcon: AlertFilled - v
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -5263,7 +5263,7 @@ exports[`Render validation.status = error properties.title: My TextInput Title -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
@@ -5368,7 +5368,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -5444,7 +5444,7 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -5488,7 +5488,7 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -5565,7 +5565,7 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -5642,7 +5642,7 @@ exports[`Render validation.status = null properties.label align: right - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -5718,7 +5718,7 @@ exports[`Render validation.status = null properties.label colon: false - value[0
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -5858,7 +5858,7 @@ exports[`Render validation.status = null properties.label extra: showing extra -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -5943,7 +5943,7 @@ exports[`Render validation.status = null properties.label inline: true - value[0
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -6023,7 +6023,7 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -6099,7 +6099,7 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -6176,7 +6176,7 @@ exports[`Render validation.status = null properties.prefix: Prefix to the text -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -6257,7 +6257,7 @@ exports[`Render validation.status = null properties.prefixIcon.size: 24 - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -6359,7 +6359,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -6452,7 +6452,7 @@ exports[`Render validation.status = null properties.prefixIcon: AccountBookFille
 
 exports[`Render validation.status = null properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -6461,7 +6461,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -6528,7 +6528,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
 
 exports[`Render validation.status = null properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -6537,7 +6537,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -6613,7 +6613,7 @@ exports[`Render validation.status = null properties.suffix: Suffix to the text -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -6690,7 +6690,7 @@ exports[`Render validation.status = null properties.suffixIcon.size 24 - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -6788,7 +6788,7 @@ exports[`Render validation.status = null properties.suffixIcon: AlertFilled - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -6886,7 +6886,7 @@ exports[`Render validation.status = null properties.title: My TextInput Title - 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
@@ -6962,7 +6962,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -7062,7 +7062,7 @@ exports[`Render validation.status = success properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -7130,7 +7130,7 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -7231,7 +7231,7 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -7332,7 +7332,7 @@ exports[`Render validation.status = success properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -7432,7 +7432,7 @@ exports[`Render validation.status = success properties.label colon: false - valu
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -7620,7 +7620,7 @@ exports[`Render validation.status = success properties.label extra: showing extr
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -7729,7 +7729,7 @@ exports[`Render validation.status = success properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -7833,7 +7833,7 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -7933,7 +7933,7 @@ exports[`Render validation.status = success properties.placeholder: Type your te
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -8034,7 +8034,7 @@ exports[`Render validation.status = success properties.prefix: Prefix to the tex
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -8139,7 +8139,7 @@ exports[`Render validation.status = success properties.prefixIcon.size: 24 - val
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -8265,7 +8265,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -8382,7 +8382,7 @@ exports[`Render validation.status = success properties.prefixIcon: AccountBookFi
 
 exports[`Render validation.status = success properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -8391,7 +8391,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -8482,7 +8482,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
 
 exports[`Render validation.status = success properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -8491,7 +8491,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -8591,7 +8591,7 @@ exports[`Render validation.status = success properties.suffix: Suffix to the tex
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -8692,7 +8692,7 @@ exports[`Render validation.status = success properties.suffixIcon.size 24 - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -8814,7 +8814,7 @@ exports[`Render validation.status = success properties.suffixIcon: AlertFilled -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -8936,7 +8936,7 @@ exports[`Render validation.status = success properties.title: My TextInput Title
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >
@@ -9036,7 +9036,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -9141,7 +9141,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -9214,7 +9214,7 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -9320,7 +9320,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -9426,7 +9426,7 @@ exports[`Render validation.status = warning properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -9531,7 +9531,7 @@ exports[`Render validation.status = warning properties.label colon: false - valu
     style={Object {}}
   >
     <label
-      className="ant-form-item-no-colon {}"
+      className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: false_input"
       title="properties.label colon: false"
     >
@@ -9729,7 +9729,7 @@ exports[`Render validation.status = warning properties.label extra: showing extr
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: showing extra_input"
       title="properties.label extra: showing extra"
     >
@@ -9838,7 +9838,7 @@ exports[`Render validation.status = warning properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -9947,7 +9947,7 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 12_input"
       title="properties.label span: 12"
     >
@@ -10052,7 +10052,7 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: Type your text here_input"
       title="properties.placeholder: Type your text here"
     >
@@ -10158,7 +10158,7 @@ exports[`Render validation.status = warning properties.prefix: Prefix to the tex
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefix: Prefix to the text_input"
       title="properties.prefix: Prefix to the text"
     >
@@ -10268,7 +10268,7 @@ exports[`Render validation.status = warning properties.prefixIcon.size: 24 - val
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon.size: 24_input"
       title="properties.prefixIcon.size: 24"
     >
@@ -10399,7 +10399,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.prefixIcon: AccountBookFilled_input"
       title="properties.prefixIcon: AccountBookFilled"
     >
@@ -10521,7 +10521,7 @@ exports[`Render validation.status = warning properties.prefixIcon: AccountBookFi
 
 exports[`Render validation.status = warning properties.size: large - value[0] 1`] = `
 <div
-  className="ant-row ant-form-large ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: large"
   style={Object {}}
 >
@@ -10530,7 +10530,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
       htmlFor="properties.size: large_input"
       title="properties.size: large"
     >
@@ -10626,7 +10626,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
 
 exports[`Render validation.status = warning properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -10635,7 +10635,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -10740,7 +10740,7 @@ exports[`Render validation.status = warning properties.suffix: Suffix to the tex
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffix: Suffix to the text_input"
       title="properties.suffix: Suffix to the text"
     >
@@ -10846,7 +10846,7 @@ exports[`Render validation.status = warning properties.suffixIcon.size 24 - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon.size 24_input"
       title="properties.suffixIcon.size 24"
     >
@@ -10973,7 +10973,7 @@ exports[`Render validation.status = warning properties.suffixIcon: AlertFilled -
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: AlertFilled_input"
       title="properties.suffixIcon: AlertFilled"
     >
@@ -11100,7 +11100,7 @@ exports[`Render validation.status = warning properties.title: My TextInput Title
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title: My TextInput Title_input"
       title="My TextInput Title"
     >

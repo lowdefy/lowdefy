@@ -21,7 +21,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="default_input"
             title="default"
           >
@@ -89,7 +89,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="inline and long extra default size_input"
             title="Lorem ipsum dolor sit amet
 "
@@ -156,7 +156,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
             htmlFor="inline and long extra large size_input"
             title="Lorem ipsum dolor sit amet
 "
@@ -203,7 +203,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-large ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "id": "inline and long extra large size",
     },
     Object {},
@@ -223,7 +223,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
             htmlFor="inline and long extra small size_input"
             title="Lorem ipsum dolor sit amet
 "
@@ -270,7 +270,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-small ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "id": "inline and long extra small size",
     },
     Object {},
@@ -299,7 +299,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.align: left_input"
             title="Label title"
           >
@@ -376,7 +376,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.align: right_input"
             title="Label title"
           >
@@ -453,7 +453,7 @@ Array [
           }
         >
           <label
-            className="ant-form-item-no-colon {}"
+            className="ant-form-item-no-colon {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.colon: false_input"
             title="Label title"
           >
@@ -530,7 +530,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.colon: true_input"
             title="Label title"
           >
@@ -664,7 +664,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.extra: Extra long_input"
             title="Label title"
           >
@@ -738,7 +738,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.extra: Extra long with inline = true_input"
             title="Label title"
           >
@@ -803,7 +803,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
             htmlFor="properties.extra: Extra long with inline = true, size = large_input"
             title="Label title"
           >
@@ -848,7 +848,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-large ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "id": "properties.extra: Extra long with inline = true, size = large",
     },
     Object {},
@@ -868,7 +868,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
             htmlFor="properties.extra: Extra long with inline = true, size = small_input"
             title="Label title"
           >
@@ -913,7 +913,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-small ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
       "id": "properties.extra: Extra long with inline = true, size = small",
     },
     Object {},
@@ -933,7 +933,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.extra: Extra long with inline true_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -1003,7 +1003,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.extra: Extra text_input"
             title="Label title"
           >
@@ -1085,7 +1085,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.extraStyle: border 1px purple_input"
             title="Label title"
           >
@@ -1167,7 +1167,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.feedbackStyle: border 1px blue_input"
             title="Label title"
           >
@@ -1240,7 +1240,7 @@ Array [
           flex="0 1 auto"
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.inline: true_input"
             title="Label title"
           >
@@ -1313,7 +1313,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.span: 2_input"
             title="This is the long label title wrapped by short span"
           >
@@ -1400,7 +1400,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.span: 2 with long work title_input"
             title="Thisisthelonglabeltitlea"
           >
@@ -1482,7 +1482,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.title_input"
             title="Label title"
           >
@@ -1559,7 +1559,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="properties.title long_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -1643,7 +1643,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="span, align right and long extra for default size_input"
             title="Lorem
 "
@@ -1738,7 +1738,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
             htmlFor="span, align right and long extra for large size_input"
             title="Lorem
 "
@@ -1799,7 +1799,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "id": "span, align right and long extra for large size",
     },
     Object {},
@@ -1833,7 +1833,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
             htmlFor="span, align right and long extra for small size_input"
             title="Lorem
 "
@@ -1894,7 +1894,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "id": "span, align right and long extra for small size",
     },
     Object {},
@@ -1928,7 +1928,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
             htmlFor="span, align right, long title and long extra for default size_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -2023,7 +2023,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
             htmlFor="span, align right, long title and long extra for large size_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -2084,7 +2084,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-large ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "id": "span, align right, long title and long extra for large size",
     },
     Object {},
@@ -2118,7 +2118,7 @@ Array [
           }
         >
           <label
-            className="{}"
+            className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
             htmlFor="span, align right, long title and long extra for small size_input"
             title="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
 "
@@ -2179,7 +2179,7 @@ Array [
           </div>
         </mockConstructor>,
       ],
-      "className": "ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
+      "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
       "id": "span, align right, long title and long extra for small size",
     },
     Object {},

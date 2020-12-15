@@ -11,7 +11,7 @@ exports[`Render colors - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="colors_input"
       title="colors"
     >
@@ -225,7 +225,7 @@ exports[`Render default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -663,7 +663,7 @@ exports[`Render defaultColor - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="defaultColor_input"
       title="defaultColor"
     >
@@ -1527,7 +1527,7 @@ exports[`Render title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="title_input"
       title="The color selector"
     >
@@ -1965,7 +1965,7 @@ exports[`Render triangle-top-left - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="triangle-top-left_input"
       title="triangle-top-left"
     >
@@ -2405,7 +2405,7 @@ exports[`Render triangle-top-right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="triangle-top-right_input"
       title="triangle-top-right"
     >
@@ -2845,7 +2845,7 @@ exports[`Render width - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="width_input"
       title="width"
     >

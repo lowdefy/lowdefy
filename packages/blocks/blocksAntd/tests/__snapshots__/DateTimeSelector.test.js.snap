@@ -11,7 +11,7 @@ exports[`Render default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -75,7 +75,7 @@ exports[`Render properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -139,7 +139,7 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -204,7 +204,7 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -269,7 +269,7 @@ exports[`Render properties.disabledDates.dates - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -333,7 +333,7 @@ exports[`Render properties.disabledDates.max - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -397,7 +397,7 @@ exports[`Render properties.disabledDates.min - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -461,7 +461,7 @@ exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -525,7 +525,7 @@ exports[`Render properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats) - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -589,7 +589,7 @@ exports[`Render properties.hourStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -653,7 +653,7 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -717,7 +717,7 @@ exports[`Render properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -781,7 +781,7 @@ exports[`Render properties.label colon: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -897,7 +897,7 @@ exports[`Render properties.label extra: extra text added - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -970,7 +970,7 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -1038,7 +1038,7 @@ exports[`Render properties.label span: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -1102,7 +1102,7 @@ exports[`Render properties.minuteStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -1166,7 +1166,7 @@ exports[`Render properties.placeholder: - Select this Date and Time - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -1230,7 +1230,7 @@ exports[`Render properties.secondStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -1294,7 +1294,7 @@ exports[`Render properties.selectGMT: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -1358,7 +1358,7 @@ exports[`Render properties.showNow: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -1413,7 +1413,7 @@ exports[`Render properties.showNow: false - value[0] 1`] = `
 
 exports[`Render properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -1422,7 +1422,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -1486,7 +1486,7 @@ exports[`Render properties.suffixIcon: CalendarTwoTone - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -1576,7 +1576,7 @@ exports[`Render properties.timeFormat: HH:mm:ss - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -1640,7 +1640,7 @@ exports[`Render properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >
@@ -1704,7 +1704,7 @@ exports[`Render required = true default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -1768,7 +1768,7 @@ exports[`Render required = true properties.allowClear: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -1832,7 +1832,7 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -1897,7 +1897,7 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -1962,7 +1962,7 @@ exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -2026,7 +2026,7 @@ exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -2090,7 +2090,7 @@ exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -2154,7 +2154,7 @@ exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -2218,7 +2218,7 @@ exports[`Render required = true properties.format: YYYY-MMM-DD HH:mm:ss (moment.
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -2282,7 +2282,7 @@ exports[`Render required = true properties.hourStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -2346,7 +2346,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -2410,7 +2410,7 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -2474,7 +2474,7 @@ exports[`Render required = true properties.label colon: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -2590,7 +2590,7 @@ exports[`Render required = true properties.label extra: extra text added - value
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -2663,7 +2663,7 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
     }
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -2731,7 +2731,7 @@ exports[`Render required = true properties.label span: 5 - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -2795,7 +2795,7 @@ exports[`Render required = true properties.minuteStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -2859,7 +2859,7 @@ exports[`Render required = true properties.placeholder: - Select this Date and T
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -2923,7 +2923,7 @@ exports[`Render required = true properties.secondStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -2987,7 +2987,7 @@ exports[`Render required = true properties.selectGMT: true - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -3051,7 +3051,7 @@ exports[`Render required = true properties.showNow: false - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -3106,7 +3106,7 @@ exports[`Render required = true properties.showNow: false - value[0] 1`] = `
 
 exports[`Render required = true properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -3115,7 +3115,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -3179,7 +3179,7 @@ exports[`Render required = true properties.suffixIcon: CalendarTwoTone - value[0
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -3269,7 +3269,7 @@ exports[`Render required = true properties.timeFormat: HH:mm:ss - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -3333,7 +3333,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="ant-form-item-required {}"
+      className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >
@@ -3397,7 +3397,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -3490,7 +3490,7 @@ exports[`Render validation.status = error properties.allowClear: false - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -3583,7 +3583,7 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -3677,7 +3677,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -3771,7 +3771,7 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -3864,7 +3864,7 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -3957,7 +3957,7 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -4050,7 +4050,7 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -4143,7 +4143,7 @@ exports[`Render validation.status = error properties.format: YYYY-MMM-DD HH:mm:s
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -4236,7 +4236,7 @@ exports[`Render validation.status = error properties.hourStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -4329,7 +4329,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -4422,7 +4422,7 @@ exports[`Render validation.status = error properties.label align: right - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -4515,7 +4515,7 @@ exports[`Render validation.status = error properties.label colon: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -4689,7 +4689,7 @@ exports[`Render validation.status = error properties.label extra: extra text add
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -4786,7 +4786,7 @@ exports[`Render validation.status = error properties.label inline: true - value[
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -4883,7 +4883,7 @@ exports[`Render validation.status = error properties.label span: 5 - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -4976,7 +4976,7 @@ exports[`Render validation.status = error properties.minuteStep - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -5069,7 +5069,7 @@ exports[`Render validation.status = error properties.placeholder: - Select this 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -5162,7 +5162,7 @@ exports[`Render validation.status = error properties.secondStep - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -5255,7 +5255,7 @@ exports[`Render validation.status = error properties.selectGMT: true - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -5348,7 +5348,7 @@ exports[`Render validation.status = error properties.showNow: false - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -5432,7 +5432,7 @@ exports[`Render validation.status = error properties.showNow: false - value[0] 1
 
 exports[`Render validation.status = error properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -5441,7 +5441,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -5534,7 +5534,7 @@ exports[`Render validation.status = error properties.suffixIcon: CalendarTwoTone
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -5653,7 +5653,7 @@ exports[`Render validation.status = error properties.timeFormat: HH:mm:ss - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -5746,7 +5746,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >
@@ -5839,7 +5839,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -5903,7 +5903,7 @@ exports[`Render validation.status = null properties.allowClear: false - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -5967,7 +5967,7 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -6032,7 +6032,7 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -6097,7 +6097,7 @@ exports[`Render validation.status = null properties.disabledDates.dates - value[
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -6161,7 +6161,7 @@ exports[`Render validation.status = null properties.disabledDates.max - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -6225,7 +6225,7 @@ exports[`Render validation.status = null properties.disabledDates.min - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -6289,7 +6289,7 @@ exports[`Render validation.status = null properties.disabledDates.ranges - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -6353,7 +6353,7 @@ exports[`Render validation.status = null properties.format: YYYY-MMM-DD HH:mm:ss
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -6417,7 +6417,7 @@ exports[`Render validation.status = null properties.hourStep - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -6481,7 +6481,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -6545,7 +6545,7 @@ exports[`Render validation.status = null properties.label align: right - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -6609,7 +6609,7 @@ exports[`Render validation.status = null properties.label colon: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -6725,7 +6725,7 @@ exports[`Render validation.status = null properties.label extra: extra text adde
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -6798,7 +6798,7 @@ exports[`Render validation.status = null properties.label inline: true - value[0
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -6866,7 +6866,7 @@ exports[`Render validation.status = null properties.label span: 5 - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -6930,7 +6930,7 @@ exports[`Render validation.status = null properties.minuteStep - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -6994,7 +6994,7 @@ exports[`Render validation.status = null properties.placeholder: - Select this D
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -7058,7 +7058,7 @@ exports[`Render validation.status = null properties.secondStep - value[0] 1`] = 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -7122,7 +7122,7 @@ exports[`Render validation.status = null properties.selectGMT: true - value[0] 1
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -7186,7 +7186,7 @@ exports[`Render validation.status = null properties.showNow: false - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -7241,7 +7241,7 @@ exports[`Render validation.status = null properties.showNow: false - value[0] 1`
 
 exports[`Render validation.status = null properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -7250,7 +7250,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -7314,7 +7314,7 @@ exports[`Render validation.status = null properties.suffixIcon: CalendarTwoTone 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -7404,7 +7404,7 @@ exports[`Render validation.status = null properties.timeFormat: HH:mm:ss - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -7468,7 +7468,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >
@@ -7532,7 +7532,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -7620,7 +7620,7 @@ exports[`Render validation.status = success properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -7708,7 +7708,7 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -7797,7 +7797,7 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -7886,7 +7886,7 @@ exports[`Render validation.status = success properties.disabledDates.dates - val
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -7974,7 +7974,7 @@ exports[`Render validation.status = success properties.disabledDates.max - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -8062,7 +8062,7 @@ exports[`Render validation.status = success properties.disabledDates.min - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -8150,7 +8150,7 @@ exports[`Render validation.status = success properties.disabledDates.ranges - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -8238,7 +8238,7 @@ exports[`Render validation.status = success properties.format: YYYY-MMM-DD HH:mm
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -8326,7 +8326,7 @@ exports[`Render validation.status = success properties.hourStep - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -8414,7 +8414,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -8502,7 +8502,7 @@ exports[`Render validation.status = success properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -8590,7 +8590,7 @@ exports[`Render validation.status = success properties.label colon: true - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -8754,7 +8754,7 @@ exports[`Render validation.status = success properties.label extra: extra text a
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -8851,7 +8851,7 @@ exports[`Render validation.status = success properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -8943,7 +8943,7 @@ exports[`Render validation.status = success properties.label span: 5 - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -9031,7 +9031,7 @@ exports[`Render validation.status = success properties.minuteStep - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -9119,7 +9119,7 @@ exports[`Render validation.status = success properties.placeholder: - Select thi
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -9207,7 +9207,7 @@ exports[`Render validation.status = success properties.secondStep - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -9295,7 +9295,7 @@ exports[`Render validation.status = success properties.selectGMT: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -9383,7 +9383,7 @@ exports[`Render validation.status = success properties.showNow: false - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -9462,7 +9462,7 @@ exports[`Render validation.status = success properties.showNow: false - value[0]
 
 exports[`Render validation.status = success properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -9471,7 +9471,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -9559,7 +9559,7 @@ exports[`Render validation.status = success properties.suffixIcon: CalendarTwoTo
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -9673,7 +9673,7 @@ exports[`Render validation.status = success properties.timeFormat: HH:mm:ss - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -9761,7 +9761,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >
@@ -9849,7 +9849,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="default_input"
       title="default"
     >
@@ -9942,7 +9942,7 @@ exports[`Render validation.status = warning properties.allowClear: false - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.allowClear: false_input"
       title="properties.allowClear: false"
     >
@@ -10035,7 +10035,7 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.autoFocus: true_input"
       title="properties.autoFocus: true"
     >
@@ -10129,7 +10129,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabled: true_input"
       title="properties.disabled: true"
     >
@@ -10223,7 +10223,7 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.dates_input"
       title="properties.disabledDates.dates"
     >
@@ -10316,7 +10316,7 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.max_input"
       title="properties.disabledDates.max"
     >
@@ -10409,7 +10409,7 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.min_input"
       title="properties.disabledDates.min"
     >
@@ -10502,7 +10502,7 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.disabledDates.ranges_input"
       title="properties.disabledDates.ranges"
     >
@@ -10595,7 +10595,7 @@ exports[`Render validation.status = warning properties.format: YYYY-MMM-DD HH:mm
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)_input"
       title="properties.format: YYYY-MMM-DD HH:mm:ss (moment.js formats)"
     >
@@ -10688,7 +10688,7 @@ exports[`Render validation.status = warning properties.hourStep - value[0] 1`] =
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.hourStep_input"
       title="properties.hourStep"
     >
@@ -10781,7 +10781,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.inputStyle: CSS style applied_input"
       title="properties.inputStyle: CSS style applied"
     >
@@ -10874,7 +10874,7 @@ exports[`Render validation.status = warning properties.label align: right - valu
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label align: right_input"
       title="properties.label align: right"
     >
@@ -10967,7 +10967,7 @@ exports[`Render validation.status = warning properties.label colon: true - value
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label colon: true_input"
       title="properties.label colon: true"
     >
@@ -11141,7 +11141,7 @@ exports[`Render validation.status = warning properties.label extra: extra text a
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label extra: extra text added_input"
       title="properties.label extra: extra text added"
     >
@@ -11238,7 +11238,7 @@ exports[`Render validation.status = warning properties.label inline: true - valu
     }
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label inline: true_input"
       title="properties.label inline: true"
     >
@@ -11335,7 +11335,7 @@ exports[`Render validation.status = warning properties.label span: 5 - value[0] 
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.label span: 5_input"
       title="properties.label span: 5"
     >
@@ -11428,7 +11428,7 @@ exports[`Render validation.status = warning properties.minuteStep - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.minuteStep_input"
       title="properties.minuteStep"
     >
@@ -11521,7 +11521,7 @@ exports[`Render validation.status = warning properties.placeholder: - Select thi
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.placeholder: - Select this Date and Time_input"
       title="properties.placeholder: - Select this Date and Time"
     >
@@ -11614,7 +11614,7 @@ exports[`Render validation.status = warning properties.secondStep - value[0] 1`]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.secondStep_input"
       title="properties.secondStep"
     >
@@ -11707,7 +11707,7 @@ exports[`Render validation.status = warning properties.selectGMT: true - value[0
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.selectGMT: true_input"
       title="properties.selectGMT: true"
     >
@@ -11800,7 +11800,7 @@ exports[`Render validation.status = warning properties.showNow: false - value[0]
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.showNow: false_input"
       title="properties.showNow: false"
     >
@@ -11884,7 +11884,7 @@ exports[`Render validation.status = warning properties.showNow: false - value[0]
 
 exports[`Render validation.status = warning properties.size: small - value[0] 1`] = `
 <div
-  className="ant-row ant-form-small ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
+  className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
   id="properties.size: small"
   style={Object {}}
 >
@@ -11893,7 +11893,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
       htmlFor="properties.size: small_input"
       title="properties.size: small"
     >
@@ -11986,7 +11986,7 @@ exports[`Render validation.status = warning properties.suffixIcon: CalendarTwoTo
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.suffixIcon: CalendarTwoTone_input"
       title="properties.suffixIcon: CalendarTwoTone"
     >
@@ -12105,7 +12105,7 @@ exports[`Render validation.status = warning properties.timeFormat: HH:mm:ss - va
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.timeFormat: HH:mm:ss_input"
       title="properties.timeFormat: HH:mm:ss"
     >
@@ -12198,7 +12198,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
     style={Object {}}
   >
     <label
-      className="{}"
+      className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
       htmlFor="properties.title_input"
       title="DateTimeSelector title"
     >

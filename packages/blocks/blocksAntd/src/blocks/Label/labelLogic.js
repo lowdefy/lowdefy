@@ -45,8 +45,6 @@ const labelLogic = ({
     label = label.replace(/[:|：]\s*$/, '');
   }
   const rowClassName = classNames({
-    [`ant-form-small`]: properties.size === 'small',
-    [`ant-form-large`]: properties.size === 'large',
     [`ant-form-item`]: true,
     [`ant-form-item-with-help`]: false,
     // Status
@@ -75,7 +73,13 @@ const labelLogic = ({
   const labelClassName = classNames({
     [`ant-form-item-required`]: required,
     [`ant-form-item-no-colon`]: properties.colon === false,
-    [methods.makeCssClass(properties.style)]: true,
+    [methods.makeCssClass([
+      {
+        height: 'fit-content !important',
+        minHeight: properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32,
+      },
+      properties.style,
+    ])]: true,
   });
 
   const extraClassName = classNames(
