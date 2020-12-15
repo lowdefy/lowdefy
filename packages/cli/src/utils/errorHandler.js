@@ -14,7 +14,37 @@
   limitations under the License.
 */
 
+import axios from 'axios';
 import createPrint from './print';
+import packageJson from '../../package.json';
+
+const { version: cliVersion } = packageJson;
+
+/* TODO:
+  - log lowdefy version
+  - log command
+  - respect disable telemetry
+*/
+async function logError(error) {
+  try {
+    await axios.request({
+      method: 'post',
+      url: 'https://api.lowdefy.net/errors',
+      headers: {
+        'User-Agent': `Lowdefy CLI v${cliVersion}`,
+      },
+      data: {
+        source: 'cli',
+        cliVersion,
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      },
+    });
+  } catch (error) {
+    // pass
+  }
+}
 
 function errorHandler(fn, options = {}) {
   async function run(...args) {
@@ -24,6 +54,7 @@ function errorHandler(fn, options = {}) {
     } catch (error) {
       const print = createPrint();
       print.error(error.message);
+      await logError(error);
       // TODO: Stay alive feature
     }
   }
