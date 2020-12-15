@@ -28,7 +28,6 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "clean": "rm -rf dist",
-    "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
     "serve": "serve dist -p 3001",
     "start": "webpack serve --config webpack.dev.js",
@@ -62,9 +61,12 @@
     "html-webpack-plugin": "4.5.0",
     "serve": "11.3.2",
     "style-loader": "2.0.0",
-    "webpack": "5.10.0",
+    "webpack": "5.10.1",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "5.5.0"
+    "webpack-merge": "5.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

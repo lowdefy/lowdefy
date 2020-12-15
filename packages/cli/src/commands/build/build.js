@@ -14,23 +14,34 @@
   limitations under the License.
 */
 
-import createContext from '../../utils/context';
+import path from 'path';
+import { cleanDirectory } from '@lowdefy/node-utils';
+import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 
 async function build(options) {
-  const context = await createContext(options);
+  const context = await startUp(options);
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
+  context.print.log(
+    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
+  );
+  await cleanDirectory(path.resolve(context.cacheDirectory, './meta'));
   context.print.info('Starting build.');
   await buildScript({
     logger: context.print,
     cacheDirectory: context.cacheDirectory,
     configDirectory: context.baseDirectory,
     outputDirectory: context.outputDirectory,
+  });
+  await context.sendTelemetry({
+    data: {
+      command: 'build',
+    },
   });
   context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
   context.print.succeed(`Build successful.`);

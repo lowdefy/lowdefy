@@ -55,6 +55,7 @@ const labelLogic = ({
     [`ant-form-item-is-validating`]: validation.status === 'validating',
     [methods.makeCssClass({
       flexWrap: properties.inline && 'inherit', // wrap extra content below input
+      marginBottom: 0,
     })]: true,
   });
 
@@ -65,14 +66,20 @@ const labelLogic = ({
       overflow: properties.inline && 'inherit', // wrap label content below input
       whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
       marginBottom: properties.size === 'small' ? 0 : 8,
-      height: properties.size === 'small' ? 22 : properties.size === 'large' ? '40' : 30,
+      overflow: 'visible',
     })]: true,
   });
 
   const labelClassName = classNames({
     [`ant-form-item-required`]: required,
     [`ant-form-item-no-colon`]: properties.colon === false,
-    [methods.makeCssClass([{ height: '100% !important' }, properties.style])]: true, // change antd's label height = 32 to text height
+    [methods.makeCssClass([
+      {
+        height: 'fit-content !important',
+        minHeight: properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32,
+      },
+      properties.style,
+    ])]: true,
   });
 
   const extraClassName = classNames(
