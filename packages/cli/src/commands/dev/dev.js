@@ -16,35 +16,40 @@
 
 import path from 'path';
 import chokidar from 'chokidar';
+import dotenv from 'dotenv';
 import express from 'express';
 import reload from 'reload';
 import opener from 'opener';
 import { ApolloServer } from 'apollo-server-express';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, cleanDirectory } from '@lowdefy/node-utils';
 
 import BatchChanges from '../../utils/BatchChanges';
-import createContext from '../../utils/context';
+import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 import { outputDirectoryPath } from '../../utils/directories';
 
 async function dev(options) {
+  dotenv.config({ silent: true });
   // Setup
   if (!options.port) options.port = 3000;
-  const context = await createContext(options);
+  const context = await startUp(options);
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
 
   const { typeDefs, resolvers, createContext: createGqlContext } = await getFederatedModule({
     module: 'graphql',
     packageName: '@lowdefy/graphql-federated',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
-
+  context.print.log(
+    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
+  );
+  await cleanDirectory(path.resolve(context.cacheDirectory, './meta'));
   context.print.log('Starting Lowdefy development server.');
 
   //Graphql
@@ -63,14 +68,14 @@ async function dev(options) {
   const reloadReturned = await reload(app, { route: '/api/dev/reload.js' });
   app.use(express.static(path.join(__dirname, 'shell')));
   app.use('/api/dev/version', (req, res) => {
-    res.json(context.version);
+    res.json(context.lowdefyVersion);
   });
   app.use((req, res) => {
     res.sendFile(path.resolve(__dirname, 'shell/index.html'));
   });
 
   // File watcher
-  const fn = async () => {
+  const build = async () => {
     context.print.log('Building configuration.');
     await buildScript({
       logger: context.print,
@@ -81,19 +86,37 @@ async function dev(options) {
     context.print.succeed('Built succesfully.');
     reloadReturned.reload();
   };
-  const batchChanges = new BatchChanges({ fn, context });
+  const buildBatchChanges = new BatchChanges({ fn: build, context });
 
-  const watcher = chokidar.watch('.', {
+  const changeEnv = async () => {
+    context.print.warn('.env file changed. You should restart your development server.');
+    process.exit();
+  };
+
+  const changeEnvBatchChanges = new BatchChanges({ fn: changeEnv, context });
+
+  const buildWatcher = chokidar.watch('.', {
     ignored: /(^|[/\\])\../, // ignore dotfiles
     persistent: true,
   });
-  watcher.on('add', () => batchChanges.newChange());
-  watcher.on('change', () => batchChanges.newChange());
-  watcher.on('unlink', () => batchChanges.newChange());
+  buildWatcher.on('add', () => buildBatchChanges.newChange());
+  buildWatcher.on('change', () => buildBatchChanges.newChange());
+  buildWatcher.on('unlink', () => buildBatchChanges.newChange());
+
+  const envWatcher = chokidar.watch('./.env', {
+    persistent: true,
+  });
+  envWatcher.on('change', () => changeEnvBatchChanges.newChange());
 
   // Start server
   app.listen(app.get('port'), function () {
     context.print.info(`Development server listening on port ${options.port}`);
+  });
+  await context.sendTelemetry({
+    data: {
+      command: 'dev',
+      type: 'startup',
+    },
   });
   opener(`http://localhost:${options.port}`);
 }

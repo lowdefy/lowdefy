@@ -18,7 +18,7 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
-import createContext from '../../utils/context';
+import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
@@ -27,14 +27,14 @@ async function buildNetlify(options) {
     options.basicPrint = true;
   }
 
-  const context = await createContext(options);
+  const context = await startUp(options);
   const netlifyDir = path.resolve(context.baseDirectory, './.lowdefy/netlify');
   context.print.info('Starting Netlify build.');
 
   context.print.spin('Fetching Lowdefy Netlify server.');
   await fetchNpmTarball({
     packageName: '@lowdefy/server-netlify',
-    version: context.version,
+    version: context.lowdefyVersion,
     directory: netlifyDir,
   });
   context.print.log('Fetched Lowdefy Netlify server.');
@@ -56,7 +56,7 @@ async function buildNetlify(options) {
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
-    version: context.version,
+    version: context.lowdefyVersion,
     context,
   });
   context.print.log('Fetched Lowdefy build script.');
@@ -71,6 +71,7 @@ async function buildNetlify(options) {
   });
   context.print.log(`Build artifacts saved at ${outputDirectory}.`);
 
+  // TODO: Move files using node fs api instead of child process
   context.print.log(`Moving output artifacts.`);
   proccessOutput = spawnSync('cp', [
     '-r',
@@ -126,7 +127,12 @@ async function buildNetlify(options) {
     message: 'Failed to move public assets.',
   });
   context.print.log(`Public assets moved to "./lowdefy/publish/public".`);
-
+  await context.sendTelemetry({
+    data: {
+      command: 'build-netlify',
+      netlify: process.env.NETLIFY === 'true',
+    },
+  });
   context.print.succeed(`Netlify build completed successfully.`);
 }
 

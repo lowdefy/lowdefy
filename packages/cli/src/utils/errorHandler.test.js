@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
+import axios from 'axios';
 import errorHandler from './errorHandler';
 import createPrint from './print';
+// eslint-disable-next-line no-unused-vars
+import packageJson from '../../package.json';
+
+jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 
 jest.mock('./print', () => {
   const error = jest.fn();
@@ -23,6 +28,7 @@ jest.mock('./print', () => {
     error,
   });
 });
+jest.mock('axios');
 
 const print = createPrint();
 
@@ -70,6 +76,17 @@ test('Catch error synchronous function', async () => {
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Error']]);
+  const axiosAgruments = axios.request.mock.calls[0][0];
+  expect(axiosAgruments.headers).toEqual({
+    'User-Agent': 'Lowdefy CLI vcliVersion',
+  });
+  expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
+  expect(axiosAgruments.method).toEqual('post');
+  expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
+  expect(axiosAgruments.data.message).toEqual('Error');
+  expect(axiosAgruments.data.name).toEqual('Error');
+  expect(axiosAgruments.data.source).toEqual('cli');
+  expect(axiosAgruments.data.stack).toMatch('Error: Error');
 });
 
 test('Catch error asynchronous function', async () => {
@@ -81,6 +98,17 @@ test('Catch error asynchronous function', async () => {
   await wrapped();
   expect(fn).toHaveBeenCalled();
   expect(print.error.mock.calls).toEqual([['Async Error']]);
+  const axiosAgruments = axios.request.mock.calls[0][0];
+  expect(axiosAgruments.headers).toEqual({
+    'User-Agent': 'Lowdefy CLI vcliVersion',
+  });
+  expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
+  expect(axiosAgruments.method).toEqual('post');
+  expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
+  expect(axiosAgruments.data.message).toEqual('Async Error');
+  expect(axiosAgruments.data.name).toEqual('Error');
+  expect(axiosAgruments.data.source).toEqual('cli');
+  expect(axiosAgruments.data.stack).toMatch('Error: Async Error');
 });
 
 // test('Catch error synchronous function, stay alive', async () => {

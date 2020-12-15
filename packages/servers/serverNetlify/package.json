@@ -28,7 +28,6 @@
     "babel": "babel src/functions --out-dir dist/functions",
     "build": "yarn webpack && yarn babel",
     "clean": "rm -rf dist && rm -rf dev",
-    "npm-publish": "npm publish --access public",
     "prepublishOnly": "yarn build",
     "version:prerelease": "yarn version prerelease",
     "version:patch": "yarn version patch",
@@ -58,7 +57,10 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "style-loader": "2.0.0",
-    "webpack": "5.10.0",
+    "webpack": "5.10.1",
     "webpack-cli": "4.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

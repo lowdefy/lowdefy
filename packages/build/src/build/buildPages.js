@@ -102,6 +102,10 @@ async function setBlockMeta(block, context) {
     // include valueType to ensure block has value on init
     block.meta.valueType = 'array';
   }
+  // Add user defined loading
+  if (block.loading) {
+    block.meta.loading = block.loading;
+  }
 }
 
 async function buildBlock(block, context) {

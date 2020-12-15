@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import dotenv from 'dotenv';
 import program from 'commander';
 import packageJson from '../package.json';
 import build from './commands/build/build.js';
@@ -22,8 +21,6 @@ import buildNetlify from './commands/buildNetlify/buildNetlify.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
 import dev from './commands/dev/dev.js';
 import errorHandler from './utils/errorHandler';
-
-dotenv.config({ silent: true });
 
 const { description, version } = packageJson;
 
