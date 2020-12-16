@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1](https://github.com/lowdefy/lowdefy/compare/@lowdefy/graphql@0.0.0-alpha.7...@lowdefy/graphql@0.0.1) (2020-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aws-sdk to v2.809.0 ([210550c](https://github.com/lowdefy/lowdefy/commit/210550c7e9b39b4ee7f8afa87a9ad67f35e0fbb8))
+
+
+
+
+
+# [0.0.0](https://github.com/lowdefy/lowdefy/compare/@lowdefy/graphql@0.0.0-alpha.7...@lowdefy/graphql@0.0.0) (2020-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aws-sdk to v2.809.0 ([210550c](https://github.com/lowdefy/lowdefy/commit/210550c7e9b39b4ee7f8afa87a9ad67f35e0fbb8))
+
+
+
+
+
 # 0.0.0-alpha.7 (2020-12-10)
 
 
