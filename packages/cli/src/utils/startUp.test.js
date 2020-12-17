@@ -21,8 +21,6 @@ import createPrint from './print';
 // eslint-disable-next-line no-unused-vars
 import getConfig from './getConfig';
 // eslint-disable-next-line no-unused-vars
-import getMachineId from './getMachineId';
-// eslint-disable-next-line no-unused-vars
 import getSendTelemetry from './getSendTelemetry';
 // eslint-disable-next-line no-unused-vars
 import packageJson from '../../package.json';
@@ -32,7 +30,6 @@ jest.mock('./getConfig', () => async () =>
 );
 jest.mock('./print', () => () => 'print');
 jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
-jest.mock('./getMachineId', () => () => 'machineId');
 jest.mock('./getSendTelemetry', () => () => 'sendTelemetry');
 
 test('startUp, options undefined', async () => {
@@ -44,7 +41,6 @@ test('startUp, options undefined', async () => {
     cliVersion: 'cliVersion',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
-    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
     print: 'print',
@@ -60,7 +56,6 @@ test('startUp, options empty', async () => {
     cliVersion: 'cliVersion',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
-    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
     print: 'print',
@@ -76,7 +71,6 @@ test('startUp, options baseDirectory', async () => {
     cliVersion: 'cliVersion',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
-    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
     print: 'print',
@@ -92,7 +86,6 @@ test('startUp, options outputDirectory', async () => {
     cliVersion: 'cliVersion',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
-    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
     print: 'print',
@@ -111,7 +104,6 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
     cliVersion: 'cliVersion',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
-    machineId: 'machineId',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
     print: 'print',

@@ -6,7 +6,6 @@
   "changelogPreset": "angular",
   "command": {
     "version": {
-      "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
       "exact": true,

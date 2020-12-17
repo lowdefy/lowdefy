@@ -24,7 +24,6 @@ jest.mock('axios', () => ({
 const appId = 'appId';
 const cliVersion = 'cliVersion';
 const lowdefyVersion = 'lowdefyVersion';
-const machineId = 'machineId';
 
 test('disable telemetry', async () => {
   const sendTelemetry = getSendTelemetry({
@@ -32,7 +31,6 @@ test('disable telemetry', async () => {
     cliVersion,
     disableTelemetry: true,
     lowdefyVersion,
-    machineId,
   });
   await sendTelemetry({ data: { x: 1 } });
   expect(axios.request.mock.calls).toEqual([]);
@@ -43,7 +41,6 @@ test('send telemetry', async () => {
     appId,
     cliVersion,
     lowdefyVersion,
-    machineId,
   });
   await sendTelemetry({ data: { x: 1 } });
   expect(axios.request.mock.calls).toEqual([
@@ -53,11 +50,10 @@ test('send telemetry', async () => {
           appId: 'appId',
           cliVersion: 'cliVersion',
           lowdefyVersion: 'lowdefyVersion',
-          machineId: 'machineId',
           x: 1,
         },
         headers: {
-          'User-Agent': 'Lowdefy CLI vlowdefyVersion',
+          'User-Agent': 'Lowdefy CLI vcliVersion',
         },
         method: 'post',
         url: 'https://api.lowdefy.net/telemetry/cli',
@@ -74,7 +70,6 @@ test('send telemetry should not throw', async () => {
     appId,
     cliVersion,
     lowdefyVersion,
-    machineId,
   });
   await sendTelemetry({ data: { x: 1 } });
   expect(true).toBe(true);

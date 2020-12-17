@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion, machineId }) {
+function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion }) {
   if (disableTelemetry) {
     return () => {};
   }
@@ -25,14 +25,13 @@ function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion,
         method: 'post',
         url: 'https://api.lowdefy.net/telemetry/cli',
         headers: {
-          'User-Agent': `Lowdefy CLI v${lowdefyVersion}`,
+          'User-Agent': `Lowdefy CLI v${cliVersion}`,
         },
         data: {
           ...data,
           appId,
           cliVersion,
           lowdefyVersion,
-          machineId,
         },
       });
     } catch (error) {
