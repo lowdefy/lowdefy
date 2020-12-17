@@ -24,7 +24,6 @@ async function getFederatedModule({ module, packageName, version, context }) {
   const cachePath = path.resolve(context.cacheDirectory, `scripts/${module}/${cleanVersion}`);
   if (!fs.existsSync(path.resolve(cachePath, 'package/dist/remoteEntry.js'))) {
     context.print.spin(`Fetching ${packageName}@${version} to cache.`);
-    console.log('start fetch tarball');
     await fetchNpmTarball({
       packageName,
       version,

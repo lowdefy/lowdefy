@@ -27,7 +27,6 @@ exports[`Render default - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -127,7 +126,6 @@ exports[`Render default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -182,7 +180,6 @@ exports[`Render default - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -227,7 +224,6 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -327,7 +323,6 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -382,7 +377,6 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -429,7 +423,6 @@ exports[`Render properties.hideOnSinglePage: true, total: 100 - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -529,7 +522,6 @@ exports[`Render properties.hideOnSinglePage: true, total: 100 - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -584,7 +576,6 @@ exports[`Render properties.hideOnSinglePage: true, total: 100 - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -629,7 +620,6 @@ exports[`Render properties.pageSizeOptions: [100, 200, 500] - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -729,7 +719,6 @@ exports[`Render properties.pageSizeOptions: [100, 200, 500] - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -784,7 +773,6 @@ exports[`Render properties.pageSizeOptions: [100, 200, 500] - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -870,7 +858,6 @@ exports[`Render properties.pageSizeOptions: [100, 200, 500] - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="down"
             fill="currentColor"
             focusable="false"
@@ -916,7 +903,6 @@ exports[`Render properties.showQuickJumper: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -1016,7 +1002,6 @@ exports[`Render properties.showQuickJumper: true - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -1071,7 +1056,6 @@ exports[`Render properties.showQuickJumper: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1133,7 +1117,6 @@ exports[`Render properties.showSizeChanger: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -1233,7 +1216,6 @@ exports[`Render properties.showSizeChanger: true - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -1288,7 +1270,6 @@ exports[`Render properties.showSizeChanger: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1374,7 +1355,6 @@ exports[`Render properties.showSizeChanger: true - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="down"
             fill="currentColor"
             focusable="false"
@@ -1425,7 +1405,6 @@ exports[`Render properties.showTotal: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -1525,7 +1504,6 @@ exports[`Render properties.showTotal: true - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -1580,7 +1558,6 @@ exports[`Render properties.showTotal: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1624,7 +1601,6 @@ exports[`Render properties.simple: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -1679,7 +1655,6 @@ exports[`Render properties.simple: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1724,7 +1699,6 @@ exports[`Render properties.size: default - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -1824,7 +1798,6 @@ exports[`Render properties.size: default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -1879,7 +1852,6 @@ exports[`Render properties.size: default - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1924,7 +1896,6 @@ exports[`Render properties.size: small - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -2024,7 +1995,6 @@ exports[`Render properties.size: small - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -2079,7 +2049,6 @@ exports[`Render properties.size: small - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -2124,7 +2093,6 @@ exports[`Render properties.total - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="left"
           fill="currentColor"
           focusable="false"
@@ -2224,7 +2192,6 @@ exports[`Render properties.total - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="double-right"
             fill="currentColor"
             focusable="false"
@@ -2279,7 +2246,6 @@ exports[`Render properties.total - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"

@@ -676,12 +676,11 @@ exports[`Render properties.pending: true - value[0] 1`] = `
     >
       <span
         aria-label="loading"
-        className="anticon anticon-loading"
+        className="anticon anticon-loading anticon-spin"
         role="img"
       >
         <svg
           aria-hidden="true"
-          className="anticon-spin"
           data-icon="loading"
           fill="currentColor"
           focusable="false"

@@ -20,7 +20,6 @@ import { cacheDirectoryPath, outputDirectoryPath } from '../directories';
 async function mockStartUp(options = {}) {
   const context = {
     cliVersion: 'cliVersion',
-    machineId: 'machineId',
     appId: 'appId',
     disableTelemetry: false,
     lowdefyVersion: 'lowdefyVersion',

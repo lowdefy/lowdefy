@@ -17,7 +17,6 @@
 import path from 'path';
 import getConfig from './getConfig';
 import getSendTelemetry from './getSendTelemetry';
-import getMachineId from './getMachineId';
 import createPrint from './print';
 import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 import packageJson from '../../package.json';
@@ -42,7 +41,6 @@ async function startUp(options = {}) {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
   const { appId, disableTelemetry, lowdefyVersion } = await getConfig(context);
-  context.machineId = await getMachineId();
   context.appId = appId;
   context.disableTelemetry = disableTelemetry;
   context.lowdefyVersion = lowdefyVersion;

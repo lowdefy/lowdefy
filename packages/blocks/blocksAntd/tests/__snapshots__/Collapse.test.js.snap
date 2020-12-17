@@ -23,7 +23,6 @@ exports[`Render default - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -90,7 +89,6 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -149,7 +147,6 @@ exports[`Render properties.accordion: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -191,7 +188,6 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -225,7 +221,6 @@ exports[`Render properties.activeKey: content_two - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -292,7 +287,6 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -351,7 +345,6 @@ exports[`Render properties.bordered: false - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -393,7 +386,6 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -427,7 +419,6 @@ exports[`Render properties.defaultActiveKey: content_two - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -494,7 +485,6 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -553,7 +543,6 @@ exports[`Render properties.destroyInactivePanel: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -700,7 +689,6 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -759,7 +747,6 @@ exports[`Render properties.expandIconPosition: right - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -801,7 +788,6 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -860,7 +846,6 @@ exports[`Render properties.forceRender: true - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -921,7 +906,6 @@ exports[`Render properties.panels - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -979,7 +963,6 @@ exports[`Render properties.panels - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1020,7 +1003,6 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1079,7 +1061,6 @@ exports[`Render properties.panels.disabled - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1121,7 +1102,6 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1194,7 +1174,6 @@ exports[`Render properties.panels.extraKey - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1250,7 +1229,6 @@ exports[`Render properties.panels.title - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
@@ -1309,7 +1287,6 @@ exports[`Render properties.panels.title - value[0] 1`] = `
       >
         <svg
           aria-hidden="true"
-          className=""
           data-icon="right"
           fill="currentColor"
           focusable="false"
