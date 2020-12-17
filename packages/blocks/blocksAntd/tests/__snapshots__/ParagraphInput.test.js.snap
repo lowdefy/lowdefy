@@ -38,7 +38,6 @@ exports[`Render default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -95,7 +94,6 @@ exports[`Render properties.code: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -150,7 +148,6 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -248,7 +245,6 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -368,7 +364,6 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -409,7 +404,6 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -464,7 +458,6 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -505,7 +498,6 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -560,7 +552,6 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -601,7 +592,6 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -658,7 +648,6 @@ exports[`Render properties.delete: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -713,7 +702,6 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -768,7 +756,6 @@ exports[`Render properties.editable.autoSize: min max - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -823,7 +810,6 @@ exports[`Render properties.editable.autoSize: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -878,7 +864,6 @@ exports[`Render properties.editable.icon - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -933,7 +918,6 @@ exports[`Render properties.editable.maxLength: 10 - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -988,7 +972,6 @@ exports[`Render properties.editable.tooltip - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1043,7 +1026,6 @@ exports[`Render properties.editable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1098,7 +1080,6 @@ exports[`Render properties.ellipsis: expandable, rows - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1153,7 +1134,6 @@ exports[`Render properties.ellipsis: rows - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1209,7 +1189,6 @@ exports[`Render properties.ellipsis: rows, suffix - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1264,7 +1243,6 @@ exports[`Render properties.ellipsis: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1321,7 +1299,6 @@ exports[`Render properties.mark: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1378,7 +1355,6 @@ exports[`Render properties.strong: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1433,7 +1409,6 @@ exports[`Render properties.type: danger - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1488,7 +1463,6 @@ exports[`Render properties.type: secondary - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1543,7 +1517,6 @@ exports[`Render properties.type: warning - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1600,7 +1573,6 @@ exports[`Render properties.underline: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1655,7 +1627,6 @@ exports[`Render required = true default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1712,7 +1683,6 @@ exports[`Render required = true properties.code: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1767,7 +1737,6 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1865,7 +1834,6 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -1985,7 +1953,6 @@ exports[`Render required = true properties.copyable: text: one - value[0] 1`] = 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2026,7 +1993,6 @@ exports[`Render required = true properties.copyable: text: one - value[0] 1`] = 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -2081,7 +2047,6 @@ exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2122,7 +2087,6 @@ exports[`Render required = true properties.copyable: tooltips: [] - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -2177,7 +2141,6 @@ exports[`Render required = true properties.copyable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2218,7 +2181,6 @@ exports[`Render required = true properties.copyable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -2275,7 +2237,6 @@ exports[`Render required = true properties.delete: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2330,7 +2291,6 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2385,7 +2345,6 @@ exports[`Render required = true properties.editable.autoSize: min max - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2440,7 +2399,6 @@ exports[`Render required = true properties.editable.autoSize: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2495,7 +2453,6 @@ exports[`Render required = true properties.editable.icon - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2550,7 +2507,6 @@ exports[`Render required = true properties.editable.maxLength: 10 - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2605,7 +2561,6 @@ exports[`Render required = true properties.editable.tooltip - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2660,7 +2615,6 @@ exports[`Render required = true properties.editable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2715,7 +2669,6 @@ exports[`Render required = true properties.ellipsis: expandable, rows - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2770,7 +2723,6 @@ exports[`Render required = true properties.ellipsis: rows - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2826,7 +2778,6 @@ exports[`Render required = true properties.ellipsis: rows, suffix - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2881,7 +2832,6 @@ exports[`Render required = true properties.ellipsis: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2938,7 +2888,6 @@ exports[`Render required = true properties.mark: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -2995,7 +2944,6 @@ exports[`Render required = true properties.strong: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3050,7 +2998,6 @@ exports[`Render required = true properties.type: danger - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3105,7 +3052,6 @@ exports[`Render required = true properties.type: secondary - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3160,7 +3106,6 @@ exports[`Render required = true properties.type: warning - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3217,7 +3162,6 @@ exports[`Render required = true properties.underline: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3272,7 +3216,6 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3329,7 +3272,6 @@ exports[`Render validation.status = error properties.code: true - value[0] 1`] =
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3384,7 +3326,6 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3482,7 +3423,6 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3602,7 +3542,6 @@ exports[`Render validation.status = error properties.copyable: text: one - value
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3643,7 +3582,6 @@ exports[`Render validation.status = error properties.copyable: text: one - value
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -3698,7 +3636,6 @@ exports[`Render validation.status = error properties.copyable: tooltips: [] - va
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3739,7 +3676,6 @@ exports[`Render validation.status = error properties.copyable: tooltips: [] - va
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -3794,7 +3730,6 @@ exports[`Render validation.status = error properties.copyable: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3835,7 +3770,6 @@ exports[`Render validation.status = error properties.copyable: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -3892,7 +3826,6 @@ exports[`Render validation.status = error properties.delete: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -3947,7 +3880,6 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4002,7 +3934,6 @@ exports[`Render validation.status = error properties.editable.autoSize: min max 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4057,7 +3988,6 @@ exports[`Render validation.status = error properties.editable.autoSize: true - v
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4112,7 +4042,6 @@ exports[`Render validation.status = error properties.editable.icon - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4167,7 +4096,6 @@ exports[`Render validation.status = error properties.editable.maxLength: 10 - va
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4222,7 +4150,6 @@ exports[`Render validation.status = error properties.editable.tooltip - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4277,7 +4204,6 @@ exports[`Render validation.status = error properties.editable: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4332,7 +4258,6 @@ exports[`Render validation.status = error properties.ellipsis: expandable, rows 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4387,7 +4312,6 @@ exports[`Render validation.status = error properties.ellipsis: rows - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4443,7 +4367,6 @@ exports[`Render validation.status = error properties.ellipsis: rows, suffix - va
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4498,7 +4421,6 @@ exports[`Render validation.status = error properties.ellipsis: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4555,7 +4477,6 @@ exports[`Render validation.status = error properties.mark: true - value[0] 1`] =
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4612,7 +4533,6 @@ exports[`Render validation.status = error properties.strong: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4667,7 +4587,6 @@ exports[`Render validation.status = error properties.type: danger - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4722,7 +4641,6 @@ exports[`Render validation.status = error properties.type: secondary - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4777,7 +4695,6 @@ exports[`Render validation.status = error properties.type: warning - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4834,7 +4751,6 @@ exports[`Render validation.status = error properties.underline: true - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4889,7 +4805,6 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -4946,7 +4861,6 @@ exports[`Render validation.status = null properties.code: true - value[0] 1`] = 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5001,7 +4915,6 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5099,7 +5012,6 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5219,7 +5131,6 @@ exports[`Render validation.status = null properties.copyable: text: one - value[
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5260,7 +5171,6 @@ exports[`Render validation.status = null properties.copyable: text: one - value[
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -5315,7 +5225,6 @@ exports[`Render validation.status = null properties.copyable: tooltips: [] - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5356,7 +5265,6 @@ exports[`Render validation.status = null properties.copyable: tooltips: [] - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -5411,7 +5319,6 @@ exports[`Render validation.status = null properties.copyable: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5452,7 +5359,6 @@ exports[`Render validation.status = null properties.copyable: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -5509,7 +5415,6 @@ exports[`Render validation.status = null properties.delete: true - value[0] 1`] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5564,7 +5469,6 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5619,7 +5523,6 @@ exports[`Render validation.status = null properties.editable.autoSize: min max -
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5674,7 +5577,6 @@ exports[`Render validation.status = null properties.editable.autoSize: true - va
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5729,7 +5631,6 @@ exports[`Render validation.status = null properties.editable.icon - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5784,7 +5685,6 @@ exports[`Render validation.status = null properties.editable.maxLength: 10 - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5839,7 +5739,6 @@ exports[`Render validation.status = null properties.editable.tooltip - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5894,7 +5793,6 @@ exports[`Render validation.status = null properties.editable: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -5949,7 +5847,6 @@ exports[`Render validation.status = null properties.ellipsis: expandable, rows -
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6004,7 +5901,6 @@ exports[`Render validation.status = null properties.ellipsis: rows - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6060,7 +5956,6 @@ exports[`Render validation.status = null properties.ellipsis: rows, suffix - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6115,7 +6010,6 @@ exports[`Render validation.status = null properties.ellipsis: true - value[0] 1`
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6172,7 +6066,6 @@ exports[`Render validation.status = null properties.mark: true - value[0] 1`] = 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6229,7 +6122,6 @@ exports[`Render validation.status = null properties.strong: true - value[0] 1`] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6284,7 +6176,6 @@ exports[`Render validation.status = null properties.type: danger - value[0] 1`] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6339,7 +6230,6 @@ exports[`Render validation.status = null properties.type: secondary - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6394,7 +6284,6 @@ exports[`Render validation.status = null properties.type: warning - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6451,7 +6340,6 @@ exports[`Render validation.status = null properties.underline: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6506,7 +6394,6 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6563,7 +6450,6 @@ exports[`Render validation.status = success properties.code: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6618,7 +6504,6 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6716,7 +6601,6 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6836,7 +6720,6 @@ exports[`Render validation.status = success properties.copyable: text: one - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6877,7 +6760,6 @@ exports[`Render validation.status = success properties.copyable: text: one - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -6932,7 +6814,6 @@ exports[`Render validation.status = success properties.copyable: tooltips: [] - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -6973,7 +6854,6 @@ exports[`Render validation.status = success properties.copyable: tooltips: [] - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -7028,7 +6908,6 @@ exports[`Render validation.status = success properties.copyable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7069,7 +6948,6 @@ exports[`Render validation.status = success properties.copyable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -7126,7 +7004,6 @@ exports[`Render validation.status = success properties.delete: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7181,7 +7058,6 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7236,7 +7112,6 @@ exports[`Render validation.status = success properties.editable.autoSize: min ma
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7291,7 +7166,6 @@ exports[`Render validation.status = success properties.editable.autoSize: true -
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7346,7 +7220,6 @@ exports[`Render validation.status = success properties.editable.icon - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7401,7 +7274,6 @@ exports[`Render validation.status = success properties.editable.maxLength: 10 - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7456,7 +7328,6 @@ exports[`Render validation.status = success properties.editable.tooltip - value[
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7511,7 +7382,6 @@ exports[`Render validation.status = success properties.editable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7566,7 +7436,6 @@ exports[`Render validation.status = success properties.ellipsis: expandable, row
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7621,7 +7490,6 @@ exports[`Render validation.status = success properties.ellipsis: rows - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7677,7 +7545,6 @@ exports[`Render validation.status = success properties.ellipsis: rows, suffix - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7732,7 +7599,6 @@ exports[`Render validation.status = success properties.ellipsis: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7789,7 +7655,6 @@ exports[`Render validation.status = success properties.mark: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7846,7 +7711,6 @@ exports[`Render validation.status = success properties.strong: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7901,7 +7765,6 @@ exports[`Render validation.status = success properties.type: danger - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -7956,7 +7819,6 @@ exports[`Render validation.status = success properties.type: secondary - value[0
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8011,7 +7873,6 @@ exports[`Render validation.status = success properties.type: warning - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8068,7 +7929,6 @@ exports[`Render validation.status = success properties.underline: true - value[0
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8123,7 +7983,6 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8180,7 +8039,6 @@ exports[`Render validation.status = warning properties.code: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8235,7 +8093,6 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8333,7 +8190,6 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8453,7 +8309,6 @@ exports[`Render validation.status = warning properties.copyable: text: one - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8494,7 +8349,6 @@ exports[`Render validation.status = warning properties.copyable: text: one - val
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -8549,7 +8403,6 @@ exports[`Render validation.status = warning properties.copyable: tooltips: [] - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8590,7 +8443,6 @@ exports[`Render validation.status = warning properties.copyable: tooltips: [] - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -8645,7 +8497,6 @@ exports[`Render validation.status = warning properties.copyable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8686,7 +8537,6 @@ exports[`Render validation.status = warning properties.copyable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -8743,7 +8593,6 @@ exports[`Render validation.status = warning properties.delete: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8798,7 +8647,6 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8853,7 +8701,6 @@ exports[`Render validation.status = warning properties.editable.autoSize: min ma
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8908,7 +8755,6 @@ exports[`Render validation.status = warning properties.editable.autoSize: true -
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -8963,7 +8809,6 @@ exports[`Render validation.status = warning properties.editable.icon - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9018,7 +8863,6 @@ exports[`Render validation.status = warning properties.editable.maxLength: 10 - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9073,7 +8917,6 @@ exports[`Render validation.status = warning properties.editable.tooltip - value[
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9128,7 +8971,6 @@ exports[`Render validation.status = warning properties.editable: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9183,7 +9025,6 @@ exports[`Render validation.status = warning properties.ellipsis: expandable, row
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9238,7 +9079,6 @@ exports[`Render validation.status = warning properties.ellipsis: rows - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9294,7 +9134,6 @@ exports[`Render validation.status = warning properties.ellipsis: rows, suffix - 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9349,7 +9188,6 @@ exports[`Render validation.status = warning properties.ellipsis: true - value[0]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9406,7 +9244,6 @@ exports[`Render validation.status = warning properties.mark: true - value[0] 1`]
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9463,7 +9300,6 @@ exports[`Render validation.status = warning properties.strong: true - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9518,7 +9354,6 @@ exports[`Render validation.status = warning properties.type: danger - value[0] 1
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9573,7 +9408,6 @@ exports[`Render validation.status = warning properties.type: secondary - value[0
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9628,7 +9462,6 @@ exports[`Render validation.status = warning properties.type: warning - value[0] 
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"
@@ -9685,7 +9518,6 @@ exports[`Render validation.status = warning properties.underline: true - value[0
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="edit"
         fill="currentColor"
         focusable="false"

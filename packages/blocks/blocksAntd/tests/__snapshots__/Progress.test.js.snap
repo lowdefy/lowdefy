@@ -432,7 +432,6 @@ exports[`Render properties.status: exception - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="close-circle"
         fill="currentColor"
         focusable="false"
@@ -516,7 +515,6 @@ exports[`Render properties.status: success - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="check-circle"
         fill="currentColor"
         focusable="false"

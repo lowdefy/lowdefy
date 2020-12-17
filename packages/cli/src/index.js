@@ -43,7 +43,7 @@ program
 
 program
   .command('build-netlify')
-  .description('Build a Lowdefy deployment to deply in netlify.')
+  .description('Build a Lowdefy deployment to deploy in netlify.')
   .usage(`[options]`)
   .option(
     '--base-directory <base-directory>',

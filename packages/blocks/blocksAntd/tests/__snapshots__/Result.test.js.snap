@@ -14,7 +14,6 @@ exports[`Render areas.extra - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="exclamation-circle"
         fill="currentColor"
         focusable="false"
@@ -76,7 +75,6 @@ exports[`Render default - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="exclamation-circle"
         fill="currentColor"
         focusable="false"
@@ -1181,7 +1179,6 @@ exports[`Render properties. status: error - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="close-circle"
         fill="currentColor"
         focusable="false"
@@ -1229,7 +1226,6 @@ exports[`Render properties. status: info - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="exclamation-circle"
         fill="currentColor"
         focusable="false"
@@ -1277,7 +1273,6 @@ exports[`Render properties. status: success  default is info - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="check-circle"
         fill="currentColor"
         focusable="false"
@@ -1325,7 +1320,6 @@ exports[`Render properties. status: warning - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="warning"
         fill="currentColor"
         focusable="false"
@@ -1373,7 +1367,6 @@ exports[`Render properties.subTitle: subTitle text - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="exclamation-circle"
         fill="currentColor"
         focusable="false"
@@ -1426,7 +1419,6 @@ exports[`Render properties.title - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="exclamation-circle"
         fill="currentColor"
         focusable="false"

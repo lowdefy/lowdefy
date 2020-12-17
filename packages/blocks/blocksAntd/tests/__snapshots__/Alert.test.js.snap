@@ -12,7 +12,6 @@ exports[`Render default - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -54,7 +53,6 @@ exports[`Render properties.closable: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -88,7 +86,6 @@ exports[`Render properties.closable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="close"
         fill="currentColor"
         focusable="false"
@@ -117,7 +114,6 @@ exports[`Render properties.closeText: Close Text - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -241,7 +237,6 @@ exports[`Render properties.message - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -277,7 +272,6 @@ exports[`Render properties.type: error - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="close-circle"
       fill="currentColor"
       focusable="false"
@@ -313,7 +307,6 @@ exports[`Render properties.type: error banner: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="close-circle"
       fill="currentColor"
       focusable="false"
@@ -365,7 +358,6 @@ exports[`Render properties.type: info - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -401,7 +393,6 @@ exports[`Render properties.type: info banner: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -453,7 +444,6 @@ exports[`Render properties.type: success - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="check-circle"
       fill="currentColor"
       focusable="false"
@@ -489,7 +479,6 @@ exports[`Render properties.type: success banner: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="check-circle"
       fill="currentColor"
       focusable="false"
@@ -541,7 +530,6 @@ exports[`Render properties.type: warning - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="exclamation-circle"
       fill="currentColor"
       focusable="false"
@@ -577,7 +565,6 @@ exports[`Render properties.type: warning banner: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="exclamation-circle"
       fill="currentColor"
       focusable="false"
@@ -629,7 +616,6 @@ exports[`Render with description properties.closable: true - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -668,7 +654,6 @@ exports[`Render with description properties.closable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="close"
         fill="currentColor"
         focusable="false"
@@ -697,7 +682,6 @@ exports[`Render with description properties.closeText: Close Text - value[0] 1`]
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -830,7 +814,6 @@ exports[`Render with description properties.message - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -871,7 +854,6 @@ exports[`Render with description properties.type: error - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="close-circle"
       fill="currentColor"
       focusable="false"
@@ -912,7 +894,6 @@ exports[`Render with description properties.type: error banner: true - value[0] 
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="close-circle"
       fill="currentColor"
       focusable="false"
@@ -971,7 +952,6 @@ exports[`Render with description properties.type: info - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -1012,7 +992,6 @@ exports[`Render with description properties.type: info banner: true - value[0] 1
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="info-circle"
       fill="currentColor"
       focusable="false"
@@ -1071,7 +1050,6 @@ exports[`Render with description properties.type: success - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="check-circle"
       fill="currentColor"
       focusable="false"
@@ -1112,7 +1090,6 @@ exports[`Render with description properties.type: success banner: true - value[0
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="check-circle"
       fill="currentColor"
       focusable="false"
@@ -1171,7 +1148,6 @@ exports[`Render with description properties.type: warning - value[0] 1`] = `
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="exclamation-circle"
       fill="currentColor"
       focusable="false"
@@ -1212,7 +1188,6 @@ exports[`Render with description properties.type: warning banner: true - value[0
   >
     <svg
       aria-hidden="true"
-      className=""
       data-icon="exclamation-circle"
       fill="currentColor"
       focusable="false"
