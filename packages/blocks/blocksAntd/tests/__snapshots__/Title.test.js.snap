@@ -218,7 +218,6 @@ exports[`Render properties.copyable: text: one - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -273,7 +272,6 @@ exports[`Render properties.copyable: tooltips: [] - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
@@ -328,7 +326,6 @@ exports[`Render properties.copyable: true - value[0] 1`] = `
     >
       <svg
         aria-hidden="true"
-        className=""
         data-icon="copy"
         fill="currentColor"
         focusable="false"
