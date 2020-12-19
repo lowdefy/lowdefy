@@ -33,6 +33,10 @@ mingoUseOperators(MingoOperatorType.PIPELINE, mingoPipelineOperators);
 mingoUseOperators(MingoOperatorType.PROJECTION, mingoQueryOperators);
 mingoUseOperators(MingoOperatorType.QUERY, mingoProjectionOperators);
 
+function _log({ params }) {
+  console.log(params);
+  return params;
+}
 function _date({ params, location }) {
   if (type.isInt(params)) {
     return new Date(params);
@@ -423,6 +427,7 @@ export {
   _eq,
   _if,
   _load_yaml,
+  _log,
   _mql_aggregate,
   _mql_expr,
   _mql_test,
