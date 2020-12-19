@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "0.0.1",
+  "version": "3.1.1",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,11 +36,11 @@
     "version:major": "yarn version major"
   },
   "dependencies": {
-    "@lowdefy/ajv": "1.1.2",
-    "@lowdefy/helpers": "1.2.2",
-    "@lowdefy/node-utils": "1.0.4",
-    "@lowdefy/nunjucks": "1.1.2",
-    "@lowdefy/operators": "1.1.2",
+    "@lowdefy/ajv": "3.1.1",
+    "@lowdefy/helpers": "3.1.1",
+    "@lowdefy/node-utils": "3.1.1",
+    "@lowdefy/nunjucks": "3.1.1",
+    "@lowdefy/operators": "3.1.1",
     "@sendgrid/mail": "7.4.0",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
