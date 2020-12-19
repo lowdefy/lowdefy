@@ -44,6 +44,9 @@ const context = {
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
+    number: 5,
+    booleanTrue: true,
+    booleanFalse: false,
   },
   urlQuery: {
     string: 'urlQuery',
@@ -98,4 +101,16 @@ test('_mql_expr invalid', () => {
       [Error: Operator Error: _mql_expr failed to execute MQL expression. Received: {"$cond":["$number"]} at locationId.],
     ]
   `);
+});
+
+// Mingo Issue
+// https://github.com/kofrasa/mingo/issues/160
+test('_mql_expr comparison operator', () => {
+  const parser = new WebParser({ context, contexts });
+  let input = {
+    _mql_expr: { $eq: [5, 5] },
+  };
+  let res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(true);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
