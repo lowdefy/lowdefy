@@ -20,18 +20,8 @@ import YAML from 'js-yaml';
 import mingo from 'mingo';
 import { get, serializer, type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import { useOperators as mingoUseOperators, OperatorType as MingoOperatorType } from 'mingo/core';
-import * as mingoAccumulatorOperators from 'mingo/operators/accumulator';
-import * as mingoExpressionOperators from 'mingo/operators/expression';
-import * as mingoPipelineOperators from 'mingo/operators/pipeline';
-import * as mingoQueryOperators from 'mingo/operators/query';
-import * as mingoProjectionOperators from 'mingo/operators/projection';
 
-mingoUseOperators(MingoOperatorType.ACCUMULATOR, mingoAccumulatorOperators);
-mingoUseOperators(MingoOperatorType.EXPRESSION, mingoExpressionOperators);
-mingoUseOperators(MingoOperatorType.PIPELINE, mingoPipelineOperators);
-mingoUseOperators(MingoOperatorType.PROJECTION, mingoProjectionOperators);
-mingoUseOperators(MingoOperatorType.QUERY, mingoQueryOperators);
+import 'mingo/init/system';
 
 function _date({ params, location }) {
   if (type.isInt(params)) {
