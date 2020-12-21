@@ -4,6 +4,8 @@ const state = {
   string: 'Some String',
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
+  booleanTrue: true,
+  booleanFalse: false,
 };
 
 const args = {};
@@ -53,4 +55,26 @@ test('_mql_expr invalid', () => {
       [Error: Operator Error: _mql_expr failed to execute MQL expression. Received: {"$cond":["$number"]} at locationId.],
     ]
   `);
+});
+
+test('_mql_expr logic', () => {
+  const parser = new NodeParser({ state });
+  let input = {
+    _mql_expr: { $and: [{ $gt: ['$number', 41] }, { _state: 'booleanTrue' }] },
+  };
+  let res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toBe(true);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  input = {
+    _mql_expr: { $and: [{ $gt: ['$number', 41] }, { _state: 'booleanFalse' }] },
+  };
+  res = res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  input = {
+    _mql_expr: { $and: [{ $gt: ['$number', 42] }, { _state: 'booleanTrue' }] },
+  };
+  res = res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
