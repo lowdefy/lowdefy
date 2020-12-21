@@ -30,8 +30,8 @@ import * as mingoProjectionOperators from 'mingo/operators/projection';
 mingoUseOperators(MingoOperatorType.ACCUMULATOR, mingoAccumulatorOperators);
 mingoUseOperators(MingoOperatorType.EXPRESSION, mingoExpressionOperators);
 mingoUseOperators(MingoOperatorType.PIPELINE, mingoPipelineOperators);
-mingoUseOperators(MingoOperatorType.PROJECTION, mingoQueryOperators);
-mingoUseOperators(MingoOperatorType.QUERY, mingoProjectionOperators);
+mingoUseOperators(MingoOperatorType.PROJECTION, mingoProjectionOperators);
+mingoUseOperators(MingoOperatorType.QUERY, mingoQueryOperators);
 
 function _date({ params, location }) {
   if (type.isInt(params)) {
