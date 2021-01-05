@@ -44,9 +44,9 @@ const context = {
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
-    number: 5,
     booleanTrue: true,
     booleanFalse: false,
+    number: 42,
   },
   urlQuery: {
     string: 'urlQuery',
@@ -103,14 +103,24 @@ test('_mql_expr invalid', () => {
   `);
 });
 
-// Mingo Issue
-// https://github.com/kofrasa/mingo/issues/160
-test('_mql_expr comparison operator', () => {
+test('_mql_expr logic', () => {
   const parser = new WebParser({ context, contexts });
   let input = {
-    _mql_expr: { $eq: [5, 5] },
+    _mql_expr: { $and: [{ $gt: ['$number', 41] }, { _state: 'booleanTrue' }] },
   };
   let res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  input = {
+    _mql_expr: { $and: [{ $gt: ['$number', 41] }, { _state: 'booleanFalse' }] },
+  };
+  res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(false);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  input = {
+    _mql_expr: { $and: [{ $gt: ['$number', 42] }, { _state: 'booleanTrue' }] },
+  };
+  res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
