@@ -46,7 +46,7 @@
     "ajv-errors": "1.0.1",
     "apollo-server": "2.19.0",
     "aws-sdk": "2.809.0",
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "dataloader": "2.0.0",
     "google-spreadsheet": "3.1.15",
     "graphql": "15.4.0",
