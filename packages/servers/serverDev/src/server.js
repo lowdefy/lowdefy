@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import dotenv from 'dotenv';
 import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
+dotenv.config({ silent: true });
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   logger: console,
