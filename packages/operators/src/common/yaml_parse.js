@@ -17,10 +17,10 @@
 import YAML from 'js-yaml';
 import { serializer, type } from '@lowdefy/helpers';
 
-function _load_yaml({ location, params }) {
+function _yaml_parse({ location, params }) {
   if (!type.isString(params)) {
     throw new Error(
-      `Operator Error: _load_yaml takes a string as input. Received: ${JSON.stringify(
+      `Operator Error: _yaml_parse takes a string as input. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
@@ -31,11 +31,11 @@ function _load_yaml({ location, params }) {
     return serializer.deserialize(loaded);
   } catch (e) {
     throw new Error(
-      `Operator Error: _load_yaml - ${e.message} Received: ${JSON.stringify(
+      `Operator Error: _yaml_parse - ${e.message} Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
   }
 }
 
-export default _load_yaml;
+export default _yaml_parse;

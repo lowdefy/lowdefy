@@ -7,8 +7,8 @@ const state = {
 };
 const args = {};
 
-test('_dump_yaml string', () => {
-  const input = { a: { _dump_yaml: 'firstName' } };
+test('_yaml_stringify string', () => {
+  const input = { a: { _yaml_stringify: 'firstName' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -18,8 +18,8 @@ test('_dump_yaml string', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml number', () => {
-  const input = { a: { _dump_yaml: 1 } };
+test('_yaml_stringify number', () => {
+  const input = { a: { _yaml_stringify: 1 } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -29,8 +29,8 @@ test('_dump_yaml number', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml boolean true', () => {
-  const input = { a: { _dump_yaml: true } };
+test('_yaml_stringify boolean true', () => {
+  const input = { a: { _yaml_stringify: true } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -40,8 +40,8 @@ test('_dump_yaml boolean true', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml boolean false', () => {
-  const input = { a: { _dump_yaml: false } };
+test('_yaml_stringify boolean false', () => {
+  const input = { a: { _yaml_stringify: false } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -51,8 +51,8 @@ test('_dump_yaml boolean false', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml null', () => {
-  const input = { a: { _dump_yaml: null } };
+test('_yaml_stringify null', () => {
+  const input = { a: { _yaml_stringify: null } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -62,8 +62,8 @@ test('_dump_yaml null', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml undefined in object', () => {
-  const input = { a: { _dump_yaml: { b: undefined } } };
+test('_yaml_stringify undefined in object', () => {
+  const input = { a: { _yaml_stringify: { b: undefined } } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -74,16 +74,16 @@ test('_dump_yaml undefined in object', () => {
 });
 
 // This is unexpected but happens due to the way JSON stringify works
-test('_dump_yaml undefined ', () => {
-  const input = { _dump_yaml: undefined };
+test('_yaml_stringify undefined ', () => {
+  const input = { _yaml_stringify: undefined };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({}); // expected 'undefined' ?
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml date', () => {
-  const input = { a: { _dump_yaml: new Date(0) } };
+test('_yaml_stringify date', () => {
+  const input = { a: { _yaml_stringify: new Date(0) } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -93,8 +93,8 @@ test('_dump_yaml date', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml array', () => {
-  const input = { a: { _dump_yaml: state.arr } };
+test('_yaml_stringify array', () => {
+  const input = { a: { _yaml_stringify: state.arr } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -105,8 +105,8 @@ test('_dump_yaml array', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml date array', () => {
-  const input = { a: { _dump_yaml: state.dateArr } };
+test('_yaml_stringify date array', () => {
+  const input = { a: { _yaml_stringify: state.dateArr } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -117,8 +117,8 @@ test('_dump_yaml date array', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('_dump_yaml date object', () => {
-  const input = { a: { _dump_yaml: state.dateObject } };
+test('_yaml_stringify date object', () => {
+  const input = { a: { _yaml_stringify: state.dateObject } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({

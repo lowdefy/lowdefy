@@ -3,8 +3,8 @@ import NodeParser from '../../src/nodeParser';
 const state = {};
 const args = {};
 
-test('_parse string unquoted', () => {
-  const input = { a: { _parse: 'firstName' } };
+test('_json_parse string unquoted', () => {
+  const input = { a: { _json_parse: 'firstName' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -12,13 +12,13 @@ test('_parse string unquoted', () => {
   });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _parse - Unexpected token i in JSON at position 1 Received: "firstName" at locationId.],
+      [Error: Operator Error: _json_parse - Unexpected token i in JSON at position 1 Received: "firstName" at locationId.],
     ]
   `);
 });
 
-test('_parse string quoted', () => {
-  const input = { a: { _parse: '"firstName"' } };
+test('_json_parse string quoted', () => {
+  const input = { a: { _json_parse: '"firstName"' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -27,8 +27,8 @@ test('_parse string quoted', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse number', () => {
-  const input = { a: { _parse: '1' } };
+test('_json_parse number', () => {
+  const input = { a: { _json_parse: '1' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -37,8 +37,8 @@ test('_parse number', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse boolean true', () => {
-  const input = { a: { _parse: 'true' } };
+test('_json_parse boolean true', () => {
+  const input = { a: { _json_parse: 'true' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -47,8 +47,8 @@ test('_parse boolean true', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse boolean false', () => {
-  const input = { a: { _parse: 'false' } };
+test('_json_parse boolean false', () => {
+  const input = { a: { _json_parse: 'false' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -57,8 +57,8 @@ test('_parse boolean false', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse null', () => {
-  const input = { a: { _parse: 'null' } };
+test('_json_parse null', () => {
+  const input = { a: { _json_parse: 'null' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -67,8 +67,8 @@ test('_parse null', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse undefined string', () => {
-  const input = { a: { _parse: 'undefined' } };
+test('_json_parse undefined string', () => {
+  const input = { a: { _json_parse: 'undefined' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -77,8 +77,8 @@ test('_parse undefined string', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse object not allowed', () => {
-  const input = { a: { _parse: { b: 'm' } } };
+test('_json_parse object not allowed', () => {
+  const input = { a: { _json_parse: { b: 'm' } } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -86,13 +86,13 @@ test('_parse object not allowed', () => {
   });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _parse takes a string as input. Received: {"b":"m"} at locationId.],
+      [Error: Operator Error: _json_parse takes a string as input. Received: {"b":"m"} at locationId.],
     ]
   `);
 });
 
-test('_parse date not supported', () => {
-  const input = { a: { _parse: new Date(0) } };
+test('_json_parse date not supported', () => {
+  const input = { a: { _json_parse: new Date(0) } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -100,13 +100,13 @@ test('_parse date not supported', () => {
   });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _parse takes a string as input. Received: "1970-01-01T00:00:00.000Z" at locationId.],
+      [Error: Operator Error: _json_parse takes a string as input. Received: "1970-01-01T00:00:00.000Z" at locationId.],
     ]
   `);
 });
 
-test('_parse array', () => {
-  const input = { a: { _parse: '[{ "a": "a1"},{ "a": "a2"}]' } };
+test('_json_parse array', () => {
+  const input = { a: { _json_parse: '[{ "a": "a1"},{ "a": "a2"}]' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -115,10 +115,11 @@ test('_parse array', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse date array', () => {
+test('_json_parse date array', () => {
   const input = {
     a: {
-      _parse: '[{ "_date": "1970-01-01T00:00:00.000Z"},{ "_date": "1970-01-01T00:00:00.001Z"}]',
+      _json_parse:
+        '[{ "_date": "1970-01-01T00:00:00.000Z"},{ "_date": "1970-01-01T00:00:00.001Z"}]',
     },
   };
   const parser = new NodeParser({ state });
@@ -129,15 +130,15 @@ test('_parse date array', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_parse date as object', () => {
-  const input = { a: { _parse: '{ "_date": "1970-01-01T00:00:00.000Z"}' } };
+test('_json_parse date as object', () => {
+  const input = { a: { _json_parse: '{ "_date": "1970-01-01T00:00:00.000Z"}' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: new Date(0) });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify then _parse', () => {
+test('_json_stringify then _json_parse', () => {
   const value = {
     a: [
       { b: 1, c: false, d: new Date(0) },
@@ -147,16 +148,16 @@ test('_stringify then _parse', () => {
     f: 'undefined',
     g: 0,
   };
-  const input = { x: { _parse: { _stringify: value } } };
+  const input = { x: { _json_parse: { _json_stringify: value } } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ x: value });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify then _parse date', () => {
+test('_json_stringify then _json_parse date', () => {
   const value = new Date();
-  const input = { _parse: { _stringify: value } };
+  const input = { _json_parse: { _json_stringify: value } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual(value);

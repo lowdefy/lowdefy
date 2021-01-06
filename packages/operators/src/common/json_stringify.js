@@ -14,14 +14,10 @@
   limitations under the License.
 */
 
-import YAML from 'js-yaml';
 import { serializer } from '@lowdefy/helpers';
 
-function _dump_yaml({ params }) {
-  return YAML.safeDump(serializer.serialize(params, { isoStringDates: true }), {
-    sortKeys: true,
-    noRefs: true,
-  });
+function _json_stringify({ params }) {
+  return serializer.serializeToString(params, { space: 2, isoStringDates: true });
 }
 
-export default _dump_yaml;
+export default _json_stringify;

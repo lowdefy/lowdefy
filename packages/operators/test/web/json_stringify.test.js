@@ -1,5 +1,11 @@
 import WebParser from '../../src/webParser';
 
+const state = {
+  arr: [{ a: 'a1' }, { a: 'a2' }],
+  dateArr: [new Date(0), new Date(1)],
+  dateObject: { a: new Date(0) },
+};
+
 const args = {
   string: 'args',
   arr: [{ a: 'args1' }, { a: 'args2' }],
@@ -55,122 +61,137 @@ const contexts = {};
 
 const arrayIndices = [1];
 
-test('_dump_yaml string', () => {
-  const input = { a: { _dump_yaml: 'firstName' } };
+test('_json_stringify string', () => {
+  const input = { a: { _json_stringify: 'firstName' } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `firstName
-`,
+    a: '"firstName"',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml number', () => {
-  const input = { a: { _dump_yaml: 1 } };
+test('_json_stringify number', () => {
+  const input = { a: { _json_stringify: 1 } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `1
-`,
+    a: '1',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml boolean true', () => {
-  const input = { a: { _dump_yaml: true } };
+test('_json_stringify boolean true', () => {
+  const input = { a: { _json_stringify: true } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `true
-`,
+    a: 'true',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml boolean false', () => {
-  const input = { a: { _dump_yaml: false } };
+test('_json_stringify boolean false', () => {
+  const input = { a: { _json_stringify: false } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `false
-`,
+    a: 'false',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml null', () => {
-  const input = { a: { _dump_yaml: null } };
+test('_json_stringify null', () => {
+  const input = { a: { _json_stringify: null } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `null
-`,
+    a: 'null',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml undefined in object', () => {
-  const input = { a: { _dump_yaml: { b: undefined } } };
+test('_json_stringify undefined in object', () => {
+  const input = { a: { _json_stringify: { b: undefined } } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: `{}
-`,
+    a: '{}',
   });
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 // This is unexpected but happens due to the way JSON stringify works
-test('_dump_yaml undefined ', () => {
-  const input = { _dump_yaml: undefined };
+test('_json_stringify undefined', () => {
+  const input = { _json_stringify: undefined };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({}); // expected 'undefined' ?
-  expect(res.errors).toEqual([]);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml date', () => {
-  const input = { _dump_yaml: new Date(0) };
+test('_json_stringify date', () => {
+  const input = { a: { _json_stringify: new Date(0) } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(`_date: '1970-01-01T00:00:00.000Z'
-`);
-  expect(res.errors).toEqual([]);
+  expect(res.output).toMatchInlineSnapshot(`
+    Object {
+      "a": "{ \\"_date\\": \\"1970-01-01T00:00:00.000Z\\" }",
+    }
+  `);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml array', () => {
-  const input = { a: { _dump_yaml: [{ a: 'a1' }, { a: 'a2' }] } };
+test('_json_stringify array', () => {
+  const input = { a: { _json_stringify: state.arr } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: `- a: a1
-- a: a2
-`,
-  });
-  expect(res.errors).toEqual([]);
+  expect(res.output).toMatchInlineSnapshot(`
+    Object {
+      "a": "[
+      {
+        \\"a\\": \\"a1\\"
+      },
+      {
+        \\"a\\": \\"a2\\"
+      }
+    ]",
+    }
+  `);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml date in array', () => {
-  const input = { a: { _dump_yaml: [new Date(0), new Date(1)] } };
+test('_json_stringify date array', () => {
+  const input = { a: { _json_stringify: state.dateArr } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: `- _date: '1970-01-01T00:00:00.000Z'
-- _date: '1970-01-01T00:00:00.001Z'
-`,
-  });
-  expect(res.errors).toEqual([]);
+  expect(res.output).toMatchInlineSnapshot(`
+    Object {
+      "a": "[
+      {
+        \\"_date\\": \\"1970-01-01T00:00:00.000Z\\"
+      },
+      {
+        \\"_date\\": \\"1970-01-01T00:00:00.001Z\\"
+      }
+    ]",
+    }
+  `);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_dump_yaml date in object', () => {
-  const input = { a: { _dump_yaml: { a: new Date(0) } } };
+test('_json_stringify date object', () => {
+  const input = { a: { _json_stringify: state.dateObject } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: `a:
-  _date: '1970-01-01T00:00:00.000Z'
-`,
-  });
-  expect(res.errors).toEqual([]);
+  expect(res.output).toMatchInlineSnapshot(`
+    Object {
+      "a": "{
+      \\"a\\": {
+        \\"_date\\": \\"1970-01-01T00:00:00.000Z\\"
+      }
+    }",
+    }
+  `);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

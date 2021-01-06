@@ -7,8 +7,8 @@ const state = {
 };
 const args = {};
 
-test('_stringify string', () => {
-  const input = { a: { _stringify: 'firstName' } };
+test('_json_stringify string', () => {
+  const input = { a: { _json_stringify: 'firstName' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -17,8 +17,8 @@ test('_stringify string', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify number', () => {
-  const input = { a: { _stringify: 1 } };
+test('_json_stringify number', () => {
+  const input = { a: { _json_stringify: 1 } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -27,8 +27,8 @@ test('_stringify number', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify boolean true', () => {
-  const input = { a: { _stringify: true } };
+test('_json_stringify boolean true', () => {
+  const input = { a: { _json_stringify: true } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -37,8 +37,8 @@ test('_stringify boolean true', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify boolean false', () => {
-  const input = { a: { _stringify: false } };
+test('_json_stringify boolean false', () => {
+  const input = { a: { _json_stringify: false } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -47,8 +47,8 @@ test('_stringify boolean false', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify null', () => {
-  const input = { a: { _stringify: null } };
+test('_json_stringify null', () => {
+  const input = { a: { _json_stringify: null } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -57,8 +57,8 @@ test('_stringify null', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify undefined in object', () => {
-  const input = { a: { _stringify: { b: undefined } } };
+test('_json_stringify undefined in object', () => {
+  const input = { a: { _json_stringify: { b: undefined } } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({
@@ -68,16 +68,16 @@ test('_stringify undefined in object', () => {
 });
 
 // This is unexpected but happens due to the way JSON stringify works
-test('_stringify undefined', () => {
-  const input = { _stringify: undefined };
+test('_json_stringify undefined', () => {
+  const input = { _json_stringify: undefined };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({}); // expected 'undefined' ?
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify date', () => {
-  const input = { a: { _stringify: new Date(0) } };
+test('_json_stringify date', () => {
+  const input = { a: { _json_stringify: new Date(0) } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toMatchInlineSnapshot(`
@@ -88,8 +88,8 @@ test('_stringify date', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify array', () => {
-  const input = { a: { _stringify: state.arr } };
+test('_json_stringify array', () => {
+  const input = { a: { _json_stringify: state.arr } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toMatchInlineSnapshot(`
@@ -107,8 +107,8 @@ test('_stringify array', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify date array', () => {
-  const input = { a: { _stringify: state.dateArr } };
+test('_json_stringify date array', () => {
+  const input = { a: { _json_stringify: state.dateArr } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toMatchInlineSnapshot(`
@@ -126,8 +126,8 @@ test('_stringify date array', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_stringify date object', () => {
-  const input = { a: { _stringify: state.dateObject } };
+test('_json_stringify date object', () => {
+  const input = { a: { _json_stringify: state.dateObject } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toMatchInlineSnapshot(`

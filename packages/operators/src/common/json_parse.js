@@ -16,10 +16,10 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-function _parse({ location, params }) {
+function _json_parse({ location, params }) {
   if (!type.isString(params)) {
     throw new Error(
-      `Operator Error: _parse takes a string as input. Received: ${JSON.stringify(
+      `Operator Error: _json_parse takes a string as input. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
@@ -29,9 +29,11 @@ function _parse({ location, params }) {
     return serializer.deserializeFromString(params);
   } catch (e) {
     throw new Error(
-      `Operator Error: _parse - ${e.message} Received: ${JSON.stringify(params)} at ${location}.`
+      `Operator Error: _json_parse - ${e.message} Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
     );
   }
 }
 
-export default _parse;
+export default _json_parse;

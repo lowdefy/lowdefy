@@ -121,8 +121,8 @@ test('_operator, _not with no params', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_operator, _parse with params', () => {
-  const input = { a: { _operator: { name: '_parse', params: '[{ "a": "a1"}]' } } };
+test('_operator, _json_parse with params', () => {
+  const input = { a: { _operator: { name: '_json_parse', params: '[{ "a": "a1"}]' } } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({

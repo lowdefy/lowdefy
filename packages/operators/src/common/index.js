@@ -1,13 +1,13 @@
 import _and from './and';
 import _args from './args';
 import _date from './date';
-import _dump_yaml from './dump_yaml';
 import _eq from './eq';
 import _get from './get';
 import _global from './global';
 import _if from './if';
 import _input from './input';
-import _load_yaml from './load_yaml';
+import _json_parse from './json_parse';
+import _json_stringify from './json_stringify';
 import _log from './log';
 import _mql_aggregate from './mql_aggregate';
 import _mql_expr from './mql_expr';
@@ -16,24 +16,24 @@ import _not from './not';
 import _nunjucks from './nunjucks';
 import _operator from './operator';
 import _or from './or';
-import _parse from './parse';
 import _regex from './regex';
 import _state from './state';
-import _stringify from './stringify';
 import _type from './type';
 import _url_query from './url_query';
+import _yaml_parse from './yaml_parse';
+import _yaml_stringify from './yaml_stringify';
 
 export default {
   _and,
   _args,
   _date,
-  _dump_yaml,
   _eq,
   _get,
   _global,
   _if,
   _input,
-  _load_yaml,
+  _json_parse,
+  _json_stringify,
   _log,
   _mql_aggregate,
   _mql_expr,
@@ -42,10 +42,10 @@ export default {
   _nunjucks,
   _operator,
   _or,
-  _parse,
   _regex,
   _state,
-  _stringify,
   _type,
   _url_query,
+  _yaml_parse,
+  _yaml_stringify,
 };
