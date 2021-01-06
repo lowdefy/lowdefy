@@ -171,3 +171,11 @@ test('parse _gte operator', () => {
   expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _if_none operator', () => {
+  const input = { a: { _if_none: [null, 'default'] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'default' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

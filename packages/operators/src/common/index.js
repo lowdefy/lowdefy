@@ -22,6 +22,7 @@ import _lt from './lt';
 import _lte from './lte';
 import _gt from './gt';
 import _gte from './gte';
+import _if_none from './if_none';
 import _get from './get';
 import _global from './global';
 import _if from './if';
@@ -55,6 +56,7 @@ export default {
   _gt,
   _gte,
   _get,
+  _if_none,
   _global,
   _if,
   _input,

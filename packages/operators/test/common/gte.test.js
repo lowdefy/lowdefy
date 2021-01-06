@@ -1,6 +1,6 @@
 import gte from '../../src/common/gte';
 
-test('_gte param 0 less than param 1', () => {
+test('_gte param 0 greater than param 1', () => {
   expect(gte({ params: [1, 1], location: 'locationId' })).toBe(true);
   expect(gte({ params: [1, 0], location: 'locationId' })).toBe(true);
   expect(gte({ params: [0, -1], location: 'locationId' })).toBe(true);
@@ -8,7 +8,7 @@ test('_gte param 0 less than param 1', () => {
   expect(gte({ params: [0.2, 0.1], location: 'locationId' })).toBe(true);
 });
 
-test('_gte param 0 greater than param 1', () => {
+test('_gte param 0 less than param 1', () => {
   expect(gte({ params: [0, 1], location: 'locationId' })).toBe(false);
   expect(gte({ params: [-1, 0], location: 'locationId' })).toBe(false);
   expect(gte({ params: [-1, 1], location: 'locationId' })).toBe(false);

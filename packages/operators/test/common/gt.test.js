@@ -1,13 +1,13 @@
 import gt from '../../src/common/gt';
 
-test('_gt param 0 less than param 1', () => {
+test('_gt param 0 greater than param 1', () => {
   expect(gt({ params: [1, 0], location: 'locationId' })).toBe(true);
   expect(gt({ params: [0, -1], location: 'locationId' })).toBe(true);
   expect(gt({ params: [1, -1], location: 'locationId' })).toBe(true);
   expect(gt({ params: [0.2, 0.1], location: 'locationId' })).toBe(true);
 });
 
-test('_gt param 0 greater than param 1', () => {
+test('_gt param 0 less than param 1', () => {
   expect(gt({ params: [1, 1], location: 'locationId' })).toBe(false);
   expect(gt({ params: [0, 1], location: 'locationId' })).toBe(false);
   expect(gt({ params: [-1, 0], location: 'locationId' })).toBe(false);
