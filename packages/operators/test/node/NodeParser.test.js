@@ -179,3 +179,14 @@ test('parse _if_none operator', () => {
   expect(res.output).toEqual({ a: 'default' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _random operator', () => {
+  const mathRandomFn = Math.random;
+  Math.random = () => 0.5678;
+  const input = { a: { _random: 'string' } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'kfv9yqdp' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  Math.random = mathRandomFn;
+});
