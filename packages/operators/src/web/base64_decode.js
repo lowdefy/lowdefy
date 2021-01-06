@@ -24,8 +24,7 @@ function _base64_decode({ params, location }) {
       )} at ${location}.`
     );
   }
-  const buff = Buffer.from(params, 'base64');
-  return buff.toString('utf8');
+  return atob(params);
 }
 
 export default _base64_decode;
