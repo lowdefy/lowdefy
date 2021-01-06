@@ -237,3 +237,19 @@ test('parse _if_none operator', () => {
   expect(res.output).toEqual({ a: 'default' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _media operator', () => {
+  Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 300 });
+  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
+  const input = { a: { _media: true } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({
+    a: {
+      height: 300,
+      size: 'xs',
+      width: 500,
+    },
+  });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -18,6 +18,7 @@ import _action_log from './action_log';
 import _base64_decode from './base64_decode';
 import _base64_encode from './base64_encode';
 import _list_contexts from './list_contexts';
+import _media from './media';
 import _menu from './menu';
 import _request from './request';
 import _request_details from './request_details';
@@ -27,6 +28,7 @@ export default {
   _base64_decode,
   _base64_encode,
   _list_contexts,
+  _media,
   _menu,
   _request_details,
   _request,

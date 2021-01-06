@@ -18,18 +18,18 @@ import _and from './and';
 import _args from './args';
 import _date from './date';
 import _eq from './eq';
-import _lt from './lt';
-import _lte from './lte';
-import _gt from './gt';
-import _gte from './gte';
-import _if_none from './if_none';
 import _get from './get';
 import _global from './global';
+import _gt from './gt';
+import _gte from './gte';
 import _if from './if';
+import _if_none from './if_none';
 import _input from './input';
 import _json_parse from './json_parse';
 import _json_stringify from './json_stringify';
 import _log from './log';
+import _lt from './lt';
+import _lte from './lte';
 import _mql_aggregate from './mql_aggregate';
 import _mql_expr from './mql_expr';
 import _mql_test from './mql_test';
@@ -51,18 +51,18 @@ export default {
   _args,
   _date,
   _eq,
-  _lt,
-  _lte,
+  _get,
+  _global,
   _gt,
   _gte,
-  _get,
   _if_none,
-  _global,
   _if,
   _input,
   _json_parse,
   _json_stringify,
   _log,
+  _lt,
+  _lte,
   _mql_aggregate,
   _mql_expr,
   _mql_test,
