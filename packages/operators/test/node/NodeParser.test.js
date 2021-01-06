@@ -124,7 +124,7 @@ test('parse _base64_decode operator', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_uri_encode strings', () => {
+test('parse _uri_encode operator', () => {
   const input = { a: { _uri_encode: 'ABC abc 123' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
@@ -132,10 +132,42 @@ test('_uri_encode strings', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_uri_decode strings', () => {
+test('parse _uri_decode operator', () => {
   const input = { a: { _uri_decode: 'ABC%20abc%20123' } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 'ABC abc 123' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _lt operator', () => {
+  const input = { a: { _lt: [4, 5] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: true });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _lte operator', () => {
+  const input = { a: { _lte: [5, 5] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: true });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _gt operator', () => {
+  const input = { a: { _gt: [5, 3] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: true });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _gte operator', () => {
+  const input = { a: { _gte: [5, 5] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

@@ -18,6 +18,10 @@ import _and from './and';
 import _args from './args';
 import _date from './date';
 import _eq from './eq';
+import _lt from './lt';
+import _lte from './lte';
+import _gt from './gt';
+import _gte from './gte';
 import _get from './get';
 import _global from './global';
 import _if from './if';
@@ -46,6 +50,10 @@ export default {
   _args,
   _date,
   _eq,
+  _lt,
+  _lte,
+  _gt,
+  _gte,
   _get,
   _global,
   _if,
