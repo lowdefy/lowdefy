@@ -107,3 +107,19 @@ test('parse js dates, do not modify input', () => {
   expect(input).toEqual({ a: new Date(1) });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _base64_encode operator', () => {
+  const input = { a: { _base64_encode: 'A string value' } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _base64_decode operator', () => {
+  const input = { a: { _base64_decode: 'QSBzdHJpbmcgdmFsdWU=' } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'A string value' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -165,3 +165,19 @@ test('parse location not specified', () => {
   expect(res.output).toEqual('state');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _base64_encode operator', () => {
+  const input = { a: { _base64_encode: 'A string value' } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _base64_decode operator', () => {
+  const input = { a: { _base64_decode: 'QSBzdHJpbmcgdmFsdWU=' } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'A string value' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-import _action_log from './action_log';
-import _base64_decode from './base64_decode';
-import _base64_encode from './base64_encode';
-import _list_contexts from './list_contexts';
-import _menu from './menu';
-import _request from './request';
-import _request_details from './request_details';
+import { type } from '@lowdefy/helpers';
 
-export default {
-  _action_log,
-  _base64_decode,
-  _base64_encode,
-  _list_contexts,
-  _menu,
-  _request_details,
-  _request,
-};
+function _base64_encode({ params, location }) {
+  if (!type.isString(params)) {
+    throw new Error(
+      `Operator Error: _base64_encode takes an string type as input. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
+  const buff = Buffer.from(params, 'utf8');
+  return buff.toString('base64');
+}
+
+export default _base64_encode;
