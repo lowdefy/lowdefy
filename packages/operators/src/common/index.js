@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import _sum from './sum';
 import _and from './and';
 import _args from './args';
 import _date from './date';
@@ -49,6 +50,7 @@ import _yaml_parse from './yaml_parse';
 import _yaml_stringify from './yaml_stringify';
 
 export default {
+  _sum,
   _and,
   _args,
   _date,

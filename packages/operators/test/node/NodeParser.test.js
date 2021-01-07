@@ -206,3 +206,11 @@ test('parse _math operator', () => {
   expect(res.output).toEqual({ a: 2 });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _sum operator', () => {
+  const input = { a: { _sum: [1, 1] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 2 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
