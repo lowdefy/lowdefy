@@ -222,3 +222,11 @@ test('parse _product operator', () => {
   expect(res.output).toEqual({ a: -6 });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _subtract operator', () => {
+  const input = { a: { _subtract: [2, -3] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 5 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

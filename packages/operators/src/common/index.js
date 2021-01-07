@@ -43,6 +43,7 @@ import _product from './product';
 import _random from './random';
 import _regex from './regex';
 import _state from './state';
+import _subtract from './subtract';
 import _type from './type';
 import _uri_decode from './uri_decode';
 import _uri_encode from './uri_encode';
@@ -80,6 +81,7 @@ export default {
   _random,
   _regex,
   _state,
+  _subtract,
   _type,
   _uri_decode,
   _uri_encode,
