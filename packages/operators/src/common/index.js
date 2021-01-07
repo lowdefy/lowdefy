@@ -39,6 +39,7 @@ import _not from './not';
 import _nunjucks from './nunjucks';
 import _operator from './operator';
 import _or from './or';
+import _product from './product';
 import _random from './random';
 import _regex from './regex';
 import _state from './state';
@@ -75,6 +76,7 @@ export default {
   _nunjucks,
   _operator,
   _or,
+  _product,
   _random,
   _regex,
   _state,

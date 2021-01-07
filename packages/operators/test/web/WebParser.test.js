@@ -274,3 +274,11 @@ test('parse _sum operator', () => {
   expect(res.output).toEqual({ a: 2 });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _product operator', () => {
+  const input = { a: { _product: [2, -3] } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: -6 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -16,20 +16,20 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _sum({ params, location }) {
+function _product({ params, location }) {
   if (!type.isArray(params)) {
     throw new Error(
-      `Operator Error: _sum takes an array type as input. Received: ${JSON.stringify(
+      `Operator Error: _product takes an array type as input. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
   }
   return params.reduce((accumulator, value) => {
     if (type.isNumber(value)) {
-      return accumulator + value;
+      return accumulator * value;
     }
     return accumulator;
-  }, 0);
+  }, 1);
 }
 
-export default _sum;
+export default _product;
