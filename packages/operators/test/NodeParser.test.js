@@ -200,7 +200,7 @@ test('parse _uuid operator', () => {
 });
 
 test('parse _math operator', () => {
-  const input = { a: { _math: { method: 'min', args: [9, 4, 2] } } };
+  const input = { a: { '_math.min': [9, 4, 2] } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 2 });

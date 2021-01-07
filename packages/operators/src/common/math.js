@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import runMethod from '../runMethod';
 
-const properties = ['E', 'LN10', 'LN2', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2', 'SQRT2'];
-const methods = [
+const allowedProperties = ['E', 'LN10', 'LN2', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2', 'SQRT2'];
+const allowedMethods = [
   'abs',
   'acos',
   'acosh',
@@ -54,41 +54,16 @@ const methods = [
   'trunc',
 ];
 
-function _math({ params, location }) {
-  if (!type.isObject(params)) {
-    throw new Error(
-      `Operator Error: _math takes an object type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-  if (params.property) {
-    if (!type.isString(params.property) || !properties.includes(params.property)) {
-      throw new Error(
-        `Operator Error: _math.property takes can be one of 'E', 'LN10', 'LN2', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2' or 'SQRT2'. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
-    }
-    return Math[params.property];
-  }
-
-  if (!type.isString(params.method) || !methods.includes(params.method)) {
-    throw new Error(
-      `Operator Error: _math.property takes can be one of 'abs', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'cbrt', 'ceil', 'clz32', 'cos', 'cosh', 'exp', 'expm1', 'floor', 'fround', 'hypot', 'imul', 'log', 'log10', 'log1p', 'log2', 'max', 'min', 'pow', 'random', 'round', 'sign', 'sinh', 'sqrt', 'tan', 'tanh' or 'trunc'. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-  params.args = params.args || [];
-  if (!type.isArray(params.args)) {
-    throw new Error(
-      `Operator Error: _math.args takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-  return Math[params.method](...params.args);
+function _math({ params, location, method }) {
+  return runMethod({
+    allowedMethods,
+    allowedProperties,
+    Fn: Math,
+    location,
+    method,
+    operator: '_math',
+    params,
+  });
 }
 
 export default _math;
