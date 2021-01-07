@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 /*
   Copyright 2020 Lowdefy, Inc
 
