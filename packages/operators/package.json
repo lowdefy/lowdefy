@@ -41,7 +41,8 @@
     "@lowdefy/helpers": "3.1.1",
     "@lowdefy/nunjucks": "3.1.1",
     "js-yaml": "3.14.1",
-    "mingo": "3.1.0"
+    "mingo": "3.1.0",
+    "uuid": "8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "7.12.10",

@@ -30,12 +30,6 @@ const context = {
       menuId: 'm_2',
     },
   ],
-  mutations: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'mutation String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'mutation a1' }, { a: 'mutation a2' }] },
-  },
   requests: {
     not_loaded: { loading: true, response: 'fail' },
     string: { loading: false, response: 'request String' },

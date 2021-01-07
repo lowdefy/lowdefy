@@ -3244,6 +3244,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 3.14.1
     mingo: 3.1.0
+    uuid: 8.3.2
   languageName: unknown
   linkType: soft
 

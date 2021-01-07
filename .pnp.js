@@ -4660,7 +4660,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:3.14.1"],
-            ["mingo", "npm:3.1.0"]
+            ["mingo", "npm:3.1.0"],
+            ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
         }]

@@ -14,14 +14,10 @@
   limitations under the License.
 */
 
-import _secret from './secret';
-import _base64_decode from './base64_decode';
-import _base64_encode from './base64_encode';
-import _uuid from './uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-export default {
-  _base64_decode,
-  _base64_encode,
-  _secret,
-  _uuid,
-};
+function _uuid() {
+  return uuidv4();
+}
+
+export default _uuid;

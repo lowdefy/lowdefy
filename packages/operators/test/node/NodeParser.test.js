@@ -190,3 +190,11 @@ test('parse _random operator', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
   Math.random = mathRandomFn;
 });
+
+test('parse _uuid operator', () => {
+  const input = { a: { _uuid: true } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output.a.length).toEqual(36);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
