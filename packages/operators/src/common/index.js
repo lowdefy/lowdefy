@@ -18,6 +18,7 @@ import _sum from './sum';
 import _and from './and';
 import _args from './args';
 import _date from './date';
+import _divide from './divide';
 import _eq from './eq';
 import _get from './get';
 import _global from './global';
@@ -56,6 +57,7 @@ export default {
   _and,
   _args,
   _date,
+  _divide,
   _eq,
   _get,
   _global,

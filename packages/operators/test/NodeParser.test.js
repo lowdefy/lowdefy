@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import NodeParser from '../../src/nodeParser';
+import NodeParser from '../src/nodeParser';
 
 const state = {
   string: 'Some String',
@@ -228,5 +228,13 @@ test('parse _subtract operator', () => {
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 5 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _divide operator', () => {
+  const input = { a: { _divide: [2, 4] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 0.5 });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
