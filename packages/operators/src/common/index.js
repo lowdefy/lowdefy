@@ -30,6 +30,7 @@ import _json_stringify from './json_stringify';
 import _log from './log';
 import _lt from './lt';
 import _lte from './lte';
+import _math from './math';
 import _mql_aggregate from './mql_aggregate';
 import _mql_expr from './mql_expr';
 import _mql_test from './mql_test';
@@ -64,6 +65,7 @@ export default {
   _log,
   _lt,
   _lte,
+  _math,
   _mql_aggregate,
   _mql_expr,
   _mql_test,

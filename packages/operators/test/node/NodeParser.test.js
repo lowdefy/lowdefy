@@ -198,3 +198,11 @@ test('parse _uuid operator', () => {
   expect(res.output.a.length).toEqual(36);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _math operator', () => {
+  const input = { a: { _math: { method: 'min', args: [9, 4, 2] } } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 2 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
