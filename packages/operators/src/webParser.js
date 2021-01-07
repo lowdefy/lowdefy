@@ -29,7 +29,6 @@ class WebParser {
       ...commonOperators,
       ...webOperators,
     };
-    this.operationList = Object.keys(this.operations);
   }
 
   parse({ input, args, location, arrayIndices }) {
@@ -46,9 +45,10 @@ class WebParser {
     const reviver = (key, value) => {
       if (type.isObject(value)) {
         // eslint-disable-next-line no-restricted-syntax
-        for (const op of this.operationList) {
+        for (const key of Object.keys(value)) {
+          const [op, method] = key.split('.');
           try {
-            if (!type.isUndefined(value[op])) {
+            if (!type.isUndefined(this.operations[op])) {
               const res = this.operations[op]({
                 actionLog: this.context.actionLog,
                 args,
@@ -61,8 +61,9 @@ class WebParser {
                 location: location ? applyArrayIndices(arrayIndices, location) : null,
                 lowdefyGlobal: this.context.lowdefyGlobal,
                 menus: this.context.menus,
+                method,
                 operations: this.operations,
-                params: value[op],
+                params: value[key],
                 requests: this.context.requests,
                 state: this.context.state,
                 urlQuery: this.context.urlQuery,

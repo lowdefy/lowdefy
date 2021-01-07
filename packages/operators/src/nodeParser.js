@@ -34,7 +34,6 @@ class NodeParser {
       ...commonOperators,
       ...nodeOperators,
     };
-    this.operationList = Object.keys(this.operations);
   }
 
   parse({ input, args, location }) {
@@ -51,9 +50,10 @@ class NodeParser {
     const reviver = (key, value) => {
       if (type.isObject(value)) {
         // eslint-disable-next-line no-restricted-syntax
-        for (const op of this.operationList) {
+        for (const key of Object.keys(value)) {
+          const [op, method] = key.split('.');
           try {
-            if (!type.isUndefined(value[op])) {
+            if (!type.isUndefined(this.operations[op])) {
               const res = this.operations[op]({
                 args,
                 arrayIndices: this.arrayIndices,
@@ -62,8 +62,9 @@ class NodeParser {
                 input: this.input,
                 location,
                 lowdefyGlobal: this.lowdefyGlobal,
+                method,
                 operations: this.operations,
-                params: value[op],
+                params: value[key],
                 secrets: this.secrets,
                 state: this.state,
                 urlQuery: this.urlQuery,
