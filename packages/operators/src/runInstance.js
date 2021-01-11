@@ -27,7 +27,15 @@ const runInstance = ({ allowedMethods, allowedProperties, location, method, oper
   if (allowedProperties.includes(method)) {
     return Instance[method];
   }
-  return Instance[method](...params.slice(1));
+  try {
+    return Instance[method](...params.slice(1));
+  } catch (e) {
+    throw new Error(
+      `Operator Error: ${operator}.${method} - ${
+        e.message
+      } Received: {"${operator}.${method}":${JSON.stringify(params)}} at ${location}.`
+    );
+  }
 };
 
 export default runInstance;

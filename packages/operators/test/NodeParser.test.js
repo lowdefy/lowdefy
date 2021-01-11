@@ -238,3 +238,53 @@ test('parse _divide operator', () => {
   expect(res.output).toEqual({ a: 0.5 });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _array operator', () => {
+  const input = { a: { '_array.length': [[2, 4]] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 2 });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _object operator', () => {
+  const input = { a: { '_object.keys': [{ a: 1, b: 2 }] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: ['a', 'b'] });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _string operator', () => {
+  const input = { a: { '_string.concat': ['a new ', 'string'] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: 'a new string' });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('_json.stringify then _json.parse', () => {
+  const value = {
+    a: [
+      { b: 1, c: false, d: new Date(0) },
+      { b: 2, c: true, d: new Date(1) },
+    ],
+    e: 'null',
+    f: 'undefined',
+    g: 0,
+  };
+  const input = { x: { '_json.parse': [{ '_json.stringify': [value] }] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ x: value });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('_json.stringify then _json.parse date', () => {
+  const value = new Date();
+  const input = { '_json.parse': [{ '_json.stringify': [value] }] };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual(value);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

@@ -5,9 +5,12 @@ const operator = '_op';
 const Cls = {
   double: (a) => a * 2,
   add: (a, b, c) => a + b + c,
+  err: () => {
+    throw new Error('Cls error.');
+  },
   constant: 42,
 };
-const allowedMethods = ['double', 'add'];
+const allowedMethods = ['double', 'add', 'err'];
 const allowedProperties = ['constant'];
 
 test('evaluate method', () => {
@@ -49,8 +52,8 @@ test('not an allowed method', () => {
       operator,
       params: [1, 2, 3],
     })
-  ).toThrow(
-    'Operator Error: _op must be called with one of the following: double, add. Received: {"_op.x":[1,2,3]} at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op must be called with one of the following: double, add, err. Received: {\\"_op.x\\":[1,2,3]} at locationId."`
   );
 });
 
@@ -77,8 +80,8 @@ test('not an allowed property', () => {
       operator,
       params: 'x',
     })
-  ).toThrow(
-    'Operator Error: _op must be called with one of the following values: constant. Received: {"_op":"x"} at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op must be called with one of the following values: constant. Received: {\\"_op\\":\\"x\\"} at locationId."`
   );
 });
 
@@ -92,7 +95,23 @@ test('method operator not called with a method', () => {
       operator,
       params: 123,
     })
-  ).toThrow(
-    'Operator Error: _op must be called with one of the following properties: constant; or methods: double, add. Received: 123 at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op must be called with one of the following properties: constant; or methods: double, add, err. Received: 123 at locationId."`
+  );
+});
+
+test('method Class error', () => {
+  expect(() =>
+    runClass({
+      allowedMethods,
+      allowedProperties,
+      Cls,
+      location,
+      operator,
+      method: 'err',
+      params: ['a'],
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op.err - Cls error. Received: {\\"_op.err\\":[\\"a\\"]} at locationId."`
   );
 });

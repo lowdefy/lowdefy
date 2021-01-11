@@ -32,8 +32,14 @@ function _operator(options) {
       )} at ${location}.`
     );
   }
-  if (Object.prototype.hasOwnProperty.call(operations, params.name)) {
-    return operations[params.name]({ ...options, location, params: params && params.params });
+  const [operator, method] = params.name.split('.');
+  if (Object.prototype.hasOwnProperty.call(operations, operator)) {
+    return operations[operator]({
+      ...options,
+      location,
+      params: params && params.params,
+      method,
+    });
   }
   throw new Error(
     `Operator Error: _operator - Invalid operator name. Received: ${JSON.stringify(

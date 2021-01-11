@@ -5,9 +5,12 @@ const operator = '_op';
 const Instance = {
   double: (a) => a * 2,
   add: (a, b, c) => a + b + c,
+  err: () => {
+    throw new Error('Cls error.');
+  },
   constant: 42,
 };
-const allowedMethods = ['double', 'add'];
+const allowedMethods = ['double', 'add', 'err'];
 const allowedProperties = ['constant'];
 
 test('evaluate method', () => {
@@ -72,8 +75,8 @@ test('instance is undefined', () => {
       operator,
       params: [undefined, 1, 2, 3],
     })
-  ).toThrow(
-    'Operator Error: _op takes an array with the first argument the instance on which to evaluate "add". Received: {"_op.add":[null,1,2,3]} at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op takes an array with the first argument the instance on which to evaluate \\"add\\". Received: {\\"_op.add\\":[null,1,2,3]} at locationId."`
   );
 });
 
@@ -87,8 +90,8 @@ test('instance method or property does not exist', () => {
       operator,
       params: [undefined, 1, 2, 3],
     })
-  ).toThrow(
-    'Operator Error: _op must be called with one of the following properties: constant; or methods: double, add. Received: {"_op.x":[null,1,2,3]} at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op must be called with one of the following properties: constant; or methods: double, add, err. Received: {\\"_op.x\\":[null,1,2,3]} at locationId."`
   );
 });
 
@@ -101,7 +104,22 @@ test('method undefined', () => {
       operator,
       params: [undefined, 1, 2, 3],
     })
-  ).toThrow(
-    'Operator Error: _op must be called with one of the following properties: constant; or methods: double, add. Received: {"_op.undefined":[null,1,2,3]} at locationId.'
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op must be called with one of the following properties: constant; or methods: double, add, err. Received: {\\"_op.undefined\\":[null,1,2,3]} at locationId."`
+  );
+});
+
+test('method Class error', () => {
+  expect(() =>
+    runInstance({
+      allowedMethods,
+      allowedProperties,
+      location,
+      operator,
+      method: 'err',
+      params: [Instance],
+    })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op.err - Cls error. Received: {\\"_op.err\\":[{\\"constant\\":42}]} at locationId."`
   );
 });

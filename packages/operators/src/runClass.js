@@ -27,7 +27,15 @@ const runClass = ({
         )}. Received: {"${operator}.${method}":${JSON.stringify(params)}} at ${location}.`
       );
     }
-    return Cls[method](...params);
+    try {
+      return Cls[method](...params);
+    } catch (e) {
+      throw new Error(
+        `Operator Error: ${operator}.${method} - ${
+          e.message
+        } Received: {"${operator}.${method}":${JSON.stringify(params)}} at ${location}.`
+      );
+    }
   }
   throw new Error(
     `Operator Error: ${operator} must be called with one of the following properties: ${allowedProperties.join(

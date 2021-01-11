@@ -27,8 +27,7 @@ import _gte from './gte';
 import _if from './if';
 import _if_none from './if_none';
 import _input from './input';
-import _json_parse from './json_parse';
-import _json_stringify from './json_stringify';
+import _json from './json';
 import _log from './log';
 import _lt from './lt';
 import _lte from './lte';
@@ -38,6 +37,7 @@ import _mql_expr from './mql_expr';
 import _mql_test from './mql_test';
 import _not from './not';
 import _nunjucks from './nunjucks';
+import _object from './object';
 import _operator from './operator';
 import _or from './or';
 import _product from './product';
@@ -68,8 +68,7 @@ export default {
   _if_none,
   _if,
   _input,
-  _json_parse,
-  _json_stringify,
+  _json,
   _log,
   _lt,
   _lte,
@@ -79,6 +78,7 @@ export default {
   _mql_test,
   _not,
   _nunjucks,
+  _object,
   _operator,
   _or,
   _product,
