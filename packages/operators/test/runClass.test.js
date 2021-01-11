@@ -1,37 +1,37 @@
-import runMethod from '../src/runMethod';
+import runClass from '../src/runClass';
 
 const location = 'locationId';
 const operator = '_op';
-const Fn = {
-  method: (a) => a,
-  methods: (a, b, c) => a + b + c,
-  property: 'propertyValue',
+const Cls = {
+  double: (a) => a * 2,
+  add: (a, b, c) => a + b + c,
+  constant: 42,
 };
-const allowedMethods = ['method', 'methods'];
-const allowedProperties = ['property'];
+const allowedMethods = ['double', 'add'];
+const allowedProperties = ['constant'];
 
 test('evaluate method', () => {
   expect(
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
-      method: 'method',
+      method: 'double',
       operator,
-      params: ['a'],
+      params: [2],
     })
-  ).toEqual('a');
+  ).toEqual(4);
 });
 
 test('evaluate method, spread properties', () => {
   expect(
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
-      method: 'methods',
+      method: 'add',
       operator,
       params: [1, 2, 3],
     })
@@ -40,59 +40,59 @@ test('evaluate method, spread properties', () => {
 
 test('not an allowed method', () => {
   expect(() =>
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
       method: 'x',
       operator,
       params: [1, 2, 3],
     })
   ).toThrow(
-    'Operator Error: _op must be called with one of the following: method, methods. Received: {"_op.x":[1,2,3]} at locationId.'
+    'Operator Error: _op must be called with one of the following: double, add. Received: {"_op.x":[1,2,3]} at locationId.'
   );
 });
 
 test('get property', () => {
   expect(
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
       operator,
-      params: 'property',
+      params: 'constant',
     })
-  ).toEqual('propertyValue');
+  ).toEqual(42);
 });
 
 test('not an allowed property', () => {
   expect(() =>
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
       operator,
       params: 'x',
     })
   ).toThrow(
-    'Operator Error: _op must be called with one of the following values: property. Received: {"_op":"x"} at locationId.'
+    'Operator Error: _op must be called with one of the following values: constant. Received: {"_op":"x"} at locationId.'
   );
 });
 
 test('method operator not called with a method', () => {
   expect(() =>
-    runMethod({
+    runClass({
       allowedMethods,
       allowedProperties,
-      Fn,
+      Cls,
       location,
       operator,
       params: 123,
     })
   ).toThrow(
-    'Operator Error: _op must be called with one of the following properties: property. Or Methods: method, methods. Received: 123 at locationId.'
+    'Operator Error: _op must be called with one of the following properties: constant; or methods: double, add. Received: 123 at locationId.'
   );
 });

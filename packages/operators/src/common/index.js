@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import _sum from './sum';
 import _and from './and';
 import _args from './args';
+import _array from './array';
 import _date from './date';
 import _divide from './divide';
 import _eq from './eq';
@@ -44,7 +44,9 @@ import _product from './product';
 import _random from './random';
 import _regex from './regex';
 import _state from './state';
+import _string from './string';
 import _subtract from './subtract';
+import _sum from './sum';
 import _type from './type';
 import _uri_decode from './uri_decode';
 import _uri_encode from './uri_encode';
@@ -53,9 +55,9 @@ import _yaml_parse from './yaml_parse';
 import _yaml_stringify from './yaml_stringify';
 
 export default {
-  _sum,
   _and,
   _args,
+  _array,
   _date,
   _divide,
   _eq,
@@ -83,7 +85,9 @@ export default {
   _random,
   _regex,
   _state,
+  _string,
   _subtract,
+  _sum,
   _type,
   _uri_decode,
   _uri_encode,

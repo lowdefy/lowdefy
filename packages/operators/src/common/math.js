@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import runMethod from '../runMethod';
+import runClass from '../runClass';
 
 const allowedProperties = ['E', 'LN10', 'LN2', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2', 'SQRT2'];
 const allowedMethods = [
@@ -55,10 +55,10 @@ const allowedMethods = [
 ];
 
 function _math({ params, location, method }) {
-  return runMethod({
+  return runClass({
     allowedMethods,
     allowedProperties,
-    Fn: Math,
+    Cls: Math,
     location,
     method,
     operator: '_math',

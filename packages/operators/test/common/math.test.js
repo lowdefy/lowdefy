@@ -2,7 +2,7 @@ import _math from '../../src/common/math';
 
 test('_math called with no method or params', () => {
   expect(() => _math({ location: 'locationId' })).toThrow(
-    'Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2. Or Methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: undefined at locationId.'
+    'Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2; or methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: undefined at locationId.'
   );
 });
 
@@ -68,12 +68,12 @@ test('_math valid methods', () => {
 
 test('_math invalid method', () => {
   expect(() => _math({ params: { method: 'X' }, location: 'locationId' })).toThrow(
-    `Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2. Or Methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: {"method":"X"} at locationId.`
+    `Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2; or methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: {"method":"X"} at locationId.`
   );
 });
 
 test('_math invalid method args', () => {
   expect(() => _math({ params: 'X', method: 'min', location: 'locationId' })).toThrow(
-    `Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2. Or Methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: "X" at locationId.`
+    `Operator Error: _math must be called with one of the following properties: E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2; or methods: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sinh, sqrt, tan, tanh, trunc. Received: "X" at locationId.`
   );
 });

@@ -1,9 +1,9 @@
 import { type } from '@lowdefy/helpers';
 
-const runMethods = ({
+const runClass = ({
   allowedMethods,
   allowedProperties,
-  Fn,
+  Cls,
   location,
   method,
   operator,
@@ -17,7 +17,7 @@ const runMethods = ({
         )}. Received: {"${operator}":${JSON.stringify(params)}} at ${location}.`
       );
     }
-    return Fn[params];
+    return Cls[params];
   }
   if (type.isString(method) && type.isArray(params)) {
     if (!allowedMethods.includes(method)) {
@@ -27,15 +27,15 @@ const runMethods = ({
         )}. Received: {"${operator}.${method}":${JSON.stringify(params)}} at ${location}.`
       );
     }
-    return Fn[method](...params);
+    return Cls[method](...params);
   }
   throw new Error(
     `Operator Error: ${operator} must be called with one of the following properties: ${allowedProperties.join(
       ', '
-    )}. Or Methods: ${allowedMethods.join(', ')}. Received: ${JSON.stringify(
+    )}; or methods: ${allowedMethods.join(', ')}. Received: ${JSON.stringify(
       params
     )} at ${location}.`
   );
 };
 
-export default runMethods;
+export default runClass;
