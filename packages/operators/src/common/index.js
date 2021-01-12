@@ -32,9 +32,7 @@ import _log from './log';
 import _lt from './lt';
 import _lte from './lte';
 import _math from './math';
-import _mql_aggregate from './mql_aggregate';
-import _mql_expr from './mql_expr';
-import _mql_test from './mql_test';
+import _mql from './mql';
 import _not from './not';
 import _nunjucks from './nunjucks';
 import _object from './object';
@@ -71,9 +69,7 @@ export default {
   _lt,
   _lte,
   _math,
-  _mql_aggregate,
-  _mql_expr,
-  _mql_test,
+  _mql,
   _not,
   _nunjucks,
   _object,

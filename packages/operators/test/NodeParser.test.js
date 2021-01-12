@@ -323,3 +323,11 @@ test('_yaml.stringify then _yaml.parse date', () => {
   expect(res.output).toEqual(value);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _mql operator', () => {
+  const input = { '_mql.test': { on: { _state: true }, test: { string: 'Some String' } } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual(true);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
