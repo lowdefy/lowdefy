@@ -542,7 +542,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-validator-option@npm:^7.12.1":
+"@babel/helper-validator-option@npm:^7.12.1, @babel/helper-validator-option@npm:^7.12.11":
   version: 7.12.11
   resolution: "@babel/helper-validator-option@npm:7.12.11"
   checksum: c0a861e95f4f24ed59535c28206f62e639404db873473886ec77b50fef53e21111b4093522838927b79be768a885ad2007086b2434353b9d2b89b891ca14028a
@@ -951,14 +951,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-block-scoping@npm:^7.12.1":
-  version: 7.12.11
-  resolution: "@babel/plugin-transform-block-scoping@npm:7.12.11"
+"@babel/plugin-transform-block-scoping@npm:^7.12.11":
+  version: 7.12.12
+  resolution: "@babel/plugin-transform-block-scoping@npm:7.12.12"
   dependencies:
     "@babel/helper-plugin-utils": ^7.10.4
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 6bc227619d7890724eec691e53859914a5420be3f8225cc8901dc839aed05697014a241e81125c541a8b5f7ac2ffc639aab645ec26484ffba696eab2cb7c8c02
+  checksum: b67415ddb08f187a67611a8af4ffb17b4f6ec8959602695181b347d7626ef0d2cbdfa78c2c192e15b1e613c3032bdb1030089ceafd753c9f138d81cd3f5631db
   languageName: node
   linkType: hard
 
@@ -1343,15 +1343,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.12.10":
-  version: 7.12.10
-  resolution: "@babel/preset-env@npm:7.12.10"
+"@babel/preset-env@npm:7.12.11":
+  version: 7.12.11
+  resolution: "@babel/preset-env@npm:7.12.11"
   dependencies:
     "@babel/compat-data": ^7.12.7
     "@babel/helper-compilation-targets": ^7.12.5
     "@babel/helper-module-imports": ^7.12.5
     "@babel/helper-plugin-utils": ^7.10.4
-    "@babel/helper-validator-option": ^7.12.1
+    "@babel/helper-validator-option": ^7.12.11
     "@babel/plugin-proposal-async-generator-functions": ^7.12.1
     "@babel/plugin-proposal-class-properties": ^7.12.1
     "@babel/plugin-proposal-dynamic-import": ^7.12.1
@@ -1380,7 +1380,7 @@ __metadata:
     "@babel/plugin-transform-arrow-functions": ^7.12.1
     "@babel/plugin-transform-async-to-generator": ^7.12.1
     "@babel/plugin-transform-block-scoped-functions": ^7.12.1
-    "@babel/plugin-transform-block-scoping": ^7.12.1
+    "@babel/plugin-transform-block-scoping": ^7.12.11
     "@babel/plugin-transform-classes": ^7.12.1
     "@babel/plugin-transform-computed-properties": ^7.12.1
     "@babel/plugin-transform-destructuring": ^7.12.1
@@ -1410,12 +1410,12 @@ __metadata:
     "@babel/plugin-transform-unicode-escapes": ^7.12.1
     "@babel/plugin-transform-unicode-regex": ^7.12.1
     "@babel/preset-modules": ^0.1.3
-    "@babel/types": ^7.12.10
+    "@babel/types": ^7.12.11
     core-js-compat: ^3.8.0
     semver: ^5.5.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 1fe64a0943dac09eb0f19cdea8af8a9906e2ae65cacef3ad33847a012392b92d51c3152697da906e8397a3a1b9fa773bd28c05e54091078099d0193abf8d7d66
+  checksum: 2811bbf697d86d2d7d972215cf07e4b153cb667eefa2ca3521e0eb34c20d3f2643c44ed31734e1db35675267f5a3de284b87e543132f075c28c979b34af6472c
   languageName: node
   linkType: hard
 
@@ -2749,7 +2749,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/nunjucks": 3.1.1
     ajv: 6.12.6
     ajv-errors: 1.0.1
@@ -2765,7 +2765,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/helpers": 3.1.1
     "@wojtekmaj/enzyme-adapter-react-17": 0.3.2
@@ -2805,7 +2805,7 @@ __metadata:
     "@ant-design/icons": 4.2.2
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/color": 3.1.1
@@ -2853,7 +2853,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/helpers": 3.1.1
@@ -2889,7 +2889,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/blocks-antd": 3.1.1
@@ -2932,7 +2932,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/helpers": 3.1.1
@@ -2972,7 +2972,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/ajv": 3.1.1
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/node-utils": 3.1.1
@@ -2998,7 +2998,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/helpers": 3.1.1
@@ -3042,7 +3042,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     babel-jest: 26.6.3
     jest: 26.6.3
     tinycolor2: 1.4.2
@@ -3055,7 +3055,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/operators": 3.1.1
     babel-jest: 26.6.3
@@ -3071,7 +3071,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     babel-jest: 26.6.3
     jest: 26.6.3
     moment: 2.29.1
@@ -3084,7 +3084,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/graphql": 3.1.1
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
@@ -3099,7 +3099,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/ajv": 3.1.1
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/node-utils": 3.1.1
@@ -3135,7 +3135,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     babel-jest: 26.6.3
     jest: 26.6.3
     jest-diff: 26.6.2
@@ -3150,7 +3150,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/helpers": 3.1.1
@@ -3207,7 +3207,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/helpers": 3.1.1
     babel-jest: 26.6.3
     jest: 26.6.3
@@ -3222,7 +3222,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/helpers": 3.1.1
     babel-jest: 26.6.3
     jest: 26.6.3
@@ -3237,7 +3237,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/nunjucks": 3.1.1
     babel-jest: 26.6.3
@@ -3286,7 +3286,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/graphql": 3.1.1
@@ -3317,7 +3317,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/graphql": 3.1.1
@@ -3347,7 +3347,7 @@ __metadata:
   dependencies:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
-    "@babel/preset-env": 7.12.10
+    "@babel/preset-env": 7.12.11
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.1.1
     "@lowdefy/graphql": 3.1.1
