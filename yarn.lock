@@ -2978,7 +2978,7 @@ __metadata:
     "@lowdefy/node-utils": 3.1.1
     "@lowdefy/nunjucks": 3.1.1
     ajv: 6.12.6
-    axios: 0.21.0
+    axios: 0.21.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
@@ -3004,7 +3004,7 @@ __metadata:
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/node-utils": 3.1.1
     apollo-server-express: 2.19.0
-    axios: 0.21.0
+    axios: 0.21.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     chalk: 4.1.0
@@ -5862,15 +5862,6 @@ __metadata:
   version: 4.1.1
   resolution: "axe-core@npm:4.1.1"
   checksum: cd00c2d359f118bb2631a0e018a5d9183996488aec5dd52c7cea2c96613725c388268f0b01d22f594271837d5f26b586a1e79e302578527fe28e71ea433c0660
-  languageName: node
-  linkType: hard
-
-"axios@npm:0.21.0":
-  version: 0.21.0
-  resolution: "axios@npm:0.21.0"
-  dependencies:
-    follow-redirects: ^1.10.0
-  checksum: 4b08ecab39040948c03cae5fa726fdcf8bc299679818179c146e779a922ce887fad9261d82ad57ad1a3aa1fcba3612f14b490fdfa2cd28fa23c190fd48517f5f
   languageName: node
   linkType: hard
 
