@@ -297,3 +297,29 @@ test('_json.stringify then _json.parse date', () => {
   expect(res.output).toEqual(value);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_yaml.stringify then _yaml.parse', () => {
+  const value = {
+    a: [
+      { b: 1, c: false, d: new Date(0) },
+      { b: 2, c: true, d: new Date(1) },
+    ],
+    e: 'null',
+    f: 'undefined',
+    g: 0,
+  };
+  const input = { x: { '_yaml.parse': [{ '_yaml.stringify': [value] }] } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ x: value });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('_yaml.stringify then _yaml.parse date', () => {
+  const value = new Date();
+  const input = { '_yaml.parse': [{ '_yaml.stringify': [value] }] };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual(value);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

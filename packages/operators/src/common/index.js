@@ -51,8 +51,7 @@ import _type from './type';
 import _uri_decode from './uri_decode';
 import _uri_encode from './uri_encode';
 import _url_query from './url_query';
-import _yaml_parse from './yaml_parse';
-import _yaml_stringify from './yaml_stringify';
+import _yaml from './yaml';
 
 export default {
   _and,
@@ -92,6 +91,5 @@ export default {
   _uri_decode,
   _uri_encode,
   _url_query,
-  _yaml_parse,
-  _yaml_stringify,
+  _yaml,
 };
