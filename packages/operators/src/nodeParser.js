@@ -45,34 +45,32 @@ class NodeParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const reviver = (key, value) => {
-      if (type.isObject(value)) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const key of Object.keys(value)) {
-          const [op, method] = key.split('.');
-          try {
-            if (!type.isUndefined(this.operations[op])) {
-              const res = this.operations[op]({
-                args,
-                arrayIndices: this.arrayIndices,
-                config: this.config,
-                env: 'node',
-                input: this.input,
-                location,
-                lowdefyGlobal: this.lowdefyGlobal,
-                method,
-                operations: this.operations,
-                params: value[key],
-                secrets: this.secrets,
-                state: this.state,
-                urlQuery: this.urlQuery,
-              });
-              return res;
-            }
-          } catch (e) {
-            errors.push(e);
-            return null;
+    const reviver = (_, value) => {
+      if (type.isObject(value) && Object.keys(value).length === 1) {
+        const key = Object.keys(value)[0];
+        const [op, method] = key.split('.');
+        try {
+          if (!type.isUndefined(this.operations[op])) {
+            const res = this.operations[op]({
+              args,
+              arrayIndices: this.arrayIndices,
+              config: this.config,
+              env: 'node',
+              input: this.input,
+              location,
+              lowdefyGlobal: this.lowdefyGlobal,
+              method,
+              operations: this.operations,
+              params: value[key],
+              secrets: this.secrets,
+              state: this.state,
+              urlQuery: this.urlQuery,
+            });
+            return res;
           }
+        } catch (e) {
+          errors.push(e);
+          return null;
         }
       }
       return value;

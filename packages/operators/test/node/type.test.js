@@ -92,7 +92,7 @@ test('_type with non-string on', () => {
 });
 
 test('_type with unknown type', () => {
-  const input = { _type: 'strings', key: 'string' };
+  const input = { _type: 'strings' };
   const parser = new NodeParser({ state, arrayIndices: [] });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);

@@ -40,38 +40,36 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const reviver = (key, value) => {
-      if (type.isObject(value)) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const key of Object.keys(value)) {
-          const [op, method] = key.split('.');
-          try {
-            if (!type.isUndefined(this.operations[op])) {
-              const res = this.operations[op]({
-                actionLog: this.context.actionLog,
-                args,
-                arrayIndices,
-                config: this.context.config,
-                context: this.context,
-                contexts: this.contexts,
-                env: 'web',
-                input: this.context.input,
-                location: location ? applyArrayIndices(arrayIndices, location) : null,
-                lowdefyGlobal: this.context.lowdefyGlobal,
-                menus: this.context.menus,
-                method,
-                operations: this.operations,
-                params: value[key],
-                requests: this.context.requests,
-                state: this.context.state,
-                urlQuery: this.context.urlQuery,
-              });
-              return res;
-            }
-          } catch (e) {
-            errors.push(e);
-            return null;
+    const reviver = (_, value) => {
+      if (type.isObject(value) && Object.keys(value).length === 1) {
+        const key = Object.keys(value)[0];
+        const [op, method] = key.split('.');
+        try {
+          if (!type.isUndefined(this.operations[op])) {
+            const res = this.operations[op]({
+              actionLog: this.context.actionLog,
+              args,
+              arrayIndices,
+              config: this.context.config,
+              context: this.context,
+              contexts: this.contexts,
+              env: 'web',
+              input: this.context.input,
+              location: location ? applyArrayIndices(arrayIndices, location) : null,
+              lowdefyGlobal: this.context.lowdefyGlobal,
+              menus: this.context.menus,
+              method,
+              operations: this.operations,
+              params: value[key],
+              requests: this.context.requests,
+              state: this.context.state,
+              urlQuery: this.context.urlQuery,
+            });
+            return res;
           }
+        } catch (e) {
+          errors.push(e);
+          return null;
         }
       }
       return value;

@@ -120,6 +120,14 @@ test('parse undefined', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
+test('operator input with more than one key is ignored.', () => {
+  const input = { a: { _state: 'string', key: 'value' } };
+  const parser = new WebParser({ context, contexts });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: { _state: 'string', key: 'value' } });
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
 test('parse args not an object', () => {
   const input = { _state: 'string' };
   const parser = new WebParser({ context, contexts });

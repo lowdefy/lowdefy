@@ -20,6 +20,7 @@ test('parse object', () => {
   expect(res.output).toEqual({ a: 'Some String' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
 test('parse array', () => {
   const input = [{ _state: 'string' }];
   const parser = new NodeParser({ state });
@@ -73,6 +74,14 @@ test('parse undefined', () => {
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toBe(undefined);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('operator input with more than one key is ignored.', () => {
+  const input = { a: { _state: 'string', key: 'value' } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual({ a: { _state: 'string', key: 'value' } });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
