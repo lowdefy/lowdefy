@@ -3193,7 +3193,7 @@ __metadata:
     eslint-import-resolver-node: 0.3.4
     eslint-plugin-import: 2.22.1
     eslint-plugin-jsx-a11y: 6.4.1
-    eslint-plugin-prettier: 3.2.0
+    eslint-plugin-prettier: 3.3.1
     eslint-plugin-react: 7.21.5
     eslint-plugin-react-hooks: 4.2.0
     lerna: 3.22.1
@@ -8972,15 +8972,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:3.2.0":
-  version: 3.2.0
-  resolution: "eslint-plugin-prettier@npm:3.2.0"
+"eslint-plugin-prettier@npm:3.3.1":
+  version: 3.3.1
+  resolution: "eslint-plugin-prettier@npm:3.3.1"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
     eslint: ">=5.0.0"
     prettier: ">=1.13.0"
-  checksum: a69ac31b1a39cf54b461b48a05928aa8c7535a87e097e2239a7e9ac22e156c93a6f13447e2ae482b466ae2b89c29c75ecc00137faca6d4ebb1182a81265a4708
+  peerDependenciesMeta:
+    eslint-config-prettier:
+      optional: true
+  checksum: cf35b0f0e9ef30782fe82913db92f6874181723d77f0c4613f9d69c87069f73d0dc420ef850ebc844613c00a8e87eb9762a36b7d028334c5c7b091763118347b
   languageName: node
   linkType: hard
 
