@@ -38,7 +38,7 @@
   "dependencies": {
     "@lowdefy/graphql": "3.1.1",
     "@lowdefy/node-utils": "3.1.1",
-    "apollo-server-lambda": "2.19.0",
+    "apollo-server-lambda": "2.19.1",
     "graphql": "15.4.0"
   },
   "devDependencies": {
