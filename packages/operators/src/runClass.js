@@ -10,21 +10,23 @@ const runClass = ({
   params,
 }) => {
   if (type.isNone(method) && type.isString(params)) {
-    if (!allowedProperties.includes(params)) {
+    if (!allowedProperties.has(params)) {
       throw new Error(
-        `Operator Error: ${operator} must be called with one of the following values: ${allowedProperties.join(
-          ', '
-        )}. Received: {"${operator}":${JSON.stringify(params)}} at ${location}.`
+        `Operator Error: ${operator} must be called with one of the following values: ${[
+          ...allowedProperties,
+        ].join(', ')}. Received: {"${operator}":${JSON.stringify(params)}} at ${location}.`
       );
     }
     return Cls[params];
   }
   if (type.isString(method) && type.isArray(params)) {
-    if (!allowedMethods.includes(method)) {
+    if (!allowedMethods.has(method)) {
       throw new Error(
-        `Operator Error: ${operator} must be called with one of the following: ${allowedMethods.join(
-          ', '
-        )}. Received: {"${operator}.${method}":${JSON.stringify(params)}} at ${location}.`
+        `Operator Error: ${operator} must be called with one of the following: ${[
+          ...allowedMethods,
+        ].join(', ')}. Received: {"${operator}.${method}":${JSON.stringify(
+          params
+        )}} at ${location}.`
       );
     }
     try {
@@ -38,9 +40,9 @@ const runClass = ({
     }
   }
   throw new Error(
-    `Operator Error: ${operator} must be called with one of the following properties: ${allowedProperties.join(
-      ', '
-    )}; or methods: ${allowedMethods.join(', ')}. Received: ${JSON.stringify(
+    `Operator Error: ${operator} must be called with one of the following properties: ${[
+      ...allowedProperties,
+    ].join(', ')}; or methods: ${[...allowedMethods].join(', ')}. Received: ${JSON.stringify(
       params
     )} at ${location}.`
   );

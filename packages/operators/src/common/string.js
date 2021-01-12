@@ -17,8 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import runInstance from '../runInstance';
 
-const allowedProperties = ['length'];
-const allowedMethods = [
+const allowedProperties = new Set(['length']);
+const allowedMethods = new Set([
   'charAt',
   'charCodeAt',
   'concat',
@@ -47,7 +47,7 @@ const allowedMethods = [
   'trim',
   'trimEnd',
   'trimStart',
-];
+]);
 
 function _string({ params, location, method }) {
   if (!type.isArray(params) || !type.isString(params[0])) {

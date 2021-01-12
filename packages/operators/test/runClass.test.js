@@ -10,8 +10,8 @@ const Cls = {
   },
   constant: 42,
 };
-const allowedMethods = ['double', 'add', 'err'];
-const allowedProperties = ['constant'];
+const allowedMethods = new Set(['double', 'add', 'err']);
+const allowedProperties = new Set(['constant']);
 
 test('evaluate method', () => {
   expect(

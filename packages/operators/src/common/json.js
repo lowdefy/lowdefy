@@ -30,7 +30,7 @@ function stringify(input) {
 }
 
 const Cls = { parse, stringify };
-const allowedMethods = ['parse', 'stringify'];
+const allowedMethods = new Set(['parse', 'stringify']);
 
 function _json({ params, location, method }) {
   return runClass({

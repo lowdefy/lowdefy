@@ -17,8 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import runInstance from '../runInstance';
 
-const allowedProperties = ['length'];
-const allowedMethods = [
+const allowedProperties = new Set(['length']);
+const allowedMethods = new Set([
   'concat',
   'copyWithin',
   // 'every',
@@ -45,8 +45,8 @@ const allowedMethods = [
   'splice',
   'toString',
   'unshift',
-];
-const instanceReturnType = ['pop', 'push', 'shift', 'splice', 'unshift'];
+]);
+const instanceReturnType = new Set(['pop', 'push', 'shift', 'splice', 'unshift']);
 
 function _array({ params, location, method }) {
   if (!type.isArray(params) || !type.isArray(params[0])) {
@@ -56,7 +56,7 @@ function _array({ params, location, method }) {
       )}} at ${location}.`
     );
   }
-  if (instanceReturnType.includes(method)) {
+  if (instanceReturnType.has(method)) {
     runInstance({
       allowedMethods,
       allowedProperties,

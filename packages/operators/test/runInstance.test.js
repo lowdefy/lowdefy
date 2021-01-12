@@ -10,8 +10,8 @@ const Instance = {
   },
   constant: 42,
 };
-const allowedMethods = ['double', 'add', 'err'];
-const allowedProperties = ['constant'];
+const allowedMethods = new Set(['double', 'add', 'err']);
+const allowedProperties = new Set(['constant']);
 
 test('evaluate method', () => {
   expect(
@@ -53,7 +53,7 @@ test('evaluate get property from key', () => {
 });
 
 test('instance is null', () => {
-  expect(
+  expect(() =>
     runInstance({
       allowedMethods,
       allowedProperties,
@@ -62,7 +62,9 @@ test('instance is null', () => {
       operator,
       params: [null, 1, 2, 3],
     })
-  ).toEqual(null);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _op takes an array with the first argument the instance on which to evaluate \\"add\\". Received: {\\"_op.add\\":[null,1,2,3]} at locationId."`
+  );
 });
 
 test('instance is undefined', () => {

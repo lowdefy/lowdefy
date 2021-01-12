@@ -18,8 +18,8 @@ import { type } from '@lowdefy/helpers';
 import runInstance from '../runInstance';
 import runClass from '../runClass';
 
-const allowedInstanceMethods = ['hasOwnProperty'];
-const allowedMethods = ['keys', 'values', 'hasOwnProperty'];
+const allowedInstanceMethods = new Set(['hasOwnProperty']);
+const allowedMethods = new Set(['keys', 'values', 'hasOwnProperty']);
 
 function _object({ params, location, method }) {
   if (!type.isArray(params) || !type.isObject(params[0])) {
@@ -29,10 +29,10 @@ function _object({ params, location, method }) {
       )}} at ${location}.`
     );
   }
-  if (allowedInstanceMethods.includes(method)) {
+  if (allowedInstanceMethods.has(method)) {
     return runInstance({
       allowedMethods: allowedInstanceMethods,
-      allowedProperties: [],
+      allowedProperties: new Set(),
       location,
       method,
       operator: '_object',
@@ -41,7 +41,7 @@ function _object({ params, location, method }) {
   }
   return runClass({
     allowedMethods,
-    allowedProperties: [],
+    allowedProperties: new Set(),
     location,
     Cls: Object,
     method,

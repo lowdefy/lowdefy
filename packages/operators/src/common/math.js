@@ -16,8 +16,17 @@
 
 import runClass from '../runClass';
 
-const allowedProperties = ['E', 'LN10', 'LN2', 'LOG10E', 'LOG2E', 'PI', 'SQRT1_2', 'SQRT2'];
-const allowedMethods = [
+const allowedProperties = new Set([
+  'E',
+  'LN10',
+  'LN2',
+  'LOG10E',
+  'LOG2E',
+  'PI',
+  'SQRT1_2',
+  'SQRT2',
+]);
+const allowedMethods = new Set([
   'abs',
   'acos',
   'acosh',
@@ -52,7 +61,7 @@ const allowedMethods = [
   'tan',
   'tanh',
   'trunc',
-];
+]);
 
 function _math({ params, location, method }) {
   return runClass({
