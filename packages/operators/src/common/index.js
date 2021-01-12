@@ -48,8 +48,7 @@ import _string from './string';
 import _subtract from './subtract';
 import _sum from './sum';
 import _type from './type';
-import _uri_decode from './uri_decode';
-import _uri_encode from './uri_encode';
+import _uri from './uri';
 import _url_query from './url_query';
 import _yaml from './yaml';
 
@@ -88,8 +87,7 @@ export default {
   _subtract,
   _sum,
   _type,
-  _uri_decode,
-  _uri_encode,
+  _uri,
   _url_query,
   _yaml,
 };

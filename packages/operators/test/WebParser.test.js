@@ -184,16 +184,16 @@ test('parse _base64.decode operator', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse _uri_encode operator', () => {
-  const input = { a: { _uri_encode: 'ABC abc 123' } };
+test('parse _uri.encode operator', () => {
+  const input = { a: { '_uri.encode': ['ABC abc 123'] } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 'ABC%20abc%20123' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse _uri_decode operator', () => {
-  const input = { a: { _uri_decode: 'ABC%20abc%20123' } };
+test('parse _uri.decode operator', () => {
+  const input = { a: { '_uri.decode': ['ABC%20abc%20123'] } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 'ABC abc 123' });
