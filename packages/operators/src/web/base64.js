@@ -15,17 +15,35 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import runClass from '../runClass';
 
-function _base64_decode({ params, location }) {
-  if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _base64_decode takes an string type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+function decode(input) {
+  if (!type.isString(input)) {
+    throw new Error('Input must be a string type.');
   }
-  const buff = Buffer.from(params, 'base64');
-  return buff.toString('utf8');
+  return atob(input);
 }
 
-export default _base64_decode;
+function encode(input) {
+  if (!type.isString(input)) {
+    throw new Error('Input must be a string type.');
+  }
+  return btoa(input);
+}
+
+const Cls = { encode, decode };
+const allowedMethods = new Set(['encode', 'decode']);
+
+function _base64({ params, location, method }) {
+  return runClass({
+    allowedMethods,
+    allowedProperties: new Set([]),
+    Cls,
+    location,
+    method,
+    operator: '_base64',
+    params,
+  });
+}
+
+export default _base64;

@@ -14,39 +14,38 @@
   limitations under the License.
 */
 
-import YAML from 'js-yaml';
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
-function parse(input) {
+function decode(input) {
   if (!type.isString(input)) {
     throw new Error('Input must be a string type.');
   }
-  if (input === 'undefined') return undefined;
-  const loaded = YAML.safeLoad(input);
-  return serializer.deserialize(loaded);
+  const buff = Buffer.from(input, 'base64');
+  return buff.toString('utf8');
 }
 
-function stringify(input) {
-  return YAML.safeDump(serializer.serialize(input, { isoStringDates: true }), {
-    sortKeys: true,
-    noRefs: true,
-  });
+function encode(input) {
+  if (!type.isString(input)) {
+    throw new Error('Input must be a string type.');
+  }
+  const buff = Buffer.from(input, 'utf8');
+  return buff.toString('base64');
 }
 
-const Cls = { parse, stringify };
-const allowedMethods = new Set(['parse', 'stringify']);
+const Cls = { encode, decode };
+const allowedMethods = new Set(['encode', 'decode']);
 
-function _yaml({ params, location, method }) {
+function _base64({ params, location, method }) {
   return runClass({
     allowedMethods,
     allowedProperties: new Set([]),
     Cls,
     location,
     method,
-    operator: '_yaml',
+    operator: '_base64',
     params,
   });
 }
 
-export default _yaml;
+export default _base64;

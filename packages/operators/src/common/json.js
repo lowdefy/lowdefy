@@ -35,7 +35,7 @@ const allowedMethods = new Set(['parse', 'stringify']);
 function _json({ params, location, method }) {
   return runClass({
     allowedMethods,
-    allowedProperties: [],
+    allowedProperties: new Set([]),
     Cls,
     location,
     method,

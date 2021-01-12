@@ -117,16 +117,16 @@ test('parse js dates, do not modify input', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse _base64_encode operator', () => {
-  const input = { a: { _base64_encode: 'A string value' } };
+test('parse _base64.encode operator', () => {
+  const input = { a: { '_base64.encode': ['A string value'] } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse _base64_decode operator', () => {
-  const input = { a: { _base64_decode: 'QSBzdHJpbmcgdmFsdWU=' } };
+test('parse _base64.decode operator', () => {
+  const input = { a: { '_base64.decode': ['QSBzdHJpbmcgdmFsdWU='] } };
   const parser = new NodeParser({ state });
   const res = parser.parse({ input, args, location: 'locationId' });
   expect(res.output).toEqual({ a: 'A string value' });

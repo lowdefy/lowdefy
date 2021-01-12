@@ -15,13 +15,11 @@
 */
 
 import _secret from './secret';
-import _base64_decode from './base64_decode';
-import _base64_encode from './base64_encode';
+import _base64 from './base64';
 import _uuid from './uuid';
 
 export default {
-  _base64_decode,
-  _base64_encode,
+  _base64,
   _secret,
   _uuid,
 };

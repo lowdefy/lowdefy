@@ -99,7 +99,7 @@ test('_yaml.parse non string', () => {
   expect(() =>
     yaml({ params: [123], location: 'locationId', method: 'parse' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - Operator Error: _yaml_parse takes a string as input. Received: 123 at http://localhost/. Received: {\\"_yaml.parse\\":[123]} at locationId."`
+    `"Operator Error: _yaml.parse - Input must be a string type. Received: {\\"_yaml.parse\\":[123]} at locationId."`
   );
 });
 
