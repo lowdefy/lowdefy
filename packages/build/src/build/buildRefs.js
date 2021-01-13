@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import * as nodePath from 'path';
 import { get, type } from '@lowdefy/helpers';
-import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
+import { getFileExtension, getFileSubExtension, readFile } from '@lowdefy/node-utils';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 import JSON5 from 'json5';
 import YAML from 'js-yaml';
@@ -31,19 +32,13 @@ function getRefPath(refDefinition) {
   return null;
 }
 
-function getRefVars(refDefinition) {
-  if (type.isObject(refDefinition) && refDefinition.vars) {
-    return refDefinition.vars;
-  }
-  return {};
-}
-
 function makeRefDefinition(refDefinition) {
   return {
     // uuid is overkill but it is already in bundle
     id: uuid(),
     path: getRefPath(refDefinition),
-    vars: getRefVars(refDefinition),
+    vars: get(refDefinition, 'vars', { default: {} }),
+    transformer: get(refDefinition, 'transformer'),
     original: refDefinition,
   };
 }
@@ -146,12 +141,18 @@ class RefBuilder {
         );
       }
       // eslint-disable-next-line no-await-in-loop
-      parsedFiles[refDef.id] = await this.recursiveParseFile({
+      let parsedFile = await this.recursiveParseFile({
         path: refDef.path,
         // Parse vars before passing down to parse new file
         vars: JSON.parse(JSON.stringify(refDef.vars), refReviver.bind({ parsedFiles, vars })),
         count: count + 1,
       });
+      if (refDef.transformer) {
+        const transformerFile = await readFile(nodePath.resolve(process.cwd(), refDef.transformer));
+        const transformerFn = eval(transformerFile);
+        parsedFile = transformerFn(parsedFile);
+      }
+      parsedFiles[refDef.id] = parsedFile;
     }
     return JSON.parse(JSON.stringify(fileContentBuiltRefs), refReviver.bind({ parsedFiles, vars }));
   }
