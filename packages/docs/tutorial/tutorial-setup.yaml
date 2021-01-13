@@ -1,0 +1,115 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-setup
+    pageTitle: Deploy your app
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-editing-page
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-setup-content-1.md
+      - id: alert1
+        type: Alert
+        properties:
+          type: info
+          showIcon: false
+          message: If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-setup-content-2.md
+      - id: alert2
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
+      - id: md3
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-setup-content-3.md
+      - id: example1
+        type: Box
+        blocks:
+          - id: example1_page
+            type: PageHeaderMenu
+            properties:
+              style:
+                minHeight: 300px
+              menus:
+                - id: default
+                  links:
+                    - id: examples
+                      type: MenuLink
+                      url: https://lowdefy.com/examples
+                      properties:
+                        title: Examples
+                        icon: AppstoreOutlined
+                    - id: docs
+                      type: MenuLink
+                      url: https://docs.lowdefy.com
+                      properties:
+                        title: Docs
+                        icon: ReadOutlined
+            blocks:
+              - id: example1_content_card
+                type: Card
+                layout:
+                  size: 800
+                areas:
+                  content:
+                    blocks:
+                      - id: example1_content
+                        type: Result
+                        properties:
+                          title: Welcome to your Lowdefy app
+                          subTitle: We are excited to see what you are going to build
+                          status: success
+                          icon:
+                            name: HeartTwoTone
+                            color: '#f00'
+                        areas:
+                          extra:
+                            blocks:
+                              - id: example1_docs_button
+                                type: Button
+                                properties:
+                                  size: large
+                                  title: Let's build something
+                                actions:
+                                  onClick:
+                                    - id: example1_link_to_docs
+                                      type: Link
+                                      params:
+                                        url: https://docs.lowdefy.com
+                                        newWindow: true
+                  footer:
+                    blocks:
+                      - id: example1_footer
+                        type: Paragraph
+                        properties:
+                          type: secondary
+                          content: |
+                            Made by a Lowdefy 🤖
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Introduction
+            previous_page_id: introduction
+            next_page_title: Editing a page
+            next_page_id: tutorial-editing-page

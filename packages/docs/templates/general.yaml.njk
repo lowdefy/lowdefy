@@ -1,0 +1,38 @@
+id: {{ pageId }}
+type: PageSiderMenu
+properties:
+  title: {{ pageTitle }}
+  header:
+    theme: light
+  sider:
+    width: 256px
+  layout:
+    style:
+      background: '#FFFFFF'
+  {% if section %}
+  breadcrumb:
+    list:
+      - {{ section }}
+      - {{ pageTitle }}
+  {% endif %}
+areas:
+  content:
+    justify: center
+    blocks:
+      - id: max_width
+        type: Box
+        layout:
+          size: 800
+          shrink: 1
+        blocks:
+          - id: page_title
+            type: Title
+            properties:
+              content:
+                _var: pageTitle
+          - id: content
+            type: Box
+            layout:
+              contentGutter: 16
+            blocks:
+              _var: content

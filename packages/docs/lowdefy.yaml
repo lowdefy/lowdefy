@@ -1,0 +1,182 @@
+version: '3.1.1'
+
+global:
+  all_icons:
+    _ref: blocks/all_icons.yaml
+  settings_input_layout:
+    span: 23
+    sm:
+      span: 23
+
+menus:
+  - id: default
+    links:
+      - id: introduction
+        type: MenuLink
+        pageId: introduction
+        properties:
+          title: Introduction
+          icon: CoffeeOutlined
+      - id: tutorial
+        type: MenuGroup
+        properties:
+          title: Tutorial
+          icon: RocketOutlined
+        links:
+          - id: tutorial-setup
+            type: MenuLink
+            pageId: tutorial-setup
+            properties:
+              title: Deploy your app
+          - id: tutorial-editing-page
+            type: MenuLink
+            pageId: tutorial-editing-page
+            properties:
+              title: Editing a page
+          - id: tutorial-development-server
+            type: MenuLink
+            pageId: tutorial-development-server
+            properties:
+              title: Development server
+          - id: tutorial-create-page
+            type: MenuLink
+            pageId: tutorial-create-page
+            properties:
+              title: Creating a page
+          - id: tutorial-add-blocks
+            type: MenuLink
+            pageId: tutorial-add-blocks
+            properties:
+              title: Making a booking form
+          - id: tutorial-actions-operators
+            type: MenuLink
+            pageId: tutorial-actions-operators
+            properties:
+              title: Interactive pages
+          - id: tutorial-requests
+            type: MenuLink
+            pageId: tutorial-requests
+            properties:
+              title: Saving data
+      - id: concepts
+        type: MenuGroup
+        properties:
+          title: Concepts
+          icon: BulbOutlined
+        links:
+          - id: layout
+            type: MenuLink
+            pageId: layout
+            properties:
+              title: Layout
+      - id: blocks_input
+        type: MenuGroup
+        properties:
+          title: Input Blocks
+          icon: FormOutlined
+        links:
+          - id: TextInput
+            type: MenuLink
+            pageId: TextInput
+      - id: blocks_display
+        type: MenuGroup
+        properties:
+          title: Display Blocks
+          icon: PictureOutlined
+        links:
+          - id: Button
+            type: MenuLink
+            pageId: Button
+      - id: connections
+        type: MenuGroup
+        properties:
+          title: Connections
+          icon: ApiOutlined
+        links:
+          - id: AWSS3
+            type: MenuLink
+            pageId: AWSS3
+            properties:
+              title: AWS S3
+          - id: AxiosHttp
+            type: MenuLink
+            pageId: AxiosHttp
+            properties:
+              title: Axios HTTP
+          - id: MongoDB
+            type: MenuLink
+            pageId: MongoDB
+      - id: actions
+        type: MenuGroup
+        properties:
+          title: Actions
+          icon: ThunderboltOutlined
+        links:
+          - id: CallMethod
+            type: MenuLink
+            pageId: CallMethod
+          - id: Link
+            type: MenuLink
+            pageId: Link
+          - id: MessageAction
+            type: MenuLink
+            pageId: MessageAction # Clash with Message block
+            properties:
+              title: Message
+          - id: NotificationAction
+            type: MenuLink
+            pageId: NotificationAction # Clash with Notification block
+            properties:
+              title: Notification
+          - id: Request
+            type: MenuLink
+            pageId: Request
+          - id: Reset
+            type: MenuLink
+            pageId: Reset
+          - id: ScrollTo
+            type: MenuLink
+            pageId: ScrollTo
+          - id: SetGlobal
+            type: MenuLink
+            pageId: SetGlobal
+          - id: SetState
+            type: MenuLink
+            pageId: SetState
+          - id: Validate
+            type: MenuLink
+            pageId: Validate
+
+pages:
+  - _ref: introduction.yaml
+  - _ref: tutorial/tutorial-setup.yaml
+  - _ref: tutorial/tutorial-editing-page.yaml
+  - _ref: tutorial/tutorial-development-server.yaml
+  - _ref: tutorial/tutorial-create-page.yaml
+  - _ref: tutorial/tutorial-create-page-config.yaml
+  - _ref: tutorial/tutorial-add-blocks.yaml
+  - _ref: tutorial/tutorial-add-blocks-config.yaml
+  - _ref: tutorial/tutorial-actions-operators.yaml
+  - _ref: tutorial/tutorial-actions-operators-config.yaml
+  - _ref: tutorial/tutorial-requests.yaml
+
+  - _ref: concepts/layout.yaml
+
+  - _ref: blocks/input/TextInput.yaml
+
+  - _ref: blocks/display/Button.yaml
+
+  - _ref: connections/AWSS3.yaml
+  - _ref: connections/AxiosHttp.yaml
+  - _ref: connections/MongoDB.yaml
+
+  - _ref: actions/CallMethod.yaml
+  - _ref: actions/Link.yaml
+  - _ref: actions/Message.yaml
+  - _ref: actions/Notification.yaml
+  - _ref: actions/Request.yaml
+  - _ref: actions/Reset.yaml
+  - _ref: actions/ScrollTo.yaml
+  - _ref: actions/SetGlobal.yaml
+  - _ref: actions/SetState.yaml
+  - _ref: actions/Validate.yaml

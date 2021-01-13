@@ -1,0 +1,38 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-requests
+    pageTitle: Saving data
+    section: Tutorial
+    # prefetchPages: []
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-requests-content-1.md
+      - id: alert1
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you started from the project template.
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-requests-content-2.md
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Interactive pages
+            previous_page_id: tutorial-actions-operators
+            next_page_title: ''
+            next_page_id: ''
+

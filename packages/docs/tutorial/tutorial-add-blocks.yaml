@@ -1,0 +1,97 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-add-blocks
+    pageTitle: Making a booking form
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-actions-operators
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-add-blocks-content-1.md
+      - id: example1
+        type: PageHeaderMenu
+        layout:
+          contentJustify: center
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links: []
+        blocks:
+          - id: example1_content_card
+            type: Card
+            layout:
+              contentGutter: 16
+              size: 600
+            blocks:
+              - id: example1_page_heading
+                type: Title
+                properties:
+                  content: Making a booking form
+                  level: 3
+              - id: example1_meeting_name
+                type: TextInput
+                properties:
+                  title: Meeting name
+              - id: example1_meeting_room
+                type: Selector
+                properties:
+                  title: Meeting room
+                  options:
+                    - Red Room
+                    - Blue Room
+                    - Green Room
+                    - Boardroom
+              - id: example1_date
+                type: DateSelector
+                properties:
+                  title: Date
+              - id: example1_start_time
+                type: DateTimeSelector
+                properties:
+                  title: Start time
+              - id: example1_end_time
+                type: DateTimeSelector
+                properties:
+                  title: End time
+              - id: example1_reset_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Reset
+                  block: true
+                  type: default
+                  icon: ClearOutlined
+              - id: example1_submit_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Submit
+                  block: true
+                  type: primary
+                  icon: SaveOutlined
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-add-blocks-content-2.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Creating a page
+            previous_page_id: tutorial-create-page
+            next_page_title: Interactive pages
+            next_page_id: tutorial-actions-operators

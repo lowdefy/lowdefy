@@ -1,0 +1,54 @@
+id: nav_buttons
+type: Box
+style:
+  paddingTop: 60px
+  paddingBottom: 80px
+layout:
+  contentGutter: 16
+blocks:
+  - id: previous_button
+    type: Button
+    layout:
+      span: 12
+    properties:
+      block: true
+      hideActionLoading: true
+      icon: ArrowLeftOutlined
+      size: large
+      title:
+        _var: previous_page_title
+      type: default
+    actions:
+      onClick:
+        - id: link_back
+          type: Link
+          params:
+            pageId:
+              _var: previous_page_id
+        - id: scroll_to_top
+          type: ScrollTo
+          params:
+            top: 0
+  - id: next_button
+    type: Button
+    layout:
+      span: 12
+    properties:
+      block: true
+      hideActionLoading: true
+      icon: ArrowRightOutlined
+      size: large
+      title:
+        _var: next_page_title
+      type: default
+    actions:
+      onClick:
+        - id: link_forward
+          type: Link
+          params:
+            pageId:
+              _var: next_page_id
+        - id: scroll_to_top
+          type: ScrollTo
+          params:
+            top: 0

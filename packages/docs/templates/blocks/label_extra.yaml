@@ -1,0 +1,12 @@
+span: 
+  _if:
+    test:
+      _eq:
+        - _var: span
+        - null
+    then: 8
+    else:
+      _var: span
+align: right
+extra:
+  _var: extra

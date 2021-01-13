@@ -1,0 +1,33 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: introduction
+    pageTitle: Introduction
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: README.md
+      - id: start_tutorial_button
+        type: Button
+        properties:
+          block: true
+          hideActionLoading: true
+          icon: RocketOutlined
+          size: large
+          title: Start the tutorial
+          type: primary
+        actions:
+          onClick:
+            - id: link_forward
+              type: Link
+              params:
+                pageId: tutorial-setup
+            - id: scroll_to_top
+              type: ScrollTo
+              params:
+                top: 0

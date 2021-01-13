@@ -1,0 +1,11 @@
+- id: style_block_input
+  type: TextArea
+  layout:
+    _global: settings_input_layout
+  properties:
+    title: block
+    rows: 3
+    size: small
+    label:
+      span: 8
+      extra: CSS Object style properties. Should be in YAML format.

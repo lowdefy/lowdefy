@@ -1,0 +1,75 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-create-page
+    pageTitle: Creating a page
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-add-blocks
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-create-page-content-1.md
+      - id: alert1
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: Make sure that the version field is the current latest Lowdefy version. This should be what is was when you created the project.
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-create-page-content-2.md
+      - id: example1
+        type: PageHeaderMenu
+        layout:
+          contentJustify: center
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+              links:
+              - id: welcome
+                type: MenuLink
+                properties:
+                  title: welcome
+              - id: booking
+                properties:
+                  title: booking
+                type: MenuLink
+        blocks:
+          - id: example1_content_card
+            type: Card
+            layout:
+              size: 600
+            blocks:
+              - id: example1_page_heading
+                type: Title
+                properties:
+                  content: Book a meeting room
+                  level: 3
+      - id: md3
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-create-page-content-3.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Development server
+            previous_page_id: tutorial-development-server
+            next_page_title: Booking form
+            next_page_id: tutorial-add-blocks

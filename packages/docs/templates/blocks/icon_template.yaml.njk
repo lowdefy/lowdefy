@@ -1,0 +1,23 @@
+id: block.properties.{{ icon_field_name }}
+type: Selector
+layout:
+  _global: settings_input_layout
+properties:
+  title: {{ icon_field_name }}
+  size: small
+  showSearch: true
+  allowClear: true
+  options:
+    _global: all_icons
+  label:
+    _ref:
+      path: templates/blocks/label_extra.yaml
+      vars:
+        extra:
+          _if:
+            test:
+              _not:
+                _var: icon_description
+            then: Name of icon to be displayed.
+            else:
+              _var: icon_description

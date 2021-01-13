@@ -1,0 +1,45 @@
+id: examples
+type: Box
+layout:
+  contentGutter: 16
+blocks:
+{% for example in examples %}
+  - id: example_title_{{ loop.index }}
+    type: Markdown
+    properties:
+      content: '##### {{ example.title }}'
+  - id: example_block_{{ loop.index }}
+    type: {{ block_type }}
+    layout:
+      span: 12
+    required:
+      _parse: '{{ example.required }}'
+    properties:
+      _parse: '{{ example.properties | safe }}'
+  - id: example_config_{{ loop.index }}
+    layout:
+      span: 12
+    type: Markdown
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            {% raw %}
+            ```yaml
+            id: {{ id }}
+            type: {{ type }}
+            {% if required %}required: {{ required }} {% endif -%}
+            properties:
+              {{ properties | safe | indent(2) }}
+            ```
+            {% endraw %}
+          on:
+            id: example_{{ loop.index }}
+            type: {{ block_type }}
+            required: {{ example.required }}
+            properties:
+              _dump_yaml:
+                  _parse: '{{ example.properties | safe }}'
+  - id: example_divider_{{ loop.index }}
+    type: Divider
+{% endfor %}

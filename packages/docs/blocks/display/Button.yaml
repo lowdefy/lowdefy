@@ -1,0 +1,190 @@
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: Button
+    category: display
+    description_content: |
+      Button block.
+    default_properties:
+      block: false
+      danger: false
+      disabled: false
+      ghost: false
+      hideTitle: false
+      shape: square
+      size: default
+      type: primary
+      title: block_id
+    properties_transform:
+      _state: block.properties
+    properties_form:
+      - id: block.properties.block
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: block
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Fit the button's span to its parent container span.
+      - id: block.properties.color
+        type: TwitterColorSelector
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: color
+          circleSize: 16
+          circleSpacing: 6
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Button color.
+      - id: block.properties.danger
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: danger
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Set button style to danger.
+      - id: block.properties.disabled
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: disabled
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Disable the button.
+      - id: block.properties.ghost
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: ghost
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Make the button's background transparent.
+      - id: block.properties.hideTitle
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: hideTitle
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Hide the button's title.
+      - id: block.properties.href
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: href
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: The URL to redirect to when the button is clicked.
+      - _ref:
+          path: templates/blocks/icon_template.yaml.njk
+          vars:
+            icon_field_name: icon
+            icon_description: Icon to be used in button.
+      - id: block.properties.shape
+        type: ButtonSelector
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: shape
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Shape of the button.
+          options:
+            - circle
+            - round
+            - square
+      - id: block.properties.size
+        type: ButtonSelector
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: size
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Size of the button.
+          options:
+            - small
+            - default
+            - large
+      - id: block.properties.title
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: title
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Title text on the button.
+      - id: block.properties.type
+        type: ButtonSelector
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: type
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: The button type.
+          options:
+            - primary
+            - default
+            - dashed
+            - danger
+            - link
+            - text
+    available_actions_description: |
+      ###### onClick
+      Called when the button is clicked.
+    examples:
+      - title: Basic button
+        properties: '{"title": "Click me"}'
+      - title: Block and ghost button with icon
+        properties: '{"title": "Get started","block": true,"ghost": true,"icon": "RocketOutlined"}'
+      - title: Round and type danger
+        properties: '{"title": "Delete Forever", "shape": "round", "type": "danger", "icon": "WarningOutlined" }'
+
+
+
+
+
+
+

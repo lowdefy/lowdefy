@@ -1,0 +1,61 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: NotificationAction
+    pageTitle: Notification
+    section: Actions
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            The `Notification` action is used to display a notification message to a user.
+
+            ### Parameters
+            - `status`: _Enum_ - Message status type. One of `success`, `error`, `info`, `warning`, or `loading`. Defaults to `success`.
+            - `duration`: _Number_ - Time in seconds before the notification disappears. When set to 0 or null, it will never be closed automatically. The default is 5.
+            - `message`: _String_ - The title of notification. Default is "Success".
+            - `description`: _String_ - The content of the notification.
+            - `placement`: _Enum_ - Position of the notification, can be one of `topLeft`, `topRight`, `bottomLeft`, or `bottomRight`. Default is `bottomRight`.
+            - `bottom`: _Number_ - Distance from the bottom of the viewport, when placement is `bottomRight`or `bottomLeft` in pixels.  The default is 24.
+            - `top`: _Number_ - Distance from the bottom of the viewport, when placement is `topRight`or `topLeft` in pixels.  The default is 24.
+
+            ### Examples
+
+            Display a success notification:
+
+            ```
+            - id: success
+              type: Notification
+              params:
+                message: Hello
+            ```
+
+            Display an info notification with a description:
+
+            ```
+            - id: info
+              type: Notification
+              params:
+                message: Something happened
+                status: info
+                description: This is a longer description of the thing that happened, so that you know why it happened.
+                duration: 10
+                placement: topRight
+            ```
+
+            Display an warning notification that does not disappear until closed:
+
+            ```
+            - id: warning
+              type: Notification
+              params:
+                message: Something bad might happen.
+                status: warning
+                description: This is a longer description of the thing that happened, so that you know why it happened.
+                duration: 0
+                placement: topRight
+            ```

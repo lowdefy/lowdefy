@@ -1,0 +1,178 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: AxiosHttp
+    pageTitle: AxiosHttp
+    section: Connections
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            The `AxiosHTTP` connection is used to connect to APIs and web servers using HTTP or HTTPS.
+
+            It uses the [axios](https://github.com/axios/axios) library.
+
+            The same properties can be set on both the connection and on axios requests and mutations. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseUrl to be set on the connection, with request specific properties like the request.
+
+            >Secrets like authentication headers and API keys should be stored using the [`_secret`](operators/secret.md) operator.
+
+            ## Connections
+
+            Connection types:
+              - AxiosHTTP
+
+            ## Requests and Mutations
+
+            Request types:
+              - AxiosHTTP
+
+            Mutation types:
+              - AxiosHTTP
+
+            ### AxiosHTTP
+
+            #### Properties
+
+            - `url`: _String_ - The server URL that will be used for the request.
+            - `method`: _Enum_ - Default: `'get'` - The request method to be used when making the request. Options are:
+              - `'get'`
+              - `'delete'`
+              - `'head'`
+              - `'options'`
+              - `'post'`
+              - `'put'`
+              - `'patch'`
+            - `baseURL`: _String_ - `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
+            - `headers`: _Object_ - An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
+            - `params`: _Object_ - An object with URL parameters to be sent with the request.
+            - `data`: _String_ **|** _Object_ - The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
+            - `timeout`: _Integer_ - Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.
+            - `auth`: _Object_ - Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
+            - `username`: _String_
+            - `password`: _String_
+
+            - `responseType`: _Enum_ - Default: `'json'` - The type of data that the server will respond with. Options are:
+              - `'document'`
+              - `'json'`
+              - `'text'`
+            - `responseEncoding`: _String_ - Default: `'utf8'` - Indicates encoding to use for decoding responses.
+            - `maxContentLength`: _Integer_ - Defines the max size of the http response content allowed in bytes.
+            - `maxRedirects`: _Integer_ - Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
+            - `proxy`: _Object_ - Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
+              - `host`: _String_ - Host IP address (eg. `'127.0.0.1'`).
+              - `port`: _Integer_ - Port number.
+              - `auth`: _Object_ - Object with username and password.
+
+
+            ### Examples
+
+            Properties for a AxiosHttp can be set on either the connection, the request/mutation, or both. However, both a connection and request/mutation need to be defined.
+
+            Using the connection to set baseUrl and authorization, and handle specific requests from request/mutation
+            ```yaml
+            connections:
+              - id: myapp_api
+                type: AxiosHttp
+                properties:
+                  baseUrl: myapp.com/api
+                  auth:
+                    username: lowdefy_api_user
+                    password:
+                      _secret: lowdefy_api_password
+            # ...
+            requests:
+              - id: get_orders
+                type: AxiosHttp
+                connectionId: myapp_api
+                properties:
+                  url: /orders
+            mutations:
+              - id: update_order
+                type: AxiosHttp
+                connectionId: myapp_api
+                properties:
+                  url:
+                    _nunjucks: /orders/{{ order_id }}
+                  method: post
+                  body:
+                    _state: true
+            ```
+
+
+            Setting properties on only the connection:
+            ```yaml
+            connections:
+              - id: get_count
+                type: AxiosHttp
+                properties:
+                  url: myapp.com/api/count
+                headers:
+                  X-Api-Key:
+                    _secret: my_api_key
+            # ...
+            requests:
+              - id: get_count
+                type: AxiosHttp
+                connectionId: get_count
+            ```
+
+            Setting properties on only the request, and using a generic connection:
+            ```yaml
+            connections:
+              - id: axios
+                type: AxiosHttp
+            # ...
+            requests:
+              - id: get_api_1
+                type: AxiosHttp
+                connectionId: axios
+                properties:
+                  url: app1.com/api/things
+            mutations:
+              - id: post_to_api_2
+                type: AxiosHttp
+                connectionId: axios
+                properties:
+                  url: api.otherapp.org/other/thing
+                  method: post
+                  body:
+                    _state: true
+            ```
+
+
+
+
+
+      # ```yaml
+      # connections:
+      #   - id: my_api_connection
+      #     type: AxiosHttp
+      #     properties:
+      #       baseURL: https://api.myapp.com
+
+      #       timeout: 5000
+      #       responseType: text
+      #       responseEncoding: utf8
+      #       maxContentLength: 5000
+
+      #   - id: my_proxy_connection
+      #     type: AxiosHttp
+      #     properties:
+      #       proxy:
+      #         host: '127.0.0.1'
+      #         port: 9000
+
+      #   - id: my_basic_auth_connection
+      #     type: axios_http
+      #     properties:
+      #       url: https://www.myapp.com/api
+      #       auth:
+      #         username: my_username
+      #         password:
+      #           _secret:
+      #             my_password
+      # ```

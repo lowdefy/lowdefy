@@ -1,0 +1,155 @@
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: TextInput
+    value_type: String
+    category: input
+    description_content: |
+      The `TextInput` block is a single line text input.
+    default_properties:
+      allowClear: true
+      autoFocus: false
+      disabled: false
+      label:
+        align: left
+        colon: true
+        disabled: false
+        extra: null
+        inline: false
+        span: null
+      size: default
+      title: block_id
+    properties_transform:
+      _state: block.properties
+    properties_form:
+      - id: block.properties.title
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: title
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Title to describe the input component, if no title is specified the block id is displayed.
+      - id: block.properties.allowClear
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: allowClear
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Allow the user to clear their input.
+      - id: block.properties.autoFocus
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: autoFocus
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Autofocus to the block on page load.
+      - id: block.properties.disabled
+        type: Switch
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: disabled
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Disable the block if true.
+      - id: block.properties.placeholder
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: placeholder
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Placeholder text inside the block before user types input.
+      - id: block.properties.prefix
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: prefix
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Prefix text for the block, priority over prefixIcon.
+      - _ref:
+          path: templates/blocks/icon_template.yaml.njk
+          vars:
+            icon_field_name: prefixIcon
+            icon_description: Icon to prefix the text input.
+
+      - id: block.properties.size
+        type: ButtonSelector
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: size
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Size of the block.
+          options:
+            - small
+            - default
+            - large
+      - id: block.properties.suffix
+        type: TextInput
+        layout:
+          _global: settings_input_layout
+        properties:
+          title: suffix
+          size: small
+          label:
+            _ref:
+              path: templates/blocks/label_extra.yaml
+              vars:
+                extra: Suffix text for the block, priority over suffixIcon.
+      - _ref:
+          path: templates/blocks/icon_template.yaml.njk
+          vars:
+            icon_field_name: suffixIcon
+            icon_description: Icon to suffix the text input.
+      - _ref: templates/blocks/label.yaml
+
+    available_actions_description: |
+      ###### onChange
+      Triggered when value is changed.
+      ##### onPressEnter
+      Triggered when enter is pressed while block is focused.
+
+    examples:
+      - title: Text input
+        properties: '{"title": "Text input"}'
+      - title: Required text input
+        required: true
+        properties: '{"title": "Required text input"}'
+      - title: Placeholder
+        properties: '{"placeholder": "Placeholder"}'
+      - title: Prefix and suffix text
+        properties: '{"label": {"extra":"Prefix and suffix text"}, "prefix": "The cat", "placeholder": "chased", "suffix": "the rat."}'
+      - title: User name
+        properties: '{"title": "First Name", "suffixIcon": "UserOutlined", "placeholder": "Your name", "label": {"span": 6}}'

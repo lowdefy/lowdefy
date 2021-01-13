@@ -1,0 +1,61 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-editing-page
+    pageTitle: Editing a page
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-development-server
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-editing-page-content-1.md
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-editing-page-content-2.md
+      - id: example1
+        type: PageHeaderMenu
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links:
+              - id: welcome
+                type: MenuLink
+                properties:
+                  title: welcome
+                url: ''
+        blocks:
+          - id: example1_content_card
+            type: Card
+            blocks:
+              - id: example1_title
+                type: Title
+                properties:
+                  content: Hello World
+      - id: md3
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-editing-page-content-3.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Setup
+            previous_page_id: tutorial-setup
+            next_page_title: Development server
+            next_page_id: tutorial-development-server

@@ -1,0 +1,15 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-actions-operators-config
+    pageTitle: Interactive pages config
+    section: Tutorial
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-actions-operators-config-1.md

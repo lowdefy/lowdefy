@@ -1,0 +1,25 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-development-server
+    pageTitle: Development server
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-create-page
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-development-server-content-1.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Editing a page
+            previous_page_id: tutorial-editing-page
+            next_page_title: Creating a page
+            next_page_id: tutorial-create-page

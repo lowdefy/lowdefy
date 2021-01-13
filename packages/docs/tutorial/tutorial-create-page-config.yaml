@@ -1,0 +1,17 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-create-page-config
+    pageTitle: Creating a page config
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-editing-page
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content:
+            _ref: tutorial/tutorial-create-page-config-1.md
