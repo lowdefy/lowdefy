@@ -140,17 +140,21 @@ class RefBuilder {
           `Invalid _ref definition ${JSON.stringify(refDef.original)} at file ${path}`
         );
       }
+      const parsedVars = JSON.parse(
+        JSON.stringify(refDef.vars),
+        refReviver.bind({ parsedFiles, vars })
+      );
       // eslint-disable-next-line no-await-in-loop
       let parsedFile = await this.recursiveParseFile({
         path: refDef.path,
         // Parse vars before passing down to parse new file
-        vars: JSON.parse(JSON.stringify(refDef.vars), refReviver.bind({ parsedFiles, vars })),
+        vars: parsedVars,
         count: count + 1,
       });
       if (refDef.transformer) {
         const transformerFile = await readFile(nodePath.resolve(process.cwd(), refDef.transformer));
         const transformerFn = eval(transformerFile);
-        parsedFile = transformerFn(parsedFile);
+        parsedFile = transformerFn(parsedFile, parsedVars);
       }
       parsedFiles[refDef.id] = parsedFile;
     }

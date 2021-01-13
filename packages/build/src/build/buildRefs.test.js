@@ -682,6 +682,9 @@ test('buildRefs with transformer function', async () => {
         _ref: {
           path: 'target.yaml',
           transformer: 'src/test/testBuildRefsTransform.js',
+          vars: {
+            var1: 'var1',
+          },
         },
       },
     },
@@ -697,5 +700,6 @@ test('buildRefs with transformer function', async () => {
   expect(res).toEqual({
     add: 43,
     json: '{"a":1}',
+    var: 'var1',
   });
 });
