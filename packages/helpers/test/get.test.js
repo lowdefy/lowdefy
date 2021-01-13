@@ -633,3 +633,27 @@ describe('deep-property unit tests', () => {
     // expectToEqual(get(num, 'path.to.property'), undefined);
   });
 });
+
+test('get should not copy objects', () => {
+  const veg = { type: 'vegetable' };
+  const min = { type: 'mineral' };
+  const a = {
+    b: { example: veg },
+    c: { example: min },
+  };
+  expect(get(a, 'b.example')).toBe(veg);
+  expect(get(a, 'c.example')).toBe(min);
+});
+
+test('get should copy objects with copy option true', () => {
+  const veg = { type: 'vegetable' };
+  const min = { type: 'mineral' };
+  const a = {
+    b: { example: veg },
+    c: { example: min },
+  };
+  expect(get(a, 'b.example', { copy: true })).not.toBe(veg);
+  expect(get(a, 'b.example', { copy: true })).toEqual(veg);
+  expect(get(a, 'c.example', { copy: true })).not.toBe(min);
+  expect(get(a, 'c.example', { copy: true })).toEqual(min);
+});

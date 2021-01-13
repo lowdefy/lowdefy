@@ -43,6 +43,7 @@
 // THE SOFTWARE.
 
 import typeTest from './type';
+import serializer from './serializer';
 
 function join(segs, joinChar, options) {
   if (typeof options.join === 'function') {
@@ -69,11 +70,7 @@ function isValidObject(val) {
   return typeTest.isObject(val) || Array.isArray(val) || typeof val === 'function';
 }
 
-function get(target, path, options) {
-  if (!typeTest.isObject(options)) {
-    options = { default: options };
-  }
-
+function getter(target, path, options) {
   if (typeTest.isNone(path) || !isValidObject(target)) {
     return typeof options.default !== 'undefined' ? options.default : undefined;
   }
@@ -143,6 +140,17 @@ function get(target, path, options) {
   }
 
   return options.default;
+}
+
+function get(target, path, options) {
+  if (!typeTest.isObject(options)) {
+    options = { default: options };
+  }
+
+  if (options.copy) {
+    return serializer.copy(getter(target, path, options));
+  }
+  return getter(target, path, options);
 }
 
 export default get;
