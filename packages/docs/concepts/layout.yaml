@@ -2,7 +2,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: layout
-    pageTitle: layout
+    pageTitle: Layout
     section: Concepts
     content:
       - id: markdown_intro
@@ -637,7 +637,7 @@ _ref:
             The properties that can be set are:
               - `align`: _Enum_ - Align blocks vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
               - `direction`: _Enum_ - Set the [`flex-direction`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction) CSS property for the area. Options are `row`, `row-reverse`, `column`, and and `column-reverse`. Default `row`.
-              - `gutter`: _Number_ | _Array_  - Create gutter between blocks placed in the area.
+              - `gutter`: _Number_ | _Array_  - Create gutter (space) between blocks placed in the area. If an array, the first element is the horizontal gutter, and the second is the vertical gutter.
               - `justify`: _Enum_ - Justify blocks horizontally inside the area. Options are `start`, `end`, `center`, `space-around`, and `space-between`. Default `start`.
               - `overflow`: _Enum_ - Set the [`overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow) CSS property for the area. Options are `visible`, `hidden`, `scroll`, and `space-between`. Default `visible`.
               - `wrap`: _Enum_ - Set the [`flex-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap) CSS property for the area. Options are `wrap`, `nowrap`, and `wrap-reverse`. Default `wrap`.
@@ -692,7 +692,7 @@ _ref:
           - id: ex_area_align_area1_title
             type: Markdown
             properties:
-              content: "##### Area 1 - `align: top`"
+              content: '##### Area 1 - `align: top`'
           - id: ex_area_align_area1
             type: Box
             areas:
@@ -722,7 +722,7 @@ _ref:
           - id: ex_area_align_area2_title
             type: Markdown
             properties:
-              content: "##### Area 2 - `align: middle`"
+              content: '##### Area 2 - `align: middle`'
           - id: ex_area_align_area2
             type: Box
             areas:
@@ -752,7 +752,7 @@ _ref:
           - id: ex_area_align_area3_title
             type: Markdown
             properties:
-              content: "##### Area 3 - `align: bottom`"
+              content: '##### Area 3 - `align: bottom`'
           - id: ex_area_align_area3
             type: Box
             areas:
@@ -849,7 +849,7 @@ _ref:
           - id: ex_area_direction_area1_title
             type: Markdown
             properties:
-              content: "##### Area 1 - `direction: row`"
+              content: '##### Area 1 - `direction: row`'
           - id: ex_area_direction_area1
             type: Box
             areas:
@@ -879,7 +879,7 @@ _ref:
           - id: ex_area_direction_area2_title
             type: Markdown
             properties:
-              content: "##### Area 2 - `direction: row-reverse`"
+              content: '##### Area 2 - `direction: row-reverse`'
           - id: ex_area_direction_area2
             type: Box
             areas:
@@ -909,7 +909,7 @@ _ref:
           - id: ex_area_direction_area3_title
             type: Markdown
             properties:
-              content: "##### Area 3 - `direction: column`"
+              content: '##### Area 3 - `direction: column`'
           - id: ex_area_direction_area3
             type: Box
             areas:
@@ -939,7 +939,7 @@ _ref:
           - id: ex_area_direction_area4_title
             type: Markdown
             properties:
-              content: "##### Area 4  - `direction: column-reverse`"
+              content: '##### Area 4  - `direction: column-reverse`'
           - id: ex_area_direction_area4
             type: Box
             areas:
@@ -966,6 +966,131 @@ _ref:
                     properties:
                       html: |
                         <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 8</div>
+
+      - id: markdown_gutter_example
+        type: Markdown
+        style:
+          marginTop: 16px
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            ###### Gutter examples:
+            ```yaml
+            - id: container
+              type: Container
+              areas:
+                area1:
+                  gutter: 16
+                  blocks:
+                    - id: block1
+                      type: Block
+                      layout:
+                        span: 12
+                    - id: block2
+                      type: Block
+                      layout:
+                        span: 12
+                    - id: block3
+                      type: Block
+
+                area2:
+                  gutter: [8, 32]
+                  blocks:
+                    - id: block4
+                      type: Block
+                      layout:
+                        span: 12
+                    - id: block5
+                      type: Block
+                      layout:
+                        span: 12
+                    - id: block6
+                      type: Block
+
+      - id: ex_area_gutter_c1
+        type: Box
+        style:
+          background: '#d9d9d9'
+          padding: 16px
+          marginTop: 16px
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: ex_area_gutter_area1_title
+            type: Markdown
+            properties:
+              content: '##### Area 1 - `gutter: 16`'
+          - id: ex_area_gutter_area1
+            type: Box
+            areas:
+              content:
+                gutter: 16
+                style:
+                  border: '1px dashed #eb2f96'
+                blocks:
+                  - id: ex_area_gutter_b1
+                    type: Html
+                    style:
+                      textAlign: center
+                    layout:
+                      span: 12
+                    properties:
+                      html: |
+                        <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 1</div>
+                  - id: ex_area_gutter_b2
+                    type: Html
+                    style:
+                      textAlign: center
+                    layout:
+                      span: 12
+                    properties:
+                      html: |
+                        <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 2</div>
+                  - id: ex_area_gutter_b3
+                    type: Html
+                    style:
+                      textAlign: center
+                    properties:
+                      html: |
+                        <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 3</div>
+          - id: ex_area_gutter_area2_title
+            type: Markdown
+            properties:
+              content: '##### Area 2 - `gutter: [8, 32]`'
+          - id: ex_area_gutter_area2
+            type: Box
+            areas:
+              content:
+                gutter: [8, 32]
+                style:
+                  border: '1px dashed #eb2f96'
+                blocks:
+                  - id: ex_area_gutter_b4
+                    type: Html
+                    style:
+                      textAlign: center
+                    layout:
+                      span: 12
+                    properties:
+                      html: |
+                        <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 4</div>
+                  - id: ex_area_gutter_b5
+                    type: Html
+                    style:
+                      textAlign: center
+                    layout:
+                      span: 12
+                    properties:
+                      html: |
+                        <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 5</div>
+                  - id: ex_area_gutter_b6
+                    type: Html
+                    style:
+                      textAlign: center
+                    properties:
+                      html: |
+                        <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 6</div>
 
       - id: markdown_justify_example
         type: Markdown
@@ -1067,7 +1192,7 @@ _ref:
           - id: ex_area_justify_area1_title
             type: Markdown
             properties:
-              content: "##### Area 1 - `justify: start`"
+              content: '##### Area 1 - `justify: start`'
           - id: ex_area_justify_area1
             type: Box
             areas:
@@ -1106,7 +1231,7 @@ _ref:
           - id: ex_area_justify_area2_title
             type: Markdown
             properties:
-              content: "##### Area 2 - `justify: end`"
+              content: '##### Area 2 - `justify: end`'
           - id: ex_area_justify_area2
             type: Box
             areas:
@@ -1145,7 +1270,7 @@ _ref:
           - id: ex_area_justify_area3_title
             type: Markdown
             properties:
-              content: "##### Area 3 - `justify: center`"
+              content: '##### Area 3 - `justify: center`'
           - id: ex_area_justify_area3
             type: Box
             areas:
@@ -1184,7 +1309,7 @@ _ref:
           - id: ex_area_justify_area4_title
             type: Markdown
             properties:
-              content: "##### Area 4 - `justify: space-around`"
+              content: '##### Area 4 - `justify: space-around`'
           - id: ex_area_justify_area4
             type: Box
             areas:
@@ -1223,7 +1348,7 @@ _ref:
           - id: ex_area_justify_area5_title
             type: Markdown
             properties:
-              content: "##### Area 5 - `justify: space-between`"
+              content: '##### Area 5 - `justify: space-between`'
           - id: ex_area_justify_area5
             type: Box
             areas:
