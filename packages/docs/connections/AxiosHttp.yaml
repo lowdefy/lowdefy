@@ -16,7 +16,7 @@ _ref:
 
             It uses the [axios](https://github.com/axios/axios) library.
 
-            The same properties can be set on both the connection and on axios requests and mutations. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseUrl to be set on the connection, with request specific properties like the request.
+            The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseUrl to be set on the connection, with request specific properties like the request.
 
             >Secrets like authentication headers and API keys should be stored using the [`_secret`](operators/secret.md) operator.
 
@@ -25,12 +25,9 @@ _ref:
             Connection types:
               - AxiosHTTP
 
-            ## Requests and Mutations
+            ## Requests
 
             Request types:
-              - AxiosHTTP
-
-            Mutation types:
               - AxiosHTTP
 
             ### AxiosHTTP
@@ -70,9 +67,9 @@ _ref:
 
             ### Examples
 
-            Properties for a AxiosHttp can be set on either the connection, the request/mutation, or both. However, both a connection and request/mutation need to be defined.
+            Properties for a AxiosHttp can be set on either the connection, the request, or both. However, both a connection and request need to be defined.
 
-            Using the connection to set baseUrl and authorization, and handle specific requests from request/mutation
+            Using the connection to set baseUrl and authorization, and handle specific requests as requests.
             ```yaml
             connections:
               - id: myapp_api
@@ -90,7 +87,6 @@ _ref:
                 connectionId: myapp_api
                 properties:
                   url: /orders
-            mutations:
               - id: update_order
                 type: AxiosHttp
                 connectionId: myapp_api
@@ -132,7 +128,6 @@ _ref:
                 connectionId: axios
                 properties:
                   url: app1.com/api/things
-            mutations:
               - id: post_to_api_2
                 type: AxiosHttp
                 connectionId: axios
@@ -142,37 +137,3 @@ _ref:
                   body:
                     _state: true
             ```
-
-
-
-
-
-      # ```yaml
-      # connections:
-      #   - id: my_api_connection
-      #     type: AxiosHttp
-      #     properties:
-      #       baseURL: https://api.myapp.com
-
-      #       timeout: 5000
-      #       responseType: text
-      #       responseEncoding: utf8
-      #       maxContentLength: 5000
-
-      #   - id: my_proxy_connection
-      #     type: AxiosHttp
-      #     properties:
-      #       proxy:
-      #         host: '127.0.0.1'
-      #         port: 9000
-
-      #   - id: my_basic_auth_connection
-      #     type: axios_http
-      #     properties:
-      #       url: https://www.myapp.com/api
-      #       auth:
-      #         username: my_username
-      #         password:
-      #           _secret:
-      #             my_password
-      # ```

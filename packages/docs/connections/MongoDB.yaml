@@ -42,7 +42,7 @@ _ref:
 
             ### MongoDBCollection
 
-            The `mongodb_collection` connection sets up a connection to a MongoDB deployment. A [connection URI](https://docs.mongodb.com/manual/reference/connection-string/index.html) with authentication credentials (username and password) is required. The URI can be in the standard or dns seedlist (srv) formats. Connections are defined on a collection level, since this allows for read/write access control on a per collection level. Access control can also be managed using the roles in the database.
+            The `MongoDBCollection` connection sets up a connection to a MongoDB deployment. A [connection URI](https://docs.mongodb.com/manual/reference/connection-string/index.html) with authentication credentials (username and password) is required. The URI can be in the standard or dns seedlist (srv) formats. Connections are defined on a collection level, since this allows for read/write access control on a per collection level. Access control can also be managed using the roles in the database.
 
             >Since the connection URI contains authentication secrets, it should be stored using the [`_secret`](operators/secret.md) operator.
 
@@ -59,7 +59,7 @@ _ref:
             ```yaml
             connections:
               - id: my_collection
-                type: AwsS3Bucket
+                type: MongoDBCollection
                 properties:
                   databaseUri:
                     _secret: my_database_uri
@@ -67,17 +67,14 @@ _ref:
                   write: true
             ```
 
-            ## Requests and Mutations
+            ## Requests
 
             Request types:
               - MongoDBAggregation
-              - MongoDBFind
-              - MongoDBFindOne
-
-            Mutation types:
-              - MongoDBAggregation
               - MongoDBDeleteMany
               - MongoDBDeleteOne
+              - MongoDBFind
+              - MongoDBFindOne
               - MongoDBInsertMany
               - MongoDBInsertOne
               - MongoDBUpdateMany
@@ -86,7 +83,7 @@ _ref:
 
             ### MongoDBAggregation
 
-            The `MongoDBAggregation` request or mutation executes an [aggregation pipeline](https://docs.mongodb.com/manual/core/aggregation-pipeline/) in the collection specified in the connectionId. It returns the array of documents returned by the aggregation. Aggregation pipelines are MongoDB's data processing and aggregation framework. They are based on a series of stages, each of which apply a transformation to the data passed through them, like sorting, grouping or calculating additional fields.
+            The `MongoDBAggregation` request executes an [aggregation pipeline](https://docs.mongodb.com/manual/core/aggregation-pipeline/) in the collection specified in the connectionId. It returns the array of documents returned by the aggregation. Aggregation pipelines are MongoDB's data processing and aggregation framework. They are based on a series of stages, each of which apply a transformation to the data passed through them, like sorting, grouping or calculating additional fields.
 
             >Cursors are not supported. The request will return the whole body of the response as an array.
 
@@ -125,7 +122,7 @@ _ref:
 
             ### MongoDBDeleteMany
 
-            The `MongoDBDeleteMany` mutation deletes multiple documents in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a documents to delete.
+            The `MongoDBDeleteMany` request deletes multiple documents in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a documents to delete.
 
             #### Properties
             - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
@@ -142,7 +139,7 @@ _ref:
 
             Delete all documents older than a specific date:
             ```yaml
-            mutations:
+            requests:
               - id: delete_old_documents
                 type:  MongoDBDeleteMany
                 properties:
@@ -154,7 +151,7 @@ _ref:
 
             ### MongoDBDeleteOne
 
-            The `MongoDBDeleteOne` mutation deletes a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to delete. It will delete the first document that matches the filter.
+            The `MongoDBDeleteOne` request deletes a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to delete. It will delete the first document that matches the filter.
 
             #### Properties
             - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
@@ -171,7 +168,7 @@ _ref:
 
             Delete a document by _id:
             ```yaml
-            mutations:
+            requests:
               - id: delete_selected_document
                 type:  MongoDBUpdateMany
                 properties:
@@ -254,7 +251,7 @@ _ref:
 
             ### MongoDBInsertMany
 
-            The `MongoDBInsertMany` mutation inserts an array of documents into the collection specified in the connectionId. If a `_id` field is not specified on a document, a MongoDB `ObjectID` will be generated.
+            The `MongoDBInsertMany` request inserts an array of documents into the collection specified in the connectionId. If a `_id` field is not specified on a document, a MongoDB `ObjectID` will be generated.
 
             #### Properties
             - `docs`: _Array_ of _Object_ - **REQUIRED** - The array of documents to be inserted.
@@ -272,7 +269,7 @@ _ref:
 
             Insert a set of documents:
             ```yaml
-            mutations:
+            requests:
               - id: insert_new_comment
                 type:  MongoDBInsertOne
                 properties:
@@ -288,7 +285,7 @@ _ref:
 
             ### MongoDBInsertOne
 
-            The `MongoDBInsertOne` mutation inserts a document into the collection specified in the connectionId. If a `_id` field is not specified, a MongoDB `ObjectID` will be generated.
+            The `MongoDBInsertOne` request inserts a document into the collection specified in the connectionId. If a `_id` field is not specified, a MongoDB `ObjectID` will be generated.
 
             #### Properties
             - `doc`: _Object_ - **REQUIRED** - The document to be inserted.
@@ -305,7 +302,7 @@ _ref:
 
             Insert a document:
             ```yaml
-            mutations:
+            requests:
               - id: insert_new_comment
                 type:  MongoDBInsertOne
                 properties:
@@ -320,7 +317,7 @@ _ref:
 
             ### MongoDBUpdateMany
 
-            The `MongoDBUpdateMany` mutation updates multiple documents that match a certain criteria in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select the documents to update.
+            The `MongoDBUpdateMany` request updates multiple documents that match a certain criteria in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select the documents to update.
 
             #### Properties
             - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
@@ -342,7 +339,7 @@ _ref:
 
             Set a list of documents as resolved:
             ```yaml
-            mutations:
+            requests:
               - id: set_resolved
                 type:  MongoDBUpdateMany
                 properties:
@@ -358,7 +355,7 @@ _ref:
 
             Mark all documents with score less than 6 as urgent:
             ```yaml
-            mutations:
+            requests:
               - id: set_resolved
                 type:  MongoDBUpdateMany
                 properties:
@@ -372,7 +369,7 @@ _ref:
 
             ### MongoDBUpdateOne
 
-            The `MongoDBUpdateOne` mutation updates a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to update. It will update the first document that matches the filter. If the `upsert` option is set to true, it will insert a new document if no document is found to update.
+            The `MongoDBUpdateOne` request updates a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to update. It will update the first document that matches the filter. If the `upsert` option is set to true, it will insert a new document if no document is found to update.
 
             #### Properties
             - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
@@ -395,7 +392,7 @@ _ref:
 
             Update a document:
             ```yaml
-            mutations:
+            requests:
               - id: update
                 type:  MongoDBUpdateOne
                 properties:
@@ -409,7 +406,7 @@ _ref:
 
             Like a comment:
             ```yaml
-            mutations:
+            requests:
               - id: like_comment
                 type:  MongoDBUpdateOne
                 properties:

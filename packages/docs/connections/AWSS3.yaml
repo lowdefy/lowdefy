@@ -53,18 +53,16 @@ _ref:
                   write: true
             ```
 
-            ## Requests and Mutations
+            ## Requests
 
             Request types:
               - AwsS3PresignedGetObject
-
-            Mutation types:
               - AwsS3PresignedGetObject
               - AwsS3PresignedPostPolicy
 
             ### AwsS3PresignedGetObject
 
-            The `AwsS3PresignedGetObject` request or mutation is used to get a download link for an object in AWS S3. It can be used as a request or a mutation. The link provided by this request can be opened using the `Link` action.
+            The `AwsS3PresignedGetObject` request is used to get a download link for an object in AWS S3. The link provided by this request can be opened using the `Link` action.
 
             #### Properties
             - `versionId`: _String_ - VersionId used to reference a specific version of the object.
@@ -101,7 +99,7 @@ _ref:
 
             ### AwsS3PresignedPostPolicy
 
-            The `AwsS3PresignedPostPolicy` mutation is used to create a policy that allows a file to be uploaded to AWS S3. This is used by a block like the `S3Uploadbutton` to upload a file.
+            The `AwsS3PresignedPostPolicy` request is used to create a policy that allows a file to be uploaded to AWS S3. This is used by a block like the `S3Uploadbutton` to upload a file.
 
             #### Properties
             - `acl`: _String_ - Access control lists used to grant read and write access.
