@@ -267,7 +267,7 @@ test('buildMenu page does not exist', async () => {
     pages: [],
   });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Page page_1 referenced in menu link menu_page_1 not found.'],
+    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
   ]);
 });
 
@@ -343,8 +343,8 @@ test('buildMenu page does not exist, nested', async () => {
     pages: [],
   });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Page page_1 referenced in menu link menu_page_1 not found.'],
-    ['Page page_2 referenced in menu link menu_page_2 not found.'],
+    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
+    ['Page "page_2" referenced in menu link "menu_page_2" not found.'],
   ]);
 });
 
