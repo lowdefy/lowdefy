@@ -48,7 +48,7 @@
     "apollo-server-express": "2.19.1",
     "axios": "0.21.1",
     "chalk": "4.1.0",
-    "chokidar": "3.4.3",
+    "chokidar": "3.5.0",
     "commander": "6.2.1",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
