@@ -1,0 +1,318 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: GoogleSheet
+    pageTitle: Google Sheets
+    section: Connections
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            ## Connections
+
+            Connection types:
+              - GoogleSheet
+
+            ### GoogleSheet
+
+            The `GoogleSheet` connection can be used to connect to a Google using an API key or a service account. An API key can only be used for read-only access to public sheets, so most applications should use a service account. A guide to creating a service account can be found in the [tutorial](/tutorial-requests).
+
+            This connection refers to the entire document as the 'spreadsheet', and the individual sheets in the document as 'sheets'. The spreadsheet is identified by it's spreadsheetId, and sheets can either be identified by their sheetId or their index (position in the document starting from 0).
+
+            When a sheet is accessed in a browser the url either looks like:
+            `https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit#gid={sheetId}`
+
+            The `GoogleSheet` connection works with sheets as a row based data store. Each row is a data record, and a header row needs to be present to define the column names. This header needs to be created in the Google Sheets web interface. Types can be specified for any of the columns in the sheet. If a type is not specified, the value will be read as a string. The `json` type will stringify a object as JSON before saving it, and parse it again when reading.
+
+            #### Properties
+            - `apiKey`: _String_ - API key for your google project.
+            - `client_email`: _String_ - The email address of your service account.
+            - `private_key`: _String_ - "The private key for your service account.
+            - `sheetId`: _String_ - The ID of the worksheet. Can be found in the URL as the "gid" parameter. One of "sheetId" or "sheetIndex" is required.
+            - `sheetIndex`: _Number_ - The position of the worksheet as they appear in the Google sheets UI. Starts from 0. One of "sheetId" or "sheetIndex" is required.
+            - `spreadsheetId`: _String_ - **REQUIRED** - The document ID from the URL of the spreadsheet.
+            - `columnTypes`: _Object_ - An object that defines the data types for each column. Each key should be the column name, and the value should be one of: `string`, `number`, `boolean`, `date`, or `json`.
+
+            #### Examples
+
+            Read only access to first sheet in a public spreadsheet:
+            ```yaml
+            connections:
+              - id: public_sheet
+                type: GoogleSheet
+                properties:
+                  apiKey:
+                    _secret: GOOGLE_SHEETS_API_KEY
+                  sheetIndex: 0
+                  spreadsheetId: ubQsWYNGRUq0gFB1sAp2r9oYE19lZ8yGA1T6y0yBoLPW
+            ```
+
+            Access with a service account, with defined types:
+            ```yaml
+            connections:
+              - id: my_sheet
+                type: GoogleSheet
+                properties:
+                  client_email:
+                    _secret: GOOGLE_SHEETS_CLIENT_EMAIL
+                  private_key:
+                    _base64.decode:
+                      _secret: GOOGLE_SHEETS_PRIVATE_KEY
+                  sheetId: '1199545345'
+                  spreadsheetId: ubQsWYNGRUq0gFB1sAp2r9oYE19lZ8yGA1T6y0yBoLPW
+                  columnTypes:
+                    name: string
+                    age: number
+                    birthday: date
+                    subscribed: boolean
+                    address: json
+            ```
+
+            ## Requests
+
+            Request types:
+              - GoogleSheetAppendMany
+              - GoogleSheetAppendOne
+              - GoogleSheetDeleteOne
+              - GoogleSheetGetMany
+              - GoogleSheetGetOne
+              - GoogleSheetUpdateMany
+              - GoogleSheetUpdateOne
+
+            ### GoogleSheetAppendMany
+
+            The `GoogleSheetAppendMany` request inserts an array of documents as rows in a Google Sheet.
+
+            #### Properties
+            - `rows`: _Array_ - **REQUIRED** - The rows to insert into the sheet. An an array of objects where keys are the column names and values are the values to insert.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `raw`: _Boolean_ - Store raw values instead of converting as if typed into the sheets UI.
+
+            #### Examples
+
+            Insert a list of rows.
+            ```yaml
+            requests:
+              - id: append_rows
+                type:  GoogleSheetAppendMany
+                connectionId: google_sheets
+                properties:
+                  rows:
+                    - name: D.Va
+                      role: Tank
+                    - name: Tracer
+                      role: Damage
+                    - name: Genji
+                      role: Damage
+                    - name: Reinhart
+                      role: Tank
+                    - name: Mercy
+                      role: Support
+            ```
+
+            ### GoogleSheetAppendOne
+
+            The `GoogleSheetAppendOne` request inserts a documents as a row in a Google Sheet.
+
+            #### Properties
+            - `row`: _Object_ - **REQUIRED** - The row to insert into the sheet. An object where keys are the column names and values are the values to insert.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `raw`: _Boolean_ - Store raw values instead of converting as if typed into the sheets UI.
+
+            #### Examples
+
+            Insert a single row:
+            ```yaml
+            requests:
+              - id: insert_dva
+                type:  GoogleSheetAppendOne
+                connectionId: google_sheets
+                properties:
+                  row:
+                    name: D.Va
+                    role: Tank
+                    real_name: Hana Song
+                    age: 19
+            ```
+
+            ### GoogleSheetDeleteOne
+
+            The `GoogleSheetDeleteOne` request deletes a row from a Google Sheet. It deletes the first row matched by the filter, written as a MongoDB query expression.
+
+            #### Properties
+            - `filter`: _Object_ - **REQUIRED** - A MongoDB query expression to filter the data. The first row matched by the filter will be deleted.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `limit`: _Number_ - The maximum number of rows to fetch.
+              - `skip`: _Number_ - The number of rows to skip from the top of the sheet.
+
+            #### Examples
+
+            Delete the row where name is "Hanzo".
+            ```yaml
+            requests:
+              - id: delete_hanzo
+                type:  GoogleSheetDeleteOne
+                connectionId: google_sheets
+                properties:
+                  filter:
+                    name:
+                      $eq: Hanzo
+            ```
+
+            ### GoogleSheetGetMany
+
+            The `GoogleSheetGetMany` request fetches a number of rows from the spreadsheet. The `limit` and `skip` options can be used to control which documents are read from the spreadsheet. The filter or pipeline options can then be used to filter or transform the fetched data.
+
+            #### Properties
+            - `filter`: _Object_ - A MongoDB query expression to filter the data.
+            - `pipeline`: _Object_ - A MongoDB aggregation pipeline to transform the data.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `limit`: _Number_ - The maximum number of rows to fetch.
+              - `skip`: _Number_ - The number of rows to skip from the top of the sheet.
+
+            #### Examples
+
+            Get the first 10 rows.
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetGetMany
+                connectionId: google_sheets
+                properties:
+                  options:
+                    limit: 10
+            ```
+
+            Pagination using limit and skip.
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetGetMany
+                connectionId: google_sheets
+                properties:
+                  options:
+                    skip:
+                      _product:
+                        - _state: page_size
+                        - _subtract:
+                            - _state: page_number
+                            - 1
+                    limit:
+                      _state: page_size
+            ```
+
+            Get all records where age is greater than 25.
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetGetMany
+                connectionId: google_sheets
+                properties:
+                  filter:
+                    age:
+                      $gt: 25
+            ```
+
+            Use an aggregation pipeline to aggregate data.
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetGetMany
+                connectionId: google_sheets
+                properties:
+                  pipeline:
+                    - $group:
+                        _id: $region
+                        score:
+                          $avg: $score
+                    - $project:
+                        _id: 0
+                        region: $_id
+                        score: 1
+                    - $sort:
+                        score: 1
+            ```
+
+            ### GoogleSheetGetOne
+
+            The `GoogleSheetGetOne` request fetches a single rows from the spreadsheet. The `limit` and `skip` options can be used to control which documents are read from the spreadsheet. The filter option can then be used to filter or select which row is returned.
+
+            #### Properties
+            - `filter`: _Object_ - A MongoDB query expression to filter the data.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `limit`: _Number_ - The maximum number of rows to fetch.
+              - `skip`: _Number_ - The number of rows to skip from the top of the sheet.
+
+            #### Examples
+
+            Get row where name is "Zarya".
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetGetOne
+                connectionId: google_sheets
+                properties:
+                  filter:
+                    name:
+                      $eq: Zarya
+            ```
+
+            ### GoogleSheetUpdateMany
+
+            The `GoogleSheetUpdateMany` request updates all the rows matched by the filter.
+
+            #### Properties
+            - `filter`: _Object_ - A MongoDB query expression to filter the data. . All rows matched by the filter will be updated.
+            - `update`: _Object_ - The update to apply to the row. An object where keys are the column names and values are the updated values.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `limit`: _Number_ - The maximum number of rows to fetch.
+              - `raw`: _Boolean_ - Store raw values instead of converting as if typed into the sheets UI.
+              - `skip`: _Number_ - The number of rows to skip from the top of the sheet.
+
+            #### Examples
+
+            Update all rows where age is less than 18.
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetUpdateMany
+                connectionId: google_sheets
+                properties:
+                  filter:
+                    age:
+                      $lt: 18
+                  update:
+                    minor: true
+            ```
+            ### GoogleSheetUpdateOne
+
+            The `GoogleSheetUpdateOne` request updates the first row matched by the filter.
+
+            #### Properties
+            - `filter`: _Object_ - A MongoDB query expression to filter the data. . The first row matched by the filter will be updated.
+            - `update`: _Object_ - The update to apply to the row. An object where keys are the column names and values are the updated values.
+            - `options`: _Object_ - Optional settings. Supported settings are:
+              - `limit`: _Number_ - The maximum number of rows to fetch.
+              - `raw`: _Boolean_ - Store raw values instead of converting as if typed into the sheets UI.
+              - `skip`: _Number_ - The number of rows to skip from the top of the sheet.
+              - `upsert`: _Boolean_ - Insert the row if no rows are matched by the filter.
+
+            #### Examples
+
+            Update the row for "Doomfist"
+            ```yaml
+            requests:
+              - id: get_10_rows
+                type:  GoogleSheetUpdateOne
+                connectionId: google_sheets
+                properties:
+                  filter:
+                    name:
+                      $eq: Doomfist
+                  update:
+                    overpowered: true
+            ```

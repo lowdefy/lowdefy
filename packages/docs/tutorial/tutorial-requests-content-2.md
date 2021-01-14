@@ -31,6 +31,7 @@ https://docs.google.com/spreadsheets/d/19lZ8yGA1pq60yBoLPWubQsKWMJRUq0gFB1sAp2r7
 To use a Google Sheet with the Lowdefy connection, we first need to define the columns in the sheet. This will be the same fields as the data we will be saving later.
 
 In the first row of your sheet, add the following column headers:
+
 - meeting_name
 - number_of_attendees
 - meeting_room
@@ -43,6 +44,7 @@ In the first row of your sheet, add the following column headers:
 In your `lowdefy.yaml` file, add the following:
 
 ##### `lowdefy.yaml`
+
 ```
 name: lowdefy-project-template
 version: CURRENT_LOWDEFY_VERSION
@@ -65,11 +67,12 @@ menus:
   # ...
 ```
 
-
 #### Step 4
 
 In your `booking.yaml` file, add the following request:
+
 ##### `pages/booking.yaml`
+
 ```yaml
 id: booking
 type: PageHeaderMenu
@@ -104,7 +107,9 @@ blocks:
 #### Step 5
 
 In your `booking.yaml` file, add the following action to the submit button:
+
 ##### `pages/booking.yaml`
+
 ```yaml
 id: booking
 # ...
@@ -123,9 +128,9 @@ blocks:
           onClick:
             - id: validate
               type: Validate
-################ -------- Copy from here -------- ################
+            ################ -------- Copy from here -------- ################
             - id: save_data
               type: Request
               params: save_data
-################ ------- Copy to here ----------- ################
+            ################ ------- Copy to here ----------- ################
 ```
