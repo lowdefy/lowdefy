@@ -40,7 +40,7 @@
   "dependencies": {
     "@lowdefy/graphql": "3.1.1",
     "@lowdefy/node-utils": "3.1.1",
-    "apollo-server-express": "2.19.1",
+    "apollo-server-express": "2.19.2",
     "express": "4.17.1",
     "graphql": "15.4.0"
   },

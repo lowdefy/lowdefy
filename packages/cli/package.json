@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/helpers": "3.1.1",
     "@lowdefy/node-utils": "3.1.1",
-    "apollo-server-express": "2.19.1",
+    "apollo-server-express": "2.19.2",
     "axios": "0.21.1",
     "chalk": "4.1.0",
     "chokidar": "3.5.0",
