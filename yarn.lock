@@ -85,9 +85,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.3.4":
-  version: 3.3.4
-  resolution: "@apollo/client@npm:3.3.4"
+"@apollo/client@npm:3.3.7":
+  version: 3.3.7
+  resolution: "@apollo/client@npm:3.3.7"
   dependencies:
     "@graphql-typed-document-node/core": ^3.0.0
     "@types/zen-observable": ^0.8.0
@@ -96,7 +96,7 @@ __metadata:
     fast-json-stable-stringify: ^2.0.0
     graphql-tag: ^2.11.0
     hoist-non-react-statics: ^3.3.2
-    optimism: ^0.13.1
+    optimism: ^0.14.0
     prop-types: ^15.7.2
     symbol-observable: ^2.0.0
     ts-invariant: ^0.6.0
@@ -111,7 +111,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: aa40047a30e6862ba4c40054c76d8850f3eb2622fa0d9b8f097a1b8a5af75bc31db7607bb6729d941725450c5961d74e1830e20134325b1abd4219dbbc1039b3
+  checksum: eb06152f3e92cb2d6ebe400f9f3392fa106816bc9bd60fdb57cc160ac077c3e0cc5a00978e53cd4796fb87617eb05c836c82e3e16e828e1deee3a79940f951f1
   languageName: node
   linkType: hard
 
@@ -3236,7 +3236,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.3.4
+    "@apollo/client": 3.3.7
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -4642,6 +4642,15 @@ __metadata:
   dependencies:
     tslib: ^1.14.1
   checksum: 50b8ee5376de1fb81470d21080158d9ad6880d76ca9354735337b78ea93df6558bf859f56e9a4d3a2ab7d9f611716da79f50b85e64144e5095eaf78634892cdb
+  languageName: node
+  linkType: hard
+
+"@wry/trie@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@wry/trie@npm:0.2.1"
+  dependencies:
+    tslib: ^1.14.1
+  checksum: bca4e43a6eaa0edafe6f763d7e833d3fe478cb7723048d57843410102e8bf920f48d1646ea58f45cdac46e9b2884a1890bb5b9022959b2c16ca59814a18b9e66
   languageName: node
   linkType: hard
 
@@ -15021,6 +15030,16 @@ fsevents@^1.2.7:
   dependencies:
     "@wry/context": ^0.5.2
   checksum: 1a37293983d18998ee9528887e27b177231bec1ec6045e90f744ae5a9abe47d3c71561c10772113f7623750a1fb159e6929e9b1f67496e83857f9100fdb9bbab
+  languageName: node
+  linkType: hard
+
+"optimism@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "optimism@npm:0.14.0"
+  dependencies:
+    "@wry/context": ^0.5.2
+    "@wry/trie": ^0.2.1
+  checksum: 43223bb26e463829182a1d03abacf85939a91c06c33eb81884aaa74b2eb1e5ebe305c4ae0c079de06605d2d688665ceb2d245a421335786aa0f8414adbf52a91
   languageName: node
   linkType: hard
 
