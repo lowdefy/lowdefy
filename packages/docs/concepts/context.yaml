@@ -12,3 +12,13 @@ _ref:
             fontSize: 14px
         properties:
           content: |
+            A Lowdefy block with category `context` provides the environment for a part of a Lowdefy app to run in. More than one context can be placed on a page, but generally only is need. The first block on a page should be a `context` category block. The standard page blocks like [`PageHeaderMenu`](/PageHeaderMenu) or [`PageSiderMenu`](/PageSiderMenu) are all `context` category blocks, and the [`Context`](/Context) block is a simple container that also provides a context.
+
+            Each context provides encapsulation to the blocks inside it. It has it's own state object and requests.
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Next Steps
+            previous_page_id: next-steps
+            next_page_title: Actions
+            next_page_id: actions

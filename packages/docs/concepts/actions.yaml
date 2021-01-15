@@ -14,8 +14,10 @@ _ref:
           content: |
             `Actions` can be used to perform actions, like calling requests or linking to a new page, based on events in your app, like button clicks or page loads.
 
-            Each block defines the events for which it will call actions. The actions to be executed can be defined as a list of action definitions, under that event's name in the actions object of a block.
+            Each block defines the events for which it will call actions. The actions to be executed can be defined as a list of action definitions, under that event's name in the actions object of a block. The event names usually start with the keyword "on", like `onClick`, `onChange`, or `onInit`. Each action definition has an `id` (which should be unique in that action chain), a `type` and a `params` object, which has the parameters that specify how the action should execute.
 
+
+            ###### Actions definition example:
             ```yaml
             - id: block_with_actions
               type: Block
@@ -38,8 +40,6 @@ _ref:
                       # ...
             ```
 
-            The event names usually start with the keyword "on", like `onClick`, `onChange`, or `onInit`. Each action definition has an `id` (which should be unique in that action chain), a `type` and a `params` object, which has the parameters that specify how the action should execute.
-
             # Context initialisation actions
 
             Four action events are always defined for `context` type blocks:
@@ -50,7 +50,7 @@ _ref:
 
             These actions can be used to initialise the context or page.
 
-            The `onInit` action will execute the first type a context is create (for example if a page is loaded for the first time), before anything is rendered. It can be used to set up a context. Actions that take a long time to execute, like `Request`, should be used sparingly here.
+            The `onInit` action will execute the first time a context is create (for example if a page is loaded for the first time), before anything is rendered. It can be used to set up a context. Actions that take a long time to execute, like `Request`, should be used sparingly here.
 
             The `onEnter` action will execute every time a context is rendered again (for example if a user left a page, and returns to it), also before anything is rendered to the screen. It can be used to execute actions that should be run each time a page is loaded, like checking if an id is present in the url query parameters, and initialising the state based on that.
 

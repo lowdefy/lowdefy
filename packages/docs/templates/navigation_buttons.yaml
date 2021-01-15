@@ -1,8 +1,8 @@
 id: nav_buttons
 type: Box
 style:
-  paddingTop: 60px
-  paddingBottom: 80px
+  marginTop: 60px
+  marginBottom: 80px
 layout:
   contentGutter: 16
 blocks:

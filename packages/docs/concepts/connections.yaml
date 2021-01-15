@@ -12,3 +12,59 @@ _ref:
             fontSize: 14px
         properties:
           content: |
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection to the service, and often contain contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record or executing a query.
+
+            # Connections
+
+            Connections are defined at the root of your Lowdefy configuration, in the connections array. Each connection should have an `id`, a `type`, and `properties` defining the connection.
+
+            ###### Connections definition example:
+            ```yaml
+            version: LOWDEFY_VERSION
+            connections:
+              - id: connection1
+                type: ConnectionType1
+                properties:
+                  # ...
+              - id: connection2
+                type: ConnectionType2
+                properties:
+                  # ...
+            pages:
+              # ...
+            ```
+
+            # Requests
+
+            Requests can be defined on any block, and the results of the request are available to any block in the context. Requests should have an `id`, a `type`, a `connectionId` specifying the connection to use, and `properties` defining the request. Requests can be called using the [`Request`](/Request) action.
+
+            ###### Requests definition example:
+            ```yaml
+            id: block_with_requests
+            type: Block
+            requests:
+              - id: request1
+                type: RequestType1
+                connectionId: connectionId1
+                properties:
+                  # ...
+              - id: request2
+                type: RequestType2
+                connectionId: connectionId2
+                properties:
+                  # ...
+            properties:
+              # ...
+            ```
+
+            # Secrets
+
+            Sensitive information like passwords or API keys are often required to use other services. The [`_secret`](/_secret) operator should be used reference these secrets, they should never be coded directly in your app, or commited to source control.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Actions
+            previous_page_id: actions
+            next_page_title: Layout
+            next_page_id: layout

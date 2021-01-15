@@ -1384,3 +1384,10 @@ _ref:
                     properties:
                       html: |
                         <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 15</div>
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Connections
+            previous_page_id: connections
+            next_page_title: Operators
+            next_page_id: operators
