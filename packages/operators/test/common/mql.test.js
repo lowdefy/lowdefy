@@ -245,9 +245,10 @@ test('_mql.aggregate params not object or array', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate takes an object or array as value input. Received: {\\"_mql.aggregate\\":\\"invalid\\"} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _mql.aggregate accepts one of the following types: array, object.
+          Received: {\\"_mql.aggregate\\":\\"invalid\\"} at locationId."
+  `);
 });
 
 test('_mql.expr add number', () => {
@@ -449,9 +450,10 @@ test('_mql.test invalid params', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.test takes an object or array as value input. Received: {\\"_mql.test\\":\\"invalid\\"} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _mql.test accepts one of the following types: array, object.
+          Received: {\\"_mql.test\\":\\"invalid\\"} at locationId."
+  `);
 });
 
 test('_mql.test null', () => {
@@ -509,9 +511,10 @@ test('_mql invalid method name', () => {
       location: 'locationId',
       methodName: 'invalid',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql must be used with one of the following methods: _mql.aggregate, _mql.expr, _mql.test. Received: {\\"_mql\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _mql.invalid is not supported, use one of the following types: aggregate, expr, test.
+          Received: {\\"_mql.invalid\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
+  `);
 });
 
 test('_mql undefined method name', () => {
@@ -523,7 +526,8 @@ test('_mql undefined method name', () => {
       },
       location: 'locationId',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql must be used with one of the following methods: _mql.aggregate, _mql.expr, _mql.test. Received: {\\"_mql\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _mql.undefined is not supported, use one of the following types: aggregate, expr, test.
+          Received: {\\"_mql.undefined\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
+  `);
 });

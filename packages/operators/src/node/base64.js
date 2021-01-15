@@ -14,35 +14,29 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
 function decode(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   const buff = Buffer.from(input, 'base64');
   return buff.toString('utf8');
 }
 
 function encode(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   const buff = Buffer.from(input, 'utf8');
   return buff.toString('base64');
 }
 
-const Cls = { encode, decode };
-const allowedMethods = new Set(['encode', 'decode']);
-
-function _base64({ params, location, method }) {
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
+};
+function _base64({ params, location, methodName }) {
   return runClass({
-    allowedMethods,
-    allowedProperties: new Set([]),
-    Cls,
+    functions,
     location,
-    method,
+    meta,
+    methodName,
     operator: '_base64',
     params,
   });

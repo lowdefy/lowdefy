@@ -32,13 +32,13 @@ function _operator(options) {
       )} at ${location}.`
     );
   }
-  const [operator, method] = params.name.split('.');
+  const [operator, methodName] = params.name.split('.');
   if (Object.prototype.hasOwnProperty.call(operations, operator)) {
     return operations[operator]({
       ...options,
       location,
       params: params && params.params,
-      method,
+      methodName,
     });
   }
   throw new Error(

@@ -14,33 +14,28 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
 function decode(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   return decodeURIComponent(input);
 }
 
 function encode(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   return encodeURIComponent(input);
 }
 
-const Cls = { encode, decode };
-const allowedMethods = new Set(['encode', 'decode']);
+const functions = { encode, decode };
+const meta = {
+  encode: { singleArg: true, validTypes: ['string'] },
+  decode: { singleArg: true, validTypes: ['string'] },
+};
 
-function _uri({ params, location, method }) {
+function _uri({ params, location, methodName }) {
   return runClass({
-    allowedMethods,
-    allowedProperties: new Set([]),
-    Cls,
+    functions,
     location,
-    method,
+    meta,
+    methodName,
     operator: '_uri',
     params,
   });

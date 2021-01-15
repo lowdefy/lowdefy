@@ -14,66 +14,57 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import runInstance from '../runInstance';
 
-const allowedProperties = new Set(['length']);
-const allowedMethods = new Set([
-  'concat',
-  'copyWithin',
-  // 'every',
-  'fill',
-  // 'filter',
-  // 'find',
-  // 'findIndex',
-  'flat',
-  // 'forEach',
-  'includes',
-  'indexOf',
-  'join',
-  'lastIndexOf',
-  // 'map',
-  'pop',
-  'push',
-  // 'reduce',
-  // 'reduceRight',
-  'reverse',
-  'shift',
-  'slice',
-  // 'some',
-  'sort',
-  'splice',
-  'toString',
-  'unshift',
-]);
-const instanceReturnType = new Set(['pop', 'push', 'shift', 'splice', 'unshift']);
+const meta = {
+  concat: { validTypes: ['array'] },
+  copyWithin: {
+    namedArgs: ['on', 'target', 'start', 'end'],
+    validTypes: ['array', 'object'],
+  },
+  fill: {
+    namedArgs: ['on', 'value', 'start', 'end'],
+    validTypes: ['array', 'object'],
+  },
+  flat: { namedArgs: ['on', 'depth'], validTypes: ['array', 'object'] },
+  includes: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
+  indexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
+  join: { namedArgs: ['on', 'separator'], validTypes: ['array', 'object'] },
+  lastIndexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
+  reverse: { validTypes: ['array'], singleArg: true },
+  slice: { namedArgs: ['on', 'start', 'end'], validTypes: ['array', 'object'] },
+  sort: { namedArgs: ['on'], validTypes: ['array'] },
+  splice: {
+    namedArgs: ['on', 'start', 'deleteCount'],
+    spreadArgs: ['insert'],
+    returnInstance: true,
+    validTypes: ['array', 'object'],
+  },
+  length: { validTypes: ['array'], property: true },
+  // every,
+  // filter,
+  // find,
+  // findIndex,
+  // forEach,
+  // map,
+  // pop: { namedArgs: ['on'] },
+  // push: { namedArgs: ['on'] },
+  // reduce,
+  // reduceRight,
+  // shift: { namedArgs: ['on'] },
+  // some,
+  // toString,
+  // unshift: { namedArgs: ['on'] },
+};
 
-function _array({ params, location, method }) {
-  if (!type.isArray(params) || !type.isArray(params[0])) {
-    throw new Error(
-      `Operator Error: _array takes an array with the first argument as an array on which to evaluate "${method}". Received: {"_array.${method}":${JSON.stringify(
-        params
-      )}} at ${location}.`
-    );
-  }
-  if (instanceReturnType.has(method)) {
-    runInstance({
-      allowedMethods,
-      allowedProperties,
-      location,
-      method,
-      operator: '_array',
-      params,
-    });
-    return params[0];
-  }
+function _array({ params, location, methodName }) {
   return runInstance({
-    allowedMethods,
-    allowedProperties,
     location,
-    method,
+    meta,
+    methodName,
     operator: '_array',
     params,
+    instanceType: 'array',
   });
 }
 

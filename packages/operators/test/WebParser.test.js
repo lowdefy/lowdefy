@@ -168,225 +168,231 @@ test('parse location not specified', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('parse _base64.encode operator', () => {
-  const input = { a: { '_base64.encode': ['A string value'] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _base64.decode operator', () => {
-  const input = { a: { '_base64.decode': ['QSBzdHJpbmcgdmFsdWU='] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'A string value' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _uri.encode operator', () => {
-  const input = { a: { '_uri.encode': ['ABC abc 123'] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'ABC%20abc%20123' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _uri.decode operator', () => {
-  const input = { a: { '_uri.decode': ['ABC%20abc%20123'] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'ABC abc 123' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _lt operator', () => {
-  const input = { a: { _lt: [4, 5] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _lte operator', () => {
-  const input = { a: { _lte: [5, 5] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _gt operator', () => {
-  const input = { a: { _gt: [5, 3] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _gte operator', () => {
-  const input = { a: { _gte: [5, 5] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _if_none operator', () => {
-  const input = { a: { _if_none: [null, 'default'] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'default' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('parse _media operator', () => {
-  Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 300 });
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
-  const input = { a: { _media: true } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({
-    a: {
-      height: 300,
-      size: 'xs',
-      width: 500,
-    },
+describe('parse operators', () => {
+  test('parse _base64.encode operator', () => {
+    const input = { a: { '_base64.encode': 'A string value' } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'QSBzdHJpbmcgdmFsdWU=' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
 
-test('parse _random operator', () => {
-  const mathRandomFn = Math.random;
-  Math.random = () => 0.5678;
-  const input = { a: { _random: 'string' } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'kfv9yqdp' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-  Math.random = mathRandomFn;
-});
+  test('parse _base64.decode operator', () => {
+    const input = { a: { '_base64.decode': 'QSBzdHJpbmcgdmFsdWU=' } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'A string value' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _math operator', () => {
-  const input = { a: { '_math.min': [9, 4, 2] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 2 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _uri.encode operator', () => {
+    const input = { a: { '_uri.encode': 'ABC abc 123' } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'ABC%20abc%20123' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _sum operator', () => {
-  const input = { a: { _sum: [1, 1] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 2 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _uri.decode operator', () => {
+    const input = { a: { '_uri.decode': 'ABC%20abc%20123' } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'ABC abc 123' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _product operator', () => {
-  const input = { a: { _product: [2, -3] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: -6 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _lt operator', () => {
+    const input = { a: { _lt: [4, 5] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: true });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _subtract operator', () => {
-  const input = { a: { _subtract: [2, -3] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 5 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _lte operator', () => {
+    const input = { a: { _lte: [5, 5] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: true });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _divide operator', () => {
-  const input = { a: { _divide: [2, 4] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 0.5 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _gt operator', () => {
+    const input = { a: { _gt: [5, 3] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: true });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _array operator', () => {
-  const input = { a: { '_array.length': [[2, 4]] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 2 });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _gte operator', () => {
+    const input = { a: { _gte: [5, 5] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: true });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _object operator', () => {
-  const input = { a: { '_object.keys': [{ a: 1, b: 2 }] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: ['a', 'b'] });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _if_none operator', () => {
+    const input = { a: { _if_none: [null, 'default'] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'default' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _string operator', () => {
-  const input = { a: { '_string.concat': ['a new ', 'string'] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ a: 'a new string' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _media operator', () => {
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 300,
+    });
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
+    const input = { a: { _media: true } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({
+      a: {
+        height: 300,
+        size: 'xs',
+        width: 500,
+      },
+    });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('_json.stringify then _json.parse', () => {
-  const value = {
-    a: [
-      { b: 1, c: false, d: new Date(0) },
-      { b: 2, c: true, d: new Date(1) },
-    ],
-    e: 'null',
-    f: 'undefined',
-    g: 0,
-  };
-  const input = { x: { '_json.parse': [{ '_json.stringify': [value] }] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ x: value });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _random operator', () => {
+    const mathRandomFn = Math.random;
+    Math.random = () => 0.5678;
+    const input = { a: { _random: 'string' } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'kfv9yqdp' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+    Math.random = mathRandomFn;
+  });
 
-test('_json.stringify then _json.parse date', () => {
-  const value = new Date();
-  const input = { '_json.parse': [{ '_json.stringify': [value] }] };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(value);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _math operator', () => {
+    const input = { a: { '_math.min': [9, 4, 2] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 2 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('_yaml.stringify then _yaml.parse', () => {
-  const value = {
-    a: [
-      { b: 1, c: false, d: new Date(0) },
-      { b: 2, c: true, d: new Date(1) },
-    ],
-    e: 'null',
-    f: 'undefined',
-    g: 0,
-  };
-  const input = { x: { '_yaml.parse': [{ '_yaml.stringify': [value] }] } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual({ x: value });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _sum operator', () => {
+    const input = { a: { _sum: [1, 1] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 2 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('_yaml.stringify then _yaml.parse date', () => {
-  const value = new Date();
-  const input = { '_yaml.parse': [{ '_yaml.stringify': [value] }] };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual(value);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
+  test('parse _product operator', () => {
+    const input = { a: { _product: [2, -3] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: -6 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 
-test('parse _mql operator', () => {
-  const input = { '_mql.test': { on: { _state: true }, test: { string: 'Some String' } } };
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId' });
-  expect(res.output).toEqual(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  test('parse _subtract operator', () => {
+    const input = { a: { _subtract: [2, -3] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 5 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _divide operator', () => {
+    const input = { a: { _divide: [2, 4] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 0.5 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _array operator', () => {
+    const input = { a: { '_array.length': [2, 4] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 2 });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _object operator', () => {
+    const input = { a: { '_object.keys': { a: 1, b: 2 } } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: ['a', 'b'] });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _string operator', () => {
+    const input = { a: { '_string.concat': ['a new ', 'string'] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ a: 'a new string' });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('_json.stringify then _json.parse', () => {
+    const value = {
+      a: [
+        { b: 1, c: false, d: new Date(0) },
+        { b: 2, c: true, d: new Date(1) },
+      ],
+      e: 'null',
+      f: 'undefined',
+      g: 0,
+    };
+    const input = { x: { '_json.parse': { '_json.stringify': [value] } } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+    expect(res.output).toEqual({ x: value });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('_json.stringify then _json.parse date', () => {
+    const value = new Date();
+    const input = { '_json.parse': { '_json.stringify': [value] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+    expect(res.output).toEqual(value);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('_yaml.stringify then _yaml.parse', () => {
+    const value = {
+      a: [
+        { b: 1, c: false, d: new Date(0) },
+        { b: 2, c: true, d: new Date(1) },
+      ],
+      e: 'null',
+      f: 'undefined',
+      g: 0,
+    };
+    const input = { x: { '_yaml.parse': { '_yaml.stringify': [value] } } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual({ x: value });
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('_yaml.stringify then _yaml.parse date', () => {
+    const value = new Date();
+    const input = { '_yaml.parse': { '_yaml.stringify': [value] } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual(value);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _mql operator', () => {
+    const input = { '_mql.test': { on: { _state: true }, test: { string: 'state' } } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual(true);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });

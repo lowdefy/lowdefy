@@ -16,7 +16,7 @@
 
 import mingo from 'mingo';
 import { get, type } from '@lowdefy/helpers';
-import useMethod from '../useMethod';
+import runClass from '../runClass';
 
 import 'mingo/init/system';
 
@@ -57,24 +57,19 @@ function test(data, test) {
   return query.test(data);
 }
 
-const methods = {
-  aggregate: { named: ['on', 'pipeline'], fn: aggregate },
-  expr: { named: ['on', 'expr'], fn: expr },
-  test: { named: ['on', 'test'], fn: test },
+const meta = {
+  aggregate: { namedArgs: ['on', 'pipeline'], validTypes: ['array', 'object'] },
+  expr: { namedArgs: ['on', 'expr'], validTypes: ['array', 'object'] },
+  test: { namedArgs: ['on', 'test'], validTypes: ['array', 'object'] },
 };
 
-function mql({ params, location, methodName }) {
-  if (type.isNone(methodName) || type.isUndefined(methods[methodName])) {
-    throw new Error(
-      `Operator Error: _mql must be used with one of the following methods:${Object.keys(
-        methods
-      ).map((key) => ` _mql.${key}`)}. Received: {"_mql":${JSON.stringify(params)}} at ${location}.`
-    );
-  }
+const functions = { aggregate, expr, test };
 
-  return useMethod({
+function mql({ params, location, methodName }) {
+  return runClass({
+    functions,
     location,
-    meta: methods[methodName],
+    meta,
     methodName,
     operator: '_mql',
     params,

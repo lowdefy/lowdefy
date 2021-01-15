@@ -30,7 +30,7 @@ function getFromObject({
 }) {
   if (params === true) return object;
   if (type.isString(params)) {
-    return get(object, applyArrayIndices(arrayIndices, params), { default: null });
+    return get(object, applyArrayIndices(arrayIndices, params), { default: null, copy: true });
   }
   if (type.isObject(params)) {
     if (params.contextId) {
@@ -59,7 +59,8 @@ function getFromObject({
       );
     }
     return get(object, applyArrayIndices(arrayIndices, params.key), {
-      default: get(params, 'default', { default: null }),
+      default: get(params, 'default', { default: null, copy: true }),
+      copy: true,
     });
   }
   throw new Error(

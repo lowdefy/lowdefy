@@ -14,37 +14,35 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import runInstance from '../runInstance';
 import runClass from '../runClass';
 
-const allowedInstanceMethods = new Set(['hasOwnProperty']);
-const allowedMethods = new Set(['keys', 'values', 'hasOwnProperty']);
+const metaInstance = {
+  hasOwnProperty: { namedArgs: ['on', 'prop'], validTypes: ['array', 'object'] },
+};
 
-function _object({ params, location, method }) {
-  if (!type.isArray(params) || !type.isObject(params[0])) {
-    throw new Error(
-      `Operator Error: _object takes an array with the first argument as an object on which to evaluate "${method}". Received: {"_object.${method}":${JSON.stringify(
-        params
-      )}} at ${location}.`
-    );
-  }
-  if (allowedInstanceMethods.has(method)) {
+const metaClass = {
+  keys: { singleArg: true, validTypes: ['object'] },
+  values: { singleArg: true, validTypes: ['object'] },
+  assign: { spreadArgs: true, validTypes: ['array'] },
+};
+
+function _object({ params, location, methodName }) {
+  if (methodName === 'hasOwnProperty') {
     return runInstance({
-      allowedMethods: allowedInstanceMethods,
-      allowedProperties: new Set(),
       location,
-      method,
+      meta: metaInstance,
+      methodName,
       operator: '_object',
       params,
+      instanceType: 'object',
     });
   }
   return runClass({
-    allowedMethods,
-    allowedProperties: new Set(),
+    functions: Object,
     location,
-    Cls: Object,
-    method,
+    meta: metaClass,
+    methodName,
     operator: '_object',
     params,
   });

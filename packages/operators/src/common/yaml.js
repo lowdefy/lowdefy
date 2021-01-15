@@ -15,35 +15,34 @@
 */
 
 import YAML from 'js-yaml';
-import { serializer, type } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
 function parse(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   if (input === 'undefined') return undefined;
   const loaded = YAML.safeLoad(input);
   return serializer.deserialize(loaded);
 }
 
-function stringify(input) {
+function stringify(input, options) {
   return YAML.safeDump(serializer.serialize(input, { isoStringDates: true }), {
     sortKeys: true,
-    noRefs: true,
+    ...options,
   });
 }
 
-const Cls = { parse, stringify };
-const allowedMethods = new Set(['parse', 'stringify']);
+const functions = { parse, stringify };
+const meta = {
+  stringify: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
+  parse: { singleArg: true, validTypes: ['string'] },
+};
 
-function _yaml({ params, location, method }) {
+function _yaml({ params, location, methodName }) {
   return runClass({
-    allowedMethods,
-    allowedProperties: new Set([]),
-    Cls,
+    functions,
     location,
-    method,
+    meta,
+    methodName,
     operator: '_yaml',
     params,
   });

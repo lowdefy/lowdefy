@@ -54,7 +54,8 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
   if (params.all === true) return object;
   if (type.isString(params.key)) {
     return get(object, applyArrayIndices(arrayIndices, params.key), {
-      default: get(params, 'default', { default: null }),
+      default: get(params, 'default', { default: null, copy: true }),
+      copy: true,
     });
   }
   return object;

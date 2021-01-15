@@ -14,31 +14,31 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 import runClass from '../runClass';
 
 function parse(input) {
-  if (!type.isString(input)) {
-    throw new Error('Input must be a string type.');
-  }
   if (input === 'undefined') return undefined;
   return serializer.deserializeFromString(input);
 }
 
-function stringify(input) {
-  return serializer.serializeToString(input, { space: 2, isoStringDates: true });
+function stringify(input, options) {
+  return serializer.serializeToString(input, { space: 2, isoStringDates: true, ...options });
 }
 
-const Cls = { parse, stringify };
-const allowedMethods = new Set(['parse', 'stringify']);
+const functions = { parse, stringify };
 
-function _json({ params, location, method }) {
+const meta = {
+  stringify: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
+  parse: { singleArg: true, validTypes: ['string'] },
+};
+
+function _json({ params, location, methodName }) {
   return runClass({
-    allowedMethods,
-    allowedProperties: new Set([]),
-    Cls,
+    functions,
     location,
-    method,
+    meta,
+    methodName,
     operator: '_json',
     params,
   });

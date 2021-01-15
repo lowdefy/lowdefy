@@ -43,7 +43,7 @@ class WebParser {
     const reviver = (_, value) => {
       if (type.isObject(value) && Object.keys(value).length === 1) {
         const key = Object.keys(value)[0];
-        const [op, method] = key.split('.');
+        const [op, methodName] = key.split('.');
         try {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
@@ -58,7 +58,7 @@ class WebParser {
               location: location ? applyArrayIndices(arrayIndices, location) : null,
               lowdefyGlobal: this.context.lowdefyGlobal,
               menus: this.context.menus,
-              method,
+              methodName,
               operations: this.operations,
               params: value[key],
               requests: this.context.requests,

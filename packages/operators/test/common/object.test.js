@@ -1,33 +1,237 @@
 import object from '../../src/common/object';
 
-test('_object valid methods', () => {
-  expect(object({ params: [{ a: 11, b: 22 }], method: 'keys', location: 'locationId' })).toEqual([
-    'a',
-    'b',
-  ]);
-  expect(object({ params: [{ a: 11, b: 22 }], method: 'values', location: 'locationId' })).toEqual([
-    11,
-    22,
-  ]);
-  expect(
-    object({ params: [{ a: 11, b: 22 }, 'b'], method: 'hasOwnProperty', location: 'locationId' })
-  ).toEqual(true);
+describe('_object.hasOwnProperty', () => {
+  const methodName = 'hasOwnProperty';
+  test('valid', () => {
+    expect(
+      object({
+        params: [{ a: 1 }, 'a'],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      object({
+        params: { on: { a: 1 }, prop: 'a' },
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      object({
+        params: { on: { a: 1 }, prop: 'b' },
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: { value: 'x', start: 1, end: 2 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
+          Received: {\\"_object.hasOwnProperty\\":{\\"value\\":\\"x\\",\\"start\\":1,\\"end\\":2}} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: [1, { a: 1 }],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
+          Received: {\\"_object.hasOwnProperty\\":[1,{\\"a\\":1}]} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
+            Received: {\\"_object.hasOwnProperty\\":\\"x\\"} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
+            Received: {\\"_object.hasOwnProperty\\":null} at http://localhost/."
+    `);
+  });
+});
+
+describe('_object.keys', () => {
+  const methodName = 'keys';
+  test('valid', () => {
+    expect(
+      object({
+        params: { a: 1, b: 1 },
+        methodName,
+        location,
+      })
+    ).toEqual(['a', 'b']);
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: [],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.keys accepts one of the following types: object.
+            Received: {\\"_object.keys\\":[]} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.keys accepts one of the following types: object.
+            Received: {\\"_object.keys\\":\\"x\\"} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.keys accepts one of the following types: object.
+            Received: {\\"_object.keys\\":null} at http://localhost/."
+    `);
+  });
+});
+
+describe('_object.values', () => {
+  const methodName = 'values';
+  test('valid', () => {
+    expect(
+      object({
+        params: { a: 1, b: 2 },
+        methodName,
+        location,
+      })
+    ).toEqual([1, 2]);
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: [],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.values accepts one of the following types: object.
+            Received: {\\"_object.values\\":[]} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.values accepts one of the following types: object.
+            Received: {\\"_object.values\\":\\"x\\"} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.values accepts one of the following types: object.
+            Received: {\\"_object.values\\":null} at http://localhost/."
+    `);
+  });
+});
+
+describe('_object.assign', () => {
+  const methodName = 'assign';
+  test('valid', () => {
+    expect(
+      object({
+        params: [
+          { a: 1, b: 2 },
+          { a: 2, c: 3 },
+        ],
+        methodName,
+        location,
+      })
+    ).toEqual({ a: 2, b: 2, c: 3 });
+    expect(
+      object({
+        params: [{ a: 1, b: 2 }, 2, 'a', { b: 3 }],
+        methodName,
+        location,
+      })
+    ).toEqual({ 0: 'a', a: 1, b: 3 });
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: [],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _object.assign - Cannot convert undefined or null to object Received: {\\"_object.assign\\":[]} at http://localhost/."`
+    );
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.assign accepts one of the following types: array.
+            Received: {\\"_object.assign\\":\\"x\\"} at http://localhost/."
+    `);
+    expect(() =>
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.assign accepts one of the following types: array.
+            Received: {\\"_object.assign\\":null} at http://localhost/."
+    `);
+  });
 });
 
 test('_object called with no method or params', () => {
-  expect(() => object({ location: 'locationId' })).toThrow(
-    'Operator Error: _object takes an array with the first argument as an object on which to evaluate "undefined". Received: {"_object.undefined":undefined} at locationId.'
-  );
+  expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _object.undefined is not supported, use one of the following types: keys, values, assign.
+          Received: {\\"_object.undefined\\":undefined} at locationId."
+  `);
 });
 
 test('_object invalid method', () => {
-  expect(() => object({ params: [{ a: 1 }], method: 'X', location: 'locationId' })).toThrow(
-    'Operator Error: _object must be called with one of the following: keys, values, hasOwnProperty. Received: {"_object.X":[{"a":1}]} at locationId.'
-  );
+  expect(() => object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _object.X is not supported, use one of the following types: keys, values, assign.
+          Received: {\\"_object.X\\":[{\\"a\\":1}]} at locationId."
+  `);
 });
 
 test('_object invalid method args', () => {
-  expect(() => object({ params: 'X', method: 'flat', location: 'locationId' })).toThrow(
-    'Operator Error: _object takes an array with the first argument as an object on which to evaluate "flat". Received: {"_object.flat":"X"} at locationId.'
-  );
+  expect(() => object({ params: 'X', methodName: 'flat', location: 'locationId' }))
+    .toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _object.flat is not supported, use one of the following types: keys, values, assign.
+          Received: {\\"_object.flat\\":\\"X\\"} at locationId."
+  `);
 });
