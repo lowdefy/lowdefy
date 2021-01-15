@@ -3287,7 +3287,7 @@ __metadata:
     graphql: 15.4.0
     html-webpack-plugin: 4.5.1
     jest: 26.6.3
-    nodemon: 2.0.6
+    nodemon: 2.0.7
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
@@ -3317,7 +3317,7 @@ __metadata:
     graphql: 15.4.0
     html-webpack-plugin: 4.5.1
     jest: 26.6.3
-    nodemon: 2.0.6
+    nodemon: 2.0.7
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
@@ -14519,9 +14519,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nodemon@npm:2.0.6":
-  version: 2.0.6
-  resolution: "nodemon@npm:2.0.6"
+"nodemon@npm:2.0.7":
+  version: 2.0.7
+  resolution: "nodemon@npm:2.0.7"
   dependencies:
     chokidar: ^3.2.2
     debug: ^3.2.6
@@ -14535,7 +14535,7 @@ fsevents@^1.2.7:
     update-notifier: ^4.1.0
   bin:
     nodemon: bin/nodemon.js
-  checksum: 6a4b0d6ba2c164796a2b164cd8c7e0587387b5fca224526bd1267e93b99a23071b31f51a5eecbeccd656a0ec097a194d9a123a3bc8833e148c53de9c4c3dcebd
+  checksum: e1e8acb584120579714c29d7e12b4efca2188b73ea537a560b1a66ec995dccbd8c0742af2c25f1a18df7e7bb8448477e80063824708466cda491dfc52ab6e233
   languageName: node
   linkType: hard
 
