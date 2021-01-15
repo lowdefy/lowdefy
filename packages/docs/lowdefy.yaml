@@ -58,17 +58,42 @@ menus:
             pageId: tutorial-requests
             properties:
               title: Saving data
+          - id: next-steps
+            type: MenuLink
+            pageId: next-steps
+            properties:
+              title: Next steps
       - id: concepts
         type: MenuGroup
         properties:
           title: Concepts
           icon: BulbOutlined
         links:
+          - id: context
+            type: MenuLink
+            pageId: context
+            properties:
+              title: Context
+          - id: actions
+            type: MenuLink
+            pageId: actions
+            properties:
+              title: Actions
+          - id: connections
+            type: MenuLink
+            pageId: connections
+            properties:
+              title: Connections
           - id: layout
             type: MenuLink
             pageId: layout
             properties:
               title: Layout
+          - id: operators
+            type: MenuLink
+            pageId: operators
+            properties:
+              title: Operators
       - id: blocks_input
         type: MenuGroup
         properties:
@@ -164,8 +189,13 @@ pages:
   - _ref: tutorial/tutorial-actions-operators.yaml
   - _ref: tutorial/tutorial-actions-operators-config.yaml
   - _ref: tutorial/tutorial-requests.yaml
+  - _ref: tutorial/next-steps.yaml
 
+  - _ref: concepts/context.yaml
+  - _ref: concepts/actions.yaml
+  - _ref: concepts/connections.yaml
   - _ref: concepts/layout.yaml
+  - _ref: concepts/operators.yaml
 
   - _ref: blocks/input/TextInput.yaml
 

@@ -1,0 +1,14 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: context
+    pageTitle: Context
+    section: Concepts
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |

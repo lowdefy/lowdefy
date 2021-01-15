@@ -33,6 +33,5 @@ _ref:
           vars:
             previous_page_title: Interactive pages
             previous_page_id: tutorial-actions-operators
-            next_page_title: ''
-            next_page_id: ''
-
+            next_page_title: Next steps
+            next_page_id: next-steps

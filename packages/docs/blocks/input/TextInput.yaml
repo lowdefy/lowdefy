@@ -138,7 +138,7 @@ _ref:
     available_actions_description: |
       ###### onChange
       Triggered when value is changed.
-      ##### onPressEnter
+      ###### onPressEnter
       Triggered when enter is pressed while block is focused.
 
     examples:

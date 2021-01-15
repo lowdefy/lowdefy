@@ -51,26 +51,23 @@ _ref:
             properties:
               style:
                 minHeight: 300px
-              menus:
-                - id: default
-                  links:
-                    - id: examples
-                      type: MenuLink
-                      url: https://lowdefy.com/examples
-                      properties:
-                        title: Examples
-                        icon: AppstoreOutlined
-                    - id: docs
-                      type: MenuLink
-                      url: https://docs.lowdefy.com
-                      properties:
-                        title: Docs
-                        icon: ReadOutlined
+              menu:
+                links:
+                  - id: examples
+                    type: MenuLink
+                    url: https://lowdefy.com/examples
+                    properties:
+                      title: Examples
+                      icon: AppstoreOutlined
+                  - id: docs
+                    type: MenuLink
+                    url: https://docs.lowdefy.com
+                    properties:
+                      title: Docs
+                      icon: ReadOutlined
             blocks:
               - id: example1_content_card
                 type: Card
-                layout:
-                  size: 800
                 areas:
                   content:
                     blocks:

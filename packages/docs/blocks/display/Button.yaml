@@ -181,10 +181,3 @@ _ref:
         properties: '{"title": "Get started","block": true,"ghost": true,"icon": "RocketOutlined"}'
       - title: Round and type danger
         properties: '{"title": "Delete Forever", "shape": "round", "type": "danger", "icon": "WarningOutlined" }'
-
-
-
-
-
-
-
