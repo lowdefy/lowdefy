@@ -71,7 +71,7 @@
     "react-markdown": "5.0.3",
     "react-syntax-highlighter": "15.4.3",
     "style-loader": "2.0.0",
-    "webpack": "5.10.1",
+    "webpack": "5.14.0",
     "webpack-cli": "4.2.0",
     "webpack-dev-server": "3.11.0",
     "webpack-merge": "5.7.0",
