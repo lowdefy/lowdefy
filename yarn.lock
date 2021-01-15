@@ -3090,7 +3090,7 @@ __metadata:
     "@lowdefy/node-utils": 3.1.1
     "@lowdefy/nunjucks": 3.1.1
     "@lowdefy/operators": 3.1.1
-    "@sendgrid/mail": 7.4.0
+    "@sendgrid/mail": 7.4.2
     "@shelf/jest-mongodb": 1.2.3
     ajv: 6.12.6
     ajv-errors: 1.0.1
@@ -3642,32 +3642,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/client@npm:^7.4.0":
-  version: 7.4.1
-  resolution: "@sendgrid/client@npm:7.4.1"
+"@sendgrid/client@npm:^7.4.2":
+  version: 7.4.2
+  resolution: "@sendgrid/client@npm:7.4.2"
   dependencies:
-    "@sendgrid/helpers": ^7.4.0
+    "@sendgrid/helpers": ^7.4.2
     axios: ^0.21.1
-  checksum: b9a266c5b72ec6978e6dcf697066eba2e443e43baa8e014c0ebdbddd6e0224b77de6fa26be828246afcb63610ca80ad08d185909b08c8431935beac1323d2b7a
+  checksum: b7dd62ee5e9324c7d97393f5667bdc7d647eec49700b5c0edc2a42bb2ec3e20e01202c920cfbcea87422b813bc02587ca93d16c4bb26498b621f003c2b2e5a5c
   languageName: node
   linkType: hard
 
-"@sendgrid/helpers@npm:^7.4.0":
-  version: 7.4.0
-  resolution: "@sendgrid/helpers@npm:7.4.0"
+"@sendgrid/helpers@npm:^7.4.2":
+  version: 7.4.2
+  resolution: "@sendgrid/helpers@npm:7.4.2"
   dependencies:
     deepmerge: ^4.2.2
-  checksum: 16e3d88348c030052ebcd90b871c9ff3ae8bcdc7eb3da00fe2acf4c801ecc211dcd0ba48a85dfd8adb23a0cf9d5dbda4702ff4062a2fe0469a4fb53adf9570ee
+  checksum: 4747128f10680311e561c3a971ed4b323edc6ccd559f3d9467a7e31bfcdf232685ee64a43de6eac9ff8ca695e4c4c555bb58f01f0cd75dc519fa03215763fa12
   languageName: node
   linkType: hard
 
-"@sendgrid/mail@npm:7.4.0":
-  version: 7.4.0
-  resolution: "@sendgrid/mail@npm:7.4.0"
+"@sendgrid/mail@npm:7.4.2":
+  version: 7.4.2
+  resolution: "@sendgrid/mail@npm:7.4.2"
   dependencies:
-    "@sendgrid/client": ^7.4.0
-    "@sendgrid/helpers": ^7.4.0
-  checksum: 8412418efb19965d17282860b059147bb35325eb2ba81c8aeea8e8a2e5453ba39a7d441482a54b1cadd4423ffafdf9969d0061ea600b84b8565b816bc90fea76
+    "@sendgrid/client": ^7.4.2
+    "@sendgrid/helpers": ^7.4.2
+  checksum: 4b4edeaf5ab06a0b4b501526e9bbe06fe0e4f6d55793be65ad22240e0701cad3a8cb0bf0ee64e6f2417557f5bfee4cf1230ec03ebe9d1356ac09eb5b868453aa
   languageName: node
   linkType: hard
 
