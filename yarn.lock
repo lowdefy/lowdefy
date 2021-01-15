@@ -2777,7 +2777,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -2825,7 +2825,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     webpack-merge: 5.7.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -2861,7 +2861,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     webpack-merge: 5.7.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -2904,7 +2904,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     webpack-merge: 5.7.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -2944,7 +2944,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     webpack-merge: 5.7.0
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -3162,7 +3162,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
   languageName: unknown
@@ -3260,7 +3260,7 @@ __metadata:
     style-loader: 2.0.0
     webpack: 5.14.0
     webpack-cli: 4.3.1
-    webpack-dev-server: 3.11.0
+    webpack-dev-server: 3.11.2
     webpack-merge: 5.7.0
   languageName: unknown
   linkType: soft
@@ -7823,7 +7823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^3.1.0, debug@npm:^3.1.1, debug@npm:^3.2.5, debug@npm:^3.2.6":
+"debug@npm:^3.1.0, debug@npm:^3.1.1, debug@npm:^3.2.6":
   version: 3.2.7
   resolution: "debug@npm:3.2.7"
   dependencies:
@@ -9535,16 +9535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faye-websocket@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "faye-websocket@npm:0.10.0"
-  dependencies:
-    websocket-driver: ">=0.5.1"
-  checksum: 2a5823ddfb39ec7ef952dd1adab4c28fd162f5ee175f40f8d7467560554299199c1f0aa505e0fe14a85452c76d0c4dbee32f8327c71bf2f61a32f62538843111
-  languageName: node
-  linkType: hard
-
-"faye-websocket@npm:^0.11.3, faye-websocket@npm:~0.11.1":
+"faye-websocket@npm:^0.11.3":
   version: 0.11.3
   resolution: "faye-websocket@npm:0.11.3"
   dependencies:
@@ -12728,7 +12719,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"json3@npm:^3.3.2, json3@npm:^3.3.3":
+"json3@npm:^3.3.3":
   version: 3.3.3
   resolution: "json3@npm:3.3.3"
   checksum: f79831247f3ecdd4e99996534a171ccd20f34502b799dd53b671af8a7d7ac1228a7d806c100948cc16f3437da5ea0b821e2c44f8372a2a4095a0abebf0fb41ef
@@ -18015,7 +18006,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"selfsigned@npm:^1.10.7, selfsigned@npm:^1.10.8":
+"selfsigned@npm:^1.10.8":
   version: 1.10.8
   resolution: "selfsigned@npm:1.10.8"
   dependencies:
@@ -18370,20 +18361,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"sockjs-client@npm:1.4.0":
-  version: 1.4.0
-  resolution: "sockjs-client@npm:1.4.0"
-  dependencies:
-    debug: ^3.2.5
-    eventsource: ^1.0.7
-    faye-websocket: ~0.11.1
-    inherits: ^2.0.3
-    json3: ^3.3.2
-    url-parse: ^1.4.3
-  checksum: efe7e7bcf2758f5ab3947f750b9909ea442022911dfad5883f5133085b587d0ac96f579a0463be8ea0613d1d4c5ee68af33b0896b58b4b7734571d9290b6c1c0
-  languageName: node
-  linkType: hard
-
 "sockjs-client@npm:^1.5.0":
   version: 1.5.0
   resolution: "sockjs-client@npm:1.5.0"
@@ -18395,17 +18372,6 @@ fsevents@^1.2.7:
     json3: ^3.3.3
     url-parse: ^1.4.7
   checksum: e5c976415fff9bcef89b280fb5310125cf838f26f94b4e9d1a65eb1ca2f12521383ac76bbab9350f8b110ed04556d3e9d8bdbf64a7b964883e4e2de950f35317
-  languageName: node
-  linkType: hard
-
-"sockjs@npm:0.3.20":
-  version: 0.3.20
-  resolution: "sockjs@npm:0.3.20"
-  dependencies:
-    faye-websocket: ^0.10.0
-    uuid: ^3.4.0
-    websocket-driver: 0.6.5
-  checksum: 9a8596f800e66bdb718165e1e51bb20d04ebf2f9f837cb459a83060b78230ae787bb6bbbc75ded3c20409b935a6cf0e03fc762cf26b558cc1f7b557b6acc9fbc
   languageName: node
   linkType: hard
 
@@ -20455,9 +20421,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:3.11.0":
-  version: 3.11.0
-  resolution: "webpack-dev-server@npm:3.11.0"
+"webpack-dev-server@npm:3.11.2":
+  version: 3.11.2
+  resolution: "webpack-dev-server@npm:3.11.2"
   dependencies:
     ansi-html: 0.0.7
     bonjour: ^3.5.0
@@ -20479,11 +20445,11 @@ fsevents@^1.2.7:
     p-retry: ^3.0.1
     portfinder: ^1.0.26
     schema-utils: ^1.0.0
-    selfsigned: ^1.10.7
+    selfsigned: ^1.10.8
     semver: ^6.3.0
     serve-index: ^1.9.1
-    sockjs: 0.3.20
-    sockjs-client: 1.4.0
+    sockjs: ^0.3.21
+    sockjs-client: ^1.5.0
     spdy: ^4.0.2
     strip-ansi: ^3.0.1
     supports-color: ^6.1.0
@@ -20499,7 +20465,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     webpack-dev-server: bin/webpack-dev-server.js
-  checksum: 1d3445745634cee36df9a01edcb8ed56eadd647a0d72751e8646c038c4d76f40194b841f97ed819971988f85c5b531c571cc776288011ffafd201c9f3ccd444d
+  checksum: 6bf6803810e70f77c50b08b040aa2e8d8e844572e18ad57c624f0cda36cc316fb700a3f765401097c4088d922b41381a44760bd3ed1f196e84a97ba938513130
   languageName: node
   linkType: hard
 
@@ -20622,15 +20588,6 @@ fsevents@^1.2.7:
   bin:
     webpack: bin/webpack.js
   checksum: e2edf306cb12b7b0a0e25c90569ceb8826c3ba580f8a7956af8914cb198637d22727f4b89fe881d93571aacacc229f1c3b616c264deed3b87942422fd7c00218
-  languageName: node
-  linkType: hard
-
-"websocket-driver@npm:0.6.5":
-  version: 0.6.5
-  resolution: "websocket-driver@npm:0.6.5"
-  dependencies:
-    websocket-extensions: ">=0.1.1"
-  checksum: 1169a0ecccf514a98abc54a1b9c9aa56ef662e9169336cc4bc684c4f95a52b93f499d52d2b2f1eb7ccae79dcc41d6cfe8bf9b4cf05f4c69756d7c75fa53d312f
   languageName: node
   linkType: hard
 
