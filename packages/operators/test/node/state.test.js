@@ -186,3 +186,20 @@ test('_state replace key arrayIndices', () => {
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('_state with contextId in node environment', () => {
+  const input = {
+    _state: {
+      all: true,
+      contextId: 'other',
+    },
+  };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual(null);
+  expect(res.errors).toMatchInlineSnapshot(`
+    Array [
+      [Error: Operator Error: Accessing a context using contextId is only available in a client environment. Received: {"all":true,"contextId":"other"} at locationId.],
+    ]
+  `);
+});

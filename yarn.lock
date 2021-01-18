@@ -2736,7 +2736,7 @@ __metadata:
     html-webpack-plugin: 4.5.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -2782,7 +2782,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     less: 3.13.0
     less-loader: 7.1.0
     moment: 2.29.1
@@ -2823,7 +2823,7 @@ __metadata:
     html-webpack-plugin: 4.5.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
@@ -2863,7 +2863,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     jest-serializer-html: 7.0.0
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     less: 3.13.0
     less-loader: 7.1.0
     react: 17.0.1
@@ -2903,7 +2903,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     imports-loader: 1.2.0
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     path-browserify: 1.0.1
     process: 0.11.10
     react: 17.0.1
@@ -2939,7 +2939,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     json5: 2.1.3
     uuid: 8.3.2
     webpack: 5.14.0
@@ -2976,7 +2976,7 @@ __metadata:
     html-webpack-plugin: 4.5.1
     inquirer: 7.3.3
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     opener: 1.5.2
     ora: 5.2.0
     react: 17.0.1
@@ -3076,7 +3076,7 @@ __metadata:
     graphql: 15.4.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
-    mingo: 3.1.0
+    mingo: 4.1.0
     moment: 2.29.1
     mongodb: 3.6.3
     webpack: 5.14.0
@@ -3119,7 +3119,7 @@ __metadata:
     html-webpack-plugin: 4.5.1
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
-    js-yaml: 3.14.1
+    js-yaml: 4.0.0
     less: 3.13.0
     less-loader: 7.1.0
     path-browserify: 1.0.1
@@ -3196,9 +3196,11 @@ __metadata:
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/nunjucks": 3.1.1
     babel-jest: 26.6.3
+    deep-diff: 1.0.2
     jest: 26.6.3
-    js-yaml: 3.14.1
-    mingo: 3.1.0
+    js-yaml: 4.0.0
+    mingo: 4.1.0
+    uuid: 8.3.2
   languageName: unknown
   linkType: soft
 
@@ -5495,6 +5497,13 @@ __metadata:
   dependencies:
     sprintf-js: ~1.0.2
   checksum: 435adaef5f6671c3ef1478a22be6fd54bdb99fdbbce8f5561b9cbbb05068ccce87b7df3b9f3322ff52a6ebb9cab2b427cbedac47a07611690a9beaa5184093e2
+  languageName: node
+  linkType: hard
+
+"argparse@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "argparse@npm:2.0.1"
+  checksum: 160b7a25d2a7097fd5fdf25eb8a99e037340078f70e6c7cfdef305837ed14d54570b2b13261bcae26c8cd44ad6e9a7136a0110d815ac65a7891c69c7bf2f4afd
   languageName: node
   linkType: hard
 
@@ -7935,6 +7944,13 @@ __metadata:
   version: 0.7.0
   resolution: "dedent@npm:0.7.0"
   checksum: 05c18541a4b932006a65eccaf03d68ac60552981db424f39f1ca4bebf5beaa53d318eadbb4dc0be24232844e69d1140763a7ada94559b2cb7771a47c0a829aeb
+  languageName: node
+  linkType: hard
+
+"deep-diff@npm:1.0.2":
+  version: 1.0.2
+  resolution: "deep-diff@npm:1.0.2"
+  checksum: 2cad2385af35be25be35bc36ecea1caf412e3c5c05390006bfb0145edbf17d8191b98bd6fc7b2471871b12e182b17de3962301bc96228201b8863620451e289b
   languageName: node
   linkType: hard
 
@@ -12519,7 +12535,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:3.14.1, js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.7.0":
+"js-yaml@npm:4.0.0":
+  version: 4.0.0
+  resolution: "js-yaml@npm:4.0.0"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: ee9b16cdbba690ec70f46d61737b28b35e26e6d51606c466de7fa876d3517de0cfdffd2e1ef21263d5ca3b32659d2e4c65255f50d6e236f022305bce72242d46
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.7.0":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
   dependencies:
@@ -13870,10 +13897,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mingo@npm:3.1.0":
-  version: 3.1.0
-  resolution: "mingo@npm:3.1.0"
-  checksum: 34eb1d66a1cccda29f8fd360bd11268a212ab1cd72dd81a06d7168f037cd9793b75820b34a67043a3f9d8e7f88bebfb4ee7a912715c534690802377a6862e3bc
+"mingo@npm:4.1.0":
+  version: 4.1.0
+  resolution: "mingo@npm:4.1.0"
+  checksum: e1c4ea8051f4089d24c485db8a0ce242d0de5eb8229f575609dcfda04137a5977f5349a83d4b34a05a70b6a3fa1b20dc7ed58be3700ca0dc7eb4d41352a53a96
   languageName: node
   linkType: hard
 

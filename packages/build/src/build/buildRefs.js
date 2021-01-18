@@ -66,7 +66,7 @@ function parseNunjucks(fileContent, vars, path) {
   const templated = template(vars);
   const subExt = getFileSubExtension(path);
   if (subExt === 'yaml' || subExt === 'yml') {
-    return YAML.safeLoad(templated);
+    return YAML.load(templated);
   }
   if (subExt === 'json') {
     return JSON5.parse(templated);

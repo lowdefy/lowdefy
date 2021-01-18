@@ -29,7 +29,7 @@ async function getConfig(context) {
   }
   let lowdefy;
   try {
-    lowdefy = YAML.safeLoad(lowdefyYaml);
+    lowdefy = YAML.load(lowdefyYaml);
   } catch (error) {
     throw new Error(`Could not parse "lowdefy.yaml" file. Received error ${error.message}.`);
   }

@@ -51,7 +51,7 @@
     "google-spreadsheet": "3.1.15",
     "graphql": "15.4.0",
     "graphql-type-json": "0.3.2",
-    "mingo": "3.1.0",
+    "mingo": "4.1.0",
     "moment": "2.29.1",
     "mongodb": "3.6.3"
   },

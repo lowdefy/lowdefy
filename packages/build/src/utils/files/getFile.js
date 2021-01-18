@@ -31,7 +31,7 @@ async function getYamlFile(filePath) {
   const file = await readFile(filePath);
   return {
     filePath,
-    content: YAML.safeLoad(file),
+    content: YAML.load(file),
   };
 }
 

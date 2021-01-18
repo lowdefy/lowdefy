@@ -6,6 +6,6 @@ module.exports = {
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/test/'],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/dist/'],
 };

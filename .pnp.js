@@ -4144,7 +4144,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:4.5.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
             ["react", "npm:17.0.1"],
@@ -4192,7 +4192,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["less", "npm:3.13.0"],
             ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.1.0"],
             ["moment", "npm:2.29.1"],
@@ -4235,7 +4235,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:4.5.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
@@ -4277,7 +4277,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["less", "npm:3.13.0"],
             ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.1.0"],
             ["react", "npm:17.0.1"],
@@ -4319,7 +4319,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["imports-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:1.2.0"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
             ["react", "npm:17.0.1"],
@@ -4357,7 +4357,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["clean-webpack-plugin", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:3.0.0"],
             ["dataloader", "npm:2.0.0"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["json5", "npm:2.1.3"],
             ["uuid", "npm:8.3.2"],
             ["webpack", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:5.14.0"],
@@ -4396,7 +4396,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:1e43113c7dc84a5d03308bf7ffaf00574d351ca16282af6c6c0b9576804fb03914bdf2200961292f439926b2e537dce172d7529f79013ce51b9f2d56e9cd836b#npm:4.5.1"],
             ["inquirer", "npm:7.3.3"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["opener", "npm:1.5.2"],
             ["ora", "npm:5.2.0"],
             ["react", "npm:17.0.1"],
@@ -4487,7 +4487,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.4.0"],
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
             ["jest", "npm:26.6.3"],
-            ["mingo", "npm:3.1.0"],
+            ["mingo", "npm:4.1.0"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.14.0"],
@@ -4551,7 +4551,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:4.5.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
+            ["js-yaml", "npm:4.0.0"],
             ["less", "npm:3.13.0"],
             ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.1.0"],
             ["path-browserify", "npm:1.0.1"],
@@ -4636,9 +4636,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
+            ["deep-diff", "npm:1.0.2"],
             ["jest", "npm:26.6.3"],
-            ["js-yaml", "npm:3.14.1"],
-            ["mingo", "npm:3.1.0"]
+            ["js-yaml", "npm:4.0.0"],
+            ["mingo", "npm:4.1.0"],
+            ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -7837,6 +7839,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["argparse", "npm:1.0.10"],
             ["sprintf-js", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/argparse-npm-2.0.1-faff7999e6-160b7a25d2.zip/node_modules/argparse/",
+          "packageDependencies": [
+            ["argparse", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -11564,6 +11573,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/dedent-npm-0.7.0-2dbb45a4c5-05c18541a4.zip/node_modules/dedent/",
           "packageDependencies": [
             ["dedent", "npm:0.7.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["deep-diff", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/deep-diff-npm-1.0.2-ab33725091-2cad2385af.zip/node_modules/deep-diff/",
+          "packageDependencies": [
+            ["deep-diff", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -17001,6 +17019,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["esprima", "npm:4.0.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/js-yaml-npm-4.0.0-3ac8e950bb-ee9b16cdbb.zip/node_modules/js-yaml/",
+          "packageDependencies": [
+            ["js-yaml", "npm:4.0.0"],
+            ["argparse", "npm:2.0.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["jsbn", [
@@ -18512,10 +18538,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mingo", [
-        ["npm:3.1.0", {
-          "packageLocation": "./.yarn/cache/mingo-npm-3.1.0-d294bc200c-34eb1d66a1.zip/node_modules/mingo/",
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/mingo-npm-4.1.0-e24ff07131-e1c4ea8051.zip/node_modules/mingo/",
           "packageDependencies": [
-            ["mingo", "npm:3.1.0"]
+            ["mingo", "npm:4.1.0"]
           ],
           "linkType": "HARD",
         }]
