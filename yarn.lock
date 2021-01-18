@@ -3219,6 +3219,7 @@ __metadata:
     "@lowdefy/helpers": 3.1.1
     "@lowdefy/nunjucks": 3.1.1
     babel-jest: 26.6.3
+    deep-diff: 1.0.2
     jest: 26.6.3
     js-yaml: 4.0.0
     mingo: 4.1.0
@@ -8156,6 +8157,13 @@ __metadata:
   version: 0.7.0
   resolution: "dedent@npm:0.7.0"
   checksum: 05c18541a4b932006a65eccaf03d68ac60552981db424f39f1ca4bebf5beaa53d318eadbb4dc0be24232844e69d1140763a7ada94559b2cb7771a47c0a829aeb
+  languageName: node
+  linkType: hard
+
+"deep-diff@npm:1.0.2":
+  version: 1.0.2
+  resolution: "deep-diff@npm:1.0.2"
+  checksum: 2cad2385af35be25be35bc36ecea1caf412e3c5c05390006bfb0145edbf17d8191b98bd6fc7b2471871b12e182b17de3962301bc96228201b8863620451e289b
   languageName: node
   linkType: hard
 

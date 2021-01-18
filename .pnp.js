@@ -4634,6 +4634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
+            ["deep-diff", "npm:1.0.2"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
             ["mingo", "npm:4.1.0"],
@@ -11615,6 +11616,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/dedent-npm-0.7.0-2dbb45a4c5-05c18541a4.zip/node_modules/dedent/",
           "packageDependencies": [
             ["dedent", "npm:0.7.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["deep-diff", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/deep-diff-npm-1.0.2-ab33725091-2cad2385af.zip/node_modules/deep-diff/",
+          "packageDependencies": [
+            ["deep-diff", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]

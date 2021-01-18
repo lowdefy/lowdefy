@@ -331,4 +331,15 @@ describe('parse operators', () => {
     expect(res.output).toEqual(true);
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
+
+  test('parse _diff operator', () => {
+    const input = { '_diff.deep': { rhs: { a: 1 }, lhs: { b: 2 } } };
+    const parser = new NodeParser({ state });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual([
+      { kind: 'D', lhs: 2, path: ['b'] },
+      { kind: 'N', path: ['a'], rhs: 1 },
+    ]);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });

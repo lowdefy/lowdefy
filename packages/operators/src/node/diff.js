@@ -14,14 +14,30 @@
   limitations under the License.
 */
 
-import _diff from './diff';
-import _base64 from './base64';
-import _secret from './secret';
-import _uuid from './uuid';
+import { diff } from 'deep-diff';
+import runClass from '../runClass';
 
-export default {
-  _diff,
-  _base64,
-  _secret,
-  _uuid,
+function deep(lhs, rhs) {
+  const result = diff(lhs, rhs);
+  if (!result) {
+    return [];
+  }
+  return result;
+}
+
+const functions = { deep };
+const meta = {
+  deep: { namedArgs: ['lhs', 'rhs'], validTypes: ['object', 'array'] },
 };
+function _diff({ params, location, methodName }) {
+  return runClass({
+    functions,
+    location,
+    meta,
+    methodName,
+    operator: '_diff',
+    params,
+  });
+}
+
+export default _diff;
