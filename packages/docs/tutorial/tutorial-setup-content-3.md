@@ -1,6 +1,7 @@
 #### Step 4
 
 Configure the Lowdefy backend server.
+
 - Click the "Site settings" button.
 - Choose the "Functions" section in the left menu.
 - Edit the settings and set your functions directory to `.lowdefy/functions`.

@@ -23,7 +23,7 @@ _ref:
             > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a `Box`, a `Card`, a `PageHeaderMenu` or any other container or context block. The `Block` blocks could be any type of block, including other container blocks.
 
 
-            ###### Two blocks in the primary content area, `content`, of a container:
+            ###### Two blocks in the primary content area (`content`) of a container:
             ```yaml
             - id: container
               type: Container
@@ -202,7 +202,7 @@ _ref:
             fontSize: 14px
         properties:
           content: |
-            # Span
+            # Layouts using span
 
             Each content area has 24 columns. Blocks have a `span` property, which determines how may columns the block occupies. Blocks are laid out horizontally, until the sum of the spans would be more than 24, then the block is placed in the next row.
 
@@ -297,7 +297,7 @@ _ref:
             fontSize: 14px
         properties:
           content: |
-            # Flex
+            # Layouts using flex
 
             Blocks can also be laid out using [CSS flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. These properties are `grow` (`flex-grow`), `shrink` (`flex-shrink`), `size` (`flex-basis`) and `flex` (`flex`). If any of these properties are set, the default span of 24 or any span set in the configuration is not used. If one of `grow`, `shrink`, or `size` are set, the other properties take their default values. The `flex` property overwrites the `grow`, `shrink`, and `size` properties.
 

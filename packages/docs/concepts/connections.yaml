@@ -2,7 +2,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: connections
-    pageTitle: Connections
+    pageTitle: Connections and Requests
     section: Concepts
     content:
       - id: md1
@@ -59,7 +59,7 @@ _ref:
 
             # Secrets
 
-            Sensitive information like passwords or API keys are often required to use other services. The [`_secret`](/_secret) operator should be used reference these secrets, they should never be coded directly in your app, or commited to source control.
+            Sensitive information like passwords or API keys are often required to use other services. The [`_secret`](/_secret) operator should be used to reference these secrets, they should never be coded directly in your app, or commited to source control.
 
       - _ref:
           path: templates/navigation_buttons.yaml

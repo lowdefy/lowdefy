@@ -47,7 +47,7 @@ menus:
             type: MenuLink
             pageId: tutorial-add-blocks
             properties:
-              title: Making a booking form
+              title: Adding blocks
           - id: tutorial-actions-operators
             type: MenuLink
             pageId: tutorial-actions-operators
@@ -83,7 +83,7 @@ menus:
             type: MenuLink
             pageId: connections
             properties:
-              title: Connections
+              title: Connections and Requests
           - id: layout
             type: MenuLink
             pageId: layout
@@ -176,6 +176,15 @@ menus:
           - id: Validate
             type: MenuLink
             pageId: Validate
+      - id: operators
+        type: MenuGroup
+        properties:
+          title: Operators
+          icon: ToolOutlined
+        links:
+          - id: _and
+            type: MenuLink
+            pageId: _and
 
 pages:
   - _ref: introduction.yaml
@@ -216,3 +225,5 @@ pages:
   - _ref: actions/SetGlobal.yaml
   - _ref: actions/SetState.yaml
   - _ref: actions/Validate.yaml
+
+  - _ref: operators/_and.yaml

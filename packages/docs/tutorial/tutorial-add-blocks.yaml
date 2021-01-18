@@ -2,7 +2,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-add-blocks
-    pageTitle: Making a booking form
+    pageTitle: Adding blocks
     section: Tutorial
     # prefetchPages:
     #   - tutorial-actions-operators

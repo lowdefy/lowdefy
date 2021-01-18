@@ -1,12 +1,12 @@
 #### Step 4
 
-If you click on the links in the menu, you should see that your browser path (the part after lowdefy.com) changes from `welcome` to `booking`.
+If you click on the links in the menu, you should see that your browser path (the part after lowdefy.com) changes from `welcome` to `new-ticket`.
 
 ### What happened
 
-- We created a new page with id `booking`.
+- We created a new page with id `new-ticket`.
 - We used a `_ref` operator to reference configuration in another file.
-- That page can now be found at the `/booking` route.
+- That page can now be found at the `/new-ticket` route.
 - A link to that page was created in the menu. These links are in the order of the pages.
 
 ## Menus
@@ -28,23 +28,22 @@ menus:
           icon: HomeOutlined
           title: Home
         pageId: welcome
-      - id: booking
+      - id: new-ticket
         type: MenuLink
         properties:
-          icon: CalendarOutlined
-          title: Book a meeting
-        pageId: booking
+          icon: AlertOutlined
+          title: New ticket
+        pageId: new-ticket
 ################ ------- Copy to here ----------- ################
 pages:
-  - id: welcome
+  - _ref: pages/welcome.yaml
     # ...
 ```
 
 The menu links will now have icons and titles.
 
->  If you would like to see how your config should look at this point, you can find it [here](tutorial-create-page-config).
+> If you would like to see how your config should look at this point, you can find it [here](tutorial-create-page-config).
 
 ### Up next
 
-In the next section we will add some more blocks to our page to create a form for users to book a meeting room.
-
+In the next section we will add some more blocks to our page to create a form to capture the ticket data.

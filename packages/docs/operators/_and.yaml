@@ -1,0 +1,14 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: _and
+    pageTitle: _and
+    section: Operators
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |

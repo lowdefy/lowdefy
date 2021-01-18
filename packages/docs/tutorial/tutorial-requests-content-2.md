@@ -14,19 +14,15 @@ Add the same variables (`LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL` and `LOWDEFY_SECRET
 
 We need to give our service account access to our Google Sheet. Go to your Google Sheet and click the "Share" button. Share the sheet with the client email of the service account we just created, with the "Editor" role.
 
+### What happened
+
+We created a Google Cloud Platform (GCP) project, and created a service account in that project that we can use to access Google sheets. This gave us the credentials we need for the [`GoogleSheet`](/GoogleSheet) connection.
+
+We set up these credentials for our local dev environment using a `.env` file, and for our Netlify app using the Netlify console.
+
 ### Using the Google Sheets connection
 
-#### Step 1
-
-Note down your spreadsheetId. You can find this by looking at the url in your browser when you are looking at your sheet. It should look something like:
-
-`https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit#gid=0`
-
-where the spreadsheetId is a 44 character random string.
-
-https://docs.google.com/spreadsheets/d/19lZ8yGA1pq60yBoLPWubQsKWMJRUq0gFB1sAp2r7FfE/edit#gid=0
-
-### Step 2
+### Step 1
 
 To use a Google Sheet with the Lowdefy connection, we first need to define the columns in the sheet. This will be the same fields as the data we will be saving later.
 
@@ -39,7 +35,7 @@ In the first row of your sheet, add the following column headers:
 - start_time
 - end_time
 
-#### Step 3
+#### Step 2
 
 In your `lowdefy.yaml` file, add the following:
 
@@ -59,13 +55,21 @@ connections:
       private_key:
         _secret: SHEETS_PRIVATE_KEY
       sheetIndex: 0
-      spreadsheetId: {spreadsheetId}
+      spreadsheetId: __YOUR_SPREADSHEET_ID__
       write: true
 ################ ------- Copy to here ----------- ################
 
 menus:
   # ...
 ```
+
+#### Step 3
+
+Note down your spreadsheetId. You can find this by looking at the url in your browser when you are looking at your sheet. It should look something like:
+
+`https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit#gid=0`
+
+where the spreadsheetId is a 44 character random string. Fill in your spreadsheetId in the spreadsheet connection.
 
 #### Step 4
 
@@ -129,8 +133,26 @@ blocks:
             - id: validate
               type: Validate
             ################ -------- Copy from here -------- ################
-            - id: save_data
+            - id: save_data # Make a request to Google Sheets
               type: Request
               params: save_data
+            - id: reset # Reset the form once data has been submitted
+              type: Reset
             ################ ------- Copy to here ----------- ################
 ```
+
+#### Step 6
+
+If you click the submit button, you should see your data submitted to your Google Sheet.
+
+### What happened
+
+We set up the column names we will be using in our Google Sheet. We need to do this to use the `GoogleSheet` connection.
+
+We defined the `GoogleSheet` connection we will be using in our app, using the credentials we obtained earlier.
+
+We also defined a `GoogleSheetAppendOne` request, to save the data to our sheet, and called that request when clicking the submit button.
+
+### Up next
+
+We would like to be able to see what data has been saved. In the next section we will create a page where we can see all the meetings that have been booked.

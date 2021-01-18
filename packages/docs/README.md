@@ -10,3 +10,12 @@ Using Lowdefy means all the complicated parts of developing your own web app are
 
 The easiest way to get started with Lowdefy is to follow the tutorial. In this tutorial we will be building a app that allows you to book meeting rooms and manage those bookings.
 
+- How Lowdefy works
+
+  - server, config,
+
+- Schema
+- Blocks
+- Deployment options (Netlify, Docker)
+- Custom blocks
+- responsive layouts

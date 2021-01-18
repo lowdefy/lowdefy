@@ -1,14 +1,14 @@
-
-Let's create a page for a form where users can book a meeting room.
+Let's create a page for a form where users can log a new ticket.
 
 #### Step 1
-Create a new YAMl file in the pages directory called `booking.yaml`, with the following content:
+
+Create a new YAMl file in the pages directory called `new-ticket.yaml`, with the following content:
 
 ```yaml
-id: booking
+id: new-ticket
 type: PageHeaderMenu
 properties:
-  title: Book meeting # The title in the browser tab.
+  title: New ticket # The title in the browser tab.
 layout:
   contentJustify: center # Center the contents of the page.
 blocks:
@@ -21,17 +21,19 @@ blocks:
       - id: page_heading
         type: Title
         properties:
-          content: Book a meeting room # Change the title on the page.
+          content: Log a ticket # The content text of the title block.
           level: 3 # Make the title a little smaller (an html `<h3>`).
 ```
+
 #### Step 2
 
 Change the `lowdefy.yaml` to look like this:
+
 ```yaml
 name: lowdefy-project-template
-version: CURRENT_LOWDEFY_VERSION
+lowdefy: CURRENT_LOWDEFY_VERSION
 
 pages:
   - _ref: pages/welcome.yaml
-  - _ref: pages/booking.yaml
+  - _ref: pages/new-ticket.yaml
 ```

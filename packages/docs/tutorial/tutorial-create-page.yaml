@@ -20,7 +20,7 @@ _ref:
         properties:
           type: warning
           showIcon: false
-          message: Make sure that the version field is the current latest Lowdefy version. This should be what is was when you created the project.
+          message: Make sure that the lowdefy field is the current latest Lowdefy version. This should be what is was when you created the project.
       - id: md2
         type: Markdown
         style:
@@ -37,14 +37,14 @@ _ref:
           style:
             minHeight: 300px
           menu:
-              links:
+            links:
               - id: welcome
                 type: MenuLink
                 properties:
                   title: welcome
-              - id: booking
+              - id: new-ticket
                 properties:
-                  title: booking
+                  title: new-ticket
                 type: MenuLink
         blocks:
           - id: example1_content_card
@@ -55,7 +55,7 @@ _ref:
               - id: example1_page_heading
                 type: Title
                 properties:
-                  content: Book a meeting room
+                  content: Log a ticket
                   level: 3
       - id: md3
         type: Markdown
@@ -71,5 +71,5 @@ _ref:
           vars:
             previous_page_title: Development server
             previous_page_id: tutorial-development-server
-            next_page_title: Booking form
+            next_page_title: Adding blocks
             next_page_id: tutorial-add-blocks

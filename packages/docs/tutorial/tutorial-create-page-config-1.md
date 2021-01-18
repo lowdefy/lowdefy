@@ -13,12 +13,12 @@ menus:
           icon: HomeOutlined
           title: Home
         pageId: welcome
-      - id: booking
+      - id: new-ticket
         type: MenuLink
         properties:
-          icon: CalendarOutlined
-          title: Book a meeting
-        pageId: booking
+          icon: AlertOutlined
+          title: New ticket
+        pageId: new-ticket
 
 pages:
   - _ref: pages/welcome.yaml
@@ -28,22 +28,22 @@ pages:
 ##### `pages/booking.yaml`
 
 ```yaml
-id: booking
+id: new-ticket
 type: PageHeaderMenu
 properties:
-  title: Book meeting
+  title: New ticket # The title in the browser tab.
 layout:
-  contentJustify: center # Center the contents of the page
+  contentJustify: center # Center the contents of the page.
 blocks:
   - id: content_card
     type: Card
     layout:
-      size: 800 # Set the size of the card so it does not fill the full screen
-      contentGutter: 16 # Make a 16px gap between all blocks in this card
+      size: 800 # Set the size of the card so it does not fill the full screen.
+      contentGutter: 16 # Make a 16px gap between all blocks in this card.
     blocks:
       - id: page_heading
         type: Title
         properties:
-          content: Book a meeting room # Change the title on the page
+          content: Log a ticket # The content text of the title block.
           level: 3 # Make the title a little smaller (an html `<h3>`).
 ```
