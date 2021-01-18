@@ -13,8 +13,84 @@ _ref:
           '.markdown-body':
             fontSize: 14px
         properties:
-          content:
-            _ref: tutorial/tutorial-add-blocks-content-1.md
+          content: |
+            We would like to add an input form with the following fields:
+
+            - A name for the meeting.
+            - Which meeting room should be booked. This should be a selection from a list of meeting rooms.
+            - The date of the meeting.
+            - The start and end times for the meeting.
+
+            There should also be submit and reset buttons at the bottom of the page.
+
+            #### Step 1
+
+            Copy the following blocks and add them in the card's blocks array.
+
+            ###### `pages/booking.yaml`
+            ```yaml
+            id: booking
+                # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    type: Title
+                    properties:
+                      content: Book a meeting room # Change the title on the page
+                      level: 3 # Make the title a little smaller (an html `<h3>`).
+            ################ -------- Copy from here -------- ################
+                  - id: meeting_name
+                    type: TextInput
+                    properties:
+                      title: Meeting name
+                  - id: meeting_room
+                    type: Selector
+                    properties:
+                      title: Meeting room
+                      options: # Set the allowed options
+                        - Red Room
+                        - Blue Room
+                        - Green Room
+                        - Boardroom
+                  - id: date
+                    type: DateSelector
+                    properties:
+                      title: Date
+                  - id: start_time
+                    type: DateTimeSelector
+                    properties:
+                      title: Start time
+                  - id: end_time
+                    type: DateTimeSelector
+                    properties:
+                      title: End time
+                  - id: reset_button
+                    type: Button
+                    layout:
+                      span: 12 # Set the size of the button (span 12 of 24 columns)
+                    properties:
+                      title: Reset
+                      block: true # Make the button fill all the space available to it
+                      type: default # Make the button a plain button
+                      icon: ClearOutlined
+                  - id: submit_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Submit
+                      block: true
+                      type: primary # Make the button a primary button with color
+                      icon: SaveOutlined
+            ```
+
+            >  If you would like to see how your config should look at this point, you can find it [here](tutorial-add-blocks-config).
+
+            #### Step 2
+
+            Your booking page should something like this:
       - id: example1
         type: PageHeaderMenu
         layout:
@@ -85,8 +161,24 @@ _ref:
           '.markdown-body':
             fontSize: 14px
         properties:
-          content:
-            _ref: tutorial/tutorial-add-blocks-content-2.md
+          content: |
+            ### What happened
+
+            We added 5 form input blocks to the page. For each of those blocks, we set the `title` property, and for the meeting room selector we set a list of meeting rooms to the options property.
+
+            We also added reset button and submit button. We set a few more properties on the buttons to set their layout and appearance.
+
+            ### How it works
+
+            Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 5 block categories, namely display, input, container, list, and context.
+
+            The first block on a page needs to be a [context](/context) block. For now, it is enough to understand that this context allows the Lowdefy magic to happen.
+
+            All blocks need to have an `id` that identifies the block. This id should be unique in that block's context.
+
+            ### Up next
+
+            Currently our form doesn't do very much. In the next section we will use [actions](actions) and [operators](operators) to make it more interactive.
 
       - _ref:
           path: templates/navigation_buttons.yaml

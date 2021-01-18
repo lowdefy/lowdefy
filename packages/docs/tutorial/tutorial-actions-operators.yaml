@@ -13,8 +13,72 @@ _ref:
           '.markdown-body':
             fontSize: 14px
         properties:
-          content:
-            _ref: tutorial/tutorial-actions-operators-content-1.md
+          content: |
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](tutorial-add-blocks-config).
+
+            ## Adding a reset button
+
+            The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
+
+            #### Step 1
+
+            Copy the following into the definition of the reset button:
+
+            ##### `pages/booking.yaml`
+            ```yaml
+            id: booking
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    # ...
+                    # ...
+                    # ...
+                  - id: reset_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Reset
+                      block: true
+                      type: default
+                      icon: ClearOutlined
+            ################ -------- Copy from here -------- ################
+                    actions:
+                      onClick:
+                        - id: reset
+                          type: Reset
+            ################ ------- Copy to here ----------- ################
+                  - id: submit_button
+                    type: Button
+                    # ...
+            ```
+
+            If you add some inputs into the form and click the reset button, those inputs should be cleared.
+
+            ### What happened
+
+            Each block defines a set of actions that it fire when a event happens. The button fires an event called `onClick` when it gets clicked. We can add a list of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
+
+            ## Required fields
+
+            We should validate the data users are submitting to make sure our app has clean data and works as expected. All of the fields in the form are compulsory, and the user should not be able to submit if they are not completed.
+
+            #### Step 1
+
+            To make the fields required, add a required property to all the input blocks like this:
+
+            ```yaml
+            - id: meeting_name
+              type: TextInput
+              required: true
+              properties:
+                title: Meeting name
+            ```
+
+            A red star should appear next to each input field, looking like this:
       - id: example1
         type: TextInput
         required: true
@@ -26,8 +90,46 @@ _ref:
           '.markdown-body':
             fontSize: 14px
         properties:
-          content:
-            _ref: tutorial/tutorial-actions-operators-content-2.md
+          content: |
+            ### Validate action
+
+            We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
+
+            #### Step 2
+            Add the validate action like this:
+
+            ##### `pages/booking.yaml`
+            ```yaml
+            id: booking
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    # ...
+                    # ...
+                    # ...
+                  - id: submit_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Submit
+                      block: true
+                      type: primary
+                      icon: SaveOutlined
+            ################ -------- Copy from here -------- ################
+                    actions:
+                      onClick:
+                        - id: validate
+                          type: Validate
+            ################ ------- Copy to here ----------- ################
+            ```
+
+            Now if we click the submit button and all our inputs aren't complete, a message pops up saying we have validation errors on the page. All the fields that have not been completed are highlighted in red.
+
+            The result should look and work like this. The examples in this tutorial are live versions of the tutorial app, so you can verify that they work like your own app.
       - id: example2
         type: PageHeaderMenu
         properties:
@@ -109,8 +211,82 @@ _ref:
             fontSize: 14px
         properties:
           renderHtml: true
-          content:
-            _ref: tutorial/tutorial-actions-operators-content-3.md
+          content: |
+            ### What happened
+
+            The validate action we added to the submit button evaluates all the input blocks on the page, and gives an error if any of them fail the validation. This will also stop the execution of any actions after that action. This means we won't insert the data into our database later. The first time a validate action is called on a page it sets a flag that tells all the input blocks to show their validation errors.
+
+            ## Advanced validations
+
+            We would like to only allow users to book the boardroom if there are 8 or more attendees in the meeting. We can use [operators](operators) to do this test.
+
+            #### Step 1
+            Add a [`ButtonSelector`](ButtonSelector) for the number of attendees, and add a `validate` rule to the `meeting_room` selector.
+
+            ##### `pages/booking.yaml`
+            ```yaml
+            id: booking
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  # ...
+                  - id: meeting_name
+                    type: TextInput
+                    required: true
+                    properties:
+                      title: Meeting Name
+            ################ -------- Copy from here -------- ################
+                  - id: number_of_attendees
+                    type: ButtonSelector
+                    required: true
+                    properties:
+                      title: Number of Attendees
+                      options:
+                        - 1 - 2
+                        - 3 - 7
+                        - 8 - 12
+            ################ ------- Copy to here ----------- ################
+                  - id: meeting_room
+                    type: Selector
+                    required: true
+                    properties:
+                      title: Meeting Room
+                      options:
+                        - Meeting Room 1
+                        - Meeting Room 2
+                        - Meeting Room 3
+                        - Boardroom
+            ################ -------- Copy from here -------- ################
+                    validate:
+                      - message: The boardroom cannot be booked for meetings with less than 8 attendees.
+                        status: error
+                        pass:
+                          _or:
+                            - _eq:
+                                - _state: number_of_attendees
+                                - 8 - 12
+                            - _not:
+                                _eq:
+                                  - _state: meeting_room
+                                  - Boardroom
+            ################ ------- Copy to here ----------- ################
+                    - id: date
+                    type: DateSelector
+                    required: true
+                    properties:
+                      title: Date
+                      # ...
+            ```
+
+            If you select the boardroom, and don't select 8 - 12 attendees, the error message of the `meeting_room` block should read: "The boardroom cannot be booked for meetings with less than 8 attendees."
+
+
+            #### Step 2
+            Change the status property of the validation from `error` to `warning`. Then the  `meeting_room` block will be highlighted in orange when the rule is not met, and the warning will appear before the `Validate` action is called. The action will also not error when the rule is not met, so a user will still be able to submit the data.
+
+            Your final result should look and work like this:
       - id: example3
         type: PageHeaderMenu
         properties:
@@ -221,13 +397,33 @@ _ref:
           '.markdown-body':
             fontSize: 14px
         properties:
-          content:
-            _ref: tutorial/tutorial-actions-operators-content-4.md
+          content: |
+            > You can find the final configuration files for this section [here](tutorial-actions-operators-config).
+
+            ### What happened
+
+            We added a block to capture the number of attendees to the meeting, and then added a `Validate` rule to the meeting room `Selector`. We use operators to calculate a value for the `pass` field of the validation rule. If the pass field receive a `true` value, the rule passes, else it fails. The operators execute every time the context changes.
+
+            We use the [`_state`](_state) operator to get the values of the `meeting_room` and `number_of_attendees` blocks from state.
+
+            We use the [`_eq`](_eq), [`_or`](_or), and [`_not`](_not) logical operators to make the comparisons needed to perform the test. In pseudocode, the logical test is:
+
+            ```python
+            number_of_attendees == '8 - 12' or meeting_room != 'Boardroom'
+            ```
+
+            The rule has a status of warning. This means it does not stop the action from continuing if it fails, displays with an orange highlight and shows up before the show validation flag has been set.
+
+
+
+            ## Up next
+
+            Our app doesn't save the form data anywhere when the submit button is clicked. In the next section we will set up a Google Sheets connection, and make a request to save the data in the sheet.
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Making a booking form
             previous_page_id: tutorial-add-blocks
-            next_page_title: Saving data
+            next_page_title: Requests
             next_page_id: tutorial-requests

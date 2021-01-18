@@ -57,7 +57,7 @@ menus:
             type: MenuLink
             pageId: tutorial-requests
             properties:
-              title: Saving data
+              title: Requests
           - id: next-steps
             type: MenuLink
             pageId: next-steps
