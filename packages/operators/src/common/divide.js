@@ -38,6 +38,13 @@ function _divide({ params, location }) {
       )} at ${location}.`
     );
   }
+  if (params[1] === 0) {
+    throw new Error(
+      `Operator Error: _divide by zero not allowed. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
   return params[0] / params[1];
 }
 
