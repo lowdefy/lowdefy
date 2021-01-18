@@ -41,7 +41,7 @@ test('get version from yaml file', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
       return `
-      version: 1.0.0
+      lowdefy: 1.0.0
       `;
     }
     return null;
@@ -54,7 +54,7 @@ test('get version from yaml file, base dir specified', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'baseDir/lowdefy.yaml')) {
       return `
-      version: 1.0.0
+      lowdefy: 1.0.0
       `;
     }
     return null;
@@ -69,7 +69,7 @@ test('could not find lowdefy.yaml in cwd', async () => {
       return null;
     }
     return `
-    version: 1.0.0
+    lowdefy: 1.0.0
     `;
   });
   await expect(getConfig({ baseDirectory })).rejects.toThrow(
@@ -83,7 +83,7 @@ test('could not find lowdefy.yaml in base dir', async () => {
       return null;
     }
     return `
-    version: 1.0.0
+    lowdefy: 1.0.0
     `;
   });
   await expect(
@@ -95,7 +95,7 @@ test('lowdefy.yaml is invalid yaml', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
       return `
-      version: 1.0.0
+      lowdefy: 1.0.0
         - a: a
         b: b
       `;
@@ -119,7 +119,7 @@ test('No version specified', async () => {
     return null;
   });
   await expect(getConfig({ baseDirectory })).rejects.toThrow(
-    'No version specified in "lowdefy.yaml" file. Specify a version in the "version field".'
+    'No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.'
   );
 });
 
@@ -127,7 +127,7 @@ test('Version is not a string', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
       return `
-      version: 1
+      lowdefy: 1
       `;
     }
     return null;
@@ -141,7 +141,7 @@ test('Version is not a valid version number', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
       return `
-      version: v1-0-3
+      lowdefy: v1-0-3
       `;
     }
     return null;
@@ -155,7 +155,7 @@ test('get disabled telemetry', async () => {
   readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
       return `
-      version: 1.0.0
+      lowdefy: 1.0.0
       cli:
         disableTelemetry: true
       `;
