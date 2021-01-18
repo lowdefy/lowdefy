@@ -14,31 +14,40 @@
   limitations under the License.
 */
 
+import runClass from '../runClass';
 import { type } from '@lowdefy/helpers';
 
-function _date({ params, location }) {
-  if (type.isInt(params)) {
-    return new Date(params);
-  }
-  if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _date input must be of type string or integer. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-  if (params === 'now') {
-    return new Date();
-  }
-  const result = new Date(params);
+function date(input) {
+  const result = new Date(input);
   if (!type.isDate(result)) {
-    throw new Error(
-      `Operator Error: _date could not resolve as a valid javascript date. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`${input} could not resolve as a valid javascript date.`);
   }
   return result;
+}
+
+function now() {
+  return new Date();
+}
+
+const functions = {
+  __default: date,
+  now,
+};
+
+const meta = {
+  __default: { singleArg: true, validTypes: ['number', 'string'] },
+  now: { noArgs: true },
+};
+
+function _date({ params, location, methodName }) {
+  return runClass({
+    functions,
+    location,
+    meta,
+    methodName: methodName || '__default',
+    operator: '_date',
+    params,
+  });
 }
 
 export default _date;
