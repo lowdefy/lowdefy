@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.2.0) (2021-01-18)
+
+
+### Bug Fixes
+
+* **deps:** update apollo server packages to v2.19.1 ([#326](https://github.com/lowdefy/lowdefy/issues/326)) ([8b977e3](https://github.com/lowdefy/lowdefy/commit/8b977e363930b2c5b639fd4455751d81e3487570))
+* **deps:** update apollo server packages to v2.19.2 ([68f89d0](https://github.com/lowdefy/lowdefy/commit/68f89d0b9a131bfd031af5a95f9b71b276efa275))
+
+
+
+
+
 ## [0.0.1](https://github.com/lowdefy/lowdefy/compare/@lowdefy/server-netlify@0.0.0-alpha.7...@lowdefy/server-netlify@0.0.1) (2020-12-15)
 
 **Note:** Version bump only for package @lowdefy/server-netlify

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.2.0) (2021-01-18)
+
+**Note:** Version bump only for package @lowdefy/ajv
+
+
+
+
+
 ## [1.1.2](https://github.com/lowdefy/lowdefy/compare/@lowdefy/ajv@1.1.0...@lowdefy/ajv@1.1.2) (2020-12-15)
 
 **Note:** Version bump only for package @lowdefy/ajv

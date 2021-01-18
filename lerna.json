@@ -1,6 +1,10 @@
 {
-  "version": "3.1.1",
-  "packages": ["src/packages/*", "src/packages/blocks/*", "src/packages/servers/*"],
+  "version": "3.2.0",
+  "packages": [
+    "src/packages/*",
+    "src/packages/blocks/*",
+    "src/packages/servers/*"
+  ],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "changelogPreset": "angular",
