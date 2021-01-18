@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql-federated",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -35,7 +35,7 @@
     "version:major": "yarn version major"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.2.0"
+    "@lowdefy/graphql": "3.3.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.10",
