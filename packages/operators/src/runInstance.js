@@ -3,7 +3,7 @@ import { type } from '@lowdefy/helpers';
 const runInstance = ({ location, meta, methodName, operator, params, instanceType }) => {
   if (!meta[methodName]) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} is not supported, use one of the following types: ${Object.keys(
+      `Operator Error: ${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
         meta
       ).join(', ')}.
       Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`

@@ -715,7 +715,7 @@ describe('_array.length', () => {
 
 test('_array called with no method or params', () => {
   expect(() => array({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _array.undefined is not supported, use one of the following types: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
+    "Operator Error: _array.undefined is not supported, use one of the following: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
           Received: {\\"_array.undefined\\":undefined} at locationId."
   `);
 });
@@ -723,7 +723,7 @@ test('_array called with no method or params', () => {
 test('_array invalid method', () => {
   expect(() => array({ params: [['a']], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _array.X is not supported, use one of the following types: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
+    "Operator Error: _array.X is not supported, use one of the following: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
           Received: {\\"_array.X\\":[[\\"a\\"]]} at locationId."
   `);
 });

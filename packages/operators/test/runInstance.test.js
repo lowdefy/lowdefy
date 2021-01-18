@@ -240,7 +240,7 @@ test('calling an undefined function', () => {
       instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.x is not supported, use one of the following types: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
+    "Operator Error: _op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
           Received: {\\"_op.x\\":[]} at locationId."
   `);
 });

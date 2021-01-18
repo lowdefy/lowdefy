@@ -2,14 +2,14 @@ import _math from '../../src/common/math';
 
 test('_math called with no method or params', () => {
   expect(() => _math({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _math requires a valid method name, use one of the following types: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
+    "Operator Error: _math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
             Received: {\\"_math.undefined\\":undefined} at locationId."
   `);
 });
 
 test('_math invalid method or params', () => {
   expect(() => _math({ params: 'X', location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _math requires a valid method name, use one of the following types: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
+    "Operator Error: _math requires a valid method name, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
             Received: {\\"_math.undefined\\":\\"X\\"} at locationId."
   `);
 });
@@ -17,7 +17,7 @@ test('_math invalid method or params', () => {
 test('_math invalid method', () => {
   expect(() => _math({ params: [1], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _math.X is not supported, use one of the following types: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
+    "Operator Error: _math.X is not supported, use one of the following: abs, acos, acosh, asin, asinh, atan, atan2, atanh, cbrt, ceil, clz32, cos, cosh, exp, expm1, floor, fround, hypot, imul, log, log10, log1p, log2, max, min, pow, random, round, sign, sin, sinh, sqrt, tan, tanh, trunc, E, LN10, LN2, LOG10E, LOG2E, PI, SQRT1_2, SQRT2.
           Received: {\\"_math.X\\":[1]} at locationId."
   `);
 });

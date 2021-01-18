@@ -215,7 +215,7 @@ describe('_object.assign', () => {
 
 test('_object called with no method or params', () => {
   expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object requires a valid method name, use one of the following types: keys, values, assign.
+    "Operator Error: _object requires a valid method name, use one of the following: keys, values, assign.
             Received: {\\"_object.undefined\\":undefined} at locationId."
   `);
 });
@@ -223,7 +223,7 @@ test('_object called with no method or params', () => {
 test('_object invalid method', () => {
   expect(() => object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.X is not supported, use one of the following types: keys, values, assign.
+    "Operator Error: _object.X is not supported, use one of the following: keys, values, assign.
           Received: {\\"_object.X\\":[{\\"a\\":1}]} at locationId."
   `);
 });
@@ -231,7 +231,7 @@ test('_object invalid method', () => {
 test('_object invalid method args', () => {
   expect(() => object({ params: 'X', methodName: 'flat', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.flat is not supported, use one of the following types: keys, values, assign.
+    "Operator Error: _object.flat is not supported, use one of the following: keys, values, assign.
           Received: {\\"_object.flat\\":\\"X\\"} at locationId."
   `);
 });

@@ -1406,7 +1406,7 @@ describe('_string.length', () => {
 
 test('_string called with no method or params', () => {
   expect(() => string({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _string.undefined is not supported, use one of the following types: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.
+    "Operator Error: _string.undefined is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.
           Received: {\\"_string.undefined\\":undefined} at locationId."
   `);
 });
@@ -1414,7 +1414,7 @@ test('_string called with no method or params', () => {
 test('_string invalid method', () => {
   expect(() => string({ params: ['a'], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _string.X is not supported, use one of the following types: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.
+    "Operator Error: _string.X is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length.
           Received: {\\"_string.X\\":[\\"a\\"]} at locationId."
   `);
 });
