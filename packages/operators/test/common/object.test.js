@@ -215,8 +215,8 @@ describe('_object.assign', () => {
 
 test('_object called with no method or params', () => {
   expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.undefined is not supported, use one of the following types: keys, values, assign.
-          Received: {\\"_object.undefined\\":undefined} at locationId."
+    "Operator Error: _object requires a valid method name, use one of the following types: keys, values, assign.
+            Received: {\\"_object.undefined\\":undefined} at locationId."
   `);
 });
 

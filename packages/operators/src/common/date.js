@@ -44,9 +44,10 @@ function _date({ params, location, methodName }) {
     functions,
     location,
     meta,
-    methodName: methodName || '__default',
+    methodName: methodName,
     operator: '_date',
     params,
+    defaultFunction: '__default',
   });
 }
 

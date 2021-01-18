@@ -1,12 +1,23 @@
 import { type } from '@lowdefy/helpers';
 
-const runClass = ({ location, meta, methodName, operator, params, functions }) => {
-  if (!methodName && type.isString(params)) {
-    methodName = params;
+const runClass = ({ location, meta, methodName, operator, params, functions, defaultFunction }) => {
+  if (!methodName) {
+    if (meta[params]) {
+      methodName = params;
+    } else if (defaultFunction) {
+      methodName = defaultFunction;
+    } else {
+      throw new Error(
+        `Operator Error: ${operator} requires a valid method name, use one of the following: ${Object.keys(
+          meta
+        ).join(', ')}.
+        Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+      );
+    }
   }
   if (!meta[methodName] && !functions[methodName]) {
     throw new Error(
-      `Operator Error: ${operator}.${methodName} is not supported, use one of the following types: ${Object.keys(
+      `Operator Error: ${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
         meta
       ).join(', ')}.
       Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`

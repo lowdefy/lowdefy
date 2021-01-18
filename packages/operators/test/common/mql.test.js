@@ -527,7 +527,7 @@ test('_mql undefined method name', () => {
       location: 'locationId',
     })
   ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _mql.undefined is not supported, use one of the following types: aggregate, expr, test.
-          Received: {\\"_mql.undefined\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
+    "Operator Error: _mql requires a valid method name, use one of the following types: aggregate, expr, test.
+            Received: {\\"_mql.undefined\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
   `);
 });
