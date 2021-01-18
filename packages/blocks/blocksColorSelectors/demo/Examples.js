@@ -38,7 +38,7 @@ const Examples = ({ type, Component }) => {
         <input type="checkbox" checked={showYaml} onChange={() => toggelYaml(!showYaml)} />
       </div>
       {(examples || []).map((block) => {
-        const exYaml = YAML.safeDump(block, {
+        const exYaml = YAML.dump(block, {
           // sortKeys: true,
           noRefs: true,
         });

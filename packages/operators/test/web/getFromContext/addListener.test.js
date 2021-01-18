@@ -213,40 +213,6 @@ test('add listener for _url_query', () => {
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _mutation_details', () => {
-  const context = {
-    id: 'own',
-    mutations: {
-      string: 'mutations',
-    },
-    updateListeners: new Set(),
-  };
-
-  const otherContext = {
-    id: 'other',
-    mutations: {
-      string: 'mutations-other',
-    },
-    updateListeners: new Set(),
-  };
-
-  const contexts = {
-    own: context,
-    other: otherContext,
-  };
-  const input = {
-    _mutation_details: {
-      key: 'string',
-      contextId: 'other',
-    },
-  };
-  expect(context.updateListeners).toEqual(new Set());
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('mutations-other');
-  expect(otherContext.updateListeners).toEqual(new Set(['own']));
-});
-
 test('add listener for _request_details', () => {
   const context = {
     id: 'own',

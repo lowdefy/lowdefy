@@ -63,7 +63,7 @@ async function dev(options) {
 
   // Express
   const app = express();
-  app.set('port', options.port);
+  app.set('port', parseInt(options.port));
   server.applyMiddleware({ app, path: '/api/graphql' });
   const reloadReturned = await reload(app, { route: '/api/dev/reload.js' });
   app.use(express.static(path.join(__dirname, 'shell')));
