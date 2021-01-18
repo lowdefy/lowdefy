@@ -4485,7 +4485,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.4.0"],
             ["graphql-type-json", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.3.2"],
             ["jest", "npm:26.6.3"],
-            ["mingo", "npm:3.1.0"],
+            ["mingo", "npm:4.1.0"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.3"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.10.1"],
@@ -4636,7 +4636,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
-            ["mingo", "npm:3.1.0"],
+            ["mingo", "npm:4.1.0"],
             ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
@@ -18531,10 +18531,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mingo", [
-        ["npm:3.1.0", {
-          "packageLocation": "./.yarn/cache/mingo-npm-3.1.0-d294bc200c-34eb1d66a1.zip/node_modules/mingo/",
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/mingo-npm-4.1.0-e24ff07131-e1c4ea8051.zip/node_modules/mingo/",
           "packageDependencies": [
-            ["mingo", "npm:3.1.0"]
+            ["mingo", "npm:4.1.0"]
           ],
           "linkType": "HARD",
         }]
