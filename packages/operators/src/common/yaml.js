@@ -20,12 +20,12 @@ import runClass from '../runClass';
 
 function parse(input) {
   if (input === 'undefined') return undefined;
-  const loaded = YAML.safeLoad(input);
+  const loaded = YAML.load(input);
   return serializer.deserialize(loaded);
 }
 
 function stringify(input, options) {
-  return YAML.safeDump(serializer.serialize(input, { isoStringDates: true }), {
+  return YAML.dump(serializer.serialize(input, { isoStringDates: true }), {
     sortKeys: true,
     ...options,
   });

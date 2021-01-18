@@ -135,10 +135,8 @@ test('_yaml.stringify undefined in object', () => {
 });
 
 test('_yaml.stringify undefined', () => {
-  expect(() =>
-    yaml({ params: [undefined], location: 'locationId', methodName: 'stringify' })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.stringify - unacceptable kind of an object to dump [object Undefined] Received: {\\"_yaml.stringify\\":[null]} at locationId."`
+  expect(yaml({ params: [undefined], location: 'locationId', methodName: 'stringify' })).toEqual(
+    ''
   );
 });
 
