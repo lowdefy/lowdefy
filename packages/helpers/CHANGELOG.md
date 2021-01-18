@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.2.0) (2021-01-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency query-string to v6.13.8 ([17bdbb8](https://github.com/lowdefy/lowdefy/commit/17bdbb8ad2e67dd10c0749beb838090985f0ec66))
+
+
+### Features
+
+* Add copy option to get. ([9d5b40f](https://github.com/lowdefy/lowdefy/commit/9d5b40f922c95929203b641457231af82d69b6f2))
+
+
+
+
+
 ## [1.2.2](https://github.com/lowdefy/lowdefy/compare/@lowdefy/helpers@1.2.0...@lowdefy/helpers@1.2.2) (2020-12-15)
 
 **Note:** Version bump only for package @lowdefy/helpers
