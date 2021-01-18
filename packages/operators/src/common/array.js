@@ -36,7 +36,7 @@ const meta = {
   sort: { namedArgs: ['on'], validTypes: ['array'] },
   splice: {
     namedArgs: ['on', 'start', 'deleteCount'],
-    spreadArgs: ['insert'],
+    spreadArgs: 'insert',
     returnInstance: true,
     validTypes: ['array', 'object'],
   },

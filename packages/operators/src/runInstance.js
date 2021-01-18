@@ -32,9 +32,22 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
     if (type.isObject(params)) {
       instance = params[meta[methodName].namedArgs[0]];
       args.push(...meta[methodName].namedArgs.slice(1).map((key) => params[key]));
-      args.push(...(meta[methodName].spreadArgs || []).map((key) => params[key]).flat());
+      if (
+        !type.isNone(meta[methodName].spreadArgs) &&
+        !type.isArray(params[meta[methodName].spreadArgs])
+      ) {
+        throw new Error(
+          `Operator Error: ${operator}.${methodName} takes an array as input argument for ${
+            meta[methodName].spreadArgs
+          }.
+          Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
+        );
+      }
+      args.push(...(params[meta[methodName].spreadArgs] || []));
     }
   }
+  // console.log(instance);
+  // console.log(type.typeOf(instance));
   if (!instance || type.typeOf(instance) !== instanceType) {
     throw new Error(`Operator Error: ${operator}.${methodName} must be evaluated on an ${instanceType} instance. For named args provide an ${instanceType} instance to the "on" property, for listed args provide and ${instanceType} instance as the first element in the operator argument array.
     Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`);

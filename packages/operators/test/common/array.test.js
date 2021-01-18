@@ -576,8 +576,8 @@ describe('_array.splice', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.splice must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.splice\\":{\\"start\\":1}} at locationId."
+      "Operator Error: _array.splice takes an array as input argument for insert.
+                Received: {\\"_array.splice\\":{\\"start\\":1}} at locationId."
     `);
     expect(() =>
       array({

@@ -2,126 +2,261 @@ import runInstance from '../src/runInstance';
 
 const location = 'locationId';
 const operator = '_op';
-const Instance = {
-  double: (a) => a * 2,
-  add: (a, b, c) => a + b + c,
-  err: () => {
-    throw new Error('Cls error.');
+const functions = {
+  singleArg: () => 30,
+  namedArgs: (a, b) => a + b,
+  spreadArgs: (...args) => args.reduce((acc, cur) => acc + cur, 0),
+  nameAndSpread: (a, b, ...args) => args.reduce((acc, cur) => acc + (cur * a) / b, 0),
+  property: 42,
+  typeCheck: () => true,
+  combination: (a, b, ...args) => args.reduce((acc, cur) => acc - (cur * a) / b, 0),
+  error: () => {
+    throw new Error('Function error.');
   },
-  constant: 42,
+  returnInstance: () => 1,
 };
-const allowedMethods = new Set(['double', 'add', 'err']);
-const allowedProperties = new Set(['constant']);
 
-test('evaluate method', () => {
+const meta = {
+  singleArg: { singleArg: true },
+  namedArgs: { namedArgs: ['on', 'x', 'y'] },
+  spreadArgs: { spreadArgs: true },
+  nameAndSpread: { namedArgs: ['on', 'x', 'y'], spreadArgs: 'z' },
+  property: { property: true },
+  typeCheck: { namedArgs: ['on'], validTypes: ['array', 'object'] },
+  combination: { namedArgs: ['on', 'x', 'y'], spreadArgs: 'z', validTypes: ['array', 'object'] },
+  error: {},
+  noFunction: { spreadArgs: true },
+  returnInstance: { returnInstance: true },
+};
+
+test('singleArg', () => {
   expect(
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'double',
+      meta,
       operator,
-      params: [Instance, 2],
+      methodName: 'singleArg',
+      params: functions,
+      instanceType: 'object',
     })
-  ).toEqual(4);
+  ).toEqual(30);
 });
 
-test('evaluate method, spread properties', () => {
+test('namedArgs', () => {
   expect(
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'add',
+      meta,
       operator,
-      params: [Instance, 1, 2, 3],
+      methodName: 'namedArgs',
+      params: [functions, 1, 2],
+      instanceType: 'object',
     })
-  ).toEqual(6);
+  ).toEqual(3);
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'namedArgs',
+      params: { on: functions, x: 1, y: 2 },
+      instanceType: 'object',
+    })
+  ).toEqual(3);
 });
 
-test('evaluate get property from key', () => {
+test('spreadArgs', () => {
   expect(
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'constant',
+      meta,
       operator,
-      params: [Instance],
+      methodName: 'spreadArgs',
+      params: [functions, 1, 2, 3, 4],
+      instanceType: 'object',
+    })
+  ).toEqual(10);
+});
+
+test('nameAndSpread', () => {
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'nameAndSpread',
+      params: [functions, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      instanceType: 'object',
+    })
+  ).toEqual(21);
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'nameAndSpread',
+      params: { on: functions, x: 1, y: 2, z: [3, 4, 5, 6, 7, 8, 9] },
+      instanceType: 'object',
+    })
+  ).toEqual(21);
+});
+
+test('nameAndSpread - spread args must be an array', () => {
+  expect(() =>
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'nameAndSpread',
+      params: { on: functions, x: 1, y: 2, z: 'x' },
+      instanceType: 'object',
+    })
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _op.nameAndSpread takes an array as input argument for z.
+              Received: {\\"_op.nameAndSpread\\":{\\"on\\":{\\"property\\":42},\\"x\\":1,\\"y\\":2,\\"z\\":\\"x\\"}} at locationId."
+  `);
+});
+
+test('property', () => {
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'property',
+      params: functions,
+      instanceType: 'object',
     })
   ).toEqual(42);
 });
 
-test('instance is null', () => {
+test('returnInstance', () => {
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'returnInstance',
+      params: [functions],
+      instanceType: 'object',
+    })
+  ).toEqual(functions);
+});
+
+test('error', () => {
   expect(() =>
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'add',
+      meta,
       operator,
-      params: [null, 1, 2, 3],
+      methodName: 'error',
+      params: [functions],
+      instanceType: 'object',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op takes an array with the first argument the instance on which to evaluate \\"add\\". Received: {\\"_op.add\\":[null,1,2,3]} at locationId."`
+    `"Operator Error: _op.error - Function error. Received: {\\"_op.error\\":[{\\"property\\":42}]} at locationId."`
   );
 });
 
-test('instance is undefined', () => {
+test('typeCheck', () => {
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'typeCheck',
+      params: [functions],
+      instanceType: 'object',
+    })
+  ).toEqual(true);
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'typeCheck',
+      params: { on: functions },
+      instanceType: 'object',
+    })
+  ).toEqual(true);
   expect(() =>
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'add',
+      meta,
       operator,
-      params: [undefined, 1, 2, 3],
+      methodName: 'typeCheck',
+      params: ['x'],
+      instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op takes an array with the first argument the instance on which to evaluate \\"add\\". Received: {\\"_op.add\\":[null,1,2,3]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
+        Received: {\\"_op.typeCheck\\":[\\"x\\"]} at locationId."
+  `);
 });
 
-test('instance method or property does not exist', () => {
+test('combination', () => {
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'combination',
+      params: [functions, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      instanceType: 'object',
+    })
+  ).toEqual(-21);
+  expect(
+    runInstance({
+      location,
+      meta,
+      operator,
+      methodName: 'combination',
+      params: { on: functions, x: 1, y: 2, z: [3, 4, 5, 6, 7, 8, 9] },
+      instanceType: 'object',
+    })
+  ).toEqual(-21);
   expect(() =>
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
-      method: 'x',
+      meta,
       operator,
-      params: [undefined, 1, 2, 3],
+      methodName: 'combination',
+      params: 'x',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op must be called with one of the following properties: constant; or methods: double, add, err. Received: {\\"_op.x\\":[null,1,2,3]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _op.combination accepts one of the following types: array, object.
+          Received: {\\"_op.combination\\":\\"x\\"} at locationId."
+  `);
 });
 
-test('method undefined', () => {
+test('calling an undefined function', () => {
   expect(() =>
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
+      meta,
       operator,
-      params: [undefined, 1, 2, 3],
+      methodName: 'x',
+      params: [],
+      instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op must be called with one of the following properties: constant; or methods: double, add, err. Received: {\\"_op.undefined\\":[null,1,2,3]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _op.x is not supported, use one of the following types: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
+          Received: {\\"_op.x\\":[]} at locationId."
+  `);
 });
 
-test('method Class error', () => {
+test('calling an undefined instance function', () => {
   expect(() =>
     runInstance({
-      allowedMethods,
-      allowedProperties,
       location,
+      meta,
       operator,
-      method: 'err',
-      params: [Instance],
+      methodName: 'noFunction',
+      params: [{}],
+      instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op.err - Cls error. Received: {\\"_op.err\\":[{\\"constant\\":42}]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Operator Error: _op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
+          Received: {\\"_op.noFunction\\":[{}]} at locationId."
+  `);
 });
