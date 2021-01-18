@@ -1,5 +1,7 @@
 import object from '../../src/common/object';
 
+const location = 'locationId';
+
 describe('_object.hasOwnProperty', () => {
   const methodName = 'hasOwnProperty';
   test('valid', () => {
@@ -34,7 +36,7 @@ describe('_object.hasOwnProperty', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-          Received: {\\"_object.hasOwnProperty\\":{\\"value\\":\\"x\\",\\"start\\":1,\\"end\\":2}} at http://localhost/."
+          Received: {\\"_object.hasOwnProperty\\":{\\"value\\":\\"x\\",\\"start\\":1,\\"end\\":2}} at locationId."
     `);
     expect(() =>
       object({
@@ -44,7 +46,7 @@ describe('_object.hasOwnProperty', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-          Received: {\\"_object.hasOwnProperty\\":[1,{\\"a\\":1}]} at http://localhost/."
+          Received: {\\"_object.hasOwnProperty\\":[1,{\\"a\\":1}]} at locationId."
     `);
     expect(() =>
       object({
@@ -54,7 +56,7 @@ describe('_object.hasOwnProperty', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
-            Received: {\\"_object.hasOwnProperty\\":\\"x\\"} at http://localhost/."
+            Received: {\\"_object.hasOwnProperty\\":\\"x\\"} at locationId."
     `);
     expect(() =>
       object({
@@ -64,7 +66,7 @@ describe('_object.hasOwnProperty', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.hasOwnProperty accepts one of the following types: array, object.
-            Received: {\\"_object.hasOwnProperty\\":null} at http://localhost/."
+            Received: {\\"_object.hasOwnProperty\\":null} at locationId."
     `);
   });
 });
@@ -89,7 +91,7 @@ describe('_object.keys', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.keys accepts one of the following types: object.
-            Received: {\\"_object.keys\\":[]} at http://localhost/."
+            Received: {\\"_object.keys\\":[]} at locationId."
     `);
     expect(() =>
       object({
@@ -99,7 +101,7 @@ describe('_object.keys', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.keys accepts one of the following types: object.
-            Received: {\\"_object.keys\\":\\"x\\"} at http://localhost/."
+            Received: {\\"_object.keys\\":\\"x\\"} at locationId."
     `);
     expect(() =>
       object({
@@ -109,7 +111,7 @@ describe('_object.keys', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.keys accepts one of the following types: object.
-            Received: {\\"_object.keys\\":null} at http://localhost/."
+            Received: {\\"_object.keys\\":null} at locationId."
     `);
   });
 });
@@ -134,7 +136,7 @@ describe('_object.values', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.values accepts one of the following types: object.
-            Received: {\\"_object.values\\":[]} at http://localhost/."
+            Received: {\\"_object.values\\":[]} at locationId."
     `);
     expect(() =>
       object({
@@ -144,7 +146,7 @@ describe('_object.values', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.values accepts one of the following types: object.
-            Received: {\\"_object.values\\":\\"x\\"} at http://localhost/."
+            Received: {\\"_object.values\\":\\"x\\"} at locationId."
     `);
     expect(() =>
       object({
@@ -154,7 +156,7 @@ describe('_object.values', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.values accepts one of the following types: object.
-            Received: {\\"_object.values\\":null} at http://localhost/."
+            Received: {\\"_object.values\\":null} at locationId."
     `);
   });
 });
@@ -188,7 +190,7 @@ describe('_object.assign', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _object.assign - Cannot convert undefined or null to object Received: {\\"_object.assign\\":[]} at http://localhost/."`
+      `"Operator Error: _object.assign - Cannot convert undefined or null to object Received: {\\"_object.assign\\":[]} at locationId."`
     );
     expect(() =>
       object({
@@ -198,7 +200,7 @@ describe('_object.assign', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.assign accepts one of the following types: array.
-            Received: {\\"_object.assign\\":\\"x\\"} at http://localhost/."
+            Received: {\\"_object.assign\\":\\"x\\"} at locationId."
     `);
     expect(() =>
       object({
@@ -208,7 +210,7 @@ describe('_object.assign', () => {
       })
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _object.assign accepts one of the following types: array.
-            Received: {\\"_object.assign\\":null} at http://localhost/."
+            Received: {\\"_object.assign\\":null} at locationId."
     `);
   });
 });
