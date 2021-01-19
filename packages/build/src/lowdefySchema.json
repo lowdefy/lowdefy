@@ -400,6 +400,12 @@
         "type": "Lowdefy version in field \"lowdefy\" should be a string."
       }
     },
+    "licence": {
+      "type": "string",
+      "errorMessage": {
+        "type": "App \"licence\" should be a string."
+      }
+    },
     "cli": {
       "type": "object",
       "errorMessage": {
