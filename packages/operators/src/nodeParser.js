@@ -70,6 +70,7 @@ class NodeParser {
           }
         } catch (e) {
           errors.push(e);
+          console.error(e);
           return null;
         }
       }
