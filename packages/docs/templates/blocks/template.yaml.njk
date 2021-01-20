@@ -79,14 +79,14 @@ blocks:
         layout:
           _state: block.layout
         style:
-          _parse:
+          _yaml.parse:
             _state: style_block_input
         visible:
           _state: block.visible
         required:
           _state: block.required
         properties:
-          _var: properties_transform
+          _var: properties_getter
       - id: state_divider
         type: Divider
         properties:
@@ -112,9 +112,9 @@ blocks:
                 {% endraw %}
               on:
                 value:
-                  _dump_yaml:
-                    block_id:
-                      _state: block_id
+                  _yaml.stringify:
+                    - block_id:
+                        _state: block_id
       - id: setup_divider
         type: Divider
         properties:
@@ -132,29 +132,31 @@ blocks:
                 {% endraw %}
               on:
                 value:
-                  _dump_yaml:
-                    _ref:
-                      path: templates/blocks/block_setup.yaml
-                      vars:
-                        block:
-                          id: block_id
-                          type: { { block_type } }
-                          layout:
-                            _state: block.layout
-                          default_layout:
-                            align: top
-                            span: 24
-                          style:
-                            _parse:
-                              _state: style_block_input
-                          visible:
-                            _state: block.visible
-                          required:
-                            _state: block.required
-                          properties:
-                            _var: properties_transform
-                          default_properties:
-                            _var: default_properties
+                  _yaml.stringify:
+                    - _ref:
+                        path: templates/blocks/block_setup.yaml
+                        vars:
+                          block:
+                            id: block_id
+                            type: {{ block_type }}
+                            layout:
+                              _state: block.layout
+                            default_layout:
+                              align: top
+                              span: 24
+                            style:
+                              _yaml.parse:
+                                  _if_none:
+                                    - _state: style_block_input
+                                    - ''
+                            visible:
+                              _state: block.visible
+                            required:
+                              _state: block.required
+                            properties:
+                              _var: properties_getter
+                            default_properties:
+                              _var: default_properties
 
   - id: right_column
     type: Box

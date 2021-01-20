@@ -1,4 +1,18 @@
-// const schema = require('./Button.json');
+/*
+  Copyright 2020-2021 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 
 function makeBlockDefinition(propertyName, propertyDescription) {
   const block = {
@@ -8,36 +22,39 @@ function makeBlockDefinition(propertyName, propertyDescription) {
       title: propertyName,
       size: 'small',
       label: {
-        _ref: {
-          path: 'templates/blocks/label_extra.yaml',
-          vars: {
-            extra: propertyDescription.description,
-          },
-        },
+        span: 8,
+        align: 'right',
+        extra: propertyDescription.description,
       },
     },
   };
 
+  if (
+    propertyDescription.docs &&
+    propertyDescription.docs.label &&
+    propertyDescription.docs.label.span
+  ) {
+    block.properties.label.span = propertyDescription.docs.label.span;
+  }
   if (propertyDescription.docs && propertyDescription.docs.displayType) {
     switch (propertyDescription.docs.displayType) {
       case 'manual':
         return propertyDescription.docs.manual;
       case 'icon':
-        return {
-          _ref: {
-            path: 'templates/blocks/icon_template.yaml.njk',
-            vars: {
-              icon_field_name: propertyName,
-              icon_description: propertyDescription.description,
-            },
-          },
+        block.type = 'Selector';
+        block.layout = { _global: 'settings_input_layout' };
+        block.properties = {
+          ...block.properties,
+          showSearch: true,
+          allowClear: true,
+          options: { _global: 'all_icons' },
         };
+        return block;
       case 'color':
         block.type = 'TwitterColorSelector';
         return block;
       case 'style':
-        // TODO:
-        block.type = 'TextInput';
+        block.type = 'TextArea';
         return block;
     }
   }
@@ -45,7 +62,7 @@ function makeBlockDefinition(propertyName, propertyDescription) {
   // enums
   if (propertyDescription.enum) {
     block.type = 'ButtonSelector';
-    block.options = propertyDescription.enum;
+    block.properties.options = propertyDescription.enum;
     return block;
   }
 
@@ -72,7 +89,5 @@ function transformer(obj) {
   });
   return blocks;
 }
-
-// transformer(schema);
 
 module.exports = transformer;

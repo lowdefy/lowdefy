@@ -27,9 +27,9 @@ blocks:
     layout:
       span: 12
     required:
-      _parse: '{{ example.required }}'
+      _json.parse: '{{ example.required }}'
     properties:
-      _parse: '{{ example.properties | safe }}'
+      _json.parse: '{{ example.properties | safe }}'
   - id: example_config_{{ loop.index }}
     layout:
       span: 12
@@ -52,8 +52,8 @@ blocks:
             type: {{ block_type }}
             required: {{ example.required }}
             properties:
-              _dump_yaml:
-                  _parse: '{{ example.properties | safe }}'
+              _yaml.stringify:
+                - _json.parse: '{{ example.properties | safe }}'
   - id: example_divider_{{ loop.index }}
     type: Divider
 {% endfor %}

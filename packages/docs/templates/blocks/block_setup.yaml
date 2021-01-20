@@ -15,7 +15,7 @@
 _get:
   key: 0.block
   from:
-    _mql_aggregate:
+    _mql.aggregate:
       on:
         - block:
             _var:
