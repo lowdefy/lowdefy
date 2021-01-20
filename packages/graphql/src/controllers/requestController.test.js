@@ -253,11 +253,16 @@ test('deserialize inputs', async () => {
         requestId: 'requestId',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: 'date' },
-          input: { _input: 'date' },
-          global: { _global: 'date' },
-          state: { _state: 'date' },
-          urlQuery: { _url_query: 'date' },
+          args: { _args: true },
+          input: { _input: true },
+          global: { _global: true },
+          state: { _state: true },
+          urlQuery: { _url_query: true },
+          argsDate: { _args: 'date' },
+          inputDate: { _input: 'date' },
+          globalDate: { _global: 'date' },
+          stateDate: { _state: 'date' },
+          urlQueryDate: { _url_query: 'date' },
         },
       };
     }
@@ -293,11 +298,16 @@ test('deserialize inputs', async () => {
           connectionProperty: 'connectionProperty',
         },
         request: {
-          args: new Date(0),
-          global: new Date(0),
-          input: new Date(0),
-          state: new Date(0),
-          urlQuery: new Date(0),
+          args: { date: new Date(0) },
+          input: { date: new Date(0) },
+          global: { date: new Date(0) },
+          state: { date: new Date(0) },
+          urlQuery: { date: new Date(0) },
+          argsDate: new Date(0),
+          inputDate: new Date(0),
+          globalDate: new Date(0),
+          stateDate: new Date(0),
+          urlQueryDate: new Date(0),
         },
       },
     ],
@@ -556,7 +566,7 @@ test('request properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at requestId.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at requestId.'
   );
 });
 
@@ -579,7 +589,7 @@ test('connection properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at testConnection.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at testConnection.'
   );
 });
 
