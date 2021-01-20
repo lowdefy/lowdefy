@@ -31,13 +31,6 @@ function _gte({ params, location }) {
       )} at ${location}.`
     );
   }
-  if (!type.isNumber(params[0]) || !type.isNumber(params[1])) {
-    throw new Error(
-      `Operator Error: _gte takes an array of 2 numbers. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
   return params[0] >= params[1];
 }
 
