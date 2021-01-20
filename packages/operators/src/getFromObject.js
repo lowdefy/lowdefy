@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, type } from '@lowdefy/helpers';
+import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 import getFromOtherContext from './getFromOtherContext';
 
@@ -28,46 +28,45 @@ function getFromObject({
   location,
   env,
 }) {
-  if (params === true) return object;
-  if (type.isString(params)) {
-    return get(object, applyArrayIndices(arrayIndices, params), { default: null, copy: true });
+  if (params === true) params = { all: true };
+  if (type.isString(params)) params = { key: params };
+  if (!type.isObject(params)) {
+    throw new Error(
+      `Operator Error: ${operator} params must be of type string, boolean or object. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
   }
-  if (type.isObject(params)) {
-    if (params.contextId) {
-      if (env === 'node') {
-        throw new Error(
-          `Operator Error: Accessing a context using contextId is only available in a client environment. Received: ${JSON.stringify(
-            params
-          )} at ${location}.`
-        );
-      }
-      return getFromOtherContext({
-        arrayIndices,
-        context,
-        contexts,
-        location,
-        operator,
-        params,
-      });
-    }
-    if (params.all === true) return object;
-    if (!type.isString(params.key)) {
+
+  if (params.contextId) {
+    if (env === 'node') {
       throw new Error(
-        `Operator Error: ${operator}.key must be of type string. Received: ${JSON.stringify(
+        `Operator Error: Accessing a context using contextId is only available in a client environment. Received: ${JSON.stringify(
           params
         )} at ${location}.`
       );
     }
-    return get(object, applyArrayIndices(arrayIndices, params.key), {
-      default: get(params, 'default', { default: null, copy: true }),
-      copy: true,
+    return getFromOtherContext({
+      arrayIndices,
+      context,
+      contexts,
+      location,
+      operator,
+      params,
     });
   }
-  throw new Error(
-    `Operator Error: ${operator} params must be of type string or object. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  if (params.all === true) return serializer.copy(object);
+  if (!type.isString(params.key)) {
+    throw new Error(
+      `Operator Error: ${operator}.key must be of type string. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
+  return get(object, applyArrayIndices(arrayIndices, params.key), {
+    default: get(params, 'default', { default: null, copy: true }),
+    copy: true,
+  });
 }
 
 export default getFromObject;
