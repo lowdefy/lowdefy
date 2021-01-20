@@ -29,26 +29,26 @@ async function getConfig(context) {
   }
   let lowdefy;
   try {
-    lowdefy = YAML.safeLoad(lowdefyYaml);
+    lowdefy = YAML.load(lowdefyYaml);
   } catch (error) {
     throw new Error(`Could not parse "lowdefy.yaml" file. Received error ${error.message}.`);
   }
-  if (!lowdefy.version) {
+  if (!lowdefy.lowdefy) {
     throw new Error(
-      `No version specified in "lowdefy.yaml" file. Specify a version in the "version field".`
+      `No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.`
     );
   }
-  if (!type.isString(lowdefy.version) || !lowdefy.version.match(/\d+\.\d+\.\d+(-\w+\.\d+)?/)) {
+  if (!type.isString(lowdefy.lowdefy) || !lowdefy.lowdefy.match(/\d+\.\d+\.\d+(-\w+\.\d+)?/)) {
     throw new Error(
       `Version number specified in "lowdefy.yaml" file is not valid. Received ${JSON.stringify(
-        lowdefy.version
+        lowdefy.lowdefy
       )}.`
     );
   }
   const { appId } = await getCliJson(context);
   return {
     appId,
-    lowdefyVersion: lowdefy.version,
+    lowdefyVersion: lowdefy.lowdefy,
     disableTelemetry: get(lowdefy, 'cli.disableTelemetry'),
   };
 }

@@ -824,7 +824,7 @@ test('parse visible operator with setValue', () => {
           {
             type: 'TextInput',
             blockId: 'textB',
-            visible: { _mql_test: { textA: 'show b' } },
+            visible: { '_mql.test': { on: { _state: true }, test: { textA: 'show b' } } },
             meta: {
               category: 'input',
               valueType: 'string',
@@ -870,7 +870,7 @@ test('rec parse visible operator with setValue', () => {
           {
             type: 'TextInput',
             blockId: 'textB',
-            visible: { _mql_test: { textA: 'show b' } },
+            visible: { '_mql.test': { on: { _state: true }, test: { textA: 'show b' } } },
             meta: {
               category: 'input',
               valueType: 'string',
@@ -879,7 +879,7 @@ test('rec parse visible operator with setValue', () => {
           {
             type: 'TextInput',
             blockId: 'textC',
-            visible: { _mql_test: { textB: { $exists: true } } },
+            visible: { '_mql.test': { on: { _state: true }, test: { textB: { $exists: true } } } },
             meta: {
               category: 'input',
               valueType: 'string',
@@ -1083,7 +1083,7 @@ test('max recuse limit', () => {
               category: 'input',
               valueType: 'string',
             },
-            visible: { _mql_test: { a: { $ne: 'a' } } },
+            visible: { '_mql.test': { on: { _state: true }, test: { a: { $ne: 'a' } } } },
           },
           {
             type: 'TextInput',
@@ -1097,7 +1097,7 @@ test('max recuse limit', () => {
           {
             type: 'TextInput',
             blockId: 'd',
-            visible: { _mql_test: { c: 'show d' } },
+            visible: { '_mql.test': { on: { _state: true }, test: { c: 'show d' } } },
             meta: {
               category: 'input',
               valueType: 'string',
@@ -1106,7 +1106,7 @@ test('max recuse limit', () => {
           {
             type: 'TextInput',
             blockId: 'e',
-            visible: { _mql_test: { d: { $exists: true } } },
+            visible: { '_mql.test': { on: { _state: true }, test: { d: { $exists: true } } } },
             meta: {
               category: 'input',
               valueType: 'string',

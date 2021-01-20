@@ -26,7 +26,7 @@ const dumpYaml = (data) => {
   if (!data) {
     return '';
   }
-  return YAML.safeDump(data, {
+  return YAML.dump(data, {
     // sortKeys: true,
     noRefs: true,
   });

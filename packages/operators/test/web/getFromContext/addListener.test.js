@@ -1,3 +1,19 @@
+/*
+  Copyright 2020 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
 
@@ -210,40 +226,6 @@ test('add listener for _url_query', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('url-other');
-  expect(otherContext.updateListeners).toEqual(new Set(['own']));
-});
-
-test('add listener for _mutation_details', () => {
-  const context = {
-    id: 'own',
-    mutations: {
-      string: 'mutations',
-    },
-    updateListeners: new Set(),
-  };
-
-  const otherContext = {
-    id: 'other',
-    mutations: {
-      string: 'mutations-other',
-    },
-    updateListeners: new Set(),
-  };
-
-  const contexts = {
-    own: context,
-    other: otherContext,
-  };
-  const input = {
-    _mutation_details: {
-      key: 'string',
-      contextId: 'other',
-    },
-  };
-  expect(context.updateListeners).toEqual(new Set());
-  const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('mutations-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 

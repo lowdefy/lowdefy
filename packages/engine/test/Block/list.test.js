@@ -715,7 +715,9 @@ test('list block with rec visible in parent blocks', () => {
                   {
                     type: 'TextInput',
                     blockId: 'list.$.b',
-                    visible: { _mql_test: { 'list.0.a': 'show b' } },
+                    visible: {
+                      '_mql.test': { on: { _state: true }, test: { 'list.0.a': 'show b' } },
+                    },
                     meta: {
                       category: 'input',
                       valueType: 'string',
@@ -728,7 +730,9 @@ test('list block with rec visible in parent blocks', () => {
           {
             type: 'TextInput',
             blockId: 'c',
-            visible: { _mql_test: { 'list.0.b': { $exists: true } } },
+            visible: {
+              '_mql.test': { on: { _state: true }, test: { 'list.0.b': { $exists: true } } },
+            },
             meta: {
               category: 'input',
               valueType: 'string',

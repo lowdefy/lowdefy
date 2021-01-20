@@ -673,3 +673,33 @@ test('buildRefs var uses default value if value not specified', async () => {
     },
   });
 });
+
+test('buildRefs with transformer function', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: {
+        _ref: {
+          path: 'target.yaml',
+          transformer: 'src/test/testBuildRefsTransform.js',
+          vars: {
+            var1: 'var1',
+          },
+        },
+      },
+    },
+    {
+      path: 'target.yaml',
+      content: {
+        a: 1,
+      },
+    },
+  ];
+  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  const res = await buildRefs({ context });
+  expect(res).toEqual({
+    add: 43,
+    json: '{"a":1}',
+    var: 'var1',
+  });
+});

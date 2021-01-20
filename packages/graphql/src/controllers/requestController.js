@@ -27,17 +27,10 @@ class RequestController {
     this.connectionLoader = getLoader('connection');
   }
 
-  async callRequest({
-    args,
-    arrayIndices,
-    blockId,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requestId,
-    state,
-    urlQuery,
-  }) {
+  async callRequest(requestInput) {
+    // get variables needed to load request/connection from requestInput
+    const { arrayIndices, blockId, pageId, requestId } = requestInput;
+
     const request = await this.loadRequest({
       pageId,
       contextId: blockId,
@@ -48,6 +41,9 @@ class RequestController {
     // Get definitions early to throw and avoid parsing if request/connection type is invalid
     const connectionDefinition = this.getConnectionDefinition({ connection, request });
     const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
+
+    // Get parser variables from requestInput and deserialize
+    const { args, input, lowdefyGlobal, state, urlQuery } = this.deserializeInputs(requestInput);
 
     const { connectionProperties, requestProperties } = await this.parseOperators({
       args,
@@ -130,6 +126,10 @@ class RequestController {
       );
     }
     return requestDefinition;
+  }
+
+  deserializeInputs({ args, input, lowdefyGlobal, state, urlQuery }) {
+    return serializer.deserialize({ args, input, lowdefyGlobal, state, urlQuery });
   }
 
   async parseOperators({

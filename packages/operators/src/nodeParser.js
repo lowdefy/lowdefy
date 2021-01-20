@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 /*
   Copyright 2020 Lowdefy, Inc
 
@@ -16,127 +14,10 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
-import {
-  _and,
-  _date,
-  _dump_yaml,
-  _eq,
-  _if,
-  _load_yaml,
-  _mql_aggregate,
-  _mql_expr,
-  _mql_test,
-  _not,
-  _nunjucks,
-  _operator,
-  _or,
-  _parse,
-  _regex,
-  _stringify,
-  _type,
-} from './operators';
-
-function getFromObject({ params, object, arrayIndices, operator, location }) {
-  if (params === true) return object;
-  if (type.isString(params)) {
-    return get(object, applyArrayIndices(arrayIndices, params), { default: null });
-  }
-  if (type.isObject(params)) {
-    if (params.all === true) return object;
-    if (!type.isString(params.key)) {
-      throw new Error(
-        `Operator Error: ${operator}.key must be of type string. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
-    }
-    return get(object, applyArrayIndices(arrayIndices, params.key), {
-      default: get(params, 'default', { default: null }),
-    });
-  }
-  throw new Error(
-    `Operator Error: ${operator} params must be of type string or object. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
-}
-
-function _args({ params, args, location, arrayIndices }) {
-  return getFromObject({ params, object: args, operator: '_args', location, arrayIndices });
-}
-
-function _global({ params, lowdefyGlobal, location, arrayIndices }) {
-  return getFromObject({
-    params,
-    object: lowdefyGlobal,
-    operator: '_global',
-    location,
-    arrayIndices,
-  });
-}
-
-function _input({ params, input, location, arrayIndices }) {
-  return getFromObject({
-    params,
-    object: input,
-    operator: '_input',
-    location,
-    arrayIndices,
-  });
-}
-
-function _secret({ params, secrets, location }) {
-  return getFromObject({
-    params,
-    object: secrets,
-    operator: '_secret',
-    location,
-  });
-}
-
-function _state({ params, state, location, arrayIndices }) {
-  return getFromObject({
-    params,
-    object: state,
-    operator: '_state',
-    location,
-    arrayIndices,
-  });
-}
-
-function _url_query({ params, urlQuery, location, arrayIndices }) {
-  return getFromObject({
-    params,
-    object: urlQuery,
-    operator: '_url_query',
-    location,
-    arrayIndices,
-  });
-}
-
-function _get({ params, location, arrayIndices }) {
-  if (!type.isObject(params)) {
-    throw new Error(
-      `Operator Error: _get takes an object as params. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-
-  if (!type.isString(params.key)) {
-    throw new Error(
-      `Operator Error: _get.key takes a string. Received ${JSON.stringify(params)} at ${location}.`
-    );
-  }
-  if (!type.isObject(params.from) && !type.isArray(params.from)) {
-    return null;
-  }
-  return get(params.from, applyArrayIndices(arrayIndices, params.key), {
-    default: get(params, 'default', { default: null }),
-  });
-}
+import commonOperators from './common';
+import nodeOperators from './node';
 
 class NodeParser {
   constructor({ arrayIndices, config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
@@ -148,32 +29,9 @@ class NodeParser {
     this.state = state;
     this.urlQuery = urlQuery;
     this.operations = {
-      _and,
-      _args,
-      _date,
-      _dump_yaml,
-      _eq,
-      _get,
-      _global,
-      _if,
-      _input,
-      _load_yaml,
-      _mql_aggregate,
-      _mql_expr,
-      _mql_test,
-      _not,
-      _nunjucks,
-      _operator,
-      _or,
-      _parse,
-      _regex,
-      _secret,
-      _state,
-      _stringify,
-      _type,
-      _url_query,
+      ...commonOperators,
+      ...nodeOperators,
     };
-    this.operationList = Object.keys(this.operations);
   }
 
   parse({ input, args, location }) {
@@ -187,32 +45,33 @@ class NodeParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const reviver = (key, value) => {
-      if (type.isObject(value)) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const op of this.operationList) {
-          try {
-            if (!type.isUndefined(value[op])) {
-              const res = this.operations[op]({
-                args,
-                arrayIndices: this.arrayIndices,
-                config: this.config,
-                input: this.input,
-                location,
-                lowdefyGlobal: this.lowdefyGlobal,
-                mutations: this.mutations,
-                operations: this.operations,
-                params: value[op],
-                secrets: this.secrets,
-                state: this.state,
-                urlQuery: this.urlQuery,
-              });
-              return res;
-            }
-          } catch (e) {
-            errors.push(e);
-            return null;
+    const reviver = (_, value) => {
+      if (type.isObject(value) && Object.keys(value).length === 1) {
+        const key = Object.keys(value)[0];
+        const [op, methodName] = key.split('.');
+        try {
+          if (!type.isUndefined(this.operations[op])) {
+            const res = this.operations[op]({
+              args,
+              arrayIndices: this.arrayIndices,
+              config: this.config,
+              env: 'node',
+              input: this.input,
+              location,
+              lowdefyGlobal: this.lowdefyGlobal,
+              methodName,
+              operations: this.operations,
+              params: value[key],
+              secrets: this.secrets,
+              state: this.state,
+              urlQuery: this.urlQuery,
+            });
+            return res;
           }
+        } catch (e) {
+          errors.push(e);
+          console.error(e);
+          return null;
         }
       }
       return value;

@@ -243,6 +243,77 @@ test('connection does not have correct type', async () => {
   );
 });
 
+test('deserialize inputs', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {
+          args: { _args: true },
+          input: { _input: true },
+          global: { _global: true },
+          state: { _state: true },
+          urlQuery: { _url_query: true },
+          argsDate: { _args: 'date' },
+          inputDate: { _input: 'date' },
+          globalDate: { _global: 'date' },
+          stateDate: { _state: 'date' },
+          urlQueryDate: { _url_query: 'date' },
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await controller.callRequest({
+    args: {
+      date: { _date: 0 },
+    },
+    arrayIndices: [],
+    blockId: 'contextId',
+    input: {
+      date: { _date: 0 },
+    },
+    lowdefyGlobal: {
+      date: { _date: 0 },
+    },
+    pageId: 'pageId',
+    requestId: 'requestId',
+    state: {
+      date: { _date: 0 },
+    },
+    urlQuery: {
+      date: { _date: 0 },
+    },
+  });
+  expect(resolvers.TestConnection.requests.TestRequest.resolver.mock.calls).toEqual([
+    [
+      {
+        connection: {
+          connectionProperty: 'connectionProperty',
+        },
+        request: {
+          args: { date: new Date(0) },
+          input: { date: new Date(0) },
+          global: { date: new Date(0) },
+          state: { date: new Date(0) },
+          urlQuery: { date: new Date(0) },
+          argsDate: new Date(0),
+          inputDate: new Date(0),
+          globalDate: new Date(0),
+          stateDate: new Date(0),
+          urlQueryDate: new Date(0),
+        },
+      },
+    ],
+  ]);
+});
+
 test('parse request properties for operators', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
@@ -495,7 +566,7 @@ test('request properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at requestId.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at requestId.'
   );
 });
 
@@ -518,7 +589,7 @@ test('connection properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at testConnection.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at testConnection.'
   );
 });
 
