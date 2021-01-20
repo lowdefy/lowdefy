@@ -42,24 +42,24 @@ _ref:
                       icon: HomeOutlined
                       title: Home
                     pageId: welcome
-                  - id: booking
+                  - id: new-ticket
                     type: MenuLink
                     properties:
-                      icon: CalendarOutlined
-                      title: Book a meeting
-                    pageId: booking
+                      icon: AlertOutlined
+                      title: New ticket
+                    pageId: new-ticket
 
             pages:
               - _ref: pages/welcome.yaml
-              - _ref: pages/booking.yaml
+              - _ref: pages/new-ticket.yaml
             ```
 
-            ##### `pages/booking.yaml`
+            ##### `pages/new-ticket.yaml`
             ```yaml
-            id: booking
+            id: new-ticket
             type: PageHeaderMenu
             properties:
-              title: Book meeting
+              title: Log a ticket # The title in the browser tab.
             layout:
               contentJustify: center # Center the contents of the page
             blocks:
@@ -72,33 +72,24 @@ _ref:
                   - id: page_heading
                     type: Title
                     properties:
-                      content: Book a meeting room # Change the title on the page
+                      content: Log a ticket # Change the title on the page.
                       level: 3 # Make the title a little smaller (an html `<h3>`).
-                  - id: meeting_name
+                  - id: ticket_title
                     type: TextInput
                     properties:
-                      title: Meeting name
-                  - id: meeting_room
-                    type: Selector
+                      title: Title
+                  - id: ticket_type
+                    type: ButtonSelector
                     properties:
-                      title: Meeting room
+                      title: Ticket type
                       options: # Set the allowed options
-                        - Red Room
-                        - Blue Room
-                        - Green Room
-                        - Boardroom
-                  - id: date
-                    type: DateSelector
+                        - Feature request
+                        - Bug report
+                        - Question
+                  - id: ticket_description
+                    type: TextArea
                     properties:
-                      title: Date
-                  - id: start_time
-                    type: DateTimeSelector
-                    properties:
-                      title: Start time
-                  - id: end_time
-                    type: DateTimeSelector
-                    properties:
-                      title: End time
+                      title: Description
                   - id: reset_button
                     type: Button
                     layout:

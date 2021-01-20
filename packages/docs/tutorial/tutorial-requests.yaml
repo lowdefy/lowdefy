@@ -179,12 +179,12 @@ _ref:
 
             #### Step 4
 
-            In your `booking.yaml` file, add the following request:
+            In your `new-ticket.yaml` file, add the following request:
 
             ##### `pages/booking.yaml`
 
             ```yaml
-            id: booking
+            id: new-ticket
             type: PageHeaderMenu
             properties:
               title: Book meeting
@@ -197,18 +197,7 @@ _ref:
                 connectionId: google_sheet
                 properties:
                   row:
-                    meeting_name:
-                      _state: meeting_name
-                    number_of_attendees:
-                      _state: number_of_attendees
-                    meeting_room:
-                      _state: meeting_room
-                    date:
-                      _state: date
-                    start_time:
-                      _state: start_time
-                    end_time:
-                      _state: end_time
+                    _state: true
             ################ ------- Copy to here ----------- ################
             blocks:
               # ...
@@ -216,12 +205,12 @@ _ref:
 
             #### Step 5
 
-            In your `booking.yaml` file, add the following action to the submit button:
+            In your `new-ticket.yaml` file, add the following action to the submit button:
 
-            ##### `pages/booking.yaml`
+            ##### `pages/new-ticket.yaml`
 
             ```yaml
-            id: booking
+            id: new-ticket
             # ...
             blocks:
               - id: content_card

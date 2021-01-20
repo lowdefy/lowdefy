@@ -81,10 +81,10 @@ _ref:
                   title: welcome
                 url: ''
         blocks:
-          - id: example1_content_card
+          - id: content_card
             type: Card
             blocks:
-              - id: example1_title
+              - id: title
                 type: Title
                 properties:
                   content: Hello World

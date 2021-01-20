@@ -30,10 +30,9 @@ _ref:
           content: |
             We would like to add an input form with the following fields:
 
-            - A name for the meeting.
-            - Which meeting room should be booked. This should be a selection from a list of meeting rooms.
-            - The date of the meeting.
-            - The start and end times for the meeting.
+            - A title for the meeting.
+            - The type of ticket. This should be a selection from a list of types.
+            - A description of the ticket.
 
             There should also be submit and reset buttons at the bottom of the page.
 
@@ -52,34 +51,25 @@ _ref:
                   - id: page_heading
                     type: Title
                     properties:
-                      content: Book a meeting room # Change the title on the page
+                      content: Log a ticket # Change the title on the page.
                       level: 3 # Make the title a little smaller (an html `<h3>`).
-            ################ -------- Copy from here -------- ################
-                  - id: meeting_name
+            ################ ------- Copy from here -------- ################
+                  - id: ticket_title
                     type: TextInput
                     properties:
-                      title: Meeting name
-                  - id: meeting_room
-                    type: Selector
+                      title: Title
+                  - id: ticket_type
+                    type: ButtonSelector
                     properties:
-                      title: Meeting room
+                      title: Ticket type
                       options: # Set the allowed options
-                        - Red Room
-                        - Blue Room
-                        - Green Room
-                        - Boardroom
-                  - id: date
-                    type: DateSelector
+                        - Feature request
+                        - Bug report
+                        - Question
+                  - id: ticket_description
+                    type: TextArea
                     properties:
-                      title: Date
-                  - id: start_time
-                    type: DateTimeSelector
-                    properties:
-                      title: Start time
-                  - id: end_time
-                    type: DateTimeSelector
-                    properties:
-                      title: End time
+                      title: Description
                   - id: reset_button
                     type: Button
                     layout:
@@ -98,6 +88,7 @@ _ref:
                       block: true
                       type: primary # Make the button a primary button with color
                       icon: SaveOutlined
+            ################ -------- Copy to here ---------- ################
             ```
 
             >  If you would like to see how your config should look at this point, you can find it [here](tutorial-add-blocks-config).
@@ -115,43 +106,34 @@ _ref:
           menu:
             links: []
         blocks:
-          - id: example1_content_card
+          - id: content_card
             type: Card
             layout:
               contentGutter: 16
               size: 600
             blocks:
-              - id: example1_page_heading
+              - id: page_heading
                 type: Title
                 properties:
-                  content: Making a booking form
+                  content: Log a ticket
                   level: 3
-              - id: example1_meeting_name
+              - id: ticket_title
                 type: TextInput
                 properties:
-                  title: Meeting name
-              - id: example1_meeting_room
-                type: Selector
+                  title: Title
+              - id: ticket_type
+                type: ButtonSelector
                 properties:
-                  title: Meeting room
+                  title: Ticket type
                   options:
-                    - Red Room
-                    - Blue Room
-                    - Green Room
-                    - Boardroom
-              - id: example1_date
-                type: DateSelector
+                    - Feature request
+                    - Bug report
+                    - Question
+              - id: ticket_description
+                type: TextArea
                 properties:
-                  title: Date
-              - id: example1_start_time
-                type: DateTimeSelector
-                properties:
-                  title: Start time
-              - id: example1_end_time
-                type: DateTimeSelector
-                properties:
-                  title: End time
-              - id: example1_reset_button
+                  title: Description
+              - id: reset_button
                 type: Button
                 layout:
                   span: 12
@@ -160,7 +142,7 @@ _ref:
                   block: true
                   type: default
                   icon: ClearOutlined
-              - id: example1_submit_button
+              - id: submit_button
                 type: Button
                 layout:
                   span: 12
@@ -178,7 +160,7 @@ _ref:
           content: |
             ### What happened
 
-            We added 5 form input blocks to the page. For each of those blocks, we set the `title` property, and for the meeting room selector we set a list of meeting rooms to the options property.
+            We added 3 form input blocks to the page. For each of those blocks, we set the `title` property, and for the ticket type selector we set a list of ticket types to the options property.
 
             We also added reset button and submit button. We set a few more properties on the buttons to set their layout and appearance.
 

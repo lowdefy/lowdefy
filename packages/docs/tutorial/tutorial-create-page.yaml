@@ -101,12 +101,12 @@ _ref:
                   title: new-ticket
                 type: MenuLink
         blocks:
-          - id: example1_content_card
+          - id: content_card
             type: Card
             layout:
               size: 600
             blocks:
-              - id: example1_page_heading
+              - id: page_heading
                 type: Title
                 properties:
                   content: Log a ticket
@@ -154,7 +154,7 @@ _ref:
                       icon: AlertOutlined
                       title: New ticket
                     pageId: new-ticket
-            ################ ------- Copy to here ----------- ################
+            ################ -------- Copy to here ---------- ################
             pages:
               - _ref: pages/welcome.yaml
                 # ...
