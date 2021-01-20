@@ -566,7 +566,7 @@ test('request properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at requestId.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at requestId.'
   );
 });
 
@@ -589,7 +589,7 @@ test('connection properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at testConnection.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at testConnection.'
   );
 });
 
