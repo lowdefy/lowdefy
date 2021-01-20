@@ -100,7 +100,7 @@ test('_global null', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _global params must be of type string or object. Received: null at locationId.],
+      [Error: Operator Error: _global params must be of type string, boolean or object. Received: null at locationId.],
     ]
   `);
 });
@@ -183,7 +183,7 @@ test('_global param array', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _global params must be of type string or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _global params must be of type string, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });

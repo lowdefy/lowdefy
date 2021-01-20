@@ -61,7 +61,7 @@ test('_input null', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _input params must be of type string or object. Received: null at locationId.],
+      [Error: Operator Error: _input params must be of type string, boolean or object. Received: null at locationId.],
     ]
   `);
 });
@@ -128,7 +128,7 @@ test('_input param array', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _state params must be of type string or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _state params must be of type string, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });

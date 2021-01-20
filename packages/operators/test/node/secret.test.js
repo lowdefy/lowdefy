@@ -49,7 +49,7 @@ test('_secret null', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _secret params must be of type string or object. Received: null at locationId.],
+      [Error: Operator Error: _secret params must be of type string, boolean or object. Received: null at locationId.],
     ]
   `);
 });
@@ -126,7 +126,7 @@ test('_secret param array', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _secret params must be of type string or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _secret params must be of type string, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });
