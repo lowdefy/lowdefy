@@ -243,6 +243,67 @@ test('connection does not have correct type', async () => {
   );
 });
 
+test('deserialize inputs', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {
+          args: { _args: 'date' },
+          input: { _input: 'date' },
+          global: { _global: 'date' },
+          state: { _state: 'date' },
+          urlQuery: { _url_query: 'date' },
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await controller.callRequest({
+    args: {
+      date: { _date: 0 },
+    },
+    arrayIndices: [],
+    blockId: 'contextId',
+    input: {
+      date: { _date: 0 },
+    },
+    lowdefyGlobal: {
+      date: { _date: 0 },
+    },
+    pageId: 'pageId',
+    requestId: 'requestId',
+    state: {
+      date: { _date: 0 },
+    },
+    urlQuery: {
+      date: { _date: 0 },
+    },
+  });
+  expect(resolvers.TestConnection.requests.TestRequest.resolver.mock.calls).toEqual([
+    [
+      {
+        connection: {
+          connectionProperty: 'connectionProperty',
+        },
+        request: {
+          args: new Date(0),
+          global: new Date(0),
+          input: new Date(0),
+          state: new Date(0),
+          urlQuery: new Date(0),
+        },
+      },
+    ],
+  ]);
+});
+
 test('parse request properties for operators', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
