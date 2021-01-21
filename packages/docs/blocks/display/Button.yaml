@@ -20,15 +20,9 @@ _ref:
     description_content: |
       Button block.
     default_properties:
-      block: false
-      danger: false
-      disabled: false
-      ghost: false
-      hideTitle: false
-      shape: square
-      size: default
-      type: primary
-      title: block_id
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
+        transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Button/Button.json

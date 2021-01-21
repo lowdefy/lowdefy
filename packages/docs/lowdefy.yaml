@@ -116,6 +116,9 @@ menus:
           title: Input Blocks
           icon: FormOutlined
         links:
+          - id: AutoComplete
+            type: MenuLink
+            pageId: AutoComplete
           - id: TextInput
             type: MenuLink
             pageId: TextInput
@@ -222,6 +225,7 @@ pages:
   - _ref: concepts/layout.yaml
   - _ref: concepts/operators.yaml
 
+  - _ref: blocks/input/AutoComplete.yaml
   - _ref: blocks/input/TextInput.yaml
 
   - _ref: blocks/display/Button.yaml

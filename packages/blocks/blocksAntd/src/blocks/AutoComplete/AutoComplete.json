@@ -38,11 +38,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
-        },
-        "optionsStyle": {
-          "type": "object",
-          "description": "Css style to applied to option elements."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -94,6 +93,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "options": {
@@ -102,6 +104,16 @@
           "description": "Auto complete options can be an array of string values.",
           "items": {
             "type": "string"
+          },
+          "docs": {
+            "displayType": "optionsString"
+          }
+        },
+        "optionsStyle": {
+          "type": "object",
+          "description": "Css style to applied to option elements.",
+          "docs": {
+            "displayType": "style"
           }
         },
         "placeholder": {

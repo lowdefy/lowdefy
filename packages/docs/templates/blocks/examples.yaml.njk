@@ -26,8 +26,7 @@ blocks:
     type: {{ block_type }}
     layout:
       span: 12
-    required:
-      _json.parse: '{{ example.required }}'
+    required: {{ example.required }}
     properties:
       _json.parse: '{{ example.properties | safe }}'
   - id: example_config_{{ loop.index }}

@@ -14,6 +14,118 @@
   limitations under the License.
 */
 
+const label = {
+  id: 'label_card',
+  type: 'Card',
+  layout: {
+    contentGutter: 0,
+  },
+  properties: {
+    size: 'small',
+    title: 'label:',
+    inner: true,
+  },
+  blocks: [
+    {
+      id: 'block.properties.label.span',
+      type: 'NumberInput',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'span',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+    {
+      id: 'block.properties.label.align',
+      type: 'ButtonSelector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'align',
+        size: 'small',
+        options: ['left', 'right'],
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+    {
+      id: 'block.properties.label.inline',
+      type: 'Switch',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'inline',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+    {
+      id: 'block.properties.label.disabled',
+      type: 'Switch',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'disabled',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+    {
+      id: 'block.properties.label.colon',
+      type: 'Switch',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'colon',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+    {
+      id: 'block.properties.label.extra',
+      type: 'TextInput',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'extra',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Align label left or right when span is applied.',
+        },
+      },
+    },
+  ],
+};
+
 function makeBlockDefinition(propertyName, propertyDescription) {
   const block = {
     id: `block.properties.${propertyName}`,
@@ -55,6 +167,23 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         return block;
       case 'style':
         block.type = 'TextArea';
+        return block;
+      case 'label':
+        return label;
+      case 'optionsString':
+        block.type = 'ControlledList';
+        block.blocks = [
+          {
+            id: 'block.properties.options.$',
+            type: 'TextInput',
+            properties: {
+              size: 'small',
+              label: {
+                disabled: true,
+              },
+            },
+          },
+        ];
         return block;
     }
   }

@@ -80,7 +80,9 @@ blocks:
           _state: block.layout
         style:
           _yaml.parse:
-            _state: style_block_input
+            _if_none:
+              - _state: style_block_input
+              - ''
         visible:
           _state: block.visible
         required:
@@ -146,9 +148,9 @@ blocks:
                               span: 24
                             style:
                               _yaml.parse:
-                                  _if_none:
-                                    - _state: style_block_input
-                                    - ''
+                                _if_none:
+                                  - _state: style_block_input
+                                  - ''
                             visible:
                               _state: block.visible
                             required:
