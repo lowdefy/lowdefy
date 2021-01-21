@@ -36,11 +36,17 @@
         },
         "prefixIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to prefix the text input."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to prefix the text input.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -92,6 +98,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "size": {
@@ -106,7 +115,10 @@
         },
         "suffixIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to suffix the text input."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to suffix the text input.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "title": {
           "type": "string",

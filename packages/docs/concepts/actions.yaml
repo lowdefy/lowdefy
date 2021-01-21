@@ -1,0 +1,95 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: actions
+    pageTitle: Actions
+    section: Concepts
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            `Actions` can be used to perform actions, like calling requests or linking to a new page, based on events in your app, like button clicks or page loads.
+
+            Each block defines the events for which it will call actions. The actions to be executed can be defined as a list of action definitions, under that event's name in the actions object of a block. The event names usually start with the keyword "on", like `onClick`, `onChange`, or `onInit`. Each action definition has an `id` (which should be unique in that action chain), a `type`, and a `params` object, which has the parameters that specify how the action should execute.
+
+
+            ###### Actions definition example:
+            ```yaml
+            - id: block_with_actions
+              type: Block
+              properties:
+                # ...
+              actions:
+                onEvent1:
+                  - id: action1
+                    type: ActionType1
+                    params:
+                      # ...
+                  - id: action2
+                    type: ActionType2
+                    params:
+                      # ...
+                onEvent2:
+                  - id: action3
+                    type: ActionType3
+                    params:
+                      # ...
+            ```
+
+            # Context initialisation actions
+
+            Four action events are always defined for [`context`](/context) type blocks:
+              - `onInit`
+              - `onEnter`
+              - `onInitAsync`
+              - `onEnterAsync`
+
+            These actions can be used to initialise the context or page.
+
+            The `onInit` action will execute the first time a context is create (for example if a page is loaded for the first time), before anything is rendered. It can be used to set up a context. Actions that take a long time to execute, like `Request`, should be used sparingly here.
+
+            The `onEnter` action will execute every time a context is rendered again (for example if a user left a page, and returns to it), also before anything is rendered to the screen. It can be used to execute actions that should be run each time a page is loaded, like checking if an id is present in the url query parameters, and initialising the state based on that.
+
+            The `onInitAsync` action will execute the first time a context is created, but after rendering has started. This is a good place to execute requests that might take longer to execute.
+
+            The `onEnterAsync` action also executes after renderering starts, and executes every time a context is rendered.
+
+            # Action types
+
+            The following actions can be used:
+
+            - [`CallMethod`](/CallMethod) - Call a method defined by another block.
+            - [`Link`](/Link) - Link to another page.
+            - [`Message`](/Message) - Show a message to the user.
+            - [`Notification`](/Notification) - Show a notification to the user.
+            - [`Request`](/Request) - Call a request.
+            - [`Reset`](/Reset) - Reset the context.
+            - [`ScrollTo`](/ScrollTo) - Scroll to a point on the page.
+            - [`SetGlobal`](/SetGlobal) - Set a value to the global object.
+            - [`SetState`](/SetState) - Set a value to the state.
+            - [`Validate`](/Validate) - Validate the inputs in the context.s
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Context
+            previous_page_id: context
+            next_page_title: Connections
+            next_page_id: connections

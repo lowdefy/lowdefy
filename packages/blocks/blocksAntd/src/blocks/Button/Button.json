@@ -12,7 +12,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Button color."
+          "description": "Button color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "danger": {
           "type": "boolean",
@@ -36,12 +39,15 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to use icon in button."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use icon in button.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "shape": {
           "type": "string",
           "default": "square",
-          "enum": ["round", "circle"],
+          "enum": ["circle", "round", "square"],
           "description": "Shape of the button."
         },
         "size": {
@@ -51,7 +57,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to button."
+          "description": "Css style object to applied to button.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "title": {
           "type": "string",

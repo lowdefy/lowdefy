@@ -1,0 +1,185 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-add-blocks
+    pageTitle: Adding blocks
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-actions-operators
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            We would like to add an input form with the following fields:
+
+            - A title for the meeting.
+            - The type of ticket. This should be a selection from a list of types.
+            - A description of the ticket.
+
+            There should also be submit and reset buttons at the bottom of the page.
+
+            #### Step 1
+
+            Copy the following blocks and add them in the card's blocks array.
+
+            ###### `pages/booking.yaml`
+            ```yaml
+            id: booking
+                # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    type: Title
+                    properties:
+                      content: Log a ticket # Change the title on the page.
+                      level: 3 # Make the title a little smaller (an html `<h3>`).
+            ################ ------- Copy from here -------- ################
+                  - id: ticket_title
+                    type: TextInput
+                    properties:
+                      title: Title
+                  - id: ticket_type
+                    type: ButtonSelector
+                    properties:
+                      title: Ticket type
+                      options: # Set the allowed options
+                        - Feature request
+                        - Bug report
+                        - Question
+                  - id: ticket_description
+                    type: TextArea
+                    properties:
+                      title: Description
+                  - id: reset_button
+                    type: Button
+                    layout:
+                      span: 12 # Set the size of the button (span 12 of 24 columns)
+                    properties:
+                      title: Reset
+                      block: true # Make the button fill all the space available to it
+                      type: default # Make the button a plain button
+                      icon: ClearOutlined
+                  - id: submit_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Submit
+                      block: true
+                      type: primary # Make the button a primary button with color
+                      icon: SaveOutlined
+            ################ -------- Copy to here ---------- ################
+            ```
+
+            >  If you would like to see how your config should look at this point, you can find it [here](tutorial-add-blocks-config).
+
+            #### Step 2
+
+            Your booking page should something like this:
+      - id: example1
+        type: PageHeaderMenu
+        layout:
+          contentJustify: center
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links: []
+        blocks:
+          - id: content_card
+            type: Card
+            layout:
+              contentGutter: 16
+              size: 600
+            blocks:
+              - id: page_heading
+                type: Title
+                properties:
+                  content: Log a ticket
+                  level: 3
+              - id: ticket_title
+                type: TextInput
+                properties:
+                  title: Title
+              - id: ticket_type
+                type: ButtonSelector
+                properties:
+                  title: Ticket type
+                  options:
+                    - Feature request
+                    - Bug report
+                    - Question
+              - id: ticket_description
+                type: TextArea
+                properties:
+                  title: Description
+              - id: reset_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Reset
+                  block: true
+                  type: default
+                  icon: ClearOutlined
+              - id: submit_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Submit
+                  block: true
+                  type: primary
+                  icon: SaveOutlined
+      - id: md2
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            ### What happened
+
+            We added 3 form input blocks to the page. For each of those blocks, we set the `title` property, and for the ticket type selector we set a list of ticket types to the options property.
+
+            We also added reset button and submit button. We set a few more properties on the buttons to set their layout and appearance.
+
+            ### How it works
+
+            Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 5 block categories, namely display, input, container, list, and context.
+
+            The first block on a page needs to be a [context](/context) block. For now, it is enough to understand that this context allows the Lowdefy magic to happen.
+
+            All blocks need to have an `id` that identifies the block. This id should be unique in that block's context.
+
+            ### Up next
+
+            Currently our form doesn't do very much. In the next section we will use [actions](actions) and [operators](operators) to make it more interactive.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Creating a page
+            previous_page_id: tutorial-create-page
+            next_page_title: Interactive pages
+            next_page_id: tutorial-actions-operators

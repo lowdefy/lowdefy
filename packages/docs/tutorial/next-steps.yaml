@@ -1,0 +1,56 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: next-steps
+    pageTitle: Next steps
+    section: Tutorial
+    # prefetchPages: []
+    content:
+      - id: md1
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            Congratulations! You have completed the tutorial and built a sort-of functioning app.
+
+            To carry on from here, you have a couple of options
+
+            # Look at an example app
+
+            One of the best ways to learn is by doing things for yourself. You can clone an example app that is similar to something you want to build, and start experimenting from there.
+
+            #### CRUD example
+
+            This example is a simple app app that has everything needed to get started managing data in a database.
+
+            #### Survey example
+
+            A simple survey example.
+
+            #### Movies example
+
+            A example reporting dashboard app based on a movies database.
+
+            # Understand the concepts
+
+            To get a more in-depth understanding of how everything works, you can start [here](/context).
+
+            # Play with blocks
+
+            The docs have an interactive playground where you can adjust a block's properties and see how that affects the block in real time. Go look at what you can do with a [`Button`](/Button).

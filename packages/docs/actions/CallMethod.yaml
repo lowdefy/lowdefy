@@ -1,0 +1,57 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: CallMethod
+    pageTitle: CallMethod
+    section: Actions
+    content:
+      - id: markdown
+        type: Markdown
+        style:
+          '.markdown-body':
+            fontSize: 14px
+        properties:
+          content: |
+            The `CallMethod` action is used to call a method defined by another block.
+
+            ### Parameters
+            - `blockId`: _String_ - The id of the block.
+            - `method`: _String_ - The name of the method that should be called.
+            - `args`: _Any_ - The arguments with which the method should be called. If this is an array, each item will be a positional argument to the method, else the args are only the first argument. (The arguments are spread if they are an array).
+
+            ### Examples
+
+            Open a modal:
+            ```
+            - id: toggle_modal
+              type: CallMethod
+              params:
+                blockId: my_modal
+                method: toggleOpen
+            ```
+
+            Display a message with args:
+            ```
+            - id: display_message
+              type: CallMethod
+              params:
+                blockId: my_message
+                method: open
+                args:
+                  content: Hello
+                  duration: 4
+            ```

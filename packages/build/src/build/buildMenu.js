@@ -75,7 +75,7 @@ async function buildMenu({ components, context }) {
   await Promise.all(
     missingPageWarnings.map(async (warning) => {
       await context.logger.warn(
-        `Page ${warning.pageId} referenced in menu link ${warning.menuItemId} not found.`
+        `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`
       );
     })
   );

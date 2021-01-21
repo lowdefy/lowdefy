@@ -1,0 +1,53 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: TextInput
+    value_type: String
+    category: input
+    description_content: |
+      The `TextInput` block is a single line text input.
+    default_properties:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
+        transformer: templates/blocks/defaultValueTransformer.js
+    properties_getter:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
+        transformer: templates/blocks/propertiesGetterTransformer.js
+    properties_form:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
+        transformer: templates/blocks/propertiesFormTransformer.js
+
+    available_actions_description: |
+      ###### onChange
+      Triggered when value is changed.
+      ###### onPressEnter
+      Triggered when enter is pressed while block is focused.
+
+    examples:
+      - title: Text input
+        properties: '{"title": "Text input"}'
+      - title: Required text input
+        required: true
+        properties: '{"title": "Required text input"}'
+      - title: Placeholder
+        properties: '{"placeholder": "Placeholder"}'
+      - title: Prefix and suffix text
+        properties: '{"label": {"extra":"Prefix and suffix text"}, "prefix": "The cat", "placeholder": "chased", "suffix": "the rat."}'
+      - title: User name
+        properties: '{"title": "First Name", "suffixIcon": "UserOutlined", "placeholder": "Your name", "label": {"span": 6}}'

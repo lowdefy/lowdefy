@@ -1,0 +1,240 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: {{ block_type }}
+type: PageSiderMenu
+properties:
+  title: {{ block_type }}
+  header:
+    theme: light
+  sider:
+    width: 256px
+  layout:
+    style:
+      background: '#FFFFFF'
+layout:
+  contentGutter: 16
+actions:
+  onInit:
+    - id: init_state
+      type: SetState
+      params:
+        block:
+          layout:
+            align: top
+            span: 24
+          visible: true
+          properties:
+            _var: default_properties
+blocks:
+  - id: title
+    type: Title
+    properties:
+      level: 2
+      content:
+        _var: block_type
+  - id: value_type
+    type: Markdown
+    visible:
+      _not:
+        _eq:
+          - _var: value_type
+          - null
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            **Value Type**: {{ value_type }}
+          on:
+            value_type:
+              _var: value_type
+  - id: description
+    type: Markdown
+    properties:
+      content:
+        _var: description_content
+  - id: left_column
+    type: Box
+    layout:
+      span: 12
+    blocks:
+      - id: block_divider
+        type: Divider
+        properties:
+          title: Block
+      - id: block_id
+        type:
+          _var: block_type
+        layout:
+          _state: block.layout
+        style:
+          _yaml.parse:
+            _if_none:
+              - _state: style_block_input
+              - ''
+        visible:
+          _state: block.visible
+        required:
+          _state: block.required
+        properties:
+          _var: properties_getter
+      - id: state_divider
+        type: Divider
+        properties:
+          title: State
+        visible:
+          _eq:
+            - _var: category
+            - input
+      - id: state_markdown
+        type: Markdown
+        visible:
+          _eq:
+            - _var: category
+            - input
+        properties:
+          content:
+            _nunjucks:
+              template: |
+                {% raw %}
+                ```yaml
+                {{ value | safe }}
+                ```
+                {% endraw %}
+              on:
+                value:
+                  _yaml.stringify:
+                    - block_id:
+                        _state: block_id
+      - id: setup_divider
+        type: Divider
+        properties:
+          title: Block Setup
+      - id: setup_markdown
+        type: Markdown
+        properties:
+          content:
+            _nunjucks:
+              template: |
+                {% raw %}
+                ```yaml
+                {{ value | safe }}
+                ```
+                {% endraw %}
+              on:
+                value:
+                  _yaml.stringify:
+                    - _ref:
+                        path: templates/blocks/block_setup.yaml
+                        vars:
+                          block:
+                            id: block_id
+                            type: {{ block_type }}
+                            layout:
+                              _state: block.layout
+                            default_layout:
+                              align: top
+                              span: 24
+                            style:
+                              _yaml.parse:
+                                _if_none:
+                                  - _state: style_block_input
+                                  - ''
+                            visible:
+                              _state: block.visible
+                            required:
+                              _state: block.required
+                            properties:
+                              _var: properties_getter
+                            default_properties:
+                              _var: default_properties
+
+  - id: right_column
+    type: Box
+    layout:
+      span: 12
+    blocks:
+      - id: settings_divider
+        type: Divider
+        properties:
+          title: Settings
+      - id: settings_collapse
+        type: Collapse
+        properties:
+          defaultActiveKey: properties
+          panels:
+            - key: properties
+              title: 'properties:'
+            - key: layout
+              title: 'layout:'
+            - key: style
+              title: 'style:'
+            - key: actions
+              title: 'actions:'
+            - key: required
+              title: 'required:'
+              disabled:
+                _not:
+                  _eq:
+                    - _var: category
+                    - input
+            - key: visible
+              title: 'visible:'
+        areas:
+          properties:
+            blocks:
+              _var: properties_form
+          layout:
+            blocks:
+              _ref: templates/blocks/layout.yaml
+          style:
+            blocks:
+              _ref: templates/blocks/style.yaml
+          actions:
+            blocks:
+              - id: available_actions_description
+                type: Markdown
+                properties:
+                  content:
+                    _var: available_actions_description
+          required:
+            blocks:
+              - id: block.required
+                type: Switch
+                properties:
+                  title: required
+                  label:
+                    extra: Toggle if the field is indicated as compulsory and required when the Validate action is called.
+                    span: 8
+                  size: small
+          visible:
+            blocks:
+              - id: block.visible
+                type: Switch
+                properties:
+                  title: visible
+                  label:
+                    extra: Toggle if block is visible and has a value in state.
+                    span: 8
+                  size: small
+  - id: examples_divider
+    type: Divider
+    properties:
+      title: Examples
+  - _ref:
+      path: templates/blocks/examples.yaml.njk
+      vars:
+        block_type: {{ block_type }}
+        examples:
+          _var: examples

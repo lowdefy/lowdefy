@@ -6,7 +6,7 @@
   "properties": {
     "filter": {
       "type": "object",
-      "description": "A MongoDB query expression to filter the data. The first row matched by the filter will be deleted",
+      "description": "A MongoDB query expression to filter the data. The first row matched by the filter will be deleted.",
       "errorMessage": {
         "type": "GoogleSheetDeleteOne request property \"filter\" should be an object."
       }
