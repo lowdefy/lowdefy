@@ -204,6 +204,30 @@ menus:
           - id: _and
             type: MenuLink
             pageId: _and
+          - id: _divide
+            type: MenuLink
+            pageId: _divide
+          - id: _eq
+            type: MenuLink
+            pageId: _eq
+          - id: _if_none
+            type: MenuLink
+            pageId: _if_none
+          - id: _log
+            type: MenuLink
+            pageId: _log
+          - id: _not
+            type: MenuLink
+            pageId: _not
+          - id: _or
+            type: MenuLink
+            pageId: _or
+          - id: _product
+            type: MenuLink
+            pageId: _product
+          - id: _sum
+            type: MenuLink
+            pageId: _sum
 
 pages:
   - _ref: introduction.yaml
@@ -247,3 +271,11 @@ pages:
   - _ref: actions/Validate.yaml
 
   - _ref: operators/_and.yaml
+  - _ref: operators/_divide.yaml
+  - _ref: operators/_eq.yaml
+  - _ref: operators/_if_none.yaml
+  - _ref: operators/_log.yaml
+  - _ref: operators/_not.yaml
+  - _ref: operators/_or.yaml
+  - _ref: operators/_product.yaml
+  - _ref: operators/_sum.yaml

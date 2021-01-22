@@ -98,7 +98,7 @@ blocks:
             - _var: category
             - input
       - id: state_markdown
-        type: Markdown
+        type: MarkdownWithHtml
         visible:
           _eq:
             - _var: category
@@ -122,7 +122,7 @@ blocks:
         properties:
           title: Block Setup
       - id: setup_markdown
-        type: Markdown
+        type: MarkdownWithHtml
         properties:
           content:
             _nunjucks:
