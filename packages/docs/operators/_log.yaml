@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _log
     pageTitle: _log
-    argument_types: any
-    return_types: any
+    types: |
+      ```
+      (value: any): any
+      ```
     description: |
       The `_log` operator logs it input to the console, and returns the value it received. Since it returns the value it received, it can be used to debug without affecting the rest of the configuration.
     arguments: |

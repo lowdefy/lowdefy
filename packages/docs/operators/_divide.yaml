@@ -17,10 +17,12 @@ _ref:
   vars:
     pageId: _divide
     pageTitle: _divide
-    argument_types: array[number]
-    return_types: number
+    types: |
+      ```
+      ([numerator: number, denominator: number]): number
+      ```
     description: |
-      The `_divide` operator divides two numbers. It takes an array of two numbers as input and returns a number. Dividing by zero will throw an error.
+      The `_divide` operator divides two numbers. It takes an array of two numbers as input and returns the first number divided by the second. Dividing by zero will throw an error.
     arguments: |
       #### array
       An array of two numbers.

@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _or
     pageTitle: _or
-    argument_types: array[any]
-    return_types: boolean
+    types: |
+      ```
+      (values: any[]): boolean
+      ```
     description: |
       The `_or` operator performs a logical `or` over an array of inputs, using javascript [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) and [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) rules.
 

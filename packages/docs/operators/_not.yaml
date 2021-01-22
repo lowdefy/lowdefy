@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _not
     pageTitle: _not
-    argument_types: any
-    return_types: boolean
+    types: |
+      ```
+      (value: any): boolean
+      ```
     description: |
       The `_not` operator returns the logical negation of the input. If the value is not a boolean, it will be converted to a boolean using javascript [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) and [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) rules.
     arguments: |
