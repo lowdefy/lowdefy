@@ -15,7 +15,7 @@
 id: nav_buttons
 type: Box
 style:
-  marginTop: 60px
+  marginTop: 40px
   marginBottom: 80px
 layout:
   contentGutter: 16

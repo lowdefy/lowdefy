@@ -28,6 +28,9 @@ _ref:
             _ref: README.md
       - id: start_tutorial_button
         type: Button
+        style:
+          marginTop: 40px
+          marginBottom: 80px
         properties:
           block: true
           hideActionLoading: true
