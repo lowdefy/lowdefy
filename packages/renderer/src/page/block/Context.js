@@ -21,10 +21,8 @@ import getContext from '@lowdefy/engine';
 
 import OnEnter from './OnEnter';
 
-const contexts = {};
-
 const Context = ({ block, contextId, pageId, render, rootContext }) => {
-  const [loading, setLoading] = useState(true);
+  const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -38,8 +36,7 @@ const Context = ({ block, contextId, pageId, render, rootContext }) => {
           rootContext,
         });
         if (mounted) {
-          contexts[contextId] = ctx;
-          setLoading(false);
+          setContext(ctx);
         }
       } catch (err) {
         setError(err);
@@ -51,7 +48,7 @@ const Context = ({ block, contextId, pageId, render, rootContext }) => {
     };
   }, [block, pageId, rootContext, contextId]);
 
-  if (loading)
+  if (context.id !== contextId)
     return (
       <Loading
         properties={get(block, 'meta.loading.properties')}
@@ -61,7 +58,7 @@ const Context = ({ block, contextId, pageId, render, rootContext }) => {
 
   if (error) throw error;
 
-  return <OnEnter block={block} context={contexts[contextId]} render={render} />;
+  return <OnEnter block={block} context={context} render={render} />;
 };
 
 export default Context;
