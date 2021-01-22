@@ -279,3 +279,5 @@ pages:
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
   - _ref: operators/_sum.yaml
+
+  - _ref: 404.yaml

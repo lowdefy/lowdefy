@@ -21,7 +21,7 @@ _ref:
     # prefetchPages: []
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -31,26 +31,42 @@ _ref:
 
             To carry on from here, you have a couple of options
 
-            # Look at an example app
+            ### Join the community
 
-            One of the best ways to learn is by doing things for yourself. You can clone an example app that is similar to something you want to build, and start experimenting from there.
+            At our [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) page you can get help with any problems you have, share you ideas, ask questions, and show off the apps you have built.
 
-            #### CRUD example
-
-            This example is a simple app app that has everything needed to get started managing data in a database.
-
-            #### Survey example
-
-            A simple survey example.
-
-            #### Movies example
-
-            A example reporting dashboard app based on a movies database.
-
-            # Understand the concepts
+            ### Understand the concepts
 
             To get a more in-depth understanding of how everything works, you can start [here](/context).
 
-            # Play with blocks
+            ### Play with blocks
 
             The docs have an interactive playground where you can adjust a block's properties and see how that affects the block in real time. Go look at what you can do with a [`Button`](/Button).
+
+            ### Look at an example app
+
+            One of the best ways to learn is by doing things for yourself. You can clone an example app that is similar to something you want to build, and start experimenting from there.
+
+            ###### CRUD example
+
+            This example is a simple app that has everything needed to get started managing data in a database.
+
+            ###### Survey example
+
+            A simple survey example.
+
+            ###### Ticketing system example
+
+            An ticketing system with action history.
+
+            ###### Movies example
+
+            An example reporting dashboard app based on a movies database.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Requests
+            previous_page_id: tutorial-requests
+            next_page_title: How it works
+            next_page_id: how-it-works

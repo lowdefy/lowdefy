@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-requests
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -99,7 +99,7 @@ _ref:
         properties:
           title: Title
       - id: md2
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -205,7 +205,7 @@ _ref:
                     - id: validate
                       type: Validate
       - id: md3
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -315,7 +315,6 @@ _ref:
 
             Your final new ticket page should look and work like this:
 
-
       - id: example3
         type: PageHeaderMenu
         properties:
@@ -407,7 +406,7 @@ _ref:
                     - id: validate
                       type: Validate
       - id: md4
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px

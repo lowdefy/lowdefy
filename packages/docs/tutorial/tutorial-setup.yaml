@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-editing-page
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -60,7 +60,7 @@ _ref:
           showIcon: false
           message: If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
       - id: md2
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -80,7 +80,7 @@ _ref:
           showIcon: false
           message: Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
       - id: md3
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px

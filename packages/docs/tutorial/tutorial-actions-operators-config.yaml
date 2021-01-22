@@ -20,7 +20,7 @@ _ref:
     section: Tutorial
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px

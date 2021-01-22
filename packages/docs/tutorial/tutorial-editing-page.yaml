@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-development-server
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -53,7 +53,7 @@ _ref:
 
             To save these changes, we are going to make a commit in the project repository.
       - id: md2
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -89,7 +89,7 @@ _ref:
                 properties:
                   content: Hello World
       - id: md3
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px

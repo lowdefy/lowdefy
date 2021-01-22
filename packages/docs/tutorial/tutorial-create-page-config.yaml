@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-editing-page
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
