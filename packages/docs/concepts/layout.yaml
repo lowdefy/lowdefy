@@ -21,20 +21,21 @@ _ref:
     content:
       - id: markdown_intro
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
-            Containers are used to lay out other blocks on a page. Blocks of category `Container` or `Context` both function as container blocks.
+            Containers blocks are used to arrange blocks on a page. Blocks of category `Container`, `Context` and `List` all function as container blocks. Container blocks has content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
+
+            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout is placed in a 24 column grid system, whereas blocks __flex__ dynamically grows or shrinks to fit content into a row depending on content size and screen size.
+
+            Under the hood, Lowdefy layouts are based on the [Ant Design Grid System](https://ant.design/components/grid/). The content areas are implemented as a row, and blocks are implemented as a column.
 
             # Content areas
 
-            Each container has content areas - these are areas where other blocks can be placed. All container blocks have a primary content area. This area is called `content`. Container blocks might have other content areas, like `header`, `footer`, or `title`. These content areas are implemented specifically by the block.
+            Each container has content areas - these are areas where nested blocks can be placed. All container blocks have a primary content area. This area is called `content`. Container blocks might have other content areas, like `header`, `footer`, or `title`. These content areas are implemented specifically by the block.
 
             To place blocks in the primary content area of a container, the block definitions for those blocks can be placed inside the `blocks` array of the container block.
 
-            > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a `Box`, a `Card`, a `PageHeaderMenu` or any other container or context block. The `Block` blocks could be any type of block, including other container blocks.
+            > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a [`Box`](/Box), a [`Card`](/Card), a [`PageHeaderMenu`](/PageHeaderMenu) or any other container or context block. The `Block` blocks could be any type of block, including other container blocks.
 
 
             ###### Two blocks in the primary content area (`content`) of a container:
@@ -77,8 +78,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             To place blocks in other content areas, the block definitions can be placed in the `blocks` array of the specific area in the `areas` object:
@@ -160,8 +159,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             Placing blocks both in the `blocks` array, as well as under the `areas.content.blocks` array is an anti-pattern, and in this case the blocks under `blocks` will overwrite those under `areas.content.blocks`.
@@ -198,27 +195,15 @@ _ref:
                   html: |
                     <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
 
-      - id: markdown_row_col
-        type: Markdown
-        style:
-          marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
-        properties:
-          content: |
-            > Lowdefy layouts are based on the [Ant Design Grid System](https://ant.design/components/grid/). The content areas are implemented as a `row`, and blocks are implemented as a `column`.
-
       - id: markdown_grid_layout
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             # Layouts using span
 
-            Each content area has 24 columns. Blocks have a `span` property, which determines how may columns the block occupies. Blocks are laid out horizontally, until the sum of the spans would be more than 24, then the block is placed in the next row.
+            Each content area has 24 columns. Blocks have a `span` property, which determines how many columns the block occupies. Blocks are laid out horizontally, until the sum of the spans is more than 24, then the last block block is wrapped to the next row.
 
             By default a block is given a span of 24. This is what makes blocks lay out vertically below each other.
 
@@ -307,25 +292,21 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             # Layouts using flex
 
-            Blocks can also be laid out using [CSS flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. These properties are `grow` (`flex-grow`), `shrink` (`flex-shrink`), `size` (`flex-basis`) and `flex` (`flex`). If any of these properties are set, the default span of 24 or any span set in the configuration is not used. If one of `grow`, `shrink`, or `size` are set, the other properties take their default values. The `flex` property overwrites the `grow`, `shrink`, and `size` properties.
+            Blocks can also be laid out using [CSS flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. These properties are `grow` (`flex-grow`), `shrink` (`flex-shrink`), `size` (`flex-basis`) and `flex` (`flex`). If any of these properties are set, the default span of 24 or any span set in the configuration is not applied. If one of `grow`, `shrink`, or `size` are set, the other properties take their default values. The `flex` property overwrites the `grow`, `shrink`, and `size` properties.
 
       - id: markdown_block_properties
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             # Block layout properties
 
-            Properties can be set on each block to control how it is placed. These properties are defined in the `layout` object. The properties that can be defined are:
+            The `layout` object on blocks can be used to control how a block is placed in the layout. The `layout` properties that can be defined are:
 
             - `align`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
             - `flex`: _String_ - Set the [`flex`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex) CSS property. This overwrites the `grow`, `shrink`, and `size` properties.
@@ -420,8 +401,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Order example:
@@ -469,8 +448,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Offset example:
@@ -524,8 +501,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Pull example:
@@ -582,8 +557,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Push example:
@@ -640,8 +613,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             # Area layout properties
@@ -798,8 +769,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Direction examples:
@@ -985,8 +954,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Gutter examples:
@@ -1110,8 +1077,6 @@ _ref:
         type: Markdown
         style:
           marginTop: 16px
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ###### Justify examples:
@@ -1401,7 +1366,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Connections
-            previous_page_id: connections
+            previous_page_title: Connections and Requests
+            previous_page_id: connections-and-requests
             next_page_title: Operators
             next_page_id: operators
