@@ -90,11 +90,11 @@ menus:
             pageId: context-and-state
             properties:
               title: Context and State
-          - id: actions
+          - id: events-and-actions
             type: MenuLink
-            pageId: actions
+            pageId: events-and-actions
             properties:
-              title: Actions
+              title: Events and Actions
           - id: connections
             type: MenuLink
             pageId: connections
@@ -244,7 +244,7 @@ pages:
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/context-and-state.yaml
-  - _ref: concepts/actions.yaml
+  - _ref: concepts/events-and-actions.yaml
   - _ref: concepts/connections.yaml
   - _ref: concepts/layout.yaml
   - _ref: concepts/operators.yaml
