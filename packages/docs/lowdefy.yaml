@@ -95,9 +95,9 @@ menus:
             pageId: events-and-actions
             properties:
               title: Events and Actions
-          - id: connections
+          - id: connections-and-requests
             type: MenuLink
-            pageId: connections
+            pageId: connections-and-requests
             properties:
               title: Connections and Requests
           - id: layout
@@ -245,7 +245,7 @@ pages:
 
   - _ref: concepts/context-and-state.yaml
   - _ref: concepts/events-and-actions.yaml
-  - _ref: concepts/connections.yaml
+  - _ref: concepts/connections-and-requests.yaml
   - _ref: concepts/layout.yaml
   - _ref: concepts/operators.yaml
 

@@ -21,9 +21,6 @@ _ref:
     content:
       - id: md1
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### TDLR;
@@ -51,5 +48,5 @@ _ref:
           vars:
             previous_page_title: Tutorial
             previous_page_id: tutorial-setup
-            next_page_title: Actions
-            next_page_id: actions
+            next_page_title: Events and Actions
+            next_page_id: events-and-actions

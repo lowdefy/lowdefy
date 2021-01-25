@@ -21,9 +21,6 @@ _ref:
     content:
       - id: md1
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ### TDLR;
@@ -102,7 +99,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Context
-            previous_page_id: context
-            next_page_title: Connections
-            next_page_id: connections
+            previous_page_title: Context and State
+            previous_page_id: context-and-state
+            next_page_title: Connections and Requests
+            next_page_id: connections-and-requests
