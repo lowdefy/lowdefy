@@ -85,6 +85,11 @@ menus:
           title: Concepts
           icon: BulbOutlined
         links:
+          - id: overview
+            type: MenuLink
+            pageId: overview
+            properties:
+              title: Overview
           - id: blocks
             type: MenuLink
             pageId: blocks
@@ -272,6 +277,7 @@ pages:
   - _ref: tutorial/tutorial-requests.yaml
   - _ref: tutorial/next-steps.yaml
 
+  - _ref: concepts/overview.yaml
   - _ref: concepts/blocks.yaml
   - _ref: concepts/context-and-state.yaml
   - _ref: concepts/events-and-actions.yaml

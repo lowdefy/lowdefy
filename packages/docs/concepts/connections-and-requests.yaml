@@ -23,9 +23,9 @@ _ref:
         type: Markdown
         properties:
           content: |
-            ### TDLR;
-              - `connections` define links to other services, like connecting to a database, they are defined on the root of the lowdefy configuration.
-              - `requests` uses connections to make a call to an the connected external services.
+            ### TLDR
+              - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
+              - `requests` use connections to make a call to the connected external services.
               - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secreted into you config or commit secrets to your config source control.
 
             -----------
@@ -53,7 +53,7 @@ _ref:
               # ...
             ```
 
-            Our goal is to make connections for everything, as the Lowdefy community grows, we will continue develop the most requested connections. If the connection you require are not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
+            Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require are not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
 
             # Requests
 
@@ -77,7 +77,6 @@ _ref:
             properties:
               # ...
             ```
-
 
       - _ref:
           path: templates/navigation_buttons.yaml
