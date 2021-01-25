@@ -21,8 +21,14 @@ _ref:
     content:
       - id: md1
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
+            Operators are functions, that can be used to express logic. They are the reason why Lowdefy apps are not completely static, but can react to data and inputs. Operators can be used in `blocks`, `actions`, `requests`, and `connections`. See the specific documentation for more details.
+
+            Each operators expects arguments with a specific structure. They can be the result of other operators, since operators are evaluated beginning with the most nested operators.
+
+            If an operator errors while evaluating, it returns a `null` value, and logs the error to the console.
+
+            # Build time operators
+
+            The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split a app into multiple files, and to reuse configuration. See ["References and templates"](/references-and-templates) for more details.
