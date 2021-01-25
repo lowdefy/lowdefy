@@ -15,43 +15,49 @@
 _ref:
   path: templates/operators.yaml.njk
   vars:
-    pageId: _sum
-    pageTitle: _sum
+    pageId: _lte
+    pageTitle: _lte
     types: |
       ```
-      (values: any[]): number
+      ([value1: any, value2: any]): boolean
       ```
     description: |
-      The `_sum` operator takes the sum of the values given as input. If a value is not a number, the value is skipped.
+      The `_lte` operator tests if the first value is less than or equal to the second equal. It takes an array of two values to test.
+
+      > The `_lte` operator tests using the javascript less than or equal to operator. You can find a description of the algorithm used to compare two values [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than).
+
     arguments: |
       #### array
-      An array of values to add.
+      An array of two values to compare.
     examples: |
       #### Two numbers:
       ```yaml
-      _sum:
-        - 3
+      _lte:
         - 4
-      ```
-      Returns: `7`
-
-      #### Array of numbers:
-      ```yaml
-      _sum:
-        - 1
-        - 2
         - 3
-        - 4
       ```
-      Returns: `10`
+      Returns: `false`
 
-      #### Non-numbers are skipped:
       ```yaml
-      _sum:
+      _lte:
         - 1
-        - null
-        - 3
-        - "four"
-        - 5
+        - 1
       ```
-      Returns: `9`
+      Returns: `true`
+
+      ```yaml
+      _lte:
+        - _sum:
+            - 3
+            - 4
+        - 8
+      ```
+      Returns: `true`
+
+      #### Two strings:
+      ```yaml
+      _lte:
+        - "a"
+        - "b"
+      ```
+      Returns: `true`

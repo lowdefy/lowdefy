@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-actions-operators
     content:
       - id: md1
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px
@@ -152,7 +152,7 @@ _ref:
                   type: primary
                   icon: SaveOutlined
       - id: md2
-        type: Markdown
+        type: MarkdownWithHtml
         style:
           '.markdown-body':
             fontSize: 14px

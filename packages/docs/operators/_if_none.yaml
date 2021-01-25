@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _if_none
     pageTitle: _if_none
-    argument_types: array[any]
-    return_types: boolean
+    types: |
+      ```
+      ([value: any, replacement: any]): any
+      ```
     description: |
       The `_if_none` operator replaces the input value with an alternative if the value is of a "none-type" like `null` or `undefined`.
     arguments: |
@@ -38,16 +40,16 @@ _ref:
       ```yaml
       _if_none:
         - null
-        - Replacement
+        - "Replacement"
       ```
-      Returns: `Replacement`
+      Returns: `"Replacement"`
 
       ```yaml
       _if_none:
         - _state: does_not_exist # Value in state that does not exist
-        - Replacement
+        - "Replacement"
       ```
-      Returns: `Replacement`
+      Returns: `"Replacement"`
 
        ```yaml
       _if_none:

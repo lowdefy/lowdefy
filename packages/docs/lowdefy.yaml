@@ -210,12 +210,27 @@ menus:
           - id: _eq
             type: MenuLink
             pageId: _eq
+          - id: _gt
+            type: MenuLink
+            pageId: _gt
+          - id: _gte
+            type: MenuLink
+            pageId: _gte
+          - id: _if
+            type: MenuLink
+            pageId: _if
           - id: _if_none
             type: MenuLink
             pageId: _if_none
           - id: _log
             type: MenuLink
             pageId: _log
+          - id: _lt
+            type: MenuLink
+            pageId: _lt
+          - id: _lte
+            type: MenuLink
+            pageId: _lte
           - id: _not
             type: MenuLink
             pageId: _not
@@ -225,9 +240,18 @@ menus:
           - id: _product
             type: MenuLink
             pageId: _product
+          - id: _random
+            type: MenuLink
+            pageId: _random
+          - id: _subtract
+            type: MenuLink
+            pageId: _subtract
           - id: _sum
             type: MenuLink
             pageId: _sum
+          - id: _uuid
+            type: MenuLink
+            pageId: _uuid
 
 pages:
   - _ref: introduction.yaml
@@ -273,9 +297,19 @@ pages:
   - _ref: operators/_and.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
+  - _ref: operators/_gt.yaml
+  - _ref: operators/_gte.yaml
+  - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_lt.yaml
+  - _ref: operators/_lte.yaml
   - _ref: operators/_log.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
+  - _ref: operators/_random.yaml
+  - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
+  - _ref: operators/_uuid.yaml
+
+  - _ref: 404.yaml

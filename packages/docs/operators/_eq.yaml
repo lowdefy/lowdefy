@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _eq
     pageTitle: _eq
-    argument_types: array[any]
-    return_types: boolean
+    types: |
+      ```
+      ([value1: any, value2: any]): boolean
+      ```
     description: |
       The `_eq` operator tests if two values are equal. It takes an array of two values to test.
 
@@ -31,8 +33,8 @@ _ref:
       #### Two strings:
       ```yaml
       _eq:
-        - Hello
-        - Hello
+        - "Hello"
+        - "Hello"
       ```
       Returns: `true`
 

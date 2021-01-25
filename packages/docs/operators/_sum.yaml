@@ -17,8 +17,10 @@ _ref:
   vars:
     pageId: _product
     pageTitle: _product
-    argument_types: array[any]
-    return_types: number
+    types: |
+      ```
+      (values: any[]): number
+      ```
     description: |
       The `_product` operator takes the product of the values given as input. If a value is not a number, the value is skipped.
     arguments: |
