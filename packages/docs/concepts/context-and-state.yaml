@@ -23,23 +23,23 @@ _ref:
         type: Markdown
         properties:
           content: |
-            #### TDLR;
-              - The first block on a page must be a `context` category.
+            #### TLDR
+              - The first block on a page must be a `context` category block.
               - A page can have multiple `context` blocks.
               - Every `context` has a single __state__ object.
-              - All input blocks writes their value to __state__, with the their `id` as the key in the __state__ object.
-              - Input blocks which are not visible is removed from __state__.
-              - The [`SetState`](/SetState) action can also modify the __state__ object.
-              
+              - All input blocks write their value to __state__, with the their `id` as the key in the __state__ object.
+              - Input blocks which are not visible are removed from __state__.
+              - The `SetState` action can also modify the __state__ object.
+
             -------
 
-            A Lowdefy block with category `context` provides the environment for a part of a Lowdefy app to run in. More than one context can be placed on a page, but generally only one is need. The first block on a page must be a `context` category block. 
-            
+            A Lowdefy block with category `context` provides the environment for a part of a Lowdefy app to run in. More than one context can be placed on a page, but generally only one is need. The first block on a page must be a `context` category block.
+
             The standard page blocks like [`PageHeaderMenu`](/PageHeaderMenu) or [`PageSiderMenu`](/PageSiderMenu) are all `context` category blocks, and the [`Context`](/Context) block is a simple container that also provides a context.
 
             Each context provides encapsulation to the blocks inside it. It has it's own __state__ object as well as requests.
 
-            Every `input` category block will have a value in the __state__ object, with the their `id` as the key in the __state__ object, unless the block is not visible, in which case the input value is removed the state object.
+            Every `input` category block inside the context will have a value in the __state__ object, with the their `id` as the key in the __state__ object, unless the block is not visible, in which case the input value is removed the state object.
 
             The only other way to modify the __state__ object is to use a `SetState` action. See [`SetState`](/SetState) and [`actions`](/actions) for more details.
 

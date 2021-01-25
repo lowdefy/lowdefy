@@ -23,9 +23,9 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Containers blocks are used to arrange blocks on a page. Blocks of category `Container`, `Context` and `List` all function as container blocks. Container blocks has content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
+            Containers blocks are used to arrange blocks on a page. Blocks of category `container`, `context` and `list` all function as container blocks. Container blocks have content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
 
-            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout is placed in a 24 column grid system, whereas blocks __flex__ dynamically grows or shrinks to fit content into a row depending on content size and screen size.
+            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column grid system, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
 
             Under the hood, Lowdefy layouts are based on the [Ant Design Grid System](https://ant.design/components/grid/). The content areas are implemented as a row, and blocks are implemented as a column.
 
