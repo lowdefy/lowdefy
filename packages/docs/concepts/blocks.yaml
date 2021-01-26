@@ -23,7 +23,7 @@ _ref:
         type: MarkdownWithHtml
         properties:
           content: |
-            A Lowdefy page is compiled out of a arrangement of blocks. Every HTML element of this page is render as a result of block placed and configured on this page. Blocks make it simple for Lodefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected. 
+            A Lowdefy page is compiled out of a arrangement of blocks. Every HTML element of this page is render as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected. 
 
             Lowdefy offers a list of over 30 block types to cater for a wide range of use cases. All blocks are categorized according to their primary function: 
             - `display` - Display page elements.
@@ -53,7 +53,7 @@ _ref:
 
             # Block types
 
-            Lowdefy has list of default block types as defined in the Lowdefy docs. The default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) react component library. To use all the default block types, you can simply use the default block `type` key, like [`Button`](/Button), [`TextInput`](/TextInput), [`Box`](/Box) and so on. 
+            Lowdefy has list of default block types as defined in the Lowdefy docs. The default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) react component library. To use all the default block types, you can simply use the block `type` key, like [`Button`](/Button), [`TextInput`](/TextInput), [`Box`](/Box) and so on. 
             
             ###### Default block type config example:
             ```yaml
@@ -68,7 +68,7 @@ _ref:
                       # ... Button details
             ```
 
-            However, the default types can overwritten or additional types can be define as required. For example, to set a `type` for a custom implementation of [AmChart](https://www.amcharts.com/), we can do the following. Lucky, someone already created [a Lowdefy block for AmCharts v4](https://www.npmjs.com/package/@lowdefy/blocks-amcharts). 
+            However, the default types can overwritten or additional types can be define as required. For example, to set a `type` for a custom implementation of [AmCharts](https://www.amcharts.com/), we can do the following. We have created a custom [Lowdefy block for AmCharts v4](https://www.npmjs.com/package/@lowdefy/blocks-amcharts) that we can use. 
             
             ###### Custom block type config example:
             ```yaml
@@ -85,12 +85,14 @@ _ref:
                     properties:
                       # ... AmCharts details
             ```
+            
+            More details on custom blocks can be found [here](https://github.com/lowdefy/blocks-template). 
 
             # Block Loading
 
-            Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a more predictable user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
+            Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
 
-            By default Lowdefy tries to give a reasonable definition for how much space a block should take up in while loading, however this can vary from page to page. The `loading` property on blocks allows the Lowdefy developer to set a custom loading configuration for a block.
+            By default, Lowdefy tries to give a reasonable definition for how much space a block should take up in while loading, however this can vary depending on how the block is used. The `loading` property on blocks allows the Lowdefy developer to set a custom loading configuration for a block.
 
             ##### Custom block `loading` example:
 
@@ -125,7 +127,7 @@ _ref:
             - `size`: _Number_ | _String_ - Size of the spinner icon. Default is `50px`.
 
             ##### IconSpinner
-            A Lowdefy logo loading spinner excluding the white background, centered on page.
+            A spinning loading icon.
 
             - `size`: _Number_ | _Enum_ - Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
 
