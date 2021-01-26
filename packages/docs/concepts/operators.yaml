@@ -31,4 +31,4 @@ _ref:
 
             # Build time operators
 
-            The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split a app into multiple files, and to reuse configuration. See ["References and templates"](/references-and-templates) for more details.
+            The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split a app into multiple files, and to reuse configuration. See [`_ref`](/_ref) for more details.

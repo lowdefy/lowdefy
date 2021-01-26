@@ -90,6 +90,11 @@ menus:
             pageId: overview
             properties:
               title: Overview
+          - id: lowdefy-schema
+            type: MenuLink
+            pageId: lowdefy-schema
+            properties:
+              title: Lowdefy App Schema
           - id: context-and-state
             type: MenuLink
             pageId: context-and-state
@@ -278,6 +283,7 @@ pages:
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/overview.yaml
+  - _ref: concepts/lowdefy-schema.yaml
   - _ref: concepts/context-and-state.yaml
   - _ref: concepts/blocks.yaml
   - _ref: concepts/layout.yaml
