@@ -38,18 +38,18 @@ _ref:
 
             The schema for a Lowdefy block is:
 
-            - `id`: _String_ -  __Required__ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in [`state`](/state-and-context). Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
-            - `type`: _String_ -  __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
-            - `properties`: _Object_ - All the settings passed to a block component. __Operators are evaluated__.
-            - `areas`: _Object_ - Used to set the content areas and content layout settings for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
-            - `blocks`: _Array_ - A array of blocks to render to the default `content` area for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
-            - `events`: _Object_ - Used to set all the `events` of a block, used to define [`event`](/events-and-actions) [`actions`](/events-and-actions).
-            - `layout`: _Object_ - Used to define the [layout](/layout) properties for a block. __Operators are evaluated__.
-            - `loading`: _Object_ - Used to overwrite a block's default loading behavior.
-            - `required`: _Boolean_ | _String_ - For `input` blocks, whether or not a value value is required in [`state`](/context-and-state) when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
-            - `style`: _Css Object_ - Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
-            - `validation`: _Array_ - A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
-            - `visible`: _Boolean_ - Controls whether or not to render a block. Operators  are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from [`state`](/state-and-context). __Operators are evaluated__.
+            - `id: string`: __Required__ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in [`state`](/state-and-context). Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
+            - `type: string`: __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
+            - `properties: object`: All the settings passed to a block component. __Operators are evaluated__.
+            - `areas: object`: Used to set the content areas and content layout settings for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
+            - `blocks: array`: A array of blocks to render to the default `content` area for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
+            - `events: object`: Used to set all the `events` of a block, used to define [`event`](/events-and-actions) [`actions`](/events-and-actions).
+            - `layout: object`: Used to define the [layout](/layout) properties for a block. __Operators are evaluated__.
+            - `loading: object`: Used to overwrite a block's default loading behavior.
+            - `required: boolean | string`: For `input` blocks, whether or not a value value is required in [`state`](/context-and-state) when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
+            - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
+            - `validation: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
+            - `visible: boolean`: Controls whether or not to render a block. Operators  are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from [`state`](/state-and-context). __Operators are evaluated__.
 
             # Block types
 
@@ -88,6 +88,51 @@ _ref:
 
             More details on custom blocks can be found [here](https://github.com/lowdefy/blocks-template).
 
+            
+            # Input block validation
+
+            All `input` block types maintains a value in [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path. 
+            
+            Client side field validation can be applied setting the `required` and / or `validation` block fields. The following schema applies to `required` and `validation`.
+
+            ##### `required` schema:
+            `requried` can be a `boolean` or `string` type. When `required: true` the field label will indicate this with a red dot for user feedback, and a value will have to be supplied in to the field in order to pass validation. If `required` is set to a `string`, this string will be used as the feedback message when the validation fails.
+
+            ```yaml
+            - id: name
+              type: TextInput
+              required: Please provide your name.
+              properties:
+                title: Name
+            ```
+            
+            ##### `validation` schema:
+            The `validation` field takes a `array` of test `objects` to evaluate before passing the field validation. This list of tests are evaluated sequentially, so the test that fails first will be used as the feedback message to the user.
+
+            The schema for the validation test `objects`:
+            - `pass: boolean`: __Required__ - The test that validates if this item passes or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
+            - `message: string`: __Required__ - The feedback message to the user if this validation tests fails. __Operators are evaluated__.
+            - `status: enum`: The feedback type to present to the user. Option are `error` and `warning`. Default is `error`. __Operators are evaluated__.
+      
+            The following `validation` example first verifies that something was entered into the `email` field, then checks that the field passes a email regex validation using the [`_regex`](/_regex) operator: 
+            ```yaml
+              - id: email
+                type: TextInput
+                validation:
+                  - message: Please enter a email address.
+                    status: error
+                    pass: 
+                      _not:
+                        _not:
+                          _state: email 
+                  - message: Please provide a valid email address.
+                    status: error
+                    pass: 
+                      _regex: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                properties:
+                  title: Email
+            ```
+            
             # Block loading
 
             Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
@@ -118,53 +163,53 @@ _ref:
             The following loading placeholder types are available:
 
             ##### Spinner
-            A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo.
+            A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo. The following `properties` apply to `Spinner`:
 
-            - `barColor`: _String_ - Color of the bars in the Lowdefy spinner logo.
-            - `color`: _String_ - Color of spinner logo. Default is `#f1f1f1`.
-            - `height`: _Number_ | _String_ - Height of the spinner block including background. Default is `100%`.
-            - `shaded`: _Boolean_ - Masks the spinner block including background.
-            - `size`: _Number_ | _String_ - Size of the spinner icon. Default is `50px`.
+            - `barColor: string`: Color of the bars in the Lowdefy spinner logo.
+            - `color: string`: Color of spinner logo. Default is `#f1f1f1`.
+            - `height: number | string`: Height of the spinner block including background. Default is `100%`.
+            - `shaded: boolean`: Masks the spinner block including background.
+            - `size: number | string`: Size of the spinner icon. Default is `50px`.
 
             ##### IconSpinner
-            A spinning loading icon.
+            A spinning loading icon. The following `properties` apply to `IconSpinner`:
 
-            - `size`: _Number_ | _Enum_ - Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
+            - `size: number | enum`: Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
 
             ##### Skeleton
-            A rectangular loading skeleton to fill the full size of the block.
+            A rectangular loading skeleton to fill the full size of the block. The following `properties` apply to `Skeleton`:
 
-            - `height`: _Number_ | _String_ - Height of the skeleton block. Default is `100%`.
-            - `width`: _Number_ | _String_ - Width of the skeleton block. Default is `100%`.
+            - `height: number | string`: Height of the skeleton block. Default is `100%`.
+            - `width: number | string`: Width of the skeleton block. Default is `100%`.
 
             ##### SkeletonAvatar
-            A avatar loading skeleton.
+            A avatar loading skeleton. The following `properties` apply to `SkeletonAvatar`:
 
-            - `size`: _Number_ | _Enum_ - Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is 32px.
-            - `shape`: _Enum_ - Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
+            - `size: number | enum`: Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is `32px`.
+            - `shape: enum`: Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
 
             ##### SkeletonButton
-            A button loading skeleton, matches the size of [`Button`](/Button) blocks.
+            A button loading skeleton, matches the size of [`Button`](/Button) blocks. The following `properties` apply to `SkeletonButton`:
 
-            - `size`: _Enum_ - Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-            - `shape`: _Enum_ - Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
-            - `height`: _Number_ | _String_ - Height of the button skeleton. Overwrites the size setting.
-            - `width`: _Number_ | _String_ - Width of the button skeleton. Default is `100%`.
+            - `size: enum`: Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `shape: enum`: Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
+            - `height: number | string`: Height of the button skeleton. Overwrites the size setting.
+            - `width: number | string`: Width of the button skeleton. Default is `100%`.
 
             ##### SkeletonInput
-            A input loading skeleton, used as a placeholder for input blocks with labels.
+            A input loading skeleton, used as a placeholder for input blocks with labels. The following `properties` apply to `SkeletonInput`:
 
-            - `size`: _Enum_ - Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-            - `labelHeight`: _Number_ | _String_ - Height of the label part of the input skeleton.
-            - `inputHeight`: _Number_ | _String_ - Height of the input part of the input skeleton. Overwrites the size setting.
-            - `labelWidth`: _Number_ | _String_ - Width of the label part of the input skeleton. Default is `100%`.
-            - `width`: _Number_ | _String_ - Width of the input part of input skeleton. Default is `100%`.
+            - `size: enum`: Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `labelHeight: number | string`: Height of the label part of the input skeleton.
+            - `inputHeight: number | string`: Height of the input part of the input skeleton. Overwrites the size setting.
+            - `labelWidth: number | string`: Width of the label part of the input skeleton. Default is `100%`.
+            - `width: number | string`: Width of the input part of input skeleton. Default is `100%`.
 
             ##### SkeletonParagraph
-            A paragraph loading skeleton, used as a placeholder for text intensive section.
+            A paragraph loading skeleton, used as a placeholder for text intensive section. The following `properties` apply to `SkeletonParagraph`:
 
-            - `lines`: _Number_ - The number of paragraph lines to render. Default is `4`.
-            - `width`: _Number_ | _String_ - Width of the paragraph skeleton. Default is `100%`.
+            - `lines: number`: The number of paragraph lines to render. Default is `4`.
+            - `width: number | string`: Width of the paragraph skeleton. Default is `100%`.
 
       - _ref:
           path: templates/navigation_buttons.yaml
