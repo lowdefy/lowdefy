@@ -33,6 +33,7 @@ _ref:
             - `config: object`: An object with app configuration like the home page pageId.
             - `global: object`: A data object that can be accessed anywhere in the app using the `_global` operator.
             - `connections: object[]`: An array of [`connection`](\connections-and-requests) objects.
+            - `types: object`: An object with user-defined block types.
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.
 
