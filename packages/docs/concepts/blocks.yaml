@@ -38,8 +38,8 @@ _ref:
 
             All Lowdefy blocks follow a __consistent__ root level schema with only 8 fields:
 
-            - `id`: _String_ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in [`state`](/state-and-context). Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
-            - `type`: _String_ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
+            - `id`: _String_ -  __Required__ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in [`state`](/state-and-context). Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
+            - `type`: _String_ -  __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
             - `properties`: _Object_ - All the settings passed to a block component.
             - `areas`: _Object_ - Used to set the content areas and content layout settings for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
             - `blocks`: _Array_ - A array of blocks to render to the default `content` area for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
@@ -92,4 +92,83 @@ _ref:
 
             By default Lowdefy tries to give a reasonable definition for how much space a block should take up in while loading, however this can vary from page to page. The `loading` property on blocks allows the Lowdefy developer to set a custom loading configuration for a block.
 
-            
+            ##### Custom block `loading` example:
+
+            ```yaml
+            pages:
+              - id: page_one
+                type: Context
+                blocks:
+                  # ...
+                  - id: paragraph_one
+                    type: Title
+                    loading:
+                      type: SkeletonParagraph
+                      properties:
+                        lines: 1
+                    properties:
+                      content: Lorem ipsum dolor sit amet.
+                  # ...
+            ```
+
+            ## Loading placeholder types
+
+            The following loading placeholder types are available:
+
+            ##### Spinner
+            A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo.
+
+            - `barColor`: _String_ - Color of the bars in the Lowdefy spinner logo.
+            - `color`: _String_ - Color of spinner logo. Default is `#f1f1f1`.
+            - `height`: _Number_ | _String_ - Height of the spinner block including background. Default is `100%`.
+            - `shaded`: _Boolean_ - Masks the spinner block including background. 
+            - `size`: _Number_ | _String_ - Size of the spinner icon. Default is `50px`.
+
+            ##### IconSpinner
+            A Lowdefy logo loading spinner excluding the white background, centered on page.
+
+            - `size`: _Number_ | _Enum_ - Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
+
+            ##### Skeleton
+            A rectangular loading skeleton to fill the full size of the block.
+
+            - `height`: _Number_ | _String_ - Height of the skeleton block. Default is `100%`.
+            - `width`: _Number_ | _String_ - Width of the skeleton block. Default is `100%`.
+
+            ##### SkeletonAvatar
+            A avatar loading skeleton.
+
+            - `size`: _Number_ | _Enum_ - Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is 32px.
+            - `shape`: _Enum_ - Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
+
+            ##### SkeletonButton
+            A button loading skeleton, matches the size of [`Button`](/Button) blocks.
+
+            - `size`: _Enum_ - Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `shape`: _Enum_ - Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
+            - `height`: _Number_ | _String_ - Height of the button skeleton. Overwrites the size setting.
+            - `width`: _Number_ | _String_ - Width of the button skeleton. Default is `100%`.
+
+            ##### SkeletonInput
+            A input loading skeleton, used as a placeholder for input blocks with labels.
+
+            - `size`: _Enum_ - Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `labelHeight`: _Number_ | _String_ - Height of the label part of the input skeleton. 
+            - `inputHeight`: _Number_ | _String_ - Height of the input part of the input skeleton. Overwrites the size setting.
+            - `labelWidth`: _Number_ | _String_ - Width of the label part of the input skeleton. Default is `100%`.
+            - `width`: _Number_ | _String_ - Width of the input part of input skeleton. Default is `100%`.
+
+            ##### SkeletonParagraph
+            A paragraph loading skeleton, used as a placeholder for text intensive section.
+
+            - `lines`: _Number_ - The number of paragraph lines to render. Default is `4`. 
+            - `width`: _Number_ | _String_ - Width of the paragraph skeleton. Default is `100%`.
+
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Lowdefy Schema
+            previous_page_id: lowdefy-schema
+            next_page_title: Context and State
+            next_page_id: context-and-state
