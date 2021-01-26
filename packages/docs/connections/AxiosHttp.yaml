@@ -20,10 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
+        type: MarkdownWithHtml
         properties:
           content: |
             The `AxiosHTTP` connection is used to connect to APIs and web servers using HTTP or HTTPS.
@@ -48,8 +45,8 @@ _ref:
 
             #### Properties
 
-            - `url`: _String_ - The server URL that will be used for the request.
-            - `method`: _Enum_ - Default: `'get'` - The request method to be used when making the request. Options are:
+            - `url: string`: _String_ - The server URL that will be used for the request.
+            - `method: enum`: Default: `'get'` - The request method to be used when making the request. Options are:
               - `'get'`
               - `'delete'`
               - `'head'`
@@ -57,26 +54,26 @@ _ref:
               - `'post'`
               - `'put'`
               - `'patch'`
-            - `baseURL`: _String_ - `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
+            - `baseURL: string`: `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
             - `headers`: _Object_ - An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
-            - `params`: _Object_ - An object with URL parameters to be sent with the request.
-            - `data`: _String_ **|** _Object_ - The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
-            - `timeout`: _Integer_ - Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.
-            - `auth`: _Object_ - Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
-            - `username`: _String_
-            - `password`: _String_
+            - `params: object`: An object with URL parameters to be sent with the request.
+            - `data: string | object`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
+            - `timeout: number`: Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.
+            - `auth: object`: Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
+              - `username: string`
+              - `password: string`
 
-            - `responseType`: _Enum_ - Default: `'json'` - The type of data that the server will respond with. Options are:
+            - `responseType: enum`: Default: `'json'` - The type of data that the server will respond with. Options are:
               - `'document'`
               - `'json'`
               - `'text'`
-            - `responseEncoding`: _String_ - Default: `'utf8'` - Indicates encoding to use for decoding responses.
-            - `maxContentLength`: _Integer_ - Defines the max size of the http response content allowed in bytes.
-            - `maxRedirects`: _Integer_ - Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
-            - `proxy`: _Object_ - Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
-              - `host`: _String_ - Host IP address (eg. `'127.0.0.1'`).
-              - `port`: _Integer_ - Port number.
-              - `auth`: _Object_ - Object with username and password.
+            - `responseEncoding: string`: Default: `'utf8'` - Indicates encoding to use for decoding responses.
+            - `maxContentLength: number`: Defines the max size of the http response content allowed in bytes.
+            - `maxRedirects: number`: Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
+            - `proxy: object`: Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
+              - `host: string`: Host IP address (eg. `'127.0.0.1'`).
+              - `port: number`: Port number.
+              - `auth: object`: Object with username and password.
 
 
             ### Examples

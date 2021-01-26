@@ -20,10 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
+        type: MarkdownWithHtml
         properties:
           content: |
             AWS S3 is a file or data storage solution, provided by Amazon Web Services. S3 does not work like a traditional file system, data is stored as objects in a collection of objects called a bucket.
@@ -43,12 +40,12 @@ _ref:
             The `AwsS3Bucket` connection is used to connect to a AWS S3 bucket. AWS S3 is the file storage solution provided by Amazon Web services.
 
             #### Properties
-            - `accessKeyId`: _String_ - AWS IAM access key id with s3 access.
-            - `secretAccessKey`: _String_ - AWS IAM secret access key with s3 access.
-            - `region`: _String_ - AWS region bucket is located in.
-            - `bucket`: _String_ - S3 bucket name.
-            - `read`: _Boolean_ - Allow reads from the bucket. Default `true`.
-            - `write`: _Boolean_ - Allow writes to the bucket. Default `false`.
+            - `accessKeyId: string`: __Required__ - AWS IAM access key id with s3 access.
+            - `secretAccessKey: string`: __Required__ - AWS IAM secret access key with s3 access.
+            - `region: string`: __Required__ - AWS region bucket is located in.
+            - `bucket: string`: __Required__ - S3 bucket name.
+            - `read: boolean`: Default: `true` - Allow reads from the bucket.
+            - `write: boolean`: Default: `false` - Allow writes to the bucket.
 
             ### Examples
 
@@ -71,7 +68,6 @@ _ref:
 
             Request types:
               - AwsS3PresignedGetObject
-              - AwsS3PresignedGetObject
               - AwsS3PresignedPostPolicy
 
             ### AwsS3PresignedGetObject
@@ -79,11 +75,11 @@ _ref:
             The `AwsS3PresignedGetObject` request is used to get a download link for an object in AWS S3. The link provided by this request can be opened using the `Link` action.
 
             #### Properties
-            - `versionId`: _String_ - VersionId used to reference a specific version of the object.
-            - `expires`: _Number_ - Number of seconds for which the policy should be valid.
-            - `key`: _String_ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
-            - `responseContentType`: _String_ - Sets the Content-Type header of the response.
-            - `responseContentDisposition`: _String_ - Sets the Content-Disposition header of the response.
+            - `versionId: string`: _String_ - VersionId used to reference a specific version of the object.
+            - `expires: number`: Number of seconds for which the policy should be valid.
+            - `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
+            - `responseContentType: string`: Sets the Content-Type header of the response.
+            - `responseContentDisposition: string`: Sets the Content-Disposition header of the response.
 
             ### Examples
 
@@ -116,17 +112,17 @@ _ref:
             The `AwsS3PresignedPostPolicy` request is used to create a policy that allows a file to be uploaded to AWS S3. This is used by a block like the `S3Uploadbutton` to upload a file.
 
             #### Properties
-            - `acl`: _String_ - Access control lists used to grant read and write access.
-              -- private
-              -- public-read
-              -- public-read-write
-              -- aws-exec-read
-              -- authenticated-read
-              -- bucket-owner-read
-              -- bucket-owner-full-control
-            - `conditions`: _Array_ of _Array_- Conditions to be enforced on the request.
-            - `expires`: _Number_ - Number of seconds for which the policy should be valid.
-            - `key`: _String_ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
+            - `acl: enum`: Access control lists used to grant read and write access.
+              - private
+              - public-read
+              - public-read-write
+              - aws-exec-read
+              - authenticated-read
+              - bucket-owner-read
+              - bucket-owner-full-control
+            - `conditions: object[] | string[][]`: Conditions to be enforced on the request. An array of objects, or condition arrays. See [here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
+            - `expires: number`: Number of seconds for which the policy should be valid.
+            - `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
 
 
             ### Examples

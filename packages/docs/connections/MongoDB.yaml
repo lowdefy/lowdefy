@@ -20,10 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
+        type: MarkdownWithHtml
         properties:
           content: |
             MongoDB is a NoSQL database that stores JSON-like documents. These documents are stored in collections, which are like database tables. The fields inside these document can differ from document to document, but generally they are all more or less the same. However documents with different schemas can be stored in the same collection.
@@ -61,11 +58,11 @@ _ref:
             >Since the connection URI contains authentication secrets, it should be stored using the [`_secret`](operators/secret.md) operator.
 
             #### Properties
-            - `databaseUri`: _String_ - **REQUIRED** - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
-            - `databaseName`: _String_ - Default: Database specified in connection string - The name of the database in the MongoDB deployment.
-            - `collection`: _String_ - **REQUIRED** - The name of the MongoDB collection.
-            - `read`: _Boolean_ - Default: `true` - Allow read operations like find on the collection.
-            - `write`: _Boolean_ - Default: `false` - Allow write operations like find or update on the collection.
+            - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
+            - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
+            - `collection: string`: __Required__ -  The name of the MongoDB collection.
+            - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
+            - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
 
             #### Examples
 
@@ -102,15 +99,15 @@ _ref:
             >Cursors are not supported. The request will return the whole body of the response as an array.
 
             #### Properties
-            - `pipeline`: _Array_ - **REQUIRED** - Array containing all the aggregation framework commands for the execution.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#aggregate) for more information. Supported settings are:
-              - `readPreference`: _String_ **|** _Object_ - The preferred read preference.
-              - `allowDiskUse`: _Boolean_ - Default: `false` - Allow disk use on the MongoDB server to store temporary results for the aggregation.
-              - `maxTimeMS`: _Integer_ - Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
-              - `bypassDocumentValidation`: _Boolean_ - Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
-              - `comment`: _String_ - Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the aggregation. These comments are visible in the MongoDB profile log, making them easier to interpret.
-              - `hint`: _String_ **|** _Object_ - Add an index selection hint to an aggregation command.
+            - `pipeline: object[]`: __Required__ - Array containing all the aggregation framework commands for the execution.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#aggregate) for more information. Supported settings are:
+              - `readPreference: string | object`: The read preference.
+              - `allowDiskUse: boolean`: Default: `false` - Allow disk use on the MongoDB server to store temporary results for the aggregation.
+              - `maxTimeMS: number`: Specifies a cumulative time limit in milliseconds for processing operations on the cursor.
+              - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
+              - `comment: string`: Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the aggregation. These comments are visible in the MongoDB profile log, making them easier to interpret.
+              - `hint: string | object`: Add an index selection hint to an aggregation command.
 
             #### Examples
 
@@ -139,15 +136,15 @@ _ref:
             The `MongoDBDeleteMany` request deletes multiple documents in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a documents to delete.
 
             #### Properties
-            - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
-              - `checkKeys`: _Boolean_ - Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
-              - `hint`: _Object_ - An optional hint for query optimization.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `j`: _Boolean_ - Specify a journal write concern.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `filter: object`: __Required__ - The filter used to select the document to update.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
+              - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
+              - `hint: object`: An optional hint for query optimization.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `j: boolean`: Specify a journal write concern.
+              - `w: number | string`: The write concern
+              - `wtimeout: number`: The write concern timeout.
 
             #### Examples
 
@@ -168,15 +165,15 @@ _ref:
             The `MongoDBDeleteOne` request deletes a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to delete. It will delete the first document that matches the filter.
 
             #### Properties
-            - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
-              - `checkKeys`: _Boolean_ - Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
-              - `hint`: _Object_ - An optional hint for query optimization.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `j`: _Boolean_ - Specify a journal write concern.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `filter: object`: __Required__ - The filter used to select the document to update.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
+              - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
+              - `hint: object`: An optional hint for query optimization.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `j: boolean`: Specify a journal write concern.
+              - `w: number | string`: The write concern
+              - `wtimeout: number`: The write concern timeout.
 
             #### Examples
 
@@ -198,17 +195,17 @@ _ref:
             >Cursors are not supported. The request will return the whole body of the response as an array.
 
             #### Properties
-            - `query`: _Object_ - **REQUIRED** - A MongoDB query object.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#find) for more information. Supported settings are:
-              - `limit`: _Integer_ - Sets the limit of documents returned in the query.
-              - `sort`: _Array_ **|** _Object_  - Set to sort the documents coming back from the query. Array of indexes, `[['a', 1]]`.
-              - `projection`: _Object_ - The fields to return in the query. Object of fields to either include or exclude (one of, not both), `{'a':1, 'b': 1}` or `{'a': 0, 'b': 0}`.
-              - `skip`: _Integer_ - Set to skip N documents ahead in your query (useful for pagination).
-              - `hint`: _Object_ - Tell the query to use specific indexes in the query. Object of indexes to use, `{'_id':1}`.
-              - `comment`: _String_ - Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the query. These comments are visible in the MongoDB profile log, making them easier to interpret.
-              - `readPreference`: _String_ **|** _Object_ - The preferred read preference.
-              - `maxTimeMS`: _Integer_ - Number of milliseconds to wait before aborting the query.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
+            - `query: object`: __Required__ - A MongoDB query object.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#find) for more information. Supported settings are:
+              - `limit: number`: Sets the limit of documents returned in the query.
+              - `sort array | object`: Set to sort the documents coming back from the query.
+              - `projection: object`: The fields to return in the query. Object of fields to either include or exclude (one of, not both), `{'a':1, 'b': 1}` or `{'a': 0, 'b': 0}`.
+              - `skip: number`: Set to skip N documents ahead in your query (useful for pagination).
+              - `hint: object`: Tell the query to use specific indexes in the query. Object of indexes to use, `{'_id':1}`.
+              - `comment: string`: Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the query. These comments are visible in the MongoDB profile log, making them easier to interpret.
+              - `readPreference: string | object`: The preferred read preference.
+              - `maxTimeMS: number`: Number of milliseconds to wait before aborting the query.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
 
             #### Examples
 
@@ -238,17 +235,17 @@ _ref:
             >Cursors are not supported. The request will return the whole body of the response as an array.
 
             #### Properties
-            - `query`: _Object_ - **REQUIRED** - A MongoDB query object.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#find) for more information. Supported settings are:
-              - `limit`: _Integer_ - Sets the limit of documents returned in the query.
-              - `sort`: _Array_ **|** _Object_  - Set to sort the documents coming back from the query. Array of indexes, `[['a', 1]]`.
-              - `projection`: _Object_ - The fields to return in the query. Object of fields to either include or exclude (one of, not both), `{'a':1, 'b': 1}` or `{'a': 0, 'b': 0}`.
-              - `skip`: _Integer_ - Set to skip N documents ahead in your query (useful for pagination).
-              - `hint`: _Object_ - Tell the query to use specific indexes in the query. Object of indexes to use, `{'_id':1}`.
-              - `comment`: _String_ - Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the query. These comments are visible in the MongoDB profile log, making them easier to interpret.
-              - `readPreference`: _String_ **|** _Object_ - The preferred read preference.
-              - `maxTimeMS`: _Integer_ - Number of milliseconds to wait before aborting the query.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
+            - `query: object`: __Required__ - A MongoDB query object.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#find) for more information. Supported settings are:
+              - `limit: number`: Sets the limit of documents returned in the query.
+              - `sort: array | object`: Set to sort the documents coming back from the query.
+              - `projection: object`: The fields to return in the query. Object of fields to either include or exclude (one of, not both), `{'a':1, 'b': 1}` or `{'a': 0, 'b': 0}`.
+              - `skip: number`: Set to skip N documents ahead in your query (useful for pagination).
+              - `hint: object`: Tell the query to use specific indexes in the query. Object of indexes to use, `{'_id':1}`.
+              - `comment: string`: Add a [comment](https://docs.mongodb.com/manual/reference/operator/query/comment/index.html) to the query. These comments are visible in the MongoDB profile log, making them easier to interpret.
+              - `readPreference: string | object`: The preferred read preference.
+              - `maxTimeMS: number`: Number of milliseconds to wait before aborting the query.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
 
             #### Examples
 
@@ -268,15 +265,15 @@ _ref:
             The `MongoDBInsertMany` request inserts an array of documents into the collection specified in the connectionId. If a `_id` field is not specified on a document, a MongoDB `ObjectID` will be generated.
 
             #### Properties
-            - `docs`: _Array_ of _Object_ - **REQUIRED** - The array of documents to be inserted.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#insertMany) for more information. Supported settings are:
-              - `bypassDocumentValidation`: _Boolean_ - Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
-              - `checkKeys`: _Boolean_ - Default: `true` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `forceServerObjectId`: _Boolean_ - Default: `false` - Force server to assign _id values instead of driver.
-              - `j`: _Boolean_ - Default: `false` - Specify a journal write concern.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `docs: object[]`: __Required__ - The array of documents to be inserted.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#insertMany) for more information. Supported settings are:
+              - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
+              - `checkKeys: boolean`: Default: `true` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `forceServerObjectId: boolean`: Default: `false` - Force server to assign _id values instead of driver.
+              - `j: boolean`: Default: `false` - Specify a journal write concern.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `w: number | string`: The write concern.
+              - `wtimeout: number`: The write concern timeout.
 
 
             #### Examples
@@ -302,15 +299,15 @@ _ref:
             The `MongoDBInsertOne` request inserts a document into the collection specified in the connectionId. If a `_id` field is not specified, a MongoDB `ObjectID` will be generated.
 
             #### Properties
-            - `doc`: _Object_ - **REQUIRED** - The document to be inserted.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#insertOne) for more information. Supported settings are:
-              - `bypassDocumentValidation`: _Boolean_ - Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
-              - `checkKeys`: _Boolean_ - Default: `true` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `forceServerObjectId`: _Boolean_ - Default: `false` - Force server to assign _id values instead of driver.
-              - `j`: _Boolean_ - Default: `false` - Specify a journal write concern.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `doc: object`: __Required__ - The document to be inserted.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#insertOne) for more information. Supported settings are:
+              - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
+              - `checkKeys: boolean`: Default: `true` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `forceServerObjectId: boolean`: Default: `false` - Force server to assign _id values instead of driver.
+              - `j: boolean`: Default: `false` - Specify a journal write concern.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `w: number | string`: The write concern.
+              - `wtimeout: number`: The write concern timeout.
 
             #### Examples
 
@@ -334,20 +331,20 @@ _ref:
             The `MongoDBUpdateMany` request updates multiple documents that match a certain criteria in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select the documents to update.
 
             #### Properties
-            - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
-            - `update`: _Object_ - **REQUIRED** - The update operations to be applied to the document.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
-              - `arrayFilters`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
-              - `bypassDocumentValidation`: _Boolean_ - Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
-              - `checkKeys`: _Boolean_ - Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
-              - `forceServerObjectId`: _Boolean_ - Force server to assign _id values instead of driver.
-              - `hint`: _Object_ - An optional hint for query optimization.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `j`: _Boolean_ - Specify a journal write concern.
-              - `upsert`: _Boolean_ - Default: `false` - Insert document if no match is found.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `filter: object`: __Required__ - The filter used to select the document to update.
+            - `update: object`: __Required__ - The update operations to be applied to the document.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
+              - `arrayFilters: string[]`: Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
+              - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
+              - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
+              - `forceServerObjectId: boolean`: Force server to assign _id values instead of driver.
+              - `hint: object`: An optional hint for query optimization.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `j: boolean`: Specify a journal write concern.
+              - `upsert: boolean`: Default: `false` - Insert document if no match is found.
+              - `w: number | string`: The write concern.
+              - `wtimeout: number`: The write concern timeout.
 
             #### Examples
 
@@ -386,20 +383,20 @@ _ref:
             The `MongoDBUpdateOne` request updates a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to update. It will update the first document that matches the filter. If the `upsert` option is set to true, it will insert a new document if no document is found to update.
 
             #### Properties
-            - `filter`: _Object_ - **REQUIRED** - The filter used to select the document to update.
-            - `update`: _Object_ - **REQUIRED** - The update operations to be applied to the document.
-            - `options`: _Object_ - Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
-              - `arrayFilters`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
-              - `bypassDocumentValidation`: _Boolean_ - Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
-              - `checkKeys`: _Boolean_ - Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
-              - `collation`: _Object_ - Specify collation (MongoDB 3.4 or higher) settings for update operation.
-              - `forceServerObjectId`: _Boolean_ - Force server to assign _id values instead of driver.
-              - `hint`: _Object_ - An optional hint for query optimization.
-              - `ignoreUndefined`: _Boolean_ - Default: `false` - Specify if the BSON serializer should ignore undefined fields.
-              - `j`: _Boolean_ - Specify a journal write concern.
-              - `upsert`: _Boolean_ - Default: `false` - Insert document if no match is found.
-              - `w`: _Integer_ **|** _String_ - The write concern
-              - `wtimeout`: _Integer_  - The write concern timeout.
+            - `filter: object`: __Required__ - The filter used to select the document to update.
+            - `update: object`: __Required__ - The update operations to be applied to the document.
+            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
+              - `arrayFilters: string[]`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
+              - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
+              - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
+              - `collation: object`: Specify collation (MongoDB 3.4 or higher) settings for update operation.
+              - `forceServerObjectId: boolean`: Force server to assign _id values instead of driver.
+              - `hint: object`: An optional hint for query optimization.
+              - `ignoreUndefined: boolean`: Default: `false` - Specify if the BSON serializer should ignore undefined fields.
+              - `j: boolean`: Specify a journal write concern.
+              - `upsert: boolean`: Default: `false` - Insert document if no match is found.
+              - `w: number | string`: _Integer_ **|** _String_ - The write concern
+              - `wtimeout: number`: _Integer_  - The write concern timeout.
 
 
             #### Examples
