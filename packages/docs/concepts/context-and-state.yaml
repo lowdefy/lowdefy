@@ -46,7 +46,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Tutorial
-            previous_page_id: tutorial-setup
-            next_page_title: Events and Actions
-            next_page_id: events-and-actions
+            previous_page_title: Lowdefy Schema
+            previous_page_id: lowdefy-schema
+            next_page_title: Blocks
+            next_page_id: blocks

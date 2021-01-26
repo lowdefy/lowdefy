@@ -1,0 +1,176 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: blocks
+    pageTitle: Blocks
+    section: Concepts
+    content:
+      - id: md1
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            A Lowdefy page is compiled out of a arrangement of blocks. Every HTML element of this page is render as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected. 
+
+            Lowdefy offers a list of over 30 block types to cater for a wide range of use cases. All blocks are categorized according to their primary function: 
+            - `display` - Display page elements.
+            - `input` - Modify a value in [`state`](/state-and-context).
+            - `context` - Create a new [`context`](/state-and-context).
+            - `container` - Render other blocks into [`content areas`](/layout).
+            - `list` - Render [`content areas`](/layout) and blocks for each element in the data array.
+
+            When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different form the previous render result. The result is _live updates_  to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas`, `blocks` and `loading` fields. 
+
+            # Block Schema
+
+            All Lowdefy blocks follow a __consistent__ root level schema with only 8 fields:
+
+            - `id`: _String_ -  __Required__ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in [`state`](/state-and-context). Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
+            - `type`: _String_ -  __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
+            - `properties`: _Object_ - All the settings passed to a block component.
+            - `areas`: _Object_ - Used to set the content areas and content layout settings for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
+            - `blocks`: _Array_ - A array of blocks to render to the default `content` area for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
+            - `events`: _Object_ - Used to set all the `events` of a block, used to define [`event`](/events-and-actions) [`actions`](/events-and-actions).
+            - `layout`: _Object_ - Used to define the [layout](/layout) properties for a block. 
+            - `loading`: _Object_ - Used to overwrite a block's default loading behavior. 
+            - `required`: _Boolean_ | _Object_ - For `input` blocks, whether or not a value value is required in [`state`](/context-and-state) when the [`Validate`](/Validate) action is called. Can be either a boolean or an object of operators evaluating if a block is required or not.
+            - `style`: _Css Object_ - Used to apply css style settings to the block's top level `div` element.
+            - `validation`: _Array_ - A list of validation tests to pass when the [`Validate`](/Validate) action is called.
+            - `visible`: _Boolean_ - Controls whether or not to render a block. This field can also be defined by operators which must evaluate to `false` to make the block invisible. Blocks with `visible: false` is excluded from [`state`](/state-and-context).
+
+            # Block types
+
+            Lowdefy has list of default block types as defined in the Lowdefy docs. The default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) react component library. To use all the default block types, you can simply use the block `type` key, like [`Button`](/Button), [`TextInput`](/TextInput), [`Box`](/Box) and so on. 
+            
+            ###### Default block type config example:
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+            pages:
+              - id: example_dashboard
+                type: PageHeaderMenu
+                blocks:
+                  - id: basic_chart
+                    type: Button
+                    properties:
+                      # ... Button details
+            ```
+
+            However, the default types can overwritten or additional types can be define as required. For example, to set a `type` for a custom implementation of [AmCharts](https://www.amcharts.com/), we can do the following. We have created a custom [Lowdefy block for AmCharts v4](https://www.npmjs.com/package/@lowdefy/blocks-amcharts) that we can use. 
+            
+            ###### Custom block type config example:
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+            types:
+              AmChartsXY: 
+                url: https://unpkg.com/@lowdefy/blocks-amcharts@latest/dist/meta/AmChartsXY.json
+            pages:
+              - id: example_dashboard
+                type: Context
+                blocks:
+                  - id: basic_chart
+                    type: AmChartsXY
+                    properties:
+                      # ... AmCharts details
+            ```
+            
+            More details on custom blocks can be found [here](https://github.com/lowdefy/blocks-template). 
+
+            # Block loading
+
+            Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
+
+            By default, Lowdefy tries to give a reasonable definition for how much space a block should take up in while loading, however this can vary depending on how the block is used. The `loading` property on blocks allows the Lowdefy developer to set a custom loading configuration for a block.
+
+            ##### Custom block `loading` example:
+
+            ```yaml
+            pages:
+              - id: page_one
+                type: Context
+                blocks:
+                  # ...
+                  - id: paragraph_one
+                    type: Title
+                    loading:
+                      type: SkeletonParagraph
+                      properties:
+                        lines: 1
+                    properties:
+                      content: Lorem ipsum dolor sit amet.
+                  # ...
+            ```
+
+            ## Loading placeholder types
+
+            The following loading placeholder types are available:
+
+            ##### Spinner
+            A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo.
+
+            - `barColor`: _String_ - Color of the bars in the Lowdefy spinner logo.
+            - `color`: _String_ - Color of spinner logo. Default is `#f1f1f1`.
+            - `height`: _Number_ | _String_ - Height of the spinner block including background. Default is `100%`.
+            - `shaded`: _Boolean_ - Masks the spinner block including background. 
+            - `size`: _Number_ | _String_ - Size of the spinner icon. Default is `50px`.
+
+            ##### IconSpinner
+            A spinning loading icon.
+
+            - `size`: _Number_ | _Enum_ - Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
+
+            ##### Skeleton
+            A rectangular loading skeleton to fill the full size of the block.
+
+            - `height`: _Number_ | _String_ - Height of the skeleton block. Default is `100%`.
+            - `width`: _Number_ | _String_ - Width of the skeleton block. Default is `100%`.
+
+            ##### SkeletonAvatar
+            A avatar loading skeleton.
+
+            - `size`: _Number_ | _Enum_ - Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is 32px.
+            - `shape`: _Enum_ - Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
+
+            ##### SkeletonButton
+            A button loading skeleton, matches the size of [`Button`](/Button) blocks.
+
+            - `size`: _Enum_ - Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `shape`: _Enum_ - Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
+            - `height`: _Number_ | _String_ - Height of the button skeleton. Overwrites the size setting.
+            - `width`: _Number_ | _String_ - Width of the button skeleton. Default is `100%`.
+
+            ##### SkeletonInput
+            A input loading skeleton, used as a placeholder for input blocks with labels.
+
+            - `size`: _Enum_ - Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
+            - `labelHeight`: _Number_ | _String_ - Height of the label part of the input skeleton. 
+            - `inputHeight`: _Number_ | _String_ - Height of the input part of the input skeleton. Overwrites the size setting.
+            - `labelWidth`: _Number_ | _String_ - Width of the label part of the input skeleton. Default is `100%`.
+            - `width`: _Number_ | _String_ - Width of the input part of input skeleton. Default is `100%`.
+
+            ##### SkeletonParagraph
+            A paragraph loading skeleton, used as a placeholder for text intensive section.
+
+            - `lines`: _Number_ - The number of paragraph lines to render. Default is `4`. 
+            - `width`: _Number_ | _String_ - Width of the paragraph skeleton. Default is `100%`.
+
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Context and State
+            previous_page_id: context-and-state
+            next_page_title: Layout
+            next_page_id: layout

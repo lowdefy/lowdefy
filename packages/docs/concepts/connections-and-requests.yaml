@@ -31,8 +31,17 @@ _ref:
             -----------
             In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record, executing a query or calling a API end-point.
 
-            > Sensitive information like passwords or API keys are often required to use external services. The [`_secret`](/_secret) operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
+      - id: alert2
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: Sensitive information like passwords or API keys are often required to use external services. The _secret operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
 
+      - id: md2
+        type: Markdown
+        properties:
+          content: |
             # Connections
 
             Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection.
@@ -81,7 +90,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Events and Actions
-            previous_page_id: events-and-actions
-            next_page_title: Layout
-            next_page_id: layout
+            previous_page_title: Layout
+            previous_page_id: layout
+            next_page_title: Events and Actions
+            next_page_id: events-and-actions
