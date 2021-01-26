@@ -26,10 +26,10 @@ _ref:
             #### TLDR
               - The first block on a page must be a `context` category block.
               - A page can have multiple `context` blocks.
-              - Every `context` has a single __state__ object.
-              - All input blocks write their value to __state__, with the their `id` as the key in the __state__ object.
-              - Input blocks which are not visible are removed from __state__.
-              - The `SetState` action can also modify the __state__ object.
+              - Every `context` has a single `state` object.
+              - All input blocks write their value to `state`, with the their `id` as the key in the `state` object.
+              - Input blocks which are not visible are removed from `state`.
+              - The `SetState` action can also modify the `state` object.
 
             -------
 
@@ -37,11 +37,25 @@ _ref:
 
             The standard page blocks like [`PageHeaderMenu`](/PageHeaderMenu) or [`PageSiderMenu`](/PageSiderMenu) are all `context` category blocks, and the [`Context`](/Context) block is a simple container that also provides a context.
 
-            Each context provides encapsulation to the blocks inside it. It has it's own __state__ object as well as requests.
+            Each context provides encapsulation to the blocks inside it. It has it's own `state` object as well as requests.
 
-            Every `input` category block inside the context will have a value in the __state__ object, with the their `id` as the key in the __state__ object, unless the block is not visible, in which case the input value is removed the state object.
+            Every `input` category block inside the context will have a value in the `state` object, with the their `id` as the key in the `state` object, unless the block is not visible, in which case the input value is removed the state object.
 
-            The only other way to modify the __state__ object is to use a `SetState` action. See [`SetState`](/SetState) and [`actions`](/actions) for more details.
+            The only other way to modify the `state` object is to use a `SetState` action. See [`SetState`](/SetState) and [`actions`](/actions) for more details.
+
+            # Context data objects
+
+            A Lowdefy `context` makes some additional data object accessible via operators. These include:
+
+            - [`_global`](/_global): The `global` object is a single app level data object defined in the Lowdefy [config root](/lowdefy-schema). This object is the same for every `context`, it is also passed between the client and server. If the [`SetGlobal`](/SetGlobal) action is called, it is not consistent between clients, like different users, or a single user with multiple tabs open.
+
+            - [`_state`](/_state): A `state` object is unique to a `context` and every [`input` block](/blocks) maintains a value in it's parent `state` object. This `state` object is passed to the server when requests are called. The [`SetState`](/SetState) action can be used to modify the value of a `state` object in the same `context` from which [`SetState`](/SetState) is called.
+
+            - [`_url_query`](/_url_query): The `urlQuery` object is used to access variables set in the url. Url query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onEnter`](/events-and-actions) event. __Note that any variables set to `urlQuery` will be publicly visible__.
+
+            - [`_input`](/_input): The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. This variable set to the `input` object are not written to the url, so they are not visible publicly but also cannot be used to share the data in a link since a `input` object is only consistent between on `context` and the next to which it links. A `input` object is set to the `input` field of the [`Link`](/Link) action when linking from one page `context` to the next.
+
+            - [`_media`](/_media): The `media` object contains some information about the client screen size etc. This is useful in order add additional responsive logic to a page.
 
       - _ref:
           path: templates/navigation_buttons.yaml
