@@ -47,6 +47,15 @@ _ref:
 
             Actions can also have a `skip` field. Operators in the `skip` field are also evaluated before an action is executed, and if the evaluated result is `true`, that action is skipped and the next action is executed.
 
+            # Action Schema
+
+            The schema for a Lowdefy action is:
+
+            - `id: string`: __Required__ - A identifier for the action. It must be unique within the action chain it is defined in.
+            - `type: string`: __Required__ - The action type to be used. It must be a valid action type.
+            - `skip: boolean`: __Required__ - The `id` of the connection that should be used.
+            - `params: object`: - The input passed to the action. __Operators are evaluated__.
+
             ###### Events and actions definition example:
             ```yaml
             - id: block_with_actions

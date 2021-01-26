@@ -44,7 +44,15 @@ _ref:
           content: |
             # Connections
 
-            Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection.
+            Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection. Operators in connection properties are evaluated every time a request is called.
+
+            # Connection Schema
+
+            The schema for a Lowdefy connection is:
+
+            - `id: string`: __Required__ - A unique identifier for the connection. This is used by requests to specify which connection to use.
+            - `type: string`: __Required__ - The connection type to be used.
+            - `properties: object`: The settings passed to the connection. __Operators are evaluated__.
 
             ###### Connections definition example:
             ```yaml
@@ -66,7 +74,16 @@ _ref:
 
             # Requests
 
-            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
+            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action. Operators in request properties are evaluated every time a request is called.
+
+            # Request Schema
+
+            The schema for a Lowdefy request is:
+
+            - `id: string`: __Required__ - A identifier for the request. It must be unique within the context the request is defined in.
+            - `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
+            - `connectionId: string`: __Required__ - The `id` of the connection that should be used.
+            - `properties: object`: The settings passed to the request. __Operators are evaluated__.
 
             ###### Requests definition example:
             ```yaml
