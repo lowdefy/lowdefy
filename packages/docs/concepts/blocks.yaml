@@ -27,11 +27,11 @@ _ref:
               - All user interfaces in Lowdefy are assembled out of blocks.
               ##### Block types
               - There a five block categories: `display`, `input`, `context`, `container` and `list`.
-              - Operators reevaluate on every [`state`](/context-and-state)  update or as request calls complete. This allows blocks to _live update_.
+              - Operators re-evaluate on every [`state`](/context-and-state)  update or as request calls complete. This allows blocks to _live update_.
               - Lowdefy has built in default block types, however this can be overwritten or extended with custom blocks by defining `types` on the Lowdefy config root.
-              - `input` blocks maintains a value in [`state`](/context-and-state) matching the block `id` key. _Dot notation_ applies to specify nested fields.
+              - `input` blocks maintain a value in [`state`](/context-and-state) matching the block `id` key. _Dot notation_ applies to specify nested fields.
               ##### Block validation
-              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validation` tests. 
+              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validation` tests.
               - Validation is invoked using the [`Validate`](/Validate) action, and applies to all `input` fields in the [`context`](/context-and-state).
               ##### Block loading
               - By default all blocks render a loading skeleton when the block's source code is fetched or while the block is waiting on data from a request.
@@ -103,11 +103,11 @@ _ref:
 
             More details on custom blocks can be found [here](https://github.com/lowdefy/blocks-template).
 
-            
+
             # Input block validation
 
-            All `input` block types maintains a value in [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path. 
-            
+            All `input` block types maintain a value in [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path.
+
             Client side field validation can be applied setting the `required` and / or `validation` block fields. The following schema applies to `required` and `validation`.
 
             Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page [`context`](/context-and-state).
@@ -122,7 +122,7 @@ _ref:
               properties:
                 title: Name
             ```
-            
+
             ##### `validation` schema:
             The `validation` field takes a `array` of test `objects` to evaluate before passing the field validation. This list of tests are evaluated sequentially, so the test that fails first will be used as the feedback message to the user.
 
@@ -130,26 +130,26 @@ _ref:
             - `pass: boolean`: __Required__ - The test that validates if this item passes or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
             - `message: string`: __Required__ - The feedback message to the user if this validation tests fails. __Operators are evaluated__.
             - `status: enum`: The feedback type to present to the user. Option are `error` and `warning`. Default is `error`. __Operators are evaluated__.
-      
-            The following `validation` example first verifies that something was entered into the `email` field, then checks that the field passes a email regex validation using the [`_regex`](/_regex) operator: 
+
+            The following `validation` example first verifies that something was entered into the `email` field, then checks that the field passes a email regex validation using the [`_regex`](/_regex) operator:
             ```yaml
               - id: email
                 type: TextInput
                 validation:
                   - message: Please enter a email address.
                     status: error
-                    pass: 
+                    pass:
                       _not:
                         _not:
-                          _state: email 
+                          _state: email
                   - message: Please provide a valid email address.
                     status: error
-                    pass: 
+                    pass:
                       _regex: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                 properties:
                   title: Email
             ```
-            
+
             # Block loading
 
             Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
