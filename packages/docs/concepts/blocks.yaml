@@ -88,7 +88,7 @@ _ref:
             
             More details on custom blocks can be found [here](https://github.com/lowdefy/blocks-template). 
 
-            # Block Loading
+            # Block loading
 
             Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
 
@@ -170,7 +170,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Lowdefy Schema
-            previous_page_id: lowdefy-schema
-            next_page_title: Context and State
-            next_page_id: context-and-state
+            previous_page_title: Context and State
+            previous_page_id: context-and-state
+            next_page_title: Layout
+            next_page_id: layout

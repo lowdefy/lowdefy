@@ -90,7 +90,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Events and Actions
-            previous_page_id: events-and-actions
-            next_page_title: Layout
-            next_page_id: layout
+            previous_page_title: Layout
+            previous_page_id: layout
+            next_page_title: Events and Actions
+            next_page_id: events-and-actions

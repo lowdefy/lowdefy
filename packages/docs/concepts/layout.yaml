@@ -1407,7 +1407,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Connections and Requests
-            previous_page_id: connections-and-requests
-            next_page_title: Operators
-            next_page_id: operators
+            previous_page_title: Blocks
+            previous_page_id: blocks
+            next_page_title: Connection and Requests
+            next_page_id: connections-and-requests

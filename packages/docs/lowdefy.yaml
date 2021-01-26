@@ -90,31 +90,31 @@ menus:
             pageId: overview
             properties:
               title: Overview
-          - id: blocks
-            type: MenuLink
-            pageId: blocks
-            properties:
-              title: Blocks
           - id: context-and-state
             type: MenuLink
             pageId: context-and-state
             properties:
               title: Context and State
-          - id: events-and-actions
+          - id: blocks
             type: MenuLink
-            pageId: events-and-actions
+            pageId: blocks
             properties:
-              title: Events and Actions
-          - id: connections-and-requests
-            type: MenuLink
-            pageId: connections-and-requests
-            properties:
-              title: Connections and Requests
+              title: Blocks
           - id: layout
             type: MenuLink
             pageId: layout
             properties:
               title: Layout
+          - id: connections-and-requests
+            type: MenuLink
+            pageId: connections-and-requests
+            properties:
+              title: Connections and Requests
+          - id: events-and-actions
+            type: MenuLink
+            pageId: events-and-actions
+            properties:
+              title: Events and Actions
           - id: operators
             type: MenuLink
             pageId: operators
@@ -278,11 +278,11 @@ pages:
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/overview.yaml
-  - _ref: concepts/blocks.yaml
   - _ref: concepts/context-and-state.yaml
-  - _ref: concepts/events-and-actions.yaml
-  - _ref: concepts/connections-and-requests.yaml
+  - _ref: concepts/blocks.yaml
   - _ref: concepts/layout.yaml
+  - _ref: concepts/connections-and-requests.yaml
+  - _ref: concepts/events-and-actions.yaml
   - _ref: concepts/operators.yaml
 
   - _ref: blocks/input/AutoComplete.yaml

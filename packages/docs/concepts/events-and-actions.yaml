@@ -105,7 +105,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Context and State
-            previous_page_id: context-and-state
-            next_page_title: Connections and Requests
-            next_page_id: connections-and-requests
+            previous_page_title: Connections and Requests
+            previous_page_id: connections-and-requests
+            next_page_title: Operators
+            next_page_id: operators
