@@ -23,6 +23,21 @@ _ref:
         type: MarkdownWithHtml
         properties:
           content: |
+            #### TLDR
+              - All user interfaces in Lowdefy are assembled out of blocks.
+              ##### Block types
+              - There a five block categories: `display`, `input`, `context`, `container` and `list`.
+              - Operators reevaluate on every [`state`](/context-and-state)  update or as request calls complete. This allows blocks to _live update_.
+              - Lowdefy has built in default block types, however this can be overwritten or extended with custom blocks by defining `types` on the Lowdefy config root.
+              - `input` blocks maintains a value in [`state`](/context-and-state) matching the block `id` key. _Dot notation_ applies to specify nested fields.
+              ##### Block validation
+              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validation` tests. 
+              - Validation is invoked using the [`Validate`](/Validate) action, and applies to all `input` fields in the [`context`](/context-and-state).
+              ##### Block loading
+              - By default all blocks render a loading skeleton when the block's source code is fetched or while the block is waiting on data from a request.
+              - A block's default loading can be overwritten by defining custom `loading` settings on a block.
+
+            -------
             A Lowdefy page is compiled out of a arrangement of blocks. Every HTML element of this page is render as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected.
 
             Lowdefy offers a list of over 30 block types to cater for a wide range of use cases. All blocks are categorized according to their primary function:
@@ -94,6 +109,8 @@ _ref:
             All `input` block types maintains a value in [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path. 
             
             Client side field validation can be applied setting the `required` and / or `validation` block fields. The following schema applies to `required` and `validation`.
+
+            Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page [`context`](/context-and-state).
 
             ##### `required` schema:
             `requried` can be a `boolean` or `string` type. When `required: true` the field label will indicate this with a red dot for user feedback, and a value will have to be supplied in to the field in order to pass validation. If `required` is set to a `string`, this string will be used as the feedback message when the validation fails.
