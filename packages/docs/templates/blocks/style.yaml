@@ -22,4 +22,5 @@
     size: small
     label:
       span: 8
+      align: right
       extra: CSS Object style properties. Should be in YAML format.
