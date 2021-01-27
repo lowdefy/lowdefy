@@ -1,7 +1,9 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true

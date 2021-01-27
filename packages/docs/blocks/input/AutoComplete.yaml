@@ -16,8 +16,12 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: AutoComplete
-    value_type: String
+    value_type: string
     category: input
+    init_property_values:
+      options:
+        - one 
+        - two
     description_content: |
       The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
 
