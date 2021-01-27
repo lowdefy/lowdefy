@@ -174,7 +174,7 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         block.type = 'ControlledList';
         block.blocks = [
           {
-            id: 'block.properties.options.$',
+            id: `block.properties.${propertyName}.$`,
             type: 'TextInput',
             properties: {
               size: 'small',
@@ -182,6 +182,90 @@ function makeBlockDefinition(propertyName, propertyDescription) {
                 disabled: true,
               },
             },
+          },
+        ];
+        return block;
+      case 'optionsSelector':
+        block.type = 'Box';
+        block.blocks = [
+          {
+            id: '__optionsType',
+            type: 'ButtonSelector',
+            properties: {
+              title: 'Options type',
+              options: ['Primitive', 'Label-value pairs'],
+              size: 'small',
+              label: { span: 8, align: 'right' },
+            },
+          },
+          {
+            id: `block.properties.options`,
+            type: 'ControlledList',
+            properties: {
+              title: 'options:',
+              size: 'small',
+            },
+            blocks: [
+              {
+                id: `block.properties.options.$.primitive`,
+                type: 'TextInput',
+                visible: {
+                  _if: {
+                    test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
+                    then: true,
+                    else: false,
+                  },
+                },
+                properties: {
+                  size: 'small',
+                  label: {
+                    disabled: true,
+                  },
+                },
+              },
+              {
+                id: `block.properties.options.$.label`,
+                type: 'TextInput',
+                visible: {
+                  _if: {
+                    test: {
+                      _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
+                    },
+                    then: true,
+                    else: false,
+                  },
+                },
+                properties: {
+                  size: 'small',
+                  title: 'label',
+                  label: {
+                    span: 8,
+                    align: 'right',
+                  },
+                },
+              },
+              {
+                id: `block.properties.options.$.value`,
+                type: 'TextInput',
+                visible: {
+                  _if: {
+                    test: {
+                      _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
+                    },
+                    then: true,
+                    else: false,
+                  },
+                },
+                properties: {
+                  size: 'small',
+                  title: 'value',
+                  label: {
+                    span: 8,
+                    align: 'right',
+                  },
+                },
+              },
+            ],
           },
         ];
         return block;
@@ -213,9 +297,11 @@ function makeBlockDefinition(propertyName, propertyDescription) {
 
 function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
-  const blocks = Object.keys(blockProperties).map((key) => {
-    return makeBlockDefinition(key, blockProperties[key]);
-  });
+  const blocks = Object.keys(blockProperties)
+    .sort()
+    .map((key) => {
+      return makeBlockDefinition(key, blockProperties[key]);
+    });
   return blocks;
 }
 

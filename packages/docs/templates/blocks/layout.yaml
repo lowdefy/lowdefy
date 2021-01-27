@@ -23,6 +23,7 @@
       - top
     label:
       span: 8
+      align: right
       extra: Align content in the block vertically.
 - id: block.layout.span
   type: NumberInput
@@ -31,6 +32,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: The number of grid cells that block will occupy in the raster.
 - id: block.layout.flex
   type: TextInput
@@ -39,6 +41,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Css flex style for the block.
 - id: block.layout.grow
   type: TextInput
@@ -47,6 +50,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Css flex grow setting for the block.
 - id: block.layout.shrink
   type: TextInput
@@ -55,6 +59,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Css flex basis setting for the block.
 - id: block.layout.size
   type: TextInput
@@ -63,6 +68,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Css flex shrink setting for the block.
 - id: block.layout.order
   type: TextInput
@@ -71,6 +77,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Css order to change where render order or elements in the raster.
 - id: block.layout.offset
   type: NumberInput
@@ -79,6 +86,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: Number of grid cells to shift the block to the right.
 - id: block.layout.pull
   type: NumberInput
@@ -87,6 +95,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: The number of grid cells that raster is moved to the left.
 - id: block.layout.push
   type: NumberInput
@@ -95,6 +104,7 @@
     size: small
     label:
       span: 8
+      align: right
       extra: The number of grid cells that raster is moved to the right.
 - id: layout_block_input
   type: Markdown

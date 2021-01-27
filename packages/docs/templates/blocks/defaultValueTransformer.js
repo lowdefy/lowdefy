@@ -18,13 +18,17 @@ function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
   const defaultValues = {};
   Object.keys(blockProperties).forEach((key) => {
-    if (blockProperties[key].default) {
+    if (blockProperties[key].default || blockProperties[key].default === false) {
       defaultValues[key] = blockProperties[key].default;
     }
     if (key === 'label') {
       defaultValues.label = {
+        span: null,
         align: 'left',
+        inline: false,
+        disabled: false,
         colon: true,
+        extra: null,
       };
     }
   });

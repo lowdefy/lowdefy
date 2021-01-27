@@ -1,7 +1,9 @@
 {
   "valueType": "array",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -13,7 +15,10 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Selected checkbox color."
+          "description": "Selected checkbox color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -22,7 +27,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "options": {
           "type": "array",
@@ -69,6 +77,9 @@
                 }
               }
             ]
+          },
+          "docs": {
+            "displayType": "optionsSelector"
           }
         },
         "label": {
@@ -121,6 +132,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "title": {
