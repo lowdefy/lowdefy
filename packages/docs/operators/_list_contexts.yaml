@@ -15,24 +15,20 @@
 _ref:
   path: templates/operators.yaml.njk
   vars:
-    pageId: _uuid
-    pageTitle: _uuid
+    pageId: _list_contexts
+    pageTitle: _list_contexts
     types: |
       ```
-      (value: any): string
+      (value: any): string[]
       ```
     description: |
-      The `_uuid` operator a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that can be used as an id that is, for practical purposes, unique. It looks like:
-
-      ```
-      123e4567-e89b-12d3-a456-426614174000
-      ```
+      The `_list_contexts` operator returns an array with the ids of all the `contexts` in the app.
     arguments: |
       #### any
-      The `_uuid` operator generates a UUID regardless of arguments.
+      The `_list_contexts` operator returns the array regardless of arguments.
     examples: |
-      #### Generate a uuid:
+      #### List all context ids:
       ```yaml
-      _uuid: true
+      _list_contexts: true
       ```
-      Returns: A version 4 UUID.
+      Returns: An array of all `context` ids.

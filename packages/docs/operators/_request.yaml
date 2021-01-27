@@ -15,24 +15,22 @@
 _ref:
   path: templates/operators.yaml.njk
   vars:
-    pageId: _uuid
-    pageTitle: _uuid
+    pageId: _request
+    pageTitle: _request
     types: |
       ```
-      (value: any): string
+      (requestId: string): any
       ```
     description: |
-      The `_uuid` operator a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that can be used as an id that is, for practical purposes, unique. It looks like:
+      The `_request` operator returns the response value of a request. If the request has not yet been call, or is still executing, the returned value is `null`.
 
-      ```
-      123e4567-e89b-12d3-a456-426614174000
-      ```
+      It only returns true if all the values in the array are truthy (not `false`, `0`, `null`, `undefined`, or the empty string `""`). Else it returns false.
     arguments: |
-      #### any
-      The `_uuid` operator generates a UUID regardless of arguments.
+      #### string
+      The id of the request.
     examples: |
-      #### Generate a uuid:
+      #### Using a request response:
       ```yaml
-      _uuid: true
+      _request: my_request
       ```
-      Returns: A version 4 UUID.
+      Returns: The response returned by the request.
