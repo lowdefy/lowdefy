@@ -17,9 +17,13 @@
 function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
   const styleProperties = [];
+  const optionsSelector = [];
   Object.keys(blockProperties).forEach((key) => {
     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'style') {
       styleProperties.push(key);
+    }
+    if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'optionsSelector') {
+      optionsSelector.push(key);
     }
   });
   const styleArray = styleProperties.map((name) => {
@@ -31,9 +35,32 @@ function transformer(obj) {
     };
     return ret;
   });
+  const optionsArray = optionsSelector.map((name) => {
+    const ret = {};
+    ret[name] = {
+      _if: {
+        test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
+        then: {
+          _get: {
+            key: '0.options',
+            from: {
+              '_mql.aggregate': {
+                pipeline: [{ $addFields: { options: '$options.primitive' } }],
+                on: [{ _state: 'block.properties' }],
+              },
+            },
+          },
+        },
+        else: {
+          _state: 'block.properties.options',
+        },
+      },
+    };
+    return ret;
+  });
   const assignArray = [{ _state: 'block.properties' }];
   return {
-    '_object.assign': assignArray.concat(styleArray),
+    '_object.assign': assignArray.concat(styleArray, optionsArray),
   };
 }
 
