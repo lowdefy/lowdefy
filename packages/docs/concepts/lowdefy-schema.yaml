@@ -25,15 +25,15 @@ _ref:
           content: |
             A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describes different parts of the app.
 
-            The general schema for a Lowdefy app is:
+            The root schema for a Lowdefy app is:
             - `lowdefy: string`: __Required__ - The Lowdefy version number the app uses. This is required and cannot be a reference to another file.
-            - `name: string`: A name for the application. This is currently not used, but might be used in the future (On user login pages for example).
-            - `licence: string`: A [SPDX licence ID](https://spdx.org/licenses/). You can use this to indicate the project's  licence if you are licencing your project under a specific software licence. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field.
+            - `name: string`: A name for the application.
+            - `licence: string`: A [SPDX licence ID](https://spdx.org/licenses/). You can use this to indicate the project's  licence if you are licencing your project under a specific software licence. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
             - `cli: object`: An object with configuration for the CLI.
             - `config: object`: An object with app configuration like the home page pageId.
-            - `global: object`: A data object that can be accessed anywhere in the app using the `_global` operator.
+            - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
             - `connections: object[]`: An array of [`connection`](\connections-and-requests) objects.
-            - `types: object`: An object with user-defined block types.
+            - `types: object`: An object to customize and add block types.
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.
 
@@ -53,9 +53,9 @@ _ref:
 
             Menu objects are an object with links to pages. The are used by blocks like `PageSiderMenu` to render the links in the menu. If no menus are provided, a default menu is created, with links to all of the defined pages, and with their pageIds as menu item titles.
 
-            Blocks like like `PageSiderMenu` use the menu with id `default` by default. This means that if you create a menu object with id `default`, this will be used unless another menu is configured.
+            Blocks like like `PageSiderMenu` use the menu with `id: default` by default. This means that if you create a menu object with `id: default`, this will be used unless another menu is configured.
 
-            More than one menu can be configured in an app. As an example, this can be used when two logically different sections ion the app need different menus.
+            More than one menu can be configured in an app. As an example, this can be used when two logically different sections in the app need different menus.
 
             The schema for a menu object is:
 
@@ -69,14 +69,14 @@ _ref:
             - `url: string`: An external url to link to.
             -  `properties: object`: The properties of the menu link. These are:
                 - `title: string`: The title to display for the link.
-                - `icon: string | object`: The name of an Ant Design Icon or properties of an Icon block to use as the icon for the link. The icon is only shown if the link is at the top level of the menu (not in a menu group).
+                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the link. The icon is only shown if the link is at the top level of the menu (not in a menu group).
 
             The schema for a `MenuGroup` is:
             - `id: string`: __Required__ - A identifier for the group unique to the menu.
             - `type: string`: __Required__ - The type should be `MenuGroup`.
             -  `properties: object`: The properties of the menu group. These are:
                 - `title: string`: The title to display for the group.
-                - `icon: string | object`: The name of an Ant Design Icon or properties of an Icon block to use as the icon for the group. The icon is only shown if the group is at the top level of the menu (not in a menu group).
+                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the group. The icon is only shown if the group is at the top level of the menu (not in a menu group).
             - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that are should be grouped together in the group.
 
             ###### Menus example:
@@ -134,7 +134,7 @@ _ref:
 
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
-            Each page should have an id that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
+            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
 
             Page blocks should be of category `context`, in order to create a context for the page. This means they always have the context initialization events like `onInit` to initialize the page.
 
@@ -142,7 +142,9 @@ _ref:
 
             # References and templates
 
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML. References are made using the  [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
+            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML. 
+            
+            References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
 
             ###### lowdefy.yaml
             ```yaml
@@ -153,7 +155,7 @@ _ref:
               _ref: pages/page1.yaml
             ```
 
-            The `_ref` operator can take an argument called `vars`. This can be any data, that can later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
+            The `_ref` operator can take an argument called `vars`. This can be any data, and is passed down to later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
 
             ###### pages/page1.yaml
             ```yaml

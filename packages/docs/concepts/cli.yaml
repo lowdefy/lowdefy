@@ -23,7 +23,7 @@ _ref:
         type: MarkdownWithHtml
         properties:
           content: |
-            The Lowdefy CLI is used to develop a Lowdefy app locally, and to build and deploy apps.
+            The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.
 
             We recommend running the CLI using `npx`, to always use the latest version:
 
@@ -76,7 +76,7 @@ _ref:
 
             The CLI collects usage and error information to help us fix bugs, prioritize features, and understand how Lowdefy is being used.
 
-            To disable all telemetry, you can set by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file):
+            zll telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file):
 
             ###### `lowdefy.yaml`
             ```yaml
@@ -90,7 +90,7 @@ _ref:
 
             - The CLI version.
             - The Lowdefy version of your app.
-            - A local app id (stored locally in your project folder at `.lowdefy/cli.json`).
+            - A random local app id (stored locally in your project folder at `.lowdefy/cli.json`).
             - The CLI command used.
             - If the CLI is being used in the Netlify CI environment (when using the `build-netlify` command).
             - Your IP address.
