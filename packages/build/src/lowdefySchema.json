@@ -384,6 +384,7 @@
       }
     }
   },
+  "additionalProperties": false,
   "required": [
     "lowdefy"
   ],
@@ -416,6 +417,20 @@
       "type": "object",
       "errorMessage": {
         "type": "App \"config\" should be an object."
+      }
+    },
+    "types": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "url": "string",
+          "errorMessage": {
+            "enum": "Type \"url\" should be a string."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "App \"types\" should be an object."
       }
     },
     "global": {

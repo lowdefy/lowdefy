@@ -29,10 +29,10 @@ _ref:
       The type to generate. One of `string`, `integer`, or `float`.
 
       #### object
-        - `type: string` - The type to generate. One of `string`, `integer`, or `float`.
-        - `length: string` - The length of the string to generate if type is `string`. Default is `8`.
-        - `max: number` - The maximum possible number if type is one of `integer` or `float`. Default is `100` if `integer` or `1` if `float`.
-        - `min: number` - The minimum possible number if type is one of `integer` or `float`. Default is `0`.
+        - `type: string`: __Required__ - The type to generate. One of `string`, `integer`, or `float`.
+        - `length: string`: The length of the string to generate if type is `string`. Default is `8`.
+        - `max: number`: The maximum possible number if type is one of `integer` or `float`. Default is `100` if `integer` or `1` if `float`.
+        - `min: number`: The minimum possible number if type is one of `integer` or `float`. Default is `0`.
     examples: |
       #### Random string:
       ```yaml

@@ -90,6 +90,16 @@ menus:
             pageId: overview
             properties:
               title: Overview
+          - id: cli
+            type: MenuLink
+            pageId: cli
+            properties:
+              title: The CLI
+          - id: lowdefy-schema
+            type: MenuLink
+            pageId: lowdefy-schema
+            properties:
+              title: Lowdefy App Schema
           - id: context-and-state
             type: MenuLink
             pageId: context-and-state
@@ -247,6 +257,9 @@ menus:
           - id: _if_none
             type: MenuLink
             pageId: _if_none
+          - id: _list_contexts
+            type: MenuLink
+            pageId: _list_contexts
           - id: _log
             type: MenuLink
             pageId: _log
@@ -259,6 +272,12 @@ menus:
           - id: _not
             type: MenuLink
             pageId: _not
+          - id: _nunjucks
+            type: MenuLink
+            pageId: _nunjucks
+          - id: _operator
+            type: MenuLink
+            pageId: _operator
           - id: _or
             type: MenuLink
             pageId: _or
@@ -268,12 +287,21 @@ menus:
           - id: _random
             type: MenuLink
             pageId: _random
+          - id: _regex
+            type: MenuLink
+            pageId: _regex
+          - id: _request
+            type: MenuLink
+            pageId: _request
           - id: _subtract
             type: MenuLink
             pageId: _subtract
           - id: _sum
             type: MenuLink
             pageId: _sum
+          - id: _type
+            type: MenuLink
+            pageId: _type
           - id: _uuid
             type: MenuLink
             pageId: _uuid
@@ -293,6 +321,8 @@ pages:
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/overview.yaml
+  - _ref: concepts/cli.yaml
+  - _ref: concepts/lowdefy-schema.yaml
   - _ref: concepts/context-and-state.yaml
   - _ref: concepts/blocks.yaml
   - _ref: concepts/layout.yaml
@@ -333,15 +363,21 @@ pages:
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_list_contexts.yaml
   - _ref: operators/_lt.yaml
   - _ref: operators/_lte.yaml
   - _ref: operators/_log.yaml
   - _ref: operators/_not.yaml
+  - _ref: operators/_nunjucks.yaml
+  - _ref: operators/_operator.yaml
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
   - _ref: operators/_random.yaml
+  - _ref: operators/_regex.yaml
+  - _ref: operators/_request.yaml
   - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
+  - _ref: operators/_type.yaml
   - _ref: operators/_uuid.yaml
 
   - _ref: 404.yaml

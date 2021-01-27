@@ -15,72 +15,28 @@
 _ref:
   path: templates/operators.yaml.njk
   vars:
-    pageId: _and
-    pageTitle: _and
-    argument_types: array
-    return_types: boolean
+    pageId: _if
+    pageTitle: _if
+    types: |
+      ```
+      (arguments: {test: boolean, then: any, else: any}): any
+      ```
     description: |
-      The `_and` operator performs a logical `and` over an array of inputs, using javascript 'truthy' and 'falsy' rules.
-
-      It returns true if all the values in the array are truthy (not `false`, `0`, `null`, `undefined`, or the empty string `""`). Else it returns false.
+      The `_if` operator returns the `then` argument if it's `test` argument is `true`, and it's `else` argument if it is `false`. Generally other operators are used to evaluate the `test` argument.
     arguments: |
-      #### array
-      An array of values over which to perform a logical and.
+      #### object
+        - `test: boolean`: The boolean result of a test.
+        - `then: any`: The value to return if the test is `true`.
+        - `else: any`: The value to return if the test is `false`.
     examples: |
-      #### Two `true` values:
+      #### Return a value based on a user input:
+      ```yaml
+      _if:
+        test:
+          _eq:
+            - _state: text_input
+            - The password
+        then: The user entered the password
+        else: Access denied
       ```
-      _and:
-        - true
-        - true
-      ```
-      Returns: `true`
-
-      #### Array of `true` and `false` values:
-      ```
-      _and:
-        - true
-        - true
-        - true
-        - false
-      ```
-      Returns: `false`
-
-      #### Check if two boolean inputs are true:
-      ```
-      _and:
-        - _state: confirm_accept_terms
-        - _state: confirm_accept_privacy_policy
-      ```
-      Returns: `true` if both inputs are `true`
-
-      #### Truthy values:
-      ```
-      _and:
-        - "Hello"
-        - 42
-        - []
-        - key: value
-      ```
-      Returns: `true`
-
-      #### Falsy values:
-      ```
-      _and:
-        - true
-        - null
-      ```
-      Returns: `false`
-
-      ```
-      _and:
-        - true
-        - 0
-      ```
-      Returns: `false`
-
-      ```
-      _and:
-        - true
-        - ""
-      ```
-      Returns: `false`
+      Returns: `"The user entered the password"` if the text input's value is `"The password"`, else `"Access denied"`
