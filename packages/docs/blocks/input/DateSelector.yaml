@@ -16,7 +16,7 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: DateSelector
-    value_type: any
+    value_type: date
     category: input
     description_content: |
       The `DateSelector` block allows a user to select a date from a calender.

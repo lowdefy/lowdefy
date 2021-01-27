@@ -16,7 +16,7 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: DateRangeSelector
-    value_type: any
+    value_type: date[]
     category: input
     description_content: |
       The `DateRangeSelector` block allows the user to choose a start date and an end date for a date range. The selected range is saved as an array with two date elements, the start and end dates.
