@@ -129,6 +129,21 @@ menus:
           - id: AutoComplete
             type: MenuLink
             pageId: AutoComplete
+          - id: ButtonSelector
+            type: MenuLink
+            pageId: ButtonSelector
+          - id: CheckboxSelector
+            type: MenuLink
+            pageId: CheckboxSelector
+          - id: MultipleSelector
+            type: MenuLink
+            pageId: MultipleSelector
+          - id: RadioSelector
+            type: MenuLink
+            pageId: RadioSelector
+          - id: Selector
+            type: MenuLink
+            pageId: Selector
           - id: TextInput
             type: MenuLink
             pageId: TextInput
@@ -286,6 +301,11 @@ pages:
   - _ref: concepts/operators.yaml
 
   - _ref: blocks/input/AutoComplete.yaml
+  - _ref: blocks/input/ButtonSelector.yaml
+  - _ref: blocks/input/CheckboxSelector.yaml
+  - _ref: blocks/input/MultipleSelector.yaml
+  - _ref: blocks/input/RadioSelector.yaml
+  - _ref: blocks/input/Selector.yaml
   - _ref: blocks/input/TextInput.yaml
 
   - _ref: blocks/display/Button.yaml

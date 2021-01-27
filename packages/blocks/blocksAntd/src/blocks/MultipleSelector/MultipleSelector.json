@@ -1,7 +1,9 @@
 {
   "valueType": "array",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -24,7 +26,10 @@
         "clearIcon": {
           "type": ["string", "object"],
           "default": "CloseCircleOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -33,11 +38,17 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "optionsStyle": {
           "type": "object",
-          "description": "Css style to applied to option elements."
+          "description": "Css style to applied to option elements.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -89,6 +100,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "options": {
@@ -136,6 +150,9 @@
                 }
               }
             ]
+          },
+          "docs": {
+            "displayType": "optionsSelector"
           }
         },
         "placeholder": {
@@ -146,7 +163,10 @@
         "selectedIcon": {
           "type": ["string", "object"],
           "default": "CheckOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon showing when a selection is made in the drop-down list."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "showArrow": {
           "type": "boolean",
@@ -162,7 +182,10 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "DownOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize at the drop-down position of the selector."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize at the drop-down position of the selector.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "title": {
           "type": "string",
