@@ -239,6 +239,12 @@ menus:
           - id: _and
             type: MenuLink
             pageId: _and
+          - id: _base64
+            type: MenuLink
+            pageId: _base64
+          - id: _diff
+            type: MenuLink
+            pageId: _diff
           - id: _divide
             type: MenuLink
             pageId: _divide
@@ -257,6 +263,9 @@ menus:
           - id: _if_none
             type: MenuLink
             pageId: _if_none
+          - id: _json
+            type: MenuLink
+            pageId: _json
           - id: _list_contexts
             type: MenuLink
             pageId: _list_contexts
@@ -269,6 +278,9 @@ menus:
           - id: _lte
             type: MenuLink
             pageId: _lte
+          - id: _mql
+            type: MenuLink
+            pageId: _mql
           - id: _not
             type: MenuLink
             pageId: _not
@@ -302,9 +314,15 @@ menus:
           - id: _type
             type: MenuLink
             pageId: _type
+          - id: _uri
+            type: MenuLink
+            pageId: _uri
           - id: _uuid
             type: MenuLink
             pageId: _uuid
+          - id: _yaml
+            type: MenuLink
+            pageId: _yaml
 
 pages:
   - _ref: introduction.yaml
@@ -357,16 +375,20 @@ pages:
   - _ref: actions/Validate.yaml
 
   - _ref: operators/_and.yaml
+  - _ref: operators/_base64.yaml
+  - _ref: operators/_diff.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
   - _ref: operators/_gt.yaml
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_json.yaml
   - _ref: operators/_list_contexts.yaml
   - _ref: operators/_lt.yaml
   - _ref: operators/_lte.yaml
   - _ref: operators/_log.yaml
+  - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
   - _ref: operators/_operator.yaml
@@ -378,6 +400,8 @@ pages:
   - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
   - _ref: operators/_type.yaml
+  - _ref: operators/_uri.yaml
   - _ref: operators/_uuid.yaml
+  - _ref: operators/_yaml.yaml
 
   - _ref: 404.yaml

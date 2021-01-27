@@ -17,6 +17,7 @@
 function transformer(obj) {
   // console.log(JSON.stringify(obj, null, 2));
   const contentArray = obj.page.areas.content.blocks[0].blocks[1].blocks;
+  const operatorName = obj.page.properties.title;
   // const methodsBlocks = [];
   (obj.methods || []).forEach((method) => {
     // console.log(method);
@@ -24,7 +25,7 @@ function transformer(obj) {
       id: `${method.name}_title`,
       type: 'Markdown',
       properties: {
-        content: `## ${method.name}`,
+        content: `## ${operatorName}.${method.name}`,
       },
     });
     contentArray.push({
@@ -39,7 +40,7 @@ function transformer(obj) {
     });
     contentArray.push({
       id: `${method.name}_description`,
-      type: 'Markdown',
+      type: 'MarkdownWithHtml',
       properties: {
         content: method.description,
       },
@@ -53,7 +54,7 @@ function transformer(obj) {
     });
     contentArray.push({
       id: `${method.name}_arguments`,
-      type: 'Markdown',
+      type: 'MarkdownWithHtml',
       properties: {
         content: method.arguments,
       },
@@ -67,7 +68,7 @@ function transformer(obj) {
     });
     contentArray.push({
       id: `${method.name}_examples`,
-      type: 'Markdown',
+      type: 'MarkdownWithHtml',
       properties: {
         content: method.examples,
       },
