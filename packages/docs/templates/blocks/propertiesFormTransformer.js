@@ -151,7 +151,7 @@ function makeBlockDefinition(propertyName, propertyDescription) {
   if (propertyDescription.docs && propertyDescription.docs.displayType) {
     switch (propertyDescription.docs.displayType) {
       case 'manual':
-        return propertyDescription.docs.manual;
+        return propertyDescription.docs.block;
       case 'icon':
         block.type = 'Selector';
         block.layout = { _global: 'settings_input_layout' };
@@ -269,6 +269,82 @@ function makeBlockDefinition(propertyName, propertyDescription) {
           },
         ];
         return block;
+      case 'disabledDates':
+        block.type = 'Card';
+        block.layout = {
+          contentGutter: 0,
+        };
+        block.properties = {
+          size: 'small',
+          title: 'disabledDates:',
+          inner: true,
+        };
+        block.blocks = [
+          {
+            id: 'block.properties.disabledDates.min',
+            type: 'DateSelector',
+            properties: {
+              size: 'small',
+              title: 'min',
+              label: {
+                span: 8,
+                align: 'right',
+              },
+            },
+          },
+          {
+            id: 'block.properties.disabledDates.max',
+            type: 'DateSelector',
+            properties: {
+              size: 'small',
+              title: 'max',
+              label: {
+                span: 8,
+                align: 'right',
+              },
+            },
+          },
+          {
+            id: 'block.properties.disabledDates.dates',
+            type: 'ControlledList',
+            properties: {
+              title: 'dates:',
+              size: 'small',
+            },
+            blocks: [
+              {
+                id: 'block.properties.disabledDates.dates.$',
+                type: 'DateSelector',
+                properties: {
+                  size: 'small',
+                  label: {
+                    disabled: true,
+                  },
+                },
+              },
+            ],
+          },
+          {
+            id: 'block.properties.disabledDates.ranges',
+            type: 'ControlledList',
+            properties: {
+              title: 'ranges:',
+              size: 'small',
+            },
+            blocks: [
+              {
+                id: 'block.properties.disabledDates.ranges.$',
+                type: 'DateRangeSelector',
+                properties: {
+                  size: 'small',
+                  label: {
+                    disabled: true,
+                  },
+                },
+              },
+            ],
+          },
+        ];
     }
   }
 

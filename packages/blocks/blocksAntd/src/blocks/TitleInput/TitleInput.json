@@ -1,7 +1,12 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "rows": 1
+    }
+  },
   "test": {
     "validation": true,
     "required": true,
@@ -19,7 +24,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Title color."
+          "description": "Title color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "content": {
           "type": "string",
@@ -42,7 +50,10 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
@@ -102,7 +113,10 @@
               "properties": {
                 "icon": {
                   "type": ["string", "object"],
-                  "description": "Edit icon."
+                  "description": "Edit icon.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltip": {
                   "type": "string",
