@@ -1,0 +1,105 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: cli
+    pageTitle: The CLI
+    section: Concepts
+    content:
+      - id: md1
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            The Lowdefy CLI is used to develop a Lowdefy app locally, and to build and deploy apps.
+
+            We recommend running the CLI using `npx`, to always use the latest version:
+
+            ```
+            npx @lowdefy/cli@latest <command>
+            ```
+
+            or, to use a specific version:
+
+            ```
+            npx @lowdefy/cli@version <command>
+            ```
+
+            Alternative, you can install the CLI globally or to a npm project (with a `package.json` file) via npm. The CLI can then be used using `lowdefy` as the executable name:
+
+            ```
+            lowdefy <command>
+            ```
+
+            # CLI commands
+
+            ## build
+
+            The `build` command runs a Lowdefy build. The options are:
+
+            - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
+            - `--output-directory <output-directory>`: Change the directory to which build artifacts are saved. The default is `<base-directory>/.lowdefy/build`.
+
+            ## build-netlify
+            The `build-netlify` command creates a production build for the [Netlify](https://www.netlify.com) web hosting service. It is designed to run as the Netlify build command.
+
+            We recommend setting the build command to `npx @lowdefy/cli@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
+
+            - `--base-directory <base-directory>`: Change base directory. The default is the current working directory (The base directory should rather be configured in the Netlify build settings).
+
+            ## clean-cache
+
+            The Lowdefy CLI caches block metadata, and build and server scripts in the `.lowdefy/cache` directory. These cached files can be removed using the `clean-cache` command.
+
+            - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
+
+            ## dev
+
+            The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory.
+
+            - `--base-directory <base-directory>`: Change base directory. The default is the current working directory.
+            - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+
+            # Telemetry
+
+            The CLI collects usage and error information to help us fix bugs, prioritize features, and understand how Lowdefy is being used.
+
+            To disable all telemetry, you can set by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file):
+
+            ###### `lowdefy.yaml`
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            cli:
+              disableTelemetry: true
+            ```
+
+            We collect the following information:
+
+            - The CLI version.
+            - The Lowdefy version of your app.
+            - A local app id (stored locally in your project folder at `.lowdefy/cli.json`).
+            - The CLI command used.
+            - If the CLI is being used in the Netlify CI environment (when using the `build-netlify` command).
+            - Your IP address.
+            - Error messages and stack traces for any errors.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Overview
+            previous_page_id: overview
+            next_page_title: Lowdefy App Schema
+            next_page_id: lowdefy-schema

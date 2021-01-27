@@ -90,6 +90,11 @@ menus:
             pageId: overview
             properties:
               title: Overview
+          - id: cli
+            type: MenuLink
+            pageId: cli
+            properties:
+              title: The CLI
           - id: lowdefy-schema
             type: MenuLink
             pageId: lowdefy-schema
@@ -283,6 +288,7 @@ pages:
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/overview.yaml
+  - _ref: concepts/cli.yaml
   - _ref: concepts/lowdefy-schema.yaml
   - _ref: concepts/context-and-state.yaml
   - _ref: concepts/blocks.yaml
