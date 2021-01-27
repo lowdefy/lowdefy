@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _list_contexts
     pageTitle: _list_contexts
@@ -24,10 +25,10 @@ _ref:
     description: |
       The `_list_contexts` operator returns an array with the ids of all the `contexts` in the app.
     arguments: |
-      #### any
+      ###### any
       The `_list_contexts` operator returns the array regardless of arguments.
     examples: |
-      #### List all context ids:
+      ###### List all context ids:
       ```yaml
       _list_contexts: true
       ```

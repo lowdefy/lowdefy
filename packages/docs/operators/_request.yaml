@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _request
     pageTitle: _request
@@ -26,10 +27,10 @@ _ref:
 
       It only returns true if all the values in the array are truthy (not `false`, `0`, `null`, `undefined`, or the empty string `""`). Else it returns false.
     arguments: |
-      #### string
+      ###### string
       The id of the request.
     examples: |
-      #### Using a request response:
+      ###### Using a request response:
       ```yaml
       _request: my_request
       ```

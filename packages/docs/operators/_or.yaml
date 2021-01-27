@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _or
     pageTitle: _or
@@ -26,10 +27,10 @@ _ref:
 
       It returns true if any of the values in the array are truthy (not `false`, `0`, `null`, `undefined`, or the empty string `""`). If all the values are falsy, it returns `false`.
     arguments: |
-      #### array
+      ###### array
       An array of values over which to perform a logical or.
     examples: |
-      #### `true` and `false` values:
+      ###### `true` and `false` values:
       ```yaml
       _or:
         - true
@@ -37,7 +38,7 @@ _ref:
       ```
       Returns: `true`
 
-      #### Array of `true` and `false` values:
+      ###### Array of `true` and `false` values:
       ```yaml
       _or:
         - true
@@ -47,8 +48,7 @@ _ref:
       ```
       Returns: `true`
 
-      #### Falsy values values:
-      ```
+      ###### Falsy values values:
       ```yaml
       _or:
         - null
@@ -57,7 +57,7 @@ _ref:
       ```
       Returns: `false`
 
-      #### Truthy values:
+      ###### Truthy values:
       ```yaml
       _or:
         - false

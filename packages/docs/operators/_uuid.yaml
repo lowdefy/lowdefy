@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _uuid
     pageTitle: _uuid
@@ -28,10 +29,10 @@ _ref:
       123e4567-e89b-12d3-a456-426614174000
       ```
     arguments: |
-      #### any
+      ###### any
       The `_uuid` operator generates a UUID regardless of arguments.
     examples: |
-      #### Generate a uuid:
+      ###### Generate a uuid:
       ```yaml
       _uuid: true
       ```

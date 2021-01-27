@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _gte
     pageTitle: _gte
@@ -27,10 +28,10 @@ _ref:
       > The `_gte` operator tests using the javascript greater than or equal operator. You can find a description of the algorithm used to compare two values [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than).
 
     arguments: |
-      #### array
+      ###### array
       An array of two values to compare.
     examples: |
-      #### Two numbers:
+      ###### Two numbers:
       ```yaml
       _gte:
         - 4
@@ -54,7 +55,7 @@ _ref:
       ```
       Returns: `false`
 
-      #### Two strings:
+      ###### Two strings:
       ```yaml
       _gte:
         - "a"

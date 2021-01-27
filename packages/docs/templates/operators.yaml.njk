@@ -11,47 +11,60 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-_ref:
-  path: templates/general.yaml.njk
-  vars:
-    pageId:
-      _var: pageId
-    pageTitle:
-      _var: pageTitle
-    section: Operators
-    content:
-      - id: types
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
-        properties:
-          content:
-            _var: types
-      - id: description
-        type: MarkdownWithHtml
-        properties:
-          content:
-            _var: description
-      - id: arguments_title
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
-        properties:
-          content: '### Arguments'
-      - id: arguments
-        type: MarkdownWithHtml
-        properties:
-          content:
-            _var: arguments
-      - id: examples_title
-        type: Markdown
-        properties:
-          content: '### Examples'
-      - id: examples
-        type: MarkdownWithHtml
-        properties:
-          content:
-            _var: examples
+methods:
+  _var: methods
+page:
+  _ref:
+    path: templates/general.yaml.njk
+    vars:
+      pageId:
+        _var: pageId
+      pageTitle:
+        _var: pageTitle
+      section: Operators
+      content:
+        - id: types
+          type: Markdown
+          style:
+            '.markdown-body':
+              fontSize: 14px
+          properties:
+            content:
+              _var: types
+        - id: description
+          type: MarkdownWithHtml
+          properties:
+            content:
+              _var: description
+        {% if arguments %}
+        - id: arguments_title
+          type: Markdown
+          properties:
+            content: '#### Arguments'
+        - id: arguments
+          type: MarkdownWithHtml
+          properties:
+            content:
+              _var: arguments
+        {% endif %}
+        {% if examples %}
+        - id: examples_title
+          type: Markdown
+          properties:
+            content: '#### Examples'
+        - id: examples
+          type: MarkdownWithHtml
+          properties:
+            content:
+              _var: examples
+        {% endif %}
+        {% if methods %}
+        - id: methods_list
+          type: Markdown
+          properties:
+            content: |
+              # Operator methods:
+              {% for method in methods %}
+              - `{{ method.name }}`
+              {% endfor %}
+        {% endif %}

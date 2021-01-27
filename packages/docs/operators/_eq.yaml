@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _eq
     pageTitle: _eq
@@ -27,10 +28,10 @@ _ref:
       > The `_eq` operator tests for strict equality, and won't do a deep comparison.
 
     arguments: |
-      #### array
+      ###### array
       An array of two values to compare.
     examples: |
-      #### Two strings:
+      ###### Two strings:
       ```yaml
       _eq:
         - "Hello"
@@ -38,7 +39,7 @@ _ref:
       ```
       Returns: `true`
 
-      #### Two numbers:
+      ###### Two numbers:
       ```yaml
       _eq:
         - _sum:
@@ -48,7 +49,7 @@ _ref:
       ```
       Returns: `false`
 
-      #### Arrays are not compared deeply:
+      ###### Arrays are not compared deeply:
       ```yaml
       _eq:
         - [1,2,3]
@@ -56,7 +57,7 @@ _ref:
       ```
       Returns: `false`
 
-      #### Values from "getter" operators are copies and not equal:
+      ###### Values from "getter" operators are copies and not equal:
       ```yaml
       _eq:
         - _state: my_object
