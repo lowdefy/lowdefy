@@ -365,6 +365,23 @@ function makeBlockDefinition(propertyName, propertyDescription) {
       return block;
     case 'number':
       block.type = 'NumberInput';
+      block.properties.step = propertyDescription.step ? propertyDescription.step : 0.1;
+      if (propertyDescription.maximum != null) {
+        block.properties.max = propertyDescription.maximum;
+      }
+      if (propertyDescription.minimum != null) {
+        block.properties.min = propertyDescription.minimum;
+      }
+      return block;
+    case 'integer':
+      block.type = 'NumberInput';
+      block.properties.step = propertyDescription.step ? propertyDescription.step : 1;
+      if (propertyDescription.maximum != null) {
+        block.properties.max = propertyDescription.maximum;
+      }
+      if (propertyDescription.minimum != null) {
+        block.properties.min = propertyDescription.minimum;
+      }
       return block;
     default:
       return block;

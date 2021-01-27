@@ -160,6 +160,9 @@ menus:
           - id: MultipleSelector
             type: MenuLink
             pageId: MultipleSelector
+          - id: NumberInput
+            type: MenuLink
+            pageId: NumberInput
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
@@ -353,6 +356,7 @@ pages:
   - _ref: blocks/input/DateTimeSelector.yaml
   - _ref: blocks/input/MonthSelector.yaml
   - _ref: blocks/input/MultipleSelector.yaml
+  - _ref: blocks/input/NumberInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
   - _ref: blocks/input/Selector.yaml
   - _ref: blocks/input/TextInput.yaml

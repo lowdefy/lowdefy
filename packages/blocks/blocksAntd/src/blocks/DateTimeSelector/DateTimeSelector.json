@@ -59,7 +59,7 @@
           "description": "Format in which to parse the date value, eg. \"DD MMMM YYYY\" will parse a date value of 1999-12-31 as \"31 December 1999\". The format has to conform to moment.js formats."
         },
         "hourStep": {
-          "type": "number",
+          "type": "integer",
           "default": 1,
           "minimum": 1,
           "description": "Hour intervals to show in the time selector."
@@ -127,7 +127,7 @@
           }
         },
         "minuteStep": {
-          "type": "number",
+          "type": "integer",
           "default": 5,
           "minimum": 1,
           "description": "Minute intervals to show in the time selector."
@@ -138,7 +138,7 @@
           "description": "Placeholder text inside the block before user types input."
         },
         "secondStep": {
-          "type": "number",
+          "type": "integer",
           "default": 5,
           "minimum": 1,
           "description": "Minute intervals to show in the time selector."

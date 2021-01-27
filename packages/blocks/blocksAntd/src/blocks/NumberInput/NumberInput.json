@@ -87,12 +87,10 @@
         },
         "min": {
           "type": "number",
-          "default": "-Infinity",
           "description": "Minimum value allowed by the block."
         },
         "max": {
           "type": "number",
-          "default": "Infinity",
           "description": "Maximum value allowed by the block."
         },
         "placeholder": {
