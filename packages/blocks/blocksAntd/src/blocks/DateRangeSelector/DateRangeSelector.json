@@ -1,7 +1,9 @@
 {
   "valueType": "array",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -46,6 +48,9 @@
               "type": "array",
               "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects."
             }
+          },
+          "docs": {
+            "displayType": "disabledDates"
           }
         },
         "format": {
@@ -55,7 +60,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -93,12 +101,53 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "placeholder": {
           "type": "array",
           "default": ["Start Date", "End Date"],
-          "description": "Placeholder text inside the block before user types input."
+          "description": "Placeholder text inside the block before user types input.",
+          "docs": {
+            "displayType": "manual",
+            "block": {
+              "id": "block_properties_placeholder",
+              "layout": { "_global": "settings_input_layout" },
+              "type": "Label",
+              "properties": {
+                "title": "placeholder",
+                "span": 8,
+                "align": "right",
+                "extra": "Placeholder text inside the block before user types input."
+              },
+              "blocks": [
+                {
+                  "id": "block.properties.placeholder.0",
+                  "layout": { "span": 12 },
+                  "type": "TextInput",
+                  "properties": {
+                    "size": "small",
+                    "label": {
+                      "disabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "block.properties.placeholder.1",
+                  "layout": { "span": 12 },
+                  "type": "TextInput",
+                  "properties": {
+                    "size": "small",
+                    "label": {
+                      "disabled": true
+                    }
+                  }
+                }
+              ]
+            }
+          }
         },
         "separator": {
           "type": "string",
@@ -114,7 +163,10 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "CalendarOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "title": {
           "type": "string",

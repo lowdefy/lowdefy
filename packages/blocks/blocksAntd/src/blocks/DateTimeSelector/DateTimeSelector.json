@@ -1,7 +1,9 @@
 {
   "valueType": "date",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -46,6 +48,9 @@
               "type": "array",
               "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects."
             }
+          },
+          "docs": {
+            "displayType": "disabledDates"
           }
         },
         "format": {
@@ -61,7 +66,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -113,6 +121,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "minuteStep": {
@@ -156,7 +167,10 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "CalendarOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "timeFormat": {
           "type": "string",

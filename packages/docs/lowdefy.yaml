@@ -145,9 +145,24 @@ menus:
           - id: CheckboxSelector
             type: MenuLink
             pageId: CheckboxSelector
+          - id: DateRangeSelector
+            type: MenuLink
+            pageId: DateRangeSelector
+          - id: DateSelector
+            type: MenuLink
+            pageId: DateSelector
+          - id: DateTimeSelector
+            type: MenuLink
+            pageId: DateTimeSelector
+          - id: MonthSelector
+            type: MenuLink
+            pageId: MonthSelector
           - id: MultipleSelector
             type: MenuLink
             pageId: MultipleSelector
+          - id: NumberInput
+            type: MenuLink
+            pageId: NumberInput
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
@@ -157,6 +172,9 @@ menus:
           - id: TextInput
             type: MenuLink
             pageId: TextInput
+          - id: WeekSelector
+            type: MenuLink
+            pageId: WeekSelector
       - id: blocks_display
         type: MenuGroup
         properties:
@@ -333,10 +351,16 @@ pages:
   - _ref: blocks/input/AutoComplete.yaml
   - _ref: blocks/input/ButtonSelector.yaml
   - _ref: blocks/input/CheckboxSelector.yaml
+  - _ref: blocks/input/DateRangeSelector.yaml
+  - _ref: blocks/input/DateSelector.yaml
+  - _ref: blocks/input/DateTimeSelector.yaml
+  - _ref: blocks/input/MonthSelector.yaml
   - _ref: blocks/input/MultipleSelector.yaml
+  - _ref: blocks/input/NumberInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
   - _ref: blocks/input/Selector.yaml
   - _ref: blocks/input/TextInput.yaml
+  - _ref: blocks/input/WeekSelector.yaml
 
   - _ref: blocks/display/Button.yaml
 

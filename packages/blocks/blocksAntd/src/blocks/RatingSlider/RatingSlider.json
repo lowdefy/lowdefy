@@ -1,7 +1,9 @@
 {
   "valueType": "number",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -18,7 +20,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Rating slider color."
+          "description": "Rating slider color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -27,7 +32,10 @@
         },
         "disableIcons": {
           "type": "boolean",
-          "description": "Hides minimum and maximum icons."
+          "description": "Hides minimum and maximum icons.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "disableNotApplicable": {
           "type": "boolean",
@@ -36,16 +44,25 @@
         "minIcon": {
           "type": ["string", "object"],
           "default": "FrownOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "maxIcon": {
           "type": ["string", "object"],
           "default": "SmileOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -97,6 +114,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
 

@@ -1,7 +1,9 @@
 {
   "valueType": "boolean",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -19,7 +21,10 @@
         "checkedIcon": {
           "type": ["string", "object"],
           "default": "CheckOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is checked (true)."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is checked (true).",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "checkedText": {
           "type": "string",
@@ -27,7 +32,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Switch checked color."
+          "description": "Switch checked color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -36,7 +44,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -88,6 +99,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "size": {
@@ -102,7 +116,10 @@
         "uncheckedIcon": {
           "type": ["string", "object"],
           "default": "CloseOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is unchecked (false)."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "uncheckedText": {
           "type": "string",

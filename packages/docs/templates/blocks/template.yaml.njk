@@ -175,31 +175,30 @@ blocks:
                                   - _state: style_block_input
                                   - ''
                             properties:
-                              _log:
-                                _ref:
-                                  path: templates/blocks/filter_default_value.yaml
-                                  vars:
-                                    value:
-                                      _object.assign:
-                                        - _var: properties_getter
-                                        - label:
-                                            _ref:
-                                              path: templates/blocks/filter_default_value.yaml
-                                              vars:
-                                                value:
-                                                  _get:
-                                                    key: label
-                                                    from:
-                                                      _var: properties_getter
-                                                default_value:
-                                                  span: null
-                                                  align: left
-                                                  inline: false
-                                                  disabled: false
-                                                  colon: true
-                                                  extra: null
-                                    default_value:
-                                      _var: default_properties
+                              _ref:
+                                path: templates/blocks/filter_default_value.yaml
+                                vars:
+                                  value:
+                                    _object.assign:
+                                      - _var: properties_getter
+                                      - label:
+                                          _ref:
+                                            path: templates/blocks/filter_default_value.yaml
+                                            vars:
+                                              value:
+                                                _get:
+                                                  key: label
+                                                  from:
+                                                    _var: properties_getter
+                                              default_value:
+                                                span: null
+                                                align: left
+                                                inline: false
+                                                disabled: false
+                                                colon: true
+                                                extra: null
+                                  default_value:
+                                    _var: default_properties
                           default_value:
                             required: false
                             visible: true

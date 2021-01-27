@@ -1,7 +1,9 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph"
+  },
   "test": {
     "validation": true,
     "required": true,
@@ -73,7 +75,10 @@
               "properties": {
                 "icon": {
                   "type": ["string", "object"],
-                  "description": "Edit icon."
+                  "description": "Edit icon.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltip": {
                   "type": "string",
