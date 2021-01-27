@@ -13,27 +13,21 @@
 # limitations under the License.
 
 _get:
-  key: 0.block
+  key: 0.value
   from:
     _mql.aggregate:
       on:
-        - block:
+        - value:
             _var:
-              name: block
+              name: value
               default: {}
       pipeline:
         - $project:
-            block.id: $block.id
-            block.type: $block.type
-            block.style: $block.style
-            block.visible: $block.visible
-            block.required: $block.required
-            block.areas: $block.areas
-            block.layout:
+            value:
               $arrayToObject:
                 $filter:
                   input:
-                    $objectToArray: $block.layout
+                    $objectToArray: $value
                   as: x
                   cond:
                     $and:
@@ -48,34 +42,14 @@ _get:
                                   v: $$x.v
                                 - $objectToArray:
                                     _var:
-                                      name: block.default_layout
+                                      name: default_value
                                       default: {}
-            block.properties:
-              $arrayToObject:
-                $filter:
-                  input:
-                    $objectToArray: $block.properties
-                  as: x
-                  cond:
-                    $and:
-                      - $not:
-                          $eq:
-                            - $$x.v
-                            - null
-                      - $not:
-                          $in:
-                            - k: $$x.k
-                              v: $$x.v
-                            - $objectToArray:
-                                _var:
-                                  name: block.default_properties
-                                  default: {}
         - $project:
-            block:
+            value:
               $arrayToObject:
                 $filter:
                   input:
-                    $objectToArray: $block
+                    $objectToArray: $value
                   as: x
                   cond:
                     $and:
@@ -88,13 +62,5 @@ _get:
                             - $in:
                                 - k: $$x.k
                                   v: $$x.v
-                                - - k: properties
+                                - - k: label
                                     v: {}
-                                  - k: layout
-                                    v: {}
-                                  - k: style
-                                    v: {}
-                                  - k: visible
-                                    v: true
-                                  - k: required
-                                    v: false

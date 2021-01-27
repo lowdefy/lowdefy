@@ -1,7 +1,9 @@
 {
   "valueType": "any",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -19,7 +21,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Selected button color."
+          "description": "Selected button color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -28,7 +33,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "options": {
           "type": "array",
@@ -78,6 +86,9 @@
                 }
               }
             ]
+          },
+          "docs": {
+            "displayType": "optionsSelector"
           }
         },
         "size": {
@@ -136,6 +147,9 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "title": {

@@ -15,36 +15,44 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: AutoComplete
-    value_type: string
+    block_type: Selector
+    value_type: any
     category: input
+    init_state_values:
+      __optionsType: Label-value pairs
     init_property_values:
       options:
-        - one 
-        - two
-    description_content: |
-      The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
+        - label: First 
+          value: one
+          primitive: one
+        - label: Second
+          value: two
+          primitive: two
 
-      >If you need the user to select only from a list of options, use a block like the `Selector` block instead.
+    description_content: |
+      The `Selector` block is a drop down selector that allows a user to select a single value from a set of options.
+
+      The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `RadioSelector`.
+
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+        path: ../blocks/blocksAntd/src/blocks/Selector/Selector.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+        path: ../blocks/blocksAntd/src/blocks/Selector/Selector.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+        path: ../blocks/blocksAntd/src/blocks/Selector/Selector.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
     available_actions_description: |
       ###### onChange
       Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
 
     examples:
-      - title: Autocomplete input
-        properties: '{"title": "Autocomplete input", "options": ["Option 1", "Option 2"]}'
+      - title: Selector input
+        properties: '{"title": "Selector input", "options": ["Option 1", "Option 2"]}'
