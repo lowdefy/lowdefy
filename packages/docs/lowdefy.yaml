@@ -263,6 +263,9 @@ menus:
           - id: _base64
             type: MenuLink
             pageId: _base64
+          - id: _date
+            type: MenuLink
+            pageId: _date
           - id: _diff
             type: MenuLink
             pageId: _diff
@@ -308,6 +311,9 @@ menus:
           - id: _nunjucks
             type: MenuLink
             pageId: _nunjucks
+          - id: _object
+            type: MenuLink
+            pageId: _object
           - id: _operator
             type: MenuLink
             pageId: _operator
@@ -326,6 +332,9 @@ menus:
           - id: _request
             type: MenuLink
             pageId: _request
+          - id: _state
+            type: MenuLink
+            pageId: _state
           - id: _subtract
             type: MenuLink
             pageId: _subtract
@@ -404,6 +413,7 @@ pages:
 
   - _ref: operators/_and.yaml
   - _ref: operators/_base64.yaml
+  - _ref: operators/_date.yaml
   - _ref: operators/_diff.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
@@ -419,12 +429,14 @@ pages:
   - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
+  - _ref: operators/_object.yaml
   - _ref: operators/_operator.yaml
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
   - _ref: operators/_random.yaml
   - _ref: operators/_regex.yaml
   - _ref: operators/_request.yaml
+  - _ref: operators/_state.yaml
   - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
   - _ref: operators/_type.yaml
