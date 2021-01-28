@@ -23,7 +23,7 @@ _ref:
       (value: any): string
       ```
     description: |
-      The `_uuid` operator a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that can be used as an id that is, for practical purposes, unique. It looks like:
+      The `_uuid` operator creates a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that can be used as an id that is, for practical purposes, unique. It looks like:
 
       ```
       123e4567-e89b-12d3-a456-426614174000

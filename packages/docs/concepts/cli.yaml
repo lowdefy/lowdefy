@@ -76,7 +76,7 @@ _ref:
 
             The CLI collects usage and error information to help us fix bugs, prioritize features, and understand how Lowdefy is being used.
 
-            zll telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file):
+            All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file):
 
             ###### `lowdefy.yaml`
             ```yaml
