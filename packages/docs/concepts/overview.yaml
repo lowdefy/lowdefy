@@ -23,7 +23,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve a app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then use the build artifacts to serve the app.
+            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then use the build artifacts to serve the app.
 
             You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently you can host Lowdefy apps on Netlify, and as a Docker container.
 
@@ -38,5 +38,5 @@ _ref:
           vars:
             previous_page_title: Tutorial
             previous_page_id: tutorial-setup
-            next_page_title: Lowdefy schema
-            next_page_id: lowdefy-schema
+            next_page_title: The CLI
+            next_page_id: cli

@@ -53,9 +53,9 @@ _ref:
 
             - [`_url_query`](/_url_query): The `urlQuery` object is used to access variables set in the url. Url query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onEnter`](/events-and-actions) event. __Note that any variables set to `urlQuery` will be publicly visible__.
 
-            - [`_input`](/_input): The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. This variable set to the `input` object are not written to the url, so they are not visible publicly but also cannot be used to share the data in a link since a `input` object is only consistent between on `context` and the next to which it links. A `input` object is set to the `input` field of the [`Link`](/Link) action when linking from one page `context` to the next.
+            - [`_input`](/_input): The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. This variable set to the `input` object are not written to the url, so they are not visible publicly but also cannot be used to share the data in a link since a `input` object is only consistent between one `context` and the next to which it links. A `input` object is set to the `input` field of the [`Link`](/Link) action when linking from one page `context` to the next.
 
-            - [`_media`](/_media): The `media` object contains some information about the client screen size etc. This is useful in order add additional responsive logic to a page.
+            - [`_media`](/_media): The `media` object contains some information about the client screen size etc. This is useful in order to add additional responsive logic to a page.
 
       - _ref:
           path: templates/navigation_buttons.yaml

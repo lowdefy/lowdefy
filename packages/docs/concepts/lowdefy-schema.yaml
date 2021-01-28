@@ -94,7 +94,7 @@ _ref:
                   - id: top-group
                     properties:
                       title: Group
-                      icon: groupOutlined
+                      icon: GroupOutlined
                     links:
                       - id: page2
                         type: MenuLink

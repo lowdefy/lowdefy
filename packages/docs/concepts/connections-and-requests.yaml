@@ -26,10 +26,10 @@ _ref:
             ### TLDR
               - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
               - `requests` use connections to make a call to the connected external services.
-              - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secreted into you config or commit secrets to your config source control.
+              - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
 
             -----------
-            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record, executing a query or calling a API end-point.
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record, executing a query or calling a API end-point.
 
       - id: alert2
         type: Alert
@@ -70,7 +70,7 @@ _ref:
               # ...
             ```
 
-            Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require are not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
+            Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require is not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
 
             # Requests
 
