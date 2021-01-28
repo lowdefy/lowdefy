@@ -60,7 +60,7 @@
     "jest": "26.6.3",
     "js-yaml": "4.0.0",
     "less": "3.13.0",
-    "less-loader": "7.1.0",
+    "less-loader": "7.3.0",
     "path-browserify": "1.0.1",
     "process": "0.11.10",
     "react-markdown": "5.0.3",
