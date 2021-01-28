@@ -21,7 +21,12 @@ _ref:
     types: |
       ```
       (type: string): string | number
-      (arguments: {type: string, length?: number, max?: number, min?: number}): string | number
+      (arguments: {
+        type: string,
+        length?: number,
+        max?: number,
+        min?: number
+      }): string | number
       ```
     description: |
       The `_random` operator returns a random string or number. The types it accepts are `string`, `integer`, or `float`.

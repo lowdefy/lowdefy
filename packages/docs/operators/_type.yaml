@@ -21,7 +21,11 @@ _ref:
     types: |
       ```
       (type: enum): boolean
-      (arguments: {type: string, on?: any, key?: string}): boolean
+      (arguments: {
+        type: string,
+        on?: any,
+        key?: string
+      }): boolean
       ```
     description: |
       The `_type` operator performs a type test on an object, and returns true if the object is of the specified type.

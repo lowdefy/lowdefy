@@ -13,95 +13,97 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/actions.yaml.njk
   vars:
     pageId: Link
     pageTitle: Link
-    section: Actions
-    content:
-      - id: markdown
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
-        properties:
-          content: |
-            The `Link` action is used to link a user to another page. An input can be passed to the next page using either the
-            `urlQuery`, which is visible to the user, but persists if the browser is refreshed, or by using the `input` object, which is not
-            visible to the user.
+    types: |
+      ```
+      (pageId: string): void
+      (params: {
+        pageId?: string,
+        home?: boolean,
+        url?: string,
+        newWindow?:boolean,
+        input?: object,
+        urlQuery? object
+      }): void
+      ```
+    description: |
+      The `Link` action is used to link a user to another page. An input can be passed to the next page using either the
+      `urlQuery`, which is visible to the user, but persists if the browser is refreshed, or by using the `input` object, which is not
+      visible to the user.
+    params: |
+      ###### string
+      The pageId of a page in the app to link to.
 
-            ### Parameters
+      ###### object
+      - `pageId: string`: The pageId of a page in the app to link to.
+      - `home: boolean`: Link to the home page. This is either the configured public or authenticated homepage, or the first page in the default menu visible to the user.
+      - `url: string`: Link to an external url.
+      - `newWindow: boolean`: Open the link in a new window.
+      - `input: object`: Object to set as the input for the linked page.
+      - `urlQuery: object`: Object to set as the urlQuery for the linked page.
 
-            As a shorthand, only the pageId can be specified as a string. Else an object with the following parameters can be specified:
-            - `pageId`: _String_ - The pageId of a page in the app to link to.
-            - `home`: _Boolean_ - Link to the home page. This is either the configured public or authenticated homepage, or the first page in the default menu visible to the user.
-            - `url`: _String_ - Link to an external url.
-            - `newWindow`: _Boolean_ - Open the link in a new window.
-            - `urlQuery`: _Object_ - Object to set as the urlQuery for the linked page.
-            - `input`: _Object_ - Object to set as the input for the linked page.
+    examples: |
+      ###### Shorthand, only specify pageId as string:
+      ```yaml
+      - id: shorthand
+        type: Link
+        params: my_page_id
+      ```
 
-            ### Examples
+      ###### Specify pageId:
+      ```yaml
+      - id: link_page_id
+        type: Link
+        params:
+          pageId: myPageId
+      ```
 
-            Shorthand, only specify pageId as string:
+      ###### Link to home page:
+      ```yaml
+      - id: link_home
+        type: Link
+        params:
+          home: true
+      ```
 
-            ```
-            - id: shorthand
-              type: Link
-              params: my_page_id
-            ```
+      ###### Link to an external url:
+      ```yaml
+      - id: link_url
+        type: Link
+        params:
+          url: www.lowdefy.com
+      ```
 
-            Specify pageId:
+      ###### Open a link in a new window:
+      ```yaml
+      - id: link_new_window
+        type: Link
+        params:
+          pageId: my_page_id
+          newWindow: true
+      ```
 
-            ```
-            - id: link_page_id
-              type: Link
-              params:
-                pageId: myPageId
-            ```
+      ###### Set the urlQuery of the page that is linked to:
+      ```yaml
+      - id: link_url_query
+        type: Link
+        params:
+          pageId: my_page_id
+          urlQuery:
+            id:
+              _state: id
+      ```
 
-            Link to home page:
-            ```
-            - id: link_home
-              type: Link
-              params:
-                home: true
-            ```
-
-            Link to an external url:
-            ```
-            - id: link_url
-              type: Link
-              params:
-                url: www.lowdefy.com
-            ```
-
-            Open a link in a new window:
-            ```
-            - id: link_new_window
-              type: Link
-              params:
-                pageId: my_page_id
-                newWindow: true
-            ```
-
-            Set the urlQuery of the page that is linked to:
-            ```
-            - id: link_url_query
-              type: Link
-              params:
-                pageId: my_page_id
-                urlQuery:
-                  id:
-                    _state: id
-            ```
-
-            Set the input of the page that is linked to:
-            ```
-            - id: link_input
-              type: Link
-              params:
-                pageId: my_page_id
-                input:
-                  id:
-                    _args: row.id
-            ```
+      ###### Set the input of the page that is linked to:
+      ```yaml
+      - id: link_input
+        type: Link
+        params:
+          pageId: my_page_id
+          input:
+            id:
+              _args: row.id
+      ```

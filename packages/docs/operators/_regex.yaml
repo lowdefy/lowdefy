@@ -21,7 +21,12 @@ _ref:
     types: |
       ```
       (pattern: string): boolean
-      (arguments: {pattern: string, on?: string, key?: string, flags?: string}): boolean
+      (arguments: {
+        pattern: string,
+        on?: string,
+        key?: string,
+        flags?: string
+      }): boolean
       ```
     description: |
       The `_regex` operator performs a regex test on a string, and returns `true` if there is a match.
