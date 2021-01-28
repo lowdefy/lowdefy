@@ -1,7 +1,9 @@
 {
   "valueType": "number",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -23,7 +25,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "label": {
           "type": "object",
@@ -75,16 +80,17 @@
               "type": "object",
               "description": "Css style to applied to label feedback."
             }
+          },
+          "docs": {
+            "displayType": "label"
           }
         },
         "min": {
           "type": "number",
-          "default": "-Infinity",
           "description": "Minimum value allowed by the block."
         },
         "max": {
           "type": "number",
-          "default": "Infinity",
           "description": "Maximum value allowed by the block."
         },
         "placeholder": {

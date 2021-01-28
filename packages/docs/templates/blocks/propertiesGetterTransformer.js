@@ -18,12 +18,16 @@ function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
   const styleProperties = [];
   const optionsSelector = [];
+  const manual = [];
   Object.keys(blockProperties).forEach((key) => {
     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'style') {
       styleProperties.push(key);
     }
     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'optionsSelector') {
       optionsSelector.push(key);
+    }
+    if (blockProperties[key].docs && blockProperties[key].docs.getter != null) {
+      manual.push(key);
     }
   });
   const styleArray = styleProperties.map((name) => {
@@ -58,9 +62,14 @@ function transformer(obj) {
     };
     return ret;
   });
+  const manualArray = manual.map((name) => {
+    const ret = {};
+    ret[name] = blockProperties[name].docs.getter;
+    return ret;
+  });
   const assignArray = [{ _state: 'block.properties' }];
   return {
-    '_object.assign': assignArray.concat(styleArray, optionsArray),
+    '_object.assign': assignArray.concat(styleArray, optionsArray, manualArray),
   };
 }
 

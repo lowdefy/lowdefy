@@ -18,7 +18,7 @@ function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
   const defaultValues = {};
   Object.keys(blockProperties).forEach((key) => {
-    if (blockProperties[key].default || blockProperties[key].default === false) {
+    if (blockProperties[key].default != null) {
       defaultValues[key] = blockProperties[key].default;
     }
     if (key === 'label') {

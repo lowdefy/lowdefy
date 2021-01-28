@@ -29,19 +29,19 @@ _ref:
             - If an action errors, the actions that follow are skipped.
             - Operators used in action `params` are evaluated right before the action is executed.
             - Actions have a `skip` field that can be used to skip action execution.
-            - The `onInit` event is triggered the first time a context is mounted and keeps the page in loading until all actions to finish.
-            - The `onEnter` event is triggered the every time a context is mounted and keeps the page in loading until all actions to finish.
-            - The `onInitAsync` event is triggered the first time a context is mounted and does not keeps the page in loading.
-            - The `onEnterAsync` event is triggered the every time a context is mounted and does not keeps the page in loading.
+            - The `onInit` event is triggered the first time a context is mounted and keeps the page in loading until all actions have finished.
+            - The `onEnter` event is triggered the every time a context is mounted and keeps the page in loading until all actions have finished.
+            - The `onInitAsync` event is triggered the first time a context is mounted and does not keep the page in loading.
+            - The `onEnterAsync` event is triggered the every time a context is mounted and does not keep the page in loading.
 
             -----------
 
 
-            Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified ar a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onEnter` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
+            Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified or a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onEnter` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
 
             _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for an event defined by a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed.
 
-            Each action have an `id`, unique to that action chain, and a `type` field which are required.
+            Each action has an `id`, unique to that action chain, and a `type` field which are required.
 
             Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have arguments relating to that event, like what the new value of an input is, or the row that was clicked in a table. These arguments can be used in the action `params` using the [`_args`](/_args) operator.
 
@@ -53,7 +53,7 @@ _ref:
 
             - `id: string`: __Required__ - A identifier for the action. It must be unique within the action chain it is defined in.
             - `type: string`: __Required__ - The action type to be used. It must be a valid action type.
-            - `skip: boolean`: __Required__ - The `id` of the connection that should be used.
+            - `skip: boolean`: The test that determines whether the action will be skipped or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
             - `params: object`: The input passed to the action. __Operators are evaluated__.
 
             ###### Events and actions definition example:
