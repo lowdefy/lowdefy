@@ -2745,8 +2745,8 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -2793,8 +2793,8 @@ __metadata:
     react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
     yaml-jest: 1.0.5
@@ -2829,8 +2829,8 @@ __metadata:
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
     yaml-jest: 1.0.5
@@ -2872,8 +2872,8 @@ __metadata:
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
     yaml-jest: 1.0.5
@@ -2912,8 +2912,8 @@ __metadata:
     react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
     yaml-jest: 1.0.5
@@ -2942,8 +2942,8 @@ __metadata:
     js-yaml: 4.0.0
     json5: 2.1.3
     uuid: 8.3.2
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -2984,8 +2984,8 @@ __metadata:
     reload: 3.1.1
     style-loader: 2.0.0
     uuid: 8.3.2
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   bin:
     lowdefy: dist/index.js
   languageName: unknown
@@ -3043,8 +3043,8 @@ __metadata:
     "@lowdefy/graphql": 3.4.0
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -3079,8 +3079,8 @@ __metadata:
     mingo: 4.1.0
     moment: 2.29.1
     mongodb: 3.6.3
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -3130,8 +3130,8 @@ __metadata:
     react-syntax-highlight: 15.3.1
     react-test-renderer: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     yaml-jest: 1.0.5
     yaml-loader: 0.6.0
@@ -3230,8 +3230,8 @@ __metadata:
     react-router-dom: 5.2.0
     serve: 11.3.2
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
     webpack-dev-server: 3.11.2
     webpack-merge: 5.7.3
   languageName: unknown
@@ -3263,8 +3263,8 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -3293,8 +3293,8 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -3321,8 +3321,8 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     style-loader: 2.0.0
-    webpack: 5.14.0
-    webpack-cli: 4.3.1
+    webpack: 5.18.0
+    webpack-cli: 4.4.0
   languageName: unknown
   linkType: soft
 
@@ -3889,7 +3889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:*":
+"@types/estree@npm:*, @types/estree@npm:^0.0.46":
   version: 0.0.46
   resolution: "@types/estree@npm:0.0.46"
   checksum: 69fcf647706f5b6a475ec2f9aacf73b40866f577eef6c6f33de95cc3b4897381c2a8257646f13cd5d91fffc5debfe6289b6864ba29ad349ae68703f8b993c9f6
@@ -4547,6 +4547,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webpack-cli/configtest@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@webpack-cli/configtest@npm:1.0.0"
+  peerDependencies:
+    webpack: 4.x.x || 5.x.x
+    webpack-cli: 4.x.x
+  checksum: 7aac463cd48f42c523e4d5af540cdb00cb5ff867c471160e0c96845db5b3ec80f4c572128bd6911f2954507ee4a5b8aaa983a427b3a053a09d20743ced59a549
+  languageName: node
+  linkType: hard
+
 "@webpack-cli/info@npm:^1.2.1":
   version: 1.2.1
   resolution: "@webpack-cli/info@npm:1.2.1"
@@ -4558,15 +4568,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webpack-cli/serve@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "@webpack-cli/serve@npm:1.2.1"
+"@webpack-cli/serve@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@webpack-cli/serve@npm:1.2.2"
   peerDependencies:
     webpack-cli: 4.x.x
   peerDependenciesMeta:
     webpack-dev-server:
       optional: true
-  checksum: b82245b17af0ca956cfb6bd153a98d69c89dfdbf795c2c9c17d1c51726428a77c6ce937a58716db94c44688d2bc7efed05b146b9e72376b0c88f7c390b91f0f2
+  checksum: 86dab170ba2f516e56005bc9a58d7e8c453064b897ed11fe18db23e02e69642ff61a9682e53593471285f3122eef276a46ee54ffb3c1a9608f073e28dc4e39f7
   languageName: node
   linkType: hard
 
@@ -20330,13 +20340,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:4.3.1":
-  version: 4.3.1
-  resolution: "webpack-cli@npm:4.3.1"
+"webpack-cli@npm:4.4.0":
+  version: 4.4.0
+  resolution: "webpack-cli@npm:4.4.0"
   dependencies:
     "@discoveryjs/json-ext": ^0.5.0
+    "@webpack-cli/configtest": ^1.0.0
     "@webpack-cli/info": ^1.2.1
-    "@webpack-cli/serve": ^1.2.1
+    "@webpack-cli/serve": ^1.2.2
     colorette: ^1.2.1
     commander: ^6.2.0
     enquirer: ^2.3.6
@@ -20346,7 +20357,7 @@ fsevents@^1.2.7:
     interpret: ^2.2.0
     rechoir: ^0.7.0
     v8-compile-cache: ^2.2.0
-    webpack-merge: ^4.2.2
+    webpack-merge: ^5.7.3
   peerDependencies:
     webpack: 4.x.x || 5.x.x
   peerDependenciesMeta:
@@ -20362,7 +20373,7 @@ fsevents@^1.2.7:
       optional: true
   bin:
     webpack-cli: bin/cli.js
-  checksum: 5765fc1fd2c98cc11288dc466f3c003c5f7e764fe656b25ac1d6a9eb95131c9529e2c65dd0f9c06cef6a928ced691c945eab90603c69b85c823049ebce4c239f
+  checksum: 0d1328369a1babcb5e90896d9579c13c18696f283e92feb29131fa9d64986e4359df37772a2a3ec15159b89efe5ab2ad77d16e2b735a458d10bb729aeadcecbc
   languageName: node
   linkType: hard
 
@@ -20439,22 +20450,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:5.7.3":
+"webpack-merge@npm:5.7.3, webpack-merge@npm:^5.7.3":
   version: 5.7.3
   resolution: "webpack-merge@npm:5.7.3"
   dependencies:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
   checksum: 5e28f66f597cb34ac5f7ca0881cd3f106265091e47d7cda9ae00f4902283efdfdab36a70e34a9cf7b1467aac021178981513393b7dcddbb84caf11920f269379
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:^4.2.2":
-  version: 4.2.2
-  resolution: "webpack-merge@npm:4.2.2"
-  dependencies:
-    lodash: ^4.17.15
-  checksum: 038c6d8ba45f538ce8e4505a8a3d90fbd2e554ba2065bacffe4d7cff0229cce9f0d983bf56061f8e0fef86c711da7232f88681aab285c06673b3916b1040cd9e
   languageName: node
   linkType: hard
 
@@ -20478,7 +20480,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:5.14.0":
+"webpack@npm:*":
   version: 5.14.0
   resolution: "webpack@npm:5.14.0"
   dependencies:
@@ -20512,6 +20514,43 @@ fsevents@^1.2.7:
   bin:
     webpack: bin/webpack.js
   checksum: e2edf306cb12b7b0a0e25c90569ceb8826c3ba580f8a7956af8914cb198637d22727f4b89fe881d93571aacacc229f1c3b616c264deed3b87942422fd7c00218
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.18.0":
+  version: 5.18.0
+  resolution: "webpack@npm:5.18.0"
+  dependencies:
+    "@types/eslint-scope": ^3.7.0
+    "@types/estree": ^0.0.46
+    "@webassemblyjs/ast": 1.11.0
+    "@webassemblyjs/wasm-edit": 1.11.0
+    "@webassemblyjs/wasm-parser": 1.11.0
+    acorn: ^8.0.4
+    browserslist: ^4.14.5
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.7.0
+    es-module-lexer: ^0.3.26
+    eslint-scope: ^5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.4
+    json-parse-better-errors: ^1.0.2
+    loader-runner: ^4.2.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    pkg-dir: ^5.0.0
+    schema-utils: ^3.0.0
+    tapable: ^2.1.1
+    terser-webpack-plugin: ^5.1.1
+    watchpack: ^2.0.0
+    webpack-sources: ^2.1.1
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: fa628657f96802f3d603dfcb33664acc03544f12ac7e7c041e3c5a8f4c3cd3c2516d734b43ccd35bd0143d263b11345c396d4be17d4edc50f6ba7c8b9f43de27
   languageName: node
   linkType: hard
 
