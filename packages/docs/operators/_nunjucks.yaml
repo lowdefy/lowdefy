@@ -42,6 +42,14 @@ _ref:
       Returns: `"Hello Steven"` if the value of name in state is `"Steven"`.
 
       ###### Populate a markdown template with different values:
+      Assuming `get_items` returns:
+      ```yaml
+      - name: Coca Cola
+        description: The original.
+      - name: Pepsi
+        description: The same but different.
+      ```
+
       ```yaml
       _nunjucks:
         template: |
@@ -51,8 +59,14 @@ _ref:
           - {{ item.name }}: {{ item.description }}
           {% endfor %}
         on:
-          title:
-            _state: title
+          title: Soft drinks
           items:
             _request: get_items
+      ```
+      Returns:
+      ```markdown
+      ### Soft drinks
+
+      - Coca Cola: The original.
+      - Pepsi: The same but different.
       ```

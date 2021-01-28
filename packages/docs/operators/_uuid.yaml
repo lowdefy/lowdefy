@@ -20,20 +20,23 @@ _ref:
     pageTitle: _uuid
     types: |
       ```
-      (value: any): string
+      (void): string
       ```
     description: |
-      The `_uuid` operator creates a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that can be used as an id that is, for practical purposes, unique. It looks like:
+      The `_uuid` operator creates a version 4 [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). A UUID is a random identifier that is, for all practical purposes, unique. It looks like:
 
       ```
       123e4567-e89b-12d3-a456-426614174000
       ```
     arguments: |
-      ###### any
-      The `_uuid` operator generates a UUID regardless of arguments.
+      The `_uuid` operator does not take any arguments.
     examples: |
       ###### Generate a uuid:
       ```yaml
-      _uuid: true
+      _uuid:
+      ```
+
+      ```yaml
+      _uuid: null
       ```
       Returns: A version 4 UUID.
