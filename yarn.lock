@@ -2978,7 +2978,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 4.0.0
     opener: 1.5.2
-    ora: 5.2.0
+    ora: 5.3.0
     react: 17.0.1
     react-dom: 17.0.1
     reload: 3.1.1
@@ -15086,9 +15086,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ora@npm:5.2.0":
-  version: 5.2.0
-  resolution: "ora@npm:5.2.0"
+"ora@npm:5.3.0":
+  version: 5.3.0
+  resolution: "ora@npm:5.3.0"
   dependencies:
     bl: ^4.0.3
     chalk: ^4.1.0
@@ -15098,7 +15098,7 @@ fsevents@^1.2.7:
     log-symbols: ^4.0.0
     strip-ansi: ^6.0.0
     wcwidth: ^1.0.1
-  checksum: 67680ed6218ceac46c0076425821d93c44f643e6603e1c87332572ebdf90cca693706b9b5040ecf32a59ade8858fd747ee4d91d01fdec82adc1a6e2e988d7629
+  checksum: 892cfd7a893bce2ba1203369abb8f197fc8e54c780a9a7398c021cfa202f18d15d64b1f1eca1d330eec52396ee7cdd9f7e97a7e6a004d6f943c4de646f80fd73
   languageName: node
   linkType: hard
 

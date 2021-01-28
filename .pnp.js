@@ -4411,7 +4411,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
             ["opener", "npm:1.5.2"],
-            ["ora", "npm:5.2.0"],
+            ["ora", "npm:5.3.0"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["reload", "npm:3.1.1"],
@@ -20094,10 +20094,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["ora", [
-        ["npm:5.2.0", {
-          "packageLocation": "./.yarn/cache/ora-npm-5.2.0-a8d35905ca-67680ed621.zip/node_modules/ora/",
+        ["npm:5.3.0", {
+          "packageLocation": "./.yarn/cache/ora-npm-5.3.0-bb3e7178be-892cfd7a89.zip/node_modules/ora/",
           "packageDependencies": [
-            ["ora", "npm:5.2.0"],
+            ["ora", "npm:5.3.0"],
             ["bl", "npm:4.0.3"],
             ["chalk", "npm:4.1.0"],
             ["cli-cursor", "npm:3.1.0"],
