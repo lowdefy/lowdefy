@@ -169,6 +169,9 @@ menus:
           - id: Selector
             type: MenuLink
             pageId: Selector
+          - id: TextArea
+            type: MenuLink
+            pageId: TextArea
           - id: TextInput
             type: MenuLink
             pageId: TextInput
@@ -359,6 +362,7 @@ pages:
   - _ref: blocks/input/NumberInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
   - _ref: blocks/input/Selector.yaml
+  - _ref: blocks/input/TextArea.yaml
   - _ref: blocks/input/TextInput.yaml
   - _ref: blocks/input/WeekSelector.yaml
 
