@@ -44,8 +44,8 @@ module.exports = () => {
         patterns: [
           {
             from: 'src/blocks/**/*.json',
-            transformPath: (targetPath) => {
-              return path.join('meta', path.basename(targetPath));
+            to: ({ absoluteFilename }) => {
+              return path.join('meta', path.basename(absoluteFilename));
             },
             transform: addRemoteEntryUrl,
           },
