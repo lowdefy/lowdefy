@@ -152,14 +152,13 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
-        className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.prefixIcon: AccountBookFilled_prefixIcon"
         required={false}
         role="img"
       >
         <svg
           aria-hidden="true"
-          className="anticon-spin"
           data-icon="loading-3-quarters"
           fill="currentColor"
           focusable="false"
@@ -253,14 +252,13 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
     >
       <span
         aria-label="loading-3-quarters"
-        className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+        className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
         id="properties.suffixIcon: AccountBookFilled_suffixIcon"
         required={false}
         role="img"
       >
         <svg
           aria-hidden="true"
-          className="anticon-spin"
           data-icon="loading-3-quarters"
           fill="currentColor"
           focusable="false"

@@ -40,7 +40,7 @@
   "dependencies": {
     "@lowdefy/helpers": "3.4.0",
     "@lowdefy/operators": "3.4.0",
-    "graphql": "15.4.0",
+    "graphql": "15.5.0",
     "graphql-tag": "2.11.0"
   },
   "devDependencies": {

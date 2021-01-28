@@ -156,14 +156,13 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon object_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -194,14 +193,13 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon string_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -729,14 +727,13 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon object_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -769,14 +766,13 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon string_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
