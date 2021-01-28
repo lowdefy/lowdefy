@@ -2963,7 +2963,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     chalk: 4.1.0
-    chokidar: 3.5.0
+    chokidar: 3.5.1
     clean-webpack-plugin: 3.0.0
     commander: 6.2.1
     copy-webpack-plugin: 6.4.0
@@ -6724,9 +6724,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:3.5.0, chokidar@npm:^3.2.2, chokidar@npm:^3.3.0, chokidar@npm:^3.4.0":
-  version: 3.5.0
-  resolution: "chokidar@npm:3.5.0"
+"chokidar@npm:3.5.1":
+  version: 3.5.1
+  resolution: "chokidar@npm:3.5.1"
   dependencies:
     anymatch: ~3.1.1
     braces: ~3.0.2
@@ -6739,7 +6739,7 @@ __metadata:
   dependenciesMeta:
     fsevents:
       optional: true
-  checksum: 36c67d9d4b5a96006bc023b8c4799b4a5697ac602b3bd1cbcec54f8516c5625382aaee0bc9e2325b7fa288b1d67ecdc308911f7448b55cfe37c384ff1f8cb62a
+  checksum: 61b3f710f9e7dc69d76f638d8b0d37bad586497444165125ca8062f7192695f35403b5f622cbd7dfdd06805201ceaba40ff90e53ea2974df9a8087861192a99b
   languageName: node
   linkType: hard
 
@@ -6763,6 +6763,25 @@ __metadata:
     fsevents:
       optional: true
   checksum: 0758dcc7c6c7ace5924cf3c68088210932d391ab41026376b0adb8e07013ac87232e029f13468dfc9ca4dd59adae62a2b7eaedebb6c4e4f0ba92cbf3ac9e3721
+  languageName: node
+  linkType: hard
+
+"chokidar@npm:^3.2.2, chokidar@npm:^3.3.0, chokidar@npm:^3.4.0":
+  version: 3.5.0
+  resolution: "chokidar@npm:3.5.0"
+  dependencies:
+    anymatch: ~3.1.1
+    braces: ~3.0.2
+    fsevents: ~2.3.1
+    glob-parent: ~5.1.0
+    is-binary-path: ~2.1.0
+    is-glob: ~4.0.1
+    normalize-path: ~3.0.0
+    readdirp: ~3.5.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: 36c67d9d4b5a96006bc023b8c4799b4a5697ac602b3bd1cbcec54f8516c5625382aaee0bc9e2325b7fa288b1d67ecdc308911f7448b55cfe37c384ff1f8cb62a
   languageName: node
   linkType: hard
 
