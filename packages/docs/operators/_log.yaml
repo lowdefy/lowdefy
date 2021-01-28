@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _log
     pageTitle: _log
@@ -24,9 +25,9 @@ _ref:
     description: |
       The `_log` operator logs it input to the console, and returns the value it received. Since it returns the value it received, it can be used to debug without affecting the rest of the configuration.
     arguments: |
-      #### any
+      ###### any
     examples: |
-      #### Log the results of a request to the console:
+      ###### Log the results of a request to the console:
       ```yaml
       _log:
         _request: my_request

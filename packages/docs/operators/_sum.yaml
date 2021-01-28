@@ -14,44 +14,45 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
-    pageId: _product
-    pageTitle: _product
+    pageId: _sum
+    pageTitle: _sum
     types: |
       ```
       (values: any[]): number
       ```
     description: |
-      The `_product` operator takes the product of the values given as input. If a value is not a number, the value is skipped.
+      The `_sum` operator takes the sum of the values given as input. If a value is not a number, the value is skipped.
     arguments: |
       #### array
-      An array of values to multiply.
+      An array of values to add.
     examples: |
-      #### Two numbers:
+      ###### Two numbers:
       ```yaml
-      _product:
+      _sum:
         - 3
         - 4
       ```
-      Returns: `12`
+      Returns: `7`
 
-      #### Array of numbers:
+      ###### Array of numbers:
       ```yaml
-      _product:
+      _sum:
         - 1
         - 2
         - 3
         - 4
       ```
-      Returns: `24`
+      Returns: `10`
 
-      #### Non-numbers are skipped:
+      ###### Non-numbers are skipped:
       ```yaml
-      _product:
+      _sum:
         - 1
         - null
         - 3
         - "four"
         - 5
       ```
-      Returns: `15`
+      Returns: `9`

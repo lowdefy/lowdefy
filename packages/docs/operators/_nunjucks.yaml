@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _nunjucks
     pageTitle: _nunjucks
@@ -27,20 +28,28 @@ _ref:
 
       If called with a string argument, the template variables are the values in `state`. Otherwise template variables can be specified using the `on` argument.
     arguments: |
-      #### string
+      ###### string
       The template to hydrate. The template variables used are the values in state
 
-      #### object
+      ###### object
         - `template: string`: The template to hydrate.
         - `on: object`: The template variables to use when hydrating the template.
     examples: |
-      #### Populate a template from values in `state`:
+      ###### Populate a template from values in `state`:
       ```yaml
       _nunjucks: Hello {{ name }}
       ```
       Returns: `"Hello Steven"` if the value of name in state is `"Steven"`.
 
-      #### Populate a markdown template with different values:
+      ###### Populate a markdown template with different values:
+      Assuming `get_items` returns:
+      ```yaml
+      - name: Coca Cola
+        description: The original.
+      - name: Pepsi
+        description: The same but different.
+      ```
+
       ```yaml
       _nunjucks:
         template: |
@@ -50,8 +59,14 @@ _ref:
           - {{ item.name }}: {{ item.description }}
           {% endfor %}
         on:
-          title:
-            _state: title
+          title: Soft drinks
           items:
             _request: get_items
+      ```
+      Returns:
+      ```markdown
+      ### Soft drinks
+
+      - Coca Cola: The original.
+      - Pepsi: The same but different.
       ```

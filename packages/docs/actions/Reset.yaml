@@ -13,47 +13,29 @@
 # limitations under the License.
 
 _ref:
-  path: templates/general.yaml.njk
+  path: templates/actions.yaml.njk
   vars:
     pageId: Reset
     pageTitle: Reset
-    section: Actions
-    content:
-      - id: markdown
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
+    types: |
+      ```
+      (void): void
+      ```
+    description: |
+      The `Reset` actions resets a context to the state it was in just after the `onInit` event was executed. This clears the user's inputs.
+
+      >  The `Reset` action resets the state to the state before the `onEnter` event is executed, and the `onEnter` event is not executed after the reset happens. This might cause unexpected behavior if you used an `onEnter` event to initialize the state.
+    params: |
+      The `Reset` action does not take any parameters.
+    examples: |
+      ###### A reset button:
+      ```yaml
+      - id: reset_button
+        type: Button
         properties:
-          content: |
-            The `Reset` actions resets a context to the state it was in just after the `onInit` action was executed. This clears the user's inputs.
-            The `Reset` action does not take any parameters.
-
-      - id: warning
-        type: Alert
-        properties:
-          type: warning
-          message: Warning
-          description: The Reset action resets the state to the state before the onEnter action is executed, and the onEnter action is not executed after the reset happens. This might cause unexpected behavior if you used an onEnter action to initialize the state.
-
-      - id: markdown2
-        type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
-        properties:
-          content: |
-            ### Examples
-
-            A reset button:
-
-            ```
-            - id: reset_button
-              type: Button
-              properties:
-                title: Reset
-              actions:
-                onClick:
-                  - id: reset
-                    type: Reset
-            ```
+          title: Reset
+        actions:
+          onClick:
+            - id: reset
+              type: Reset
+      ```

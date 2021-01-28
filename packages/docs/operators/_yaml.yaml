@@ -1,0 +1,82 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _yaml
+    pageTitle: _yaml
+    description: |
+      The `_yaml` parses and writes YAML strings.
+    methods:
+      - name: parse
+        types: |
+          ```
+          (value: string): any
+          ```
+        description: |
+          The `_yaml.parse` method parses a YAML string into an object.
+        arguments: |
+          ###### string
+          The string to parse.
+        examples: |
+          ###### Parse a YAML string:
+          ```yaml
+          _yaml.parse: |
+            key: Value
+            boolean: true
+            array:
+              - 1
+              - 2
+          ```
+          Returns:
+          ```
+          key: Value
+          boolean: true
+          array:
+            - 1
+            - 2
+          ```
+      - name: stringify
+        types: |
+          ```
+          ({on: any, options?: object}): string
+          ([on: any, options?: object]): string
+          ```
+        description: |
+          The `_yaml.stringify` method creates a YAML string from an object.
+        arguments: |
+          ###### object
+            - `on: any`: The object to stringify.
+            - `options: object`: Optional settings. See the [YAML.dump method here](https://www.npmjs.com/package/js-yaml) for supported settings.
+
+        examples: |
+          ###### Stringify an object as YAML:
+          ```yaml
+          _yaml.stringify:
+            key: Value
+            boolean: true
+            array:
+              - 1
+              - 2
+          ```
+          Returns (as a string):
+          ```text
+          key: Value
+          boolean: true
+          array:
+            - 1
+            - 2
+          ```

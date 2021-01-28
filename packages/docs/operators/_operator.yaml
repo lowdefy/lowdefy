@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _operator
     pageTitle: _operator
@@ -24,11 +25,11 @@ _ref:
     description: |
       The `_operator` operator evaluates an operator with the given params. This is useful if the operator needs to be chosen dynamically. The `_operator` cannot evaluate itself.
     arguments: |
-      #### object
+      ###### object
         - `operator: string`: The name of the operator to evaluate.
         - `params: any`: The params to give to the operator.
     examples: |
-      #### Get a value from `urlQuery` if specified, else use the value in `state`:
+      ###### Get a value from `urlQuery` if specified, else use the value in `state`:
       ```yaml
       _operator:
         operator:

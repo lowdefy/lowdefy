@@ -14,23 +14,25 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _type
     pageTitle: _type
     types: |
       ```
       (type: enum): boolean
-      (arguments: {type: string, on?: any, key?: string}): boolean
+      (arguments: {
+        type: string,
+        on?: any,
+        key?: string
+      }): boolean
       ```
     description: |
       The `_type` operator performs a type test on an object, and returns true if the object is of the specified type.
 
       The regex operator has shorthand argument definitions that can be used on web client.
     arguments: |
-      #### string
-      The type to test. The string shorthand can only be used in an input block, and the tested value will be the block's value.
-
-      #### object
+      ###### object
         - `type: enum`: __Required__ - The type to test. Can be one of:
           - `string`
           - `array`
@@ -45,8 +47,11 @@ _ref:
           - `primitive` (`undefined`, `null`, `string`, `number`, `boolean`, or `date`)
         - `on: any`: The value to test. One of `on` or `key` must be specified unless the operator is used in an input block.
         - `key: string`: The key of a value in `state` to test. One of `on` or `key` must be specified unless the operator is used in an input block.
+
+      ###### string
+      The type to test. The string shorthand can only be used in an input block, and the tested value will be the block's value.
     examples: |
-      #### Check if a value is a number:
+      ###### Check if a value is a number:
       ```yaml
       _type:
         type: number
@@ -55,7 +60,7 @@ _ref:
       ```
       Returns: `true` if a number.
 
-      #### Using the key of the value in `state`:
+      ###### Using the key of the value in `state`:
       ```yaml
       _type:
         type: number
@@ -63,13 +68,20 @@ _ref:
       ```
       Returns: `true` if a number.
 
-      #### Using the value of the block in which the operator is evaluated:
+      ###### Using the value of the block in which the operator is evaluated:
       ```yaml
-      _type: number
+      id: input
+      type: TextInput
+      validation:
+        - message: This field id required.
+          status: error
+          pass:
+            _not:
+              _type: none
       ```
-      Returns: `true` if a number
+      Returns: `true` if the input is none.
 
-      #### Test if an id in the `urlQuery` is undefined or null:
+      ###### Test if an id in the `urlQuery` is undefined or null:
       ```yaml
       _type:
         type: none

@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _if
     pageTitle: _if
@@ -24,12 +25,12 @@ _ref:
     description: |
       The `_if` operator returns the `then` argument if it's `test` argument is `true`, and it's `else` argument if it is `false`. Generally other operators are used to evaluate the `test` argument.
     arguments: |
-      #### object
+      ###### object
         - `test: boolean`: The boolean result of a test.
         - `then: any`: The value to return if the test is `true`.
         - `else: any`: The value to return if the test is `false`.
     examples: |
-      #### Return a value based on a user input:
+      ###### Return a value based on a user input:
       ```yaml
       _if:
         test:

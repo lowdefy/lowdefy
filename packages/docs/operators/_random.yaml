@@ -14,27 +14,33 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _random
     pageTitle: _random
     types: |
       ```
       (type: string): string | number
-      (arguments: {type: string, length?: number, max?: number, min?: number}): string | number
+      (arguments: {
+        type: string,
+        length?: number,
+        max?: number,
+        min?: number
+      }): string | number
       ```
     description: |
       The `_random` operator returns a random string or number. The types it accepts are `string`, `integer`, or `float`.
     arguments: |
-      #### string
+      ###### string
       The type to generate. One of `string`, `integer`, or `float`.
 
-      #### object
+      ###### object
         - `type: string`: __Required__ - The type to generate. One of `string`, `integer`, or `float`.
         - `length: string`: The length of the string to generate if type is `string`. Default is `8`.
         - `max: number`: The maximum possible number if type is one of `integer` or `float`. Default is `100` if `integer` or `1` if `float`.
         - `min: number`: The minimum possible number if type is one of `integer` or `float`. Default is `0`.
     examples: |
-      #### Random string:
+      ###### Random string:
       ```yaml
       _random: string
       ```
@@ -46,7 +52,7 @@ _ref:
       ```
       Returns: Random string of length 8.
 
-      #### Random integer:
+      ###### Random integer:
       ```yaml
       _random: integer
       ```
@@ -58,7 +64,7 @@ _ref:
       ```
       Returns: Random integer between 0 and 100 inclusive.
 
-      #### Random float:
+      ###### Random float:
       ```yaml
       _random: float
       ```
@@ -70,7 +76,7 @@ _ref:
       ```
       Returns: Random float between 0 and 1 inclusive.
 
-      #### Random string of length 12:
+      ###### Random string of length 12:
       ```yaml
       _random:
         type: string
@@ -78,7 +84,7 @@ _ref:
       ```
       Returns: Random string of length 12.
 
-      #### Random integer between 1 and 6 (Dice roll):
+      ###### Random integer between 1 and 6 (Dice roll):
       ```yaml
       _random:
         type: integer
@@ -87,7 +93,7 @@ _ref:
       ```
       Returns: Random integer between 1 and 6 inclusive.
 
-      #### Random float between 34.2 and 42.89:
+      ###### Random float between 34.2 and 42.89:
       ```yaml
       _random:
         type: float

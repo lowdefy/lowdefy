@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _and
     pageTitle: _and
@@ -26,10 +27,10 @@ _ref:
 
       It only returns true if all the values in the array are truthy (not `false`, `0`, `null`, `undefined`, or the empty string `""`). Else it returns false.
     arguments: |
-      #### array
+      ###### array
       An array of values over which to perform a logical and.
     examples: |
-      #### Two `true` values:
+      ###### Two `true` values:
       ```yaml
       _and:
         - true
@@ -37,7 +38,7 @@ _ref:
       ```
       Returns: `true`
 
-      #### Array of `true` and `false` values:
+      ###### Array of `true` and `false` values:
       ```yaml
       _and:
         - true
@@ -47,7 +48,7 @@ _ref:
       ```
       Returns: `false`
 
-      #### Check if two boolean inputs are true:
+      ###### Check if two boolean inputs are true:
       ```yaml
       _and:
         - _state: confirm_accept_terms
@@ -55,7 +56,7 @@ _ref:
       ```
       Returns: `true` if both inputs are `true`
 
-      #### Truthy values:
+      ###### Truthy values:
       ```yaml
       _and:
         - "Hello"
@@ -65,7 +66,7 @@ _ref:
       ```
       Returns: `true`
 
-      #### Falsy values:
+      ###### Falsy values:
       ```yaml
       _and:
         - true

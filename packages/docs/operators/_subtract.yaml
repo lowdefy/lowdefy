@@ -14,6 +14,7 @@
 
 _ref:
   path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
   vars:
     pageId: _subtract
     pageTitle: _subtract
@@ -24,10 +25,10 @@ _ref:
     description: |
       The `_subtract` operator takes an array of two numbers as input and returns the second number subtracted from the first.
     arguments: |
-      #### array
+      ###### array
       An array of two numbers.
     examples: |
-      #### Subtract a number:
+      ###### Subtract a number:
       ```yaml
       _subtract:
         - 12
