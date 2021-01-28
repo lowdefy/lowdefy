@@ -5,15 +5,6 @@ __metadata:
   version: 4
   cacheKey: 7
 
-"@ant-design/colors@npm:^3.1.0":
-  version: 3.2.2
-  resolution: "@ant-design/colors@npm:3.2.2"
-  dependencies:
-    tinycolor2: ^1.4.1
-  checksum: b42a2e5422af6f2004587b43a0591fb063f1882629a60a923efd43abb130a469cdd9402507153eb913b994514962247d2d04ce1d9c7578c11f94802a800b75e6
-  languageName: node
-  linkType: hard
-
 "@ant-design/colors@npm:^5.0.0":
   version: 5.0.1
   resolution: "@ant-design/colors@npm:5.0.1"
@@ -37,19 +28,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/icons@npm:4.2.2":
-  version: 4.2.2
-  resolution: "@ant-design/icons@npm:4.2.2"
+"@ant-design/icons@npm:4.4.0":
+  version: 4.4.0
+  resolution: "@ant-design/icons@npm:4.4.0"
   dependencies:
-    "@ant-design/colors": ^3.1.0
+    "@ant-design/colors": ^5.0.0
     "@ant-design/icons-svg": ^4.0.0
-    "@babel/runtime": ^7.10.4
+    "@babel/runtime": ^7.11.2
     classnames: ^2.2.6
     insert-css: ^2.0.0
     rc-util: ^5.0.1
   peerDependencies:
-    react: 16.x
-  checksum: 76b319587802f955ebe11f654e18bd8175e664823a434e9bbe9cb1577e8e93a97c26c8653c4c612b36c55aac69145f8064a0096443a81956eaf1032eb8c309ff
+    react: ">=16.0.0"
+  checksum: d78fb5caf5f70c5ee76bc8c842d39dfc2072160c73e90f9350cdd1b3f770eb6db11d877d81b03990d5d469eb547827e48faa3d3d94e77a8aaad8dfda43ec9339
   languageName: node
   linkType: hard
 
@@ -2757,7 +2748,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd"
   dependencies:
-    "@ant-design/icons": 4.2.2
+    "@ant-design/icons": 4.4.0
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
     "@babel/preset-env": 7.12.11

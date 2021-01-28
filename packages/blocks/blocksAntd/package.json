@@ -43,7 +43,7 @@
     "build:moduleFederation": "webpack --config webpack.prod.js"
   },
   "dependencies": {
-    "@ant-design/icons": "4.2.2",
+    "@ant-design/icons": "4.4.0",
     "@lowdefy/block-tools": "3.4.0",
     "@lowdefy/color": "3.4.0",
     "@lowdefy/format": "3.4.0",
