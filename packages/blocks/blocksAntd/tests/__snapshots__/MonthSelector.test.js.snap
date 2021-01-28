@@ -1343,14 +1343,13 @@ exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -1433,14 +1432,13 @@ exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -2806,14 +2804,13 @@ exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -2896,14 +2893,13 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -2995,7 +2991,6 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3088,7 +3083,6 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3181,7 +3175,6 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3274,7 +3267,6 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3367,7 +3359,6 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3460,7 +3451,6 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3553,7 +3543,6 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3646,7 +3635,6 @@ exports[`Render validation.status = error property.allowClear: false - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3740,7 +3728,6 @@ exports[`Render validation.status = error property.autoFocus: true - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3834,7 +3821,6 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3927,7 +3913,6 @@ exports[`Render validation.status = error property.format: YYYY-MMMM - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4020,7 +4005,6 @@ exports[`Render validation.status = error property.label align: right - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4113,7 +4097,6 @@ exports[`Render validation.status = error property.label colon: true - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4194,7 +4177,6 @@ exports[`Render validation.status = error property.label disabled: true - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4287,7 +4269,6 @@ exports[`Render validation.status = error property.label extra: extra text added
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4388,7 +4369,6 @@ exports[`Render validation.status = error property.label inline: true - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4481,7 +4461,6 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4574,7 +4553,6 @@ exports[`Render validation.status = error property.placeholder: - Select this Mo
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4667,7 +4645,6 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4760,7 +4737,6 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4844,14 +4820,13 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -4879,7 +4854,6 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4963,14 +4937,13 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -4998,7 +4971,6 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -6365,14 +6337,13 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled - v
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -6455,14 +6426,13 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -6554,7 +6524,6 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6642,7 +6611,6 @@ exports[`Render validation.status = success properties.disabledDates.dates - val
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6730,7 +6698,6 @@ exports[`Render validation.status = success properties.disabledDates.max - value
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6818,7 +6785,6 @@ exports[`Render validation.status = success properties.disabledDates.min - value
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6906,7 +6872,6 @@ exports[`Render validation.status = success properties.disabledDates.ranges - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6994,7 +6959,6 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7082,7 +7046,6 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7170,7 +7133,6 @@ exports[`Render validation.status = success property.allowClear: false - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7259,7 +7221,6 @@ exports[`Render validation.status = success property.autoFocus: true - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7348,7 +7309,6 @@ exports[`Render validation.status = success property.disabled: true - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7436,7 +7396,6 @@ exports[`Render validation.status = success property.format: YYYY-MMMM - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7524,7 +7483,6 @@ exports[`Render validation.status = success property.label align: right - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7612,7 +7570,6 @@ exports[`Render validation.status = success property.label colon: true - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7688,7 +7645,6 @@ exports[`Render validation.status = success property.label disabled: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7776,7 +7732,6 @@ exports[`Render validation.status = success property.label extra: extra text add
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7877,7 +7832,6 @@ exports[`Render validation.status = success property.label inline: true - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7965,7 +7919,6 @@ exports[`Render validation.status = success property.label span: 5 - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8053,7 +8006,6 @@ exports[`Render validation.status = success property.placeholder: - Select this 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8141,7 +8093,6 @@ exports[`Render validation.status = success property.size: large - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8229,7 +8180,6 @@ exports[`Render validation.status = success property.size: small - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8308,14 +8258,13 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -8343,7 +8292,6 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8422,14 +8370,13 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -8457,7 +8404,6 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -8545,7 +8491,6 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8638,7 +8583,6 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8731,7 +8675,6 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8824,7 +8767,6 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8917,7 +8859,6 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9010,7 +8951,6 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9103,7 +9043,6 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9196,7 +9135,6 @@ exports[`Render validation.status = warning property.allowClear: false - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9290,7 +9228,6 @@ exports[`Render validation.status = warning property.autoFocus: true - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9384,7 +9321,6 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9477,7 +9413,6 @@ exports[`Render validation.status = warning property.format: YYYY-MMMM - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9570,7 +9505,6 @@ exports[`Render validation.status = warning property.label align: right - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9663,7 +9597,6 @@ exports[`Render validation.status = warning property.label colon: true - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9744,7 +9677,6 @@ exports[`Render validation.status = warning property.label disabled: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9837,7 +9769,6 @@ exports[`Render validation.status = warning property.label extra: extra text add
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9938,7 +9869,6 @@ exports[`Render validation.status = warning property.label inline: true - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10031,7 +9961,6 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10124,7 +10053,6 @@ exports[`Render validation.status = warning property.placeholder: - Select this 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10217,7 +10145,6 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10310,7 +10237,6 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10394,14 +10320,13 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
                   id="property.suffixIcon: CalendarFilled_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -10429,7 +10354,6 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -10513,14 +10437,13 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
               >
                 <span
                   aria-label="loading-3-quarters"
-                  className="anticon anticon-loading-3-quarters {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
+                  className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{\\"color\\":\\"blue\\"},null]}"
                   id="property.suffixIcon: CalendarFilled.blue_suffixIcon"
                   required={false}
                   role="img"
                 >
                   <svg
                     aria-hidden="true"
-                    className="anticon-spin"
                     data-icon="loading-3-quarters"
                     fill="currentColor"
                     focusable="false"
@@ -10548,7 +10471,6 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"

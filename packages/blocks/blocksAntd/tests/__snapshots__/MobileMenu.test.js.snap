@@ -12,14 +12,13 @@ exports[`Render backgroundColor: #016e1e - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="backgroundColor: #016e1e_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -48,14 +47,13 @@ exports[`Render default - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="default_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -84,14 +82,13 @@ exports[`Render menus: default - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menus: default_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -120,14 +117,13 @@ exports[`Render menus: links[0] - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menus: links[0]_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -156,14 +152,13 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menus: properties.menuId: menu_one_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -192,14 +187,13 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menusTitle pageId_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -228,14 +222,13 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menusTitle properties.title_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -264,14 +257,13 @@ exports[`Render menusTitle url - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="menusTitle url_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -300,14 +292,13 @@ exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.MenuGroup with MenuLInks_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -336,14 +327,13 @@ exports[`Render properties.danger: true - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.danger: true_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -372,14 +362,13 @@ exports[`Render properties.icon - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.icon_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -408,14 +397,13 @@ exports[`Render properties.links - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.links_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -444,14 +432,13 @@ exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.subMenuCloseDelay: 3_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -480,14 +467,13 @@ exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.subMenuOpenDelay: 3_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -516,14 +502,13 @@ exports[`Render properties.title - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties.title_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -552,14 +537,13 @@ exports[`Render selectedColor: #f16e1e - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="selectedColor: #f16e1e_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -588,14 +572,13 @@ exports[`Render selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] 
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -624,14 +607,13 @@ exports[`Render theme: light - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="theme: light_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -660,14 +642,13 @@ exports[`Render theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="theme: light, selectedColor: #6C2ACB_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
@@ -696,14 +677,13 @@ exports[`Render theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e -
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"
