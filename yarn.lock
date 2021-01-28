@@ -2972,7 +2972,7 @@ __metadata:
     decompress-targz: 4.1.1
     dotenv: 8.2.0
     express: 4.17.1
-    graphql: 15.4.0
+    graphql: 15.5.0
     html-webpack-plugin: 4.5.1
     inquirer: 7.3.3
     jest: 26.6.3
@@ -3014,7 +3014,7 @@ __metadata:
     "@lowdefy/helpers": 3.4.0
     "@lowdefy/operators": 3.4.0
     babel-jest: 26.6.3
-    graphql: 15.4.0
+    graphql: 15.5.0
     graphql-tag: 2.11.0
     jest: 26.6.3
   languageName: unknown
@@ -3073,7 +3073,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     dataloader: 2.0.0
     google-spreadsheet: 3.1.15
-    graphql: 15.4.0
+    graphql: 15.5.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
     mingo: 4.1.0
@@ -3221,7 +3221,7 @@ __metadata:
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     css-loader: 5.0.1
-    graphql: 15.4.0
+    graphql: 15.5.0
     graphql-type-json: 0.3.2
     html-webpack-plugin: 4.5.1
     react: 17.0.1
@@ -3256,7 +3256,7 @@ __metadata:
     css-loader: 5.0.1
     dotenv: 8.2.0
     express: 4.17.1
-    graphql: 15.4.0
+    graphql: 15.5.0
     html-webpack-plugin: 4.5.1
     jest: 26.6.3
     nodemon: 2.0.7
@@ -3286,7 +3286,7 @@ __metadata:
     copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
     express: 4.17.1
-    graphql: 15.4.0
+    graphql: 15.5.0
     html-webpack-plugin: 4.5.1
     jest: 26.6.3
     nodemon: 2.0.7
@@ -3315,7 +3315,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 6.4.0
     css-loader: 5.0.1
-    graphql: 15.4.0
+    graphql: 15.5.0
     html-webpack-plugin: 4.5.1
     jest: 26.6.3
     react: 17.0.1
@@ -10526,10 +10526,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql@npm:*, graphql@npm:15.4.0, graphql@npm:^15.3.0":
+"graphql@npm:*, graphql@npm:^15.3.0":
   version: 15.4.0
   resolution: "graphql@npm:15.4.0"
   checksum: 1a307dcfe2646e1e8323d03e8cd24554ba9f7369863bf0b020f2e4b39bff3504dc7d6dcad19cb96899f0825eda4c688819911f0c270e84f1bb0954fe3ac16a31
+  languageName: node
+  linkType: hard
+
+"graphql@npm:15.5.0":
+  version: 15.5.0
+  resolution: "graphql@npm:15.5.0"
+  checksum: 789cdcb069a3e00592e779002217a6bc5fd09efad63ee8c4190c4b3ea96c89010e74f085fb1cba876a0bb0e324e01df2eddb84d79dca90a28e582bc425fef9ef
   languageName: node
   linkType: hard
 

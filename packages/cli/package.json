@@ -54,7 +54,7 @@
     "decompress-targz": "4.1.1",
     "dotenv": "8.2.0",
     "express": "4.17.1",
-    "graphql": "15.4.0",
+    "graphql": "15.5.0",
     "inquirer": "7.3.3",
     "js-yaml": "4.0.0",
     "opener": "1.5.2",
