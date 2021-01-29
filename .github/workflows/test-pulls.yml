@@ -16,7 +16,7 @@ jobs:
       - name: Check yarn cache integrity
         run: yarn install
       - name: Build packages
-        run: yarn build --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*'
+        run: yarn build --ignore='@lowdefy/blocks-*'
 
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
@@ -45,7 +45,7 @@ jobs:
       - name: Check yarn cache integrity
         run: yarn install
       - name: Build packages
-        run: yarn build --ignore='@lowdefy/format' --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/operators' --ignore='@lowdefy/renderer' --ignore='@lowdefy/server*'
+        run: yarn build --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/operators' --ignore='@lowdefy/renderer' --ignore='@lowdefy/server*'
 
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
