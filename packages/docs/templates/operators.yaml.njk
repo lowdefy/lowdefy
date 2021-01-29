@@ -58,13 +58,3 @@ page:
             content:
               _var: examples
         {% endif %}
-        {% if methods %}
-        - id: methods_list
-          type: Markdown
-          properties:
-            content: |
-              # Operator methods:
-              {% for method in methods %}
-              - `{{ pageTitle }}.{{ method.name }}`
-              {% endfor %}
-        {% endif %}

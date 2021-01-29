@@ -221,7 +221,9 @@ class Blocks {
         let blockValue = get(initState, block.field);
         if (type.isUndefined(blockValue)) {
           // default null value for block type
-          blockValue = type.enforceType(block.meta.valueType, null);
+          blockValue = type.isUndefined(block.meta.initValue)
+            ? type.enforceType(block.meta.valueType, null)
+            : block.meta.initValue;
           this.context.State.set(block.field, block.value);
           block.update = true;
         }

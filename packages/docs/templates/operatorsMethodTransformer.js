@@ -16,10 +16,45 @@
 
 function transformer(obj) {
   // console.log(JSON.stringify(obj, null, 2));
+  if (!obj.methods) {
+    return obj.page;
+  }
   const contentArray = obj.page.areas.content.blocks[0].blocks[1].blocks;
   const operatorName = obj.page.properties.title;
+
+  contentArray.push({
+    id: `methods_title`,
+    type: 'Markdown',
+    properties: {
+      content: '# Operator methods:',
+    },
+  });
+
+  obj.methods.forEach((method) => {
+    // console.log(method);
+    contentArray.push({
+      id: `${method.name}_link`,
+      type: 'Anchor',
+      properties: {
+        title: `${operatorName}.${method.name}`,
+        icon: 'LinkOutlined',
+      },
+      actions: {
+        onClick: [
+          {
+            id: 'scroll',
+            type: 'ScrollTo',
+            params: {
+              blockId: `${method.name}_title`,
+            },
+          },
+        ],
+      },
+    });
+  });
+
   // const methodsBlocks = [];
-  (obj.methods || []).forEach((method) => {
+  obj.methods.forEach((method) => {
     // console.log(method);
     contentArray.push({
       id: `${method.name}_title`,
@@ -45,34 +80,38 @@ function transformer(obj) {
         content: method.description,
       },
     });
-    contentArray.push({
-      id: `${method.name}_arguments_title`,
-      type: 'Markdown',
-      properties: {
-        content: '#### Arguments',
-      },
-    });
-    contentArray.push({
-      id: `${method.name}_arguments`,
-      type: 'MarkdownWithHtml',
-      properties: {
-        content: method.arguments,
-      },
-    });
-    contentArray.push({
-      id: `${method.name}_arguments_title`,
-      type: 'Markdown',
-      properties: {
-        content: '#### Examples',
-      },
-    });
-    contentArray.push({
-      id: `${method.name}_examples`,
-      type: 'MarkdownWithHtml',
-      properties: {
-        content: method.examples,
-      },
-    });
+    if (method.arguments) {
+      contentArray.push({
+        id: `${method.name}_arguments_title`,
+        type: 'Markdown',
+        properties: {
+          content: '#### Arguments',
+        },
+      });
+      contentArray.push({
+        id: `${method.name}_arguments`,
+        type: 'MarkdownWithHtml',
+        properties: {
+          content: method.arguments,
+        },
+      });
+    }
+    if (method.examples) {
+      contentArray.push({
+        id: `${method.name}_arguments_title`,
+        type: 'Markdown',
+        properties: {
+          content: '#### Examples',
+        },
+      });
+      contentArray.push({
+        id: `${method.name}_examples`,
+        type: 'MarkdownWithHtml',
+        properties: {
+          content: method.examples,
+        },
+      });
+    }
   });
   return obj.page;
 }
