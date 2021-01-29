@@ -32,13 +32,12 @@
         },
         "disableIcons": {
           "type": "boolean",
-          "description": "Hides minimum and maximum icons.",
-          "docs": {
-            "displayType": "icon"
-          }
+          "default": false,
+          "description": "Hides minimum and maximum icons."
         },
         "disableNotApplicable": {
           "type": "boolean",
+          "default": false,
           "description": "Disables the N/A option left of slider."
         },
         "minIcon": {
