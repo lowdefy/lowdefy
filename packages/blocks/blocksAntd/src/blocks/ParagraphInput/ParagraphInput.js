@@ -89,12 +89,6 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               rows: properties.ellipsis.rows,
               expandable: properties.ellipsis.expandable,
               suffix: properties.ellipsis.suffix,
-              // FIX: not working, might be and antd issue.
-              // symbol: properties.ellipsis.symbol && <span>{properties.ellipsis.symbol}</span>,
-              // "symbol": {
-              //   "type": "string",
-              //   "description": "Custom ... symbol of ellipsis content."
-              // }
               onExpand: (ellipsis) => {
                 methods.callAction({
                   action: 'onCopy',

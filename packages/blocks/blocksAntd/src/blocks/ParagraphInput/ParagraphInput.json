@@ -21,10 +21,6 @@
           "default": false,
           "description": "Apply code style."
         },
-        "content": {
-          "type": "string",
-          "description": "Paragraph text content."
-        },
         "copyable": {
           "default": false,
           "oneOf": [
