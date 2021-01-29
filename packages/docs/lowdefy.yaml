@@ -487,4 +487,3 @@ pages:
   - _ref: operators/_yaml.yaml
 
   - _ref: 404.yaml
-  - id: test
