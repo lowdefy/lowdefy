@@ -4,14 +4,23 @@
   "schema": {
     "properties": {
       "type": "object",
+      "required": ["s3PostPolicyRequestId"],
       "properties": {
         "accept": {
           "type": "string",
-          "description": "File types accepted by the input. See html file type input [accept property](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept)."
+          "description": "File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept."
         },
         "button": {
           "type": "object",
-          "description": "Button block properties."
+          "description": "Button block properties.",
+          "docs": {
+            "displayType": "button"
+          },
+          "default": {
+            "icon": "UploadOutlined",
+            "title": "Upload",
+            "type": "default"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -19,7 +28,37 @@
         },
         "s3PostPolicyRequestId": {
           "type": "string",
-          "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+          "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
+          "docs": {
+            "displayType": "manual",
+            "block": {
+              "id": "block_properties_s3PostPolicyRequestId",
+              "layout": { "_global": "settings_input_layout" },
+              "type": "Label",
+              "required": true,
+              "properties": {
+                "title": "s3PostPolicyRequestId",
+                "span": 8,
+                "align": "right"
+
+              },
+              "blocks": [
+                {
+                  "id": "block_properties_s3PostPolicyRequestId_text",
+                  "type": "Markdown",
+                  "style": {
+                    "color": "#8c8c8c",
+                    ".markdown-body": {
+                      "fontSize": "14px"
+                    }
+                  },
+                  "properties": {
+                    "content": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+                  }
+                }
+              ]
+            }
+          }
         },
         "showUploadList": {
           "type": "boolean",
