@@ -33,10 +33,6 @@ _ref:
     examples: |
       ###### Generate a uuid:
       ```yaml
-      _uuid:
-      ```
-
-      ```yaml
       _uuid: null
       ```
       Returns: A version 4 UUID.
