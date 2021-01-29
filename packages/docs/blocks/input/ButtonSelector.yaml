@@ -22,7 +22,7 @@ _ref:
       __optionsType: Label-value pairs
     init_property_values:
       options:
-        - label: First 
+        - label: First
           value: one
           primitive: one
         - label: Second

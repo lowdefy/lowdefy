@@ -13,6 +13,74 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+const button = (propertyName) => ({
+  id: 'button_card',
+  type: 'Card',
+  layout: {
+    contentGutter: 0,
+  },
+  properties: {
+    size: 'small',
+    title: 'button:',
+    inner: true,
+  },
+  blocks: [
+    {
+      id: `block.properties.${propertyName}.icon`,
+      type: 'Selector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'icon',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Name of an Ant Design Icon or properties of an Icon block to use icon in button.',
+        },
+        showSearch: true,
+        allowClear: true,
+        options: { _global: 'all_icons' },
+      },
+    },
+    {
+      id: `block.properties.${propertyName}.title`,
+      type: 'TextInput',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'title',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Title text on the button.',
+        },
+      },
+    },
+    {
+      id: `block.properties.${propertyName}.type`,
+      type: 'ButtonSelector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'type',
+        size: 'small',
+        options: ['primary', 'default', 'dashed', 'danger', 'link', 'text'],
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'The button type.',
+        },
+      },
+    },
+  ],
+});
+
 const label = {
   id: 'label_card',
   type: 'Card',
@@ -125,10 +193,11 @@ const label = {
   ],
 };
 
-function makeBlockDefinition(propertyName, propertyDescription) {
+function makeBlockDefinition(propertyName, propertyDescription, requiredProperties) {
   const block = {
     id: `block.properties.${propertyName}`,
     layout: { _global: 'settings_input_layout' },
+    required: requiredProperties.includes(propertyName),
     properties: {
       title: propertyName,
       size: 'small',
@@ -154,7 +223,6 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         return propertyDescription.docs.block;
       case 'icon':
         block.type = 'Selector';
-        block.layout = { _global: 'settings_input_layout' };
         block.properties = {
           ...block.properties,
           showSearch: true,
@@ -170,6 +238,8 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         return block;
       case 'label':
         return label;
+      case 'button':
+        return button(propertyName);
       case 'optionsString':
         block.type = 'ControlledList';
         block.blocks = [
@@ -507,7 +577,8 @@ function makeBlockDefinition(propertyName, propertyDescription) {
                     return Object.keys(item.properties).map((objectPropertyName) => {
                       bl = makeBlockDefinition(
                         `${propertyName}.${objectPropertyName}`,
-                        item.properties[objectPropertyName]
+                        item.properties[objectPropertyName],
+                        []
                       );
                       bl.properties.title = objectPropertyName;
                       bl.visible = {
@@ -522,7 +593,7 @@ function makeBlockDefinition(propertyName, propertyDescription) {
                       return bl;
                     });
                   }
-                  bl = makeBlockDefinition(`${propertyName}.__${item.type}`, item);
+                  bl = makeBlockDefinition(`${propertyName}.__${item.type}`, item, []);
                   bl.visible = {
                     _if: {
                       test: {
@@ -548,10 +619,11 @@ function makeBlockDefinition(propertyName, propertyDescription) {
 
 function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
+  const requiredProperties = obj.schema.properties.required || [];
   const blocks = Object.keys(blockProperties)
     .sort()
-    .map((key) => {
-      return makeBlockDefinition(key, blockProperties[key]);
+    .map((propertyName) => {
+      return makeBlockDefinition(propertyName, blockProperties[propertyName], requiredProperties);
     });
   return blocks;
 }

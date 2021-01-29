@@ -23,7 +23,7 @@ global:
     span: 23
     sm:
       span: 23
-      
+
 types:
   TitleInput:
     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
@@ -175,6 +175,9 @@ menus:
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
+          - id: S3UploadButton
+            type: MenuLink
+            pageId: S3UploadButton
           - id: Selector
             type: MenuLink
             pageId: Selector
@@ -413,6 +416,7 @@ pages:
   - _ref: blocks/input/NumberInput.yaml
   - _ref: blocks/input/ParagraphInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
+  - _ref: blocks/input/S3UploadButton.yaml
   - _ref: blocks/input/Selector.yaml
   - _ref: blocks/input/Switch.yaml
   - _ref: blocks/input/TextArea.yaml
