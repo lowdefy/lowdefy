@@ -21,16 +21,12 @@
           "default": false,
           "description": "Apply code style."
         },
-        "content": {
-          "type": "string",
-          "description": "Paragraph text content."
-        },
         "copyable": {
-          "description": "Provide copy text button.",
           "default": false,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Provide copy text button."
             },
             {
               "type": "object",
@@ -42,15 +38,36 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
-                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                  "docs": {
+                    "displayType": "TextInput"
+                  }
                 }
               }
             }
-          ]
+          ],
+          "docs": {
+            "getter": {
+              "_if": {
+                "test": {
+                  "_eq": [{ "_state": "__type_select_copyable" }, "boolean"]
+                },
+                "then": {
+                  "_state": "block.properties.copyable.__boolean"
+                },
+                "else": {
+                  "_state": "block.properties.copyable"
+                }
+              }
+            }
+          }
         },
         "delete": {
           "type": "boolean",
@@ -63,11 +80,11 @@
           "description": "Apply disabled style."
         },
         "editable": {
-          "description": "Allow paragraph editing when true, editable settings can be provided with editable object.",
-          "default": false,
+          "default": true,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow paragraph editing when true, editable settings can be provided with editable object."
             },
             {
               "type": "object",
@@ -91,44 +108,32 @@
                 "maxLength": {
                   "type": "number",
                   "description": "Max length of text area input."
-                },
-                "autoSize": {
-                  "type": ["boolean", "object"],
-                  "description": "Auto size text area input. Can be boolean or object with max and min rows.",
-                  "oneOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "description": "Auto size rows settings.",
-                      "properties": {
-                        "minRows": {
-                          "type": "number",
-                          "description": "Minimum number of rows for text area input."
-                        },
-                        "maxRows": {
-                          "type": "number",
-                          "description": "Maximum number of rows for text area input."
-                        }
-                      }
-                    }
-                  ]
-                },
-                "symbol": {
-                  "type": "string",
-                  "description": "Custom ... symbol of ellipsis content."
                 }
               }
             }
-          ]
+          ],
+          "docs": {
+            "getter": {
+              "_if": {
+                "test": {
+                  "_eq": [{ "_state": "__type_select_editable" }, "boolean"]
+                },
+                "then": {
+                  "_state": "block.properties.editable.__boolean"
+                },
+                "else": {
+                  "_state": "block.properties.editable"
+                }
+              }
+            }
+          }
         },
         "ellipsis": {
           "default": false,
-          "description": "Display ellipsis when text overflows a single line.",
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display ellipsis when text overflows a single line."
             },
             {
               "type": "object",
@@ -148,7 +153,22 @@
                 }
               }
             }
-          ]
+          ],
+          "docs": {
+            "getter": {
+              "_if": {
+                "test": {
+                  "_eq": [{ "_state": "__type_select_ellipsis" }, "boolean"]
+                },
+                "then": {
+                  "_state": "block.properties.ellipsis.__boolean"
+                },
+                "else": {
+                  "_state": "block.properties.ellipsis"
+                }
+              }
+            }
+          }
         },
         "mark": {
           "type": "boolean",
@@ -162,7 +182,8 @@
         },
         "type": {
           "type": "string",
-          "enum": ["secondary", "warning", "danger"],
+          "default": "default",
+          "enum": ["default", "secondary", "warning", "danger"],
           "description": "Additional types. Don't specify for default."
         },
         "underline": {

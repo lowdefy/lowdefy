@@ -15,33 +15,30 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: TextArea
-    value_type: string
+    block_type: Switch
+    value_type: boolean
     category: input
-    init_state_values:
-      __type_autoSize: boolean
+
     description_content: |
-      The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
+      The `Switch` block is an on/off input. It has a boolean value (true/false).
+
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
     available_actions_description: |
       ###### onChange
       Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
 
     examples:
-      - title: TextArea input
-        properties: '{"title": "TextArea input"}'
-      
+      - title: Switch input
+        properties: '{"title": "Switch input"}'
