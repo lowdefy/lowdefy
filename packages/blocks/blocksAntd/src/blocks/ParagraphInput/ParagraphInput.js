@@ -126,7 +126,7 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               autoSize: properties.editable.autoSize,
               ...editableActions,
             }
-          : editableActions
+          : properties.editable !== false && editableActions
       }
       mark={properties.mark}
       strong={properties.strong}

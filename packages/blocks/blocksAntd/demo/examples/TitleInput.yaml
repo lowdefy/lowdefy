@@ -120,6 +120,10 @@
   type: TitleInput
   properties:
     editable: true
+- id: 'properties.editable: false'
+  type: TitleInput
+  properties:
+    editable: false
 - id: 'properties.editable.icon'
   type: TitleInput
   properties:
@@ -141,15 +145,15 @@
   properties:
     editable: 
       maxLength: 10
-- id: 'properties.editable.autoSize: true'
-  type: TitleInput
-  properties:
-    editable: 
-      autoSize: true
-- id: 'properties.editable.autoSize: min max'
-  type: TitleInput
-  properties:
-    editable: 
-      autoSize: 
-        minRows: 2
-        maxRows: 4
+# - id: 'properties.editable.autoSize: true'
+#   type: TitleInput
+#   properties:
+#     editable: 
+#       autoSize: true
+# - id: 'properties.editable.autoSize: min max'
+#   type: TitleInput
+#   properties:
+#     editable: 
+#       autoSize: 
+#         minRows: 2
+#         maxRows: 4

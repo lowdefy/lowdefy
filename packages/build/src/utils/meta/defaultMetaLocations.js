@@ -162,6 +162,9 @@ const defaultMetaLocations = {
   Paragraph: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/Paragraph.json',
   },
+  ParagraphInput: {
+    url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json',
+  },
   Progress: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/Progress.json',
   },
@@ -209,6 +212,9 @@ const defaultMetaLocations = {
   },
   Title: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/Title.json',
+  },
+  TitleInput: {
+    url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json',
   },
   UserAvatar: {
     url: 'https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/UserAvatar.json',

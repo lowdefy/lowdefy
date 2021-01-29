@@ -15,33 +15,39 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: TextArea
+    block_type: TitleInput
     value_type: string
     category: input
     init_state_values:
-      __type_autoSize: boolean
+      __type_select_copyable: boolean
+      __type_select_ellipsis: boolean
+      __type_select_editable: boolean
+      block.properties.editable.__boolean: true
+      block.properties.copyable.__boolean: false
+      block.properties.ellipsis.__boolean: false
     description_content: |
-      The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
+      The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
     available_actions_description: |
       ###### onChange
-      Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
+      Trigger action when title is changed.
+      ###### onCopy
+      Trigger action when copy text is clicked.
+      ###### onExpand
+      Trigger action when ellipse expand is clicked.
 
     examples:
-      - title: TextArea input
-        properties: '{"title": "TextArea input"}'
-      
+      - title: Title input
+        properties: '{"title": "Title input"}'

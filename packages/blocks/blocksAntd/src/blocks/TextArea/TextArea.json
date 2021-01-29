@@ -47,102 +47,11 @@
           ],
           "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined.",
           "docs": {
-            "displayType": "manual",
-            "block": {
-              "id": "block_properties_autoSize",
-              "layout": { "_global": "settings_input_layout" },
-              "type": "Label",
-              "properties": {
-                "title": "autoSize",
-                "span": 8,
-                "align": "right",
-                "extra": "Automatically extend the block number of rows."
-              },
-              "blocks": [
-                {
-                  "id": "__autoSize_type",
-                  "layout": { "span": 10 },
-                  "type": "ButtonSelector",
-                  "properties": {
-                    "size": "small",
-                    "options": ["boolean", "object"],
-                    "label": {
-                      "disabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "block.properties.autoSize.boolean",
-                  "layout": { "span": 6 },
-                  "type": "Switch",
-                  "visible": {
-                    "_if": {
-                      "test": {
-                        "_eq": [{ "_state": "__autoSize_type" }, "boolean"]
-                      },
-                      "then": true,
-                      "else": false
-                    }
-                  },
-                  "properties": {
-                    "size": "small",
-                    "label": {
-                      "disabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "block.properties.autoSize.minRows",
-                  "layout": { "span": 6 },
-                  "type": "NumberInput",
-                  "visible": {
-                    "_if": {
-                      "test": {
-                        "_eq": [{ "_state": "__autoSize_type" }, "object"]
-                      },
-                      "then": true,
-                      "else": false
-                    }
-                  },
-                  "properties": {
-                    "size": "small",
-                    "placeholder": "minRows",
-                    "minimum": 1,
-                    "step": 1,
-                    "label": {
-                      "disabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "block.properties.autoSize.maxRows",
-                  "layout": { "span": 6 },
-                  "type": "NumberInput",
-                  "visible": {
-                    "_if": {
-                      "test": {
-                        "_eq": [{ "_state": "__autoSize_type" }, "object"]
-                      },
-                      "then": true,
-                      "else": false
-                    }
-                  },
-                  "properties": {
-                    "size": "small",
-                    "placeholder": "maxRows",
-                    "minimum": 1,
-                    "step": 1,
-                    "label": {
-                      "disabled": true
-                    }
-                  }
-                }
-              ]
-            },
+            "displayType": "minMaxSize",
             "getter": {
               "_if": {
                 "test": {
-                  "_eq": [{ "_state": "__autoSize_type" }, "boolean"]
+                  "_eq": [{ "_state": "__type_autoSize" }, "boolean"]
                 },
                 "then": {
                   "_state": "block.properties.autoSize.boolean"
