@@ -193,6 +193,40 @@ test('set block enforceType value no init', () => {
   expect(context.state).toEqual({ selector: [] });
 });
 
+test('set block value to initValue in meta', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'ObjectBlock',
+            blockId: 'object_one',
+            meta: {
+              category: 'input',
+              valueType: 'object',
+              initValue: {
+                a: 1,
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { object_one } = context.RootBlocks.map;
+  expect(object_one.value).toEqual({ a: 1 });
+  expect(context.state).toEqual({ object_one: { a: 1 } });
+});
+
 test('Reset to change blocks back to initState', () => {
   const rootBlock = {
     blockId: 'root',
