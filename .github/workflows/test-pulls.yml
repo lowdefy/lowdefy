@@ -5,6 +5,7 @@ on:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node
@@ -13,13 +14,13 @@ jobs:
           node-version: '12.x'
       - uses: actions/checkout@v2
       - name: Check yarn cache integrity
-        run: yarn install --immutable --immutable-cache
+        run: yarn install
       - name: Build packages
-        run: yarn build
+        run: yarn build --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*'
 
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
-        run: yarn test --ignore='@lowdefy/format'
+        run: yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*'
 
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
@@ -31,3 +32,44 @@ jobs:
         with:
           coverageLocations: |
             ${{github.workspace}}/packages/*/coverage/lcov.info:lcov
+
+  test-blocks:
+    name: Test blocks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+      - uses: actions/checkout@v2
+      - name: Check yarn cache integrity
+        run: yarn install
+      - name: Build packages
+        run: yarn build --ignore='@lowdefy/format' --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/operators' --ignore='@lowdefy/renderer' --ignore='@lowdefy/server*'
+
+      # format tests don't pass on node 12 since icu is missing and tests don't work with locales
+      - name: Test packages
+        run: yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/build' --ignore='@lowdefy/cli' --ignore='@lowdefy/engine' --ignore='@lowdefy/graphql*' --ignore='@lowdefy/layout' --ignore='@lowdefy/node-utils' --ignore='@lowdefy/operators' --ignore='@lowdefy/renderer' --ignore='@lowdefy/server*'
+
+      - name: Upload coverage to codecov
+        run: bash <(curl -s https://codecov.io/bash)
+
+      - name: Upload coverage to codeclimate
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/packages/*/coverage/lcov.info:lcov
+
+  check-yarn-cache:
+    name: Check yarn cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+      - uses: actions/checkout@v2
+      - name: Check yarn cache integrity
+        run: yarn install --immutable --immutable-cache --check-cache
