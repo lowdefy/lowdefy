@@ -302,6 +302,9 @@ menus:
           - id: _lte
             type: MenuLink
             pageId: _lte
+          - id: _math
+            type: MenuLink
+            pageId: _math
           - id: _mql
             type: MenuLink
             pageId: _mql
@@ -426,6 +429,7 @@ pages:
   - _ref: operators/_lt.yaml
   - _ref: operators/_lte.yaml
   - _ref: operators/_log.yaml
+  - _ref: operators/_math.yaml
   - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
