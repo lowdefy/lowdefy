@@ -178,15 +178,12 @@ menus:
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
-<<<<<<< HEAD
-          - id: S3UploadButton
-            type: MenuLink
-            pageId: S3UploadButton
-=======
           - id: RatingSlider
             type: MenuLink
             pageId: RatingSlider
->>>>>>> origin/develop
+          - id: S3UploadButton
+            type: MenuLink
+            pageId: S3UploadButton
           - id: Selector
             type: MenuLink
             pageId: Selector
@@ -490,3 +487,4 @@ pages:
   - _ref: operators/_yaml.yaml
 
   - _ref: 404.yaml
+  - id: test
