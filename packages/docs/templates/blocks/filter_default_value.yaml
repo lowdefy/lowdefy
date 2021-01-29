@@ -18,9 +18,9 @@ _get:
     _mql.aggregate:
       on:
         - value:
-            _var:
-              name: value
-              default: {}
+            _if_none:
+              - _var: value
+              - {}
       pipeline:
         - $project:
             value:
@@ -41,9 +41,9 @@ _get:
                                 - k: $$x.k
                                   v: $$x.v
                                 - $objectToArray:
-                                    _var:
-                                      name: default_value
-                                      default: {}
+                                    _if_none:
+                                      - _var: default_value
+                                      - {}
         - $project:
             value:
               $arrayToObject:

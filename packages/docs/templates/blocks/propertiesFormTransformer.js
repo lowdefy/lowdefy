@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
 const label = {
   id: 'label_card',
   type: 'Card',
@@ -148,6 +147,7 @@ function makeBlockDefinition(propertyName, propertyDescription) {
   ) {
     block.properties.label.span = propertyDescription.docs.label.span;
   }
+
   if (propertyDescription.docs && propertyDescription.docs.displayType) {
     switch (propertyDescription.docs.displayType) {
       case 'manual':
@@ -178,6 +178,95 @@ function makeBlockDefinition(propertyName, propertyDescription) {
             type: 'TextInput',
             properties: {
               size: 'small',
+              label: {
+                disabled: true,
+              },
+            },
+          },
+        ];
+        return block;
+      case 'minMaxSize':
+        block.type = 'Label';
+        block.properties = {
+          title: propertyName,
+          span: 8,
+          align: 'right',
+          extra: propertyDescription.description,
+        };
+        block.blocks = [
+          {
+            id: `__type_${propertyName}`,
+            layout: { span: 10 },
+            type: 'ButtonSelector',
+            properties: {
+              size: 'small',
+              options: ['boolean', 'object'],
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.boolean`,
+            layout: { span: 6 },
+            type: 'Switch',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'boolean'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.minRows`,
+            layout: { span: 6 },
+            type: 'NumberInput',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'object'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              placeholder: 'minRows',
+              minimum: 1,
+              step: 1,
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.maxRows`,
+            layout: { span: 6 },
+            type: 'NumberInput',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'object'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              placeholder: 'maxRows',
+              minimum: 1,
+              step: 1,
               label: {
                 disabled: true,
               },
@@ -268,6 +357,9 @@ function makeBlockDefinition(propertyName, propertyDescription) {
             ],
           },
         ];
+        return block;
+      case 'TextInput':
+        block.type = 'TextInput';
         return block;
       case 'disabledDates':
         block.type = 'Card';
@@ -383,6 +475,72 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         block.properties.min = propertyDescription.minimum;
       }
       return block;
+    case undefined:
+      if (propertyDescription.oneOf) {
+        block.type = 'Card';
+        block.layout = {
+          contentGutter: 0,
+        };
+        block.properties = { size: 'small', title: `${propertyName} - type options:`, inner: true };
+        block.areas = {
+          extra: {
+            blocks: [
+              {
+                id: `__type_select_${propertyName}`,
+                type: 'ButtonSelector',
+                properties: {
+                  options: propertyDescription.oneOf.map((item) => item.type),
+                  size: 'small',
+                  label: {
+                    disabled: true,
+                  },
+                },
+              },
+            ],
+          },
+          content: {
+            blocks: [
+              ...[].concat(
+                ...propertyDescription.oneOf.map((item) => {
+                  let bl;
+                  if (item.type === 'object') {
+                    return Object.keys(item.properties).map((objectPropertyName) => {
+                      bl = makeBlockDefinition(
+                        `${propertyName}.${objectPropertyName}`,
+                        item.properties[objectPropertyName]
+                      );
+                      bl.properties.title = objectPropertyName;
+                      bl.visible = {
+                        _if: {
+                          test: {
+                            _eq: [{ _state: `__type_select_${propertyName}` }, item.type],
+                          },
+                          then: true,
+                          else: false,
+                        },
+                      };
+                      return bl;
+                    });
+                  }
+                  bl = makeBlockDefinition(`${propertyName}.__${item.type}`, item);
+                  bl.visible = {
+                    _if: {
+                      test: {
+                        _eq: [{ _state: `__type_select_${propertyName}` }, item.type],
+                      },
+                      then: true,
+                      else: false,
+                    },
+                  };
+                  bl.properties.title = propertyName;
+                  return [bl];
+                })
+              ),
+            ],
+          },
+        };
+        return block;
+      }
     default:
       return block;
   }
