@@ -49,8 +49,7 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
       showTotal={
         properties.showTotal && ((total, range) => `${range[0]}-${range[1]} of ${total} items`)
       }
-      showTitle={properties.showTitle !== undefined ? properties.showTitle : true}
-      showSizeChanger={!!properties.showSizeChanger || !!properties.pageSizeOptions}
+      showSizeChanger={properties.showSizeChanger}
       showQuickJumper={properties.showQuickJumper}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       hideOnSinglePage={properties.hideOnSinglePage}

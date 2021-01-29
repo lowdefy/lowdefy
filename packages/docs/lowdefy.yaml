@@ -169,15 +169,24 @@ menus:
           - id: NumberInput
             type: MenuLink
             pageId: NumberInput
+          - id: Pagination
+            type: MenuLink
+            pageId: Pagination
           - id: ParagraphInput
             type: MenuLink
             pageId: ParagraphInput
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
+<<<<<<< HEAD
           - id: S3UploadButton
             type: MenuLink
             pageId: S3UploadButton
+=======
+          - id: RatingSlider
+            type: MenuLink
+            pageId: RatingSlider
+>>>>>>> origin/develop
           - id: Selector
             type: MenuLink
             pageId: Selector
@@ -414,8 +423,10 @@ pages:
   - _ref: blocks/input/MonthSelector.yaml
   - _ref: blocks/input/MultipleSelector.yaml
   - _ref: blocks/input/NumberInput.yaml
+  - _ref: blocks/input/Pagination.yaml
   - _ref: blocks/input/ParagraphInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
+  - _ref: blocks/input/RatingSlider.yaml
   - _ref: blocks/input/S3UploadButton.yaml
   - _ref: blocks/input/Selector.yaml
   - _ref: blocks/input/Switch.yaml
