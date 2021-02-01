@@ -206,7 +206,7 @@ _ref:
 
             In your `new-ticket.yaml` file, add the following request:
 
-            ##### `pages/booking.yaml`
+            ##### `pages/new-ticket.yaml`
 
             ```yaml
             id: new-ticket

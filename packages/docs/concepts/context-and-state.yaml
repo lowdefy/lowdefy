@@ -33,7 +33,7 @@ _ref:
 
             -------
 
-            A Lowdefy block with category `context` provides the environment for a part of a Lowdefy app to run in. More than one context can be placed on a page, but generally only one is need. The first block on a page must be a `context` category block.
+            A Lowdefy block with category `context` provides the environment for a part of a Lowdefy app to run in. More than one context can be placed on a page, but generally only one is needed. The first block on a page must be a `context` category block.
 
             The standard page blocks like [`PageHeaderMenu`](/PageHeaderMenu) or [`PageSiderMenu`](/PageSiderMenu) are all `context` category blocks, and the [`Context`](/Context) block is a simple container that also provides a context.
 
