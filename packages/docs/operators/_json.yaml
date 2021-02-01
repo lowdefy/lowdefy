@@ -80,14 +80,14 @@ _ref:
           ```
           Returns (as a string):
           ```text
-          {
+          '{
             "key": "Value",
             "boolean": true,
             "array": [
               1,
               2
             ]
-          }
+          }'
           ```
           ###### Stable option:
           ```yaml
@@ -103,14 +103,14 @@ _ref:
           ```
           Returns (as a string):
           ```text
-          {
+          '{
             "array": [
               1,
               2
             ],
             "boolean": true,
             "key": "Value"
-          }
+          }''
           ```
           ###### Space option:
           ```yaml

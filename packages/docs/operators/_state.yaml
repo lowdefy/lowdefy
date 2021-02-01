@@ -26,11 +26,11 @@ _ref:
         all?: boolean,
         key?: string,
         default?: any,
-        contextId?: string?
+        contextId?: string
       }): any
       ```
     description: |
-      The `_state` operator gets a value from the [`state`](/context-and-state) object. By default it is from the [`context`](/context-and-state) the operator is used in, but it can be another context.
+      The `_state` operator gets a value from the [`state`](/context-and-state) object. The `state` is a data object specific to the context it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [`context`](/context-and-state) the operator is used in, but a different context can be specified.
 
     arguments: |
       ###### string
@@ -43,7 +43,7 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `state` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `state` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `state`. By default, `null` is returned if a value is not found.
-        - `contextId: string`: The id of a `context`. Setting this will get the value from the `state` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator. Cannot be used in connections` or `requests`.
+        - `contextId: string`: The id of a `context`. Setting this will get the value from the `state` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator. Cannot be used in `connections` or `requests`.
     examples: |
       ###### Get the value of `my_key` from `state`:
       ```yaml
@@ -90,7 +90,7 @@ _ref:
       Returns: The value of `might_not_exist`, or `"Default value"`.
 
       ###### Block list indices:
-      Assuming state:
+      Assuming `state`:
       ```yaml
       my_array:
         - value: 0

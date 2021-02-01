@@ -314,6 +314,15 @@ menus:
           - id: _eq
             type: MenuLink
             pageId: _eq
+          - id: _event
+            type: MenuLink
+            pageId: _event
+          - id: _global
+            type: MenuLink
+            pageId: _global
+          - id: _get
+            type: MenuLink
+            pageId: _get
           - id: _gt
             type: MenuLink
             pageId: _gt
@@ -326,6 +335,9 @@ menus:
           - id: _if_none
             type: MenuLink
             pageId: _if_none
+          - id: _input
+            type: MenuLink
+            pageId: _input
           - id: _json
             type: MenuLink
             pageId: _json
@@ -344,6 +356,12 @@ menus:
           - id: _math
             type: MenuLink
             pageId: _math
+          - id: _media
+            type: MenuLink
+            pageId: _media
+          - id: _menu
+            type: MenuLink
+            pageId: _menu
           - id: _mql
             type: MenuLink
             pageId: _mql
@@ -374,6 +392,9 @@ menus:
           - id: _request
             type: MenuLink
             pageId: _request
+          - id: _secret
+            type: MenuLink
+            pageId: _secret
           - id: _state
             type: MenuLink
             pageId: _state
@@ -392,6 +413,9 @@ menus:
           - id: _uri
             type: MenuLink
             pageId: _uri
+          - id: _url_query
+            type: MenuLink
+            pageId: _url_query
           - id: _uuid
             type: MenuLink
             pageId: _uuid
@@ -473,16 +497,22 @@ pages:
   - _ref: operators/_diff.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
+  - _ref: operators/_event.yaml
+  - _ref: operators/_global.yaml
+  - _ref: operators/_get.yaml
   - _ref: operators/_gt.yaml
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_input.yaml
   - _ref: operators/_json.yaml
   - _ref: operators/_list_contexts.yaml
+  - _ref: operators/_log.yaml
   - _ref: operators/_lt.yaml
   - _ref: operators/_lte.yaml
-  - _ref: operators/_log.yaml
   - _ref: operators/_math.yaml
+  - _ref: operators/_media.yaml
+  - _ref: operators/_menu.yaml
   - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
@@ -493,12 +523,14 @@ pages:
   - _ref: operators/_random.yaml
   - _ref: operators/_regex.yaml
   - _ref: operators/_request.yaml
+  - _ref: operators/_secret.yaml
   - _ref: operators/_state.yaml
   - _ref: operators/_string.yaml
   - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
   - _ref: operators/_type.yaml
   - _ref: operators/_uri.yaml
+  - _ref: operators/_url_query.yaml
   - _ref: operators/_uuid.yaml
   - _ref: operators/_yaml.yaml
 

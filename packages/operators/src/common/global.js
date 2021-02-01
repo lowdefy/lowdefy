@@ -16,9 +16,11 @@
 
 import getFromObject from '../getFromObject';
 
-function _global({ arrayIndices, env, location, lowdefyGlobal, params }) {
+function _global({ arrayIndices, context, contexts, env, location, lowdefyGlobal, params }) {
   return getFromObject({
     arrayIndices,
+    context,
+    contexts,
     env,
     location,
     object: lowdefyGlobal,

@@ -20,6 +20,7 @@ const contextKeys = {
   _action_log: 'actionLog',
   _state: 'state',
   _input: 'input',
+  _global: 'lowdefyGlobal',
   _request_details: 'requests',
   _mutation_details: 'mutations',
   _url_query: 'urlQuery',
@@ -37,6 +38,13 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
   if (!type.isString(contextId)) {
     throw new Error(
       `Operator Error: ${operator}.contextId must be of type string. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
+  if (type.isUndefined(contextKeys[operator])) {
+    throw new Error(
+      `Operator Error: Cannot use ${operator} to get from another context. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
