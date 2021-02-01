@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "lines": 1
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,19 +13,27 @@
       "properties": {
         "disabled": {
           "type": "boolean",
+          "default": false,
           "description": "Disable the anchor if true."
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block for anchor icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block for anchor icon.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "strong": {
           "type": "boolean",
+          "default": false,
           "description": "Makes the text bold when true."
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to anchor."
+          "description": "Css style object to applied to anchor.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "title": {
           "type": "string",
@@ -33,7 +46,8 @@
       "additionalProperties": false,
       "properties": {
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Called when Anchor is clicked."
         }
       }
     }

@@ -225,31 +225,6 @@ exports[`Render properties.shape - value[0] 1`] = `
 </span>
 `;
 
-exports[`Render properties.size 40 - value[0] 1`] = `
-<span
-  className="ant-avatar {\\"style\\":[{},null]} ant-avatar-circle"
-  id="properties.size 40"
-  onClick={[Function]}
-  style={
-    Object {
-      "fontSize": 18,
-      "height": 40,
-      "lineHeight": "40px",
-      "width": 40,
-    }
-  }
->
-  <span
-    className="ant-avatar-string"
-    style={
-      Object {
-        "opacity": 0,
-      }
-    }
-  />
-</span>
-`;
-
 exports[`Render properties.size large - value[0] 1`] = `
 <span
   className="ant-avatar {\\"style\\":[{},null]} ant-avatar-lg ant-avatar-circle"
@@ -339,10 +314,6 @@ exports[`Test Schema properties.icon string properties.shape square 2`] = `null`
 exports[`Test Schema properties.shape 1`] = `true`;
 
 exports[`Test Schema properties.shape 2`] = `null`;
-
-exports[`Test Schema properties.size 40 1`] = `true`;
-
-exports[`Test Schema properties.size 40 2`] = `null`;
 
 exports[`Test Schema properties.size large 1`] = `true`;
 
