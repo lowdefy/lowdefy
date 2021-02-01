@@ -12,7 +12,10 @@
         },
         "count": {
           "type": ["number", "string"],
-          "description": "Text to show in badge."
+          "description": "Text to show in badge.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "dot": {
           "type": "boolean",
@@ -21,7 +24,10 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in badge."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in badge.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "offset": {
           "type": "array",

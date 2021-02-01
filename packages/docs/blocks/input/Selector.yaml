@@ -19,7 +19,7 @@ _ref:
     value_type: any
     category: input
     init_state_values:
-      __optionsType: Label-value pairs
+      __optionsType: object
     init_property_values:
       options:
         - label: First 

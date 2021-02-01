@@ -45,23 +45,7 @@
               }
             }
           ],
-          "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined.",
-          "docs": {
-            "displayType": "minMaxSize",
-            "getter": {
-              "_if": {
-                "test": {
-                  "_eq": [{ "_state": "__type_autoSize" }, "boolean"]
-                },
-                "then": {
-                  "_state": "block.properties.autoSize.boolean"
-                },
-                "else": {
-                  "_state": "block.properties.autoSize"
-                }
-              }
-            }
-          }
+          "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined."
         },
         "disabled": {
           "type": "boolean",
@@ -119,15 +103,18 @@
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "style"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "style"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "placeholder": {

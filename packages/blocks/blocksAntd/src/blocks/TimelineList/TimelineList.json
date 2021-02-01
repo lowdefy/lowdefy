@@ -48,7 +48,10 @@
               },
               "iconField": {
                 "type": ["string", "object"],
-                "description": "Name of an Ant Design Icon or properties of an Icon block to customize the item timeline icon."
+                "description": "Name of an Ant Design Icon or properties of an Icon block to customize the item timeline icon.",
+                "docs": {
+                  "displayType": "icon"
+                }
               }
             }
           }

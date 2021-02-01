@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 100
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,10 +13,12 @@
       "properties": {
         "bordered": {
           "type": "boolean",
+          "default": true,
           "description": "Render items in a table."
         },
         "colon": {
           "type": "boolean",
+          "default": true,
           "description": "Include a colon in item labels."
         },
         "column": {
@@ -19,10 +26,10 @@
           "description": "The number of description items in a row, could be a number or a object like { xs: 8, sm: 16, md: 24}."
         },
         "items": {
-          "anyOf": [
+          "description": "List of items to display",
+          "oneOf": [
             {
               "type": "array",
-              "description": "List of items to display",
               "items": {
                 "type": "object",
                 "required": ["label"],
@@ -42,21 +49,22 @@
                 }
               }
             },
-            { "type": "object" },
-            { "type": "string" },
-            { "type": "number" },
-            { "type": "boolean" }
+            {
+              "type": "object"
+            }
           ]
         },
         "layout": {
           "type": "string",
           "description": "Put values next to or below their labels.",
-          "enum": ["horizontal", "vertical"]
+          "enum": ["horizontal", "vertical"],
+          "default": "horizontal"
         },
         "size": {
           "type": "string",
           "description": "Size of the block.",
-          "enum": ["default", "small"]
+          "enum": ["default", "small"],
+          "default": "default"
         },
         "title": {
           "type": "string",

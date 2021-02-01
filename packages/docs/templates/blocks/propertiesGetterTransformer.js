@@ -19,9 +19,13 @@ function transformer(obj) {
   const styleProperties = [];
   const optionsSelector = [];
   const manual = [];
+  const oneOf = [];
   Object.keys(blockProperties).forEach((key) => {
     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'style') {
       styleProperties.push(key);
+    }
+    if (blockProperties[key].oneOf != null) {
+      oneOf.push(key);
     }
     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'optionsSelector') {
       optionsSelector.push(key);
@@ -35,6 +39,15 @@ function transformer(obj) {
     ret[name] = {
       '_yaml.parse': {
         _if_none: [{ _state: `block.properties.${name}` }, ''],
+      },
+    };
+    return ret;
+  });
+  const oneOfArray = oneOf.map((name) => {
+    const ret = {};
+    ret[name] = {
+      _state: {
+        '_string.concat': [`__${name}_`, { _state: `__${name}_type` }],
       },
     };
     return ret;
@@ -69,7 +82,7 @@ function transformer(obj) {
   });
   const assignArray = [{ _state: 'block.properties' }];
   return {
-    '_object.assign': assignArray.concat(styleArray, optionsArray, manualArray),
+    '_object.assign': assignArray.concat(styleArray, oneOfArray, optionsArray, manualArray),
   };
 }
 

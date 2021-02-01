@@ -15,28 +15,38 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Switch
-    value_type: boolean
-    category: input
+    block_type: Descriptions
+    category: display
+    init_state_values:
+      __type_column: number
+
+    init_property_values:
+      column: 
+        number: 2
+      items:
+        - label: Item One
+          value: 1
+        - label: Item Two
+          value: 2
+        - label: Item Three
+          value: 3
+        - label: Item Four
+          value: 4
     description_content: |
-      The `Switch` block is an on/off input. It has a boolean value (true/false).
+      Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
+        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
+        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
+        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    available_actions_description: |
-      ###### onChange
-      Triggered when value is changed.
-
     examples:
-      - title: Switch input
-        properties: '{"title": "Switch input"}'
+      - title: Basic button
+        properties: '{"title": "Click me"}'
+      

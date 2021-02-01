@@ -55,27 +55,12 @@
                   "type": ["string", "array"],
                   "description": "Tooltip text, can be an array or two strings for before and after clicked.",
                   "docs": {
-                    "displayType": "TextInput"
+                    "displayType": "string"
                   }
                 }
               }
             }
-          ],
-          "docs": {
-            "getter": {
-              "_if": {
-                "test": {
-                  "_eq": [{ "_state": "__type_select_copyable" }, "boolean"]
-                },
-                "then": {
-                  "_state": "block.properties.copyable.__boolean"
-                },
-                "else": {
-                  "_state": "block.properties.copyable"
-                }
-              }
-            }
-          }
+          ]
         },
         "delete": {
           "type": "boolean",
@@ -112,22 +97,7 @@
                 }
               }
             }
-          ],
-          "docs": {
-            "getter": {
-              "_if": {
-                "test": {
-                  "_eq": [{ "_state": "__type_select_ellipsis" }, "boolean"]
-                },
-                "then": {
-                  "_state": "block.properties.ellipsis.__boolean"
-                },
-                "else": {
-                  "_state": "block.properties.ellipsis"
-                }
-              }
-            }
-          }
+          ]
         },
         "editable": {
           "default": true,
@@ -161,22 +131,7 @@
                 }
               }
             }
-          ],
-          "docs": {
-            "getter": {
-              "_if": {
-                "test": {
-                  "_eq": [{ "_state": "__type_select_editable" }, "boolean"]
-                },
-                "then": {
-                  "_state": "block.properties.editable.__boolean"
-                },
-                "else": {
-                  "_state": "block.properties.editable"
-                }
-              }
-            }
-          }
+          ]
         },
         "level": {
           "type": "number",

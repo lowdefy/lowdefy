@@ -89,15 +89,18 @@
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "style"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "style"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "options": {
@@ -106,9 +109,6 @@
           "description": "Auto complete options can be an array of string values.",
           "items": {
             "type": "string"
-          },
-          "docs": {
-            "displayType": "optionsString"
           }
         },
         "optionsStyle": {

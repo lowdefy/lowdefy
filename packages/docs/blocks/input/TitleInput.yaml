@@ -19,12 +19,12 @@ _ref:
     value_type: string
     category: input
     init_state_values:
-      __type_select_copyable: boolean
-      __type_select_ellipsis: boolean
-      __type_select_editable: boolean
-      block.properties.editable.__boolean: true
-      block.properties.copyable.__boolean: false
-      block.properties.ellipsis.__boolean: false
+      __copyable_type: boolean
+      __ellipsis_type: boolean
+      __editable_type: boolean
+      __editable_boolean: true
+      __copyable_boolean: false
+      __ellipsis_boolean: false
     description_content: |
       The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
     default_properties:

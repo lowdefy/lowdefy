@@ -48,9 +48,6 @@
               "type": "array",
               "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects."
             }
-          },
-          "docs": {
-            "displayType": "disabledDates"
           }
         },
         "format": {
@@ -115,15 +112,18 @@
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "style"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "style"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "minuteStep": {
