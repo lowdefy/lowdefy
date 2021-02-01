@@ -90,7 +90,7 @@ _ref:
       Returns: The value of `might_not_exist`, or `"Default value"`.
 
       ###### Block list indices:
-      Assuming input:
+      Assuming `input`:
       ```yaml
       my_array:
         - value: 0
