@@ -14,6 +14,73 @@
   limitations under the License.
 */
 
+const button = (propertyName) => ({
+  id: 'button_card',
+  type: 'Card',
+  layout: {
+    contentGutter: 0,
+  },
+  properties: {
+    size: 'small',
+    title: 'button:',
+    inner: true,
+  },
+  blocks: [
+    {
+      id: `block.properties.${propertyName}.icon`,
+      type: 'Selector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'icon',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Name of an Ant Design Icon or properties of an Icon block to use icon in button.',
+        },
+        showSearch: true,
+        allowClear: true,
+        options: { _global: 'all_icons' },
+      },
+    },
+    {
+      id: `block.properties.${propertyName}.title`,
+      type: 'TextInput',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'title',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Title text on the button.',
+        },
+      },
+    },
+    {
+      id: `block.properties.${propertyName}.type`,
+      type: 'ButtonSelector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'type',
+        size: 'small',
+        options: ['primary', 'default', 'dashed', 'danger', 'link', 'text'],
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'The button type.',
+        },
+      },
+    },
+  ],
+});
+
 const label = {
   id: 'label_card',
   type: 'Card',
@@ -126,10 +193,11 @@ const label = {
   ],
 };
 
-function makeBlockDefinition(propertyName, propertyDescription) {
+function makeBlockDefinition(propertyName, propertyDescription, requiredProperties) {
   const block = {
     id: `block.properties.${propertyName}`,
     layout: { _global: 'settings_input_layout' },
+    required: requiredProperties.includes(propertyName),
     properties: {
       title: propertyName,
       size: 'small',
@@ -148,13 +216,13 @@ function makeBlockDefinition(propertyName, propertyDescription) {
   ) {
     block.properties.label.span = propertyDescription.docs.label.span;
   }
+
   if (propertyDescription.docs && propertyDescription.docs.displayType) {
     switch (propertyDescription.docs.displayType) {
       case 'manual':
         return propertyDescription.docs.block;
       case 'icon':
         block.type = 'Selector';
-        block.layout = { _global: 'settings_input_layout' };
         block.properties = {
           ...block.properties,
           showSearch: true,
@@ -170,6 +238,8 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         return block;
       case 'label':
         return label;
+      case 'button':
+        return button(propertyName);
       case 'optionsString':
         block.type = 'ControlledList';
         block.blocks = [
@@ -178,6 +248,95 @@ function makeBlockDefinition(propertyName, propertyDescription) {
             type: 'TextInput',
             properties: {
               size: 'small',
+              label: {
+                disabled: true,
+              },
+            },
+          },
+        ];
+        return block;
+      case 'minMaxSize':
+        block.type = 'Label';
+        block.properties = {
+          title: propertyName,
+          span: 8,
+          align: 'right',
+          extra: propertyDescription.description,
+        };
+        block.blocks = [
+          {
+            id: `__type_${propertyName}`,
+            layout: { span: 10 },
+            type: 'ButtonSelector',
+            properties: {
+              size: 'small',
+              options: ['boolean', 'object'],
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.boolean`,
+            layout: { span: 6 },
+            type: 'Switch',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'boolean'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.minRows`,
+            layout: { span: 6 },
+            type: 'NumberInput',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'object'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              placeholder: 'minRows',
+              minimum: 1,
+              step: 1,
+              label: {
+                disabled: true,
+              },
+            },
+          },
+          {
+            id: `block.properties.${propertyName}.maxRows`,
+            layout: { span: 6 },
+            type: 'NumberInput',
+            visible: {
+              _if: {
+                test: {
+                  _eq: [{ _state: `__type_${propertyName}` }, 'object'],
+                },
+                then: true,
+                else: false,
+              },
+            },
+            properties: {
+              size: 'small',
+              placeholder: 'maxRows',
+              minimum: 1,
+              step: 1,
               label: {
                 disabled: true,
               },
@@ -268,6 +427,9 @@ function makeBlockDefinition(propertyName, propertyDescription) {
             ],
           },
         ];
+        return block;
+      case 'TextInput':
+        block.type = 'TextInput';
         return block;
       case 'disabledDates':
         block.type = 'Card';
@@ -383,6 +545,73 @@ function makeBlockDefinition(propertyName, propertyDescription) {
         block.properties.min = propertyDescription.minimum;
       }
       return block;
+    case undefined:
+      if (propertyDescription.oneOf) {
+        block.type = 'Card';
+        block.layout = {
+          contentGutter: 0,
+        };
+        block.properties = { size: 'small', title: `${propertyName} - type options:`, inner: true };
+        block.areas = {
+          extra: {
+            blocks: [
+              {
+                id: `__type_select_${propertyName}`,
+                type: 'ButtonSelector',
+                properties: {
+                  options: propertyDescription.oneOf.map((item) => item.type),
+                  size: 'small',
+                  label: {
+                    disabled: true,
+                  },
+                },
+              },
+            ],
+          },
+          content: {
+            blocks: [
+              ...[].concat(
+                ...propertyDescription.oneOf.map((item) => {
+                  let bl;
+                  if (item.type === 'object') {
+                    return Object.keys(item.properties).map((objectPropertyName) => {
+                      bl = makeBlockDefinition(
+                        `${propertyName}.${objectPropertyName}`,
+                        item.properties[objectPropertyName],
+                        []
+                      );
+                      bl.properties.title = objectPropertyName;
+                      bl.visible = {
+                        _if: {
+                          test: {
+                            _eq: [{ _state: `__type_select_${propertyName}` }, item.type],
+                          },
+                          then: true,
+                          else: false,
+                        },
+                      };
+                      return bl;
+                    });
+                  }
+                  bl = makeBlockDefinition(`${propertyName}.__${item.type}`, item, []);
+                  bl.visible = {
+                    _if: {
+                      test: {
+                        _eq: [{ _state: `__type_select_${propertyName}` }, item.type],
+                      },
+                      then: true,
+                      else: false,
+                    },
+                  };
+                  bl.properties.title = propertyName;
+                  return [bl];
+                })
+              ),
+            ],
+          },
+        };
+        return block;
+      }
     default:
       return block;
   }
@@ -390,10 +619,11 @@ function makeBlockDefinition(propertyName, propertyDescription) {
 
 function transformer(obj) {
   const blockProperties = obj.schema.properties.properties;
+  const requiredProperties = obj.schema.properties.required || [];
   const blocks = Object.keys(blockProperties)
     .sort()
-    .map((key) => {
-      return makeBlockDefinition(key, blockProperties[key]);
+    .map((propertyName) => {
+      return makeBlockDefinition(propertyName, blockProperties[propertyName], requiredProperties);
     });
   return blocks;
 }

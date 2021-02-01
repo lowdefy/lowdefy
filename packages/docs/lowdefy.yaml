@@ -24,6 +24,12 @@ global:
     sm:
       span: 23
 
+types:
+  TitleInput:
+    url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
+  ParagraphInput:
+    url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json
+
 menus:
   - id: default
     links:
@@ -163,18 +169,36 @@ menus:
           - id: NumberInput
             type: MenuLink
             pageId: NumberInput
+          - id: Pagination
+            type: MenuLink
+            pageId: Pagination
+          - id: ParagraphInput
+            type: MenuLink
+            pageId: ParagraphInput
           - id: RadioSelector
             type: MenuLink
             pageId: RadioSelector
+          - id: RatingSlider
+            type: MenuLink
+            pageId: RatingSlider
+          - id: S3UploadButton
+            type: MenuLink
+            pageId: S3UploadButton
           - id: Selector
             type: MenuLink
             pageId: Selector
+          - id: Switch
+            type: MenuLink
+            pageId: Switch
           - id: TextArea
             type: MenuLink
             pageId: TextArea
           - id: TextInput
             type: MenuLink
             pageId: TextInput
+          - id: TitleInput
+            type: MenuLink
+            pageId: TitleInput
           - id: WeekSelector
             type: MenuLink
             pageId: WeekSelector
@@ -260,9 +284,15 @@ menus:
           - id: _and
             type: MenuLink
             pageId: _and
+          - id: _array
+            type: MenuLink
+            pageId: _array
           - id: _base64
             type: MenuLink
             pageId: _base64
+          - id: _date
+            type: MenuLink
+            pageId: _date
           - id: _diff
             type: MenuLink
             pageId: _diff
@@ -299,6 +329,9 @@ menus:
           - id: _lte
             type: MenuLink
             pageId: _lte
+          - id: _math
+            type: MenuLink
+            pageId: _math
           - id: _mql
             type: MenuLink
             pageId: _mql
@@ -308,6 +341,9 @@ menus:
           - id: _nunjucks
             type: MenuLink
             pageId: _nunjucks
+          - id: _object
+            type: MenuLink
+            pageId: _object
           - id: _operator
             type: MenuLink
             pageId: _operator
@@ -326,6 +362,12 @@ menus:
           - id: _request
             type: MenuLink
             pageId: _request
+          - id: _state
+            type: MenuLink
+            pageId: _state
+          - id: _string
+            type: MenuLink
+            pageId: _string
           - id: _subtract
             type: MenuLink
             pageId: _subtract
@@ -378,10 +420,16 @@ pages:
   - _ref: blocks/input/MonthSelector.yaml
   - _ref: blocks/input/MultipleSelector.yaml
   - _ref: blocks/input/NumberInput.yaml
+  - _ref: blocks/input/Pagination.yaml
+  - _ref: blocks/input/ParagraphInput.yaml
   - _ref: blocks/input/RadioSelector.yaml
+  - _ref: blocks/input/RatingSlider.yaml
+  - _ref: blocks/input/S3UploadButton.yaml
   - _ref: blocks/input/Selector.yaml
+  - _ref: blocks/input/Switch.yaml
   - _ref: blocks/input/TextArea.yaml
   - _ref: blocks/input/TextInput.yaml
+  - _ref: blocks/input/TitleInput.yaml
   - _ref: blocks/input/WeekSelector.yaml
 
   - _ref: blocks/display/Button.yaml
@@ -403,7 +451,9 @@ pages:
   - _ref: actions/Validate.yaml
 
   - _ref: operators/_and.yaml
+  - _ref: operators/_array.yaml
   - _ref: operators/_base64.yaml
+  - _ref: operators/_date.yaml
   - _ref: operators/_diff.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
@@ -416,15 +466,19 @@ pages:
   - _ref: operators/_lt.yaml
   - _ref: operators/_lte.yaml
   - _ref: operators/_log.yaml
+  - _ref: operators/_math.yaml
   - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
+  - _ref: operators/_object.yaml
   - _ref: operators/_operator.yaml
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
   - _ref: operators/_random.yaml
   - _ref: operators/_regex.yaml
   - _ref: operators/_request.yaml
+  - _ref: operators/_state.yaml
+  - _ref: operators/_string.yaml
   - _ref: operators/_subtract.yaml
   - _ref: operators/_sum.yaml
   - _ref: operators/_type.yaml

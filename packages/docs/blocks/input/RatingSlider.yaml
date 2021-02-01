@@ -15,33 +15,28 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: TextArea
-    value_type: string
+    block_type: RatingSlider
+    value_type: number
     category: input
-    init_state_values:
-      __type_autoSize: boolean
     description_content: |
-      The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
+      The `RatingSlider` block allows a user to choose a numerical value on a slider input. It is typically used for scores or ratings. It has the option to have a "Not Applicable" checkbox, which leaves the value as null.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/RatingSlider/RatingSlider.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/RatingSlider/RatingSlider.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/RatingSlider/RatingSlider.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
     available_actions_description: |
       ###### onChange
       Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
 
     examples:
-      - title: TextArea input
-        properties: '{"title": "TextArea input"}'
-      
+      - title: RatingSlider input
+        properties: '{"title": "RatingSlider input"}'

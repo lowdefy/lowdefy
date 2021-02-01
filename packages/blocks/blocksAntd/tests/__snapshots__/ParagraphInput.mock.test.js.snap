@@ -18,15 +18,13 @@ exports[`Mock render - properties.delete: true - value[0] - default 1`] = `Array
 
 exports[`Mock render - properties.disabled: true - value[0] - default 1`] = `Array []`;
 
-exports[`Mock render - properties.editable.autoSize: min max - value[0] - default 1`] = `Array []`;
-
-exports[`Mock render - properties.editable.autoSize: true - value[0] - default 1`] = `Array []`;
-
 exports[`Mock render - properties.editable.icon - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.editable.maxLength: 10 - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.editable.tooltip - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.editable: false - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.editable: true - value[0] - default 1`] = `Array []`;
 

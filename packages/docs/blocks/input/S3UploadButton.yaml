@@ -15,33 +15,32 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: TextArea
-    value_type: string
+    block_type: S3UploadButton
+    value_type: object
     category: input
-    init_state_values:
-      __type_autoSize: boolean
     description_content: |
-      The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
+      The `S3UploadButton` block allows a user to to upload a file to AWS S3.
+
+      The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
+
+      The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
     available_actions_description: |
       ###### onChange
       Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
 
     examples:
-      - title: TextArea input
-        properties: '{"title": "TextArea input"}'
-      
+      - title: S3UploadButtonBlock
+        properties: '{"s3PostPolicyRequestId": "my_request_id"}'
