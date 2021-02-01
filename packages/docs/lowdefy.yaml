@@ -302,9 +302,15 @@ menus:
           - id: _eq
             type: MenuLink
             pageId: _eq
+          - id: _event
+            type: MenuLink
+            pageId: _event
           - id: _global
             type: MenuLink
             pageId: _global
+          - id: _get
+            type: MenuLink
+            pageId: _get
           - id: _gt
             type: MenuLink
             pageId: _gt
@@ -341,6 +347,9 @@ menus:
           - id: _media
             type: MenuLink
             pageId: _media
+          - id: _menu
+            type: MenuLink
+            pageId: _menu
           - id: _mql
             type: MenuLink
             pageId: _mql
@@ -371,6 +380,9 @@ menus:
           - id: _request
             type: MenuLink
             pageId: _request
+          - id: _secret
+            type: MenuLink
+            pageId: _secret
           - id: _state
             type: MenuLink
             pageId: _state
@@ -469,7 +481,9 @@ pages:
   - _ref: operators/_diff.yaml
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
+  - _ref: operators/_event.yaml
   - _ref: operators/_global.yaml
+  - _ref: operators/_get.yaml
   - _ref: operators/_gt.yaml
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
@@ -482,6 +496,7 @@ pages:
   - _ref: operators/_lte.yaml
   - _ref: operators/_math.yaml
   - _ref: operators/_media.yaml
+  - _ref: operators/_menu.yaml
   - _ref: operators/_mql.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
@@ -492,6 +507,7 @@ pages:
   - _ref: operators/_random.yaml
   - _ref: operators/_regex.yaml
   - _ref: operators/_request.yaml
+  - _ref: operators/_secret.yaml
   - _ref: operators/_state.yaml
   - _ref: operators/_string.yaml
   - _ref: operators/_subtract.yaml
