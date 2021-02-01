@@ -331,26 +331,6 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size 40 - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "alt": undefined,
-      "children": undefined,
-      "className": "{\\"style\\":[{},null]}",
-      "gap": undefined,
-      "icon": undefined,
-      "id": "properties.size 40",
-      "onClick": [Function],
-      "shape": undefined,
-      "size": 40,
-      "src": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
 exports[`Mock render - properties.size large - value[0] - default 1`] = `
 Array [
   Array [
