@@ -32,7 +32,7 @@ _ref:
     description: |
       The `_url_query` operator gets a value from the [`urlQuery`](/context-and-state) object. The `urlQuery` is a data object that is set as the [`https://en.wikipedia.org/wiki/Query_string`] of the app URL. It can be set when linking to a new page using the [`Link`](/link) action, and can be used to set data like a `id` when switching to a new page. Unlike `input`, the `urlQuery` is visible to the user, and can be modified by the user.
 
-      > Setting a `id` that can be guessed, like an incremental `id`, can lead to security issues, since users can easily guess and access data for other `ids`.
+      > __DO NOT__ set any private or personal information to `urlQuery`; all data set to `urlQuery` are accessible publicly. Setting a `id` that can be guessed, like an incremental `id`, can lead to security issues, since users can easily guess and access data for other `ids`.
 
       If the page is reloaded, the `urlQuery` is not lost. By using `urlQuery`, you can make links containing data that can be shared by users. By default, `_url_query` accesses the `url_query` object from the [`context`](/context-and-state) the operator is used in, but a different context can be specified.
 

@@ -23,7 +23,7 @@ _ref:
       (value: any): string[]
       ```
     description: |
-      The `_list_contexts` operator returns an array with the ids of all the `contexts` in the app. The operator can only be used in the web-client, and not in `connections` or `requests`.
+      The `_list_contexts` operator returns an array with the ids of all the `contexts` already mounted during the current user session in the app. The operator can only be used in the web-client, and not in `connections` or `requests`.
     arguments: |
       ###### any
       The `_list_contexts` operator returns the array regardless of arguments.
