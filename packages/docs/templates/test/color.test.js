@@ -57,7 +57,11 @@ test('color propertiesGetterTransformer', () => {
 });
 
 test('color defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "field": null,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {

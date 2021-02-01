@@ -55,7 +55,11 @@ test('integer propertiesGetterTransformer', () => {
 });
 
 test('integer defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "num": null,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {

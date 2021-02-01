@@ -162,7 +162,11 @@ test('oneOf propertiesGetterTransformer', () => {
 });
 
 test('oneOf defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "field": null,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {
@@ -268,23 +272,6 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
               Object {
                 "blocks": Array [
                   Object {
-                    "id": "__field_object.str",
-                    "layout": Object {
-                      "_global": "settings_input_layout",
-                    },
-                    "properties": Object {
-                      "label": Object {
-                        "align": "right",
-                        "extra": "str description",
-                        "span": 8,
-                      },
-                      "size": "small",
-                      "title": "str",
-                    },
-                    "required": false,
-                    "type": "TextInput",
-                  },
-                  Object {
                     "id": "__field_object.bool",
                     "layout": Object {
                       "_global": "settings_input_layout",
@@ -300,6 +287,23 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     },
                     "required": false,
                     "type": "Switch",
+                  },
+                  Object {
+                    "id": "__field_object.str",
+                    "layout": Object {
+                      "_global": "settings_input_layout",
+                    },
+                    "properties": Object {
+                      "label": Object {
+                        "align": "right",
+                        "extra": "str description",
+                        "span": 8,
+                      },
+                      "size": "small",
+                      "title": "str",
+                    },
+                    "required": false,
+                    "type": "TextInput",
                   },
                 ],
                 "id": "__field_object",
@@ -397,7 +401,11 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
 });
 
 test('oneOf schemaStrObj defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schemaStrObj)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schemaStrObj)).toMatchInlineSnapshot(`
+    Object {
+      "field": null,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {

@@ -54,7 +54,11 @@ test('boolean propertiesGetterTransformer', () => {
 });
 
 test('boolean defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "bool": false,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {

@@ -38,12 +38,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -64,12 +64,12 @@
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {

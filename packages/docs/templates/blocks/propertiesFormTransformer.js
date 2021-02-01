@@ -81,118 +81,6 @@ const button = (propertyName) => ({
   ],
 });
 
-const label = (propertyName) => ({
-  id: `${propertyName}_card`,
-  type: 'Card',
-  layout: {
-    contentGutter: 0,
-  },
-  properties: {
-    size: 'small',
-    title: `${propertyName}:`,
-    inner: true,
-  },
-  blocks: [
-    {
-      id: `block.properties.${propertyName}.span`,
-      type: 'NumberInput',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'span',
-        size: 'small',
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-    {
-      id: `block.properties.${propertyName}.align`,
-      type: 'ButtonSelector',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'align',
-        size: 'small',
-        options: ['left', 'right'],
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-    {
-      id: `block.properties.${propertyName}.inline`,
-      type: 'Switch',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'inline',
-        size: 'small',
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-    {
-      id: `block.properties.${propertyName}.disabled`,
-      type: 'Switch',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'disabled',
-        size: 'small',
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-    {
-      id: `block.properties.${propertyName}.colon`,
-      type: 'Switch',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'colon',
-        size: 'small',
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-    {
-      id: `block.properties.${propertyName}.extra`,
-      type: 'TextInput',
-      layout: {
-        _global: 'settings_input_layout',
-      },
-      properties: {
-        title: 'extra',
-        size: 'small',
-        label: {
-          span: 8,
-          align: 'right',
-          extra: 'Align label left or right when span is applied.',
-        },
-      },
-    },
-  ],
-});
-
 const oneOf = (propertyName, propertyDescription) => {
   const block = {
     id: propertyName,
@@ -293,8 +181,6 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
       case 'style':
         block.type = 'TextArea';
         return block;
-      case 'label':
-        return label(propertyName);
       case 'button':
         return button(propertyName);
       default:
@@ -352,16 +238,18 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
           bodyStyle: { padding: 0 },
         },
       };
-      block.blocks = Object.keys(propertyDescription.properties).map((objectPropertyName) => {
-        const bl = makeBlockDefinition({
-          propertyName: objectPropertyName,
-          propertyDescription: propertyDescription.properties[objectPropertyName],
-          requiredProperties: propertyDescription.required || [],
-          nameSpace: `${nameSpace}${propertyName}.`,
+      block.blocks = Object.keys(propertyDescription.properties)
+        .sort()
+        .map((objectPropertyName) => {
+          const bl = makeBlockDefinition({
+            propertyName: objectPropertyName,
+            propertyDescription: propertyDescription.properties[objectPropertyName],
+            requiredProperties: propertyDescription.required || [],
+            nameSpace: `${nameSpace}${propertyName}.`,
+          });
+          bl.properties.title = objectPropertyName;
+          return bl;
         });
-        bl.properties.title = objectPropertyName;
-        return bl;
-      });
       return block;
     case undefined:
       if (propertyDescription.oneOf) {

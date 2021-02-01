@@ -60,7 +60,11 @@ test('enum propertiesGetterTransformer', () => {
 });
 
 test('enum defaultValueTransformer', () => {
-  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
+  expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`
+    Object {
+      "enum": null,
+    }
+  `);
   const schemaDV = {
     schema: {
       properties: {
