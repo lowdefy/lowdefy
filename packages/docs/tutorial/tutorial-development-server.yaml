@@ -58,7 +58,7 @@ _ref:
 
             #### Step 5
 
-            If you make changes to any of the files in your project, the server will reload with your changes. Make a change to the title text. You should see the app reload with your new title.
+            If you make changes to any of the files in your project, when you save the server will reload with your changes. Make a change to the title text. You should see the app reload with your new title.
 
             ### Up next
 

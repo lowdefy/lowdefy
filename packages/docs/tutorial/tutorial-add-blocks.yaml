@@ -40,9 +40,9 @@ _ref:
 
             Copy the following blocks and add them in the card's blocks array.
 
-            ###### `pages/booking.yaml`
+            ###### `pages/new-ticket.yaml` 
             ```yaml
-            id: booking
+            id: new-ticket
                 # ...
             blocks:
               - id: content_card

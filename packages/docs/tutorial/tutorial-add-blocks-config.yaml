@@ -31,7 +31,7 @@ _ref:
             ##### `lowdefy.yaml`
             ```yaml
             name: lowdefy-project-template
-            version: CURRENT_LOWDEFY_VERSION
+            lowdefy: CURRENT_LOWDEFY_VERSION # e.g. 3.4.0
 
             menus:
               - id: default
