@@ -32,7 +32,7 @@ _ref:
 
             #### Step 1
 
-            Create a new YAMl file in the pages directory called `new-ticket.yaml`, with the following content:
+            Create a new YAML file in the pages directory called `new-ticket.yaml`, with the following content:
 
             ```yaml
             id: new-ticket
@@ -61,7 +61,7 @@ _ref:
 
             ```yaml
             name: lowdefy-project-template
-            lowdefy: CURRENT_LOWDEFY_VERSION
+            lowdefy: CURRENT_LOWDEFY_VERSION # e.g. 3.4.0
 
             pages:
               - _ref: pages/welcome.yaml
