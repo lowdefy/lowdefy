@@ -46,10 +46,10 @@
   properties:
     size: large
 # version 4.8
-- id: properties.size 40
-  type: Avatar
-  properties:
-    size: 40
+# - id: properties.size 40
+#   type: Avatar
+#   properties:
+#     size: 40
 - id: properties.src
   type: Avatar
   properties:
