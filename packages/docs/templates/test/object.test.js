@@ -68,10 +68,14 @@ test('object propertiesFormTransformer', () => {
             "type": "NumberInput",
           },
         ],
+        "id": "block.properties.field",
         "layout": Object {
           "contentGutter": 0,
         },
         "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
           "inner": true,
           "size": "small",
           "title": "field:",

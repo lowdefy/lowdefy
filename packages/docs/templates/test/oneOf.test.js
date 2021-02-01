@@ -33,7 +33,7 @@ test('oneOf propertiesFormTransformer', () => {
           "content": Object {
             "blocks": Array [
               Object {
-                "id": "block.properties.__number_field",
+                "id": "__field_number",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -55,7 +55,7 @@ test('oneOf propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__type_field",
+                          "_state": "__field_type",
                         },
                         "number",
                       ],
@@ -65,7 +65,7 @@ test('oneOf propertiesFormTransformer', () => {
                 },
               },
               Object {
-                "id": "block.properties.__string_field",
+                "id": "__field_string",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -86,7 +86,7 @@ test('oneOf propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__type_field",
+                          "_state": "__field_type",
                         },
                         "string",
                       ],
@@ -100,7 +100,7 @@ test('oneOf propertiesFormTransformer', () => {
           "extra": Object {
             "blocks": Array [
               Object {
-                "id": "__type_field",
+                "id": "__field_type",
                 "properties": Object {
                   "label": Object {
                     "disabled": true,
@@ -116,10 +116,17 @@ test('oneOf propertiesFormTransformer', () => {
             ],
           },
         },
+        "bodyStyle": Object {
+          "padding": 0,
+        },
+        "id": "field",
         "layout": Object {
           "contentGutter": 0,
         },
         "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
           "inner": true,
           "size": "small",
           "title": "field - type options:",
@@ -141,11 +148,10 @@ test('oneOf propertiesGetterTransformer', () => {
           "field": Object {
             "_state": Object {
               "_string.concat": Array [
-                "block.properties.__",
+                "__field_",
                 Object {
-                  "_state": "__type_field",
+                  "_state": "__field_type",
                 },
-                "_field",
               ],
             },
           },
@@ -229,7 +235,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "content": Object {
             "blocks": Array [
               Object {
-                "id": "block.properties.__string_field",
+                "id": "__field_string",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -250,7 +256,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__type_field",
+                          "_state": "__field_type",
                         },
                         "string",
                       ],
@@ -262,7 +268,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
               Object {
                 "blocks": Array [
                   Object {
-                    "id": "block.properties.__object_field.str",
+                    "id": "__field_object.str",
                     "layout": Object {
                       "_global": "settings_input_layout",
                     },
@@ -279,7 +285,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "type": "TextInput",
                   },
                   Object {
-                    "id": "block.properties.__object_field.bool",
+                    "id": "__field_object.bool",
                     "layout": Object {
                       "_global": "settings_input_layout",
                     },
@@ -296,13 +302,17 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "type": "Switch",
                   },
                 ],
+                "id": "__field_object",
                 "layout": Object {
                   "contentGutter": 0,
                 },
                 "properties": Object {
+                  "bodyStyle": Object {
+                    "padding": 0,
+                  },
                   "inner": true,
                   "size": "small",
-                  "title": "field",
+                  "title": "field:",
                 },
                 "type": "Card",
                 "visible": Object {
@@ -311,7 +321,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__type_field",
+                          "_state": "__field_type",
                         },
                         "object",
                       ],
@@ -325,7 +335,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "extra": Object {
             "blocks": Array [
               Object {
-                "id": "__type_field",
+                "id": "__field_type",
                 "properties": Object {
                   "label": Object {
                     "disabled": true,
@@ -341,10 +351,17 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
             ],
           },
         },
+        "bodyStyle": Object {
+          "padding": 0,
+        },
+        "id": "field",
         "layout": Object {
           "contentGutter": 0,
         },
         "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
           "inner": true,
           "size": "small",
           "title": "field - type options:",
@@ -366,11 +383,10 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
           "field": Object {
             "_state": Object {
               "_string.concat": Array [
-                "block.properties.__",
+                "__field_",
                 Object {
-                  "_state": "__type_field",
+                  "_state": "__field_type",
                 },
-                "_field",
               ],
             },
           },
