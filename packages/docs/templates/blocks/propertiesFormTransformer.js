@@ -345,88 +345,103 @@ function makeBlockDefinition(propertyName, propertyDescription, requiredProperti
         ];
         return block;
       case 'optionsSelector':
-        block.type = 'Box';
-        block.blocks = [
-          {
-            id: '__optionsType',
-            type: 'ButtonSelector',
-            properties: {
-              title: 'Options type',
-              options: ['Primitive', 'Label-value pairs'],
-              size: 'small',
-              label: { span: 8, align: 'right' },
-            },
+        block.type = 'Card';
+        block.layout = {
+          contentGutter: 0,
+        };
+        block.properties = {
+          title: 'options:',
+          size: 'small',
+          inner: true,
+          bodyStyle: {
+            padding: 0,
           },
-          {
-            id: `block.properties.options`,
-            type: 'ControlledList',
-            properties: {
-              title: 'options:',
-              size: 'small',
-            },
+        };
+        block.areas = {
+          extra: {
             blocks: [
               {
-                id: `block.properties.options.$.primitive`,
-                type: 'TextInput',
-                visible: {
-                  _if: {
-                    test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
-                    then: true,
-                    else: false,
-                  },
-                },
+                id: '__optionsType',
+                type: 'ButtonSelector',
                 properties: {
+                  options: ['Primitive', 'Label-value pairs'],
                   size: 'small',
-                  label: {
-                    disabled: true,
-                  },
-                },
-              },
-              {
-                id: `block.properties.options.$.label`,
-                type: 'TextInput',
-                visible: {
-                  _if: {
-                    test: {
-                      _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
-                    },
-                    then: true,
-                    else: false,
-                  },
-                },
-                properties: {
-                  size: 'small',
-                  title: 'label',
-                  label: {
-                    span: 8,
-                    align: 'right',
-                  },
-                },
-              },
-              {
-                id: `block.properties.options.$.value`,
-                type: 'TextInput',
-                visible: {
-                  _if: {
-                    test: {
-                      _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
-                    },
-                    then: true,
-                    else: false,
-                  },
-                },
-                properties: {
-                  size: 'small',
-                  title: 'value',
-                  label: {
-                    span: 8,
-                    align: 'right',
-                  },
+                  label: { disabled: true },
                 },
               },
             ],
           },
-        ];
+          content: {
+            blocks: [
+              {
+                id: `block.properties.options`,
+                type: 'ControlledList',
+                properties: { size: 'small' },
+                blocks: [
+                  {
+                    id: `block.properties.options.$.primitive`,
+                    type: 'TextInput',
+                    visible: {
+                      _if: {
+                        test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
+                        then: true,
+                        else: false,
+                      },
+                    },
+                    properties: {
+                      size: 'small',
+                      label: {
+                        disabled: true,
+                      },
+                    },
+                  },
+                  {
+                    id: `block.properties.options.$.label`,
+                    type: 'TextInput',
+                    visible: {
+                      _if: {
+                        test: {
+                          _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
+                        },
+                        then: true,
+                        else: false,
+                      },
+                    },
+                    properties: {
+                      size: 'small',
+                      title: 'label',
+                      label: {
+                        span: 8,
+                        align: 'right',
+                      },
+                    },
+                  },
+                  {
+                    id: `block.properties.options.$.value`,
+                    type: 'TextInput',
+                    visible: {
+                      _if: {
+                        test: {
+                          _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
+                        },
+                        then: true,
+                        else: false,
+                      },
+                    },
+                    properties: {
+                      size: 'small',
+                      title: 'value',
+                      label: {
+                        span: 8,
+                        align: 'right',
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        };
         return block;
       case 'TextInput':
         block.type = 'TextInput';

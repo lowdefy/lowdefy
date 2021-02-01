@@ -208,6 +208,18 @@ menus:
           title: Display Blocks
           icon: PictureOutlined
         links:
+          - id: Alert
+            type: MenuLink
+            pageId: Alert
+          - id: Anchor
+            type: MenuLink
+            pageId: Anchor
+          - id: Avatar
+            type: MenuLink
+            pageId: Avatar
+          - id: Breadcrumb
+            type: MenuLink
+            pageId: Breadcrumb
           - id: Button
             type: MenuLink
             pageId: Button
@@ -456,6 +468,10 @@ pages:
   - _ref: blocks/input/TitleInput.yaml
   - _ref: blocks/input/WeekSelector.yaml
 
+  - _ref: blocks/display/Alert.yaml
+  - _ref: blocks/display/Anchor.yaml
+  - _ref: blocks/display/Avatar.yaml
+  - _ref: blocks/display/Breadcrumb.yaml
   - _ref: blocks/display/Button.yaml
 
   - _ref: connections/AWSS3.yaml

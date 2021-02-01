@@ -1,6 +1,8 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonAvatar"
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -12,7 +14,10 @@
         },
         "color": {
           "type": "string",
-          "description": "The background color of the avatar if not using a src url. Should be a hex color string. Color is a random color if not specified."
+          "description": "The background color of the avatar if not using a src url. Should be a hex color string. Color is a random color if not specified.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "content": {
           "type": "string",
@@ -24,7 +29,10 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in avatar."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in avatar.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "shape": {
           "type": "string",
@@ -33,8 +41,9 @@
           "description": "Shape of the avatar."
         },
         "size": {
-          "type": ["string", "number", "object"],
+          "type": "string",
           "default": "default",
+          "enum": ["default", "small", "large"],
           "description": "Size of the avatar."
         },
         "src": {
@@ -43,7 +52,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to avatar."
+          "description": "Css style object to applied to avatar.",
+          "docs": {
+            "displayType": "style"
+          }
         }
       }
     },
