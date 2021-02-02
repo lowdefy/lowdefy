@@ -79,9 +79,9 @@ const loaders = {
 const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
-  args: {},
   arrayIndices: [],
   blockId: 'contextId',
+  event: {},
   input: {},
   lowdefyGlobal: {},
   pageId: 'pageId',
@@ -253,12 +253,12 @@ test('deserialize inputs', async () => {
         requestId: 'requestId',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: true },
+          event: { _event: true },
           input: { _input: true },
           global: { _global: true },
           state: { _state: true },
           urlQuery: { _url_query: true },
-          argsDate: { _args: 'date' },
+          eventDate: { _event: 'date' },
           inputDate: { _input: 'date' },
           globalDate: { _global: 'date' },
           stateDate: { _state: 'date' },
@@ -271,11 +271,11 @@ test('deserialize inputs', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   await controller.callRequest({
-    args: {
-      date: { _date: 0 },
-    },
     arrayIndices: [],
     blockId: 'contextId',
+    event: {
+      date: { _date: 0 },
+    },
     input: {
       date: { _date: 0 },
     },
@@ -298,12 +298,12 @@ test('deserialize inputs', async () => {
           connectionProperty: 'connectionProperty',
         },
         request: {
-          args: { date: new Date(0) },
+          event: { date: new Date(0) },
           input: { date: new Date(0) },
           global: { date: new Date(0) },
           state: { date: new Date(0) },
           urlQuery: { date: new Date(0) },
-          argsDate: new Date(0),
+          eventDate: new Date(0),
           inputDate: new Date(0),
           globalDate: new Date(0),
           stateDate: new Date(0),
@@ -324,8 +324,8 @@ test('parse request properties for operators', async () => {
         requestId: 'requestId',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: 'value' },
           input: { _input: 'value' },
+          event: { _event: 'value' },
           global: { _global: 'value' },
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
@@ -338,13 +338,13 @@ test('parse request properties for operators', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
-    args: {
-      value: 'argValue',
-    },
     arrayIndices: [1],
     blockId: 'contextId',
     input: {
       value: 'inputValue',
+    },
+    event: {
+      value: 'eventValue',
     },
     lowdefyGlobal: {
       value: 'globalValue',
@@ -366,7 +366,7 @@ test('parse request properties for operators', async () => {
         connectionProperty: 'connectionProperty',
       },
       request: {
-        args: 'argValue',
+        event: 'eventValue',
         input: 'inputValue',
         global: 'globalValue',
         state: 'stateValue',
@@ -387,7 +387,7 @@ test('parse connection properties for operators', async () => {
         type: 'TestConnection',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: 'value' },
+          event: { _event: 'value' },
           input: { _input: 'value' },
           global: { _global: 'value' },
           state: { _state: 'value' },
@@ -402,11 +402,11 @@ test('parse connection properties for operators', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
-    args: {
-      value: 'argValue',
-    },
     arrayIndices: [1],
     blockId: 'contextId',
+    event: {
+      value: 'eventValue',
+    },
     input: {
       value: 'inputValue',
     },
@@ -427,7 +427,7 @@ test('parse connection properties for operators', async () => {
     id: 'request:pageId:contextId:requestId',
     response: {
       connection: {
-        args: 'argValue',
+        event: 'eventValue',
         input: 'inputValue',
         global: 'globalValue',
         state: 'stateValue',
