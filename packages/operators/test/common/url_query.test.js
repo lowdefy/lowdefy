@@ -24,12 +24,9 @@ const input = {
   context: { context: true },
   contexts: { contexts: true },
   env: 'env',
-  input: { input: true },
   location: 'location',
-  lowdefyGlobal: { lowdefyGlobal: true },
   params: 'params',
   secrets: { secrets: true },
-  state: { state: true },
   urlQuery: { urlQuery: true },
 };
 

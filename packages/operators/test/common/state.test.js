@@ -20,18 +20,13 @@ import getFromObject from '../../src/getFromObject';
 jest.mock('../../src/getFromObject');
 
 const input = {
-  actionLog: [{ actionLog: true }],
   arrayIndices: [0],
   context: { context: true },
   contexts: { contexts: true },
   env: 'env',
-  input: { input: true },
   location: 'location',
-  lowdefyGlobal: { lowdefyGlobal: true },
   params: 'params',
-  secrets: { secrets: true },
   state: { state: true },
-  urlQuery: { urlQuery: true },
 };
 
 test('state calls getFromObject', () => {

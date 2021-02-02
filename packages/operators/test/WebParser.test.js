@@ -139,11 +139,19 @@ test('operator input with more than one key is ignored.', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
+test('parse event not an object', () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context, contexts });
+  expect(() => parser.parse({ input, event: 'String' })).toThrow(
+    'Operator parser event must be a object.'
+  );
+});
+
 test('parse args not an object', () => {
   const input = { _state: 'string' };
   const parser = new WebParser({ context, contexts });
   expect(() => parser.parse({ input, args: 'String' })).toThrow(
-    'Operator parser args must be a object.'
+    'Operator parser args must be an array.'
   );
 });
 

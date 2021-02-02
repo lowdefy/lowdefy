@@ -33,12 +33,15 @@ class NodeParser {
     };
   }
 
-  parse({ input, args, location }) {
+  parse({ args, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
-    if (args && !type.isObject(args)) {
-      throw new Error('Operator parser args must be a object.');
+    if (event && !type.isObject(event)) {
+      throw new Error('Operator parser event must be a object.');
+    }
+    if (args && !type.isArray(args)) {
+      throw new Error('Operator parser args must be an array.');
     }
     if (location && !type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
@@ -54,6 +57,7 @@ class NodeParser {
               args,
               arrayIndices: this.arrayIndices,
               env: 'node',
+              event,
               input: this.input,
               location,
               lowdefyGlobal: this.lowdefyGlobal,

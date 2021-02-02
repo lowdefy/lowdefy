@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import global from '../../src/common/global';
+import event from '../../src/common/event';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
@@ -24,29 +24,23 @@ const input = {
   context: { context: true },
   contexts: { contexts: true },
   env: 'env',
+  event: { event: true },
   location: 'location',
-  lowdefyGlobal: { lowdefyGlobal: true },
   params: 'params',
 };
 
-test('state calls getFromObject', () => {
-  global(input);
+test('event calls getFromObject', () => {
+  event(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        context: {
-          context: true,
-        },
-        contexts: {
-          contexts: true,
-        },
         env: 'env',
         location: 'location',
         object: {
-          lowdefyGlobal: true,
+          event: true,
         },
-        operator: '_global',
+        operator: '_event',
         params: 'params',
       },
     ],

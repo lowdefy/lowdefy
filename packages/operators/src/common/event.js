@@ -14,32 +14,17 @@
   limitations under the License.
 */
 
-import secret from '../../src/node/secret';
-import getFromObject from '../../src/getFromObject';
+import getFromObject from '../getFromObject';
 
-jest.mock('../../src/getFromObject');
+function _event({ arrayIndices, env, event, location, params }) {
+  return getFromObject({
+    arrayIndices,
+    env,
+    location,
+    object: event,
+    operator: '_event',
+    params,
+  });
+}
 
-const input = {
-  arrayIndices: [0],
-  env: 'env',
-  location: 'location',
-  params: 'params',
-  secrets: { secrets: true },
-};
-
-test('secret calls getFromObject', () => {
-  secret(input);
-  expect(getFromObject.mock.calls).toEqual([
-    [
-      {
-        env: 'env',
-        location: 'location',
-        object: {
-          secrets: true,
-        },
-        operator: '_secret',
-        params: 'params',
-      },
-    ],
-  ]);
-});
+export default _event;
