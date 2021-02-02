@@ -20,9 +20,8 @@ import commonOperators from './common';
 import nodeOperators from './node';
 
 class NodeParser {
-  constructor({ arrayIndices, config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
+  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
     this.arrayIndices = arrayIndices;
-    this.config = config;
     this.input = input;
     this.lowdefyGlobal = lowdefyGlobal;
     this.secrets = secrets;
@@ -54,7 +53,6 @@ class NodeParser {
             const res = this.operations[op]({
               args,
               arrayIndices: this.arrayIndices,
-              config: this.config,
               env: 'node',
               input: this.input,
               location,

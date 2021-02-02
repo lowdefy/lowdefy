@@ -359,3 +359,43 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 });
+
+test('parse _global operator', () => {
+  const input = { _global: 'key' };
+  const parser = new NodeParser({ lowdefyGlobal: { key: 'value' } });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual('value');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _input operator', () => {
+  const input = { _input: 'key' };
+  const parser = new NodeParser({ input: { key: 'value' } });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual('value');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _secret operator', () => {
+  const input = { _secret: 'key' };
+  const parser = new NodeParser({ secrets: { key: 'value' } });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual('value');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _state operator', () => {
+  const input = { _state: 'key' };
+  const parser = new NodeParser({ state: { key: 'value' } });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual('value');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('parse _url_query operator', () => {
+  const input = { _url_query: 'key' };
+  const parser = new NodeParser({ urlQuery: { key: 'value' } });
+  const res = parser.parse({ input, args, location: 'locationId' });
+  expect(res.output).toEqual('value');
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});

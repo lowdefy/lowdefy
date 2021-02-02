@@ -57,6 +57,36 @@ test('get a field from an object, key as param', () => {
   expect(res).toEqual('string');
 });
 
+test('get a field from an object, shorthand, not found returns null', () => {
+  const params = 'not_there';
+  const res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(null);
+});
+
+test('get a field from an object, key as param, not found returns null', () => {
+  const params = { key: 'not_there' };
+  const res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(null);
+});
+
 test('get an entire object, shorthand', () => {
   const params = true;
   const res = getFromObject({
@@ -204,4 +234,112 @@ test('params key not a string', () => {
       env: 'node',
     })
   ).toThrow('Operator Error: _operator.key must be of type string.');
+});
+
+test('replace arrayIndices', () => {
+  let params = 'array.$.subArray.$';
+  let res = getFromObject({
+    params,
+    object: {
+      array: [
+        {
+          subArray: [1, 2],
+        },
+        {
+          subArray: [3, 4],
+        },
+      ],
+    },
+    context,
+    contexts,
+    arrayIndices: [1, 0],
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(3);
+  params = { key: 'array.$.subArray.$' };
+  res = getFromObject({
+    params,
+    object: {
+      array: [
+        {
+          subArray: [1, 2],
+        },
+        {
+          subArray: [3, 4],
+        },
+      ],
+    },
+    context,
+    contexts,
+    arrayIndices: [1, 0],
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(3);
+
+  params = 'array.$.subArray';
+  res = getFromObject({
+    params,
+    object: {
+      array: [
+        {
+          subArray: [1, 2],
+        },
+        {
+          subArray: [3, 4],
+        },
+      ],
+    },
+    context,
+    contexts,
+    arrayIndices: [1, 0],
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual([3, 4]);
+});
+
+test('get a field from an object, default value', () => {
+  let params = { key: 'not_there', default: 'default' };
+  let res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual('default');
+
+  params = { key: 'not_there', default: false };
+  res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(false);
+
+  params = { key: 'not_there', default: 0 };
+  res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(0);
 });

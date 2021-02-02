@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import secret from '../../src/node/secret';
+import url_query from '../../src/common/url_query';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
 const input = {
   arrayIndices: [0],
+  context: { context: true },
+  contexts: { contexts: true },
   env: 'env',
   input: { input: true },
   location: 'location',
@@ -31,17 +33,24 @@ const input = {
   urlQuery: { urlQuery: true },
 };
 
-test('secret calls getFromObject', () => {
-  secret(input);
+test('url_query calls getFromObject', () => {
+  url_query(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
+        arrayIndices: [0],
+        context: {
+          context: true,
+        },
+        contexts: {
+          contexts: true,
+        },
         env: 'env',
         location: 'location',
         object: {
-          secrets: true,
+          urlQuery: true,
         },
-        operator: '_secret',
+        operator: '_url_query',
         params: 'params',
       },
     ],

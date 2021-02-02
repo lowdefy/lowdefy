@@ -50,7 +50,6 @@ class WebParser {
               actionLog: this.context.actionLog,
               args,
               arrayIndices,
-              config: this.context.config,
               context: this.context,
               contexts: this.contexts,
               env: 'web',

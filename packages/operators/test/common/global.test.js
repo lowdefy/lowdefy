@@ -14,13 +14,16 @@
   limitations under the License.
 */
 
-import secret from '../../src/node/secret';
+import global from '../../src/common/global';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
 const input = {
+  actionLog: [{ actionLog: true }],
   arrayIndices: [0],
+  context: { context: true },
+  contexts: { contexts: true },
   env: 'env',
   input: { input: true },
   location: 'location',
@@ -31,17 +34,24 @@ const input = {
   urlQuery: { urlQuery: true },
 };
 
-test('secret calls getFromObject', () => {
-  secret(input);
+test('state calls getFromObject', () => {
+  global(input);
   expect(getFromObject.mock.calls).toEqual([
     [
       {
+        arrayIndices: [0],
+        context: {
+          context: true,
+        },
+        contexts: {
+          contexts: true,
+        },
         env: 'env',
         location: 'location',
         object: {
-          secrets: true,
+          lowdefyGlobal: true,
         },
-        operator: '_secret',
+        operator: '_global',
         params: 'params',
       },
     ],

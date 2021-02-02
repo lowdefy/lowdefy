@@ -411,4 +411,36 @@ describe('parse operators', () => {
     expect(res.output).toEqual(true);
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
+
+  test('parse _global operator', () => {
+    const input = { _global: 'string' };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual('global');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _input operator', () => {
+    const input = { _input: 'string' };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual('input');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _state operator', () => {
+    const input = { _state: 'string' };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual('state');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _url_query operator', () => {
+    const input = { _url_query: 'string' };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, args, location: 'locationId' });
+    expect(res.output).toEqual('urlQuery');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });
