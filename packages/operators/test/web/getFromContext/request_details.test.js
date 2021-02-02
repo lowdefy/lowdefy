@@ -17,11 +17,6 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
-
 const context = {
   id: 'own',
   config: {
@@ -128,7 +123,7 @@ const arrayIndices = [1];
 test('_request_details, other context contextId not a string', () => {
   const input = { _request_details: { key: 'string', contextId: 1 } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -140,7 +135,7 @@ test('_request_details, other context contextId not a string', () => {
 test('_request_details, other context contextId not found', () => {
   const input = { _request_details: { key: 'string', contextId: 'not_there' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -157,7 +152,7 @@ test('_request_details param object key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ loading: false, response: 'request String-other' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -165,7 +160,7 @@ test('_request_details param object key', () => {
 test('_request_details full state', () => {
   const input = { _request_details: { contextId: 'other' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail-other' },
     string: { loading: false, response: 'request String-other' },
@@ -183,7 +178,7 @@ test('_request_details param object all', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail-other' },
     string: { loading: false, response: 'request String-other' },
@@ -202,7 +197,7 @@ test('_request_details param object all and key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail-other' },
     string: { loading: false, response: 'request String-other' },
@@ -221,7 +216,7 @@ test('_request_details param object with string default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

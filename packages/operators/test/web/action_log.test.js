@@ -16,11 +16,6 @@
 
 import WebParser from '../../src/webParser';
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
-
 const context = {
   config: {
     string: 'config',
@@ -89,7 +84,7 @@ const arrayIndices = [1];
 test('_action_log in array', () => {
   const input = { a: { _action_log: '1.blockId' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'block_b',
   });
@@ -99,7 +94,7 @@ test('_action_log in array', () => {
 test('_action_log full state', () => {
   const input = { _action_log: true };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
       blockId: 'block_a',
@@ -121,7 +116,7 @@ test('_action_log full state', () => {
 test('_action_log null', () => {
   const input = { _action_log: null };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -137,7 +132,7 @@ test('_action_log param object key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('name_a');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -149,7 +144,7 @@ test('_action_log param object all', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
       blockId: 'block_a',
@@ -176,7 +171,7 @@ test('_action_log param object all and key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
       blockId: 'block_a',
@@ -202,7 +197,7 @@ test('_action_log param object invalid', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -216,7 +211,7 @@ test('_action_log param array', () => {
     _action_log: ['string'],
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -233,7 +228,7 @@ test('_action_log param object with string default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -246,7 +241,7 @@ test('_action_log param object with zero default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(0);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -259,7 +254,7 @@ test('_action_log param object with false default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -271,7 +266,7 @@ test('_action_log param object with no default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
