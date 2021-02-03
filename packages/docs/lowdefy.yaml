@@ -247,6 +247,9 @@ menus:
           - id: Statistic
             type: MenuLink
             pageId: Statistic
+          - id: Title
+            type: MenuLink
+            pageId: Title
       - id: connections
         type: MenuGroup
         properties:
@@ -505,6 +508,7 @@ pages:
   - _ref: blocks/display/Progress.yaml
   - _ref: blocks/display/Skeleton.yaml
   - _ref: blocks/display/Statistic.yaml
+  - _ref: blocks/display/Title.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

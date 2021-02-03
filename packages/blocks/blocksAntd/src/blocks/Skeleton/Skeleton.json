@@ -99,7 +99,10 @@
                 },
                 "width": {
                   "type": ["number", "string", "array"],
-                  "description": "Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width. Can be numbers or strings."
+                  "description": "Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width. Can be numbers or strings.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
@@ -117,7 +120,10 @@
               "properties": {
                 "width": {
                   "type": ["number", "string"],
-                  "description": "Set the width of title. Can be a number or string."
+                  "description": "Set the width of title. Can be a number or string.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
