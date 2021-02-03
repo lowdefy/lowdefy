@@ -26,11 +26,11 @@ const Option = AutoComplete.Option;
 const AutoCompleteInput = ({
   blockId,
   loading,
+  methods,
   properties,
   required,
   validation,
   value,
-  methods,
 }) => {
   return (
     <Label
@@ -63,7 +63,7 @@ const AutoCompleteInput = ({
               } else {
                 methods.setValue(newVal);
               }
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             value={type.isNone(value) ? undefined : value}
           >

@@ -194,7 +194,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
                 } else {
                   methods.setValue(val);
                 }
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={value === null ? minMin : value}
             />

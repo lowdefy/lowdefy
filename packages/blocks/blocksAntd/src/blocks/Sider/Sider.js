@@ -23,10 +23,10 @@ const Sider = Layout.Sider;
 
 const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
   if (!state) {
-    await methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
+    await methods.triggerEvent({ name: get(rename, 'events.onClose', { default: 'onClose' }) });
   }
   if (state) {
-    await methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
+    await methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
   }
   setOpen(state);
 };
@@ -57,7 +57,7 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
       reverseArrow={properties.reverseArrow}
       theme={properties.theme}
       width={properties.width}
-      onBreakpoint={() => methods.callAction({ action: 'onBreakpoint' })}
+      onBreakpoint={() => methods.triggerEvent({ name: 'onBreakpoint' })}
     >
       {content.content && content.content()}
     </Sider>

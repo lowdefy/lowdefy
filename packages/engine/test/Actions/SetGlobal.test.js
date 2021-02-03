@@ -36,7 +36,7 @@ test('SetGlobal data to global', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -60,7 +60,7 @@ test('SetGlobal data to global', async () => {
   expect(context.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
   const { button } = context.RootBlocks.map;
 
-  await button.callAction({ action: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(context.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',

@@ -28,7 +28,7 @@ const MessageBlock = ({ blockId, properties, methods }) => {
         id: `${blockId}_message`,
         content: args.content || properties.content || blockId,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        onClose: () => methods.callAction({ action: 'onClose' }),
+        onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: properties.icon && (
           <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
         ),

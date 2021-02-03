@@ -15,7 +15,7 @@
 */
 
 import Actions from './Actions';
-import BlockActions from './BlockActions';
+import Events from './Events';
 import Blocks from './Blocks';
 import makeContextId from './makeContextId';
 import Requests from './Requests';
@@ -23,6 +23,6 @@ import State from './State';
 
 import getContext from './getContext';
 
-export { Actions, BlockActions, Blocks, makeContextId, Requests, State };
+export { Actions, Events, Blocks, makeContextId, Requests, State };
 
 export default getContext;

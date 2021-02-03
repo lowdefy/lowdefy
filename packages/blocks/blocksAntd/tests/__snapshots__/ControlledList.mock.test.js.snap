@@ -11,14 +11,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="default_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -43,9 +42,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -93,14 +93,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.addItemButton: title: Add new Item_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -125,9 +124,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -176,14 +176,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.addToFront: true_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -208,9 +207,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -277,14 +277,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.noDataTitle: No title display_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -309,9 +308,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -359,14 +359,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.removeItemButton: shape: round_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -391,9 +390,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -441,14 +441,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.removeItemButton: shape: square_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -473,9 +472,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -523,14 +523,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.size: large_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -555,9 +554,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -605,14 +605,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.size: small_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -637,9 +636,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }
@@ -687,14 +687,13 @@ Array [
       >
         <br />
         <ButtonBlock
-          actions={Object {}}
           blockId="properties.title_add_button"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -734,9 +733,10 @@ Array [
               "moveItemDown": [Function],
               "moveItemUp": [Function],
               "pushItem": [Function],
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
               "removeItem": [Function],
+              "triggerEvent": [Function],
               "unshiftItem": [Function],
             }
           }

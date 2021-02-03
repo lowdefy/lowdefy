@@ -28,7 +28,7 @@
         icon: SaveOutlined
       - label: label 2
         icon: DeleteOutlined
-  actions:
+  events:
     onClick: []
 - id: properties.list.url
   type: Breadcrumb
@@ -36,7 +36,7 @@
     list:
       - url: https://www.url.com
       - url: https://docs.url.com
-- id: "properties.list.pageId label and url"
+- id: 'properties.list.pageId label and url'
   type: Breadcrumb
   properties:
     list:
@@ -54,7 +54,7 @@
   properties:
     list:
       - label: Page One
-        style: 
+        style:
           color: blue
       - label: Page two
         style:
@@ -66,7 +66,7 @@
     list:
       - label: Page One
       - label: Page two
-- id: "properties.style: fontSize: 18"
+- id: 'properties.style: fontSize: 18'
   type: Breadcrumb
   properties:
     style:

@@ -69,7 +69,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "properties": {
         "onChange": {

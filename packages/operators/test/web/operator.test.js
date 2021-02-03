@@ -16,11 +16,6 @@
 
 import WebParser from '../../src/webParser';
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
-
 const context = {
   config: {
     string: 'config',
@@ -74,7 +69,7 @@ const arrayIndices = [1];
 test('_operator, _state', () => {
   const input = { a: { _operator: { name: '_state', params: 'string' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'state',
   });
@@ -84,7 +79,7 @@ test('_operator, _state', () => {
 test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -96,7 +91,7 @@ test('_operator.name invalid', () => {
 test('_operator.name not a string', () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -108,7 +103,7 @@ test('_operator.name not a string', () => {
 test('_operator with value not a object', () => {
   const input = { a: { _operator: 'a' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -120,7 +115,7 @@ test('_operator with value not a object', () => {
 test('_operator cannot be set to _operator', () => {
   const input = { a: { _operator: { name: '_operator' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -132,7 +127,7 @@ test('_operator cannot be set to _operator', () => {
 test('_operator, _not with no params', () => {
   const input = { a: { _operator: { name: '_not' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -140,7 +135,7 @@ test('_operator, _not with no params', () => {
 test('_operator, _json.parse with params', () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: [{ a: 'a1' }],
   });

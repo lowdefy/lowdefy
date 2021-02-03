@@ -39,7 +39,7 @@ const ItemLink = ({ link, children, className }) => {
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
+const BreadcrumbBlock = ({ blockId, events, methods, properties }) => (
   <Breadcrumb
     id={blockId}
     separator={properties.separator}
@@ -49,14 +49,14 @@ const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
       <Breadcrumb.Item
         key={index}
         onClick={
-          actions.onClick &&
-          (() => methods.callAction({ action: 'onClick', args: { link, index } }))
+          events.onClick &&
+          (() => methods.triggerEvent({ name: 'onClick', event: { link, index } }))
         }
       >
         <ItemLink
           className={methods.makeCssClass([
             {
-              cursor: actions.onClick && 'pointer',
+              cursor: events.onClick && 'pointer',
             },
             link.style,
           ])}

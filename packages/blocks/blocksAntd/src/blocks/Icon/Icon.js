@@ -22,6 +22,7 @@ import { omit, type } from '@lowdefy/helpers';
 const lowdefyProps = [
   'actionLog',
   'content',
+  'eventLog',
   'homePageId',
   'list',
   'loading',
@@ -33,7 +34,7 @@ const lowdefyProps = [
   'user',
   'validation',
 ];
-const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
+const IconBlock = ({ events, blockId, methods, properties, ...props }) => {
   const propertiesObj = type.isString(properties) ? { name: properties } : properties;
   if (!type.isString(propertiesObj.name)) {
     propertiesObj.name = 'CloseCircleOutlined';
@@ -52,7 +53,7 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
   const IconComp = memo(lazy(() => import(`./icons/${propertiesObj.name}`)));
   return (
     <>
-      {actions.onClick && actions.onClick.loading && !propertiesObj.disableLoadingIcon ? (
+      {events.onClick && events.onClick.loading && !propertiesObj.disableLoadingIcon ? (
         <Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />
       ) : (
         <ErrorBoundary fallback={() => <ExclamationCircleOutlined {...iconProps} />}>
@@ -60,10 +61,10 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
             <IconComp
               id={blockId}
               onClick={
-                actions.onClick &&
+                events.onClick &&
                 (() =>
-                  methods.callAction({
-                    action: 'onClick',
+                  methods.triggerEvent({
+                    name: 'onClick',
                   }))
               }
               {...iconProps} // spread props for Ant design to populate props from parent

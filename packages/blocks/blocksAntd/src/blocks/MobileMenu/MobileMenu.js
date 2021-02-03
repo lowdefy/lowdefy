@@ -49,7 +49,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
         methods={methods}
         onClick={() => methods[get(rename, 'methods.toggleOpen', { default: 'toggleOpen' })]()}
         rename={{
-          actions: {
+          events: {
             onClick: 'onToggleDrawer',
           },
         }}
@@ -63,7 +63,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
           properties.drawer,
         ])}
         rename={{
-          actions: {
+          events: {
             onToggle: 'onToggleDrawer',
           },
           methods: {
@@ -88,7 +88,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
                   mode: 'inline',
                 }}
                 rename={{
-                  actions: {
+                  events: {
                     onClick: 'onMenuItemClick',
                     onSelect: 'onMenuItemSelect',
                   },

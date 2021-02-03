@@ -64,7 +64,7 @@ const DateSelector = ({ blockId, loading, methods, properties, required, validat
                     ? null
                     : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('day').toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={type.isDate(value) ? moment.utc(value).startOf('day') : null}
             />

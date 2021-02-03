@@ -138,14 +138,13 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
-        actions={Object {}}
         blockId="properties.clearIcon: ChromeFilled_clearIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -245,9 +244,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="ChromeFilled"
@@ -304,14 +304,13 @@ Array [
       ],
       "className": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
       "clearIcon": <IconBlock
-        actions={Object {}}
         blockId="properties.clearIcon-object: ChromeFilled_clearIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -411,9 +410,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1079,14 +1079,13 @@ Array [
       "showArrow": true,
       "size": undefined,
       "suffixIcon": <IconBlock
-        actions={Object {}}
         blockId="properties.suffixIcon: DoubleLeftOutlined_suffixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1172,9 +1171,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="DoubleLeftOutlined"

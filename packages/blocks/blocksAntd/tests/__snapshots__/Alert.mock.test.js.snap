@@ -76,17 +76,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -127,17 +127,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="CheckCircleOutlined"
@@ -472,17 +472,17 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
-        actions={Object {}}
         blockId="with description properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -523,17 +523,17 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
-        actions={Object {}}
         blockId="with description properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="CheckCircleOutlined"

@@ -79,7 +79,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
                     ? uniqueValueOptions[newVal]
                     : uniqueValueOptions[newVal].value
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={getValueIndex(value, uniqueValueOptions)}
             >

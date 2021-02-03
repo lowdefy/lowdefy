@@ -25,14 +25,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: alternate_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -54,9 +53,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -94,14 +94,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: alternate_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -123,9 +122,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -163,14 +163,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: alternate_2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -192,9 +191,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -250,14 +250,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: left_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -279,9 +278,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -319,14 +319,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: left_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -348,9 +347,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -388,14 +388,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: left_2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -417,9 +416,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -475,14 +475,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: right_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -504,9 +503,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -544,14 +544,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: right_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -573,9 +572,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -613,14 +613,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.mode: right_2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -642,9 +641,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -700,14 +700,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pending: true_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -729,9 +728,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -769,14 +769,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pending: true_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -798,9 +797,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -838,14 +838,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pending: true_2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -867,9 +866,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -924,14 +924,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pendingDotIcon: _0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -953,9 +952,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -993,14 +993,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pendingDotIcon: _1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -1022,9 +1021,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -1062,14 +1062,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.pendingDotIcon: _2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -1091,9 +1090,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -1132,14 +1132,13 @@ Array [
       "id": "properties.pendingDotIcon: ",
       "pending": true,
       "pendingDot": <IconBlock
-        actions={Object {}}
         blockId="properties.pendingDotIcon: _pendingDotIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1161,9 +1160,10 @@ Array [
             "moveItemDown": [Function],
             "moveItemUp": [Function],
             "pushItem": [Function],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "removeItem": [Function],
+            "triggerEvent": [Function],
             "unshiftItem": [Function],
           }
         }
@@ -1200,14 +1200,13 @@ Array [
           color="red"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.reverse: true_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -1229,9 +1228,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -1269,14 +1269,13 @@ Array [
           color="green"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.reverse: true_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -1298,9 +1297,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }
@@ -1338,14 +1338,13 @@ Array [
           color="blue"
           dot={
             <IconBlock
-              actions={Object {}}
               blockId="properties.reverse: true_2_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -1367,9 +1366,10 @@ Array [
                   "moveItemDown": [Function],
                   "moveItemUp": [Function],
                   "pushItem": [Function],
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
                   "removeItem": [Function],
+                  "triggerEvent": [Function],
                   "unshiftItem": [Function],
                 }
               }

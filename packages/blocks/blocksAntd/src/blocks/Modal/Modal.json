@@ -99,7 +99,7 @@
           "description": "The z-index of the modal. Useful when displaying two modals simultaneously."
         }
       },
-      "actions": {
+      "events": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

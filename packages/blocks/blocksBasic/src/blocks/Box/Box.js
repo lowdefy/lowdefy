@@ -17,13 +17,13 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const Box = ({ blockId, content, properties, methods, actions }) => (
+const Box = ({ blockId, content, events, methods, properties }) => (
   <div
     id={blockId}
     data-testid={blockId}
-    onClick={() => methods.callAction({ action: 'onClick' })}
+    onClick={() => methods.triggerEvent({ name: 'onClick' })}
     className={methods.makeCssClass([
-      { outline: 'none', cursor: actions.onClick && 'pointer' },
+      { outline: 'none', cursor: events.onClick && 'pointer' },
       properties.style,
     ])}
   >

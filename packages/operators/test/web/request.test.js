@@ -16,11 +16,6 @@
 
 import WebParser from '../../src/webParser';
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
-
 const context = {
   config: {
     string: 'config',
@@ -74,7 +69,7 @@ const arrayIndices = [1];
 test('_request by id', () => {
   const input = { a: { _request: 'string' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'request String',
   });
@@ -84,7 +79,7 @@ test('_request by id', () => {
 test('_request true gives null', () => {
   const input = { _request: true };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -96,7 +91,7 @@ test('_request true gives null', () => {
 test('_request return full array', () => {
   const input = { _request: 'arr' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([{ a: 'request a1' }, { a: 'request a2' }]);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -104,7 +99,7 @@ test('_request return full array', () => {
 test('_request return number', () => {
   const input = { _request: 'number' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(500);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -112,7 +107,7 @@ test('_request return number', () => {
 test('_request null', () => {
   const input = { _request: null };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -124,7 +119,7 @@ test('_request null', () => {
 test('_request loading true', () => {
   const input = { _request: 'not_loaded' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

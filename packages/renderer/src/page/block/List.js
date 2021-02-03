@@ -63,21 +63,21 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
     >
       <Component
         methods={{
-          callAction: block.callAction,
           makeCssClass,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
-          registerAction: block.registerAction,
+          registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           removeItem: block.removeItem,
+          triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         }}
-        actions={block.eval.actions}
         blockId={block.blockId}
-        list={contentList}
+        events={block.eval.events}
         homePageId={rootContext.homePageId}
         key={block.blockId}
+        list={contentList}
         loading={block.loading}
         menus={rootContext.menus}
         pageId={pageId}

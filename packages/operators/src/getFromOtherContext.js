@@ -17,7 +17,7 @@
 import { applyArrayIndices, get, type } from '@lowdefy/helpers';
 
 const contextKeys = {
-  _action_log: 'actionLog',
+  _event_log: 'eventLog',
   _state: 'state',
   _input: 'input',
   _global: 'lowdefyGlobal',

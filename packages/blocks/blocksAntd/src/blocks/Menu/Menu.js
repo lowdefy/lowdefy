@@ -115,21 +115,21 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
       onSelect={(item) =>
-        methods.callAction({
-          action: get(rename, 'actions.onSelect', { default: 'onSelect' }),
-          args: { key: item.key },
+        methods.triggerEvent({
+          name: get(rename, 'events.onSelect', { default: 'onSelect' }),
+          event: { key: item.key },
         })
       }
       onClick={(item) =>
-        methods.callAction({
-          action: get(rename, 'actions.onClick', { default: 'onClick' }),
-          args: { key: item.key },
+        methods.triggerEvent({
+          name: get(rename, 'events.onClick', { default: 'onClick' }),
+          event: { key: item.key },
         })
       }
       onOpenChange={(openKeys) =>
-        methods.callAction({
-          action: get(rename, 'actions.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
-          args: { openKeys },
+        methods.triggerEvent({
+          name: get(rename, 'events.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
+          event: { openKeys },
         })
       }
       {...exProps}

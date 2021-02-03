@@ -25,17 +25,17 @@ const Title = Typography.Title;
 
 const TitleInput = ({ blockId, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
-  const editableActions = {
+  const editableEvents = {
     onStart: () => {
       setEdit(true);
-      methods.callAction({
-        action: 'onStart',
+      methods.triggerEvent({
+        name: 'onStart',
       });
     },
     onChange: (val) => {
       setEdit(false);
       methods.setValue(val);
-      methods.callAction({ action: 'onChange', args: { value: val } });
+      methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
   return (
@@ -51,9 +51,9 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
           ? {
               text: properties.copyable.text,
               onCopy: () => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { value: properties.copyable.text },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { value: properties.copyable.text },
                 });
               },
               icon:
@@ -93,9 +93,9 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
               expandable: properties.ellipsis.expandable,
               suffix: properties.ellipsis.suffix,
               onExpand: (ellipsis) => {
-                methods.callAction({
-                  action: 'onExpand',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onExpand',
+                  event: { ellipsis },
                 });
               },
             }
@@ -115,9 +115,9 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
               editing: properties.editable.editing || editing,
               maxLength: properties.editable.maxLength,
               autoSize: properties.editable.autoSize,
-              ...editableActions,
+              ...editableEvents,
             }
-          : properties.editable !== false && editableActions
+          : properties.editable !== false && editableEvents
       }
       level={properties.level}
       mark={properties.mark}

@@ -32,7 +32,7 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
             blockId={`${blockId}_button`}
             properties={properties.button}
             methods={methods}
-            onClick={() => methods.callAction({ action: 'onClose' })}
+            onClick={() => methods.triggerEvent({ name: 'onClose' })}
           />
         ),
         className: methods.makeCssClass(properties.notificationStyle),
@@ -47,8 +47,8 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
           />
         ),
         message: args.message || properties.message || blockId,
-        onClose: () => methods.callAction({ action: 'onClose' }),
-        onClick: () => methods.callAction({ action: 'onClick' }),
+        onClose: () => methods.triggerEvent({ name: 'onClose' }),
+        onClick: () => methods.triggerEvent({ name: 'onClick' }),
         placement: properties.placement,
         top: properties.top,
       });

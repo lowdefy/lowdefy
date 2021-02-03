@@ -40,7 +40,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
             colors={properties.colors}
             onChangeComplete={(color) => {
               methods.setValue(color.hex ? color.hex : '#000000');
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
           />
         ),

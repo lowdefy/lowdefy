@@ -31,9 +31,9 @@ const getPageSize = ({ properties, value }) => {
 
 const changeValue = ({ current, pageSize, methods }) => {
   methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
-  methods.callAction({
-    action: 'onSizeChange',
-    args: { current, pageSize, skip: current * pageSize },
+  methods.triggerEvent({
+    name: 'onSizeChange',
+    event: { current, pageSize, skip: current * pageSize },
   });
 };
 

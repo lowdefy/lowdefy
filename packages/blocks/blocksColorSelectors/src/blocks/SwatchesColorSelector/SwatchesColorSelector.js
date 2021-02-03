@@ -42,7 +42,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
             height={properties.height || '135px'}
             onChangeComplete={(color) => {
               methods.setValue(color.hex ? color.hex : '#000000');
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
           />
         ),

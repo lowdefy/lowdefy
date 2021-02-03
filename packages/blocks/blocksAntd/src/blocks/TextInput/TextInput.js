@@ -40,10 +40,10 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
               disabled={properties.disabled}
               onChange={(event) => {
                 methods.setValue(event.target.value);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               onPressEnter={() => {
-                methods.callAction({ action: 'onPressEnter' });
+                methods.triggerEvent({ name: 'onPressEnter' });
               }}
               placeholder={properties.placeholder}
               value={value}

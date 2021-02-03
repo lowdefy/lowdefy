@@ -24,7 +24,7 @@ const testSchemaProperties = {
     type: 'object',
   },
   schemaErrors: {},
-  actionLog: {
+  eventLog: {
     type: 'array',
   },
   blockId: {

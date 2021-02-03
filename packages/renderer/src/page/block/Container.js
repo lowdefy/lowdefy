@@ -61,14 +61,14 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
     >
       <Component
         methods={{
-          callAction: block.callAction,
           makeCssClass,
-          registerAction: block.registerAction,
+          registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
+          triggerEvent: block.triggerEvent,
         }}
-        actions={block.eval.actions}
         blockId={block.blockId}
         content={content}
+        events={block.eval.events}
         homePageId={rootContext.homePageId}
         key={block.blockId}
         loading={block.loading}

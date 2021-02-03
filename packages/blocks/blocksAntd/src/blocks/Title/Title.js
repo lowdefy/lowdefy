@@ -36,9 +36,9 @@ const TitleBlock = ({ blockId, properties, methods }) => (
         ? {
             text: properties.copyable.text,
             onCopy: () => {
-              methods.callAction({
-                action: 'onCopy',
-                args: { value: properties.copyable.text },
+              methods.triggerEvent({
+                name: 'onCopy',
+                event: { value: properties.copyable.text },
               });
             },
             icon:
@@ -84,9 +84,9 @@ const TitleBlock = ({ blockId, properties, methods }) => (
             //   "description": "Custom ... symbol of ellipsis content."
             // }
             onExpand: (ellipsis) => {
-              methods.callAction({
-                action: 'onExpand',
-                args: { ellipsis },
+              methods.triggerEvent({
+                name: 'onExpand',
+                event: { ellipsis },
               });
             },
           }

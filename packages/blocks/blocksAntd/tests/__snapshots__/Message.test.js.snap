@@ -83,14 +83,13 @@ Array [
       "content": "Args message content",
       "duration": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -108,10 +107,11 @@ Array [
             "moveItemUp": [MockFunction],
             "open": [Function],
             "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
+            "registerEvent": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
             "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
             "unshiftItem": [MockFunction],
           }
         }
@@ -310,14 +310,13 @@ Array [
       "content": "Message content",
       "duration": 1,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -335,10 +334,11 @@ Array [
             "moveItemUp": [MockFunction],
             "open": [Function],
             "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
+            "registerEvent": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
             "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
             "unshiftItem": [MockFunction],
           }
         }
@@ -539,14 +539,13 @@ Array [
       "content": "Message content",
       "duration": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -564,10 +563,11 @@ Array [
             "moveItemUp": [MockFunction],
             "open": [Function],
             "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
+            "registerEvent": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
             "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
             "unshiftItem": [MockFunction],
           }
         }
@@ -764,14 +764,13 @@ Array [
       "content": "Message content",
       "duration": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [MockFunction],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -789,10 +788,11 @@ Array [
             "moveItemUp": [MockFunction],
             "open": [Function],
             "pushItem": [MockFunction],
-            "registerAction": [MockFunction],
+            "registerEvent": [MockFunction],
             "registerMethod": [Function],
             "removeItem": [MockFunction],
             "setValue": [MockFunction],
+            "triggerEvent": [MockFunction],
             "unshiftItem": [MockFunction],
           }
         }

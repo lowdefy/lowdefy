@@ -68,7 +68,7 @@ const MonthSelector = ({ blockId, loading, methods, properties, required, valida
                         .startOf('month')
                         .toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
             />

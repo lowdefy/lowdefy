@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Box from '../Box/Box';
 
-const List = ({ actions, blockId, methods, properties, list }) => {
+const List = ({ blockId, events, list, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
@@ -28,7 +28,7 @@ const List = ({ actions, blockId, methods, properties, list }) => {
   }, []);
   return (
     <Box
-      actions={actions}
+      events={events}
       blockId={blockId}
       properties={{ style: properties.style }}
       methods={methods}

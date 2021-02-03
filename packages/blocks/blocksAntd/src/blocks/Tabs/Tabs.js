@@ -51,15 +51,15 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
       animated={properties.animated !== undefined ? properties.animated : true}
       defaultActiveKey={properties.defaultActiveKey || tabs[0].key}
       id={blockId}
-      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
+      onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       size={properties.size || 'default'}
       tabBarStyle={methods.makeCssClass(properties.tabBarStyle, { styleObjectOnly: true })}
       tabPosition={properties.tabPosition || 'top'}
       type={properties.tabType || 'line'}
       onTabScroll={({ direction }) =>
-        methods.callAction({ action: 'onTabScroll', args: { direction } })
+        methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
-      onTabClick={(key) => methods.callAction({ action: 'onTabClick', args: { key } })}
+      onTabClick={(key) => methods.triggerEvent({ name: 'onTabClick', event: { key } })}
       {...additionalProps}
     >
       {tabs.map((tab, i) => (
