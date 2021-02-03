@@ -123,6 +123,7 @@
                 },
                 "editing": {
                   "type": "boolean",
+                  "default": false,
                   "description": "Control editing state."
                 },
                 "maxLength": {
