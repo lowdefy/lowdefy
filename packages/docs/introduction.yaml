@@ -20,9 +20,6 @@ _ref:
     content:
       - id: markdown
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content:
             _ref: README.md
