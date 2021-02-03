@@ -124,7 +124,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
                   setValue: (val) => {
                     if (val[0] === true) {
                       unCheck(true);
-                      methods.setValue(null);
+                      methods.setValue(properties.notApplicableLabel || 'N/A');
                     } else {
                       unCheck(false);
                     }

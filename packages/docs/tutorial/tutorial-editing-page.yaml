@@ -23,9 +23,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 1
@@ -54,9 +51,6 @@ _ref:
             To save these changes, we are going to make a commit in the project repository.
       - id: md2
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             Write a message to describe the changes you have made, choose the option to create a new branch, and click "Propose changes". Then click "Create pull request".
@@ -90,9 +84,6 @@ _ref:
                   content: Hello World
       - id: md3
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 6

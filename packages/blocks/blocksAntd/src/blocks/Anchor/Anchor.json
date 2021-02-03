@@ -32,7 +32,7 @@
           "type": "object",
           "description": "Css style object to applied to anchor.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "title": {

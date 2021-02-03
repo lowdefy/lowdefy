@@ -35,14 +35,14 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "optionsStyle": {
           "type": "object",
           "description": "Css style to applied to option elements.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "label": {
@@ -53,12 +53,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -75,29 +75,33 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "disabled": {
@@ -106,21 +110,33 @@
           "description": "Disable the block if true."
         },
         "options": {
-          "type": "array",
           "default": [],
-          "description": "Selector options can either be an array of primitive values, on an array of label, value pairs.",
-          "items": {
-            "anyOf": [
-              {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "string"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "number"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "boolean"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "object",
                 "required": ["value"],
                 "properties": {
@@ -129,18 +145,27 @@
                     "description": "Value label shown to user."
                   },
                   "value": {
-                    "anyOf": [
+                    "oneOf": [
                       {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "number"
+                        "type": "number",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Value selected."
+                      },
+                      {
+                        "type": "object",
+                        "description": "Value selected.",
+                        "docs": {
+                          "displayType": "yaml"
+                        }
                       }
-                    ],
-                    "description": "Value selected."
+                    ]
                   },
                   "disabled": {
                     "type": "boolean",
@@ -149,11 +174,8 @@
                   }
                 }
               }
-            ]
-          },
-          "docs": {
-            "displayType": "optionsSelector"
-          }
+            }
+          ]
         },
         "placeholder": {
           "type": "string",
@@ -195,7 +217,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when selection is changed."
         }
       }
     }

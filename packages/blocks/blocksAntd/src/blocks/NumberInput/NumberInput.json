@@ -27,7 +27,7 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "label": {
@@ -38,12 +38,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -60,29 +60,33 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "min": {
@@ -104,9 +108,7 @@
         },
         "precision": {
           "type": "integer",
-          "default": 0,
-          "maximum": 100,
-          "description": "Precision (number of decimal places) allowed by the block. Maximum of 100."
+          "description": "Precision (number of decimal places) allowed by the block."
         },
         "size": {
           "type": "string",
@@ -130,10 +132,12 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when number is changed."
         },
         "onPressEnter": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when input is focused and enter is pressed."
         }
       }
     }

@@ -13,17 +13,17 @@
         "align": {
           "type": "string",
           "enum": ["left", "right"],
-          "defaultValue": "right",
+          "default": "left",
           "description": "Align label left or right when inline."
         },
         "colon": {
           "type": "boolean",
-          "defaultValue": true,
+          "default": true,
           "description": "Append label with colon."
         },
         "disabled": {
           "type": "boolean",
-          "defaultValue": true,
+          "default": true,
           "description": "Disable to not render a label title."
         },
         "extra": {
@@ -42,11 +42,17 @@
         },
         "extraStyle": {
           "type": "object",
-          "description": "Css style to applied to label extra."
+          "description": "Css style to applied to label extra.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "feedbackStyle": {
           "type": "object",
-          "description": "Css style to applied to label feedback."
+          "description": "Css style to applied to label feedback.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "span": {
           "type": "number",
@@ -54,7 +60,7 @@
         },
         "inline": {
           "type": "boolean",
-          "defaultValue": false,
+          "default": false,
           "description": "Render input and label inline."
         }
       }

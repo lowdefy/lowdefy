@@ -14,25 +14,38 @@
   limitations under the License.
 */
 
-function transformer(obj) {
-  const blockProperties = obj.schema.properties.properties;
-  const defaultValues = {};
-  Object.keys(blockProperties).forEach((key) => {
-    if (blockProperties[key].default != null) {
-      defaultValues[key] = blockProperties[key].default;
+// we assume:
+// anyOf, oneOf specifies default on property level.
+// array must specify default on array level
+function getDefaultValues(defaultValues, obj) {
+  Object.keys(obj.properties || {}).forEach((key) => {
+    if (obj.properties[key].default != null) {
+      defaultValues[key] = obj.properties[key].default;
     }
-    if (key === 'label') {
-      defaultValues.label = {
-        span: null,
-        align: 'left',
-        inline: false,
-        disabled: false,
-        colon: true,
-        extra: null,
-      };
+    if (typeof defaultValues[key] === 'undefined' || obj.properties[key].type === 'object') {
+      switch (obj.properties[key].type) {
+        case 'boolean':
+          defaultValues[key] = false;
+          break;
+        case 'array':
+          defaultValues[key] = [];
+          break;
+        case 'object':
+          defaultValues[key] = getDefaultValues(defaultValues[key] || {}, obj.properties[key]);
+          // unset empty objects for style inputs
+          if (Object.keys(defaultValues[key]).length === 0) {
+            delete defaultValues[key];
+          }
+          break;
+        default:
+          defaultValues[key] = null;
+          break;
+      }
     }
   });
   return defaultValues;
 }
+
+const transformer = (obj) => getDefaultValues({}, obj.schema.properties);
 
 module.exports = transformer;

@@ -177,7 +177,7 @@ Array [
         <br />
         <ButtonBlock
           actions={Object {}}
-          blockId="undefined_id"
+          blockId="properties.addToFront: true_add_button"
           content={Object {}}
           list={Array []}
           menus={Array []}

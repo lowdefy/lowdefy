@@ -43,16 +43,23 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize message icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize message icon.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "status": {
           "type": "string",
           "enum": ["success", "error", "info", "warning", "loading"],
+          "default": "info",
           "description": "Message status type."
         },
         "messageStyle": {
           "type": "object",
-          "description": "Css style to applied to message."
+          "description": "Css style to applied to message.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },
@@ -63,7 +70,7 @@
       "properties": {
         "onClose": {
           "type": "array",
-          "description": "Triggers actions when message is closed."
+          "description": "Trigger actions when message is closed."
         }
       }
     }

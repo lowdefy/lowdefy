@@ -8,7 +8,10 @@
       "properties": {
         "style": {
           "type": "object",
-          "description": "Css style object to applied to layout."
+          "description": "Css style object to applied to layout.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }

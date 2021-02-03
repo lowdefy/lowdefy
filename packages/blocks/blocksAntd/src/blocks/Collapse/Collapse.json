@@ -8,6 +8,7 @@
       "properties": {
         "accordion": {
           "type": "boolean",
+          "default": false,
           "description": "If true, only one panel is open at a time."
         },
         "activeKey": {
@@ -16,6 +17,7 @@
         },
         "bordered": {
           "type": "boolean",
+          "default": true,
           "description": "Toggles rendering of the border around the collapse block."
         },
         "defaultActiveKey": {
@@ -24,19 +26,25 @@
         },
         "destroyInactivePanel": {
           "type": "boolean",
+          "default": false,
           "description": "Destroy inactive panel."
         },
         "expandIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block for expand icon on the right of selector."
+          "description": "Name of an Ant Design Icon or properties of an Icon block for expand icon on the right of selector.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "expandIconPosition": {
           "type": "string",
           "enum": ["left", "right"],
+          "default": "left",
           "description": "Set position of expand icon."
         },
         "forceRender": {
           "type": "boolean",
+          "default": "false",
           "description": "Force render for all panels."
         },
         "panels": {
@@ -58,6 +66,7 @@
               },
               "disabled": {
                 "type": "boolean",
+                "default": false,
                 "description": "Disable the panel if true."
               }
             }
@@ -65,6 +74,7 @@
         },
         "showArrow": {
           "type": "boolean",
+          "default": true,
           "description": "Show expand icon."
         }
       }
@@ -74,7 +84,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when collapse item is toggled."
         }
       }
     }

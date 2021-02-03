@@ -20,283 +20,55 @@
           "type": "object",
           "description": "Css style object to applied to breadcrumb.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "list": {
-          "type": "array",
-          "description": "List of breadcrumb links.",
-          "items": {
-            "type": ["object", "string"],
-            "properties": {
-              "label": {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
                 "type": "string",
-                "description": "Label of the breadcrumb link."
-              },
-              "pageId": {
-                "type": "string",
-                "description": "Page id to link to when clicked."
-              },
-              "url": {
-                "type": "string",
-                "description": "External url link."
-              },
-              "style": {
-                "type": "object",
-                "description": "Css style to apply to link."
-              },
-              "icon": {
-                "type": ["string", "object"],
-                "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link."
-              }
-            }
-          },
-          "docs": {
-            "displayType": "manual",
-            "getter": {
-              "_if": {
-                "test": {
-                  "_eq": [
-                    {
-                      "_state": "__listType"
-                    },
-                    "string"
-                  ]
-                },
-                "then": {
-                  "_get": {
-                    "key": "0.list",
-                    "from": {
-                      "_mql.aggregate": {
-                        "pipeline": [
-                          {
-                            "$addFields": {
-                              "list": "$list.string"
-                            }
-                          }
-                        ],
-                        "on": [
-                          {
-                            "_state": "block.properties"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                },
-                "else": {
-                  "_state": "block.properties.list"
-                }
+                "description": "Title of the breadcrumb link."
               }
             },
-            "block": {
-              "id": "_card.block.properties.list",
-              "type": "Card",
-              "layout": {
-                "contentGutter": 0
-              },
-              "properties": {
-                "title": "list:",
-                "size": "small",
-                "inner": true,
-                "bodyStyle": {
-                  "padding": 0
-                }
-              },
-              "areas": {
-                "extra": {
-                  "blocks": [
-                    {
-                      "id": "__listType",
-                      "type": "ButtonSelector",
-                      "properties": {
-                        "label": {
-                          "disabled": true
-                        },
-                        "size": "small",
-                        "options": ["string", "object"]
-                      }
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Label of the breadcrumb link."
+                  },
+                  "pageId": {
+                    "type": "string",
+                    "description": "Page id to link to when clicked."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "External url link."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to apply to link.",
+                    "docs": {
+                      "displayType": "yaml"
                     }
-                  ]
-                },
-                "content": {
-                  "blocks": [
-                    {
-                      "id": "block.properties.list",
-                      "type": "ControlledList",
-                      "properties": {
-                        "size": "small"
-                      },
-                      "blocks": [
-                        {
-                          "id": "block.properties.list.$.string",
-                          "type": "TextInput",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "string"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "label": {
-                              "disabled": true
-                            }
-                          }
-                        },
-                        {
-                          "id": "block.properties.list.$.icon",
-                          "type": "Selector",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "object"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "title": "icon",
-                            "label": {
-                              "span": 8,
-                              "align": "right",
-                              "extra": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link."
-                            },
-                            "showSearch": true,
-                            "allowClear": true,
-                            "options": { "_global": "all_icons" }
-                          }
-                        },
-                        {
-                          "id": "block.properties.list.$.label",
-                          "type": "TextInput",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "object"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "title": "label",
-                            "label": {
-                              "span": 8,
-                              "align": "right",
-                              "extra": "Label of the breadcrumb link."
-                            }
-                          }
-                        },
-                        {
-                          "id": "block.properties.list.$.pageId",
-                          "type": "TextInput",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "object"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "title": "pageId",
-                            "label": {
-                              "span": 8,
-                              "align": "right",
-                              "extra": "Page id to link to when clicked."
-                            }
-                          }
-                        },
-                        {
-                          "id": "block.properties.list.$.style",
-                          "type": "TextArea",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "object"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "title": "style",
-                            "label": {
-                              "span": 8,
-                              "align": "right",
-                              "extra": "Css style to apply to link."
-                            }
-                          }
-                        },
-                        {
-                          "id": "block.properties.list.$.url",
-                          "type": "TextInput",
-                          "visible": {
-                            "_if": {
-                              "test": {
-                                "_eq": [
-                                  {
-                                    "_state": "__listType"
-                                  },
-                                  "object"
-                                ]
-                              },
-                              "then": true,
-                              "else": false
-                            }
-                          },
-                          "properties": {
-                            "size": "small",
-                            "title": "url",
-                            "label": {
-                              "span": 8,
-                              "align": "right",
-                              "extra": "External url link.External url link."
-                            }
-                          }
-                        }
-                      ]
+                  },
+                  "icon": {
+                    "type": ["string", "object"],
+                    "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link.",
+                    "docs": {
+                      "displayType": "icon"
                     }
-                  ]
+                  }
                 }
               }
             }
-          }
+          ]
         }
       }
     },

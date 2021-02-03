@@ -9,7 +9,10 @@
       "properties": {
         "style": {
           "type": "object",
-          "description": "Style to apply to Box div."
+          "description": "Css style object to apply to List div.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },
@@ -17,11 +20,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "onClick":  {
-          "type": "array"
+        "onClick": {
+          "type": "array",
+          "description": "Trigger actions when the List is clicked."
         }
       }
     }
   }
 }
-

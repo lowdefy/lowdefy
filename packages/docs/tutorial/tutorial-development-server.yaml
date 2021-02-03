@@ -23,9 +23,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             Lowdefy has a development server that allows you to develop your app locally. In this section we will start up the development server.
