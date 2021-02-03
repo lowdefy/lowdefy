@@ -78,7 +78,8 @@
           "oneOf": [
             {
               "type": "number",
-              "description": "Value to display."
+              "description": "Value to display.",
+              "step": "0.01"
             },
             {
               "type": "string",

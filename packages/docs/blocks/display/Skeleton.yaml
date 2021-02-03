@@ -15,37 +15,23 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Descriptions
+    block_type: Skeleton
     category: display
-    init_state_values:
-      __type_block.properties.column: number
-      __type_block.properties.items: object[]
-      __number_block.properties.column: 2
-      __object_arr_block.properties.items:
-        - label: Item One
-          value: 1
-        - label: Item Two
-          value: 2
-        - label: Item Three
-          value: 3
-        - label: Item Four
-          value: 4
-
     description_content: |
-      Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
+      Skeleton block to use as a loading place holder.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+        path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+        path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+        path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
         transformer: templates/blocks/propertiesFormTransformer.js
     examples:
-      - title: Basic descriptions
-        properties: '{"items": {"Location": "South Africa", "Temperature": 22, "Date": "2021-02-02"}}'
+      - title: Basic skeleton
+        properties: '{}'
       

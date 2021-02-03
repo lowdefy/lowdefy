@@ -13,7 +13,10 @@
         },
         "content": {
           "type": "string",
-          "description": "Paragraph text content."
+          "description": "Paragraph text content.",
+          "docs": {
+            "displayType": "text-area"
+          }
         },
         "copyable": {
           "description": "Provide copy text button.",

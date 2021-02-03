@@ -199,7 +199,9 @@ function makeBlockDefinition({
         return block;
       case 'yaml':
         block.type = 'TextArea';
-        // delete block.properties.size;
+        return block;
+      case 'text-area':
+        block.type = 'TextArea';
         return block;
       case 'button':
         return button(propertyName);
@@ -212,6 +214,9 @@ function makeBlockDefinition({
   // enums
   if (propertyDescription.enum) {
     block.type = 'ButtonSelector';
+    if (propertyDescription.enum.length >= 5) {
+      block.type = 'Selector';
+    }
     block.properties.options = propertyDescription.enum;
     return block;
   }

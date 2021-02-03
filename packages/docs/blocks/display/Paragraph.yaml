@@ -15,40 +15,30 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: TitleInput
-    value_type: string
-    category: input
+    block_type: Paragraph
+    category: display
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean
-      __type_block.properties.editable: boolean
       __boolean_block.properties.copyable: false
       __boolean_block.properties.ellipsis: false
-      __boolean_block.properties.editable: true
-      block_id: Click edit to change the title.
+    init_property_values:
+      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     description_content: |
-      The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
+      A paragraph text component.
     default_properties:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+        path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+        path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+        path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    available_actions_description: |
-      ###### onChange
-      Trigger action when title is changed.
-      ###### onCopy
-      Trigger action when copy text is clicked.
-      ###### onExpand
-      Trigger action when ellipse expand is clicked.
-
     examples:
-      - title: Title input
-        properties: '{"title": "Title input"}'
+      - title: Basic paragraph
+        properties: '{"content": "Lowdefy simplifies creating software that helps manage internal data - think web apps, admin panels, BI dashboards, CRUD and workflow apps. Within most companies the need exist to connect to a variety of data sources and execute actions on such data. This must be done without compromising data security while respecting complex data integrity rules."}'
+      

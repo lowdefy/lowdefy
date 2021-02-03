@@ -13,7 +13,7 @@
         },
         "orientation": {
           "type": "string",
-          "default": "left",
+          "default": "center",
           "enum": ["left", "right", "center"],
           "description": "Position of title inside divider."
         },
