@@ -557,8 +557,7 @@ class Blocks {
         );
         block.eval = {
           areas: block.areasLayoutEval.output,
-          // TODO:
-          actions: type.isNone(block.Events.events) ? null : block.Events.events,
+          events: type.isNone(block.Events.events) ? null : block.Events.events,
           properties: block.propertiesEval.output,
           required: block.requiredEval.output,
           layout: block.layoutEval.output,

@@ -73,7 +73,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
           removeItem: block.removeItem,
           unshiftItem: block.unshiftItem,
         }}
-        actions={block.eval.actions}
+        events={block.eval.events}
         blockId={block.blockId}
         list={contentList}
         homePageId={rootContext.homePageId}

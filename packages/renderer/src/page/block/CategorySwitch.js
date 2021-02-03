@@ -93,7 +93,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
               registerMethod: block.registerMethod,
               setValue: block.setValue,
             }}
-            actions={block.eval.actions}
+            events={block.eval.events}
             blockId={block.blockId}
             homePageId={rootContext.homePageId}
             key={block.blockId}
@@ -124,7 +124,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
               registerAction: block.registerAction,
               registerMethod: block.registerMethod,
             }}
-            actions={block.eval.actions}
+            events={block.eval.events}
             blockId={block.blockId}
             homePageId={rootContext.homePageId}
             key={block.blockId}

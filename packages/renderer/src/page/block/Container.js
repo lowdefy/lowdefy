@@ -66,7 +66,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
           registerAction: block.registerAction,
           registerMethod: block.registerMethod,
         }}
-        actions={block.eval.actions}
+        events={block.eval.events}
         blockId={block.blockId}
         content={content}
         homePageId={rootContext.homePageId}
