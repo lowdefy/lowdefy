@@ -30,7 +30,7 @@ runBlockSchemaTests({ examples, meta });
 const { before, methods, getProps } = mockBlock({ meta });
 beforeEach(before);
 
-test('callAction onClick', () => {
+test('triggerEvent onClick', () => {
   const block = {
     id: 'one',
     type: 'List',
@@ -38,7 +38,7 @@ test('callAction onClick', () => {
   const Shell = () => <List {...getProps(block)} methods={methods} />;
   const wrapper = mount(<Shell />);
   wrapper.find('[data-testid="one"]').simulate('click');
-  expect(methods.callAction).toHaveBeenCalledWith({ action: 'onClick' });
+  expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });
 
 test('register list methods on mount', () => {
