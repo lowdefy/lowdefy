@@ -18,10 +18,8 @@ _ref:
     block_type: Switch
     value_type: boolean
     category: input
-
     description_content: |
       The `Switch` block is an on/off input. It has a boolean value (true/false).
-
     default_properties:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Switch/Switch.json

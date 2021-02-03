@@ -25,7 +25,7 @@
         "status": {
           "type": "string",
           "enum": ["success", "exception", "normal", "active"],
-          "default": "active",
+          "default": "normal",
           "description": "Set the status of the Progress."
         },
         "strokeLinecap": {
@@ -36,7 +36,10 @@
         },
         "strokeColor": {
           "type": ["string", "object"],
-          "description": "Color of progress bar."
+          "description": "Color of progress bar.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "success": {
           "type": "number",
@@ -45,7 +48,10 @@
         },
         "trailColor": {
           "type": "string",
-          "description": "Color of unfilled part."
+          "description": "Color of unfilled part.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "strokeWidth": {
           "type": "number",

@@ -45,7 +45,7 @@
         },
         "button": {
           "type": "object",
-          "description": "Button object to customized the close button. Triggers onClose action when clicked."
+          "description": "Button object to customized the close button. Triggers onClose event when clicked."
         },
         "description": {
           "type": "string",
@@ -96,11 +96,11 @@
       "properties": {
         "onClose": {
           "type": "array",
-          "description": "Triggers actions when notification is closed."
+          "description": "Trigger actions when notification is closed."
         },
         "onClick": {
           "type": "array",
-          "description": "Triggers actions when notification is clicked."
+          "description": "Trigger actions when notification is clicked."
         }
       }
     }

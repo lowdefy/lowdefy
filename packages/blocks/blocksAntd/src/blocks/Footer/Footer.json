@@ -8,7 +8,10 @@
       "properties": {
         "style": {
           "type": "object",
-          "description": "Css style object to applied to footer."
+          "description": "Css style object to applied to footer.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }

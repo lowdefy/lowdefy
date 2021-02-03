@@ -42,7 +42,7 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "label": {
@@ -53,12 +53,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -79,25 +79,28 @@
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
-          },
-          "docs": {
-            "displayType": "label"
           }
         },
         "options": {
@@ -106,16 +109,13 @@
           "description": "Auto complete options can be an array of string values.",
           "items": {
             "type": "string"
-          },
-          "docs": {
-            "displayType": "optionsString"
           }
         },
         "optionsStyle": {
           "type": "object",
           "description": "Css style to applied to option elements.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "placeholder": {
@@ -140,7 +140,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when selection is changed."
         }
       }
     }

@@ -16,7 +16,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to affix."
+          "description": "Css style object to applied to affix.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },

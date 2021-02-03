@@ -59,6 +59,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/color"
       },
       {
+        "name": "@lowdefy/docs",
+        "reference": "workspace:packages/docs"
+      },
+      {
         "name": "@lowdefy/engine",
         "reference": "workspace:packages/engine"
       },
@@ -123,6 +127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/build", ["workspace:packages/build"]],
       ["@lowdefy/cli", ["workspace:packages/cli"]],
       ["@lowdefy/color", ["workspace:packages/color"]],
+      ["@lowdefy/docs", ["workspace:packages/docs"]],
       ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/format", ["workspace:packages/format"]],
       ["@lowdefy/graphql", ["workspace:packages/graphql"]],
@@ -4387,6 +4392,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
             ["jest", "npm:26.6.3"],
             ["tinycolor2", "npm:1.4.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@lowdefy/docs", [
+        ["workspace:packages/docs", {
+          "packageLocation": "./packages/docs/",
+          "packageDependencies": [
+            ["@lowdefy/docs", "workspace:packages/docs"],
+            ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.10"],
+            ["@babel/core", "npm:7.12.10"],
+            ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.11"],
+            ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
+            ["jest", "npm:26.6.3"]
           ],
           "linkType": "SOFT",
         }]

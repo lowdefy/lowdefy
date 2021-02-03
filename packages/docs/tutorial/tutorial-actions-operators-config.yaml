@@ -21,9 +21,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             ##### `lowdefy.yaml`

@@ -45,7 +45,7 @@
         "centered": {
           "type": "boolean",
           "default": false,
-          "description": "Centered Modal"
+          "description": "Centered Modal."
         },
         "content": {
           "type": "string",
@@ -53,7 +53,10 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize modal icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize modal icon.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "mask": {
           "type": "boolean",
@@ -67,35 +70,47 @@
         },
         "modalStyle": {
           "type": "object",
-          "description": "Css style to applied to modal."
+          "description": "Css style to applied to modal.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "okText": {
           "type": "string",
           "default": "Ok",
-          "description": "Text of the Ok button"
+          "description": "Text of the Ok button."
         },
         "cancelText": {
           "type": "string",
           "default": "Cancel",
-          "description": "Text of the Cancel button"
+          "description": "Text of the Cancel button."
         },
         "okButton": {
           "type": "object",
-          "description": "Ok button properties"
+          "description": "Ok button properties.",
+          "docs": {
+            "displayType": "button"
+          }
         },
         "cancelButton": {
           "type": "object",
-          "description": "Cancel button properties"
+          "description": "Cancel button properties.",
+          "docs": {
+            "displayType": "button"
+          }
         },
         "width": {
           "type": ["number", "string"],
           "default": 416,
-          "description": "Width of the modal dialog"
+          "description": "Width of the modal dialog.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "zIndex": {
           "type": "number",
           "default": 1000,
-          "description": "The z-index of the Modal"
+          "description": "The z-index of the Modal."
         },
         "status": {
           "type": "string",
@@ -111,15 +126,15 @@
       "properties": {
         "onOk": {
           "type": "array",
-          "description": "Triggers actions when Ok button is clicked."
+          "description": "Trigger actions when Ok button is clicked."
         },
         "onOpen": {
           "type": "array",
-          "description": "Triggers actions when modal is opened."
+          "description": "Trigger actions when confirm modal is opened."
         },
         "onCancel": {
           "type": "array",
-          "description": "Triggers actions when Cancel button is clicked."
+          "description": "Trigger actions when Cancel button is clicked."
         },
         "onClose": {
           "type": "array",

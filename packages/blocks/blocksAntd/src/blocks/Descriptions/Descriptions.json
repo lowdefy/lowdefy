@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 100
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,18 +13,49 @@
       "properties": {
         "bordered": {
           "type": "boolean",
+          "default": true,
           "description": "Render items in a table."
         },
         "colon": {
           "type": "boolean",
+          "default": true,
           "description": "Include a colon in item labels."
         },
         "column": {
-          "type": ["number", "object"],
-          "description": "The number of description items in a row, could be a number or a object like { xs: 8, sm: 16, md: 24}."
+          "oneOf": [
+            {
+              "type": "number",
+              "description": "The number of description items in a row."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "xs": {
+                  "type": "integer",
+                  "description": "The number of description items in a row for 'xs' media size."
+                },
+                "sm": {
+                  "type": "integer",
+                  "description": "The number of description items in a row for 'sm' media size."
+                },
+                "md": {
+                  "type": "integer",
+                  "description": "The number of description items in a row for 'md' media size."
+                },
+                "lg": {
+                  "type": "integer",
+                  "description": "The number of description items in a row for 'lg' media size."
+                },
+                "xl": {
+                  "type": "integer",
+                  "description": "The number of description items in a row for 'xl' media size."
+                }
+              }
+            }
+          ]
         },
         "items": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "array",
               "description": "List of items to display",
@@ -36,27 +72,32 @@
                     "description": "Value of item."
                   },
                   "span": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "Number of columns for this item to span."
                   }
                 }
               }
             },
-            { "type": "object" },
-            { "type": "string" },
-            { "type": "number" },
-            { "type": "boolean" }
+            {
+              "type": "object",
+              "description": "Object of key value pairs to display",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
           ]
         },
         "layout": {
           "type": "string",
           "description": "Put values next to or below their labels.",
-          "enum": ["horizontal", "vertical"]
+          "enum": ["horizontal", "vertical"],
+          "default": "horizontal"
         },
         "size": {
           "type": "string",
           "description": "Size of the block.",
-          "enum": ["default", "small"]
+          "enum": ["default", "small"],
+          "default": "default"
         },
         "title": {
           "type": "string",

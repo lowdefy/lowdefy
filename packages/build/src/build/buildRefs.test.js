@@ -703,3 +703,33 @@ test('buildRefs with transformer function', async () => {
     var: 'var1',
   });
 });
+
+test('buildRefs _var receives invalid type', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: {
+        ref: {
+          _ref: {
+            path: 'file.yaml',
+            vars: {
+              var1: 'value',
+            },
+          },
+        },
+      },
+    },
+    {
+      path: 'file.yaml',
+      content: {
+        key: {
+          _var: [1],
+        },
+      },
+    },
+  ];
+  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow(
+    '"_var" operator takes a string or object with name field as arguments. Received "{"_var":[1]}"'
+  );
+});

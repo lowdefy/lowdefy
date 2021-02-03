@@ -22,7 +22,10 @@
       "properties": {
         "bodyStyle": {
           "type": "object",
-          "description": "Css style to applied to modal body."
+          "description": "Css style to applied to modal body.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "centered": {
           "type": "boolean",
@@ -50,7 +53,10 @@
         },
         "maskStyle": {
           "type": "object",
-          "description": "Css style to applied to modal mask."
+          "description": "Css style to applied to modal mask.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "maskClosable": {
           "type": "boolean",
@@ -74,15 +80,21 @@
         },
         "width": {
           "type": ["string", "number"],
-          "default": 520,
-          "description": "Width of the modal dialog."
+          "default": "520px",
+          "description": "Width of the modal dialog.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "wrapperStyle": {
           "type": "object",
-          "description": "Css style to applied to modal wrapper."
+          "description": "Css style to applied to modal wrapper.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "zIndex": {
-          "type": "number",
+          "type": "integer",
           "default": 1000,
           "description": "The z-index of the modal. Useful when displaying two modals simultaneously."
         }
@@ -93,19 +105,19 @@
         "properties": {
           "onOk": {
             "type": "array",
-            "description": "Triggers actions when Ok button is clicked."
+            "description": "Trigger actions when Ok button is clicked."
           },
           "onOpen": {
             "type": "array",
-            "description": "Triggers actions when modal is opened."
+            "description": "Trigger actions when modal is opened."
           },
           "onCancel": {
             "type": "array",
-            "description": "Triggers actions when Cancel button is clicked."
+            "description": "Trigger actions when Cancel button is clicked."
           },
           "onClose": {
             "type": "array",
-            "description": "Triggers after onOk or onCancel is completed."
+            "description": "Trigger actions after onOk or onCancel is completed."
           }
         }
       }
