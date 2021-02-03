@@ -17,7 +17,6 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 
 const NumberInput = ({ blockId, loading, properties, required, validation, value, methods }) => {
@@ -39,9 +38,9 @@ const NumberInput = ({ blockId, loading, properties, required, validation, value
             placeholder={properties.placeholder}
             autoComplete="off"
             decimalSeparator={properties.decimalSeparator}
-            min={!type.isNone(properties.min) ? properties.min : -Infinity}
-            max={!type.isNone(properties.max) ? properties.max : Infinity}
-            precision={!type.isNone(properties.precision) ? properties.precision : 0}
+            min={properties.min}
+            max={properties.max}
+            precision={properties.precision}
             step={properties.step}
             size={properties.size}
             onChange={(newVal) => {

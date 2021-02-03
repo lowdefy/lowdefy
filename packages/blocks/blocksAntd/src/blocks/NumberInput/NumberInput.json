@@ -108,9 +108,7 @@
         },
         "precision": {
           "type": "integer",
-          "default": 0,
-          "maximum": 100,
-          "description": "Precision (number of decimal places) allowed by the block. Maximum of 100."
+          "description": "Precision (number of decimal places) allowed by the block."
         },
         "size": {
           "type": "string",
@@ -138,7 +136,8 @@
           "description": "Trigger actions when number is changed."
         },
         "onPressEnter": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when input is focused and enter is pressed."
         }
       }
     }
