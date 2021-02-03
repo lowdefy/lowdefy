@@ -25,7 +25,7 @@ const AffixBlock = ({ blockId, content, methods, properties }) => (
     offsetBottom={properties.offsetBottom}
     offsetTop={properties.offsetTop}
     onChange={(affixed) => {
-      methods.callAction({ action: 'onChange', args: { affixed } });
+      methods.triggerEvent({ name: 'onChange', event: { affixed } });
     }}
   >
     {content.content && content.content()}

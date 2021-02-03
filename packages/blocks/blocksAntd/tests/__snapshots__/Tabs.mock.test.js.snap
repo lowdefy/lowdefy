@@ -949,14 +949,13 @@ Array [
               className="{}"
             >
               <IconBlock
-                actions={Object {}}
                 blockId="properties.tabs.icon_icon"
                 content={Object {}}
+                events={Object {}}
                 list={Array []}
                 menus={Array []}
                 methods={
                   Object {
-                    "callAction": [Function],
                     "makeCssClass": [MockFunction] {
                       "calls": Array [
                         Array [
@@ -994,8 +993,9 @@ Array [
                         },
                       ],
                     },
-                    "registerAction": [Function],
+                    "registerEvent": [Function],
                     "registerMethod": [Function],
+                    "triggerEvent": [Function],
                   }
                 }
                 properties="WarningOutlined"
@@ -1050,14 +1050,13 @@ Array [
               className="{}"
             >
               <IconBlock
-                actions={Object {}}
                 blockId="properties.tabs.icon_icon"
                 content={Object {}}
+                events={Object {}}
                 list={Array []}
                 menus={Array []}
                 methods={
                   Object {
-                    "callAction": [Function],
                     "makeCssClass": [MockFunction] {
                       "calls": Array [
                         Array [
@@ -1095,8 +1094,9 @@ Array [
                         },
                       ],
                     },
-                    "registerAction": [Function],
+                    "registerEvent": [Function],
                     "registerMethod": [Function],
+                    "triggerEvent": [Function],
                   }
                 }
                 properties="SaveOutlined"

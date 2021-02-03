@@ -6,18 +6,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
-          actions={Object {}}
           blockId="areas.content_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -33,8 +32,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -63,18 +63,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
-          actions={Object {}}
           blockId="areas.footer_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -90,8 +89,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -120,18 +120,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
-          actions={Object {}}
           blockId="areas.header_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -147,8 +146,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -177,18 +177,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="areas.sider_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -204,14 +203,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -232,18 +232,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="areas.sider_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -259,8 +258,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -289,18 +289,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <LayoutBlock
-          actions={Object {}}
           blockId="default_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -316,8 +315,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -346,18 +346,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.content.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -373,14 +372,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -401,18 +401,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.content.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -428,8 +427,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -458,18 +458,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.footer.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -485,14 +484,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -513,18 +513,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.footer.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -540,8 +539,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -570,18 +570,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.header.color: #4432a8 _sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -597,14 +596,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -625,18 +625,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.color: #4432a8 _layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -652,8 +651,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -682,18 +682,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.header.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -709,14 +708,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -737,18 +737,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -764,8 +763,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -794,18 +794,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.header.theme: light - dark is default_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -821,14 +820,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -849,18 +849,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.theme: light - dark is default_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -876,8 +875,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -906,18 +906,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.main.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -933,14 +932,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -961,18 +961,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.main.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -988,8 +987,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1024,18 +1024,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.sider.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1051,8 +1050,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1064,7 +1064,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -1085,18 +1085,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.sider.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1112,8 +1111,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1142,18 +1142,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.sider.theme: light - dark is default_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1169,8 +1168,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1180,7 +1180,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -1201,18 +1201,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.sider.theme: light - dark is default_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1228,8 +1227,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1258,18 +1258,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <SiderBlock
-          actions={Object {}}
           blockId="properties.style: border: 5px solid blue_sider"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1286,14 +1285,15 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClose": "onSiderClose",
                 "onOpen": "onSiderOpen",
               },
@@ -1314,18 +1314,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.style: border: 5px solid blue_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1342,8 +1341,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}

@@ -57,7 +57,7 @@ const RadioSelector = ({ blockId, loading, properties, required, validation, val
                   ? uniqueValueOptions[event.target.value]
                   : uniqueValueOptions[event.target.value].value
               );
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             value={getValueIndex(value, uniqueValueOptions)}
           >

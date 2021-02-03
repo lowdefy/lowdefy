@@ -737,14 +737,13 @@ Array [
       "showToday": undefined,
       "size": undefined,
       "suffixIcon": <IconBlock
-        actions={Object {}}
         blockId="properties.suffixIcon: CalendarTwoTone_suffixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -830,9 +829,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="CalendarTwoTone"

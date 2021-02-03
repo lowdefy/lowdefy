@@ -41,10 +41,10 @@ const TextAreaBlock = ({ blockId, loading, properties, required, validation, val
               autoFocus={properties.autoFocus}
               onChange={(event) => {
                 methods.setValue(event.target.value);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               onPressEnter={() => {
-                methods.callAction({ action: 'onPressEnter' });
+                methods.triggerEvent({ name: 'onPressEnter' });
               }}
               placeholder={properties.placeholder}
               value={value}

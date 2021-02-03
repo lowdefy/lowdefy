@@ -41,7 +41,7 @@ const PageSHCF = ({ blockId, content, properties, methods }) => (
                 content: () => content.sider(),
               }}
               rename={{
-                actions: {
+                events: {
                   onClose: 'onSiderClose',
                   onOpen: 'onSiderOpen',
                 },

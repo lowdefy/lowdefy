@@ -7,14 +7,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="default_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -89,9 +88,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -116,14 +116,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="default_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -198,9 +197,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -231,14 +231,13 @@ Array [
       "autoFocus": true,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.autoFocus: true_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -313,9 +312,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -340,14 +340,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.autoFocus: true_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -422,9 +421,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -455,14 +455,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.checkedIcon: CheckCircleOutlined_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -537,9 +536,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -564,14 +564,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -646,9 +645,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -688,14 +688,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.checkedText: Checked_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -770,9 +769,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -803,14 +803,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.color: #_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -889,9 +888,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -916,14 +916,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.color: #_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1002,9 +1001,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1035,14 +1035,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.disabled: true_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1117,9 +1116,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1144,14 +1144,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.disabled: true_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1226,9 +1225,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1259,14 +1259,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.inputStyle: CSS style applied_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1343,9 +1342,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1370,14 +1370,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.inputStyle: CSS style applied_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1454,9 +1453,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1487,14 +1487,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label align: right_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1569,9 +1568,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1596,14 +1596,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label align: right_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1678,9 +1677,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1711,14 +1711,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label colon: false_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1793,9 +1792,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1820,14 +1820,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label colon: false_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1902,9 +1901,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1935,14 +1935,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label disabled: true_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2017,9 +2016,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2044,14 +2044,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label disabled: true_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2126,9 +2125,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2159,14 +2159,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label extra: showing extra_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2241,9 +2240,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2268,14 +2268,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label extra: showing extra_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2350,9 +2349,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2383,14 +2383,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label inline: true_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2465,9 +2464,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2492,14 +2492,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label inline: true_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2574,9 +2573,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2607,14 +2607,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label span: 4_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2689,9 +2688,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2716,14 +2716,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.label span: 4_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2798,9 +2797,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2831,14 +2831,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.size: small_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2913,9 +2912,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2940,14 +2940,13 @@ Array [
       "onChange": [Function],
       "size": "small",
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.size: small_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3022,9 +3021,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3055,14 +3055,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.title_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3137,9 +3136,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3164,14 +3164,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.title_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3246,9 +3245,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3279,14 +3279,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.uncheckedIcon: UnlockFilled_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3361,9 +3360,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3388,14 +3388,13 @@ Array [
       "onChange": [Function],
       "size": undefined,
       "unCheckedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3470,9 +3469,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3503,14 +3503,13 @@ Array [
       "autoFocus": undefined,
       "checked": false,
       "checkedChildren": <IconBlock
-        actions={Object {}}
         blockId="properties.uncheckedText: Unchecked_checkedIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3585,9 +3584,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={

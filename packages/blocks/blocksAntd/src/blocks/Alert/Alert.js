@@ -29,15 +29,14 @@ const AlertBlock = ({ blockId, methods, properties }) => {
   }
   return (
     <Alert
-      afterClose={() => methods.callAction({ action: 'afterClose' })}
+      afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
       banner={properties.banner}
       closable={properties.closable}
       closeText={properties.closeText}
       description={properties.description}
       id={blockId}
       message={properties.message || <div style={{ height: '1.5175em' }}></div>}
-      description={properties.description}
-      onClose={() => methods.callAction({ action: 'onClose' })}
+      onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
       type={properties.type}
       {...additionalProps}

@@ -25,17 +25,17 @@ const Paragraph = Typography.Paragraph;
 
 const ParagraphInput = ({ blockId, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
-  const editableActions = {
+  const editableEvents = {
     onStart: () => {
       setEdit(true);
-      methods.callAction({
-        action: 'onStart',
+      methods.triggerEvent({
+        name: 'onStart',
       });
     },
     onChange: (val) => {
       setEdit(false);
       methods.setValue(val);
-      methods.callAction({ action: 'onChange', args: { value: val } });
+      methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
   return (
@@ -48,9 +48,9 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
           ? {
               text: properties.copyable.test || value,
               onCopy: () => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { value: properties.copyable.test || value },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { value: properties.copyable.test || value },
                 });
               },
               icon:
@@ -90,15 +90,15 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               expandable: properties.ellipsis.expandable,
               suffix: properties.ellipsis.suffix,
               onExpand: (ellipsis) => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { ellipsis },
                 });
               },
               onEllipsis: (ellipsis) => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { ellipsis },
                 });
               },
             }
@@ -118,9 +118,9 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               editing: properties.editable.editing || editing,
               maxLength: properties.editable.maxLength,
               autoSize: properties.editable.autoSize,
-              ...editableActions,
+              ...editableEvents,
             }
-          : properties.editable !== false && editableActions
+          : properties.editable !== false && editableEvents
       }
       mark={properties.mark}
       strong={properties.strong}

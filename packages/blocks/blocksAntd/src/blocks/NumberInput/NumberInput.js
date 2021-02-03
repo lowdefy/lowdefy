@@ -45,10 +45,10 @@ const NumberInput = ({ blockId, loading, properties, required, validation, value
             size={properties.size}
             onChange={(newVal) => {
               methods.setValue(newVal);
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             onPressEnter={() => {
-              methods.callAction({ action: 'onPressEnter' });
+              methods.triggerEvent({ name: 'onPressEnter' });
             }}
             value={value}
           />

@@ -6,18 +6,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="default_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -51,18 +51,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="default_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -101,18 +101,18 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.accept_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -146,18 +146,18 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.accept_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -196,18 +196,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.button_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -241,18 +241,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.button_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -291,18 +291,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.disabled_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -336,18 +336,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.disabled_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -386,18 +386,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.showUploadList_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -431,18 +431,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.showUploadList_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -481,18 +481,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.singleFile_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -526,18 +526,18 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.singleFile_button"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={

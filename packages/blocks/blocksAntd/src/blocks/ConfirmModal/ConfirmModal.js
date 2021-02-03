@@ -28,7 +28,7 @@ const ConfirmModal = ({ blockId, content, methods, properties }) => {
           <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
         );
       }
-      methods.callAction({ action: 'onOpen' });
+      methods.triggerEvent({ name: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: properties.title,
@@ -44,12 +44,12 @@ const ConfirmModal = ({ blockId, content, methods, properties }) => {
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {
-          await methods.callAction({ action: 'onOk' });
-          methods.callAction({ action: 'onClose' });
+          await methods.triggerEvent({ name: 'onOk' });
+          methods.triggerEvent({ name: 'onClose' });
         },
         onCancel: async () => {
-          await methods.callAction({ action: 'onCancel' });
-          methods.callAction({ action: 'onClose' });
+          await methods.triggerEvent({ name: 'onCancel' });
+          methods.triggerEvent({ name: 'onClose' });
         },
         ...additionalProps,
       });
