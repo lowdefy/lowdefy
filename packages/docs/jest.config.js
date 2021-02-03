@@ -1,11 +1,19 @@
 module.exports = {
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js'],
+  collectCoverageFrom: ['**/*.js'],
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/test/'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/.lowdefy/',
+    '<rootDir>/jest.config.js',
+    '<rootDir>/coverage/',
+  ],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['<rootDir>/dist/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.lowdefy/',
+    '<rootDir>/jest.config.js',
+    '<rootDir>/coverage/',
+  ],
 };
