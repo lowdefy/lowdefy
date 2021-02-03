@@ -104,10 +104,10 @@ test('Validate', async () => {
     status: 'error',
     warnings: [],
   });
-  await button.callAction({ action: 'onClick' });
-  expect(button.BlockActions.actions.onClick.calls[0].error).toEqual([
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].error).toEqual([
     {
-      args: undefined,
+      event: undefined,
       error: null,
       errorMessage: 'Error validating text1',
       id: 'action1',
@@ -117,10 +117,10 @@ test('Validate', async () => {
     },
   ]);
   text1.setValue('12');
-  await button.callAction({ action: 'onClick' });
-  expect(button.BlockActions.actions.onClick.calls[0].error).toEqual([
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].error).toEqual([
     {
-      args: undefined,
+      event: undefined,
       error: null,
       errorMessage: 'Error validating text2',
       id: 'action2',
@@ -129,7 +129,7 @@ test('Validate', async () => {
       type: 'Validate',
     },
     {
-      args: undefined,
+      event: undefined,
       error: null,
       id: 'action1',
       params: 'text1',
@@ -139,16 +139,16 @@ test('Validate', async () => {
     },
   ]);
   text1.setValue('123');
-  await button.callAction({ action: 'onClick' });
-  expect(button.BlockActions.actions.onClick.calls[0].success).toEqual([
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].success).toEqual([
     'Success validating text2',
     'Success validating text1',
   ]);
   text1.setValue('');
-  await button.callAction({ action: 'onClick' });
-  expect(button.BlockActions.actions.onClick.calls[0].error).toEqual([
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].error).toEqual([
     {
-      args: undefined,
+      event: undefined,
       error: null,
       errorMessage: 'Error validating text1',
       id: 'action1',

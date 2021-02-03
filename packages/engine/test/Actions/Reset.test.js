@@ -108,7 +108,7 @@ test('Reset one field', () => {
 
   textInput.setValue('1');
   expect(context.state).toEqual({ textInput: '1' });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'init' });
 });
 
@@ -169,7 +169,7 @@ test('Reset on primitive array after adding item', () => {
 
   list.pushItem();
   expect(context.state).toEqual({ list: ['init', null] });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ list: ['init'] });
 });
 
@@ -232,6 +232,6 @@ test('Reset on object array after removing item', () => {
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
   list.removeItem(0);
   expect(context.state).toEqual({ list: [] });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
 });

@@ -117,19 +117,18 @@ test('init BlockActions', () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  expect(button.BlockActions.actions).toMatchInlineSnapshot(`
+  expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "actionName": "onClick",
-        "call": [Function],
-        "calls": Array [],
+        "history": Array [],
         "loading": false,
+        "trigger": [Function],
       },
     }
   `);
 });
 
-test('callAction no Action defined', async () => {
+test('triggerEvent no Action defined', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -157,13 +156,13 @@ test('callAction no Action defined', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  const promise = button.callAction({ action: 'onClick' });
-  expect(button.BlockActions.actions).toEqual({});
+  const promise = button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events).toEqual({});
   const res = await promise;
   expect(res).toBe(undefined);
 });
 
-test('callAction x1', async () => {
+test('triggerEvent x1', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -194,24 +193,23 @@ test('callAction x1', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  const promise = button.callAction({ action: 'onClick', args: { x: 1 } });
-  expect(button.BlockActions.actions).toMatchInlineSnapshot(`
+  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "actionName": "onClick",
-        "call": [Function],
-        "calls": Array [],
+        "history": Array [],
         "loading": true,
+        "trigger": [Function],
       },
     }
   `);
   await promise;
-  expect(button.BlockActions.actions.onClick.calls[0].args).toEqual({ x: 1 });
-  expect(button.BlockActions.actions.onClick.calls[0].success.length).toEqual(1);
-  expect(button.BlockActions.actions.onClick.loading).toEqual(false);
+  expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
+  expect(button.Events.events.onClick.history[0].success.length).toEqual(1);
+  expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
-test('callAction x2', async () => {
+test('triggerEvent x2', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -246,13 +244,13 @@ test('callAction x2', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
-  expect(button.BlockActions.actions.onClick.calls[0].args).toEqual({ x: 1 });
-  expect(button.BlockActions.actions.onClick.calls[0].success.length).toEqual(2);
-  expect(button.BlockActions.actions.onClick.loading).toEqual(false);
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
+  expect(button.Events.events.onClick.history[0].success.length).toEqual(2);
+  expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
-test('callAction error', async () => {
+test('triggerEvent error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -290,21 +288,21 @@ test('callAction error', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
-  expect(button.BlockActions.actions.onClick.calls[0].error.length).toEqual(1);
-  expect(button.BlockActions.actions.onClick.loading).toEqual(false);
-  expect(button.BlockActions.actions.onClick.calls[0].error).toMatchInlineSnapshot(`
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events.onClick.history[0].error.length).toEqual(1);
+  expect(button.Events.events.onClick.loading).toEqual(false);
+  expect(button.Events.events.onClick.history[0].error).toMatchInlineSnapshot(`
     Array [
       Object {
-        "args": Object {
-          "x": 1,
-        },
         "error": Object {
           "error": [Error: Invalid action: {"id":"e","type":"error()","params":{"a":"a"},"error":"error invalid action type"}],
           "message": "Invalid action: {\\"id\\":\\"e\\",\\"type\\":\\"error()\\",\\"params\\":{\\"a\\":\\"a\\"},\\"error\\":\\"error invalid action type\\"}",
           "name": "Error",
         },
         "errorMessage": "error invalid action type",
+        "event": Object {
+          "x": 1,
+        },
         "id": "e",
         "params": Object {
           "a": "a",
@@ -355,7 +353,7 @@ test('messages: loading and success', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(1);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
   expect(mockSuccess).toHaveBeenCalledTimes(1);
@@ -401,7 +399,7 @@ test('messages: success and hideLoading', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', hideLoading: true, args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', hideLoading: true, event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(0);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(0);
   expect(mockSuccess).toHaveBeenCalledTimes(1);
@@ -439,7 +437,7 @@ test('messages: no success and loading', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(1);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
   expect(mockSuccess).toHaveBeenCalledTimes(0);
@@ -485,7 +483,7 @@ test('messages: error and loading', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(1);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
   expect(mockSuccess).toHaveBeenCalledTimes(0);
@@ -530,7 +528,7 @@ test('messages: default error and loading', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(1);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
   expect(mockSuccess).toHaveBeenCalledTimes(0);
@@ -584,14 +582,14 @@ test('messages: error and hideLoading', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  await button.callAction({ action: 'onClick', hideLoading: true, args: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', hideLoading: true, event: { x: 1 } });
   expect(mockLoading).toHaveBeenCalledTimes(0);
   expect(mockLoadingCallback).toHaveBeenCalledTimes(0);
   expect(mockSuccess).toHaveBeenCalledTimes(0);
   expect(mockError).toHaveBeenCalledTimes(1);
 });
 
-test('registerAction then callAction x1', async () => {
+test('registerEvent then triggerEvent x1', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -619,28 +617,27 @@ test('registerAction then callAction x1', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  button.BlockActions.registerAction('onClick', [
-    { id: 'a', type: 'SetState', params: { a: 'a' } },
-  ]);
-  expect(button.BlockActions.actions.onClick).toMatchInlineSnapshot(`
+  button.Events.registerEvent({
+    name: 'onClick',
+    actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+  });
+  expect(button.Events.events.onClick).toMatchInlineSnapshot(`
     Object {
-      "actionName": "onClick",
-      "call": [Function],
-      "calls": Array [],
+      "history": Array [],
       "loading": false,
+      "trigger": [Function],
     }
   `);
-  const promise = button.callAction({ action: 'onClick', args: { x: 1 } });
-  expect(button.BlockActions.actions.onClick.actionName).toEqual('onClick');
-  expect(button.BlockActions.actions.onClick.call).toBeInstanceOf(Function);
-  expect(button.BlockActions.actions.onClick.loading).toEqual(true);
+  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events.onClick.trigger).toBeInstanceOf(Function);
+  expect(button.Events.events.onClick.loading).toEqual(true);
   await promise;
-  expect(button.BlockActions.actions.onClick.calls[0].args).toEqual({ x: 1 });
-  expect(button.BlockActions.actions.onClick.calls[0].success.length).toEqual(1);
-  expect(button.BlockActions.actions.onClick.loading).toEqual(false);
+  expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
+  expect(button.Events.events.onClick.history[0].success.length).toEqual(1);
+  expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
-test('callAction skip', async () => {
+test('triggerEvent skip', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -671,45 +668,43 @@ test('callAction skip', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  const promise = button.callAction({ action: 'onClick', args: { x: 1 } });
-  expect(button.BlockActions.actions).toMatchInlineSnapshot(`
+  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "actionName": "onClick",
-        "call": [Function],
-        "calls": Array [],
+        "history": Array [],
         "loading": true,
+        "trigger": [Function],
       },
     }
   `);
   await promise;
-  expect(button.BlockActions.actions).toMatchInlineSnapshot(`
+  expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "actionName": "onClick",
-        "call": [Function],
-        "calls": Array [
+        "history": Array [
           Object {
-            "args": Object {
+            "event": Object {
               "x": 1,
             },
             "success": Array [
               null,
             ],
-            "ts": Object {
+            "timestamp": Object {
               "date": 0,
             },
           },
         ],
         "loading": false,
+        "trigger": [Function],
       },
     }
   `);
-  expect(context.actionLog).toMatchInlineSnapshot(`
+  expect(context.eventLog).toMatchInlineSnapshot(`
     Array [
       Object {
-        "actionName": "onClick",
         "blockId": "button",
+        "eventName": "onClick",
         "response": Array [
           Object {
             "actionId": "a",
@@ -718,7 +713,7 @@ test('callAction skip', async () => {
           },
         ],
         "status": "success",
-        "ts": Object {
+        "timestamp": Object {
           "date": 0,
         },
       },

@@ -81,7 +81,7 @@ test('ScrollTo with no params', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockWindowScrollTo.mock.calls).toEqual([]);
 });
 
@@ -115,7 +115,7 @@ test('ScrollTo with no blockId', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockWindowScrollTo.mock.calls).toEqual([
     [
       {
@@ -156,7 +156,7 @@ test('ScrollTo with blockId', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockDocGetElementById.mock.calls).toEqual([['root']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([[undefined]]);
 });
@@ -197,7 +197,7 @@ test('ScrollTo with blockId and options', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
 
   expect(mockDocGetElementById.mock.calls).toEqual([['a']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([

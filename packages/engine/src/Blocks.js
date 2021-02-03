@@ -18,7 +18,7 @@
 
 import { applyArrayIndices, get, serializer, set, swap, type } from '@lowdefy/helpers';
 
-import BlockActions from './BlockActions';
+import Events from './BlockActions';
 import getFieldValues from './getFieldValues';
 
 class Blocks {
@@ -202,13 +202,13 @@ class Blocks {
         };
       }
 
-      block.BlockActions = new BlockActions({
+      block.Events = new Events({
         arrayIndices: this.arrayIndices,
         block,
         context: this.context,
       });
-      block.callAction = block.BlockActions.callAction;
-      block.registerAction = block.BlockActions.registerAction;
+      block.triggerEvent = block.Events.triggerEvent;
+      block.registerEvent = block.Events.registerEvent;
     });
     this.reset(initState); // set initial values to blocks.
   }
@@ -557,7 +557,8 @@ class Blocks {
         );
         block.eval = {
           areas: block.areasLayoutEval.output,
-          actions: type.isNone(block.BlockActions.actions) ? null : block.BlockActions.actions,
+          // TODO:
+          actions: type.isNone(block.Events.events) ? null : block.Events.events,
           properties: block.propertiesEval.output,
           required: block.requiredEval.output,
           layout: block.layoutEval.output,

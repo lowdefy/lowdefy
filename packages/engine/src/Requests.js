@@ -38,20 +38,20 @@ class Requests {
     this.fetch = this.fetch.bind(this);
   }
 
-  callRequests({ requestIds, args, arrayIndices } = {}) {
+  callRequests({ requestIds, event, arrayIndices } = {}) {
     if (!requestIds) {
       return Promise.all(
         this.requestList.map((request) =>
-          this.callRequest({ requestId: request.requestId, args, arrayIndices })
+          this.callRequest({ requestId: request.requestId, event, arrayIndices })
         )
       );
     }
     return Promise.all(
-      requestIds.map((requestId) => this.callRequest({ requestId, args, arrayIndices }))
+      requestIds.map((requestId) => this.callRequest({ requestId, event, arrayIndices }))
     );
   }
 
-  callRequest({ requestId, args, arrayIndices }) {
+  callRequest({ requestId, event, arrayIndices }) {
     if (!this.context.requests[requestId]) {
       const request = this.requestList.find((req) => req.requestId === requestId);
       if (!request) {
@@ -71,10 +71,10 @@ class Requests {
       };
     }
 
-    return this.fetch({ requestId, args, arrayIndices });
+    return this.fetch({ requestId, event, arrayIndices });
   }
 
-  fetch({ requestId, args, arrayIndices }) {
+  fetch({ requestId, event, arrayIndices }) {
     this.context.requests[requestId].loading = true;
     if (this.context.RootBlocks) {
       this.context.RootBlocks.setBlocksLoadingCache();
@@ -89,7 +89,7 @@ class Requests {
             arrayIndices,
             requestId,
             blockId: this.context.blockId,
-            args: serializer.serialize(args) || {},
+            event: serializer.serialize(event) || {},
             input: serializer.serialize(this.context.input),
             lowdefyGlobal: serializer.serialize(this.context.lowdefyGlobal),
             pageId: this.context.pageId,

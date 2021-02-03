@@ -67,7 +67,7 @@ test('Message with content', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockMessageError.mock.calls).toEqual([]);
   expect(mockMessageSuccess.mock.calls).toEqual([
     [
@@ -115,7 +115,7 @@ test('Message with status error and content', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockMessageSuccess.mock.calls).toEqual([]);
   expect(mockMessageError.mock.calls).toEqual([
     [
@@ -162,7 +162,7 @@ test('Message with no params', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockMessageError.mock.calls).toEqual([]);
   expect(mockMessageSuccess.mock.calls).toEqual([
     [

@@ -16,51 +16,51 @@
 
 import { type } from '@lowdefy/helpers';
 
-class BlockActions {
+class Events {
   constructor({ arrayIndices, block, context }) {
-    this.actions = {};
+    this.events = {};
     this.arrayIndices = arrayIndices;
     this.block = block;
     this.context = context;
 
     this.init = this.init.bind(this);
-    this.callAction = this.callAction.bind(this);
-    this.createCall = this.createCall.bind(this);
+    this.triggerEvent = this.triggerEvent.bind(this);
+    this.createTrigger = this.createTrigger.bind(this);
     this.callRec = this.callRec.bind(this);
-    this.registerAction = this.registerAction.bind(this);
+    this.registerEvent = this.registerEvent.bind(this);
 
     this.init();
   }
 
-  callRec(args, actions, results, resolve, reject) {
+  callRec(event, actions, results, resolve, reject) {
     if (actions.length > 0) {
       // eslint-disable-next-line no-unused-vars
       const { fn, success, error, ...action } = actions[0];
       try {
         const skip = this.context.parser.parse({
-          args,
+          event,
           arrayIndices: this.arrayIndices,
           input: action.skip,
           location: this.block.blockId,
         });
         if (skip.output) {
           results.unshift({ actionId: action.id, actionType: action.type, skipped: true });
-          this.callRec(args, actions.slice(1), results, resolve, reject);
+          this.callRec(event, actions.slice(1), results, resolve, reject);
         } else {
-          fn({ args, arrayIndices: this.arrayIndices, blockId: this.block.blockId })
+          fn({ event, arrayIndices: this.arrayIndices, blockId: this.block.blockId })
             .then((result) => {
               results.unshift({
                 ...result,
-                args,
+                event,
                 ...action,
                 skipped: false,
               });
-              this.callRec(args, actions.slice(1), results, resolve, reject);
+              this.callRec(event, actions.slice(1), results, resolve, reject);
             })
             .catch((e) => {
               results.unshift({
                 ...e,
-                args,
+                event,
                 ...action,
                 skipped: false,
               });
@@ -69,7 +69,7 @@ class BlockActions {
         }
       } catch (e) {
         results.unshift({
-          args,
+          event,
           ...action,
           skipped: false,
           error: e,
@@ -81,42 +81,40 @@ class BlockActions {
     }
   }
 
-  createCall(actions) {
+  createTrigger(actions) {
     const fnActions = this.context.Actions.build(actions);
-    return (args) =>
+    return (event) =>
       new Promise((resolve, reject) => {
-        this.callRec(args, fnActions, [], resolve, reject);
+        this.callRec(event, fnActions, [], resolve, reject);
       });
   }
 
   init() {
-    Object.keys(this.block.actions).forEach((actionName) => {
-      this.actions[actionName] = {
+    Object.keys(this.block.actions).forEach((eventName) => {
+      this.events[eventName] = {
         loading: false,
-        calls: [],
-        call: this.createCall(this.block.actions[actionName]),
-        actionName,
+        history: [],
+        trigger: this.createTrigger(this.block.actions[eventName]),
       };
     });
   }
 
-  callAction({ action, args, hideLoading }) {
-    const actionName = action;
-    if (type.isUndefined(this.actions[actionName])) {
+  triggerEvent({ name, event, hideLoading }) {
+    if (type.isUndefined(this.events[name])) {
       return Promise.resolve();
     }
-    this.actions[actionName].loading = true;
+    this.events[name].loading = true;
     this.context.update(this.block.id);
     let loader = () => true;
     if (!hideLoading) {
       loader = this.context.displayMessage.loading('Loading...', 0);
     }
-    return this.actions[actionName] // return to promise to await in test
-      .call(args)
+    return this.events[name] // return to promise to await in test
+      .trigger(event)
       .then((results) => {
-        this.actions[actionName].calls.unshift({
-          args,
-          ts: new Date(),
+        this.events[name].history.unshift({
+          event,
+          timestamp: new Date(),
           success: results.map((res) => res.successMessage || null),
         });
         results.reverse().forEach((result) => {
@@ -124,14 +122,14 @@ class BlockActions {
             this.context.displayMessage.success(result.successMessage);
           }
         });
-        this.context.actionLog.push({
+        this.context.eventLog.push({
           blockId: this.block.blockId,
-          actionName,
+          eventName: name,
           response: results,
-          ts: new Date(),
+          timestamp: new Date(),
           status: 'success',
         });
-        this.actions[actionName].loading = false;
+        this.events[name].loading = false;
         this.block.update = true;
         this.context.update();
 
@@ -139,9 +137,9 @@ class BlockActions {
         return results;
       })
       .catch((results) => {
-        this.actions[actionName].calls.unshift({
-          args,
-          ts: new Date(),
+        this.events[name].history.unshift({
+          event,
+          timestamp: new Date(),
           error: results.map((res) => ({
             ...res,
             error: type.isError(res.error)
@@ -157,14 +155,14 @@ class BlockActions {
             this.context.displayMessage.error(result.errorMessage, 6);
           }
         });
-        this.context.actionLog.push({
+        this.context.eventLog.push({
           blockId: this.block.blockId,
-          actionName,
+          eventName: name,
           response: results,
-          ts: new Date(),
+          timestamp: new Date(),
           status: 'error',
         });
-        this.actions[actionName].loading = false;
+        this.events[name].loading = false;
         this.block.update = true;
         this.context.update();
         loader();
@@ -172,14 +170,13 @@ class BlockActions {
       });
   }
 
-  registerAction(actionName, actionDefinition) {
-    this.actions[actionName] = {
+  registerEvent({ name, actions }) {
+    this.events[name] = {
       loading: false,
-      calls: [],
-      call: this.createCall(actionDefinition),
-      actionName,
+      history: [],
+      trigger: this.createTrigger(actions),
     };
   }
 }
 
-export default BlockActions;
+export default Events;
