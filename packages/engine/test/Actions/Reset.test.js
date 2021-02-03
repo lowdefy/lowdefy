@@ -89,7 +89,7 @@ test('Reset one field', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Reset' }],
             },
           },
@@ -150,7 +150,7 @@ test('Reset on primitive array after adding item', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Reset' }],
             },
           },
@@ -212,7 +212,7 @@ test('Reset on object array after removing item', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Reset' }],
             },
           },

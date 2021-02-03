@@ -86,7 +86,7 @@ beforeEach(() => {
   mockQuery.mockImplementation(mockQueryImp);
 });
 
-test('init BlockActions', () => {
+test('init Events', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -102,7 +102,7 @@ test('init BlockActions', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
             },
           },
@@ -128,7 +128,7 @@ test('init BlockActions', () => {
   `);
 });
 
-test('triggerEvent no Action defined', async () => {
+test('triggerEvent no event defined', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -178,7 +178,7 @@ test('triggerEvent x1', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
             },
           },
@@ -226,7 +226,7 @@ test('triggerEvent x2', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 { id: 'a', type: 'SetState', params: { a: 'a' } },
                 { id: 'b', type: 'Request', params: 'request1' },
@@ -266,13 +266,13 @@ test('triggerEvent error', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'e',
-                  type: 'error()',
+                  type: 'Error',
                   params: { a: 'a' },
-                  error: 'error invalid action type',
+                  error: 'Error: invalid action type',
                 },
               ],
             },
@@ -295,11 +295,11 @@ test('triggerEvent error', async () => {
     Array [
       Object {
         "error": Object {
-          "error": [Error: Invalid action: {"id":"e","type":"error()","params":{"a":"a"},"error":"error invalid action type"}],
-          "message": "Invalid action: {\\"id\\":\\"e\\",\\"type\\":\\"error()\\",\\"params\\":{\\"a\\":\\"a\\"},\\"error\\":\\"error invalid action type\\"}",
+          "error": [Error: Invalid action: {"id":"e","type":"Error","params":{"a":"a"},"error":"Error: invalid action type"}],
+          "message": "Invalid action: {\\"id\\":\\"e\\",\\"type\\":\\"Error\\",\\"params\\":{\\"a\\":\\"a\\"},\\"error\\":\\"Error: invalid action type\\"}",
           "name": "Error",
         },
-        "errorMessage": "error invalid action type",
+        "errorMessage": "Error: invalid action type",
         "event": Object {
           "x": 1,
         },
@@ -308,7 +308,7 @@ test('triggerEvent error', async () => {
           "a": "a",
         },
         "skipped": false,
-        "type": "error()",
+        "type": "Error",
       },
     ]
   `);
@@ -330,7 +330,7 @@ test('messages: loading and success', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -376,7 +376,7 @@ test('messages: success and hideLoading', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -422,7 +422,7 @@ test('messages: no success and loading', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, error: 'errorMessage' }],
             },
           },
@@ -460,7 +460,7 @@ test('messages: error and loading', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -506,7 +506,7 @@ test('messages: default error and loading', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -559,7 +559,7 @@ test('messages: error and hideLoading', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -653,7 +653,7 @@ test('triggerEvent skip', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: true }],
             },
           },

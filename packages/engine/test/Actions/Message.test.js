@@ -47,7 +47,7 @@ test('Message with content', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -95,7 +95,7 @@ test('Message with status error and content', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -143,7 +143,7 @@ test('Message with no params', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',

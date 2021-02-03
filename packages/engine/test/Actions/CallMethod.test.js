@@ -44,7 +44,7 @@ test('CallMethod with no args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -120,7 +120,7 @@ test('CallMethod method return a promise', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -189,7 +189,7 @@ test('CallMethod with single arg, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -258,7 +258,7 @@ test('CallMethod with positional args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -327,7 +327,7 @@ test('CallMethod with object args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -416,7 +416,7 @@ test('CallMethod of block in array by explicit id', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -485,7 +485,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
                       category: 'display',
                       valueType: 'string',
                     },
-                    actions: {
+                    events: {
                       onClick: [
                         {
                           id: 'a',

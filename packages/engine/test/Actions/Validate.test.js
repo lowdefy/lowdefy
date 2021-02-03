@@ -62,7 +62,7 @@ test('Validate', async () => {
             meta: {
               category: 'display',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'action1',

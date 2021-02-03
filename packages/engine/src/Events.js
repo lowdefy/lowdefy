@@ -90,11 +90,11 @@ class Events {
   }
 
   init() {
-    Object.keys(this.block.actions).forEach((eventName) => {
+    Object.keys(this.block.events).forEach((eventName) => {
       this.events[eventName] = {
         loading: false,
         history: [],
-        trigger: this.createTrigger(this.block.actions[eventName]),
+        trigger: this.createTrigger(this.block.events[eventName]),
       };
     });
   }

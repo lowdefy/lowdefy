@@ -44,7 +44,7 @@ test('SetState data to state', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { x: [1, 2, 3] } }],
             },
           },
@@ -89,7 +89,7 @@ test('SetState field to state and update block value', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { textInput: 'new' } }],
             },
           },
@@ -136,7 +136,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { textInput: 1 } }],
             },
           },
@@ -198,7 +198,7 @@ test('SetState value on array and create new Blocks for array items', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',

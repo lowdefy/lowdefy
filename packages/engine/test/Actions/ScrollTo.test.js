@@ -67,7 +67,7 @@ test('ScrollTo with no params', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo' }],
             },
           },
@@ -101,7 +101,7 @@ test('ScrollTo with no blockId', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo', params: { behavior: 'smooth', top: 0 } }],
             },
           },
@@ -142,7 +142,7 @@ test('ScrollTo with blockId', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo', params: { blockId: 'root' } }],
             },
           },
@@ -177,7 +177,7 @@ test('ScrollTo with blockId and options', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',

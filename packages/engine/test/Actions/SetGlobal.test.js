@@ -36,7 +36,7 @@ test('SetGlobal data to global', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',

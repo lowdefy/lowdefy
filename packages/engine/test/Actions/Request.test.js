@@ -84,7 +84,7 @@ test('Request call one request', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
             },
           },
@@ -142,7 +142,7 @@ test('Request call all requests', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
             },
           },
@@ -221,7 +221,7 @@ test('Request call array of requests', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
             },
           },
@@ -300,7 +300,7 @@ test('Request pass if params are none', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request' }],
             },
           },

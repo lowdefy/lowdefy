@@ -77,7 +77,7 @@ class Blocks {
       block.properties = type.isNone(block.properties) ? {} : block.properties;
       block.style = type.isNone(block.style) ? {} : block.style;
       block.layout = type.isNone(block.layout) ? {} : block.layout;
-      block.actions = type.isNone(block.actions) ? {} : block.actions;
+      block.events = type.isNone(block.events) ? {} : block.events;
 
       block.visibleEval = {};
       block.propertiesEval = {};

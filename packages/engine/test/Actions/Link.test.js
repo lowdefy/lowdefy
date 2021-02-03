@@ -48,7 +48,7 @@ test('Link with home and urlQuery', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Link', params: { home: true, urlQuery: { a: 1 } } }],
             },
           },
@@ -82,7 +82,7 @@ test('Link with pageId', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Link', params: { pageId: 'page1' } }],
             },
           },
@@ -116,7 +116,7 @@ test('Link with pageId, newWindow and urlQuery', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -156,7 +156,7 @@ test('Link with url', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -196,7 +196,7 @@ test('Link with url and newWindow', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -236,7 +236,7 @@ test('Link with pageId and urlQuery', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -276,7 +276,7 @@ test('Link with pageId and input', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -317,7 +317,7 @@ test('Link with pageId and input and newWindow', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
