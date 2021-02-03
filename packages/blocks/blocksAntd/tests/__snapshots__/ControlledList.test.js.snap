@@ -136,14 +136,14 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >
@@ -726,14 +726,14 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >
@@ -1316,14 +1316,14 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >
@@ -1906,14 +1906,14 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >
@@ -2496,14 +2496,14 @@ exports[`Render validation.status = success properties.addToFront: true - value[
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >
@@ -3086,14 +3086,14 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
       <br />
       <button
         className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="undefined_id"
+        id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="undefined_id_icon"
+          id="properties.addToFront: true_add_button_icon"
           required={false}
           role="img"
         >

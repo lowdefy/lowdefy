@@ -42,11 +42,17 @@
         },
         "extraStyle": {
           "type": "object",
-          "description": "Css style to applied to label extra."
+          "description": "Css style to applied to label extra.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "feedbackStyle": {
           "type": "object",
-          "description": "Css style to applied to label feedback."
+          "description": "Css style to applied to label feedback.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "span": {
           "type": "number",

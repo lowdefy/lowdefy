@@ -23,7 +23,8 @@
         "breakpoint": {
           "type": "string",
           "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
-          "description": "Breakpoints of the responsive layout"
+          "default": "sm",
+          "description": "Breakpoint of the responsive layout"
         },
         "collapsedWidth": {
           "type": "integer",
@@ -35,28 +36,40 @@
         },
         "color": {
           "type": "string",
-          "description": "Sider color"
+          "description": "Sider color",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "initialCollapsed": {
           "type": "boolean",
+          "default": true,
           "description": "Set the initial collapsed state"
         },
         "reverseArrow": {
           "type": "boolean",
+          "default": false,
           "description": "Direction of arrow, for a sider that expands from the right"
         },
         "theme": {
           "type": "string",
           "enum": ["light", "dark"],
+          "default": "light",
           "description": "Color theme of the sidebar"
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to sider."
+          "description": "Css style object to apply to sider.",
+          "docs": {
+            "displayType": "style"
+          }
         },
         "width": {
           "type": ["string", "number"],
-          "description": "width of the sidebar"
+          "description": "width of the sidebar",
+          "docs": {
+            "displayType": "string"
+          }
         }
       }
     },

@@ -60,13 +60,14 @@
         "size": {
           "type": "string",
           "enum": ["small", "default", "large"],
+          "default": "default",
           "description": "Size of the button."
         },
         "style": {
           "type": "object",
           "description": "Css style object to applied to button.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "title": {

@@ -849,82 +849,9 @@ exports[`Test Schema properties.column: 2 1`] = `true`;
 
 exports[`Test Schema properties.column: 2 2`] = `null`;
 
-exports[`Test Schema properties.items-list 1`] = `false`;
+exports[`Test Schema properties.items-list 1`] = `true`;
 
-exports[`Test Schema properties.items-list 2`] = `
-Array [
-  Object {
-    "dataPath": "/properties/items/0/span",
-    "keyword": "type",
-    "message": "should be string",
-    "params": Object {
-      "type": "string",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/properties/span/type",
-  },
-  Object {
-    "dataPath": "/properties/items/1/span",
-    "keyword": "type",
-    "message": "should be string",
-    "params": Object {
-      "type": "string",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/properties/span/type",
-  },
-  Object {
-    "dataPath": "/properties/items/2/span",
-    "keyword": "type",
-    "message": "should be string",
-    "params": Object {
-      "type": "string",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/properties/span/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be object",
-    "params": Object {
-      "type": "object",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/1/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be string",
-    "params": Object {
-      "type": "string",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/2/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be number",
-    "params": Object {
-      "type": "number",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/3/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be boolean",
-    "params": Object {
-      "type": "boolean",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/4/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "anyOf",
-    "message": "should match some schema in anyOf",
-    "params": Object {},
-    "schemaPath": "#/properties/properties/properties/items/anyOf",
-  },
-]
-`;
+exports[`Test Schema properties.items-list 2`] = `null`;
 
 exports[`Test Schema properties.items-list-primitive 1`] = `false`;
 
@@ -937,7 +864,7 @@ Array [
     "params": Object {
       "type": "object",
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/type",
+    "schemaPath": "#/properties/properties/properties/items/oneOf/0/items/type",
   },
   Object {
     "dataPath": "/properties/items/1",
@@ -946,7 +873,7 @@ Array [
     "params": Object {
       "type": "object",
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/type",
+    "schemaPath": "#/properties/properties/properties/items/oneOf/0/items/type",
   },
   Object {
     "dataPath": "/properties/items/2",
@@ -955,7 +882,7 @@ Array [
     "params": Object {
       "type": "object",
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/type",
+    "schemaPath": "#/properties/properties/properties/items/oneOf/0/items/type",
   },
   Object {
     "dataPath": "/properties/items/3",
@@ -964,7 +891,7 @@ Array [
     "params": Object {
       "type": "object",
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/0/items/type",
+    "schemaPath": "#/properties/properties/properties/items/oneOf/0/items/type",
   },
   Object {
     "dataPath": "/properties/items",
@@ -973,41 +900,16 @@ Array [
     "params": Object {
       "type": "object",
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/1/type",
+    "schemaPath": "#/properties/properties/properties/items/oneOf/1/type",
   },
   Object {
     "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be string",
+    "keyword": "oneOf",
+    "message": "should match exactly one schema in oneOf",
     "params": Object {
-      "type": "string",
+      "passingSchemas": null,
     },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/2/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be number",
-    "params": Object {
-      "type": "number",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/3/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "type",
-    "message": "should be boolean",
-    "params": Object {
-      "type": "boolean",
-    },
-    "schemaPath": "#/properties/properties/properties/items/anyOf/4/type",
-  },
-  Object {
-    "dataPath": "/properties/items",
-    "keyword": "anyOf",
-    "message": "should match some schema in anyOf",
-    "params": Object {},
-    "schemaPath": "#/properties/properties/properties/items/anyOf",
+    "schemaPath": "#/properties/properties/properties/items/oneOf",
   },
 ]
 `;

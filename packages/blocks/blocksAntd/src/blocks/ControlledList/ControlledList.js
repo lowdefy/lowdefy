@@ -60,6 +60,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
             )}
             {properties.addToFront && !properties.hideAddButton && (
               <Button
+                blockId={`${blockId}_add_button`}
                 properties={{
                   title: get(properties, 'addItemButton.title ') || 'Add Item',
                   size: properties.size,

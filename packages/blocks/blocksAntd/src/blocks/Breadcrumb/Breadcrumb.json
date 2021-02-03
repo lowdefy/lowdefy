@@ -20,19 +20,23 @@
           "type": "object",
           "description": "Css style object to applied to breadcrumb.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "list": {
-          "type": "array",
-          "description": "List of breadcrumb links.",
-          "items": {
-            "oneOf": [
-              {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
                 "type": "string",
                 "description": "Title of the breadcrumb link."
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
                 "type": "object",
                 "properties": {
                   "label": {
@@ -51,7 +55,7 @@
                     "type": "object",
                     "description": "Css style to apply to link.",
                     "docs": {
-                      "displayType": "style"
+                      "displayType": "yaml"
                     }
                   },
                   "icon": {
@@ -63,8 +67,8 @@
                   }
                 }
               }
-            ]
-          }
+            }
+          ]
         }
       }
     },

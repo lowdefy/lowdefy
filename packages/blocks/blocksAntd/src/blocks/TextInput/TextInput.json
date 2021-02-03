@@ -47,7 +47,7 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "label": {
@@ -80,6 +80,7 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
@@ -96,14 +97,14 @@
               "type": "object",
               "description": "Css style to applied to label extra.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             },
             "feedbackStyle": {
               "type": "object",
               "description": "Css style to applied to label feedback.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             }
           }

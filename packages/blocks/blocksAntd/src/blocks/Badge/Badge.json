@@ -8,7 +8,10 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Customize Badge dot color"
+          "description": "Customize Badge dot color",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "count": {
           "type": ["number", "string"],
@@ -47,6 +50,7 @@
         "status": {
           "type": "string",
           "enum": ["success", "processing", "default", "error", "warning"],
+          "default": "default",
           "description": "Set Badge as a status dot"
         },
         "text": {

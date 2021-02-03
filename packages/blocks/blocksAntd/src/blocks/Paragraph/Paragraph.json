@@ -32,11 +32,17 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
-                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
@@ -54,10 +60,10 @@
         },
         "ellipsis": {
           "default": false,
-          "description": "Display ellipsis when text overflows a single line.",
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display ellipsis when text overflows a single line."
             },
             {
               "type": "object",
@@ -92,6 +98,7 @@
         "type": {
           "type": "string",
           "enum": ["secondary", "warning", "danger"],
+          "default": "default",
           "description": "Additional types. Don't specify for default."
         },
         "underline": {

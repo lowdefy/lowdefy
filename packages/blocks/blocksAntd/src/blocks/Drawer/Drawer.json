@@ -46,32 +46,50 @@
         },
         "width": {
           "type": ["string", "number"],
-          "default": 256,
-          "description": "Width of the Drawer dialog."
+          "default": "256px",
+          "description": "Width of the Drawer dialog.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "height": {
           "type": ["string", "number"],
-          "default": 256,
-          "description": "When placement is top or bottom, height of the Drawer dialog."
+          "default": "256px",
+          "description": "When placement is top or bottom, height of the Drawer dialog.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "headerStyle": {
           "type": "object",
-          "description": "Css style to applied to drawer header."
+          "description": "Css style to applied to drawer header.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "bodyStyle": {
           "type": "object",
-          "description": "Css style to applied to drawer body."
+          "description": "Css style to applied to drawer body.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "maskStyle": {
           "type": "object",
-          "description": "Css style to applied to drawer mask."
+          "description": "Css style to applied to drawer mask.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "drawerStyle": {
           "type": "object",
-          "description": "Css style to applied to drawer."
+          "description": "Css style to applied to drawer.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "zIndex": {
-          "type": "number",
+          "type": "integer",
           "default": 1000,
           "description": "The z-index of the Drawer."
         },

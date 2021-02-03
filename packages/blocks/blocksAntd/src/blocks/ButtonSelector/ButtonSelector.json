@@ -35,25 +35,37 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "options": {
-          "type": "array",
           "default": [],
-          "description": "Radio options can either be an array of primitive values, on an array of label, value pairs.",
-          "items": {
-            "anyOf": [
-              {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "string"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "number"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "boolean"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "object",
                 "required": ["value"],
                 "properties": {
@@ -62,21 +74,27 @@
                     "description": "Value label shown to user."
                   },
                   "value": {
-                    "anyOf": [
+                    "oneOf": [
                       {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "number"
+                        "type": "number",
+                        "description": "Value selected."
                       },
                       {
-                        "type_js_date": true
+                        "type": "boolean",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "boolean"
+                        "type": "object",
+                        "description": "Value selected.",
+                        "docs": {
+                          "displayType": "yaml"
+                        }
                       }
-                    ],
-                    "description": "Value selected."
+                    ]
                   },
                   "disabled": {
                     "type": "boolean",
@@ -85,8 +103,8 @@
                   }
                 }
               }
-            ]
-          }
+            }
+          ]
         },
         "size": {
           "type": "string",
@@ -124,6 +142,7 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
@@ -140,14 +159,14 @@
               "type": "object",
               "description": "Css style to applied to label extra.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             },
             "feedbackStyle": {
               "type": "object",
               "description": "Css style to applied to label feedback.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             }
           }
@@ -163,7 +182,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when selection is changed."
         }
       }
     }

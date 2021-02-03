@@ -33,11 +33,11 @@
           "description": "Disable specific dates so that they can not be chosen.",
           "properties": {
             "min": {
-              "anyOf": [{ "type": "string" }, { "type": "object" }],
+              "oneOf": [{ "type": "string" }, { "type": "object" }],
               "description": "Disable all dates less than the minimum date. Can be a date string or a _date object."
             },
             "max": {
-              "anyOf": [{ "type": "string" }, { "type": "object" }],
+              "oneOf": [{ "type": "string" }, { "type": "object" }],
               "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object."
             },
             "dates": {
@@ -59,12 +59,13 @@
           "type": "object",
           "description": "Css style to applied to input.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         },
         "label": {
           "type": "object",
           "description": "Label properties.",
+          "additionalProperties": false,
           "properties": {
             "align": {
               "type": "string",
@@ -85,23 +86,37 @@
               "type": "string",
               "description": "Label title."
             },
+            "span": {
+              "type": "number",
+              "description": "Label inline span."
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Hide input label."
+            },
             "hasFeedback": {
               "type": "boolean",
               "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
+            "inline": {
+              "type": "boolean",
+              "default": false,
+              "description": "Render input and label inline."
+            },
             "extraStyle": {
               "type": "object",
               "description": "Css style to applied to label extra.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             },
             "feedbackStyle": {
               "type": "object",
               "description": "Css style to applied to label feedback.",
               "docs": {
-                "displayType": "style"
+                "displayType": "yaml"
               }
             }
           }
@@ -179,7 +194,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when selection is changed."
         }
       }
     }

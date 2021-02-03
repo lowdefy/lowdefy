@@ -25,6 +25,7 @@
                 "momentFormat",
                 "momentHumanizeDuration"
               ],
+              "default": "default",
               "description": "Type of formatter to apply to value."
             },
             "properties": {
@@ -53,7 +54,10 @@
         },
         "prefixIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which prefix the statistic."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which prefix the statistic.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "suffix": {
           "type": "string",
@@ -61,19 +65,33 @@
         },
         "suffixIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which suffix the statistic."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon which suffix the statistic.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "title": {
           "type": "string",
           "description": "Title to describe the input component, if no title is specified the block id is displayed."
         },
         "value": {
-          "type": ["number", "string", "object", "array"],
-          "description": "Value to display."
+          "oneOf": [
+            {
+              "type": "number",
+              "description": "Value to display."
+            },
+            {
+              "type": "string",
+              "description": "Value to display."
+            }
+          ]
         },
         "valueStyle": {
           "type": "object",
-          "description": "Css style to applied to value."
+          "description": "Css style to applied to value.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }

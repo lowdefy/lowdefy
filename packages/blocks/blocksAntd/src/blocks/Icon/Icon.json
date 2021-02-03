@@ -8,7 +8,10 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Primary icon color."
+          "description": "Primary icon color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "name": {
           "type": "string",
@@ -811,7 +814,10 @@
         },
         "size": {
           "type": ["string", "number"],
-          "description": "Size of the icon."
+          "description": "Size of the icon.",
+          "docs": {
+            "displayType": "number"
+          }
         },
         "spin": {
           "type": "boolean",
@@ -821,7 +827,10 @@
 
         "style": {
           "type": "object",
-          "description": "CSS style object."
+          "description": "CSS style object.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "disableLoadingIcon": {
           "type": "boolean",
@@ -835,7 +844,8 @@
       "additionalProperties": false,
       "properties": {
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Triggers actions when icon is clicked."
         }
       }
     }
