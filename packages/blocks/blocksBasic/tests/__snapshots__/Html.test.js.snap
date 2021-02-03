@@ -16,6 +16,14 @@ exports[`Render properties.html - value[0] 1`] = `
 />
 `;
 
+exports[`Render properties.html-bad-code - value[0] 1`] = `
+<div
+  className="{}"
+  data-testid="properties.html-bad-code"
+  id="properties.html-bad-code"
+/>
+`;
+
 exports[`Render properties.html-iframe - value[0] 1`] = `
 <div
   className="{}"
@@ -47,6 +55,10 @@ exports[`Test Schema default 2`] = `null`;
 exports[`Test Schema properties.html 1`] = `true`;
 
 exports[`Test Schema properties.html 2`] = `null`;
+
+exports[`Test Schema properties.html-bad-code 1`] = `true`;
+
+exports[`Test Schema properties.html-bad-code 2`] = `null`;
 
 exports[`Test Schema properties.html-iframe 1`] = `true`;
 

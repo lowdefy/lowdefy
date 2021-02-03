@@ -25,7 +25,7 @@ class HtmlBlock extends React.Component {
       innerHTML: '',
     };
     // we do not revaluate DOMPurifyOptions improve options safety by not making options dynamic.
-    this.DOMPurifyOptions = this.props.properties.DOMPurifyOptions;
+    this.DOMPurifyOptions = props.properties.DOMPurifyOptions;
   }
 
   componentDidMount() {
