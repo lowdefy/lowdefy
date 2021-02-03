@@ -37,7 +37,7 @@
         },
         "width": {
           "type": ["string", "number"],
-          "description": "Pixel value for selector width.",
+          "description": "Color selector width.",
           "default": "#100%",
           "docs": {
             "displayType": "string"

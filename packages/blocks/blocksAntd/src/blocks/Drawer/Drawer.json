@@ -120,7 +120,7 @@
         },
         "onOpen": {
           "type": "array",
-          "description": "Trigger actions when modal is opened."
+          "description": "Trigger actions when drawer is opened."
         }
       }
     }

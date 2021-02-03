@@ -130,7 +130,7 @@
         },
         "onOpen": {
           "type": "array",
-          "description": "Trigger actions when modal is opened."
+          "description": "Trigger actions when confirm modal is opened."
         },
         "onCancel": {
           "type": "array",
