@@ -43,7 +43,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
             onChangeComplete={(clr) => {
               setColor(clr);
               methods.setValue(clr);
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
           />
         ),
