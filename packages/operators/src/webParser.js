@@ -50,7 +50,7 @@ class WebParser {
         try {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
-              actionLog: this.context.actionLog,
+              eventLog: this.context.eventLog,
               args,
               arrayIndices,
               context: this.context,

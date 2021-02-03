@@ -54,7 +54,7 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
-  actionLog: [
+  eventLog: [
     {
       blockId: 'block_a',
       actionName: 'name_a',
@@ -117,7 +117,7 @@ const otherContext = {
     number: { loading: false, response: 600 },
     arr: { loading: false, response: [{ a: 'request a1-other' }, { a: 'request a2-other' }] },
   },
-  actionLog: [
+  eventLog: [
     {
       blockId: 'block_a-other',
       actionName: 'name_a-other',
@@ -150,20 +150,20 @@ const contexts = {
 
 const arrayIndices = [1];
 
-test('_action_log, other context contextId not a string', () => {
-  const input = { _action_log: { key: 'string', contextId: 1 } };
+test('_event_log, other context contextId not a string', () => {
+  const input = { _event_log: { key: 'string', contextId: 1 } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _action_log.contextId must be of type string. Received: {"key":"string","contextId":1} at locationId.],
+      [Error: Operator Error: _event_log.contextId must be of type string. Received: {"key":"string","contextId":1} at locationId.],
     ]
   `);
 });
 
-test('_action_log, other context contextId not found', () => {
-  const input = { _action_log: { key: 'string', contextId: 'not_there' } };
+test('_event_log, other context contextId not found', () => {
+  const input = { _event_log: { key: 'string', contextId: 'not_there' } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -174,9 +174,9 @@ test('_action_log, other context contextId not found', () => {
   `);
 });
 
-test('_action_log param object key', () => {
+test('_event_log param object key', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: '0.blockId',
       contextId: 'other',
     },
@@ -187,8 +187,8 @@ test('_action_log param object key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log full state', () => {
-  const input = { _action_log: { contextId: 'other' } };
+test('_event_log full state', () => {
+  const input = { _event_log: { contextId: 'other' } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -209,9 +209,9 @@ test('_action_log full state', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object all', () => {
+test('_event_log param object all', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       all: true,
       contextId: 'other',
     },
@@ -236,9 +236,9 @@ test('_action_log param object all', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object all and key', () => {
+test('_event_log param object all and key', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       all: true,
       key: 'string',
       contextId: 'other',
@@ -264,9 +264,9 @@ test('_action_log param object all and key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object with string default', () => {
+test('_event_log param object with string default', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: 'notFound',
       default: 'defaultValue',
       contextId: 'other',

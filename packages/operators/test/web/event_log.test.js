@@ -52,7 +52,7 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
-  actionLog: [
+  eventLog: [
     {
       blockId: 'block_a',
       actionName: 'name_a',
@@ -81,8 +81,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
-test('_action_log in array', () => {
-  const input = { a: { _action_log: '1.blockId' } };
+test('_event_log in array', () => {
+  const input = { a: { _event_log: '1.blockId' } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -91,8 +91,8 @@ test('_action_log in array', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log full state', () => {
-  const input = { _action_log: true };
+test('_event_log full state', () => {
+  const input = { _event_log: true };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -113,21 +113,21 @@ test('_action_log full state', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log null', () => {
-  const input = { _action_log: null };
+test('_event_log null', () => {
+  const input = { _event_log: null };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _action_log params must be of type string, boolean or object. Received: null at locationId.],
+      [Error: Operator Error: _event_log params must be of type string, boolean or object. Received: null at locationId.],
     ]
   `);
 });
 
-test('_action_log param object key', () => {
+test('_event_log param object key', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: '0.actionName',
     },
   };
@@ -137,9 +137,9 @@ test('_action_log param object key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object all', () => {
+test('_event_log param object all', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       all: true,
     },
   };
@@ -163,9 +163,9 @@ test('_action_log param object all', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object all and key', () => {
+test('_event_log param object all and key', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       all: true,
       key: 'string',
     },
@@ -190,9 +190,9 @@ test('_action_log param object all and key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object invalid', () => {
+test('_event_log param object invalid', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       other: true,
     },
   };
@@ -201,28 +201,28 @@ test('_action_log param object invalid', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _action_log.key must be of type string. Received: {"other":true} at locationId.],
+      [Error: Operator Error: _event_log.key must be of type string. Received: {"other":true} at locationId.],
     ]
   `);
 });
 
-test('_action_log param array', () => {
+test('_event_log param array', () => {
   const input = {
-    _action_log: ['string'],
+    _event_log: ['string'],
   };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _action_log params must be of type string, boolean or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _event_log params must be of type string, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });
 
-test('_action_log param object with string default', () => {
+test('_event_log param object with string default', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: 'notFound',
       default: 'defaultValue',
     },
@@ -233,9 +233,9 @@ test('_action_log param object with string default', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object with zero default', () => {
+test('_event_log param object with zero default', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: 'notFound',
       default: 0,
     },
@@ -246,9 +246,9 @@ test('_action_log param object with zero default', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object with false default', () => {
+test('_event_log param object with false default', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: 'notFound',
       default: false,
     },
@@ -259,9 +259,9 @@ test('_action_log param object with false default', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_action_log param object with no default', () => {
+test('_event_log param object with no default', () => {
   const input = {
-    _action_log: {
+    _event_log: {
       key: 'notFound',
     },
   };
