@@ -253,6 +253,9 @@ menus:
           - id: Divider
             type: MenuLink
             pageId: Divider
+          - id: Html
+            type: MenuLink
+            pageId: Html
           - id: Icon
             type: MenuLink
             pageId: Icon
@@ -540,6 +543,7 @@ pages:
   - _ref: blocks/display/Button.yaml
   - _ref: blocks/display/Descriptions.yaml
   - _ref: blocks/display/Divider.yaml
+  - _ref: blocks/display/Html.yaml
   - _ref: blocks/display/Icon.yaml
   - _ref: blocks/display/Menu.yaml
   - _ref: blocks/display/Paragraph.yaml
