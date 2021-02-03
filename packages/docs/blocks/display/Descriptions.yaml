@@ -18,12 +18,10 @@ _ref:
     block_type: Descriptions
     category: display
     init_state_values:
-      __type_column: number
-
-    init_property_values:
-      column: 
-        number: 2
-      items:
+      __type_block.properties.column: number
+      __type_block.properties.items: object[]
+      __number_block.properties.column: 2
+      __object_arr_block.properties.items:
         - label: Item One
           value: 1
         - label: Item Two
@@ -32,6 +30,7 @@ _ref:
           value: 3
         - label: Item Four
           value: 4
+
     description_content: |
       Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
     default_properties:

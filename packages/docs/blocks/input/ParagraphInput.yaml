@@ -19,12 +19,13 @@ _ref:
     value_type: string
     category: input
     init_state_values:
-      __copyable_type: boolean
-      __ellipsis_type: boolean
-      __editable_type: boolean
-      __editable_boolean: true
-      __copyable_boolean: false
-      __ellipsis_boolean: false
+      __type_block.properties.copyable: boolean
+      __type_block.properties.ellipsis: boolean
+      __type_block.properties.editable: boolean
+      __boolean_block.properties.copyable: true
+      __boolean_block.properties.ellipsis: false
+      __boolean_block.properties.editable: false
+      block_id: Click edit to change the paragraph content.
     description_content: |
       The `ParagraphInput` block can display a paragraph, yet allow the user to click a edit icon and change the paragraph content. This is useful when the UI renders an existing document with a paragraph, which a user must be able to edit.
     default_properties:

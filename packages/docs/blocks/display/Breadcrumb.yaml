@@ -18,13 +18,10 @@ _ref:
     block_type: Breadcrumb
     category: display
     init_state_values:
-      __listType: object
-    init_property_values:
-      list:
-        - label: A List
-          string: A List
-        - label: Of Items
-          string: Of Items
+      __type_block.properties.list: string[]
+      __string_arr_block.properties.list:
+        - First 
+        - Second
     description_content: |
       A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy with provided links.
     default_properties:

@@ -19,8 +19,8 @@ _ref:
     value_type: string
     category: input
     init_state_values:
-      __autoSize_type: boolean
-      __autoSize_boolean: true
+      __type_block.properties.autoSize: boolean
+      __boolean_block.properties.autoSize: true
     description_content: |
       The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
     default_properties:
