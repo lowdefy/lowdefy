@@ -44,7 +44,7 @@ test('SetState data to state', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { x: [1, 2, 3] } }],
             },
           },
@@ -61,7 +61,7 @@ test('SetState data to state', () => {
   expect(context.state).toEqual({ textInput: 'init' });
   const { button } = context.RootBlocks.map;
   expect(context.state).toEqual({ textInput: 'init' });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'init', x: [1, 2, 3] });
 });
 
@@ -89,7 +89,7 @@ test('SetState field to state and update block value', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { textInput: 'new' } }],
             },
           },
@@ -107,7 +107,7 @@ test('SetState field to state and update block value', () => {
   const { button, textInput } = context.RootBlocks.map;
 
   expect(context.state).toEqual({ textInput: 'init' });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'new' });
   expect(textInput.value).toEqual('new');
 });
@@ -136,7 +136,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'SetState', params: { textInput: 1 } }],
             },
           },
@@ -154,7 +154,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
   const { button, textInput } = context.RootBlocks.map;
 
   expect(context.state).toEqual({ textInput: 'init' });
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 1 });
   expect(textInput.value).toEqual(1);
 });
@@ -198,7 +198,7 @@ test('SetState value on array and create new Blocks for array items', () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -222,7 +222,7 @@ test('SetState value on array and create new Blocks for array items', () => {
 
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
 
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({
     list: [{ textInput: '0' }, { textInput: '1' }, { textInput: '2' }],
   });

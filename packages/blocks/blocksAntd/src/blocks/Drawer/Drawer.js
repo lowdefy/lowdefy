@@ -21,12 +21,12 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
   if (!state) {
-    methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
+    methods.triggerEvent({ name: get(rename, 'events.onClose', { default: 'onClose' }) });
   }
   if (state) {
-    methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
+    methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
   }
-  methods.callAction({ action: get(rename, 'actions.onToggle', { default: 'onToggle' }) });
+  methods.triggerEvent({ name: get(rename, 'events.onToggle', { default: 'onToggle' }) });
   setOpen(state);
 };
 

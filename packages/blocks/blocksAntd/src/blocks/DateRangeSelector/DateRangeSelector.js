@@ -87,7 +87,7 @@ const DateRangeSelector = ({
                         moment.utc(val.add(val.utcOffset(), 'minutes')).startOf('day').toDate()
                       )
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={rangeValue(value)}
             />

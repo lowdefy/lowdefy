@@ -17,16 +17,16 @@
 import makeCssClass from './makeCssClass';
 
 const blockDefaultProps = {
-  actions: {},
   blockId: 'undefined_id',
   content: {},
+  events: {},
   list: [],
   menus: [],
   methods: {
-    callAction: () => undefined,
-    registerAction: () => undefined,
-    registerMethod: () => undefined,
     makeCssClass: makeCssClass,
+    registerEvent: () => undefined,
+    registerMethod: () => undefined,
+    triggerEvent: () => undefined,
   },
   properties: {},
   user: {},

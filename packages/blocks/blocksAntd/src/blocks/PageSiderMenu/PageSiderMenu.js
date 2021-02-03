@@ -145,7 +145,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                               toggleOpen: 'toggleMobileMenuOpen',
                               setOpen: 'setMobileMenuOpen',
                             },
-                            actions: {
+                            events: {
                               onClose: 'onMobileMenuClose',
                               onOpen: 'onMobileMenuOpen',
                             },
@@ -218,7 +218,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                                   toggleOpen: 'toggleMobileMenuOpen',
                                   setOpen: 'setMobileMenuOpen',
                                 },
-                                actions: {
+                                events: {
                                   onClick: 'onMenuItemClick',
                                   onSelect: 'onMenuItemCSelect',
                                   onToggleMenuGroup: 'onToggleMenuGroup',
@@ -245,7 +245,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                                 methods={methods}
                                 onClick={() => methods.toggleSiderOpen()}
                                 rename={{
-                                  actions: {
+                                  events: {
                                     onClick: 'onToggleSider',
                                   },
                                 }}

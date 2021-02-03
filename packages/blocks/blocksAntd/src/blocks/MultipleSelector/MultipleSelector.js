@@ -99,7 +99,7 @@ const MultipleSelector = ({
                   );
                 });
                 methods.setValue(val);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={getValueIndex(value, uniqueValueOptions, true)}
             >

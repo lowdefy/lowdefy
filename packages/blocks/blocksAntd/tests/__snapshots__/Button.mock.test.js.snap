@@ -156,14 +156,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.hideTitle: true_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -185,8 +184,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="DeleteOutlined"
@@ -248,14 +248,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -277,8 +276,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -321,14 +321,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -350,8 +349,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="SaveOutlined"

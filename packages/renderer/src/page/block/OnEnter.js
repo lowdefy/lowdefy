@@ -18,9 +18,9 @@ import React, { useEffect, useState } from 'react';
 import { Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
-const callAction = ({ action, context }) => {
-  return context.RootBlocks.areas.root.blocks[0].callAction({
-    action,
+const triggerEvent = ({ name, context }) => {
+  return context.RootBlocks.areas.root.blocks[0].triggerEvent({
+    name,
   });
 };
 
@@ -31,9 +31,9 @@ const OnEnter = ({ block, context, render }) => {
     let mounted = true;
     const mount = async () => {
       try {
-        await callAction({ action: 'onEnter', context });
+        await triggerEvent({ name: 'onEnter', context });
         if (mounted) {
-          callAction({ action: 'onEnterAsync', context });
+          triggerEvent({ name: 'onEnterAsync', context });
           setLoading(false);
         }
       } catch (err) {

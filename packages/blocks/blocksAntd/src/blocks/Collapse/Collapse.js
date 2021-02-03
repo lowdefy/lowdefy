@@ -41,7 +41,7 @@ const CollapseBlock = ({ blockId, content, methods, properties }) => {
       defaultActiveKey={properties.defaultActiveKey || panels[0].key}
       bordered={properties.bordered}
       accordion={properties.accordion}
-      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
+      onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       expandIcon={
         propertiesIconExpand &&
         (({ isActive }) => (

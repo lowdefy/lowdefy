@@ -65,7 +65,7 @@ const WeekSelector = ({ blockId, loading, methods, properties, required, validat
                     ? null
                     : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={value && type.isDate(value) ? moment.utc(value).startOf('week') : null}
             />

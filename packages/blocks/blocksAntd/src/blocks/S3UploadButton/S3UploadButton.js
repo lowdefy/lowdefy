@@ -34,9 +34,9 @@ const getCustomRequest = ({ methods, setS3Parameters }) => async ({
 }) => {
   const { name, size, type, uid } = file;
 
-  const s3PostPolicyResponse = await methods.callAction({
-    action: '__getS3PostPolicy',
-    args: { filename: name, size, type, uid },
+  const s3PostPolicyResponse = await methods.triggerEvent({
+    name: '__getS3PostPolicy',
+    event: { filename: name, size, type, uid },
   });
 
   if (s3PostPolicyResponse[0].error) {
@@ -85,13 +85,16 @@ const S3UploadButtonBlock = ({ blockId, methods, properties, value }) => {
   let customRequest;
   useEffect(() => {
     methods.setValue({ file: null, fileList: [] });
-    methods.registerAction('__getS3PostPolicy', [
-      {
-        id: `${blockId}__getS3PostPolicy`,
-        type: 'Request',
-        params: properties.s3PostPolicyRequestId,
-      },
-    ]);
+    methods.registerEvent({
+      name: '__getS3PostPolicy',
+      actions: [
+        {
+          id: `${blockId}__getS3PostPolicy`,
+          type: 'Request',
+          params: properties.s3PostPolicyRequestId,
+        },
+      ],
+    });
     customRequest = getCustomRequest({ methods, setS3Parameters });
   }, []);
 
@@ -106,7 +109,7 @@ const S3UploadButtonBlock = ({ blockId, methods, properties, value }) => {
       showUploadList={properties.showUploadList}
       onChange={(event) => {
         methods.setValue(makeOnChangeValue(s3Parameters, event));
-        methods.callAction({ action: 'onChange' });
+        methods.triggerEvent({ name: 'onChange' });
       }}
     >
       <Button

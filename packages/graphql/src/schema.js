@@ -26,9 +26,9 @@ const typeDefs = gql`
   }
 
   input RequestInput {
-    args: JSON!
     arrayIndices: JSON!
     blockId: String!
+    event: JSON!
     input: JSON!
     lowdefyGlobal: JSON!
     pageId: String!

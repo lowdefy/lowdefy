@@ -112,7 +112,7 @@
             "type": "Block \"validate\" should be an array."
           }
         },
-        "actions": {
+        "events": {
           "type": "object",
           "patternProperties": {
             "^.*$": {
@@ -123,7 +123,7 @@
             }
           },
           "errorMessage": {
-            "type": "Block \"actions\" should be an object."
+            "type": "Block \"events\" should be an object."
           }
         },
         "areas": {

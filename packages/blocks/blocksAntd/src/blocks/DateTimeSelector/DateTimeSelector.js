@@ -89,7 +89,7 @@ const DateTimeSelector = ({
                         .startOf(timeUnit)
                         .toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={
                 !type.isDate(value)

@@ -84,7 +84,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
             }
             onChange={(newVal) => {
               methods.setValue(newVal);
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
           />
         ),

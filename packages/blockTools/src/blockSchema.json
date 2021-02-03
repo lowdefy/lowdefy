@@ -27,7 +27,7 @@
         "type": "object"
       }
     },
-    "actions": {
+    "events": {
       "type": "object"
     },
     "menus": {

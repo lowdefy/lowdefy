@@ -123,10 +123,10 @@ test('add listener for _state', () => {
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _action_log', () => {
+test('add listener for _event_log', () => {
   const context = {
     id: 'own',
-    actionLog: [
+    eventLog: [
       {
         string: 'state',
       },
@@ -136,7 +136,7 @@ test('add listener for _action_log', () => {
 
   const otherContext = {
     id: 'other',
-    actionLog: [
+    eventLog: [
       {
         string: 'state-other',
       },
@@ -149,7 +149,7 @@ test('add listener for _action_log', () => {
     other: otherContext,
   };
   const input = {
-    _action_log: {
+    _event_log: {
       key: '0.string',
       contextId: 'other',
     },

@@ -43,10 +43,10 @@ class RequestController {
     const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
 
     // Get parser variables from requestInput and deserialize
-    const { args, input, lowdefyGlobal, state, urlQuery } = this.deserializeInputs(requestInput);
+    const { event, input, lowdefyGlobal, state, urlQuery } = this.deserializeInputs(requestInput);
 
     const { connectionProperties, requestProperties } = await this.parseOperators({
-      args,
+      event,
       arrayIndices,
       connection,
       input,
@@ -128,12 +128,12 @@ class RequestController {
     return requestDefinition;
   }
 
-  deserializeInputs({ args, input, lowdefyGlobal, state, urlQuery }) {
-    return serializer.deserialize({ args, input, lowdefyGlobal, state, urlQuery });
+  deserializeInputs({ event, input, lowdefyGlobal, state, urlQuery }) {
+    return serializer.deserialize({ event, input, lowdefyGlobal, state, urlQuery });
   }
 
   async parseOperators({
-    args,
+    event,
     arrayIndices,
     connection,
     input,
@@ -153,18 +153,18 @@ class RequestController {
     });
 
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+      event,
       input: connection.properties || {},
       location: connection.connectionId,
-      args,
     });
     if (connectionErrors.length > 0) {
       throw new RequestError(connectionErrors[0]);
     }
 
     const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+      event,
       input: request.properties || {},
       location: request.requestId,
-      args,
     });
     if (requestErrors.length > 0) {
       throw new RequestError(requestErrors[0]);

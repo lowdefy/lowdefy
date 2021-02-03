@@ -29,12 +29,15 @@ class WebParser {
     };
   }
 
-  parse({ input, args, location, arrayIndices }) {
+  parse({ args, arrayIndices, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
-    if (args && !type.isObject(args)) {
-      throw new Error('Operator parser args must be a object.');
+    if (event && !type.isObject(event)) {
+      throw new Error('Operator parser event must be a object.');
+    }
+    if (args && !type.isArray(args)) {
+      throw new Error('Operator parser args must be an array.');
     }
     if (location && !type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
@@ -47,13 +50,13 @@ class WebParser {
         try {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
-              actionLog: this.context.actionLog,
+              eventLog: this.context.eventLog,
               args,
               arrayIndices,
-              config: this.context.config,
               context: this.context,
               contexts: this.contexts,
               env: 'web',
+              event,
               input: this.context.input,
               location: location ? applyArrayIndices(arrayIndices, location) : null,
               lowdefyGlobal: this.context.lowdefyGlobal,

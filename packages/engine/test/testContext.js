@@ -24,7 +24,7 @@ import State from '../src/State';
 const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlobal }) => {
   const ctx = {
     pageId,
-    actionLog: [],
+    eventLog: [],
     blockId: rootBlock.blockId,
     client: rootContext.client || {},
     displayMessage: rootContext.displayMessage || {

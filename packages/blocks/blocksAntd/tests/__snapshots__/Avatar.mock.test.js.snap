@@ -129,14 +129,13 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -156,8 +155,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -196,14 +196,13 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -223,8 +222,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="UserOutlined"
@@ -258,14 +258,13 @@ Array [
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon string properties.shape square_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -285,8 +284,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="UserOutlined"

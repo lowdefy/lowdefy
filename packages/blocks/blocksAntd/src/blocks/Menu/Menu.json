@@ -196,7 +196,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
