@@ -24,14 +24,18 @@ class HtmlBlock extends React.Component {
     this.div = {
       innerHTML: '',
     };
+    // we do not revaluate DOMPurifyOptions improve options safety by not making options dynamic.
+    this.DOMPurifyOptions = this.props.properties.DOMPurifyOptions;
   }
 
   componentDidMount() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
+    // this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
   }
 
   componentDidUpdate() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
+    // this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
   }
 
   render() {
