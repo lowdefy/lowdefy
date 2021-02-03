@@ -386,6 +386,9 @@ menus:
           - id: _random
             type: MenuLink
             pageId: _random
+          - id: _ref
+            type: MenuLink
+            pageId: _ref
           - id: _regex
             type: MenuLink
             pageId: _regex
@@ -419,6 +422,9 @@ menus:
           - id: _uuid
             type: MenuLink
             pageId: _uuid
+          - id: _var
+            type: MenuLink
+            pageId: _var
           - id: _yaml
             type: MenuLink
             pageId: _yaml
@@ -521,6 +527,7 @@ pages:
   - _ref: operators/_or.yaml
   - _ref: operators/_product.yaml
   - _ref: operators/_random.yaml
+  - _ref: operators/_ref.yaml
   - _ref: operators/_regex.yaml
   - _ref: operators/_request.yaml
   - _ref: operators/_secret.yaml
@@ -532,6 +539,7 @@ pages:
   - _ref: operators/_uri.yaml
   - _ref: operators/_url_query.yaml
   - _ref: operators/_uuid.yaml
+  - _ref: operators/_var.yaml
   - _ref: operators/_yaml.yaml
 
   - _ref: 404.yaml
