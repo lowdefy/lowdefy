@@ -20,16 +20,13 @@ import { ErrorBoundary, blockDefaultProps } from '@lowdefy/block-tools';
 import { omit, type } from '@lowdefy/helpers';
 
 const lowdefyProps = [
-  'actionLog',
   'content',
   'homePageId',
   'list',
   'loading',
   'menus',
   'pageId',
-  'registerAction',
-  'registerMethod',
-  'schemaErrors',
+  'required',
   'user',
   'validation',
 ];
