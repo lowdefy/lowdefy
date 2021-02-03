@@ -12,7 +12,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Style to apply to Html div."
+          "description": "Css style object to apply to Html div.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }

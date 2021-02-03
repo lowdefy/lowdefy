@@ -8,11 +8,17 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Customize Badge dot color"
+          "description": "Customize Badge dot color",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "count": {
           "type": ["number", "string"],
-          "description": "Text to show in badge."
+          "description": "Text to show in badge.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "dot": {
           "type": "boolean",
@@ -21,7 +27,10 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in badge."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in badge.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "offset": {
           "type": "array",
@@ -41,6 +50,7 @@
         "status": {
           "type": "string",
           "enum": ["success", "processing", "default", "error", "warning"],
+          "default": "default",
           "description": "Set Badge as a status dot"
         },
         "text": {

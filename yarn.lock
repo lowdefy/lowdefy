@@ -2979,6 +2979,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/docs@workspace:packages/docs":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/docs@workspace:packages/docs"
+  dependencies:
+    "@babel/cli": 7.12.10
+    "@babel/core": 7.12.10
+    "@babel/preset-env": 7.12.11
+    babel-jest: 26.6.3
+    jest: 26.6.3
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/engine@3.4.0, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"

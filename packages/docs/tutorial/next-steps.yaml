@@ -22,9 +22,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             Congratulations! You have completed the tutorial and built a sort-of functioning app.

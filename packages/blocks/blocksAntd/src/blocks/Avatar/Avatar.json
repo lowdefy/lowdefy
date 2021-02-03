@@ -54,7 +54,7 @@
           "type": "object",
           "description": "Css style object to applied to avatar.",
           "docs": {
-            "displayType": "style"
+            "displayType": "yaml"
           }
         }
       }

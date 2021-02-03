@@ -22,9 +22,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](\GoogleSheet). To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
@@ -100,9 +97,6 @@ _ref:
 
       - id: md2
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 12
@@ -124,9 +118,6 @@ _ref:
           message: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you started from the project template.
       - id: md3
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 12

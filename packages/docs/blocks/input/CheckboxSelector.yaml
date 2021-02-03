@@ -19,15 +19,14 @@ _ref:
     value_type: any[]
     category: input
     init_state_values:
-      __optionsType: Label-value pairs
-    init_property_values:
-      options:
+      __type_block.properties.options: object[]
+      __object_arr_block.properties.options:
         - label: First 
-          value: one
-          primitive: one
         - label: Second
-          value: two
-          primitive: two
+      __type___object_arr_block.properties.options.0.value: string
+      __type___object_arr_block.properties.options.1.value: string
+      __string___object_arr_block.properties.options.0.value: one
+      __string___object_arr_block.properties.options.1.value: two
 
     description_content: |
       The `CheckboxSelector` block allows a user to select multiple values from a set of options.

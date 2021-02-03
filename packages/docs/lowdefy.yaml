@@ -223,6 +223,33 @@ menus:
           - id: Button
             type: MenuLink
             pageId: Button
+          - id: Descriptions
+            type: MenuLink
+            pageId: Descriptions
+          - id: Divider
+            type: MenuLink
+            pageId: Divider
+          - id: Icon
+            type: MenuLink
+            pageId: Icon
+          - id: Menu
+            type: MenuLink
+            pageId: Menu
+          - id: Paragraph
+            type: MenuLink
+            pageId: Paragraph
+          - id: Progress
+            type: MenuLink
+            pageId: Progress
+          - id: Skeleton
+            type: MenuLink
+            pageId: Skeleton
+          - id: Statistic
+            type: MenuLink
+            pageId: Statistic
+          - id: Title
+            type: MenuLink
+            pageId: Title
       - id: connections
         type: MenuGroup
         properties:
@@ -473,6 +500,15 @@ pages:
   - _ref: blocks/display/Avatar.yaml
   - _ref: blocks/display/Breadcrumb.yaml
   - _ref: blocks/display/Button.yaml
+  - _ref: blocks/display/Descriptions.yaml
+  - _ref: blocks/display/Divider.yaml
+  - _ref: blocks/display/Icon.yaml
+  - _ref: blocks/display/Menu.yaml
+  - _ref: blocks/display/Paragraph.yaml
+  - _ref: blocks/display/Progress.yaml
+  - _ref: blocks/display/Skeleton.yaml
+  - _ref: blocks/display/Statistic.yaml
+  - _ref: blocks/display/Title.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

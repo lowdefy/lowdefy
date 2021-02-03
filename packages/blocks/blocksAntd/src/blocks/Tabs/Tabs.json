@@ -53,18 +53,25 @@
               },
               "disabled": {
                 "type": "boolean",
+                "default": false,
                 "description": "Disable the tab if true."
               },
               "icon": {
                 "type": ["string", "object"],
-                "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to show in tab title."
+                "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to show in tab title.",
+                "docs": {
+                  "displayType": "icon"
+                }
               }
             }
           }
         },
         "tabBarStyle": {
           "type": "object",
-          "description": "Css style to apply to the tab bar."
+          "description": "Css style to apply to the tab bar.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "extraAreaKey": {
           "type": "string",

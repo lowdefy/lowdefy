@@ -23,9 +23,6 @@ _ref:
     content:
       - id: md1
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             Let's create a page for a form where users can log a new ticket.
@@ -75,9 +72,6 @@ _ref:
           message: Make sure that the lowdefy field is the current latest Lowdefy version. This should be what is was when you created the project.
       - id: md2
         type: Markdown
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 3
@@ -113,9 +107,6 @@ _ref:
                   level: 3
       - id: md3
         type: MarkdownWithHtml
-        style:
-          '.markdown-body':
-            fontSize: 14px
         properties:
           content: |
             #### Step 4

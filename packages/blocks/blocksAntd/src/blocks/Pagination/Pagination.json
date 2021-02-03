@@ -9,7 +9,7 @@
   "loading": {
     "type": "Skeleton",
     "properties": {
-      "height": 100
+      "height": 33
     }
   },
   "schema": {
@@ -54,25 +54,6 @@
           "description": "Specify the page size changer options.",
           "items": {
             "type": "number"
-          },
-          "docs": {
-            "displayType": "manual",
-            "block": {
-              "id": "block.properties.pageSizeOptions",
-              "type": "ControlledList",
-              "blocks": [
-                {
-                  "id": "block.properties.pageSizeOptions.$",
-                  "type": "NumberInput",
-                  "properties": {
-                    "size": "small",
-                    "label": {
-                      "disabled": true
-                    }
-                  }
-                }
-              ]
-            }
           }
         },
         "hideOnSinglePage": {

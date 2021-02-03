@@ -487,9 +487,39 @@ exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
 
-exports[`Test Schema properties.type: intlListFormat 1`] = `true`;
+exports[`Test Schema properties.type: intlListFormat 1`] = `false`;
 
-exports[`Test Schema properties.type: intlListFormat 2`] = `null`;
+exports[`Test Schema properties.type: intlListFormat 2`] = `
+Array [
+  Object {
+    "dataPath": "/properties/value",
+    "keyword": "type",
+    "message": "should be number",
+    "params": Object {
+      "type": "number",
+    },
+    "schemaPath": "#/properties/properties/properties/value/oneOf/0/type",
+  },
+  Object {
+    "dataPath": "/properties/value",
+    "keyword": "type",
+    "message": "should be string",
+    "params": Object {
+      "type": "string",
+    },
+    "schemaPath": "#/properties/properties/properties/value/oneOf/1/type",
+  },
+  Object {
+    "dataPath": "/properties/value",
+    "keyword": "oneOf",
+    "message": "should match exactly one schema in oneOf",
+    "params": Object {
+      "passingSchemas": null,
+    },
+    "schemaPath": "#/properties/properties/properties/value/oneOf",
+  },
+]
+`;
 
 exports[`Test Schema properties.type: intlNumberFormat 1`] = `true`;
 

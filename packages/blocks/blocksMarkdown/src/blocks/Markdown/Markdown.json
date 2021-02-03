@@ -17,7 +17,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Style to apply to Markdown div."
+          "description": "Style to apply to Markdown div.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }
