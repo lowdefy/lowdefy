@@ -15,7 +15,7 @@
 */
 
 import Actions from './Actions';
-import Events from './BlockActions';
+import Events from './Events';
 import Blocks from './Blocks';
 import makeContextId from './makeContextId';
 import Requests from './Requests';
