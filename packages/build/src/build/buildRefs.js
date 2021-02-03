@@ -80,12 +80,19 @@ function refReviver(key, value) {
       return this.parsedFiles[value._ref.id];
     }
     if (value._var) {
+      if (type.isString(value._var)) {
+        return JSON.parse(JSON.stringify(get(this.vars, value._var, { default: null })));
+      }
       if (type.isObject(value._var) && type.isString(value._var.name)) {
         return JSON.parse(
           JSON.stringify(get(this.vars, value._var.name, { default: value._var.default || null }))
         );
       }
-      return JSON.parse(JSON.stringify(get(this.vars, value._var, { default: null })));
+      throw new Error(
+        `"_var" operator takes a string or object with name field as arguments. Received "${JSON.stringify(
+          value
+        )}"`
+      );
     }
   }
   return value;
