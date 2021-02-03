@@ -135,7 +135,7 @@
       "properties": {
         "onChange": {
           "type": "array",
-          "description": "Triggers actions when number is changed."
+          "description": "Trigger actions when number is changed."
         },
         "onPressEnter": {
           "type": "array"

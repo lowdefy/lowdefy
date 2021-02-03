@@ -126,15 +126,15 @@
       "properties": {
         "onOk": {
           "type": "array",
-          "description": "Triggers actions when Ok button is clicked."
+          "description": "Trigger actions when Ok button is clicked."
         },
         "onOpen": {
           "type": "array",
-          "description": "Triggers actions when modal is opened."
+          "description": "Trigger actions when modal is opened."
         },
         "onCancel": {
           "type": "array",
-          "description": "Triggers actions when Cancel button is clicked."
+          "description": "Trigger actions when Cancel button is clicked."
         },
         "onClose": {
           "type": "array",

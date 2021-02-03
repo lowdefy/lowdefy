@@ -183,7 +183,7 @@
       "properties": {
         "onChange": {
           "type": "array",
-          "description": "Triggers actions when selection is changed."
+          "description": "Trigger actions when selection is changed."
         }
       }
     }

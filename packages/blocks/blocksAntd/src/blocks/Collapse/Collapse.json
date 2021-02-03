@@ -85,7 +85,7 @@
       "properties": {
         "onChange": {
           "type": "array",
-          "description": "Triggers actions when collapse item is toggled."
+          "description": "Trigger actions when collapse item is toggled."
         }
       }
     }

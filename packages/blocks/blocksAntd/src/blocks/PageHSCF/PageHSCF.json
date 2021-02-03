@@ -157,11 +157,11 @@
       "properties": {
         "onSiderClose": {
           "type": "array",
-          "description": "Triggers actions when sider is closed."
+          "description": "Trigger actions when sider is closed."
         },
         "onSiderOpen": {
           "type": "array",
-          "description": "Triggers actions when sider is opened."
+          "description": "Trigger actions when sider is opened."
         },
         "onBreakpoint": {
           "type": "array"

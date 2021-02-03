@@ -845,7 +845,7 @@
       "properties": {
         "onClick": {
           "type": "array",
-          "description": "Triggers actions when icon is clicked."
+          "description": "Trigger actions when icon is clicked."
         }
       }
     }

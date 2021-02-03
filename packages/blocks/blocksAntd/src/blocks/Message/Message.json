@@ -70,7 +70,7 @@
       "properties": {
         "onClose": {
           "type": "array",
-          "description": "Triggers actions when message is closed."
+          "description": "Trigger actions when message is closed."
         }
       }
     }
