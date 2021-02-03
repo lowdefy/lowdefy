@@ -9,6 +9,9 @@ Array [
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
     },
     Object {},
@@ -32,6 +35,9 @@ Array [
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
     },
     Object {},
@@ -68,6 +74,47 @@ A table:
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
+      "skipHtml": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.content DangerousHtml - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "### Link 
+
+<a href=\\"https://lowdefy.com\\">Lowdefy link</a>
+
+<font size=\\"+10\\">Description</font>
+
+### Bad HTML 
+
+<div onmouseover=\\"alert('alpha')\\">
+  <a href=\\"javascript:alert('bravo')\\">delta</a>
+  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
+  <iframe src=\\"javascript:alert('delta')\\"></iframe>
+  <math>
+    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
+  </math>
+</div>
+<script>
+  alert('script tag');
+</script>
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
     },
     Object {},
@@ -89,6 +136,9 @@ Default
 Html
 \`\`\`html
   <a href=\\"\\">html style</a>
+  <script>
+    alert('script tag');
+  </script>
 \`\`\`
 
 Json
@@ -121,6 +171,9 @@ Bad HTML
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
     },
     Object {},
@@ -139,77 +192,10 @@ Array [
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.skipHtml = false - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "children": "### Link 
-
-<a href=\\"https://lowdefy.com\\">Lowdefy link</a>
-
-<font size=\\"+10\\">Description</font>
-
-### Bad HTML 
-
-<div onmouseover=\\"alert('alpha')\\">
-  <a href=\\"javascript:alert('bravo')\\">delta</a>
-  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
-  <iframe src=\\"javascript:alert('delta')\\"></iframe>
-  <math>
-    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
-  </math>
-</div>
-<script>
-  alert('script tag');
-</script>
-",
-      "className": "markdown-body",
-      "plugins": Array [
-        [Function],
-      ],
-      "skipHtml": false,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.skipHtml = true - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "children": "### Link 
-
-<a href=\\"https://lowdefy.com\\">Lowdefy link</a>
-
-<font size=\\"+10\\">Description</font>
-
-### Bad HTML 
-
-<div onmouseover=\\"alert('alpha')\\">
-  <a href=\\"javascript:alert('bravo')\\">delta</a>
-  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
-  <iframe src=\\"javascript:alert('delta')\\"></iframe>
-  <math>
-    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
-  </math>
-</div>
-<script>
-  alert('script tag');
-</script>
-",
-      "className": "markdown-body",
-      "plugins": Array [
-        [Function],
-      ],
-      "skipHtml": true,
     },
     Object {},
   ],
@@ -231,6 +217,9 @@ Array [
       "plugins": Array [
         [Function],
       ],
+      "renderers": Object {
+        "code": [Function],
+      },
       "skipHtml": undefined,
     },
     Object {},

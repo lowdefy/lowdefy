@@ -1,0 +1,30 @@
+{
+  "category": "container",
+  "loading": false,
+  "schema": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "Content in markdown format."
+        },
+        "DOMPurifyOptions": {
+          "type": "object",
+          "description": "Customize DOMPurify options.",
+          "docs": {
+            "displayType": "yaml"
+          }
+        },
+        "style": {
+          "type": "object",
+          "description": "Style to apply to Markdown div.",
+          "docs": {
+            "displayType": "yaml"
+          }
+        }
+      }
+    }
+  }
+}

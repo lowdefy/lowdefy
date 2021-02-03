@@ -57,20 +57,19 @@ const renderers = {
     </SyntaxHighlighter>
   ),
 };
-
-const MarkdownWithHtml = ({ blockId, properties, methods }) => (
+const MarkdownWithCode = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
     <ReactMarkdown
       className="markdown-body"
       renderers={renderers}
       plugins={[gfm]}
-      allowDangerousHtml={properties.allowDangerousHtml}
+      skipHtml={properties.skipHtml}
     >
       {properties.content}
     </ReactMarkdown>
   </div>
 );
 
-MarkdownWithHtml.defaultProps = blockDefaultProps;
+MarkdownWithCode.defaultProps = blockDefaultProps;
 
-export default MarkdownWithHtml;
+export default MarkdownWithCode;
