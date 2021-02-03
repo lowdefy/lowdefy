@@ -151,6 +151,18 @@ menus:
           - id: CheckboxSelector
             type: MenuLink
             pageId: CheckboxSelector
+          - id: ChromeColorSelector
+            type: MenuLink
+            pageId: ChromeColorSelector
+          - id: CircleColorSelector
+            type: MenuLink
+            pageId: CircleColorSelector
+          - id: ColorSelector
+            type: MenuLink
+            pageId: ColorSelector
+          - id: CompactColorSelector
+            type: MenuLink
+            pageId: CompactColorSelector
           - id: DateRangeSelector
             type: MenuLink
             pageId: DateRangeSelector
@@ -160,6 +172,9 @@ menus:
           - id: DateTimeSelector
             type: MenuLink
             pageId: DateTimeSelector
+          - id: GithubColorSelector
+            type: MenuLink
+            pageId: GithubColorSelector
           - id: MonthSelector
             type: MenuLink
             pageId: MonthSelector
@@ -187,6 +202,12 @@ menus:
           - id: Selector
             type: MenuLink
             pageId: Selector
+          - id: SliderColorSelector
+            type: MenuLink
+            pageId: SliderColorSelector
+          - id: SwatchesColorSelector
+            type: MenuLink
+            pageId: SwatchesColorSelector
           - id: Switch
             type: MenuLink
             pageId: Switch
@@ -199,6 +220,9 @@ menus:
           - id: TitleInput
             type: MenuLink
             pageId: TitleInput
+          - id: TwitterColorSelector
+            type: MenuLink
+            pageId: TwitterColorSelector
           - id: WeekSelector
             type: MenuLink
             pageId: WeekSelector
@@ -483,9 +507,14 @@ pages:
   - _ref: blocks/input/AutoComplete.yaml
   - _ref: blocks/input/ButtonSelector.yaml
   - _ref: blocks/input/CheckboxSelector.yaml
+  - _ref: blocks/input/ChromeColorSelector.yaml
+  - _ref: blocks/input/CircleColorSelector.yaml
+  - _ref: blocks/input/ColorSelector.yaml
+  - _ref: blocks/input/CompactColorSelector.yaml
   - _ref: blocks/input/DateRangeSelector.yaml
   - _ref: blocks/input/DateSelector.yaml
   - _ref: blocks/input/DateTimeSelector.yaml
+  - _ref: blocks/input/GithubColorSelector.yaml
   - _ref: blocks/input/MonthSelector.yaml
   - _ref: blocks/input/MultipleSelector.yaml
   - _ref: blocks/input/NumberInput.yaml
@@ -495,10 +524,13 @@ pages:
   - _ref: blocks/input/RatingSlider.yaml
   - _ref: blocks/input/S3UploadButton.yaml
   - _ref: blocks/input/Selector.yaml
+  - _ref: blocks/input/SliderColorSelector.yaml
+  - _ref: blocks/input/SwatchesColorSelector.yaml
   - _ref: blocks/input/Switch.yaml
   - _ref: blocks/input/TextArea.yaml
   - _ref: blocks/input/TextInput.yaml
   - _ref: blocks/input/TitleInput.yaml
+  - _ref: blocks/input/TwitterColorSelector.yaml
   - _ref: blocks/input/WeekSelector.yaml
 
   - _ref: blocks/display/Alert.yaml
