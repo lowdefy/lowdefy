@@ -81,30 +81,34 @@ const button = (propertyName) => ({
   ],
 });
 
-const oneOf = (propertyName, propertyDescription) => {
+const oneOf = ({ propertyName, propertyDescription, nameSpace }) => {
   const block = {
     id: propertyName,
     type: 'Card',
     layout: {
       contentGutter: 0,
     },
-    bodyStyle: { padding: 0 },
     properties: {
       size: 'small',
-      title: `${propertyName} - type options:`,
+      title: `Select ${propertyName} type`,
       inner: true,
       bodyStyle: { padding: 0 },
+      headerStyle: { color: 'rgba(0, 0, 0, 0.45)', background: 'rgba(0, 0, 0, 0.06)' },
     },
   };
   block.areas = {
     extra: {
       blocks: [
         {
-          id: `__${propertyName}_type`,
+          id: `__type_${nameSpace}${propertyName}`,
           type: 'ButtonSelector',
           properties: {
-            options: propertyDescription.oneOf.map((item) => item.type),
+            options: propertyDescription.oneOf.map((item) =>
+              item.type === 'array' ? `${item.items.type}[]` : item.type
+            ),
             size: 'small',
+            color: 'rgba(0, 0, 0, 0.1)',
+            buttonStyle: 'outlined',
             label: {
               disabled: true,
             },
@@ -115,21 +119,25 @@ const oneOf = (propertyName, propertyDescription) => {
     content: {
       blocks: propertyDescription.oneOf.map((item) => {
         const bl = makeBlockDefinition({
-          propertyName: `__${propertyName}_${item.type}`,
+          propertyName: propertyName,
           propertyDescription: item,
           requiredProperties: [],
-          nameSpace: '',
+          nameSpace: `__${
+            item.type === 'array' ? `${item.items.type}_arr` : item.type
+          }_${nameSpace}`,
         });
         bl.visible = {
           _if: {
             test: {
-              _eq: [{ _state: `__${propertyName}_type` }, item.type],
+              _eq: [
+                { _state: `__type_${nameSpace}${propertyName}` },
+                item.type === 'array' ? `${item.items.type}[]` : item.type,
+              ],
             },
             then: true,
             else: false,
           },
         };
-        bl.properties.title = bl.type === 'Card' ? `${propertyName}:` : propertyName;
         return bl;
       }),
     },
@@ -137,7 +145,13 @@ const oneOf = (propertyName, propertyDescription) => {
   return block;
 };
 
-function makeBlockDefinition({ propertyName, propertyDescription, requiredProperties, nameSpace }) {
+function makeBlockDefinition({
+  propertyName,
+  propertyDescription,
+  requiredProperties,
+  nameSpace,
+  labelDisabled,
+}) {
   let block = {
     id: `${nameSpace}${propertyName}`,
     layout: { _global: 'settings_input_layout' },
@@ -145,11 +159,13 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
     properties: {
       title: propertyName,
       size: 'small',
-      label: {
-        span: 8,
-        align: 'right',
-        extra: propertyDescription.description,
-      },
+      label: labelDisabled
+        ? { disabled: true }
+        : {
+            span: 8,
+            align: 'right',
+            extra: propertyDescription.description,
+          },
     },
   };
 
@@ -178,8 +194,12 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
       case 'color':
         block.type = 'TwitterColorSelector';
         return block;
-      case 'style':
+      case 'date':
+        block.type = 'DateSelector';
+        return block;
+      case 'yaml':
         block.type = 'TextArea';
+        // delete block.properties.size;
         return block;
       case 'button':
         return button(propertyName);
@@ -226,15 +246,14 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
       return block;
     case 'object':
       block = {
-        id: block.id,
+        id: `${nameSpace}${propertyName}`,
         type: 'Card',
         layout: {
           contentGutter: 0,
         },
         properties: {
           size: 'small',
-          title: `${propertyName}:`,
-          inner: true,
+          title: !labelDisabled && `${propertyName}:`,
           bodyStyle: { padding: 0 },
         },
       };
@@ -247,13 +266,35 @@ function makeBlockDefinition({ propertyName, propertyDescription, requiredProper
             requiredProperties: propertyDescription.required || [],
             nameSpace: `${nameSpace}${propertyName}.`,
           });
-          bl.properties.title = objectPropertyName;
           return bl;
         });
       return block;
+    case 'array':
+      block = {
+        id: `${nameSpace}${propertyName}`,
+        type: 'ControlledList',
+        layout: {
+          contentGutter: 0,
+        },
+        properties: {
+          size: 'small',
+          title: !labelDisabled && `${propertyName}:`,
+          itemStyle: { padding: 0 },
+        },
+      };
+      block.blocks = [
+        makeBlockDefinition({
+          propertyName: `$`,
+          propertyDescription: propertyDescription.items,
+          requiredProperties: [],
+          nameSpace: `${nameSpace}${propertyName}.`,
+          labelDisabled: true,
+        }),
+      ];
+      return block;
     case undefined:
       if (propertyDescription.oneOf) {
-        return oneOf(propertyName, propertyDescription);
+        return oneOf({ propertyName, propertyDescription, nameSpace });
       }
       return block;
     default:
@@ -278,445 +319,3 @@ function transformer(obj) {
 }
 
 module.exports = transformer;
-
-// case 'optionsString':
-//   block.type = 'ControlledList';
-//   block.blocks = [
-//     {
-//       id: `block.properties.${propertyName}.$`,
-//       type: 'TextInput',
-//       properties: {
-//         size: 'small',
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//   ];
-//   return block;
-// case 'mediaSize':
-//   block.type = 'Label';
-//   block.properties = {
-//     title: propertyName,
-//     span: 8,
-//     align: 'right',
-//     extra: propertyDescription.description,
-//   };
-//   block.blocks = [
-//     {
-//       id: `__type_${propertyName}`,
-//       layout: { span: 9 },
-//       type: 'ButtonSelector',
-//       properties: {
-//         size: 'small',
-//         options: ['number', 'object'],
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.number`,
-//       layout: { span: 15 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'number'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.xs`,
-//       layout: { span: 3 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'xs',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.sm`,
-//       layout: { span: 3 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'sm',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.md`,
-//       layout: { span: 3 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'md',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.lg`,
-//       layout: { span: 3 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'lg',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.xl`,
-//       layout: { span: 3 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'xl',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//   ];
-//   return block;
-// case 'minMaxSize':
-//   block.type = 'Label';
-//   block.properties = {
-//     title: propertyName,
-//     span: 8,
-//     align: 'right',
-//     extra: propertyDescription.description,
-//   };
-//   block.blocks = [
-//     {
-//       id: `__type_${propertyName}`,
-//       layout: { span: 10 },
-//       type: 'ButtonSelector',
-//       properties: {
-//         size: 'small',
-//         options: ['boolean', 'object'],
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.boolean`,
-//       layout: { span: 6 },
-//       type: 'Switch',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'boolean'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.minRows`,
-//       layout: { span: 6 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'minRows',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//     {
-//       id: `block.properties.${propertyName}.maxRows`,
-//       layout: { span: 6 },
-//       type: 'NumberInput',
-//       visible: {
-//         _if: {
-//           test: {
-//             _eq: [{ _state: `__type_${propertyName}` }, 'object'],
-//           },
-//           then: true,
-//           else: false,
-//         },
-//       },
-//       properties: {
-//         size: 'small',
-//         placeholder: 'maxRows',
-//         minimum: 1,
-//         step: 1,
-//         label: {
-//           disabled: true,
-//         },
-//       },
-//     },
-//   ];
-//   return block;
-// case 'optionsSelector':
-//   block.type = 'Card';
-//   block.layout = {
-//     contentGutter: 0,
-//   };
-//   block.properties = {
-//     title: 'options:',
-//     size: 'small',
-//     inner: true,
-//     bodyStyle: {
-//       padding: 0,
-//     },
-//   };
-//   block.areas = {
-//     extra: {
-//       blocks: [
-//         {
-//           id: '__optionsType',
-//           type: 'ButtonSelector',
-//           properties: {
-//             options: ['Primitive', 'Label-value pairs'],
-//             size: 'small',
-//             label: { disabled: true },
-//           },
-//         },
-//       ],
-//     },
-//     content: {
-//       blocks: [
-//         {
-//           id: `block.properties.options`,
-//           type: 'ControlledList',
-//           properties: { size: 'small' },
-//           blocks: [
-//             {
-//               id: `block.properties.options.$.primitive`,
-//               type: 'TextInput',
-//               visible: {
-//                 _if: {
-//                   test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
-//                   then: true,
-//                   else: false,
-//                 },
-//               },
-//               properties: {
-//                 size: 'small',
-//                 label: {
-//                   disabled: true,
-//                 },
-//               },
-//             },
-//             {
-//               id: `block.properties.options.$.label`,
-//               type: 'TextInput',
-//               visible: {
-//                 _if: {
-//                   test: {
-//                     _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
-//                   },
-//                   then: true,
-//                   else: false,
-//                 },
-//               },
-//               properties: {
-//                 size: 'small',
-//                 title: 'label',
-//                 label: {
-//                   span: 8,
-//                   align: 'right',
-//                 },
-//               },
-//             },
-//             {
-//               id: `block.properties.options.$.value`,
-//               type: 'TextInput',
-//               visible: {
-//                 _if: {
-//                   test: {
-//                     _eq: [{ _state: '__optionsType' }, 'Label-value pairs'],
-//                   },
-//                   then: true,
-//                   else: false,
-//                 },
-//               },
-//               properties: {
-//                 size: 'small',
-//                 title: 'value',
-//                 label: {
-//                   span: 8,
-//                   align: 'right',
-//                 },
-//               },
-//             },
-//           ],
-//         },
-//       ],
-//     },
-//   };
-//   return block;
-// case 'TextInput':
-//   block.type = 'TextInput';
-//   return block;
-//   case 'disabledDates':
-//     block.type = 'Card';
-//     block.layout = {
-//       contentGutter: 0,
-//     };
-//     block.properties = {
-//       size: 'small',
-//       title: 'disabledDates:',
-//       inner: true,
-//     };
-//     block.blocks = [
-//       {
-//         id: 'block.properties.disabledDates.min',
-//         type: 'DateSelector',
-//         properties: {
-//           size: 'small',
-//           title: 'min',
-//           label: {
-//             span: 8,
-//             align: 'right',
-//           },
-//         },
-//       },
-//       {
-//         id: 'block.properties.disabledDates.max',
-//         type: 'DateSelector',
-//         properties: {
-//           size: 'small',
-//           title: 'max',
-//           label: {
-//             span: 8,
-//             align: 'right',
-//           },
-//         },
-//       },
-//       {
-//         id: 'block.properties.disabledDates.dates',
-//         type: 'ControlledList',
-//         properties: {
-//           title: 'dates:',
-//           size: 'small',
-//         },
-//         blocks: [
-//           {
-//             id: 'block.properties.disabledDates.dates.$',
-//             type: 'DateSelector',
-//             properties: {
-//               size: 'small',
-//               label: {
-//                 disabled: true,
-//               },
-//             },
-//           },
-//         ],
-//       },
-//       {
-//         id: 'block.properties.disabledDates.ranges',
-//         type: 'ControlledList',
-//         properties: {
-//           title: 'ranges:',
-//           size: 'small',
-//         },
-//         blocks: [
-//           {
-//             id: 'block.properties.disabledDates.ranges.$',
-//             type: 'DateRangeSelector',
-//             properties: {
-//               size: 'small',
-//               label: {
-//                 disabled: true,
-//               },
-//             },
-//           },
-//         ],
-//       },
-//     ];
-// }

@@ -76,7 +76,6 @@ test('object propertiesFormTransformer', () => {
           "bodyStyle": Object {
             "padding": 0,
           },
-          "inner": true,
           "size": "small",
           "title": "field:",
         },
@@ -92,6 +91,15 @@ test('object propertiesGetterTransformer', () => {
       "_object.assign": Array [
         Object {
           "_state": "block.properties",
+        },
+        Object {
+          "field": Object {
+            "_object.assign": Array [
+              Object {
+                "_state": "block.properties.field",
+              },
+            ],
+          },
         },
       ],
     }
@@ -142,6 +150,202 @@ test('object defaultValueTransformer', () => {
       },
     }
   `);
+});
+
+const schemaNested = {
+  schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        field: {
+          type: 'object',
+          default: {
+            num: 1,
+          },
+          description: 'description',
+          properties: {
+            str: {
+              type: 'string',
+              description: 'str description',
+            },
+            num: {
+              type: 'number',
+              description: 'num description',
+            },
+            bool: {
+              type: 'boolean',
+              default: true,
+              description: 'bool description',
+            },
+            obj: {
+              type: 'object',
+              description: 'obj description',
+              properties: {
+                str: {
+                  type: 'string',
+                  description: 'obj.str description',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+test('object schemaNested propertiesFormTransformer', () => {
+  expect(propertiesFormTransformer(schemaNested)).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "blocks": Array [
+          Object {
+            "id": "block.properties.field.bool",
+            "layout": Object {
+              "_global": "settings_input_layout",
+            },
+            "properties": Object {
+              "label": Object {
+                "align": "right",
+                "extra": "bool description",
+                "span": 8,
+              },
+              "size": "small",
+              "title": "bool",
+            },
+            "required": false,
+            "type": "Switch",
+          },
+          Object {
+            "id": "block.properties.field.num",
+            "layout": Object {
+              "_global": "settings_input_layout",
+            },
+            "properties": Object {
+              "label": Object {
+                "align": "right",
+                "extra": "num description",
+                "span": 8,
+              },
+              "size": "small",
+              "step": 0.1,
+              "title": "num",
+            },
+            "required": false,
+            "type": "NumberInput",
+          },
+          Object {
+            "blocks": Array [
+              Object {
+                "id": "block.properties.field.obj.str",
+                "layout": Object {
+                  "_global": "settings_input_layout",
+                },
+                "properties": Object {
+                  "label": Object {
+                    "align": "right",
+                    "extra": "obj.str description",
+                    "span": 8,
+                  },
+                  "size": "small",
+                  "title": "str",
+                },
+                "required": false,
+                "type": "TextInput",
+              },
+            ],
+            "id": "block.properties.field.obj",
+            "layout": Object {
+              "contentGutter": 0,
+            },
+            "properties": Object {
+              "bodyStyle": Object {
+                "padding": 0,
+              },
+              "size": "small",
+              "title": "obj:",
+            },
+            "type": "Card",
+          },
+          Object {
+            "id": "block.properties.field.str",
+            "layout": Object {
+              "_global": "settings_input_layout",
+            },
+            "properties": Object {
+              "label": Object {
+                "align": "right",
+                "extra": "str description",
+                "span": 8,
+              },
+              "size": "small",
+              "title": "str",
+            },
+            "required": false,
+            "type": "TextInput",
+          },
+        ],
+        "id": "block.properties.field",
+        "layout": Object {
+          "contentGutter": 0,
+        },
+        "properties": Object {
+          "bodyStyle": Object {
+            "padding": 0,
+          },
+          "size": "small",
+          "title": "field:",
+        },
+        "type": "Card",
+      },
+    ]
+  `);
+});
+
+test('object schemaNested propertiesGetterTransformer', () => {
+  expect(propertiesGetterTransformer(schemaNested)).toMatchInlineSnapshot(`
+    Object {
+      "_object.assign": Array [
+        Object {
+          "_state": "block.properties",
+        },
+        Object {
+          "field": Object {
+            "_object.assign": Array [
+              Object {
+                "_state": "block.properties.field",
+              },
+              Object {
+                "obj": Object {
+                  "_object.assign": Array [
+                    Object {
+                      "_state": "block.properties.field.obj",
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    }
+  `);
+});
+
+test('object schemaNested defaultValueTransformer', () => {
+  expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`
+    Object {
+      "field": Object {
+        "bool": true,
+        "num": 1,
+        "obj": Object {
+          "str": null,
+        },
+        "str": null,
+      },
+    }
+  `);
   const schemaDVNested = {
     schema: {
       properties: {
@@ -168,6 +372,19 @@ test('object defaultValueTransformer', () => {
                 default: true,
                 description: 'bool description',
               },
+              obj: {
+                type: 'object',
+                default: {
+                  str: 'a',
+                },
+                description: 'obj description',
+                properties: {
+                  str: {
+                    type: 'string',
+                    description: 'obj.str description',
+                  },
+                },
+              },
             },
           },
         },
@@ -179,6 +396,9 @@ test('object defaultValueTransformer', () => {
       "field": Object {
         "bool": true,
         "num": 1,
+        "obj": Object {
+          "str": "a",
+        },
         "str": null,
       },
     }

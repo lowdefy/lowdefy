@@ -33,7 +33,7 @@ test('oneOf propertiesFormTransformer', () => {
           "content": Object {
             "blocks": Array [
               Object {
-                "id": "__field_number",
+                "id": "__number_block.properties.field",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -55,7 +55,7 @@ test('oneOf propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__field_type",
+                          "_state": "__type_block.properties.field",
                         },
                         "number",
                       ],
@@ -65,7 +65,7 @@ test('oneOf propertiesFormTransformer', () => {
                 },
               },
               Object {
-                "id": "__field_string",
+                "id": "__string_block.properties.field",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -86,7 +86,7 @@ test('oneOf propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__field_type",
+                          "_state": "__type_block.properties.field",
                         },
                         "string",
                       ],
@@ -100,8 +100,10 @@ test('oneOf propertiesFormTransformer', () => {
           "extra": Object {
             "blocks": Array [
               Object {
-                "id": "__field_type",
+                "id": "__type_block.properties.field",
                 "properties": Object {
+                  "buttonStyle": "outlined",
+                  "color": "rgba(0, 0, 0, 0.1)",
                   "label": Object {
                     "disabled": true,
                   },
@@ -116,9 +118,6 @@ test('oneOf propertiesFormTransformer', () => {
             ],
           },
         },
-        "bodyStyle": Object {
-          "padding": 0,
-        },
         "id": "field",
         "layout": Object {
           "contentGutter": 0,
@@ -127,9 +126,13 @@ test('oneOf propertiesFormTransformer', () => {
           "bodyStyle": Object {
             "padding": 0,
           },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
           "inner": true,
           "size": "small",
-          "title": "field - type options:",
+          "title": "Select field type",
         },
         "type": "Card",
       },
@@ -143,18 +146,6 @@ test('oneOf propertiesGetterTransformer', () => {
       "_object.assign": Array [
         Object {
           "_state": "block.properties",
-        },
-        Object {
-          "field": Object {
-            "_state": Object {
-              "_string.concat": Array [
-                "__field_",
-                Object {
-                  "_state": "__field_type",
-                },
-              ],
-            },
-          },
         },
       ],
     }
@@ -239,7 +230,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "content": Object {
             "blocks": Array [
               Object {
-                "id": "__field_string",
+                "id": "__string_block.properties.field",
                 "layout": Object {
                   "_global": "settings_input_layout",
                 },
@@ -260,7 +251,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__field_type",
+                          "_state": "__type_block.properties.field",
                         },
                         "string",
                       ],
@@ -272,7 +263,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
               Object {
                 "blocks": Array [
                   Object {
-                    "id": "__field_object.bool",
+                    "id": "__object_block.properties.field.bool",
                     "layout": Object {
                       "_global": "settings_input_layout",
                     },
@@ -289,7 +280,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "type": "Switch",
                   },
                   Object {
-                    "id": "__field_object.str",
+                    "id": "__object_block.properties.field.str",
                     "layout": Object {
                       "_global": "settings_input_layout",
                     },
@@ -306,7 +297,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "type": "TextInput",
                   },
                 ],
-                "id": "__field_object",
+                "id": "__object_block.properties.field",
                 "layout": Object {
                   "contentGutter": 0,
                 },
@@ -314,7 +305,6 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                   "bodyStyle": Object {
                     "padding": 0,
                   },
-                  "inner": true,
                   "size": "small",
                   "title": "field:",
                 },
@@ -325,7 +315,7 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
                     "test": Object {
                       "_eq": Array [
                         Object {
-                          "_state": "__field_type",
+                          "_state": "__type_block.properties.field",
                         },
                         "object",
                       ],
@@ -339,8 +329,10 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "extra": Object {
             "blocks": Array [
               Object {
-                "id": "__field_type",
+                "id": "__type_block.properties.field",
                 "properties": Object {
+                  "buttonStyle": "outlined",
+                  "color": "rgba(0, 0, 0, 0.1)",
                   "label": Object {
                     "disabled": true,
                   },
@@ -355,9 +347,6 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
             ],
           },
         },
-        "bodyStyle": Object {
-          "padding": 0,
-        },
         "id": "field",
         "layout": Object {
           "contentGutter": 0,
@@ -366,9 +355,13 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
           "bodyStyle": Object {
             "padding": 0,
           },
+          "headerStyle": Object {
+            "background": "rgba(0, 0, 0, 0.06)",
+            "color": "rgba(0, 0, 0, 0.45)",
+          },
           "inner": true,
           "size": "small",
-          "title": "field - type options:",
+          "title": "Select field type",
         },
         "type": "Card",
       },
@@ -382,18 +375,6 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
       "_object.assign": Array [
         Object {
           "_state": "block.properties",
-        },
-        Object {
-          "field": Object {
-            "_state": Object {
-              "_string.concat": Array [
-                "__field_",
-                Object {
-                  "_state": "__field_type",
-                },
-              ],
-            },
-          },
         },
       ],
     }
