@@ -17,40 +17,35 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import ReactMarkdown from 'react-markdown';
 
-class HtmlBlock extends React.Component {
+import gfm from 'remark-gfm';
+import '../../Markdown.css';
+
+class DangerousMarkdown extends React.Component {
   constructor(props) {
     super(props);
-    this.div = {
-      innerHTML: '',
-    };
-  }
-
-  componentDidMount() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
-  }
-
-  componentDidUpdate() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
+    // we do not revaluate DOMPurifyOptions improve options safety by not making options dynamic.
+    this.DOMPurifyOptions = props.properties.DOMPurifyOptions;
   }
 
   render() {
     const { blockId, properties, methods } = this.props;
     return (
-      <div
-        id={blockId}
-        data-testid={blockId}
-        ref={(el) => {
-          if (el) {
-            this.div = el;
-          }
-        }}
-        className={methods.makeCssClass(properties.style)}
-      />
+      <div id={blockId} className={methods.makeCssClass(properties.style)}>
+        <ReactMarkdown
+          className="markdown-body"
+          plugins={[gfm]}
+          allowDangerousHtml={true}
+          skipHtml={false}
+        >
+          {DOMPurify.sanitize(this.props.properties.content, this.DOMPurifyOptions)}
+        </ReactMarkdown>
+      </div>
     );
   }
 }
 
-HtmlBlock.defaultProps = blockDefaultProps;
+DangerousMarkdown.defaultProps = blockDefaultProps;
 
-export default HtmlBlock;
+export default DangerousMarkdown;

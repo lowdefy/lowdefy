@@ -20,9 +20,9 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import ReactMarkdown from 'react-markdown';
 
 Enzyme.configure({ adapter: new Adapter() });
-import MarkdownWithHtml from '../src/blocks/MarkdownWithHtml/MarkdownWithHtml';
-import examples from '../demo/examples/MarkdownWithHtml.yaml';
-import meta from '../src/blocks/MarkdownWithHtml/MarkdownWithHtml.json';
+import MarkdownWithCode from '../src/blocks/MarkdownWithCode/MarkdownWithCode';
+import examples from '../demo/examples/MarkdownWithCode.yaml';
+import meta from '../src/blocks/MarkdownWithCode/MarkdownWithCode.json';
 
 jest.mock('react-markdown', () => {
   return jest.fn(() => 'mocked');
@@ -35,4 +35,4 @@ const mocks = [
   },
 ];
 
-runMockRenderTests({ examples, Block: MarkdownWithHtml, meta, mocks, enzyme: { mount } });
+runMockRenderTests({ examples, Block: MarkdownWithCode, meta, mocks, enzyme: { mount } });

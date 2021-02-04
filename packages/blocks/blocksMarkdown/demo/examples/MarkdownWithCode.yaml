@@ -1,5 +1,5 @@
 - id: default
-  type: MarkdownWithHtml
+  type: MarkdownWithCode
 - id: properties.content
   type: Box
   properties:
@@ -9,6 +9,10 @@
       A paragraph with *emphasis* and **strong importance**.
 
       > A block quote with ~strikethrough~ and a URL: https://reactjs.org.
+      
+      #### Link
+
+      [A link to Lowdefy](https://lowdefy.com)
 
       # Two
 
@@ -22,7 +26,7 @@
       | - | - |
       
 - id: properties.style and headings
-  type: MarkdownWithHtml
+  type: MarkdownWithCode
   properties:
     content: |
       # One
@@ -34,7 +38,7 @@
     style: 
       border: '1px solid blue'
 - id: properties.content = table
-  type: MarkdownWithHtml
+  type: MarkdownWithCode
   properties:
     content: |
       ### Table 
@@ -45,35 +49,9 @@
       | 123 | 345 | 34892 |
       | true | false | none |
 
-- id: properties.allowDangerousHtml = false
-  type: MarkdownWithHtml
+- id: properties.content DangerousHtml
+  type: MarkdownWithCode
   properties:
-    allowDangerousHtml: false
-    content: |
-      ### Link 
-
-      <a href="https://lowdefy.com">Lowdefy link</a>
-
-      <font size="+10">Description</font>
-
-      ### Bad HTML 
-
-      <div onmouseover="alert('alpha')">
-        <a href="javascript:alert('bravo')">delta</a>
-        <img src="x" onerror="alert('charlie')">
-        <iframe src="javascript:alert('delta')"></iframe>
-        <math>
-          <mi xlink:href="data:x,<script>alert('echo')</script>"></mi>
-        </math>
-      </div>
-      <script>
-        alert('script tag');
-      </script>
-
-- id: properties.allowDangerousHtml = true
-  type: MarkdownWithHtml
-  properties:
-    allowDangerousHtml: true
     content: |
       ### Link 
 
@@ -96,7 +74,7 @@
       </script>
 
 - id: properties.content with code
-  type: MarkdownWithHtml
+  type: MarkdownWithCode
   properties:
     content: |
       ### Code 
@@ -109,6 +87,9 @@
       Html
       ```html
         <a href="">html style</a>
+        <script>
+          alert('script tag');
+        </script>
       ```
 
       Json
@@ -122,4 +103,24 @@
         }
       ```
 
+      Bad HTML 
+      ```html
+      <div onmouseover="alert('alpha')">
+        <a href="javascript:alert('bravo')">delta</a>
+        <img src="x" onerror="alert('charlie')">
+        <iframe src="javascript:alert('delta')"></iframe>
+        <math>
+          <mi xlink:href="data:x,<script>alert('echo')</script>"></mi>
+        </math>
+      </div>
+      <script>
+        alert('script tag');
+      </script>
+      ```
+- id: properties.html-iframe
+  type: MarkdownWithCode
+  properties:
+    content: |
+      No additional ADD_TAGS:
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
