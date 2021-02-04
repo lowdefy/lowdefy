@@ -43,6 +43,9 @@ const types = {
   Type2: {
     url: 'type2Url',
   },
+  Localhost: {
+    url: 'http://localhost:3003/meta/Block.json',
+  },
 };
 
 const defaultMeta = {
@@ -124,4 +127,20 @@ test('getMeta invalid meta', async () => {
   await expect(getMeta('Type2')).rejects.toThrow(
     'Block type "Type2" has invalid block meta at {"url":"type2Url"}.'
   );
+});
+
+test('getMeta fetches from url and writes to cache', async () => {
+  mockFetchMetaUrl.mockImplementation(({ location }) => {
+    if (location && location.url === 'http://localhost:3003/meta/Block.json') {
+      return defaultMeta;
+    }
+    return null;
+  });
+  const res = await getMeta('Localhost');
+  expect(res).toEqual({
+    type: 'Localhost',
+    meta: defaultMeta,
+  });
+  expect(mockFetchMetaCache.mock.calls).toEqual([]);
+  expect(mockWriteMetaCache.mock.calls).toEqual([]);
 });

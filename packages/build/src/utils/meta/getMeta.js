@@ -45,18 +45,24 @@ function createGetMeta({ types, cacheDirectory }) {
         `Block type ${JSON.stringify(type)} is not defined. Specify type url in types array.`
       );
     }
+
+    const cacheMeta = !location.url.startsWith('http://localhost:');
     let meta;
 
-    meta = await fetchMetaCache(location);
-
-    if (meta)
-      return {
-        type,
-        meta,
-      };
+    if (cacheMeta) {
+      meta = await fetchMetaCache(location);
+      if (meta)
+        return {
+          type,
+          meta,
+        };
+    }
     meta = await fetchMetaUrl({ location, type });
-    await writeMetaCache({ location, meta });
-    // TODO: implement Ajv schema check. Use testAjvSchema func from @lowdefy/graphql
+    if (cacheMeta) {
+      await writeMetaCache({ location, meta });
+    }
+
+    // TODO: implement Ajv schema check. Use testAjvSchema func from @lowdefy/ajv
     if (meta && typeHelper.isString(meta.category) && meta.moduleFederation) {
       return {
         type,
