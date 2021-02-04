@@ -8,7 +8,10 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "Content in markdown format."
+          "description": "Content in markdown format.",
+          "docs": {
+            "displayType": "text-area"
+          }
         },
         "skipHtml": {
           "type": "boolean",
