@@ -20,7 +20,7 @@ import buildWatcher from './buildWatcher';
 import envWatcher from './envWatcher';
 import getBuild from './getBuild';
 import getExpress from './getExpress';
-import getGraphQl from './getGraphQl';
+import getGraphQL from './getGraphQL';
 import prepare from './prepare';
 
 async function initialBuild({ context }) {
@@ -30,7 +30,7 @@ async function initialBuild({ context }) {
 }
 
 async function serverSetup({ context, options }) {
-  const gqlServer = await getGraphQl({ context });
+  const gqlServer = await getGraphQL({ context });
   return getExpress({ context, gqlServer, options });
 }
 

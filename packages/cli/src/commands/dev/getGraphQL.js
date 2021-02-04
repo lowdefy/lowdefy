@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 import { ApolloServer } from 'apollo-server-express';
 
