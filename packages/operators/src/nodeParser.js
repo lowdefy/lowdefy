@@ -27,6 +27,7 @@ class NodeParser {
     this.secrets = secrets;
     this.state = state;
     this.urlQuery = urlQuery;
+    this.parse = this.parse.bind(this);
     this.operations = {
       ...commonOperators,
       ...nodeOperators,
@@ -67,6 +68,7 @@ class NodeParser {
               secrets: this.secrets,
               state: this.state,
               urlQuery: this.urlQuery,
+              parser: this,
             });
             return res;
           }

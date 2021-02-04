@@ -23,6 +23,7 @@ class WebParser {
   constructor({ context, contexts }) {
     this.context = context;
     this.contexts = contexts;
+    this.parse = this.parse.bind(this);
     this.operations = {
       ...commonOperators,
       ...webOperators,
@@ -67,6 +68,7 @@ class WebParser {
               requests: this.context.requests,
               state: this.context.state,
               urlQuery: this.context.urlQuery,
+              parser: this,
             });
             return res;
           }

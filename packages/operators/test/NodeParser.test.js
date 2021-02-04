@@ -406,3 +406,12 @@ test('parse _url_query operator', () => {
   expect(res.output).toEqual('value');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
+
+test('parse _function operator', () => {
+  const input = { _function: { state: { __state: 'key' }, args: { __args: true } } };
+  const parser = new NodeParser({ state: { key: 'value' } });
+  const { output, errors } = parser.parse({ input, location: 'locationId' });
+  expect(output).toBeInstanceOf(Function);
+  expect(output(1, 2)).toEqual({ state: 'value', args: [1, 2] });
+  expect(errors).toEqual([]);
+});

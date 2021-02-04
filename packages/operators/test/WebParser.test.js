@@ -447,3 +447,12 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 });
+
+test('parse _function operator', () => {
+  const input = { _function: { state: { __state: 'string' }, args: { __args: true } } };
+  const parser = new WebParser({ context, contexts });
+  const { output, errors } = parser.parse({ input, location: 'locationId' });
+  expect(output).toBeInstanceOf(Function);
+  expect(output(1, 2)).toEqual({ state: 'state', args: [1, 2] });
+  expect(errors).toEqual([]);
+});
