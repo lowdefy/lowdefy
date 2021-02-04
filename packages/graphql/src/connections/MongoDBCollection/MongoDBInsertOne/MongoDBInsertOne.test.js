@@ -93,7 +93,7 @@ test('insertOne mongodb error', async () => {
   };
   await resolver({ request, connection });
   await expect(resolver({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error dup key'
+    'E11000 duplicate key error collection: test.insertOne index: _id_ dup key: { _id: "insertOne_mongodb_error" }'
   );
 });
 

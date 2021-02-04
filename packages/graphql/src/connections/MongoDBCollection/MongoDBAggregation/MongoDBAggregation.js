@@ -19,9 +19,22 @@ import { serialize, deserialize } from '../serialize';
 
 import schema from './MongoDBAggregationSchema.json';
 
+function checkOutAndMerge({ pipeline, connection }) {
+  if (connection.write !== true) {
+    pipeline.forEach((stage) => {
+      if (stage.$out != null || stage.$merge != null) {
+        throw new Error(
+          'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+        );
+      }
+    });
+  }
+}
+
 async function mongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
+  checkOutAndMerge({ pipeline, connection });
   const { collection, client } = await getCollection({ connection });
   let res;
   try {

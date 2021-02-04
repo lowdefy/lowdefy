@@ -741,7 +741,7 @@ test('checkRead, read explicitly false', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow reads.'
+    'Connection "testConnection" does not allow reads.'
   );
 });
 
@@ -855,7 +855,7 @@ test('checkWrite, write explicitly false', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow writes.'
+    'Connection "testConnection" does not allow writes.'
   );
 });
 
@@ -887,6 +887,6 @@ test('checkWrite, write not set', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow writes.'
+    'Connection "testConnection" does not allow writes.'
   );
 });
