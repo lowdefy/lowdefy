@@ -15,7 +15,7 @@
         },
         "DOMPurifyOptions": {
           "type": "object",
-          "description": "Customize DOMPurify options.",
+          "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
           "docs": {
             "displayType": "yaml"
           }
