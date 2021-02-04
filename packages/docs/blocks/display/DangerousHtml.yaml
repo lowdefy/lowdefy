@@ -15,31 +15,33 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Html
+    block_type: DangerousHtml
     category: display
     init_property_values:
       html: <a href="https://lowdefy.com">Lowdefy Website</a>
     description_content: |
-      A block to render HTML. 
+      A block to render HTML with the ability to customize the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify). 
       
-      > The Html block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) default configuration. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the Html block. In short, it is strongly advised to never render any user input Html content, only render hardcoded or trusted HTML content.
+      > The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block. In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
     default_properties:
       _ref:
-        path: ../blocks/blocksBasic/src/blocks/Html/Html.json
+        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksBasic/src/blocks/Html/Html.json
+        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksBasic/src/blocks/Html/Html.json
+        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
         transformer: templates/blocks/propertiesFormTransformer.js
     examples:
-      - title: Basic Html
+      - title: Basic DangerousHtml
         properties: '{"html": "<div style=\"background: #123456; padding: 10px;\"><h1 style=\"color: white;\">A simple white title box</h1></div>"}'
-      - title: Html with iframes sanitized
+      - title: DangerousHtml with iframes sanitized
         properties: '{"html": "The iframe was removed: <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\"  allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'
-      - title: Html basic sanitization
+      - title: DangerousHtml with iframes enabled
+        properties: '{"DOMPurifyOptions": {"ADD_TAGS": ["iframe"]}, "html": "The iframe was not removed: <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\"  allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'
+      - title: DangerousHtml basic sanitization
         properties: '{"html": "<div style=\"color: red; border: 2px dashed blue; padding: 10px;\"><script>alert(\"hello world\")</script><img src=x onerror=alert(\"img\") />A little bit of bad html sanitized.</div>"}'
   
