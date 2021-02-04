@@ -69,7 +69,7 @@ const WeekSelector = ({
                   />
                 )
               }
-              disabledDate={disabledDate(properties.disabledDate)}
+              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal

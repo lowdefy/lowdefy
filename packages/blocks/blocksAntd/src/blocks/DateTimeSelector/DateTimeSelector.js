@@ -82,7 +82,7 @@ const DateTimeSelector = ({
                 secondStep: properties.secondStep || 30,
               }}
               showNow={properties.showNow}
-              disabledDate={disabledDate(properties.disabledDate)}
+              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal
