@@ -1,6 +1,8 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph"
+  },
   "schema": {
     "properties": {
       "type": "object",

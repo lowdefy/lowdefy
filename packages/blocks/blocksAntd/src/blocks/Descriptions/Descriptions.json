@@ -3,7 +3,7 @@
   "loading": {
     "type": "Skeleton",
     "properties": {
-      "height": 100
+      "height": 80
     }
   },
   "schema": {

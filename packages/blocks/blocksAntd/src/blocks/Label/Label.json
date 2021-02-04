@@ -1,6 +1,8 @@
 {
   "category": "container",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true

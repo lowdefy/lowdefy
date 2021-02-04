@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 5
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
