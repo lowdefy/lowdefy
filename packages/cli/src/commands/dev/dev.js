@@ -27,8 +27,10 @@ async function dev(options) {
   const context = await prepare(options);
   const build = await getBuild({ context });
   const gqlServer = await getGraphQl({ context });
-  const { expressApp, reloadFn } = await getExpress({ context, gqlServer, options });
 
+  await build();
+
+  const { expressApp, reloadFn } = await getExpress({ context, gqlServer, options });
   buildWatcher({ build, context, reloadFn });
   envWatcher({ context });
 

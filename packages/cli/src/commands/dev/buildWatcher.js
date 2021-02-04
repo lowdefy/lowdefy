@@ -17,9 +17,14 @@ import chokidar from 'chokidar';
 import BatchChanges from '../../utils/BatchChanges';
 
 function buildWatcher({ build, context, reloadFn }) {
+  let started = false;
   const buildCallback = async () => {
-    await build();
-    reloadFn();
+    if (started) {
+      await build();
+      reloadFn();
+    } else {
+      started = true;
+    }
   };
   const buildBatchChanges = new BatchChanges({ fn: buildCallback, context });
   const configWatcher = chokidar.watch('.', {
