@@ -211,7 +211,11 @@ Array [
             <IconBlock
               blockId="properties.list.icon with onClick_0_icon"
               content={Object {}}
-              events={Object {}}
+              events={
+                Object {
+                  "onClick": Array [],
+                }
+              }
               list={Array []}
               menus={Array []}
               methods={
@@ -294,7 +298,11 @@ Array [
             <IconBlock
               blockId="properties.list.icon with onClick_1_icon"
               content={Object {}}
-              events={Object {}}
+              events={
+                Object {
+                  "onClick": Array [],
+                }
+              }
               list={Array []}
               menus={Array []}
               methods={
