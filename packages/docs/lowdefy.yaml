@@ -29,6 +29,16 @@ types:
     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
   ParagraphInput:
     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json
+  DangerousHtml:
+    url: http://localhost:3002/meta/DangerousHtml.json
+  Html:
+    url: http://localhost:3002/meta/Html.json
+  DangerousMarkdown:
+    url: http://localhost:3003/meta/DangerousMarkdown.json
+  Markdown:
+    url: http://localhost:3003/meta/Markdown.json
+  MarkdownWithCode:
+    url: http://localhost:3003/meta/MarkdownWithCode.json
 
 menus:
   - id: default
@@ -247,6 +257,12 @@ menus:
           - id: Button
             type: MenuLink
             pageId: Button
+          - id: DangerousHtml
+            type: MenuLink
+            pageId: DangerousHtml
+          - id: DangerousMarkdown
+            type: MenuLink
+            pageId: DangerousMarkdown
           - id: Descriptions
             type: MenuLink
             pageId: Descriptions
@@ -259,6 +275,12 @@ menus:
           - id: Icon
             type: MenuLink
             pageId: Icon
+          - id: Markdown
+            type: MenuLink
+            pageId: Markdown
+          - id: MarkdownWithCode
+            type: MenuLink
+            pageId: MarkdownWithCode
           - id: Menu
             type: MenuLink
             pageId: Menu
@@ -541,10 +563,14 @@ pages:
   - _ref: blocks/display/Avatar.yaml
   - _ref: blocks/display/Breadcrumb.yaml
   - _ref: blocks/display/Button.yaml
+  - _ref: blocks/display/DangerousHtml.yaml
+  - _ref: blocks/display/DangerousMarkdown.yaml
   - _ref: blocks/display/Descriptions.yaml
   - _ref: blocks/display/Divider.yaml
   - _ref: blocks/display/Html.yaml
   - _ref: blocks/display/Icon.yaml
+  - _ref: blocks/display/Markdown.yaml
+  - _ref: blocks/display/MarkdownWithCode.yaml
   - _ref: blocks/display/Menu.yaml
   - _ref: blocks/display/Paragraph.yaml
   - _ref: blocks/display/Progress.yaml

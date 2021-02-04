@@ -22,7 +22,9 @@ _ref:
     description_content: |
       A block to render HTML with the ability to customize the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify). 
       
-      > The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block. In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
+      > The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block. 
+      > 
+      > In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
     default_properties:
       _ref:
         path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
