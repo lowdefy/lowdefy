@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import DangerousMarkdown from './blocks/DangerousMarkdown/DangerousMarkdown';
-import Markdown from './blocks/Markdown/Markdown';
-import MarkdownWithCode from './blocks/MarkdownWithCode/MarkdownWithCode';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
-export { DangerousMarkdown, Markdown, MarkdownWithCode };
-export default { DangerousMarkdown, Markdown, MarkdownWithCode };
+import { MarkdownWithCode } from '../src';
+import examples from '../demo/examples/MarkdownWithCode.yaml';
+import meta from '../src/blocks/MarkdownWithCode/MarkdownWithCode.json';
+
+runRenderTests({ examples, Block: MarkdownWithCode, meta });
+runBlockSchemaTests({ examples, meta });

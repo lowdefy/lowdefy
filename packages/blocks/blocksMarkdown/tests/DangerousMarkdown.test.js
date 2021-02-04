@@ -16,9 +16,9 @@
 
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-tools';
 
-import { MarkdownWithHtml } from '../src';
-import examples from '../demo/examples/MarkdownWithHtml.yaml';
-import meta from '../src/blocks/MarkdownWithHtml/MarkdownWithHtml.json';
+import { DangerousMarkdown } from '../src';
+import examples from '../demo/examples/DangerousMarkdown.yaml';
+import meta from '../src/blocks/DangerousMarkdown/DangerousMarkdown.json';
 
-runRenderTests({ examples, Block: MarkdownWithHtml, meta });
+runRenderTests({ examples, Block: DangerousMarkdown, meta });
 runBlockSchemaTests({ examples, meta });

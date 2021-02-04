@@ -18,20 +18,24 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-class HtmlBlock extends React.Component {
+class DangerousHtml extends React.Component {
   constructor(props) {
     super(props);
     this.div = {
       innerHTML: '',
     };
+    // we do not revaluate DOMPurifyOptions improve options safety by not making options dynamic.
+    this.DOMPurifyOptions = props.properties.DOMPurifyOptions;
   }
 
   componentDidMount() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
+    // this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
   }
 
   componentDidUpdate() {
-    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
+    // this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html, this.DOMPurifyOptions);
   }
 
   render() {
@@ -51,6 +55,6 @@ class HtmlBlock extends React.Component {
   }
 }
 
-HtmlBlock.defaultProps = blockDefaultProps;
+DangerousHtml.defaultProps = blockDefaultProps;
 
-export default HtmlBlock;
+export default DangerousHtml;

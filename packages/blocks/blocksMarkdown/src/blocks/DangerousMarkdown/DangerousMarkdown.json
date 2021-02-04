@@ -8,12 +8,17 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "Content in markdown format."
+          "description": "Content in markdown format.",
+          "docs": {
+            "displayType": "text-area"
+          }
         },
-        "allowDangerousHtml": {
-          "type": "boolean",
-          "default": false,
-          "description": "Rendering HTML in markdown is dangerous for security reasons. However, if you trust the markdown environment or source, you can render HTML in markdown by setting this field as true. It is not recommended."
+        "DOMPurifyOptions": {
+          "type": "object",
+          "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "style": {
           "type": "object",

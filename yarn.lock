@@ -2794,6 +2794,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.1
+    dompurify: 2.2.6
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.1
     identity-obj-proxy: 3.0.0
@@ -2802,6 +2803,7 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
+    react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.18.0
@@ -2873,6 +2875,7 @@ __metadata:
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.1
+    dompurify: 2.2.6
     enzyme: 3.11.0
     html-webpack-plugin: 4.5.1
     identity-obj-proxy: 3.0.0
@@ -2884,6 +2887,7 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
+    react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
@@ -8291,6 +8295,13 @@ __metadata:
   dependencies:
     domelementtype: ^2.1.0
   checksum: 22cc8e1335728a7c49434d1d12ff1563aea758c26c8ebf50fcf9e28ceb2bd0e5a15518d69abdb5db37aa7c0c347c8f68d323d12fc744a68853fb7641cbdcec89
+  languageName: node
+  linkType: hard
+
+"dompurify@npm:2.2.6":
+  version: 2.2.6
+  resolution: "dompurify@npm:2.2.6"
+  checksum: dfc77c2c603d84d4385a419acbda3f14777bf97f7a33a1de43d8a4f264171d12c916eda923715bc0199bcece20d3d6d3de730f3470d178c8ffdf25ba7ca18aee
   languageName: node
   linkType: hard
 
