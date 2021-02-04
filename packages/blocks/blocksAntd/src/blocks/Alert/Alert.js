@@ -35,7 +35,11 @@ const AlertBlock = ({ blockId, methods, properties }) => {
       closeText={properties.closeText}
       description={properties.description}
       id={blockId}
-      message={properties.message || <div style={{ height: '1.5175em' }}></div>}
+      message={
+        properties.message
+          ? properties.message
+          : !properties.description && <div style={{ height: '1.5175em' }}></div>
+      }
       onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
       type={properties.type}
