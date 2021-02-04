@@ -17,13 +17,17 @@
 import path from 'path';
 import express from 'express';
 import reload from 'reload';
+import findOpenPort from '../../utils/findOpenPort';
 
 async function getExpress({ context, gqlServer, options }) {
   const app = express();
   app.set('port', parseInt(options.port));
   gqlServer.applyMiddleware({ app, path: '/api/graphql' });
-  const reloadReturned = await reload(app, { route: '/api/dev/reload.js' });
+
+  const reloadPort = await findOpenPort();
+  const reloadReturned = await reload(app, { route: '/api/dev/reload.js', port: reloadPort });
   app.use(express.static(path.join(__dirname, 'shell')));
+
   app.use('/api/dev/version', (req, res) => {
     res.json(context.lowdefyVersion);
   });

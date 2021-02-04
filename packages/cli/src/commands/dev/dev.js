@@ -23,18 +23,30 @@ import getExpress from './getExpress';
 import getGraphQl from './getGraphQl';
 import prepare from './prepare';
 
+async function initialBuild({ context }) {
+  const build = await getBuild({ context });
+  await build();
+  return build;
+}
+
+async function serverSetup({ context, options }) {
+  const gqlServer = await getGraphQl({ context });
+  return getExpress({ context, gqlServer, options });
+}
+
 async function dev(options) {
   const context = await prepare(options);
-  const build = await getBuild({ context });
-  const gqlServer = await getGraphQl({ context });
+  const initialBuildPromise = initialBuild({ context });
+  const serverSetupPromise = serverSetup({ context, options });
 
-  await build();
+  const [build, { expressApp, reloadFn }] = await Promise.all([
+    initialBuildPromise,
+    serverSetupPromise,
+  ]);
 
-  const { expressApp, reloadFn } = await getExpress({ context, gqlServer, options });
   buildWatcher({ build, context, reloadFn });
   envWatcher({ context });
 
-  // Start server
   context.print.log('Starting Lowdefy development server.');
   expressApp.listen(expressApp.get('port'), function () {
     context.print.info(`Development server listening on port ${options.port}`);
