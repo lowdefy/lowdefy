@@ -57,13 +57,13 @@ class RequestController {
     });
 
     this.checkConnectionRead({
+      connectionId: request.connectionId,
       connectionProperties,
-      connection,
       checkRead: requestDefinition.checkRead,
     });
     this.checkConnectionWrite({
+      connectionId: request.connectionId,
       connectionProperties,
-      connection,
       checkWrite: requestDefinition.checkWrite,
     });
 
@@ -176,15 +176,15 @@ class RequestController {
     };
   }
 
-  checkConnectionRead({ connectionProperties, connection, checkRead }) {
+  checkConnectionRead({ connectionId, connectionProperties, checkRead }) {
     if (checkRead && connectionProperties.read === false) {
-      throw new ConfigurationError(`${connection.type} connection does not allow reads.`);
+      throw new ConfigurationError(`Connection "${connectionId}" does not allow reads.`);
     }
   }
 
-  checkConnectionWrite({ connectionProperties, connection, checkWrite }) {
+  checkConnectionWrite({ connectionId, connectionProperties, checkWrite }) {
     if (checkWrite && connectionProperties.write !== true) {
-      throw new ConfigurationError(`${connection.type} connection does not allow writes.`);
+      throw new ConfigurationError(`Connection "${connectionId}" does not allow writes.`);
     }
   }
 

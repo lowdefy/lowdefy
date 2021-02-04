@@ -101,7 +101,7 @@ test('insertMany mongodb error', async () => {
   };
   await resolver({ request, connection });
   await expect(resolver({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error dup key: { : "insertMany9-1" }'
+    'E11000 duplicate key error collection: test.insertMany index: _id_ dup key: { _id: "insertMany9-1" }'
   );
 });
 
