@@ -24,21 +24,21 @@ global:
     sm:
       span: 23
 
-types:
-  TitleInput:
-    url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
-  ParagraphInput:
-    url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json
-  DangerousHtml:
-    url: http://localhost:3002/meta/DangerousHtml.json
-  Html:
-    url: http://localhost:3002/meta/Html.json
-  DangerousMarkdown:
-    url: http://localhost:3003/meta/DangerousMarkdown.json
-  Markdown:
-    url: http://localhost:3003/meta/Markdown.json
-  MarkdownWithCode:
-    url: http://localhost:3003/meta/MarkdownWithCode.json
+# types:
+#   TitleInput:
+#     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
+#   ParagraphInput:
+#     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json
+#   DangerousHtml:
+#     url: http://localhost:3002/meta/DangerousHtml.json
+#   Html:
+#     url: http://localhost:3002/meta/Html.json
+#   DangerousMarkdown:
+#     url: http://localhost:3003/meta/DangerousMarkdown.json
+#   Markdown:
+#     url: http://localhost:3003/meta/Markdown.json
+#   MarkdownWithCode:
+#     url: http://localhost:3003/meta/MarkdownWithCode.json
 
 menus:
   - id: default
@@ -372,6 +372,9 @@ menus:
           - id: _and
             type: MenuLink
             pageId: _and
+          - id: _args
+            type: MenuLink
+            pageId: _args
           - id: _array
             type: MenuLink
             pageId: _array
@@ -393,12 +396,15 @@ menus:
           - id: _event
             type: MenuLink
             pageId: _event
-          - id: _global
+          - id: _function
             type: MenuLink
-            pageId: _global
+            pageId: _function
           - id: _get
             type: MenuLink
             pageId: _get
+          - id: _global
+            type: MenuLink
+            pageId: _global
           - id: _gt
             type: MenuLink
             pageId: _gt
@@ -529,54 +535,54 @@ pages:
   - _ref: concepts/events-and-actions.yaml
   - _ref: concepts/operators.yaml
 
-  - _ref: blocks/input/AutoComplete.yaml
-  - _ref: blocks/input/ButtonSelector.yaml
-  - _ref: blocks/input/CheckboxSelector.yaml
-  - _ref: blocks/input/ChromeColorSelector.yaml
-  - _ref: blocks/input/CircleColorSelector.yaml
-  - _ref: blocks/input/ColorSelector.yaml
-  - _ref: blocks/input/CompactColorSelector.yaml
-  - _ref: blocks/input/DateRangeSelector.yaml
-  - _ref: blocks/input/DateSelector.yaml
-  - _ref: blocks/input/DateTimeSelector.yaml
-  - _ref: blocks/input/GithubColorSelector.yaml
-  - _ref: blocks/input/MonthSelector.yaml
-  - _ref: blocks/input/MultipleSelector.yaml
-  - _ref: blocks/input/NumberInput.yaml
-  - _ref: blocks/input/Pagination.yaml
-  - _ref: blocks/input/ParagraphInput.yaml
-  - _ref: blocks/input/RadioSelector.yaml
-  - _ref: blocks/input/RatingSlider.yaml
-  - _ref: blocks/input/S3UploadButton.yaml
-  - _ref: blocks/input/Selector.yaml
-  - _ref: blocks/input/SliderColorSelector.yaml
-  - _ref: blocks/input/SwatchesColorSelector.yaml
-  - _ref: blocks/input/Switch.yaml
-  - _ref: blocks/input/TextArea.yaml
-  - _ref: blocks/input/TextInput.yaml
-  - _ref: blocks/input/TitleInput.yaml
-  - _ref: blocks/input/TwitterColorSelector.yaml
-  - _ref: blocks/input/WeekSelector.yaml
+  # - _ref: blocks/input/AutoComplete.yaml
+  # - _ref: blocks/input/ButtonSelector.yaml
+  # - _ref: blocks/input/CheckboxSelector.yaml
+  # - _ref: blocks/input/ChromeColorSelector.yaml
+  # - _ref: blocks/input/CircleColorSelector.yaml
+  # - _ref: blocks/input/ColorSelector.yaml
+  # - _ref: blocks/input/CompactColorSelector.yaml
+  # - _ref: blocks/input/DateRangeSelector.yaml
+  # - _ref: blocks/input/DateSelector.yaml
+  # - _ref: blocks/input/DateTimeSelector.yaml
+  # - _ref: blocks/input/GithubColorSelector.yaml
+  # - _ref: blocks/input/MonthSelector.yaml
+  # - _ref: blocks/input/MultipleSelector.yaml
+  # - _ref: blocks/input/NumberInput.yaml
+  # - _ref: blocks/input/Pagination.yaml
+  # - _ref: blocks/input/ParagraphInput.yaml
+  # - _ref: blocks/input/RadioSelector.yaml
+  # - _ref: blocks/input/RatingSlider.yaml
+  # - _ref: blocks/input/S3UploadButton.yaml
+  # - _ref: blocks/input/Selector.yaml
+  # - _ref: blocks/input/SliderColorSelector.yaml
+  # - _ref: blocks/input/SwatchesColorSelector.yaml
+  # - _ref: blocks/input/Switch.yaml
+  # - _ref: blocks/input/TextArea.yaml
+  # - _ref: blocks/input/TextInput.yaml
+  # - _ref: blocks/input/TitleInput.yaml
+  # - _ref: blocks/input/TwitterColorSelector.yaml
+  # - _ref: blocks/input/WeekSelector.yaml
 
-  - _ref: blocks/display/Alert.yaml
-  - _ref: blocks/display/Anchor.yaml
-  - _ref: blocks/display/Avatar.yaml
-  - _ref: blocks/display/Breadcrumb.yaml
-  - _ref: blocks/display/Button.yaml
-  - _ref: blocks/display/DangerousHtml.yaml
-  - _ref: blocks/display/DangerousMarkdown.yaml
-  - _ref: blocks/display/Descriptions.yaml
-  - _ref: blocks/display/Divider.yaml
-  - _ref: blocks/display/Html.yaml
-  - _ref: blocks/display/Icon.yaml
-  - _ref: blocks/display/Markdown.yaml
-  - _ref: blocks/display/MarkdownWithCode.yaml
-  - _ref: blocks/display/Menu.yaml
-  - _ref: blocks/display/Paragraph.yaml
-  - _ref: blocks/display/Progress.yaml
-  - _ref: blocks/display/Skeleton.yaml
-  - _ref: blocks/display/Statistic.yaml
-  - _ref: blocks/display/Title.yaml
+  # - _ref: blocks/display/Alert.yaml
+  # - _ref: blocks/display/Anchor.yaml
+  # - _ref: blocks/display/Avatar.yaml
+  # - _ref: blocks/display/Breadcrumb.yaml
+  # - _ref: blocks/display/Button.yaml
+  # - _ref: blocks/display/DangerousHtml.yaml
+  # - _ref: blocks/display/DangerousMarkdown.yaml
+  # - _ref: blocks/display/Descriptions.yaml
+  # - _ref: blocks/display/Divider.yaml
+  # - _ref: blocks/display/Html.yaml
+  # - _ref: blocks/display/Icon.yaml
+  # - _ref: blocks/display/Markdown.yaml
+  # - _ref: blocks/display/MarkdownWithCode.yaml
+  # - _ref: blocks/display/Menu.yaml
+  # - _ref: blocks/display/Paragraph.yaml
+  # - _ref: blocks/display/Progress.yaml
+  # - _ref: blocks/display/Skeleton.yaml
+  # - _ref: blocks/display/Statistic.yaml
+  # - _ref: blocks/display/Title.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml
@@ -595,6 +601,7 @@ pages:
   - _ref: actions/Validate.yaml
 
   - _ref: operators/_and.yaml
+  - _ref: operators/_args.yaml
   - _ref: operators/_array.yaml
   - _ref: operators/_base64.yaml
   - _ref: operators/_date.yaml
@@ -602,8 +609,9 @@ pages:
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
   - _ref: operators/_event.yaml
-  - _ref: operators/_global.yaml
+  - _ref: operators/_function.yaml
   - _ref: operators/_get.yaml
+  - _ref: operators/_global.yaml
   - _ref: operators/_gt.yaml
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml

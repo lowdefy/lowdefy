@@ -21,6 +21,7 @@ import _date from './date';
 import _divide from './divide';
 import _eq from './eq';
 import _event from './event';
+import _function from './function';
 import _get from './get';
 import _global from './global';
 import _gt from './gt';
@@ -59,6 +60,7 @@ export default {
   _divide,
   _eq,
   _event,
+  _function,
   _get,
   _global,
   _gt,

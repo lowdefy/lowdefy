@@ -16,6 +16,7 @@
 
 import path from 'path';
 import { spawnSync } from 'child_process';
+import { cleanDirectory } from '@lowdefy/node-utils';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
 import startUp from '../../utils/startUp';
@@ -97,6 +98,10 @@ async function buildNetlify(options) {
   });
   context.print.log(`Netlify functions artifacts moved to "./lowdefy/functions".`);
 
+  context.print.log(`Cleaning "./node_modules".`);
+  cleanDirectory('./node_modules');
+
+  context.print.log(`Moving Lowdefy server node_modules.`);
   proccessOutput = spawnSync('cp', [
     '-r',
     path.resolve(netlifyDir, 'package/node_modules'),
