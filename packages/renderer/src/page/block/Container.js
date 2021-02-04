@@ -60,12 +60,12 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
       makeCssClass={makeCssClass}
     >
       <Component
-        methods={{
+        methods={Object.assign(block.methods, {
           makeCssClass,
           registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           triggerEvent: block.triggerEvent,
-        }}
+        })}
         blockId={block.blockId}
         content={content}
         events={block.eval.events}
