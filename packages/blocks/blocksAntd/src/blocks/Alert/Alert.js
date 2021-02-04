@@ -20,11 +20,16 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const AlertBlock = ({ blockId, methods, properties }) => {
+const AlertBlock = ({ blockId, events, methods, properties }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+      <Icon
+        blockId={`${blockId}_icon`}
+        events={events}
+        methods={methods}
+        properties={properties.icon}
+      />
     );
   }
   return (

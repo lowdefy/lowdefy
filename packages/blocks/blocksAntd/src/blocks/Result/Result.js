@@ -20,7 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const ResultBlock = ({ blockId, content, methods, properties }) => (
+const ResultBlock = ({ blockId, events, content, methods, properties }) => (
   <Result
     id={blockId}
     title={properties.title}
@@ -28,7 +28,12 @@ const ResultBlock = ({ blockId, content, methods, properties }) => (
     status={properties.status}
     icon={
       properties.icon && (
-        <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+        <Icon
+          blockId={`${blockId}_icon`}
+          events={events}
+          methods={methods}
+          properties={properties.icon}
+        />
       )
     }
     extra={content.extra && content.extra({ justifyContent: 'center' })}

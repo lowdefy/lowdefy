@@ -25,6 +25,7 @@ import getUniqueValues from '../../getUniqueValues';
 
 const CheckboxSelector = ({
   blockId,
+  events,
   loading,
   properties,
   required,
@@ -36,6 +37,7 @@ const CheckboxSelector = ({
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

@@ -20,13 +20,18 @@ import { Badge } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const BadgeBlock = ({ blockId, content, properties, methods }) => (
+const BadgeBlock = ({ blockId, events, content, properties, methods }) => (
   <Badge
     id={blockId}
     color={properties.color}
     count={
       (properties.icon && (
-        <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+        <Icon
+          blockId={`${blockId}_icon`}
+          events={events}
+          properties={properties.icon}
+          methods={methods}
+        />
       )) ||
       properties.count
     }

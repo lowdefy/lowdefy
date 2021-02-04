@@ -25,6 +25,7 @@ const Option = AutoComplete.Option;
 
 const AutoCompleteInput = ({
   blockId,
+  events,
   loading,
   methods,
   properties,
@@ -35,6 +36,7 @@ const AutoCompleteInput = ({
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

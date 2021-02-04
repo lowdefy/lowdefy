@@ -19,10 +19,20 @@ import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Label from '../Label/Label';
 
-const NumberInput = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const NumberInput = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

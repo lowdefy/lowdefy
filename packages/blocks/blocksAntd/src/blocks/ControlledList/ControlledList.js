@@ -21,7 +21,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Button from '../Button/Button';
 
-const ControlledListBlock = ({ blockId, properties, list, methods }) => {
+const ControlledListBlock = ({ blockId, events, properties, list, methods }) => {
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
@@ -61,6 +61,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
             {properties.addToFront && !properties.hideAddButton && (
               <Button
                 blockId={`${blockId}_add_button`}
+                events={events}
                 properties={{
                   title: get(properties, 'addItemButton.title ') || 'Add Item',
                   size: properties.size,
@@ -82,6 +83,7 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
             <br />
             <Button
               blockId={`${blockId}_add_button`}
+              events={events}
               properties={{
                 title: get(properties, 'addItemButton.title ') || 'Add Item',
                 type: 'primary',
@@ -104,8 +106,10 @@ const ControlledListBlock = ({ blockId, properties, list, methods }) => {
           className={methods.makeCssClass([styles.item, properties.itemStyle])}
           actions={
             !properties.hideRemoveButton && [
+              // eslint-disable-next-line react/jsx-key
               <Button
                 blockId={`${blockId}_${i}_remove_button`}
+                events={events}
                 properties={{
                   title: '',
                   type: 'danger',

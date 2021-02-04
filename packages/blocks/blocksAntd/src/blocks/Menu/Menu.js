@@ -64,7 +64,7 @@ const getNestedColors = (menuColor, background) => {
   };
 };
 
-const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
+const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename }) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',
@@ -174,6 +174,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                   link.properties.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
+                      events={events}
                       methods={methods}
                       properties={link.properties.icon}
                     />
@@ -204,6 +205,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                                 subLinkGroup.properties.icon && (
                                   <Icon
                                     blockId={`${subLinkGroup.id}_icon`}
+                                    events={events}
                                     methods={methods}
                                     properties={subLinkGroup.properties.icon}
                                   />
@@ -233,6 +235,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                             subLink.properties.icon && (
                               <Icon
                                 blockId={`${subLink.id}_icon`}
+                                events={events}
                                 methods={methods}
                                 properties={subLink.properties.icon}
                               />
@@ -264,6 +267,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                   link.properties.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
+                      events={events}
                       methods={methods}
                       properties={link.properties.icon}
                     />

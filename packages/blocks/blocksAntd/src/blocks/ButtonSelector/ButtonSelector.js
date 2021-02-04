@@ -23,11 +23,21 @@ import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';
 
-const ButtonSelector = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const ButtonSelector = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

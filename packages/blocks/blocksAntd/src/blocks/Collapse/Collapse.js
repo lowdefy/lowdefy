@@ -21,7 +21,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const CollapseBlock = ({ blockId, content, methods, properties }) => {
+const CollapseBlock = ({ blockId, events, content, methods, properties }) => {
   const panels =
     properties.panels ||
     Object.keys(content)
@@ -47,6 +47,7 @@ const CollapseBlock = ({ blockId, content, methods, properties }) => {
         (({ isActive }) => (
           <Icon
             blockId={`${blockId}_expandIcon`}
+            events={events}
             properties={{ rotate: isActive ? 90 : 0, ...propertiesIconExpand }}
             methods={methods}
           />

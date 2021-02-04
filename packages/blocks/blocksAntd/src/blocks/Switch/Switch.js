@@ -22,7 +22,16 @@ import { type, serializer } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 
-const SwitchBlock = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const SwitchBlock = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   let propertiesIconChecked = serializer.copy(properties.checkedIcon);
   if (type.isString(propertiesIconChecked)) {
     propertiesIconChecked = { name: propertiesIconChecked };
@@ -34,6 +43,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
   return (
     <Label
       blockId={blockId}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -60,6 +70,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
               ) : (
                 <Icon
                   blockId={`${blockId}_checkedIcon`}
+                  events={events}
                   methods={methods}
                   properties={{
                     name: 'CheckOutlined',
@@ -74,6 +85,7 @@ const SwitchBlock = ({ blockId, loading, methods, properties, required, validati
               ) : (
                 <Icon
                   blockId={`${blockId}_uncheckedIcon`}
+                  events={events}
                   methods={methods}
                   properties={{
                     name: 'CloseOutlined',

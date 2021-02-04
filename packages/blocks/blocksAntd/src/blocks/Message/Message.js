@@ -21,7 +21,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const MessageBlock = ({ blockId, properties, methods }) => {
+const MessageBlock = ({ blockId, events, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       message[args.status || properties.status || 'success']({
@@ -30,7 +30,12 @@ const MessageBlock = ({ blockId, properties, methods }) => {
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: properties.icon && (
-          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={properties.icon}
+            methods={methods}
+          />
         ),
         className: methods.makeCssClass(properties.messageStyle),
       });

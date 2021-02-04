@@ -22,10 +22,20 @@ import Label from '../Label/Label';
 
 const TextAreaComp = Input.TextArea;
 
-const TextAreaBlock = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const TextAreaBlock = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}

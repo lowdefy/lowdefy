@@ -28,8 +28,8 @@ const List = ({ blockId, events, list, methods, properties }) => {
   }, []);
   return (
     <Box
-      events={events}
       blockId={blockId}
+      events={events}
       properties={{ style: properties.style }}
       methods={methods}
       content={{

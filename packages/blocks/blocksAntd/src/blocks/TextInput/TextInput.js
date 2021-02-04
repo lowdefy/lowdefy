@@ -21,10 +21,20 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
 
-const TextInput = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const TextInput = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -52,6 +62,7 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
                 (properties.prefixIcon && (
                   <Icon
                     blockId={`${blockId}_prefixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.prefixIcon}
                   />
@@ -62,6 +73,7 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
                 (properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon}
                   />
