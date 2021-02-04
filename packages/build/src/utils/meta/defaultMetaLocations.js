@@ -22,6 +22,9 @@ const defaultMetaLocations = {
   Box: {
     url: 'https://unpkg.com/@lowdefy/blocks-basic@^3.0.0/dist/meta/Box.json',
   },
+  DangerousHtml: {
+    url: 'https://unpkg.com/@lowdefy/blocks-basic@^3.0.0/dist/meta/DangerousHtml.json',
+  },
   Html: {
     url: 'https://unpkg.com/@lowdefy/blocks-basic@^3.0.0/dist/meta/Html.json',
   },
@@ -270,8 +273,11 @@ const defaultMetaLocations = {
   Markdown: {
     url: 'https://unpkg.com/@lowdefy/blocks-markdown@^3.0.0/dist/meta/Markdown.json',
   },
-  MarkdownWithHtml: {
-    url: 'https://unpkg.com/@lowdefy/blocks-markdown@^3.0.0/dist/meta/MarkdownWithHtml.json',
+  MarkdownWithCode: {
+    url: 'https://unpkg.com/@lowdefy/blocks-markdown@^3.0.0/dist/meta/MarkdownWithCode.json',
+  },
+  DangerousMarkdown: {
+    url: 'https://unpkg.com/@lowdefy/blocks-markdown@^3.0.0/dist/meta/DangerousMarkdown.json',
   },
 };
 
