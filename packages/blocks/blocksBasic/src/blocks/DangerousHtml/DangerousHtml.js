@@ -18,7 +18,7 @@ import React from 'react';
 import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-class HtmlBlock extends React.Component {
+class DangerousHtml extends React.Component {
   constructor(props) {
     super(props);
     this.div = {
@@ -55,6 +55,6 @@ class HtmlBlock extends React.Component {
   }
 }
 
-HtmlBlock.defaultProps = blockDefaultProps;
+DangerousHtml.defaultProps = blockDefaultProps;
 
-export default HtmlBlock;
+export default DangerousHtml;
