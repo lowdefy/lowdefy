@@ -46,6 +46,20 @@ _ref:
           ```
         description: |
           The `_array.copyWithin` method [copies part of an array to another location in the same array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin) without modifying its length.
+      - name: every
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): boolean
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): boolean
+          ```
+        description: |
+          The `_array.every` method  tests whether [all elements in the array pass](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every) the test implemented by the provided function. It returns a Boolean value.
       - name: fill
         types: |
           ```
@@ -64,6 +78,48 @@ _ref:
           ```
         description: |
           The `_array.fill` method [changes all elements in an array to a static value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill), from a `start` index to an `end` index.
+      - name: filter
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): any[]
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): any[]
+          ```
+        description: |
+          The `_array.filter` method returns [an array with all elements that pass the test](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) implemented by the provided function.
+      - name: find
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): any
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): any
+          ```
+        description: |
+          The `_array.find` method returns the value of the [first element in the provided array that satisfies the provided testing function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find). If no values satisfies the testing function, undefined is returned.
+      - name: findIndex
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): number
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): number
+          ```
+        description: |
+          The `_array.findIndex` method returns [the index of the first element in the array that satisfies the provided testing function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex). Otherwise, it returns -1, indicating that no element passed the test.
       - name: flat
         types: |
           ```
@@ -111,6 +167,52 @@ _ref:
           ```
         description: |
           The `_array.length` method returns the [number of elements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) in the array.
+      - name: map
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): any[]
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): any[]
+          ```
+        description: |
+          The `_array.map` method returns an array populated with the results of [calling a provided function on every element](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) in the provided array.
+      - name: reduce
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+            initialValue?: any
+          }): any
+          (arguments: [
+            on: any[],
+            callback: function,
+            initialValue?: any
+          ]): any
+          ```
+        description: |
+          The `_array.reduce` method [executes a reducer function on each element of the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce), resulting in single output value.
+      - name: reduceRight
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+            initialValue?: any
+          }): any
+          (arguments: [
+            on: any[],
+            callback: function,
+            initialValue?: any
+          ]): any
+          ```
+        description: |
+          The `_array.reduceRight` method [applies a function against an accumulator and each value of the array (from right-to-left)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/ReduceRight) to reduce it to a single value.
       - name: reverse
         types: |
           ```
@@ -134,6 +236,20 @@ _ref:
           ```
         description: |
           The `_array.slice` method returns [a portion of an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) selected from `start` to `end` (end not included) where `start` and `end` represent the index of items in that array.
+      - name: some
+        types: |
+          ```
+          (arguments: {
+            on: any[],
+            callback: function,
+          }): boolean
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): boolean
+          ```
+        description: |
+          The `_array.some` method tests whether [at least one element in the array passes the test](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some) implemented by the provided function. It returns a Boolean value.
       - name: sort
         types: |
           ```

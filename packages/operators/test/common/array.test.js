@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
+import NodeParser from '../../src/nodeParser';
 import array from '../../src/common/array';
+import _function from '../../src/common/function';
+
+const parser = new NodeParser();
 
 const location = 'locationId';
 
@@ -129,6 +133,71 @@ describe('_array.copyWithin', () => {
   });
 });
 
+describe('_array.every', () => {
+  const methodName = 'every';
+  const callback = _function({ params: { __gt: [{ __args: '0' }, 3] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [4, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      array({
+        params: [[4, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.every must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.every\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.every - 1 is not a function Received: {\\"_array.every\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.every accepts one of the following types: array, object.
+            Received: {\\"_array.every\\":null} at locationId."
+    `);
+  });
+});
+
 describe('_array.fill', () => {
   const methodName = 'fill';
   test('valid', () => {
@@ -184,6 +253,171 @@ describe('_array.fill', () => {
     ).toThrowErrorMatchingInlineSnapshot(`
       "Operator Error: _array.fill accepts one of the following types: array, object.
             Received: {\\"_array.fill\\":null} at locationId."
+    `);
+  });
+});
+
+describe('_array.filter', () => {
+  const methodName = 'filter';
+  const callback = _function({ params: { __gt: [{ __args: '0' }, 3] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual([5, 6]);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual([5, 6]);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.filter must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.filter\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.filter - 1 is not a function Received: {\\"_array.filter\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.filter accepts one of the following types: array, object.
+            Received: {\\"_array.filter\\":null} at locationId."
+    `);
+  });
+});
+
+describe('_array.find', () => {
+  const methodName = 'find';
+  const callback = _function({ params: { __gt: [{ __args: '0' }, 3] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(5);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(5);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.find must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.find\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.find - 1 is not a function Received: {\\"_array.find\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.find accepts one of the following types: array, object.
+            Received: {\\"_array.find\\":null} at locationId."
+    `);
+  });
+});
+
+describe('_array.findIndex', () => {
+  const methodName = 'findIndex';
+  const callback = _function({ params: { __gt: [{ __args: '0' }, 3] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(1);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(1);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.findIndex must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.findIndex\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.findIndex - 1 is not a function Received: {\\"_array.findIndex\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.findIndex accepts one of the following types: array, object.
+            Received: {\\"_array.findIndex\\":null} at locationId."
     `);
   });
 });
@@ -469,6 +703,193 @@ describe('_array.lastIndexOf', () => {
   });
 });
 
+describe('_array.map', () => {
+  const methodName = 'map';
+  const callback = _function({ params: { __sum: [{ __args: '0' }, 1] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual([2, 6, 7]);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual([2, 6, 7]);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.map must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.map\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.map - 1 is not a function Received: {\\"_array.map\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.map accepts one of the following types: array, object.
+            Received: {\\"_array.map\\":null} at locationId."
+    `);
+  });
+});
+
+describe('_array.reduce', () => {
+  const methodName = 'reduce';
+  const callback = _function({ params: { __sum: [{ __args: '0' }, { __args: '1' }] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(12);
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+          initialValue: 8,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(20);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(12);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.reduce must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.reduce\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduce - 1 is not a function Received: {\\"_array.reduce\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.reduce accepts one of the following types: array, object.
+            Received: {\\"_array.reduce\\":null} at locationId."
+    `);
+  });
+});
+
+describe('_array.reduceRight', () => {
+  const methodName = 'reduceRight';
+  const callback = _function({ params: { __sum: [{ __args: '0' }, { __args: '1' }] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(12);
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+          initialValue: 8,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(20);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(12);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.reduceRight must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.reduceRight\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduceRight - 1 is not a function Received: {\\"_array.reduceRight\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.reduceRight accepts one of the following types: array, object.
+            Received: {\\"_array.reduceRight\\":null} at locationId."
+    `);
+  });
+});
+
 describe('_array.reverse', () => {
   const methodName = 'reverse';
   test('valid', () => {
@@ -618,6 +1039,71 @@ describe('_array.splice', () => {
   });
 });
 
+describe('_array.some', () => {
+  const methodName = 'some';
+  const callback = _function({ params: { __gt: [{ __args: '0' }, 3] }, parser });
+  test('valid', () => {
+    expect(
+      array({
+        params: {
+          on: [1, 2, 2],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      array({
+        params: {
+          on: [1, 5, 6],
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      array({
+        params: [[1, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+  });
+  test('throw', () => {
+    expect(() =>
+      array({
+        params: { on: 0 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.some must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
+          Received: {\\"_array.some\\":{\\"on\\":0}} at locationId."
+    `);
+    expect(() =>
+      array({
+        params: { on: [], callback: 1 },
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.some - 1 is not a function Received: {\\"_array.some\\":{\\"on\\":[],\\"callback\\":1}} at locationId."`
+    );
+    expect(() =>
+      array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _array.some accepts one of the following types: array, object.
+            Received: {\\"_array.some\\":null} at locationId."
+    `);
+  });
+});
+
 describe('_array.sort', () => {
   const methodName = 'sort';
   test('valid', () => {
@@ -731,7 +1217,7 @@ describe('_array.length', () => {
 
 test('_array called with no method or params', () => {
   expect(() => array({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _array.undefined is not supported, use one of the following: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
+    "Operator Error: _array.undefined is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length.
           Received: {\\"_array.undefined\\":undefined} at locationId."
   `);
 });
@@ -739,7 +1225,7 @@ test('_array called with no method or params', () => {
 test('_array invalid method', () => {
   expect(() => array({ params: [['a']], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _array.X is not supported, use one of the following: concat, copyWithin, fill, flat, includes, indexOf, join, lastIndexOf, reverse, slice, sort, splice, length.
+    "Operator Error: _array.X is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length.
           Received: {\\"_array.X\\":[[\\"a\\"]]} at locationId."
   `);
 });
