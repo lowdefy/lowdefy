@@ -295,6 +295,7 @@ class Blocks {
     this.loopBlocks((block) => {
       if (block.meta.category === 'input') {
         const stateValue = get(this.context.state, block.field);
+        // TODO: related to #345
         // enforce type here? should we reassign value here??
         block.value = type.isUndefined(stateValue) ? block.value : stateValue;
       }
