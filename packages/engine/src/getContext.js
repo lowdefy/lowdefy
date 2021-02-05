@@ -22,10 +22,10 @@ import Requests from './Requests';
 import State from './State';
 
 const blockData = ({
-  actions,
   areas,
   blockId,
   blocks,
+  events,
   field,
   id,
   layout,
@@ -39,10 +39,10 @@ const blockData = ({
   validate,
   visible,
 }) => ({
-  actions,
   areas,
   blockId,
   blocks,
+  events,
   field,
   id,
   layout,
