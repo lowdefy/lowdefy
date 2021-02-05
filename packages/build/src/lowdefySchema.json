@@ -7,10 +7,7 @@
     "connection": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string",
@@ -42,10 +39,7 @@
     "block": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string",
@@ -57,6 +51,12 @@
           "type": "string",
           "errorMessage": {
             "type": "Block \"type\" should be a string."
+          }
+        },
+        "field": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Block \"field\" should be a string."
           }
         },
         "properties": {
@@ -163,11 +163,7 @@
     "request": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type",
-        "connectionId"
-      ],
+      "required": ["id", "type", "connectionId"],
       "properties": {
         "id": {
           "type": "string",
@@ -206,10 +202,7 @@
     "menuLink": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string",
@@ -253,10 +246,7 @@
     "menuGroup": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string",
@@ -307,9 +297,7 @@
     "menu": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id"
-      ],
+      "required": ["id"],
       "properties": {
         "id": {
           "type": "string",
@@ -343,10 +331,7 @@
     "action": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
+      "required": ["id", "type"],
       "properties": {
         "id": {
           "type": "string",
@@ -385,9 +370,7 @@
     }
   },
   "additionalProperties": false,
-  "required": [
-    "lowdefy"
-  ],
+  "required": ["lowdefy"],
   "properties": {
     "name": {
       "type": "string",
