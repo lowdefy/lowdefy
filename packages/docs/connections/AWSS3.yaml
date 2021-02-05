@@ -20,7 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             AWS S3 is a file or data storage solution, provided by Amazon Web Services. S3 does not work like a traditional file system, data is stored as objects in a collection of objects called a bucket.
@@ -97,7 +97,7 @@ _ref:
                     blocks:
                       - id: getFileButton
                         type: Button
-                        actions:
+                        events:
                           onClick:
                             - id: open_file
                               type: Link

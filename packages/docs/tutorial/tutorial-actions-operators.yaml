@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-requests
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](tutorial-add-blocks-config).
@@ -57,7 +57,7 @@ _ref:
                       type: default
                       icon: ClearOutlined
             ################ -------- Copy from here -------- ################
-                    actions:
+                    events:
                       onClick:
                         - id: reset
                           type: Reset
@@ -96,7 +96,7 @@ _ref:
         properties:
           title: Title
       - id: md2
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
@@ -126,7 +126,7 @@ _ref:
                       type: primary
                       icon: SaveOutlined
             ################ -------- Copy from here -------- ################
-                    actions:
+                    events:
                       onClick:
                         - id: validate
                           type: Validate
@@ -181,7 +181,7 @@ _ref:
                   block: true
                   type: default
                   icon: ClearOutlined
-                actions:
+                events:
                   onClick:
                     - id: reset
                       type: Reset
@@ -194,12 +194,12 @@ _ref:
                   block: true
                   type: primary
                   icon: SaveOutlined
-                actions:
+                events:
                   onClick:
                     - id: validate
                       type: Validate
       - id: md3
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           renderHtml: true
           content: |
@@ -313,7 +313,7 @@ _ref:
             minHeight: 300px
           menu:
             links: []
-        actions:
+        events:
           onInit:
             - id: init
               type: SetState
@@ -379,7 +379,7 @@ _ref:
                   block: true # Make the button fill all the space available to it
                   type: default # Make the button a plain button
                   icon: ClearOutlined
-                actions:
+                events:
                   onClick:
                     - id: reset
                       type: Reset
@@ -392,12 +392,12 @@ _ref:
                   block: true
                   type: primary # Make the button a primary button with color
                   icon: SaveOutlined
-                actions:
+                events:
                   onClick:
                     - id: validate
                       type: Validate
       - id: md4
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             > You can find the final configuration files for this section [here](tutorial-actions-operators-config).

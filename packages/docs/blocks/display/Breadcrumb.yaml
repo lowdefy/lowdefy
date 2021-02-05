@@ -36,7 +36,7 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    available_actions_description: |
+    event_description: |
       ###### onClick
       Triggered when breadcrumb item is clicked. Provides clicked link and index as args.
     examples:

@@ -14,259 +14,254 @@
   limitations under the License.
 */
 
+import { version } from '../../../package.json';
+
 const defaultMetaLocations = {
   // @lowdefy/blocks-basic
   Context: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/Context.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Context.json`,
   },
   Box: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/Box.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Box.json`,
   },
   DangerousHtml: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/DangerousHtml.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/DangerousHtml.json`,
   },
   Html: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/Html.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Html.json`,
   },
   List: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/List.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/List.json`,
   },
   Span: {
-    url: 'https://unpkg.com/@lowdefy/blocks-basic@3.5.0/dist/meta/Span.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-basic/meta/Span.json`,
   },
 
   // @lowdefy/blocks-antd
   Affix: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Affix.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Affix.json`,
   },
   Alert: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Alert.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Alert.json`,
   },
   Anchor: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Anchor.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Anchor.json`,
   },
   AutoComplete: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/AutoComplete.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/AutoComplete.json`,
   },
   Avatar: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Avatar.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Avatar.json`,
   },
   Badge: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Badge.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Badge.json`,
   },
   Breadcrumb: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Breadcrumb.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Breadcrumb.json`,
   },
   Button: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Button.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Button.json`,
   },
   ButtonSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/ButtonSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ButtonSelector.json`,
   },
   Card: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Card.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Card.json`,
   },
   CheckboxSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/CheckboxSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/CheckboxSelector.json`,
   },
   Collapse: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Collapse.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Collapse.json`,
   },
   Comment: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Comment.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Comment.json`,
   },
   ConfirmModal: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/ConfirmModal.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ConfirmModal.json`,
   },
   Content: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Content.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Content.json`,
   },
   ControlledList: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/ControlledList.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ControlledList.json`,
   },
   DateRangeSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/DateRangeSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/DateRangeSelector.json`,
   },
   DateSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/DateSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/DateSelector.json`,
   },
   DateTimeSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/DateTimeSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/DateTimeSelector.json`,
   },
   Descriptions: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Descriptions.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Descriptions.json`,
   },
   Divider: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Divider.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Divider.json`,
   },
   Drawer: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Drawer.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Drawer.json`,
   },
   Footer: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Footer.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Footer.json`,
   },
   Header: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Header.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Header.json`,
   },
   Icon: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Icon.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Icon.json`,
   },
   Label: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Label.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Label.json`,
   },
   Layout: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Layout.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Layout.json`,
   },
   Menu: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Menu.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Menu.json`,
   },
   Message: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Message.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Message.json`,
   },
   MobileMenu: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/MobileMenu.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/MobileMenu.json`,
   },
   Modal: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Modal.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Modal.json`,
   },
   MonthSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/MonthSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/MonthSelector.json`,
   },
   MultipleSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/MultipleSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/MultipleSelector.json`,
   },
   Notification: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Notification.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Notification.json`,
   },
   NumberInput: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/NumberInput.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/NumberInput.json`,
   },
   PageHCF: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageHCF.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageHCF.json`,
   },
   PageHCSF: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageHCSF.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageHCSF.json`,
   },
   PageHeaderMenu: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageHeaderMenu.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageHeaderMenu.json`,
   },
   PageHSCF: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageHSCF.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageHSCF.json`,
   },
   PageSHCF: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageSHCF.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageSHCF.json`,
   },
   PageSiderMenu: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/PageSiderMenu.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/PageSiderMenu.json`,
   },
   Pagination: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Pagination.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Pagination.json`,
   },
   Paragraph: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Paragraph.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Paragraph.json`,
   },
   ParagraphInput: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/ParagraphInput.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/ParagraphInput.json`,
   },
   Progress: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Progress.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Progress.json`,
   },
   RadioSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/RadioSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/RadioSelector.json`,
   },
   RatingSlider: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/RatingSlider.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/RatingSlider.json`,
   },
   Result: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Result.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Result.json`,
   },
   S3UploadButton: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/S3UploadButton.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/S3UploadButton.json`,
   },
   Selector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Selector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Selector.json`,
   },
   Slider: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Slider.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Slider.json`,
   },
   Skeleton: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Skeleton.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Skeleton.json`,
   },
   Spin: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Spin.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Spin.json`,
   },
   Statistic: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Statistic.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Statistic.json`,
   },
   Switch: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Switch.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Switch.json`,
   },
   Tabs: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Tabs.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Tabs.json`,
   },
   TextArea: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/TextArea.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TextArea.json`,
   },
   TextInput: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/TextInput.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TextInput.json`,
   },
   Timeline: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Timeline.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Timeline.json`,
   },
   Title: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/Title.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Title.json`,
   },
   TitleInput: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/TitleInput.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TitleInput.json`,
   },
   UserAvatar: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/UserAvatar.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/UserAvatar.json`,
   },
   WeekSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-antd@3.5.0/dist/meta/WeekSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/WeekSelector.json`,
   },
 
-  // @lowdefy/blocks-color-selectors
+  // @lowdefy/blocks-color-selectors-selectors
   ColorSelector: {
-    url: 'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/ColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/ColorSelector.json`,
   },
   ChromeColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/ChromeColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/ChromeColorSelector.json`,
   },
   CircleColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/CircleColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/CircleColorSelector.json`,
   },
   CompactColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/CompactColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/CompactColorSelector.json`,
   },
   GithubColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/GithubColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/GithubColorSelector.json`,
   },
   SliderColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/SliderColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/SliderColorSelector.json`,
   },
   SwatchesColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/SwatchesColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/SwatchesColorSelector.json`,
   },
   TwitterColorSelector: {
-    url:
-      'https://unpkg.com/@lowdefy/blocks-color-selectors@3.5.0/dist/meta/TwitterColorSelector.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/TwitterColorSelector.json`,
   },
   // @lowdefy/blocks-markdown
   Markdown: {
-    url: 'https://unpkg.com/@lowdefy/blocks-markdown@3.5.0/dist/meta/Markdown.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-markdown/meta/Markdown.json`,
   },
   MarkdownWithCode: {
-    url: 'https://unpkg.com/@lowdefy/blocks-markdown@3.5.0/dist/meta/MarkdownWithCode.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-markdown/meta/MarkdownWithCode.json`,
   },
   DangerousMarkdown: {
-    url: 'https://unpkg.com/@lowdefy/blocks-markdown@3.5.0/dist/meta/DangerousMarkdown.json',
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-markdown/meta/DangerousMarkdown.json`,
   },
 };
 

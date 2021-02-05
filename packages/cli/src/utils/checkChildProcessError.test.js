@@ -24,18 +24,18 @@ const context = {
 };
 
 test('output status 0', () => {
-  checkChildProcessError({ context, proccessOutput: { status: 0 }, message: 'Test Error Message' });
+  checkChildProcessError({ context, processOutput: { status: 0 }, message: 'Test Error Message' });
   // checkChildProcessError should not throw, expect is so that test passes
   expect(true).toBe(true);
 });
 
 test('output status 1', () => {
-  const proccessOutput = {
+  const processOutput = {
     status: 1,
     stderr: Buffer.from('Process error message'),
   };
   expect(() =>
-    checkChildProcessError({ context, proccessOutput, message: 'Test Error Message' })
+    checkChildProcessError({ context, processOutput, message: 'Test Error Message' })
   ).toThrow('Test Error Message');
   expect(mockError.mock.calls).toMatchInlineSnapshot(
     [['Process error message']],

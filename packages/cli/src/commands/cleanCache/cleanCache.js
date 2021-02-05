@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { cleanDirectory } from '@lowdefy/node-utils';
+import fse from 'fs-extra';
 import startUp from '../../utils/startUp';
 
 async function cleanCache(options) {
   const context = await startUp(options);
   context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
-  await cleanDirectory(context.cacheDirectory);
+  await fse.emptyDir(context.cacheDirectory);
   await context.sendTelemetry({
     data: {
       command: 'clean-cache',

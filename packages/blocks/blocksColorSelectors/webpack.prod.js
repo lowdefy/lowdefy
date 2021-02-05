@@ -22,7 +22,7 @@ const addRemoteEntryUrl = (content, absoluteFrom) => {
       module: path.basename(absoluteFrom, '.json'),
       scope,
       version: packageJson.version,
-      remoteEntryUrl: `https://unpkg.com/${packageJson.name}@${packageJson.version}/dist/remoteEntry.js`,
+      remoteEntryUrl: `https://blocks-cdn.lowdefy.com/v${packageJson.version}/blocks-color-selectors/remoteEntry.js`,
     };
   }
   return JSON.stringify(meta);

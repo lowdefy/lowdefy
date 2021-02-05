@@ -39,7 +39,7 @@ _ref:
         path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
-    available_actions_description: |
+    event_description: |
       ###### onChange
       Triggered when value is changed.
       ###### onPressEnter

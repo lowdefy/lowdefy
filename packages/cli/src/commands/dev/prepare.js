@@ -15,7 +15,7 @@
 */
 import path from 'path';
 import dotenv from 'dotenv';
-import { cleanDirectory } from '@lowdefy/node-utils';
+import fse from 'fs-extra';
 
 import startUp from '../../utils/startUp';
 
@@ -27,7 +27,7 @@ async function prepare(options) {
   context.print.log(
     `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
   );
-  await cleanDirectory(path.resolve(context.cacheDirectory, './meta'));
+  await fse.emptyDir(path.resolve(context.cacheDirectory, './meta'));
   return context;
 }
 

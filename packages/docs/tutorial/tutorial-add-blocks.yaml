@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-actions-operators
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             We would like to add an input form with the following fields:
@@ -37,7 +37,7 @@ _ref:
 
             Copy the following blocks and add them in the card's blocks array.
 
-            ###### `pages/new-ticket.yaml` 
+            ###### `pages/new-ticket.yaml`
             ```yaml
             id: new-ticket
                 # ...
@@ -149,7 +149,7 @@ _ref:
                   type: primary
                   icon: SaveOutlined
       - id: md2
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             ### What happened

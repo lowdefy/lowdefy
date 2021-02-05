@@ -20,7 +20,7 @@ _ref:
     section: Concepts
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.

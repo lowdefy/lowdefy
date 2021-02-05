@@ -34,7 +34,7 @@ _ref:
         type: Button
         properties:
           title: Reset
-        actions:
+        events:
           onClick:
             - id: reset
               type: Reset
