@@ -1,11 +1,11 @@
 name: Publish Blocks
 
 on:
-  pull_request:
-    branches: [ develop ]
-  # release:
-  #   types:
-  #     - published
+  # pull_request:
+  #   branches: [ develop ]
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -22,31 +22,31 @@ jobs:
         run: yarn build
       - name: Upload blocks-cdn.lowdefy.com/blocks-basic
         run: |
-          aws --region eu-west-1 s3 sync packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.number }}/blocks-basic --acl public-read --cache-control 'public, max-age=31536000'
+          aws --region eu-west-1 s3 sync packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-basic --acl public-read --cache-control 'public, max-age=31536000'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      # - name: Upload blocks-cdn.lowdefy.com/blocks-basic
-      #   run: |
-      #     aws --region eu-west-1 s3 cp packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-basic
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      # - name: Upload blocks-cdn.lowdefy.com/blocks-antd
-      #   run: |
-      #     aws --region eu-west-1 s3 cp packages/blocks/blocksAntd/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-antd
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      # - name: Upload blocks-cdn.lowdefy.com/blocks-markdown
-      #   run: |
-      #     aws --region eu-west-1 s3 cp packages/blocks/blocksMarkdown/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-markdown
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      # - name: Upload blocks-cdn.lowdefy.com/blocks-color
-      #   run: |
-      #     aws --region eu-west-1 s3 cp packages/blocks/blocksColor/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-antd
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksAntd/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-antd --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-markdown
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksMarkdown/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-markdown --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/blocks-color
+        run: |
+          aws --region eu-west-1 s3 sync packages/blocks/blocksColor/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      - name: Upload blocks-cdn.lowdefy.com/renderer
+        run: |
+          aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
