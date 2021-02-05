@@ -113,7 +113,6 @@ const RatingSlider = ({
               styles.content,
               {
                 paddingRight: validation.status && 30,
-                paddingTop: 18,
               },
             ])}
           >
