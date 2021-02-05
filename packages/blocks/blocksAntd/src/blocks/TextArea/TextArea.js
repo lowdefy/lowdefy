@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { Input } from 'antd';
 import Label from '../Label/Label';
+import useRunAfterUpdate from '../../useRunAfterUpdate';
 
 const TextAreaComp = Input.TextArea;
 
@@ -43,6 +44,7 @@ const TextAreaBlock = ({
       methods={methods}
       content={{
         content: () => {
+          const runAfterUpdate = useRunAfterUpdate();
           return (
             <TextAreaComp
               id={`${blockId}_input`}
@@ -52,6 +54,11 @@ const TextAreaBlock = ({
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange' });
+                const cStart = event.target.selectionStart;
+                const cEnd = event.target.selectionEnd;
+                runAfterUpdate(() => {
+                  event.target.setSelectionRange(cStart, cEnd);
+                });
               }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });

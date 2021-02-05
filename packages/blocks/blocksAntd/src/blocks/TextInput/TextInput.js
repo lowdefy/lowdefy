@@ -20,6 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
+import useRunAfterUpdate from '../../useRunAfterUpdate';
 
 const TextInput = ({
   blockId,
@@ -42,6 +43,7 @@ const TextInput = ({
       validation={validation}
       content={{
         content: () => {
+          const runAfterUpdate = useRunAfterUpdate();
           return (
             <Input
               id={`${blockId}_input`}
@@ -51,6 +53,11 @@ const TextInput = ({
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange' });
+                const cStart = event.target.selectionStart;
+                const cEnd = event.target.selectionEnd;
+                runAfterUpdate(() => {
+                  event.target.setSelectionRange(cStart, cEnd);
+                });
               }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
