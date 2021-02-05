@@ -20,7 +20,7 @@ import { Loading, loadWebpackFederatedModule, useDynamicScript } from '@lowdefy/
 
 function Shell({ version }) {
   const { ready, failed } = useDynamicScript({
-    src: `http://unpkg.com/@lowdefy/renderer@${version}/dist/remoteEntry.js`,
+    src: `https://blocks-cdn.lowdefy.com/v${version}/renderer/remoteEntry.js`,
   });
 
   if (!ready) {

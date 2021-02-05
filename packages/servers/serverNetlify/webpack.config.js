@@ -67,7 +67,7 @@ module.exports = {
         },
       },
       remotes: {
-        lowdefy_renderer: `lowdefy_renderer@https://unpkg.com/@lowdefy/renderer@${packageJson.version}/dist/remoteEntry.js`,
+        lowdefy_renderer: `lowdefy_renderer@https://blocks-cdn.lowdefy.com/v${packageJson.version}/renderer/remoteEntry.js`,
       },
     }),
     new CopyPlugin({
