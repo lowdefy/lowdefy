@@ -2,7 +2,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -60,12 +60,12 @@ class Actions {
   build(actions) {
     return actions.map((action) => ({
       ...action,
-      fn: ({ args, arrayIndices, blockId }) =>
+      fn: ({ event, arrayIndices, blockId }) =>
         get(this.actions, action.type, { default: Actions.invalidAction(action) })(
           action.params,
           action.success,
           action.error,
-          args,
+          event,
           arrayIndices,
           blockId
         ),
@@ -105,13 +105,13 @@ class Actions {
     }
   }
 
-  request(params, successMessage, errorMessage, args, arrayIndices) {
+  request(params, successMessage, errorMessage, event, arrayIndices) {
     if (type.isNone(params)) {
       // Should this resolve or error
       return Promise.resolve();
     }
     if (params.all === true) {
-      return this.context.Requests.callRequests({ args, arrayIndices })
+      return this.context.Requests.callRequests({ event, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -127,7 +127,7 @@ class Actions {
         });
     }
     if (type.isString(params)) {
-      return this.context.Requests.callRequest({ requestId: params, args, arrayIndices })
+      return this.context.Requests.callRequest({ requestId: params, event, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -143,7 +143,7 @@ class Actions {
         });
     }
     if (type.isArray(params)) {
-      return this.context.Requests.callRequests({ requestIds: params, args, arrayIndices })
+      return this.context.Requests.callRequests({ requestIds: params, event, arrayIndices })
         .then((response) => ({ successMessage, response }))
         .catch((error) => {
           if (errorMessage) {
@@ -164,10 +164,10 @@ class Actions {
     });
   }
 
-  message(params = {}, successMessage, errorMessage, args, arrayIndices, blockId) {
+  message(params = {}, successMessage, errorMessage, event, arrayIndices, blockId) {
     try {
       const { output: parsed, errors: parseErrors } = this.context.parser.parse({
-        args,
+        event,
         arrayIndices,
         input: params,
         location: blockId,
@@ -191,10 +191,10 @@ class Actions {
     }
   }
 
-  setState(value, successMessage, errorMessage, args, arrayIndices, blockId) {
+  setState(value, successMessage, errorMessage, event, arrayIndices, blockId) {
     try {
       const { output: parsed, errors: stateParseErrors } = this.context.parser.parse({
-        args,
+        event,
         arrayIndices,
         input: value,
         location: blockId,
@@ -217,10 +217,10 @@ class Actions {
     return Promise.resolve({ successMessage });
   }
 
-  setGlobal(value, successMessage, errorMessage, args, arrayIndices, blockId) {
+  setGlobal(value, successMessage, errorMessage, event, arrayIndices, blockId) {
     try {
       const { output: parsed, errors: globalParseErrors } = this.context.parser.parse({
-        args,
+        event,
         arrayIndices,
         input: value,
         location: blockId,
@@ -243,9 +243,9 @@ class Actions {
     return Promise.resolve({ successMessage });
   }
 
-  scrollTo(params, successMessage, errorMessage, args, arrayIndices, blockId) {
+  scrollTo(params, successMessage, errorMessage, event, arrayIndices, blockId) {
     const { output: parsedParams, errors: parserErrors } = this.context.parser.parse({
-      args,
+      event,
       arrayIndices,
       input: params,
       location: blockId,
@@ -273,9 +273,9 @@ class Actions {
     return Promise.resolve({ successMessage });
   }
 
-  link(params, successMessage, errorMessage, args, arrayIndices, blockId) {
+  link(params, successMessage, errorMessage, event, arrayIndices, blockId) {
     const { output: parsedParams, errors: parserErrors } = this.context.parser.parse({
-      args,
+      event,
       arrayIndices,
       input: params,
       location: blockId,

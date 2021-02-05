@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ test('CallMethod with no args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -67,10 +67,10 @@ test('CallMethod with no args, synchronous method', async () => {
   const { button, textInput } = context.RootBlocks.map;
 
   textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.callAction({ action: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual([
     {
-      args: undefined,
+      event: undefined,
       id: 'a',
       params: {
         blockId: 'textInput',
@@ -120,7 +120,7 @@ test('CallMethod method return a promise', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -143,10 +143,10 @@ test('CallMethod method return a promise', async () => {
   const { button, textInput } = context.RootBlocks.map;
 
   textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.callAction({ action: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual([
     {
-      args: undefined,
+      event: undefined,
       id: 'a',
       params: {
         blockId: 'textInput',
@@ -189,7 +189,7 @@ test('CallMethod with single arg, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -212,10 +212,10 @@ test('CallMethod with single arg, synchronous method', async () => {
   const { button, textInput } = context.RootBlocks.map;
 
   textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.callAction({ action: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual([
     {
-      args: undefined,
+      event: undefined,
       id: 'a',
       params: {
         blockId: 'textInput',
@@ -258,7 +258,7 @@ test('CallMethod with positional args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -281,10 +281,10 @@ test('CallMethod with positional args, synchronous method', async () => {
   const { button, textInput } = context.RootBlocks.map;
 
   textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.callAction({ action: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual([
     {
-      args: undefined,
+      event: undefined,
       id: 'a',
       params: {
         blockId: 'textInput',
@@ -327,7 +327,7 @@ test('CallMethod with object args, synchronous method', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -354,10 +354,10 @@ test('CallMethod with object args, synchronous method', async () => {
   const { button, textInput } = context.RootBlocks.map;
 
   textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.callAction({ action: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual([
     {
-      args: undefined,
+      event: undefined,
       id: 'a',
       params: {
         blockId: 'textInput',
@@ -416,7 +416,7 @@ test('CallMethod of block in array by explicit id', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -443,7 +443,7 @@ test('CallMethod of block in array by explicit id', async () => {
 
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
-  await button.callAction({ action: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(blockMethod0.mock.calls).toEqual([['arg']]);
   expect(blockMethod1.mock.calls).toEqual([]);
 });
@@ -485,7 +485,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
                       category: 'display',
                       valueType: 'string',
                     },
-                    actions: {
+                    events: {
                       onClick: [
                         {
                           id: 'a',
@@ -521,11 +521,11 @@ test('CallMethod of block in array by block with same indices and id pattern', a
 
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
-  await button1.callAction({ action: 'onClick' });
+  await button1.triggerEvent({ name: 'onClick' });
   expect(blockMethod0.mock.calls).toEqual([]);
   expect(blockMethod1.mock.calls).toEqual([['arg']]);
 
-  await button0.callAction({ action: 'onClick' });
+  await button0.triggerEvent({ name: 'onClick' });
   expect(blockMethod0.mock.calls).toEqual([['arg']]);
   expect(blockMethod1.mock.calls).toEqual([['arg']]);
 });

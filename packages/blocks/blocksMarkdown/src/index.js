@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import DangerousMarkdown from './blocks/DangerousMarkdown/DangerousMarkdown';
 import Markdown from './blocks/Markdown/Markdown';
-import MarkdownWithHtml from './blocks/MarkdownWithHtml/MarkdownWithHtml';
+import MarkdownWithCode from './blocks/MarkdownWithCode/MarkdownWithCode';
 
-export { Markdown, MarkdownWithHtml };
-export default { Markdown, MarkdownWithHtml };
+export { DangerousMarkdown, Markdown, MarkdownWithCode };
+export default { DangerousMarkdown, Markdown, MarkdownWithCode };

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,8 +22,24 @@ const meta = {
     namedArgs: ['on', 'target', 'start', 'end'],
     validTypes: ['array', 'object'],
   },
+  every: {
+    namedArgs: ['on', 'callback'],
+    validTypes: ['array', 'object'],
+  },
   fill: {
     namedArgs: ['on', 'value', 'start', 'end'],
+    validTypes: ['array', 'object'],
+  },
+  filter: {
+    namedArgs: ['on', 'callback'],
+    validTypes: ['array', 'object'],
+  },
+  find: {
+    namedArgs: ['on', 'callback'],
+    validTypes: ['array', 'object'],
+  },
+  findIndex: {
+    namedArgs: ['on', 'callback'],
     validTypes: ['array', 'object'],
   },
   flat: { namedArgs: ['on', 'depth'], validTypes: ['array', 'object'] },
@@ -31,8 +47,24 @@ const meta = {
   indexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
   join: { namedArgs: ['on', 'separator'], validTypes: ['array', 'object'] },
   lastIndexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
+  map: {
+    namedArgs: ['on', 'callback'],
+    validTypes: ['array', 'object'],
+  },
+  reduce: {
+    namedArgs: ['on', 'callback', 'initialValue'],
+    validTypes: ['array', 'object'],
+  },
+  reduceRight: {
+    namedArgs: ['on', 'callback', 'initialValue'],
+    validTypes: ['array', 'object'],
+  },
   reverse: { validTypes: ['array'], singleArg: true },
   slice: { namedArgs: ['on', 'start', 'end'], validTypes: ['array', 'object'] },
+  some: {
+    namedArgs: ['on', 'callback'],
+    validTypes: ['array', 'object'],
+  },
   sort: { namedArgs: ['on'], validTypes: ['array'] },
   splice: {
     namedArgs: ['on', 'start', 'deleteCount'],
@@ -41,18 +73,11 @@ const meta = {
     validTypes: ['array', 'object'],
   },
   length: { validTypes: ['array'], property: true },
-  // every,
-  // filter,
-  // find,
-  // findIndex,
+  // some,
   // forEach,
-  // map,
   // pop: { namedArgs: ['on'] },
   // push: { namedArgs: ['on'] },
-  // reduce,
-  // reduceRight,
   // shift: { namedArgs: ['on'] },
-  // some,
   // toString,
   // unshift: { namedArgs: ['on'] },
 };

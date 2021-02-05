@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -66,11 +66,11 @@ const rootBlock = {
 };
 
 const blockId = 'one';
-const input = {};
-const lowdefyGlobal = {};
+const input = { input: true };
+const lowdefyGlobal = { lowdefyGlobal: true };
 const pageId = 'one';
-const state = {};
-const urlQuery = {};
+const state = { state: true };
+const urlQuery = { urlQuery: true };
 
 beforeEach(() => {
   mockQuery.mockReset();
@@ -97,6 +97,36 @@ test('callRequest', async () => {
       error: [null],
       loading: false,
       response: 1,
+    },
+  });
+});
+
+test('callRequest, pass variables to qraphql', async () => {
+  const context = {
+    blockId,
+    client,
+    input,
+    lowdefyGlobal,
+    pageId,
+    requests: {},
+    state,
+    rootBlock,
+    update: jest.fn(),
+    urlQuery,
+  };
+  const Requests = new RequestsClass(context);
+  await Requests.callRequest({ requestId: 'req_one', event: { event: true }, arrayIndices: [1] });
+  expect(mockQuery.mock.calls[0][0].variables).toEqual({
+    input: {
+      arrayIndices: [1],
+      blockId: 'one',
+      event: { event: true },
+      input: { input: true },
+      lowdefyGlobal: { lowdefyGlobal: true },
+      pageId: 'one',
+      requestId: 'req_one',
+      state: { state: true },
+      urlQuery: { urlQuery: true },
     },
   });
 });

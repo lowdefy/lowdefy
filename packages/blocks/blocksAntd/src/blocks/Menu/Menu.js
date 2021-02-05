@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ const getNestedColors = (menuColor, background) => {
   };
 };
 
-const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
+const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename }) => {
   const styles = {
     lineHeight: '64px',
     display: properties.mode === 'horizontal' && 'inline-block',
@@ -115,21 +115,21 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
       onSelect={(item) =>
-        methods.callAction({
-          action: get(rename, 'actions.onSelect', { default: 'onSelect' }),
-          args: { key: item.key },
+        methods.triggerEvent({
+          name: get(rename, 'events.onSelect', { default: 'onSelect' }),
+          event: { key: item.key },
         })
       }
       onClick={(item) =>
-        methods.callAction({
-          action: get(rename, 'actions.onClick', { default: 'onClick' }),
-          args: { key: item.key },
+        methods.triggerEvent({
+          name: get(rename, 'events.onClick', { default: 'onClick' }),
+          event: { key: item.key },
         })
       }
       onOpenChange={(openKeys) =>
-        methods.callAction({
-          action: get(rename, 'actions.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
-          args: { openKeys },
+        methods.triggerEvent({
+          name: get(rename, 'events.onToggleMenuGroup', { default: 'onToggleMenuGroup' }),
+          event: { openKeys },
         })
       }
       {...exProps}
@@ -174,6 +174,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                   link.properties.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
+                      events={events}
                       methods={methods}
                       properties={link.properties.icon}
                     />
@@ -204,6 +205,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                                 subLinkGroup.properties.icon && (
                                   <Icon
                                     blockId={`${subLinkGroup.id}_icon`}
+                                    events={events}
                                     methods={methods}
                                     properties={subLinkGroup.properties.icon}
                                   />
@@ -233,6 +235,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                             subLink.properties.icon && (
                               <Icon
                                 blockId={`${subLink.id}_icon`}
+                                events={events}
                                 methods={methods}
                                 properties={subLink.properties.icon}
                               />
@@ -264,6 +267,7 @@ const MenuComp = ({ blockId, methods, menus, pageId, properties, rename }) => {
                   link.properties.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
+                      events={events}
                       methods={methods}
                       properties={link.properties.icon}
                     />

@@ -1,6 +1,8 @@
 {
   "category": "container",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph"
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -12,15 +14,21 @@
         },
         "avatar": {
           "type": ["string", "object"],
-          "description": "Comment avatar."
+          "description": "Comment avatar.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "content": {
           "type": "string",
           "description": "Comment content."
         },
         "datetime": {
-          "type": "string",
-          "description": "Comment content."
+          "type": "object",
+          "description": "Comment date and time.",
+          "docs": {
+            "displayType": "string"
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,11 +20,22 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
 import Icon from '../Icon/Icon';
+import useRunAfterUpdate from '../../useRunAfterUpdate';
 
-const TextInput = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const TextInput = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -32,6 +43,7 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
       validation={validation}
       content={{
         content: () => {
+          const runAfterUpdate = useRunAfterUpdate();
           return (
             <Input
               id={`${blockId}_input`}
@@ -40,10 +52,15 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
               disabled={properties.disabled}
               onChange={(event) => {
                 methods.setValue(event.target.value);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
+                const cStart = event.target.selectionStart;
+                const cEnd = event.target.selectionEnd;
+                runAfterUpdate(() => {
+                  event.target.setSelectionRange(cStart, cEnd);
+                });
               }}
               onPressEnter={() => {
-                methods.callAction({ action: 'onPressEnter' });
+                methods.triggerEvent({ name: 'onPressEnter' });
               }}
               placeholder={properties.placeholder}
               value={value}
@@ -52,6 +69,7 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
                 (properties.prefixIcon && (
                   <Icon
                     blockId={`${blockId}_prefixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.prefixIcon}
                   />
@@ -62,6 +80,7 @@ const TextInput = ({ blockId, loading, methods, properties, required, validation
                 (properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon}
                   />

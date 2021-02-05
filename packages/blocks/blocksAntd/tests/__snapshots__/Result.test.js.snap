@@ -117,14 +117,13 @@ exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
   >
     <span
       aria-label="loading-3-quarters"
-      className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+      className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
       id="properties. icon: ApiFilled_icon"
       required={false}
       role="img"
     >
       <svg
         aria-hidden="true"
-        className="anticon-spin"
         data-icon="loading-3-quarters"
         fill="currentColor"
         focusable="false"

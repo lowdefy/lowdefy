@@ -1,7 +1,12 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 96
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,22 +18,40 @@
         "colors": {
           "type": "array",
           "description": "Colors to display.",
+          "default": [
+            "#FF6900",
+            "#FCB900",
+            "#7BDCB5",
+            "#00D084",
+            "#8ED1FC",
+            "#0693E3",
+            "#ABB8C3",
+            "#EB144C",
+            "#F78DA7",
+            "#9900EF"
+          ],
           "items": {
             "type": "string"
           }
         },
         "defaultColor": {
           "type": "string",
+          "default": "#000000",
           "description": "Default color to display if input value is null."
         },
         "triangle": {
           "type": "string",
           "enum": ["hide", "top-left", "top-right"],
+          "default": "hide",
           "description": "Show triangle on color selector border."
         },
         "width": {
           "type": ["string", "number"],
-          "description": "Pixel value for selector width."
+          "description": "Color selector width.",
+          "default": "100%",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "label": {
           "type": "object",
@@ -38,12 +61,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -60,37 +83,44 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onChange": {
           "type": "array",
-          "description": "Trigger action when color is picked."
+          "description": "Trigger actions when color is picked."
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -702,4 +702,34 @@ test('buildRefs with transformer function', async () => {
     json: '{"a":1}',
     var: 'var1',
   });
+});
+
+test('buildRefs _var receives invalid type', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: {
+        ref: {
+          _ref: {
+            path: 'file.yaml',
+            vars: {
+              var1: 'value',
+            },
+          },
+        },
+      },
+    },
+    {
+      path: 'file.yaml',
+      content: {
+        key: {
+          _var: [1],
+        },
+      },
+    },
+  ];
+  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow(
+    '"_var" operator takes a string or object with name field as arguments. Received "{"_var":[1]}"'
+  );
 });

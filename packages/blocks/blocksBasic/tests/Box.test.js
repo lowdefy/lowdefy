@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ runBlockSchemaTests({ examples, meta });
 const { before, methods, getProps } = mockBlock({ meta });
 beforeEach(before);
 
-test('callAction onClick', () => {
+test('triggerEvent onClick', () => {
   const block = {
     id: 'one',
     type: 'Box',
@@ -38,5 +38,5 @@ test('callAction onClick', () => {
   const Shell = () => <Box {...getProps(block)} methods={methods} />;
   const wrapper = mount(<Shell />);
   wrapper.find('[data-testid="one"]').simulate('click');
-  expect(methods.callAction).toHaveBeenCalledWith({ action: 'onClick' });
+  expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 });

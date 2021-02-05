@@ -1,0 +1,42 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: overview
+    pageTitle: Overview
+    section: Concepts
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then use the build artifacts to serve the app.
+
+            You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently you can host Lowdefy apps on Netlify, and as a Docker container.
+
+            The Lowdefy server manages connections and executes requests, serves a web client, and serves the configuration for app pages to the client. The server does not have a data-store, but can connect to external data sources like APIs and databases.
+
+            The Lowdefy web client manages the layout and loading of Lowdefy blocks. Blocks are loaded to the client using _webpack Module Federation_. This means they do not need to be served by your app, can be cached for different Lowdefy apps, and that you can write a custom block that can then be accessed by any Lowdefy app.
+
+            The client also manages each context in the app, executes actions that are triggered by events, and evaluates operators that allow for "live updates" to the UI.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Tutorial
+            previous_page_id: tutorial-setup
+            next_page_title: The CLI
+            next_page_id: cli

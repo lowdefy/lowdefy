@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ const Option = Select.Option;
 
 const MultipleSelector = ({
   blockId,
+  events,
   loading,
   methods,
   properties,
@@ -59,6 +60,7 @@ const MultipleSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon}
                   />
@@ -68,6 +70,7 @@ const MultipleSelector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.clearIcon}
                   />
@@ -77,6 +80,7 @@ const MultipleSelector = ({
                 properties.selectedIcon && (
                   <Icon
                     blockId={`${blockId}_selectedIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.selectedIcon}
                   />
@@ -99,7 +103,7 @@ const MultipleSelector = ({
                   );
                 });
                 methods.setValue(val);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={getValueIndex(value, uniqueValueOptions, true)}
             >

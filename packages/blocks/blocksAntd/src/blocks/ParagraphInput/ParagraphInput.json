@@ -1,7 +1,9 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph"
+  },
   "test": {
     "validation": true,
     "required": true,
@@ -19,16 +21,12 @@
           "default": false,
           "description": "Apply code style."
         },
-        "content": {
-          "type": "string",
-          "description": "Paragraph text content."
-        },
         "copyable": {
-          "description": "Provide copy text button.",
           "default": false,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Provide copy text button."
             },
             {
               "type": "object",
@@ -40,11 +38,17 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
-                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
@@ -61,11 +65,11 @@
           "description": "Apply disabled style."
         },
         "editable": {
-          "description": "Allow paragraph editing when true, editable settings can be provided with editable object.",
-          "default": false,
+          "default": true,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow paragraph editing when true, editable settings can be provided with editable object."
             },
             {
               "type": "object",
@@ -73,7 +77,10 @@
               "properties": {
                 "icon": {
                   "type": ["string", "object"],
-                  "description": "Edit icon."
+                  "description": "Edit icon.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltip": {
                   "type": "string",
@@ -86,33 +93,6 @@
                 "maxLength": {
                   "type": "number",
                   "description": "Max length of text area input."
-                },
-                "autoSize": {
-                  "type": ["boolean", "object"],
-                  "description": "Auto size text area input. Can be boolean or object with max and min rows.",
-                  "oneOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "description": "Auto size rows settings.",
-                      "properties": {
-                        "minRows": {
-                          "type": "number",
-                          "description": "Minimum number of rows for text area input."
-                        },
-                        "maxRows": {
-                          "type": "number",
-                          "description": "Maximum number of rows for text area input."
-                        }
-                      }
-                    }
-                  ]
-                },
-                "symbol": {
-                  "type": "string",
-                  "description": "Custom ... symbol of ellipsis content."
                 }
               }
             }
@@ -120,10 +100,10 @@
         },
         "ellipsis": {
           "default": false,
-          "description": "Display ellipsis when text overflows a single line.",
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display ellipsis when text overflows a single line."
             },
             {
               "type": "object",
@@ -157,7 +137,8 @@
         },
         "type": {
           "type": "string",
-          "enum": ["secondary", "warning", "danger"],
+          "default": "default",
+          "enum": ["default", "secondary", "warning", "danger"],
           "description": "Additional types. Don't specify for default."
         },
         "underline": {
@@ -167,7 +148,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

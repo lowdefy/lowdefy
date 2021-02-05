@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,15 +44,15 @@ test('basic display', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Display",
@@ -70,16 +70,16 @@ test('basic input', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
         "setValue": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Input",
@@ -100,16 +100,16 @@ test('input setState', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
         "setValue": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Input",
@@ -130,8 +130,6 @@ test('basic container', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -139,12 +137,14 @@ test('basic container', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Container",
@@ -162,8 +162,6 @@ test('basic context', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
@@ -171,12 +169,14 @@ test('basic context', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Context",
@@ -194,23 +194,23 @@ test('basic list', () => {
   };
   expect(stubBlockProps({ block, meta, logger })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "list": Array [],
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
         "removeItem": [Function],
+        "triggerEvent": [Function],
         "unshiftItem": [Function],
       },
       "schemaErrors": false,
@@ -230,23 +230,23 @@ test('list methods', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {},
       },
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "list": Array [],
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
         "removeItem": [Function],
+        "triggerEvent": [Function],
         "unshiftItem": [Function],
       },
       "schemaErrors": false,
@@ -278,8 +278,6 @@ test('blocks container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -300,12 +298,14 @@ test('blocks container', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Container",
@@ -342,8 +342,6 @@ test('blocks areas container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -364,12 +362,14 @@ test('blocks areas container', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Container",
@@ -399,8 +399,6 @@ test('areas container', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -415,12 +413,14 @@ test('areas container', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Container",
@@ -450,8 +450,6 @@ test('areas context', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -466,12 +464,14 @@ test('areas context', () => {
       "content": Object {
         "content": [Function],
       },
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Context",
@@ -501,8 +501,6 @@ test('areas list', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "areas": Object {
         "content": Object {
           "blocks": Array [
@@ -514,6 +512,8 @@ test('areas list', () => {
         },
       },
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "list": Array [
         Object {
@@ -521,14 +521,14 @@ test('areas list', () => {
         },
       ],
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
         "moveItemDown": [Function],
         "moveItemUp": [Function],
         "pushItem": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
         "removeItem": [Function],
+        "triggerEvent": [Function],
         "unshiftItem": [Function],
       },
       "schemaErrors": false,
@@ -538,11 +538,11 @@ test('areas list', () => {
   expect(res.list[0].content()).toMatchInlineSnapshot(`undefined`);
 });
 
-test('actions display', () => {
+test('events display', () => {
   const block = {
     id: 'a',
     type: 'Display',
-    actions: {
+    events: {
       onClick: [
         {
           id: 'c',
@@ -557,8 +557,9 @@ test('actions display', () => {
   const res = stubBlockProps({ block, meta, logger });
   expect(res).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {
+      "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {
         "onClick": Array [
           Object {
             "id": "c",
@@ -566,13 +567,12 @@ test('actions display', () => {
           },
         ],
       },
-      "blockId": "a",
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "schemaErrors": false,
       "type": "Display",
@@ -604,15 +604,15 @@ test('provide schema errors', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "properties": Object {
         "mistake": true,
@@ -630,15 +630,15 @@ test('provide schema errors', () => {
   };
   expect(stubBlockProps({ block, meta })).toMatchInlineSnapshot(`
     Object {
-      "actionLog": Array [],
-      "actions": Object {},
       "blockId": "a",
+      "eventLog": Array [],
+      "events": Object {},
       "id": "a",
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [Function],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "properties": Object {
         "mistake": 1,
@@ -702,7 +702,7 @@ test('register and call methods', () => {
   expect(mockMethod).toBeCalledWith({ test: 1 });
 });
 
-test('register and call actions', () => {
+test('register and call events', () => {
   const block = {
     id: 'a',
     type: 'Display',
@@ -711,15 +711,15 @@ test('register and call actions', () => {
     category: 'display',
   };
   const res = stubBlockProps({ block, meta });
-  res.methods.registerAction('actionsName', [{ id: 'reset', type: 'Reset' }]);
-  expect(res.actions).toEqual({
-    actionsName: [{ id: 'reset', type: 'Reset' }],
+  res.methods.registerEvent({ name: 'eventName', actions: [{ id: 'reset', type: 'Reset' }] });
+  expect(res.events).toEqual({
+    eventName: [{ id: 'reset', type: 'Reset' }],
   });
-  res.methods.callAction({ action: 'actionsName', args: { a: 1 } });
-  expect(res.actionLog).toEqual([{ action: 'actionsName', args: { a: 1 } }]);
-  res.methods.callAction({ action: 'actionsName', args: { a: 2 } });
-  expect(res.actionLog).toEqual([
-    { action: 'actionsName', args: { a: 2 } },
-    { action: 'actionsName', args: { a: 1 } },
+  res.methods.triggerEvent({ name: 'eventName', event: { a: 1 } });
+  expect(res.eventLog).toEqual([{ name: 'eventName', event: { a: 1 } }]);
+  res.methods.triggerEvent({ name: 'eventName', event: { a: 2 } });
+  expect(res.eventLog).toEqual([
+    { name: 'eventName', event: { a: 2 } },
+    { name: 'eventName', event: { a: 1 } },
   ]);
 });

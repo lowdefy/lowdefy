@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,10 +26,20 @@ import disabledDate from '../../disabledDate';
 
 const WeekPicker = DatePicker.WeekPicker;
 
-const WeekSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const WeekSelector = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -53,19 +63,20 @@ const WeekSelector = ({ blockId, loading, methods, properties, required, validat
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />
                 )
               }
-              disabledDate={disabledDate(properties.disabledDate)}
+              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal
                     ? null
                     : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('week').toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={value && type.isDate(value) ? moment.utc(value).startOf('week') : null}
             />

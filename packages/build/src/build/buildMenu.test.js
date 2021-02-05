@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -267,7 +267,7 @@ test('buildMenu page does not exist', async () => {
     pages: [],
   });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Page page_1 referenced in menu link menu_page_1 not found.'],
+    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
   ]);
 });
 
@@ -343,8 +343,8 @@ test('buildMenu page does not exist, nested', async () => {
     pages: [],
   });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Page page_1 referenced in menu link menu_page_1 not found.'],
-    ['Page page_2 referenced in menu link menu_page_2 not found.'],
+    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
+    ['Page "page_2" referenced in menu link "menu_page_2" not found.'],
   ]);
 });
 

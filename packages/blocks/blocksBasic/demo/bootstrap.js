@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,18 +16,30 @@
 
 import React from 'react';
 import { render } from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import Blocks from '../src';
 import Examples from './Examples';
 import './app.css';
 
-const Demo = () => (
-  <div id="page">
-    {Object.keys(Blocks).map((key) => (
-      <Examples key={key} type={key} Component={Blocks[key]} />
-    ))}
-  </div>
-);
+const Demo = () => {
+  let blocks = Object.keys(Blocks);
+  if (document.location.pathname[1] && Blocks[document.location.pathname.substring(1)]) {
+    blocks = [document.location.pathname.substring(1)];
+  }
+  return (
+    <div id="page">
+      {blocks.map((key) => (
+        <Examples key={key} type={key} Component={Blocks[key]} />
+      ))}
+    </div>
+  );
+};
 
 export default Demo;
 
-render(<Demo />, document.querySelector('#root'));
+render(
+  <BrowserRouter>
+    <Demo />
+  </BrowserRouter>,
+  document.querySelector('#root')
+);

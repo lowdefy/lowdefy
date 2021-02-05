@@ -1,43 +1,56 @@
 {
   "valueType": "object",
+  "initValue": {
+    "current": 0,
+    "pageSize": 10,
+    "skip": 0
+  },
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 33
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "total": {
-          "type": "number",
+          "type": "integer",
+          "default": 100,
           "description": "Total number of items to be displayed in pagination."
         },
         "size": {
           "type": "string",
           "enum": ["small", "default"],
+          "default": "default",
           "description": "Pagination element size."
         },
         "simple": {
           "type": "boolean",
+          "default": false,
           "description": "Use simplified pagination display."
         },
         "showTotal": {
           "type": "boolean",
+          "default": false,
           "description": "Show pagination total number and range."
-        },
-        "showTitle": {
-          "type": "boolean",
-          "description": "Show page item's title."
         },
         "showSizeChanger": {
           "type": "boolean",
+          "default": false,
           "description": "Determine whether to show page size select, it will be true when total > 50."
         },
         "showQuickJumper": {
           "type": "boolean",
+          "default": false,
           "description": "Determine whether you can jump to pages directly."
         },
         "pageSizeOptions": {
           "type": "array",
+          "default": [10, 20, 30, 40],
           "description": "Specify the page size changer options.",
           "items": {
             "type": "number"
@@ -45,15 +58,17 @@
         },
         "hideOnSinglePage": {
           "type": "boolean",
+          "default": false,
           "description": "Hide pager on short list of a single page."
         },
         "disabled": {
           "type": "boolean",
+          "default": false,
           "description": "Disable pager."
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

@@ -22,15 +22,24 @@
       "properties": {
         "toggleMenuButton": {
           "type": "object",
-          "description": "Toggle menu button properties."
+          "description": "Toggle menu button properties.",
+          "docs": {
+            "displayType": "button"
+          }
         },
         "drawer": {
           "type": "object",
-          "description": "Menu drawer properties."
+          "description": "Menu drawer properties.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "backgroundColor": {
           "type": "string",
-          "description": "Menu background color."
+          "description": "Menu background color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "menuId": {
           "type": "string",
@@ -38,11 +47,18 @@
         },
         "selectedColor": {
           "type": "string",
-          "description": "Menu primary selected color."
+          "description": "Menu primary selected color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "selectedKeys": {
           "type": "array",
-          "description": "Array with the keys of currently selected menu items."
+          "description": "Array with the keys of currently selected menu items.",
+          "items": {
+            "type": "string",
+            "description": "Selected menu item 'id'."
+          }
         },
         "subMenuCloseDelay": {
           "type": "number",
@@ -55,6 +71,7 @@
         "theme": {
           "type": "string",
           "enum": ["dark", "light"],
+          "default": "light",
           "description": "Color theme of menu."
         },
         "links": {
@@ -70,6 +87,7 @@
               "type": {
                 "type": "string",
                 "enum": ["MenuLink", "MenuGroup"],
+                "default": "MenuLink",
                 "description": "Menu item type."
               },
               "pageId": {
@@ -78,7 +96,10 @@
               },
               "style": {
                 "type": "object",
-                "description": "Css style to applied to link."
+                "description": "Css style to applied to link.",
+                "docs": {
+                  "displayType": "yaml"
+                }
               },
               "properties": {
                 "type": "object",
@@ -90,10 +111,14 @@
                   },
                   "icon": {
                     "type": ["string", "object"],
-                    "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item."
+                    "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   },
                   "danger": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Apply danger style to menu item."
                   }
                 }
@@ -111,11 +136,15 @@
                     "type": {
                       "type": "string",
                       "enum": ["MenuLink", "MenuGroup"],
+                      "default": "MenuLink",
                       "description": "Menu item type."
                     },
                     "style": {
                       "type": "object",
-                      "description": "Css style to applied to sub-link."
+                      "description": "Css style to applied to sub-link.",
+                      "docs": {
+                        "displayType": "yaml"
+                      }
                     },
                     "pageId": {
                       "type": "string",
@@ -131,6 +160,7 @@
                         },
                         "danger": {
                           "type": "boolean",
+                          "default": false,
                           "description": "Apply danger style to menu item."
                         }
                       },
@@ -147,11 +177,15 @@
                             "type": {
                               "type": "string",
                               "enum": ["MenuLink"],
+                              "default": "MenuLink",
                               "description": "Menu item type."
                             },
                             "style": {
                               "type": "object",
-                              "description": "Css style to applied to sub-link."
+                              "description": "Css style to applied to sub-link.",
+                              "docs": {
+                                "displayType": "yaml"
+                              }
                             },
                             "pageId": {
                               "type": "string",
@@ -167,6 +201,7 @@
                                 },
                                 "danger": {
                                   "type": "boolean",
+                                  "default": false,
                                   "description": "Apply danger style to menu item."
                                 }
                               }
@@ -183,7 +218,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -197,7 +232,7 @@
         },
         "onOpen": {
           "type": "array",
-          "description": "Trigger action when mobile menu is open."
+          "description": "Trigger action when mobile menu is opened."
         },
         "onMenuItemSelect": {
           "type": "array",

@@ -6,7 +6,7 @@
   "properties": {
     "filter": {
       "type": "object",
-      "description": "A MongoDB query expression to filter the data. All rows matched by the filter will be updated",
+      "description": "A MongoDB query expression to filter the data. All rows matched by the filter will be updated.",
       "errorMessage": {
         "type": "GoogleSheetUpdateMany request property \"filter\" should be an object."
       }

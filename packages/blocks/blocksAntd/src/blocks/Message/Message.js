@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,16 +21,21 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const MessageBlock = ({ blockId, properties, methods }) => {
+const MessageBlock = ({ blockId, events, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       message[args.status || properties.status || 'success']({
         id: `${blockId}_message`,
         content: args.content || properties.content || blockId,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        onClose: () => methods.callAction({ action: 'onClose' }),
+        onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: properties.icon && (
-          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={properties.icon}
+            methods={methods}
+          />
         ),
         className: methods.makeCssClass(properties.messageStyle),
       });

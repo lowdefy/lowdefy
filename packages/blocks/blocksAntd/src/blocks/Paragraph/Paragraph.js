@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import Icon from '../Icon/Icon';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphBlock = ({ blockId, properties, methods }) => (
+const ParagraphBlock = ({ blockId, events, properties, methods }) => (
   <Paragraph
     id={blockId}
     className={methods.makeCssClass(properties.style)}
@@ -33,9 +33,9 @@ const ParagraphBlock = ({ blockId, properties, methods }) => (
         ? {
             text: properties.copyable.text,
             onCopy: () => {
-              methods.callAction({
-                action: 'onCopy',
-                args: { value: properties.copyable.text },
+              methods.triggerEvent({
+                name: 'onCopy',
+                event: { value: properties.copyable.text },
               });
             },
             icon:
@@ -44,6 +44,7 @@ const ParagraphBlock = ({ blockId, properties, methods }) => (
                 [
                   <Icon
                     key="copy-icon"
+                    events={events}
                     blockId={`${blockId}_copyable_before_icon`}
                     methods={methods}
                     properties={properties.copyable.icon[0]}
@@ -51,6 +52,7 @@ const ParagraphBlock = ({ blockId, properties, methods }) => (
                   <Icon
                     key="copied-icon"
                     blockId={`${blockId}_copyable_after_icon`}
+                    events={events}
                     methods={methods}
                     properties={properties.copyable.icon[1]}
                   />,
@@ -58,6 +60,7 @@ const ParagraphBlock = ({ blockId, properties, methods }) => (
               ) : (
                 <Icon
                   blockId={`${blockId}_copyable_icon`}
+                  events={events}
                   methods={methods}
                   properties={properties.copyable.icon}
                 />
@@ -81,9 +84,9 @@ const ParagraphBlock = ({ blockId, properties, methods }) => (
             //   "description": "Custom ... symbol of ellipsis content."
             // }
             onExpand: (ellipsis) => {
-              methods.callAction({
-                action: 'onExpand',
-                args: { ellipsis },
+              methods.triggerEvent({
+                name: 'onExpand',
+                event: { ellipsis },
               });
             },
           }

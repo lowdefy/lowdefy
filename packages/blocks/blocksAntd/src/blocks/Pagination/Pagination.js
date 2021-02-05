@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ const getPageSize = ({ properties, value }) => {
 
 const changeValue = ({ current, pageSize, methods }) => {
   methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
-  methods.callAction({
-    action: 'onSizeChange',
-    args: { current, pageSize, skip: current * pageSize },
+  methods.triggerEvent({
+    name: 'onSizeChange',
+    event: { current, pageSize, skip: current * pageSize },
   });
 };
 
@@ -49,8 +49,7 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
       showTotal={
         properties.showTotal && ((total, range) => `${range[0]}-${range[1]} of ${total} items`)
       }
-      showTitle={properties.showTitle !== undefined ? properties.showTitle : true}
-      showSizeChanger={!!properties.showSizeChanger || !!properties.pageSizeOptions}
+      showSizeChanger={properties.showSizeChanger}
       showQuickJumper={properties.showQuickJumper}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       hideOnSinglePage={properties.hideOnSinglePage}

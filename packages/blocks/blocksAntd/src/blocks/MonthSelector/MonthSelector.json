@@ -1,7 +1,9 @@
 {
   "valueType": "date",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -31,20 +33,59 @@
           "description": "Disable specific dates so that they can not be chosen.",
           "properties": {
             "min": {
-              "anyOf": [{ "type": "string" }, { "type": "object" }],
-              "description": "Disable all dates less than the minimum date. Can be a date string or a _date object."
+              "type": ["string", "object"],
+              "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+              "docs": {
+                "displayType": "date"
+              }
             },
             "max": {
-              "anyOf": [{ "type": "string" }, { "type": "object" }],
-              "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object."
+              "type": ["string", "object"],
+              "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+              "docs": {
+                "displayType": "date"
+              }
             },
             "dates": {
               "type": "array",
-              "description": "Array of specific dates to be disabled. Can be date strings or a _date objects."
+              "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "description": "Specific dates to be disabled. "
+                  },
+                  {
+                    "type": "object",
+                    "description": "Specific dates to be disabled. ",
+                    "docs": {
+                      "displayType": "date"
+                    }
+                  }
+                ]
+              }
             },
             "ranges": {
               "type": "array",
-              "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects."
+              "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Specific dates to be disabled. "
+                    },
+                    {
+                      "type": "object",
+                      "description": "Specific dates to be disabled. ",
+                      "docs": {
+                        "displayType": "date"
+                      }
+                    }
+                  ]
+                }
+              }
             }
           }
         },
@@ -55,7 +96,10 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "placeholder": {
           "type": "string",
@@ -76,7 +120,10 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "CalenderOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "label": {
           "type": "object",
@@ -86,12 +133,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -108,41 +155,48 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
-
         "title": {
           "type": "string",
           "description": "Month selector label title."
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when selection is changed."
         }
       }
     }

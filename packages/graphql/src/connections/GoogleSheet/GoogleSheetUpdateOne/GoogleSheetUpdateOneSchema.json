@@ -6,7 +6,7 @@
   "properties": {
     "filter": {
       "type": "object",
-      "description": "A MongoDB query expression to filter the data. The first row matched by the filter will be updated",
+      "description": "A MongoDB query expression to filter the data. The first row matched by the filter will be updated.",
       "errorMessage": {
         "type": "GoogleSheetUpdateOne request property \"filter\" should be an object."
       }
@@ -44,7 +44,7 @@
         },
         "upsert": {
           "type": "boolean",
-          "description": "The insert the row if no rows are matched by the filter.",
+          "description": "Insert the row if no rows are matched by the filter.",
           "errorMessage": {
             "type": "GoogleSheetUpdateOne request property \"options.upsert\" should be a boolean."
           }

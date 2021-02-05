@@ -1,10 +1,21 @@
+/*
+  Copyright 2020-2021 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
-
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
 
 const context = {
   id: 'own',
@@ -112,7 +123,7 @@ const arrayIndices = [1];
 test('_input, other context contextId not a string', () => {
   const input = { _input: { key: 'string', contextId: 1 } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -124,7 +135,7 @@ test('_input, other context contextId not a string', () => {
 test('_input, other context contextId not found', () => {
   const input = { _input: { key: 'string', contextId: 'not_there' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -141,7 +152,7 @@ test('_input param object key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('input-other');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -149,7 +160,7 @@ test('_input param object key', () => {
 test('_input full state', () => {
   const input = { _input: { contextId: 'other' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     string: 'input-other',
     arr: [{ a: 'input1-other' }, { a: 'input2-other' }],
@@ -160,7 +171,7 @@ test('_input full state', () => {
 test('_input replace key arrayIndices', () => {
   const input = { a: { _input: { key: 'arr.$.a', contextId: 'other' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'input2-other',
   });
@@ -175,7 +186,7 @@ test('_input param object all', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     string: 'input-other',
     arr: [{ a: 'input1-other' }, { a: 'input2-other' }],
@@ -192,7 +203,7 @@ test('_input param object all and key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     string: 'input-other',
     arr: [{ a: 'input1-other' }, { a: 'input2-other' }],
@@ -209,7 +220,7 @@ test('_input param object with string default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

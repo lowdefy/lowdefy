@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import _array from './array';
 import _date from './date';
 import _divide from './divide';
 import _eq from './eq';
+import _event from './event';
+import _function from './function';
 import _get from './get';
 import _global from './global';
 import _gt from './gt';
@@ -57,6 +59,8 @@ export default {
   _date,
   _divide,
   _eq,
+  _event,
+  _function,
   _get,
   _global,
   _gt,

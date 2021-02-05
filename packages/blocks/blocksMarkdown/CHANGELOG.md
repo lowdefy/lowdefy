@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/lowdefy/lowdefy/compare/v3.4.0...v3.5.0) (2021-02-05)
+
+
+### Bug Fixes
+
+* **blocks:** Fix port setting in webpack config. ([c828740](https://github.com/lowdefy/lowdefy/commit/c82874045dd041fbf3c3a8b4f5cb7dc27a05f39a))
+* **blocksMarkdown:** Update schemas. ([9af217c](https://github.com/lowdefy/lowdefy/commit/9af217cb2b9de6609680fe96e6c006b983adda5d))
+* **deps:** Update dependency copy-webpack-plugin to v7.0.0. ([901d412](https://github.com/lowdefy/lowdefy/commit/901d4126544dd4ee68d62bf520cdd4cc2b0d1dcc))
+
+
+### Features
+
+* **blocks:** Add default block loading. ([d0d1801](https://github.com/lowdefy/lowdefy/commit/d0d1801490c486b19ec49ee9fd50395c9e02bb68))
+* **blocks:** Update block schemas and tests. ([30636bd](https://github.com/lowdefy/lowdefy/commit/30636bd744f43652adcad51dd91570b53667dc04))
+* **blocksMarkdown:** Split  MarkdownWithCode and Markdown, and add DangerousMarkdown which uses dompurify. ([61ea65b](https://github.com/lowdefy/lowdefy/commit/61ea65b35bd04393cab01de3e9f6a229822001c2))
+
+
+
+
+
+# [3.4.0](https://github.com/lowdefy/lowdefy/compare/v3.3.0...v3.4.0) (2021-01-20)
+
+**Note:** Version bump only for package @lowdefy/blocks-markdown
+
+
+
+
+
 # [3.3.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.3.0) (2021-01-18)
 
 

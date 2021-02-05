@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,9 +23,10 @@ import Footer from '../Footer/Footer';
 import Content from '../Content/Content';
 import Layout from '../Layout/Layout';
 
-const PageHCF = ({ blockId, content, properties, methods }) => (
+const PageHCF = ({ blockId, events, content, properties, methods }) => (
   <Layout
     blockId={blockId}
+    events={events}
     methods={methods}
     properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
     content={{
@@ -34,6 +35,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
           {content.header && (
             <Header
               blockId={`${blockId}_header`}
+              events={events}
               properties={properties.header}
               methods={methods}
               content={{
@@ -44,6 +46,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
           {content.content && (
             <Content
               blockId={`${blockId}_content`}
+              events={events}
               properties={properties.content}
               methods={methods}
               content={{
@@ -54,6 +57,7 @@ const PageHCF = ({ blockId, content, properties, methods }) => (
           {content.footer && (
             <Footer
               blockId={`${blockId}_footer`}
+              events={events}
               properties={properties.footer}
               methods={methods}
               content={{

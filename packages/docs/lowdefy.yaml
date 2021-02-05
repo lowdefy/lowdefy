@@ -1,0 +1,635 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: '@lowdefy/docs'
+lowdefy: '3.5.0'
+licence: Apache-2.0
+
+global:
+  all_icons:
+    _ref: blocks/all_icons.yaml
+  settings_input_layout:
+    span: 23
+    sm:
+      span: 23
+
+menus:
+  - id: default
+    links:
+      - id: introduction
+        type: MenuLink
+        pageId: introduction
+        properties:
+          title: Introduction
+          icon: CoffeeOutlined
+      - id: tutorial
+        type: MenuGroup
+        properties:
+          title: Tutorial
+          icon: RocketOutlined
+        links:
+          - id: tutorial-setup
+            type: MenuLink
+            pageId: tutorial-setup
+            properties:
+              title: Deploy your app
+          - id: tutorial-editing-page
+            type: MenuLink
+            pageId: tutorial-editing-page
+            properties:
+              title: Editing a page
+          - id: tutorial-development-server
+            type: MenuLink
+            pageId: tutorial-development-server
+            properties:
+              title: Development server
+          - id: tutorial-create-page
+            type: MenuLink
+            pageId: tutorial-create-page
+            properties:
+              title: Creating a page
+          - id: tutorial-add-blocks
+            type: MenuLink
+            pageId: tutorial-add-blocks
+            properties:
+              title: Adding blocks
+          - id: tutorial-actions-operators
+            type: MenuLink
+            pageId: tutorial-actions-operators
+            properties:
+              title: Interactive pages
+          - id: tutorial-requests
+            type: MenuLink
+            pageId: tutorial-requests
+            properties:
+              title: Requests
+          - id: next-steps
+            type: MenuLink
+            pageId: next-steps
+            properties:
+              title: Next steps
+      - id: concepts
+        type: MenuGroup
+        properties:
+          title: Concepts
+          icon: BulbOutlined
+        links:
+          - id: overview
+            type: MenuLink
+            pageId: overview
+            properties:
+              title: Overview
+          - id: cli
+            type: MenuLink
+            pageId: cli
+            properties:
+              title: The CLI
+          - id: lowdefy-schema
+            type: MenuLink
+            pageId: lowdefy-schema
+            properties:
+              title: Lowdefy App Schema
+          - id: context-and-state
+            type: MenuLink
+            pageId: context-and-state
+            properties:
+              title: Context and State
+          - id: blocks
+            type: MenuLink
+            pageId: blocks
+            properties:
+              title: Blocks
+          - id: layout
+            type: MenuLink
+            pageId: layout
+            properties:
+              title: Layout
+          - id: connections-and-requests
+            type: MenuLink
+            pageId: connections-and-requests
+            properties:
+              title: Connections and Requests
+          - id: events-and-actions
+            type: MenuLink
+            pageId: events-and-actions
+            properties:
+              title: Events and Actions
+          - id: operators
+            type: MenuLink
+            pageId: operators
+            properties:
+              title: Operators
+      - id: blocks_input
+        type: MenuGroup
+        properties:
+          title: Input Blocks
+          icon: FormOutlined
+        links:
+          - id: AutoComplete
+            type: MenuLink
+            pageId: AutoComplete
+          - id: ButtonSelector
+            type: MenuLink
+            pageId: ButtonSelector
+          - id: CheckboxSelector
+            type: MenuLink
+            pageId: CheckboxSelector
+          - id: ChromeColorSelector
+            type: MenuLink
+            pageId: ChromeColorSelector
+          - id: CircleColorSelector
+            type: MenuLink
+            pageId: CircleColorSelector
+          - id: ColorSelector
+            type: MenuLink
+            pageId: ColorSelector
+          - id: CompactColorSelector
+            type: MenuLink
+            pageId: CompactColorSelector
+          - id: DateRangeSelector
+            type: MenuLink
+            pageId: DateRangeSelector
+          - id: DateSelector
+            type: MenuLink
+            pageId: DateSelector
+          - id: DateTimeSelector
+            type: MenuLink
+            pageId: DateTimeSelector
+          - id: GithubColorSelector
+            type: MenuLink
+            pageId: GithubColorSelector
+          - id: MonthSelector
+            type: MenuLink
+            pageId: MonthSelector
+          - id: MultipleSelector
+            type: MenuLink
+            pageId: MultipleSelector
+          - id: NumberInput
+            type: MenuLink
+            pageId: NumberInput
+          - id: Pagination
+            type: MenuLink
+            pageId: Pagination
+          - id: ParagraphInput
+            type: MenuLink
+            pageId: ParagraphInput
+          - id: RadioSelector
+            type: MenuLink
+            pageId: RadioSelector
+          - id: RatingSlider
+            type: MenuLink
+            pageId: RatingSlider
+          - id: S3UploadButton
+            type: MenuLink
+            pageId: S3UploadButton
+          - id: Selector
+            type: MenuLink
+            pageId: Selector
+          - id: SliderColorSelector
+            type: MenuLink
+            pageId: SliderColorSelector
+          - id: SwatchesColorSelector
+            type: MenuLink
+            pageId: SwatchesColorSelector
+          - id: Switch
+            type: MenuLink
+            pageId: Switch
+          - id: TextArea
+            type: MenuLink
+            pageId: TextArea
+          - id: TextInput
+            type: MenuLink
+            pageId: TextInput
+          - id: TitleInput
+            type: MenuLink
+            pageId: TitleInput
+          - id: TwitterColorSelector
+            type: MenuLink
+            pageId: TwitterColorSelector
+          - id: WeekSelector
+            type: MenuLink
+            pageId: WeekSelector
+      - id: blocks_display
+        type: MenuGroup
+        properties:
+          title: Display Blocks
+          icon: PictureOutlined
+        links:
+          - id: Alert
+            type: MenuLink
+            pageId: Alert
+          - id: Anchor
+            type: MenuLink
+            pageId: Anchor
+          - id: Avatar
+            type: MenuLink
+            pageId: Avatar
+          - id: Breadcrumb
+            type: MenuLink
+            pageId: Breadcrumb
+          - id: Button
+            type: MenuLink
+            pageId: Button
+          - id: DangerousHtml
+            type: MenuLink
+            pageId: DangerousHtml
+          - id: DangerousMarkdown
+            type: MenuLink
+            pageId: DangerousMarkdown
+          - id: Descriptions
+            type: MenuLink
+            pageId: Descriptions
+          - id: Divider
+            type: MenuLink
+            pageId: Divider
+          - id: Html
+            type: MenuLink
+            pageId: Html
+          - id: Icon
+            type: MenuLink
+            pageId: Icon
+          - id: Markdown
+            type: MenuLink
+            pageId: Markdown
+          - id: MarkdownWithCode
+            type: MenuLink
+            pageId: MarkdownWithCode
+          - id: Menu
+            type: MenuLink
+            pageId: Menu
+          - id: Paragraph
+            type: MenuLink
+            pageId: Paragraph
+          - id: Progress
+            type: MenuLink
+            pageId: Progress
+          - id: Skeleton
+            type: MenuLink
+            pageId: Skeleton
+          - id: Statistic
+            type: MenuLink
+            pageId: Statistic
+          - id: Title
+            type: MenuLink
+            pageId: Title
+      - id: connections
+        type: MenuGroup
+        properties:
+          title: Connections
+          icon: ApiOutlined
+        links:
+          - id: AWSS3
+            type: MenuLink
+            pageId: AWSS3
+            properties:
+              title: AWS S3
+          - id: AxiosHttp
+            type: MenuLink
+            pageId: AxiosHttp
+            properties:
+              title: Axios HTTP
+          - id: GoogleSheet
+            type: MenuLink
+            pageId: GoogleSheet
+            properties:
+              title: Google Sheets
+          - id: MongoDB
+            type: MenuLink
+            pageId: MongoDB
+      - id: actions
+        type: MenuGroup
+        properties:
+          title: Actions
+          icon: ThunderboltOutlined
+        links:
+          - id: CallMethod
+            type: MenuLink
+            pageId: CallMethod
+          - id: Link
+            type: MenuLink
+            pageId: Link
+          - id: MessageAction
+            type: MenuLink
+            pageId: MessageAction # Clash with Message block
+            properties:
+              title: Message
+          - id: NotificationAction
+            type: MenuLink
+            pageId: NotificationAction # Clash with Notification block
+            properties:
+              title: Notification
+          - id: Request
+            type: MenuLink
+            pageId: Request
+          - id: Reset
+            type: MenuLink
+            pageId: Reset
+          - id: ScrollTo
+            type: MenuLink
+            pageId: ScrollTo
+          - id: SetGlobal
+            type: MenuLink
+            pageId: SetGlobal
+          - id: SetState
+            type: MenuLink
+            pageId: SetState
+          - id: Validate
+            type: MenuLink
+            pageId: Validate
+      - id: operators
+        type: MenuGroup
+        properties:
+          title: Operators
+          icon: ToolOutlined
+        links:
+          - id: _and
+            type: MenuLink
+            pageId: _and
+          - id: _args
+            type: MenuLink
+            pageId: _args
+          - id: _array
+            type: MenuLink
+            pageId: _array
+          - id: _base64
+            type: MenuLink
+            pageId: _base64
+          - id: _date
+            type: MenuLink
+            pageId: _date
+          - id: _diff
+            type: MenuLink
+            pageId: _diff
+          - id: _divide
+            type: MenuLink
+            pageId: _divide
+          - id: _eq
+            type: MenuLink
+            pageId: _eq
+          - id: _event
+            type: MenuLink
+            pageId: _event
+          - id: _function
+            type: MenuLink
+            pageId: _function
+          - id: _get
+            type: MenuLink
+            pageId: _get
+          - id: _global
+            type: MenuLink
+            pageId: _global
+          - id: _gt
+            type: MenuLink
+            pageId: _gt
+          - id: _gte
+            type: MenuLink
+            pageId: _gte
+          - id: _if
+            type: MenuLink
+            pageId: _if
+          - id: _if_none
+            type: MenuLink
+            pageId: _if_none
+          - id: _input
+            type: MenuLink
+            pageId: _input
+          - id: _json
+            type: MenuLink
+            pageId: _json
+          - id: _list_contexts
+            type: MenuLink
+            pageId: _list_contexts
+          - id: _log
+            type: MenuLink
+            pageId: _log
+          - id: _lt
+            type: MenuLink
+            pageId: _lt
+          - id: _lte
+            type: MenuLink
+            pageId: _lte
+          - id: _math
+            type: MenuLink
+            pageId: _math
+          - id: _media
+            type: MenuLink
+            pageId: _media
+          - id: _menu
+            type: MenuLink
+            pageId: _menu
+          - id: _mql
+            type: MenuLink
+            pageId: _mql
+          - id: _not
+            type: MenuLink
+            pageId: _not
+          - id: _nunjucks
+            type: MenuLink
+            pageId: _nunjucks
+          - id: _object
+            type: MenuLink
+            pageId: _object
+          - id: _operator
+            type: MenuLink
+            pageId: _operator
+          - id: _or
+            type: MenuLink
+            pageId: _or
+          - id: _product
+            type: MenuLink
+            pageId: _product
+          - id: _random
+            type: MenuLink
+            pageId: _random
+          - id: _ref
+            type: MenuLink
+            pageId: _ref
+          - id: _regex
+            type: MenuLink
+            pageId: _regex
+          - id: _request
+            type: MenuLink
+            pageId: _request
+          - id: _secret
+            type: MenuLink
+            pageId: _secret
+          - id: _state
+            type: MenuLink
+            pageId: _state
+          - id: _string
+            type: MenuLink
+            pageId: _string
+          - id: _subtract
+            type: MenuLink
+            pageId: _subtract
+          - id: _sum
+            type: MenuLink
+            pageId: _sum
+          - id: _type
+            type: MenuLink
+            pageId: _type
+          - id: _uri
+            type: MenuLink
+            pageId: _uri
+          - id: _url_query
+            type: MenuLink
+            pageId: _url_query
+          - id: _uuid
+            type: MenuLink
+            pageId: _uuid
+          - id: _var
+            type: MenuLink
+            pageId: _var
+          - id: _yaml
+            type: MenuLink
+            pageId: _yaml
+
+pages:
+  - _ref: introduction.yaml
+  - _ref: tutorial/tutorial-setup.yaml
+  - _ref: tutorial/tutorial-editing-page.yaml
+  - _ref: tutorial/tutorial-development-server.yaml
+  - _ref: tutorial/tutorial-create-page.yaml
+  - _ref: tutorial/tutorial-create-page-config.yaml
+  - _ref: tutorial/tutorial-add-blocks.yaml
+  - _ref: tutorial/tutorial-add-blocks-config.yaml
+  - _ref: tutorial/tutorial-actions-operators.yaml
+  - _ref: tutorial/tutorial-actions-operators-config.yaml
+  - _ref: tutorial/tutorial-requests.yaml
+  - _ref: tutorial/next-steps.yaml
+
+  - _ref: concepts/overview.yaml
+  - _ref: concepts/cli.yaml
+  - _ref: concepts/lowdefy-schema.yaml
+  - _ref: concepts/context-and-state.yaml
+  - _ref: concepts/blocks.yaml
+  - _ref: concepts/layout.yaml
+  - _ref: concepts/connections-and-requests.yaml
+  - _ref: concepts/events-and-actions.yaml
+  - _ref: concepts/operators.yaml
+
+  - _ref: blocks/input/AutoComplete.yaml
+  - _ref: blocks/input/ButtonSelector.yaml
+  - _ref: blocks/input/CheckboxSelector.yaml
+  - _ref: blocks/input/ChromeColorSelector.yaml
+  - _ref: blocks/input/CircleColorSelector.yaml
+  - _ref: blocks/input/ColorSelector.yaml
+  - _ref: blocks/input/CompactColorSelector.yaml
+  - _ref: blocks/input/DateRangeSelector.yaml
+  - _ref: blocks/input/DateSelector.yaml
+  - _ref: blocks/input/DateTimeSelector.yaml
+  - _ref: blocks/input/GithubColorSelector.yaml
+  - _ref: blocks/input/MonthSelector.yaml
+  - _ref: blocks/input/MultipleSelector.yaml
+  - _ref: blocks/input/NumberInput.yaml
+  - _ref: blocks/input/Pagination.yaml
+  - _ref: blocks/input/ParagraphInput.yaml
+  - _ref: blocks/input/RadioSelector.yaml
+  - _ref: blocks/input/RatingSlider.yaml
+  - _ref: blocks/input/S3UploadButton.yaml
+  - _ref: blocks/input/Selector.yaml
+  - _ref: blocks/input/SliderColorSelector.yaml
+  - _ref: blocks/input/SwatchesColorSelector.yaml
+  - _ref: blocks/input/Switch.yaml
+  - _ref: blocks/input/TextArea.yaml
+  - _ref: blocks/input/TextInput.yaml
+  - _ref: blocks/input/TitleInput.yaml
+  - _ref: blocks/input/TwitterColorSelector.yaml
+  - _ref: blocks/input/WeekSelector.yaml
+
+  - _ref: blocks/display/Alert.yaml
+  - _ref: blocks/display/Anchor.yaml
+  - _ref: blocks/display/Avatar.yaml
+  - _ref: blocks/display/Breadcrumb.yaml
+  - _ref: blocks/display/Button.yaml
+  - _ref: blocks/display/DangerousHtml.yaml
+  - _ref: blocks/display/DangerousMarkdown.yaml
+  - _ref: blocks/display/Descriptions.yaml
+  - _ref: blocks/display/Divider.yaml
+  - _ref: blocks/display/Html.yaml
+  - _ref: blocks/display/Icon.yaml
+  - _ref: blocks/display/Markdown.yaml
+  - _ref: blocks/display/MarkdownWithCode.yaml
+  - _ref: blocks/display/Menu.yaml
+  - _ref: blocks/display/Paragraph.yaml
+  - _ref: blocks/display/Progress.yaml
+  - _ref: blocks/display/Skeleton.yaml
+  - _ref: blocks/display/Statistic.yaml
+  - _ref: blocks/display/Title.yaml
+
+  - _ref: connections/AWSS3.yaml
+  - _ref: connections/AxiosHttp.yaml
+  - _ref: connections/GoogleSheet.yaml
+  - _ref: connections/MongoDB.yaml
+
+  - _ref: actions/CallMethod.yaml
+  - _ref: actions/Link.yaml
+  - _ref: actions/Message.yaml
+  - _ref: actions/Notification.yaml
+  - _ref: actions/Request.yaml
+  - _ref: actions/Reset.yaml
+  - _ref: actions/ScrollTo.yaml
+  - _ref: actions/SetGlobal.yaml
+  - _ref: actions/SetState.yaml
+  - _ref: actions/Validate.yaml
+
+  - _ref: operators/_and.yaml
+  - _ref: operators/_args.yaml
+  - _ref: operators/_array.yaml
+  - _ref: operators/_base64.yaml
+  - _ref: operators/_date.yaml
+  - _ref: operators/_diff.yaml
+  - _ref: operators/_divide.yaml
+  - _ref: operators/_eq.yaml
+  - _ref: operators/_event.yaml
+  - _ref: operators/_function.yaml
+  - _ref: operators/_get.yaml
+  - _ref: operators/_global.yaml
+  - _ref: operators/_gt.yaml
+  - _ref: operators/_gte.yaml
+  - _ref: operators/_if.yaml
+  - _ref: operators/_if_none.yaml
+  - _ref: operators/_input.yaml
+  - _ref: operators/_json.yaml
+  - _ref: operators/_list_contexts.yaml
+  - _ref: operators/_log.yaml
+  - _ref: operators/_lt.yaml
+  - _ref: operators/_lte.yaml
+  - _ref: operators/_math.yaml
+  - _ref: operators/_media.yaml
+  - _ref: operators/_menu.yaml
+  - _ref: operators/_mql.yaml
+  - _ref: operators/_not.yaml
+  - _ref: operators/_nunjucks.yaml
+  - _ref: operators/_object.yaml
+  - _ref: operators/_operator.yaml
+  - _ref: operators/_or.yaml
+  - _ref: operators/_product.yaml
+  - _ref: operators/_random.yaml
+  - _ref: operators/_ref.yaml
+  - _ref: operators/_regex.yaml
+  - _ref: operators/_request.yaml
+  - _ref: operators/_secret.yaml
+  - _ref: operators/_state.yaml
+  - _ref: operators/_string.yaml
+  - _ref: operators/_subtract.yaml
+  - _ref: operators/_sum.yaml
+  - _ref: operators/_type.yaml
+  - _ref: operators/_uri.yaml
+  - _ref: operators/_url_query.yaml
+  - _ref: operators/_uuid.yaml
+  - _ref: operators/_var.yaml
+  - _ref: operators/_yaml.yaml
+
+  - _ref: 404.yaml

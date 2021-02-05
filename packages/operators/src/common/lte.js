@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,13 +27,6 @@ function _lte({ params, location }) {
   if (params.length !== 2) {
     throw new Error(
       `Operator Error: _lte takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
-  }
-  if (!type.isNumber(params[0]) || !type.isNumber(params[1])) {
-    throw new Error(
-      `Operator Error: _lte takes an array of 2 numbers. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );

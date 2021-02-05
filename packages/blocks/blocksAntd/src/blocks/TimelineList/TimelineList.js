@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
 
-const TimelineList = ({ blockId, list, methods, properties }) => {
+const TimelineList = ({ blockId, events, list, methods, properties }) => {
   const other = {};
   if (properties.mode) {
     other.mode = properties.mode;
@@ -35,6 +35,7 @@ const TimelineList = ({ blockId, list, methods, properties }) => {
         properties.pendingDotIcon && (
           <Icon
             blockId={`${blockId}_pendingDotIcon`}
+            events={events}
             methods={methods}
             properties={mergeObjects([{ style: { fontSize: 16 } }, properties.pendingDotIcon])}
           />
@@ -61,6 +62,7 @@ const TimelineList = ({ blockId, list, methods, properties }) => {
               icon && (
                 <Icon
                   blockId={`${blockId}_${i}_icon`}
+                  events={events}
                   methods={methods}
                   properties={mergeObjects([icon, { style: styleDot }])}
                 />

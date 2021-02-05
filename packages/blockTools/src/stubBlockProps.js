@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -45,13 +45,12 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
     if (!block.areas.content) block.areas.content = {};
     if (block.blocks) block.areas.content.blocks = block.blocks;
   }
-  block.actions = block.actions || {};
-  block.actionLog = [];
+  block.events = block.events || {};
+  block.eventLog = [];
   // mock default block methods
   block.methods = {
-    callAction: (action) => block.actionLog.unshift(action),
-    registerAction: (actionName, actions) => {
-      block.actions[actionName] = actions;
+    registerEvent: ({ name, actions }) => {
+      block.events[name] = actions;
       return;
     },
     registerMethod: (method, methodFn) => {
@@ -59,6 +58,7 @@ const stubBlockProps = ({ block, meta, logger, initialValue }) => {
       return;
     },
     makeCssClass,
+    triggerEvent: (event) => block.eventLog.unshift(event),
   };
 
   // block category defaults

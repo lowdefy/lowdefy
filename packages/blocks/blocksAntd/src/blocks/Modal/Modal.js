@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ import { Modal } from 'antd';
 
 const triggerSetOpen = ({ state, setOpen, methods }) => {
   if (!state) {
-    methods.callAction({ action: 'onClose' });
+    methods.triggerEvent({ name: 'onClose' });
   }
   if (state) {
-    methods.callAction({ action: 'onOpen' });
+    methods.triggerEvent({ name: 'onOpen' });
   }
   setOpen(state);
 };
 
-const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
+const ModalBlock = ({ blockId, content, properties, events, methods }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod('toggleOpen', () =>
@@ -54,16 +54,16 @@ const ModalBlock = ({ blockId, content, properties, actions, methods }) => {
         bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
         visible={type.isBoolean(properties.open) ? properties.open : openState}
         onOk={async () => {
-          await methods.callAction({ action: 'onOk' });
+          await methods.triggerEvent({ name: 'onOk' });
           // the visible should only close if actions finished successfully
           triggerSetOpen({ state: false, setOpen, methods });
         }}
         onCancel={async () => {
-          await methods.callAction({ action: 'onCancel' });
+          await methods.triggerEvent({ name: 'onCancel' });
           triggerSetOpen({ state: false, setOpen, methods });
         }}
-        afterClose={() => methods.callAction({ action: 'afterClose' })}
-        confirmLoading={get(actions, 'onOk.loading')}
+        afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
+        confirmLoading={get(events, 'onOk.loading')}
         okText={properties.okText || 'Ok'}
         cancelText={properties.cancelText || 'Cancel'}
         width={properties.width}

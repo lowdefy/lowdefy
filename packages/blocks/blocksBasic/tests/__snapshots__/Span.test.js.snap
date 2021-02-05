@@ -1,25 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render actions.onClick - value[0] 1`] = `
-<span
-  className="{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
-  data-testid="actions.onClick"
-  id="actions.onClick"
-  onClick={[Function]}
->
-  <div
-    style={
-      Object {
-        "border": "1px solid red",
-        "padding": 10,
-      }
-    }
-  >
-    content
-  </div>
-</span>
-`;
-
 exports[`Render areas.content - value[0] 1`] = `
 <span
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
@@ -45,6 +25,26 @@ exports[`Render default - value[0] 1`] = `
   className="{\\"style\\":[{\\"outline\\":\\"none\\"},null]}"
   data-testid="default"
   id="default"
+  onClick={[Function]}
+>
+  <div
+    style={
+      Object {
+        "border": "1px solid red",
+        "padding": 10,
+      }
+    }
+  >
+    content
+  </div>
+</span>
+`;
+
+exports[`Render events.onClick - value[0] 1`] = `
+<span
+  className="{\\"style\\":[{\\"outline\\":\\"none\\",\\"cursor\\":\\"pointer\\"},null]}"
+  data-testid="events.onClick"
+  id="events.onClick"
   onClick={[Function]}
 >
   <div
@@ -91,10 +91,6 @@ exports[`Render properties.style - value[0] 1`] = `
 </span>
 `;
 
-exports[`Test Schema actions.onClick 1`] = `true`;
-
-exports[`Test Schema actions.onClick 2`] = `null`;
-
 exports[`Test Schema areas.content 1`] = `true`;
 
 exports[`Test Schema areas.content 2`] = `null`;
@@ -102,6 +98,10 @@ exports[`Test Schema areas.content 2`] = `null`;
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema events.onClick 1`] = `true`;
+
+exports[`Test Schema events.onClick 2`] = `null`;
 
 exports[`Test Schema properties.content 1`] = `true`;
 

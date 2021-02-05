@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 import Actions from './Actions';
-import BlockActions from './BlockActions';
+import Events from './Events';
 import Blocks from './Blocks';
 import makeContextId from './makeContextId';
 import Requests from './Requests';
@@ -23,6 +23,6 @@ import State from './State';
 
 import getContext from './getContext';
 
-export { Actions, BlockActions, Blocks, makeContextId, Requests, State };
+export { Actions, Events, Blocks, makeContextId, Requests, State };
 
 export default getContext;

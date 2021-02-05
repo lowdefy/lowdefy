@@ -76,17 +76,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -127,17 +127,17 @@ Array [
       "closeText": undefined,
       "description": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="CheckCircleOutlined"
@@ -422,6 +422,46 @@ Array [
 ]
 `;
 
+exports[`Mock render - with description only - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": "This is a description for the block.",
+      "id": "with description only",
+      "message": false,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with description only and icon false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": "This is a description for the block.",
+      "id": "with description only and icon false",
+      "message": false,
+      "onClose": [Function],
+      "showIcon": false,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - with description properties.closable: true - value[0] - default 1`] = `
 Array [
   Array [
@@ -472,17 +512,17 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
-        actions={Object {}}
         blockId="with description properties.icon object_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -523,17 +563,17 @@ Array [
       "closeText": undefined,
       "description": "This is a description for the block.",
       "icon": <IconBlock
-        actions={Object {}}
         blockId="with description properties.icon string_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="CheckCircleOutlined"

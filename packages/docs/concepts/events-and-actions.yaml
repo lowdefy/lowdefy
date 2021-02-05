@@ -1,0 +1,120 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: events-and-actions
+    pageTitle: Events and Actions
+    section: Concepts
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            ### TLDR
+            - Events are triggered when something happens on a page, like clicking a button or loading a page.
+            - A list of actions are executed sequentially by a triggered event.
+            - If an action errors, the actions that follow are skipped.
+            - Operators used in action `params` are evaluated right before the action is executed.
+            - Actions have a `skip` field that can be used to skip action execution.
+            - The `onInit` event is triggered the first time a context is mounted and keeps the page in loading until all actions have finished.
+            - The `onEnter` event is triggered the every time a context is mounted and keeps the page in loading until all actions have finished.
+            - The `onInitAsync` event is triggered the first time a context is mounted and does not keep the page in loading.
+            - The `onEnterAsync` event is triggered the every time a context is mounted and does not keep the page in loading.
+
+            -----------
+
+
+            Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified or a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onEnter` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
+
+            _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for an event defined by a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed.
+
+            Each action has an `id`, unique to that action chain, and a `type` field which are required.
+
+            Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have arguments relating to that event, like what the new value of an input is, or the row that was clicked in a table. These arguments can be used in the action `params` using the [`_args`](/_args) operator.
+
+            Actions can also have a `skip` field. Operators in the `skip` field are also evaluated before an action is executed, and if the evaluated result is `true`, that action is skipped and the next action is executed.
+
+            # Action Schema
+
+            The schema for a Lowdefy action is:
+
+            - `id: string`: __Required__ - A identifier for the action. It must be unique within the action chain it is defined in.
+            - `type: string`: __Required__ - The action type to be used. It must be a valid action type.
+            - `skip: boolean`: The test that determines whether the action will be skipped or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
+            - `params: object`: The input passed to the action. __Operators are evaluated__.
+
+            ###### Events and actions definition example:
+            ```yaml
+            - id: block_with_actions
+              type: Block
+              properties:
+                # ...
+              events:
+                onEvent1:
+                  - id: action1
+                    type: ActionType1
+                    skip:
+                      # Operator expression that returns true if action should be skipped.
+                    params:
+                      # ...
+                  - id: action2
+                    type: ActionType2
+                onEvent2:
+                  - id: action3
+                    type: ActionType3
+                    params:
+                      # ...
+            ```
+
+            # Context initialisation events
+
+            Four events are always defined for [`context`](/context) type blocks:
+              - `onInit`
+              - `onEnter`
+              - `onInitAsync`
+              - `onEnterAsync`
+
+            These events can be used to initialise the context or page.
+
+            The `onInit` event is triggered the first time a context is mounted, for example if a page is loaded for the first time. This event blocks page render, in other words, the page __will__ remain in a loading state until all the actions have completed execution. It can be used to set up a context. Actions that take a long time to execute, like `Request`, should be used sparingly here.
+
+            The `onEnter` event is triggered every time a context is mounted to a page, for example if a user left a page, and returns to it. This event also blocks page render. It can be used to execute actions that should be run each time a page is loaded, like checking if an id is present in the [url query parameters](/_url_query), and initialising the [`state`](/context-and-state).
+
+            The `onInitAsync` event is triggered the first time a context is mounted, but does not block page render. In other words, the page __will not__ remain in a loading state until all the actions have completed execution. This is a good place to execute non-blocking tasks or requests that might take longer to execute.
+
+            The `onEnterAsync` event is triggered every time a context is mounted, but does not block page render.
+
+            # Action types
+
+            The following actions can be used:
+
+            - [`CallMethod`](/CallMethod) - Call a method defined by another block.
+            - [`Link`](/Link) - Link to another page.
+            - [`Message`](/Message) - Show a message to the user.
+            - [`Notification`](/Notification) - Show a notification to the user.
+            - [`Request`](/Request) - Call a request.
+            - [`Reset`](/Reset) - Reset the context.
+            - [`ScrollTo`](/ScrollTo) - Scroll to a point on the page.
+            - [`SetGlobal`](/SetGlobal) - Set a value to the `global` variable object.
+            - [`SetState`](/SetState) - Set a value to the context `state`.
+            - [`Validate`](/Validate) - Validate the inputs in the context.
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Connections and Requests
+            previous_page_id: connections-and-requests
+            next_page_title: Operators
+            next_page_id: operators

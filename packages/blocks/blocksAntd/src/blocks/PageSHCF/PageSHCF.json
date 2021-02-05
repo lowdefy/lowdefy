@@ -1,6 +1,11 @@
 {
   "category": "context",
-  "loading": false,
+  "loading": {
+    "type": "Spinner",
+    "properties": {
+      "height": "100vh"
+    }
+  },
   "test": {
     "methods": [
       {
@@ -28,15 +33,22 @@
             "theme": {
               "type": "string",
               "enum": ["light", "dark"],
+              "default": "dark",
               "description": "Header theme color."
             },
             "color": {
               "type": "string",
-              "description": "Header color."
+              "description": "Header color.",
+              "docs": {
+                "displayType": "color"
+              }
             },
             "style": {
               "type": "object",
-              "description": "Header css style object."
+              "description": "Header css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
@@ -47,7 +59,10 @@
           "properties": {
             "style": {
               "type": "object",
-              "description": "Main css style object."
+              "description": "Main css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
@@ -58,7 +73,10 @@
           "properties": {
             "style": {
               "type": "object",
-              "description": "Content css style object."
+              "description": "Content css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
@@ -70,7 +88,8 @@
             "breakpoint": {
               "type": "string",
               "enum": ["xs", "sm", "md", "lg", "xl", "xxl"],
-              "description": "Breakpoints of the responsive layout"
+              "default": "sm",
+              "description": "Breakpoint of the responsive layout"
             },
             "collapsedWidth": {
               "type": "integer",
@@ -78,32 +97,45 @@
             },
             "collapsible": {
               "type": "boolean",
+              "default": true,
               "description": "Whether can be collapsed"
             },
             "color": {
               "type": "string",
-              "description": "Sider color"
+              "description": "Sider color",
+              "docs": {
+                "displayType": "color"
+              }
             },
             "initialCollapsed": {
               "type": "boolean",
+              "default": true,
               "description": "Set the initial collapsed state"
             },
             "reverseArrow": {
               "type": "boolean",
+              "default": false,
               "description": "Direction of arrow, for a sider that expands from the right"
             },
             "theme": {
               "type": "string",
               "enum": ["light", "dark"],
+              "default": "light",
               "description": "Color theme of the sidebar"
             },
             "style": {
               "type": "object",
-              "description": "Css style object to apply to sider."
+              "description": "Css style object to apply to sider.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "width": {
               "type": ["string", "number"],
-              "description": "width of the sidebar"
+              "description": "width of the sidebar",
+              "docs": {
+                "displayType": "string"
+              }
             }
           }
         },
@@ -114,30 +146,37 @@
           "properties": {
             "style": {
               "type": "object",
-              "description": "Footer css style object."
+              "description": "Footer css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to layout."
+          "description": "Css style object to apply to layout.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onSiderClose": {
           "type": "array",
-          "description": "Triggers actions when sider is closed."
+          "description": "Trigger actions when sider is closed."
         },
         "onSiderOpen": {
           "type": "array",
-          "description": "Triggers actions when sider is opened."
+          "description": "Trigger actions when sider is opened."
         },
         "onBreakpoint": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when sider breakpoint id crossed."
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,11 +25,21 @@ import getUniqueValues from '../../getUniqueValues';
 
 const RadioGroup = Radio.Group;
 
-const RadioSelector = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const RadioSelector = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -57,7 +67,7 @@ const RadioSelector = ({ blockId, loading, properties, required, validation, val
                   ? uniqueValueOptions[event.target.value]
                   : uniqueValueOptions[event.target.value].value
               );
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             value={getValueIndex(value, uniqueValueOptions)}
           >

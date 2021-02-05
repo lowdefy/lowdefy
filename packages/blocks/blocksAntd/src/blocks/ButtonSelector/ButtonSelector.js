@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,11 +23,21 @@ import Label from '../Label/Label';
 import getValueIndex from '../../getValueIndex';
 import getUniqueValues from '../../getUniqueValues';
 
-const ButtonSelector = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const ButtonSelector = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -55,7 +65,7 @@ const ButtonSelector = ({ blockId, loading, properties, required, validation, va
                   ? uniqueValueOptions[event.target.value]
                   : uniqueValueOptions[event.target.value].value
               );
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
           >

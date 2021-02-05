@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -70,7 +70,16 @@ const styles = {
   },
 };
 
-const RatingSlider = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const RatingSlider = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   const [check, unCheck] = useState(false);
   let propertiesIconMin = serializer.copy(properties.minIcon);
   if (type.isString(propertiesIconMin)) {
@@ -91,6 +100,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
   return (
     <Label
       blockId={blockId}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -103,7 +113,6 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
               styles.content,
               {
                 paddingRight: validation.status && 30,
-                paddingTop: 18,
               },
             ])}
           >
@@ -124,7 +133,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
                   setValue: (val) => {
                     if (val[0] === true) {
                       unCheck(true);
-                      methods.setValue(null);
+                      methods.setValue(properties.notApplicableLabel || 'N/A');
                     } else {
                       unCheck(false);
                     }
@@ -136,6 +145,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMin`}
+                events={events}
                 methods={methods}
                 properties={mergeObjects([
                   {
@@ -149,6 +159,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             )}
             <Slider
               id={`${blockId}_input`}
+              events={events}
               className={classNames(
                 methods.makeCssClass([
                   properties.color && {
@@ -194,13 +205,14 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
                 } else {
                   methods.setValue(val);
                 }
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={value === null ? minMin : value}
             />
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMax`}
+                events={events}
                 methods={methods}
                 properties={mergeObjects([
                   {

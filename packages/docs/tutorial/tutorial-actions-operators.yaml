@@ -1,0 +1,415 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-actions-operators
+    pageTitle: Interactive pages
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-requests
+    content:
+      - id: md1
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](tutorial-add-blocks-config).
+
+            ## Adding a reset button
+
+            The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
+
+            #### Step 1
+
+            Copy the following into the definition of the reset button:
+
+            ##### `pages/new-ticket.yaml`
+            ```yaml
+            id: new-ticket
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    # ...
+                    # ...
+                    # ...
+                  - id: reset_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Reset
+                      block: true
+                      type: default
+                      icon: ClearOutlined
+            ################ -------- Copy from here -------- ################
+                    actions:
+                      onClick:
+                        - id: reset
+                          type: Reset
+            ################ -------- Copy to here ---------- ################
+                  - id: submit_button
+                    type: Button
+                    # ...
+            ```
+
+            If you add some inputs into the form and click the reset button, those inputs should be cleared.
+
+            ### How it works
+
+            Each block defines a set of actions that it fire when a event happens. The button fires an event called `onClick` when it gets clicked. We can add a array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
+
+            ## Required fields
+
+            We should validate the data users are submitting to make sure our app has clean data and works as expected. The `ticket_title` and `ticket_type` fields should be compulsory, and the user should not be able to submit the ticket if they are not completed.
+
+            #### Step 1
+
+            To make the fields required, add a required property to the input blocks like this:
+
+            ```yaml
+            - id: ticket_title
+              type: TextInput
+              required: true
+              properties:
+                title: Title
+            ```
+
+            A red star should appear next to each input field, looking like this:
+      - id: example1
+        type: TextInput
+        required: true
+        properties:
+          title: Title
+      - id: md2
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
+
+            #### Step 2
+            Add the validate action like this:
+
+            ##### `pages/new-ticket.yaml`
+            ```yaml
+            id: new-ticket
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    # ...
+                    # ...
+                    # ...
+                  - id: submit_button
+                    type: Button
+                    layout:
+                      span: 12
+                    properties:
+                      title: Submit
+                      block: true
+                      type: primary
+                      icon: SaveOutlined
+            ################ -------- Copy from here -------- ################
+                    actions:
+                      onClick:
+                        - id: validate
+                          type: Validate
+            ################ -------- Copy to here ---------- ################
+            ```
+
+            Now if we click the submit button and all our inputs aren't complete, a message pops up saying we have validation errors on the page. All the fields that have not been completed are highlighted in red.
+
+            The result should look and work like this. The examples in this tutorial are live versions of the tutorial app, so you can verify that they work like your own app.
+      - id: example2
+        type: PageHeaderMenu
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links: []
+        blocks:
+          - id: content_card
+            type: Card
+            layout:
+              contentGutter: 16
+            blocks:
+              - id: page_heading
+                type: Title
+                properties:
+                  content: Book a meeting room
+                  level: 3
+              - id: ticket_title
+                type: TextInput
+                required: true
+                properties:
+                  title: Title
+              - id: meeting_room
+                type: ButtonSelector
+                required: true
+                properties:
+                  title: Ticket type
+                  options:
+                    - Feature request
+                    - Bug report
+                    - Question
+              - id: ticket_description
+                type: TextArea
+                properties:
+                  title: Description
+              - id: reset_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Reset
+                  block: true
+                  type: default
+                  icon: ClearOutlined
+                actions:
+                  onClick:
+                    - id: reset
+                      type: Reset
+              - id: submit_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Submit
+                  block: true
+                  type: primary
+                  icon: SaveOutlined
+                actions:
+                  onClick:
+                    - id: validate
+                      type: Validate
+      - id: md3
+        type: MarkdownWithHtml
+        properties:
+          renderHtml: true
+          content: |
+            ### How it works
+
+            The validate action we added to the submit button evaluates all the input blocks on the page, and gives an error if any of them fail the validation. This will also stop the execution of any actions after that action. This means we won't insert the data into our database later. The first time a validate action is called on a page it sets a flag that tells all the input blocks to show their validation errors.
+
+            ## Hiding blocks
+
+            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](\_eq) [`operator`](\operators) to test if the ticket type is equal to `Bug report`
+
+            #### Step 1
+            Add the following [`ButtonSelector`](ButtonSelector) to your app.
+
+            ##### `pages/new-ticket.yaml`
+            ```yaml
+            id: new-ticket
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  # ...
+                  - id: ticket_description
+                    type: TextArea
+                    properties:
+                      title: Description
+            ################ -------- Copy from here -------- ################
+                  - id: confirm_restart
+                    type: ButtonSelector
+                    visible: # Test if block should be visible to the user
+                      _eq: # Equals operator
+                        - _state: ticket_type # Get the ticket_type value from state.
+                        - Bug report
+                    properties:
+                      title: Did you restart your device?
+                      label:
+                        colon: false # Hide the label colon
+                      options:
+                        - Yes
+                        - No
+            ################ -------- Copy to here ---------- ################
+                  - id: reset_button
+                    type: Button
+            ```
+
+            If you select the "Bug report" ticket type, the selector confirming if you restarted your device should appear.
+
+            ### How it works
+
+            If the visible field value is `false`, the block won't be rendered. To change this value while our app is running, we use an operator. Operators evaluate every time something in the app changes, like when a user provides an input.
+
+            We used the [`_eq`](\_eq) operator to check the ticket type is 'Bug report'.
+
+            To get the value of the `ticket_type` input, we use the [`_state`](\_state) operator. This get a value from the page's [`state`](\context). _The `state` is an object where data the app needs is stored_. All inputs automatically write their values to state, and you can also set values in `state` by using the [`SetState`](\SetState) action.
+
+            ## Validation rules
+
+            We would like to add a validation rule on the `confirm_restart` block to warn users that they should restart their device before creating a bug report.
+
+             #### Step 1
+
+             Add the following to your app
+            ##### `pages/new-ticket.yaml`
+            ```yaml
+            id: new-ticket
+            # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  # ...
+                  - id: confirm_restart
+                    type: ButtonSelector
+                    visible: # Test if block should be visible to the user
+                      _eq: # Equals operator
+                        - _state: ticket_type # Get the ticket_type value from state.
+                        - Bug report
+            ################ ------- Copy from here -------- ################
+                    validate:
+                      - status: warning # Show a warning that shows before validate is called and does not block Validate action.
+                        message: If you did not restart your device, we will ask you to restart it.
+                        pass:
+                          _eq:
+                            - _state: confirm_restart
+                            - Yes
+            ################ -------- Copy to here ---------- ################
+                    properties:
+                      title: Did you restart your device?
+                      label:
+                        colon: false # Hide the label colon
+                      options:
+                        - Yes
+                        - No
+            ```
+
+            Your app should now show a warning message if `confirm_restart` is not yes.
+
+            ### How it works
+
+            The `validation` field contains an array of validation rules that can be evaluated using operators.
+
+            If the pass field receives `true`, the rule passes and nothing happens. If the rule fails and the status is error, the `Validate` action will fail, like it did for required fields. If the status is warning, a warning will be shown to the user, but the `Validate` action will still pass.
+
+            Your final new ticket page should look and work like this:
+
+      - id: example3
+        type: PageHeaderMenu
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links: []
+        actions:
+          onInit:
+            - id: init
+              type: SetState
+              params:
+                example3_number_of_attendees: 2 - 3
+                example3_meeting_room: Boardroom
+        blocks:
+          - id: example3_content_card
+            type: Card
+            layout:
+              contentGutter: 16
+            blocks:
+              - id: page_heading
+                type: Title
+                required: true
+                properties:
+                  content: Log a ticket # Change the title on the page.
+                  level: 3 # Make the title a little smaller (an html `<h3>`).
+              - id: ticket_title
+                type: TextInput
+                required: true
+                properties:
+                  title: Title
+              - id: ticket_type
+                type: ButtonSelector
+                required: true
+                properties:
+                  title: Ticket type
+                  options: # Set the allowed options
+                    - Feature request
+                    - Bug report
+                    - Question
+              - id: ticket_description
+                type: TextArea
+                properties:
+                  title: Description
+              - id: confirm_restart
+                type: ButtonSelector
+                visible: # Test if block should be visible to the user
+                  _eq: # Equals operator
+                    - _state: ticket_type # Get the ticket_type value from state.
+                    - Bug report
+                validate:
+                  - status: warning # Show a warning that shows before validate is called and does not block Validate action.
+                    message: If you did not restart your device, we will ask you to restart it.
+                    pass:
+                      _eq:
+                        - _state: confirm_restart
+                        - Yes
+                properties:
+                  title: Did you restart your device?
+                  label:
+                    colon: false # Hide the label colon
+                  options:
+                    - Yes
+                    - No
+              - id: reset_button
+                type: Button
+                layout:
+                  span: 12 # Set the size of the button (span 12 of 24 columns)
+                properties:
+                  title: Reset
+                  block: true # Make the button fill all the space available to it
+                  type: default # Make the button a plain button
+                  icon: ClearOutlined
+                actions:
+                  onClick:
+                    - id: reset
+                      type: Reset
+              - id: submit_button
+                type: Button
+                layout:
+                  span: 12
+                properties:
+                  title: Submit
+                  block: true
+                  type: primary # Make the button a primary button with color
+                  icon: SaveOutlined
+                actions:
+                  onClick:
+                    - id: validate
+                      type: Validate
+      - id: md4
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            > You can find the final configuration files for this section [here](tutorial-actions-operators-config).
+
+            ## Up next
+
+            Our app doesn't save the form data anywhere when the submit button is clicked. In the next section we will set up a Google Sheets connection, and make a request to save the data in the sheet.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Adding blocks
+            previous_page_id: tutorial-add-blocks
+            next_page_title: Requests
+            next_page_id: tutorial-requests

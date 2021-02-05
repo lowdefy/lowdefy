@@ -1,0 +1,150 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: AxiosHttp
+    pageTitle: AxiosHttp
+    section: Connections
+    content:
+      - id: markdown
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            The `AxiosHTTP` connection is used to connect to APIs and web servers using HTTP or HTTPS.
+
+            It uses the [axios](https://github.com/axios/axios) library.
+
+            The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseUrl to be set on the connection, with request specific properties like the request.
+
+            >Secrets like authentication headers and API keys should be stored using the [`_secret`](operators/secret.md) operator.
+
+            ## Connections
+
+            Connection types:
+              - AxiosHTTP
+
+            ## Requests
+
+            Request types:
+              - AxiosHTTP
+
+            ### AxiosHTTP
+
+            #### Properties
+
+            - `url: string`: _String_ - The server URL that will be used for the request.
+            - `method: enum`: Default: `'get'` - The request method to be used when making the request. Options are:
+              - `'get'`
+              - `'delete'`
+              - `'head'`
+              - `'options'`
+              - `'post'`
+              - `'put'`
+              - `'patch'`
+            - `baseURL: string`: `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
+            - `headers`: _Object_ - An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
+            - `params: object`: An object with URL parameters to be sent with the request.
+            - `data: string | object`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
+            - `timeout: number`: Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.
+            - `auth: object`: Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
+              - `username: string`
+              - `password: string`
+
+            - `responseType: enum`: Default: `'json'` - The type of data that the server will respond with. Options are:
+              - `'document'`
+              - `'json'`
+              - `'text'`
+            - `responseEncoding: string`: Default: `'utf8'` - Indicates encoding to use for decoding responses.
+            - `maxContentLength: number`: Defines the max size of the http response content allowed in bytes.
+            - `maxRedirects: number`: Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
+            - `proxy: object`: Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
+              - `host: string`: Host IP address (eg. `'127.0.0.1'`).
+              - `port: number`: Port number.
+              - `auth: object`: Object with username and password.
+
+
+            ### Examples
+
+            Properties for a AxiosHttp can be set on either the connection, the request, or both. However, both a connection and request need to be defined.
+
+            Using the connection to set baseUrl and authorization, and handle specific requests as requests.
+            ```yaml
+            connections:
+              - id: myapp_api
+                type: AxiosHttp
+                properties:
+                  baseUrl: myapp.com/api
+                  auth:
+                    username: lowdefy_api_user
+                    password:
+                      _secret: lowdefy_api_password
+            # ...
+            requests:
+              - id: get_orders
+                type: AxiosHttp
+                connectionId: myapp_api
+                properties:
+                  url: /orders
+              - id: update_order
+                type: AxiosHttp
+                connectionId: myapp_api
+                properties:
+                  url:
+                    _nunjucks: /orders/{{ order_id }}
+                  method: post
+                  body:
+                    _state: true
+            ```
+
+
+            Setting properties on only the connection:
+            ```yaml
+            connections:
+              - id: get_count
+                type: AxiosHttp
+                properties:
+                  url: myapp.com/api/count
+                headers:
+                  X-Api-Key:
+                    _secret: my_api_key
+            # ...
+            requests:
+              - id: get_count
+                type: AxiosHttp
+                connectionId: get_count
+            ```
+
+            Setting properties on only the request, and using a generic connection:
+            ```yaml
+            connections:
+              - id: axios
+                type: AxiosHttp
+            # ...
+            requests:
+              - id: get_api_1
+                type: AxiosHttp
+                connectionId: axios
+                properties:
+                  url: app1.com/api/things
+              - id: post_to_api_2
+                type: AxiosHttp
+                connectionId: axios
+                properties:
+                  url: api.otherapp.org/other/thing
+                  method: post
+                  body:
+                    _state: true
+            ```

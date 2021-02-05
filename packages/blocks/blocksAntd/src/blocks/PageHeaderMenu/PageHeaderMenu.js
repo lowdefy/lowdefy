@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,7 +27,16 @@ import Layout from '../Layout/Layout';
 import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
 
-const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, properties }) => {
+const PageHeaderMenu = ({
+  blockId,
+  content,
+  events,
+  homePageId,
+  menus,
+  methods,
+  pageId,
+  properties,
+}) => {
   const styles = {
     layout: {
       minHeight: '100vh',
@@ -90,6 +99,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
   return (
     <Layout
       blockId={blockId}
+      events={events}
       methods={methods}
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       content={{
@@ -97,6 +107,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
           <>
             <Header
               blockId={`${blockId}_header`}
+              events={events}
               methods={methods}
               properties={mergeObjects([
                 {
@@ -126,6 +137,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
                       <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
                         <Menu
                           blockId={`${blockId}_menu`}
+                          events={events}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -151,6 +163,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
+                          events={events}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -164,6 +177,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
             />
             <Content
               blockId={`${blockId}_content`}
+              events={events}
               methods={methods}
               properties={mergeObjects([properties.content, { style: styles.body }])}
               content={{
@@ -172,6 +186,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
                     {!type.isNone(properties.breadcrumb) ? (
                       <Breadcrumb
                         blockId={`${blockId}_breadcrumb`}
+                        events={events}
                         methods={methods}
                         properties={mergeObjects([
                           properties.breadcrumb,
@@ -189,6 +204,7 @@ const PageHeaderMenu = ({ blockId, content, homePageId, menus, methods, pageId, 
             {content.footer && (
               <Footer
                 blockId={`${blockId}_footer`}
+                events={events}
                 methods={methods}
                 properties={properties.footer}
                 content={{

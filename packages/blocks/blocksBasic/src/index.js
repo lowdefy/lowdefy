@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 import Box from './blocks/Box/Box';
 import Context from './blocks/Context/Context';
+import DangerousHtml from './blocks/DangerousHtml/DangerousHtml';
 import Html from './blocks/Html/Html';
 import List from './blocks/List/List';
 import Span from './blocks/Span/Span';
 
-export { Box, Context, Html, Span, List };
-export default { Box, Context, Html, Span, List };
+export { Box, Context, DangerousHtml, Html, Span, List };
+export default { Box, Context, DangerousHtml, Html, Span, List };

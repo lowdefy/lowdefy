@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ const typeDefs = gql`
   }
 
   input RequestInput {
-    args: JSON!
     arrayIndices: JSON!
     blockId: String!
+    event: JSON!
     input: JSON!
     lowdefyGlobal: JSON!
     pageId: String!

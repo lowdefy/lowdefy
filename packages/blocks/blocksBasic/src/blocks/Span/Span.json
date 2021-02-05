@@ -12,16 +12,20 @@
         },
         "style": {
           "type": "object",
-          "description": "Style to apply to Span div."
+          "description": "Css style object to apply to Span div.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when the Span is clicked."
         }
       }
     }

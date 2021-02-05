@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import { Avatar } from 'antd';
 import Icon from '../Icon/Icon';
 
-const AvatarBlock = ({ actions, blockId, methods, properties }) => (
+const AvatarBlock = ({ blockId, events, methods, properties }) => (
   <Avatar
     id={blockId}
     alt={properties.alt}
@@ -27,17 +27,22 @@ const AvatarBlock = ({ actions, blockId, methods, properties }) => (
     shape={properties.shape}
     size={properties.size}
     src={properties.src}
-    onClick={() => methods.callAction({ action: 'onClick' })}
+    onClick={() => methods.triggerEvent({ name: 'onClick' })}
     className={methods.makeCssClass([
       {
         backgroundColor: !properties.src && properties.color,
-        cursor: actions.onClick && 'pointer',
+        cursor: events.onClick && 'pointer',
       },
       properties.style,
     ])}
     icon={
       properties.icon && (
-        <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+        <Icon
+          blockId={`${blockId}_icon`}
+          events={events}
+          properties={properties.icon}
+          methods={methods}
+        />
       )
     }
   >

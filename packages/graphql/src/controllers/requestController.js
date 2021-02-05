@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,17 +27,10 @@ class RequestController {
     this.connectionLoader = getLoader('connection');
   }
 
-  async callRequest({
-    args,
-    arrayIndices,
-    blockId,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requestId,
-    state,
-    urlQuery,
-  }) {
+  async callRequest(requestInput) {
+    // get variables needed to load request/connection from requestInput
+    const { arrayIndices, blockId, pageId, requestId } = requestInput;
+
     const request = await this.loadRequest({
       pageId,
       contextId: blockId,
@@ -49,8 +42,11 @@ class RequestController {
     const connectionDefinition = this.getConnectionDefinition({ connection, request });
     const requestDefinition = this.getRequestDefinition({ connectionDefinition, request });
 
+    // Get parser variables from requestInput and deserialize
+    const { event, input, lowdefyGlobal, state, urlQuery } = this.deserializeInputs(requestInput);
+
     const { connectionProperties, requestProperties } = await this.parseOperators({
-      args,
+      event,
       arrayIndices,
       connection,
       input,
@@ -61,13 +57,13 @@ class RequestController {
     });
 
     this.checkConnectionRead({
+      connectionId: request.connectionId,
       connectionProperties,
-      connection,
       checkRead: requestDefinition.checkRead,
     });
     this.checkConnectionWrite({
+      connectionId: request.connectionId,
       connectionProperties,
-      connection,
       checkWrite: requestDefinition.checkWrite,
     });
 
@@ -132,8 +128,12 @@ class RequestController {
     return requestDefinition;
   }
 
+  deserializeInputs({ event, input, lowdefyGlobal, state, urlQuery }) {
+    return serializer.deserialize({ event, input, lowdefyGlobal, state, urlQuery });
+  }
+
   async parseOperators({
-    args,
+    event,
     arrayIndices,
     connection,
     input,
@@ -153,18 +153,18 @@ class RequestController {
     });
 
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+      event,
       input: connection.properties || {},
       location: connection.connectionId,
-      args,
     });
     if (connectionErrors.length > 0) {
       throw new RequestError(connectionErrors[0]);
     }
 
     const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+      event,
       input: request.properties || {},
       location: request.requestId,
-      args,
     });
     if (requestErrors.length > 0) {
       throw new RequestError(requestErrors[0]);
@@ -176,15 +176,15 @@ class RequestController {
     };
   }
 
-  checkConnectionRead({ connectionProperties, connection, checkRead }) {
+  checkConnectionRead({ connectionId, connectionProperties, checkRead }) {
     if (checkRead && connectionProperties.read === false) {
-      throw new ConfigurationError(`${connection.type} connection does not allow reads.`);
+      throw new ConfigurationError(`Connection "${connectionId}" does not allow reads.`);
     }
   }
 
-  checkConnectionWrite({ connectionProperties, connection, checkWrite }) {
+  checkConnectionWrite({ connectionId, connectionProperties, checkWrite }) {
     if (checkWrite && connectionProperties.write !== true) {
-      throw new ConfigurationError(`${connection.type} connection does not allow writes.`);
+      throw new ConfigurationError(`Connection "${connectionId}" does not allow writes.`);
     }
   }
 

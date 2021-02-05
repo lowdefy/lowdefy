@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 class HtmlBlock extends React.Component {
@@ -26,11 +27,11 @@ class HtmlBlock extends React.Component {
   }
 
   componentDidMount() {
-    this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
   }
 
   componentDidUpdate() {
-    this.div.innerHTML = this.props.properties.html;
+    this.div.innerHTML = DOMPurify.sanitize(this.props.properties.html);
   }
 
   render() {

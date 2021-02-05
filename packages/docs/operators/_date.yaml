@@ -1,0 +1,70 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _date
+    pageTitle: _date
+    types: |
+      ```
+      (dateString: string): date
+      (unixTimestamp: number): date
+      ```
+    description: |
+      The `_date` operator returns a date object representing a single moment in time. It can take a string in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format, or a number that is the number of milliseconds since 1 January 1970 UTC (the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time)).
+    arguments: |
+      ###### string
+      An string in ISO 8601 format representing a date and time.
+
+      ###### number
+      The number of milliseconds since 1 January 1970 UTC.
+    examples: |
+      ###### Timestamp:
+      ```yaml
+      _date: 1611837509802
+      ```
+      Returns: Thu Jan 28 2021 12:38:29 GMT+0000
+
+      ###### ISO 8601 string, only date:
+      ```yaml
+      _date: 2021-01-28
+      ```
+      Returns: Thu Jan 28 2021 00:00:00 GMT+0000
+
+      ###### ISO 8601 string, date and time:
+      ```yaml
+      _date: 2021-01-28T12:36:03.957Z
+      ```
+      Returns: Thu Jan 28 2021 12:38:29 GMT+0000
+    methods:
+      - name: now
+        types: |
+          ```
+          (void): date
+          ```
+        description: |
+          The `_date.now` method returns a date object representing the moment in time it was called. The method can also be used as `_date: now`
+        arguments: |
+          The `_date.now` method does not take any arguments.
+        examples: |
+          ###### Get the current date and time:
+          ```yaml
+          _date.now: null
+          ```
+          ```yaml
+          _date: now
+          ```
+          Returns: The current date and time.

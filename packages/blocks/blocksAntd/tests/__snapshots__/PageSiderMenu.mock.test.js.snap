@@ -6,18 +6,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="default_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -33,8 +32,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -67,18 +67,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="default_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -94,8 +93,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -124,18 +124,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.breadcrumb.list_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -151,8 +150,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -185,18 +185,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.breadcrumb.list_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -212,8 +211,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -242,18 +242,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.content.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -269,8 +268,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -303,18 +303,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.content.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -330,8 +329,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -360,18 +360,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.footer.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -387,8 +386,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -421,18 +421,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.footer.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -448,8 +447,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -478,18 +478,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.header.color_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -505,8 +504,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -540,18 +540,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.color_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -567,8 +566,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -597,18 +597,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.header.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -624,8 +623,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -659,18 +659,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -686,8 +685,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -716,18 +716,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.header.theme: light_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -743,8 +742,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -778,18 +778,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.header.theme: light_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -805,8 +804,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -835,18 +835,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.logo.alt_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -862,8 +861,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -896,18 +896,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.logo.alt_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -923,8 +922,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -953,18 +953,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.logo.src_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -980,8 +979,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1014,18 +1014,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.logo.src_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1041,8 +1040,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1071,18 +1071,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.logo.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1098,8 +1097,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1132,18 +1132,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.logo.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1159,8 +1158,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1189,18 +1189,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.menu_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1216,8 +1215,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1250,18 +1250,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.menu_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1277,8 +1276,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1307,18 +1307,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.menu.selectedColor_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1334,8 +1333,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1368,18 +1368,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.menu.selectedColor_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1395,8 +1394,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1425,18 +1425,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.sider.color_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1452,8 +1451,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1486,18 +1486,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.sider.color_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1513,8 +1512,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1543,18 +1543,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.sider.initialCollapsed_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1570,8 +1569,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1604,18 +1604,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.sider.initialCollapsed_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1631,8 +1630,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1661,18 +1661,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.sider.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1688,8 +1687,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1722,18 +1722,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.sider.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1749,8 +1748,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1779,18 +1779,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.style_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1807,8 +1806,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1841,18 +1841,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.style_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1869,8 +1868,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -1899,18 +1899,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.toggleSiderButton.hide_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1926,8 +1925,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1960,18 +1960,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.toggleSiderButton.hide_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1987,8 +1986,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}
@@ -2017,18 +2017,17 @@ Array [
     Object {
       "children": <React.Fragment>
         <HeaderBlock
-          actions={Object {}}
           blockId="properties.toggleSiderButton.type_header"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2044,8 +2043,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -2078,18 +2078,17 @@ Array [
           }
         />
         <LayoutBlock
-          actions={Object {}}
           blockId="properties.toggleSiderButton.type_layout"
           content={
             Object {
               "content": [Function],
             }
           }
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2105,8 +2104,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={Object {}}

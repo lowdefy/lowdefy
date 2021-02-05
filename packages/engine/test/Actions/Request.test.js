@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ test('Request call one request', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
             },
           },
@@ -104,7 +104,7 @@ test('Request call one request', async () => {
     loading: false,
     response: 1,
   });
-  const promise = button.callAction({ action: 'onClick' });
+  const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests.req_one).toEqual({
     error: [null],
     loading: true,
@@ -142,7 +142,7 @@ test('Request call all requests', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
             },
           },
@@ -169,7 +169,7 @@ test('Request call all requests', async () => {
       response: 2,
     },
   });
-  const promise = button.callAction({ action: 'onClick' });
+  const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: {
       error: [null],
@@ -221,7 +221,7 @@ test('Request call array of requests', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
             },
           },
@@ -248,7 +248,7 @@ test('Request call array of requests', async () => {
       response: 2,
     },
   });
-  const promise = button.callAction({ action: 'onClick' });
+  const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: {
       error: [null],
@@ -300,7 +300,7 @@ test('Request pass if params are none', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'Request' }],
             },
           },
@@ -327,7 +327,7 @@ test('Request pass if params are none', async () => {
       response: 2,
     },
   });
-  await button.callAction({ action: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: {
       error: [null],

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,10 +26,20 @@ import disabledDate from '../../disabledDate';
 
 const MonthPicker = DatePicker.MonthPicker;
 
-const MonthSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const MonthSelector = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={`${blockId}_label`}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -53,12 +63,13 @@ const MonthSelector = ({ blockId, loading, methods, properties, required, valida
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />
                 )
               }
-              disabledDate={disabledDate(properties.disabledDate)}
+              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal
@@ -68,7 +79,7 @@ const MonthSelector = ({ blockId, loading, methods, properties, required, valida
                         .startOf('month')
                         .toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
             />

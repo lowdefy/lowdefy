@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ import React from 'react';
 import { Skeleton } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const SkeletonBlock = ({ blockId, properties, methods }) => {
+const SkeletonBlock = ({ blockId, events, properties, methods }) => {
   if (properties.button) {
     return (
       <Skeleton.Button
         id={blockId}
         className={methods.makeCssClass(properties.style)}
+        events={events}
         active={properties.active || properties.button.active}
         size={properties.size || properties.button.size}
         shape={properties.shape || properties.button.shape}
@@ -35,6 +36,7 @@ const SkeletonBlock = ({ blockId, properties, methods }) => {
       <Skeleton.Input
         id={blockId}
         className={methods.makeCssClass(properties.style)}
+        events={events}
         active={properties.active || properties.input.active}
         size={properties.size || properties.input.size}
       />
@@ -45,6 +47,7 @@ const SkeletonBlock = ({ blockId, properties, methods }) => {
       <Skeleton.Avatar
         id={blockId}
         className={methods.makeCssClass(properties.style)}
+        events={events}
         active={properties.active || properties.avatar.active}
         size={properties.size || properties.avatar.size}
         shape={properties.shape || properties.avatar.shape}
@@ -55,6 +58,7 @@ const SkeletonBlock = ({ blockId, properties, methods }) => {
     <Skeleton
       id={blockId}
       className={methods.makeCssClass(properties.style)}
+      events={events}
       active={properties.active}
       avatar={properties.avatar}
       title={properties.title}

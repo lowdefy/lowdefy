@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,16 +19,21 @@ import { Modal } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ConfirmModal = ({ blockId, content, methods, properties }) => {
+const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
       if (properties.icon) {
         additionalProps.icon = (
-          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={properties.icon}
+            methods={methods}
+          />
         );
       }
-      methods.callAction({ action: 'onOpen' });
+      methods.triggerEvent({ name: 'onOpen' });
       Modal[args.status || properties.status || 'confirm']({
         id: `${blockId}_confirm_modal`,
         title: properties.title,
@@ -44,12 +49,12 @@ const ConfirmModal = ({ blockId, content, methods, properties }) => {
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {
-          await methods.callAction({ action: 'onOk' });
-          methods.callAction({ action: 'onClose' });
+          await methods.triggerEvent({ name: 'onOk' });
+          methods.triggerEvent({ name: 'onClose' });
         },
         onCancel: async () => {
-          await methods.callAction({ action: 'onCancel' });
-          methods.callAction({ action: 'onClose' });
+          await methods.triggerEvent({ name: 'onCancel' });
+          methods.triggerEvent({ name: 'onClose' });
         },
         ...additionalProps,
       });

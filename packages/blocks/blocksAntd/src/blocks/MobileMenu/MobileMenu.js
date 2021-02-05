@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import Button from '../Button/Button';
 import Drawer from '../Drawer/Drawer';
 import Menu from '../Menu/Menu';
 
-const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => {
+const MobileMenu = ({ blockId, events, methods, menus, pageId, properties, rename }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () => {
@@ -38,6 +38,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
     <div id={blockId}>
       <Button
         blockId={`${blockId}_button`}
+        events={events}
         properties={{
           title: '',
           type: 'primary',
@@ -49,7 +50,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
         methods={methods}
         onClick={() => methods[get(rename, 'methods.toggleOpen', { default: 'toggleOpen' })]()}
         rename={{
-          actions: {
+          events: {
             onClick: 'onToggleDrawer',
           },
         }}
@@ -63,7 +64,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
           properties.drawer,
         ])}
         rename={{
-          actions: {
+          events: {
             onToggle: 'onToggleDrawer',
           },
           methods: {
@@ -79,6 +80,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
               <Menu
                 blockId={`${blockId}_menu`}
                 methods={methods}
+                events={events}
                 menus={menus}
                 pageId={pageId}
                 properties={{
@@ -88,7 +90,7 @@ const MobileMenu = ({ blockId, methods, menus, pageId, properties, rename }) => 
                   mode: 'inline',
                 }}
                 rename={{
-                  actions: {
+                  events: {
                     onClick: 'onMenuItemClick',
                     onSelect: 'onMenuItemSelect',
                   },

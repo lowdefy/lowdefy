@@ -1,6 +1,8 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton"
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,7 +15,10 @@
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to skeleton."
+          "description": "Css style object to apply to skeleton.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "round": {
           "type": "boolean",
@@ -21,10 +26,10 @@
           "description": "Show paragraph and title radius when true."
         },
         "avatar": {
+          "default": false,
           "oneOf": [
             {
               "type": "boolean",
-              "default": false,
               "description": "Show avatar."
             },
             {
@@ -37,7 +42,7 @@
                   "description": "The shape of the avatar."
                 },
                 "size": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "type": "string",
                       "enum": ["small", "default", "large"],
@@ -55,10 +60,10 @@
           ]
         },
         "button": {
+          "default": false,
           "oneOf": [
             {
               "type": "boolean",
-              "default": false,
               "description": "Show button."
             },
             {
@@ -81,10 +86,10 @@
           ]
         },
         "paragraph": {
+          "default": true,
           "oneOf": [
             {
               "type": "boolean",
-              "default": true,
               "description": "Show paragraph placeholder."
             },
             {
@@ -96,17 +101,20 @@
                 },
                 "width": {
                   "type": ["number", "string", "array"],
-                  "description": "Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width. Can be numbers or strings."
+                  "description": "Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width. Can be numbers or strings.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
           ]
         },
         "title": {
+          "default": true,
           "oneOf": [
             {
               "type": "boolean",
-              "default": true,
               "description": "Show title placeholder."
             },
             {
@@ -114,7 +122,10 @@
               "properties": {
                 "width": {
                   "type": ["number", "string"],
-                  "description": "Set the width of title. Can be a number or string."
+                  "description": "Set the width of title. Can be a number or string.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }

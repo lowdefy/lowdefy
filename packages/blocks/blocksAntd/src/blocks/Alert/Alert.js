@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,24 +20,32 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const AlertBlock = ({ blockId, methods, properties }) => {
+const AlertBlock = ({ blockId, events, methods, properties }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon blockId={`${blockId}_icon`} methods={methods} properties={properties.icon} />
+      <Icon
+        blockId={`${blockId}_icon`}
+        events={events}
+        methods={methods}
+        properties={properties.icon}
+      />
     );
   }
   return (
     <Alert
-      afterClose={() => methods.callAction({ action: 'afterClose' })}
+      afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
       banner={properties.banner}
       closable={properties.closable}
       closeText={properties.closeText}
       description={properties.description}
       id={blockId}
-      message={properties.message || <div style={{ height: '1.5175em' }}></div>}
-      description={properties.description}
-      onClose={() => methods.callAction({ action: 'onClose' })}
+      message={
+        properties.message
+          ? properties.message
+          : !properties.description && <div style={{ height: '1.5175em' }}></div>
+      }
+      onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
       type={properties.type}
       {...additionalProps}

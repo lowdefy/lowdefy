@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import path from 'path';
 import { spawnSync } from 'child_process';
+import { cleanDirectory } from '@lowdefy/node-utils';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
 import startUp from '../../utils/startUp';
@@ -97,6 +98,10 @@ async function buildNetlify(options) {
   });
   context.print.log(`Netlify functions artifacts moved to "./lowdefy/functions".`);
 
+  context.print.log(`Cleaning "./node_modules".`);
+  cleanDirectory('./node_modules');
+
+  context.print.log(`Moving Lowdefy server node_modules.`);
   proccessOutput = spawnSync('cp', [
     '-r',
     path.resolve(netlifyDir, 'package/node_modules'),

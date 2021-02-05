@@ -10,6 +10,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "default_input",
       "marks": Object {
         "-1": Object {
@@ -143,6 +144,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {\\"style\\":{\\"border\\":\\"1px solid red\\"}}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "properties.inputStyle: CSS style applied_input",
       "marks": Object {
         "-1": Object {
@@ -276,6 +278,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "properties.title_input",
       "marks": Object {
         "-1": Object {
@@ -409,6 +412,7 @@ Array [
       "className": "{\\"style\\":[{\\"& > div.ant-slider-track\\":{\\"backgroundColor\\":\\"#f44336 !important\\"},\\"& > div.ant-slider-handle\\":{\\"borderColor\\":\\"#f44336 !important\\"},\\"& > div.ant-slider-step > span.ant-slider-dot-active\\":{\\"borderColor\\":\\"#f44336 !important\\"}},null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.color: #_input",
       "marks": Object {
         "-1": Object {
@@ -542,6 +546,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.disableIcons: true_input",
       "marks": Object {
         "-1": Object {
@@ -675,6 +680,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.disableNotApplicable: true_input",
       "marks": Object {
         "-1": Object {
@@ -808,6 +814,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": true,
       "dots": true,
+      "events": Object {},
       "id": "property.disabled: true_input",
       "marks": Object {
         "-1": Object {
@@ -941,6 +948,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label align: right_input",
       "marks": Object {
         "-1": Object {
@@ -1074,6 +1082,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label colon: false_input",
       "marks": Object {
         "-1": Object {
@@ -1207,6 +1216,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label disabled: true_input",
       "marks": Object {
         "-1": Object {
@@ -1340,6 +1350,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label extra: extra text added_input",
       "marks": Object {
         "-1": Object {
@@ -1473,6 +1484,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label inline: true_input",
       "marks": Object {
         "-1": Object {
@@ -1606,6 +1618,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.label span: 5_input",
       "marks": Object {
         "-1": Object {
@@ -1739,6 +1752,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.max: 14_input",
       "marks": Object {
         "-1": Object {
@@ -1908,6 +1922,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.maxIcon: SmileTwoTone_input",
       "marks": Object {
         "-1": Object {
@@ -2041,6 +2056,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.min: 3_input",
       "marks": Object {
         "10": Object {
@@ -2147,6 +2163,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.minIcon: MehTwoTone_input",
       "marks": Object {
         "-1": Object {
@@ -2280,6 +2297,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.notApplicableLabel: Not Applicable_input",
       "marks": Object {
         "-1": Object {
@@ -2413,6 +2431,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": false,
+      "events": Object {},
       "id": "property.showDots: false_input",
       "marks": undefined,
       "max": 10,
@@ -2439,6 +2458,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.showMarks: false_input",
       "marks": undefined,
       "max": 10,
@@ -2465,6 +2485,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.step: 2_input",
       "marks": Object {
         "-2": Object {
@@ -2553,6 +2574,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.tooltipVisible: always_input",
       "marks": Object {
         "-1": Object {
@@ -2686,6 +2708,7 @@ Array [
       "className": "{\\"style\\":[null,null]} {\\"style\\":{\\"flex\\":\\"auto\\"}} {}",
       "disabled": false,
       "dots": true,
+      "events": Object {},
       "id": "property.tooltipVisible: never_input",
       "marks": Object {
         "-1": Object {

@@ -1,0 +1,113 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: connections-and-requests
+    pageTitle: Connections and Requests
+    section: Concepts
+    content:
+      - id: md1
+        type: Markdown
+        properties:
+          content: |
+            ### TLDR
+              - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
+              - `requests` use connections to make a call to the connected external services.
+              - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
+
+            -----------
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record, executing a query or calling a API end-point.
+
+      - id: alert2
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: Sensitive information like passwords or API keys are often required to use external services. The _secret operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
+
+      - id: md2
+        type: Markdown
+        properties:
+          content: |
+            # Connections
+
+            Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection. Operators in connection properties are evaluated every time a request is called.
+
+            # Connection Schema
+
+            The schema for a Lowdefy connection is:
+
+            - `id: string`: __Required__ - A unique identifier for the connection. This is used by requests to specify which connection to use.
+            - `type: string`: __Required__ - The connection type to be used.
+            - `properties: object`: The settings passed to the connection. __Operators are evaluated__.
+
+            ###### Connections definition example:
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+            connections:
+              - id: connection1
+                type: ConnectionType1
+                properties:
+                  # ...
+              - id: connection2
+                type: ConnectionType2
+                properties:
+                  # ...
+            pages:
+              # ...
+            ```
+
+            Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require is not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
+
+            # Requests
+
+            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action. Operators in request properties are evaluated every time a request is called.
+
+            # Request Schema
+
+            The schema for a Lowdefy request is:
+
+            - `id: string`: __Required__ - A identifier for the request. It must be unique within the context the request is defined in.
+            - `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
+            - `connectionId: string`: __Required__ - The `id` of the connection that should be used.
+            - `properties: object`: The settings passed to the request. __Operators are evaluated__.
+
+            ###### Requests definition example:
+            ```yaml
+            id: block_with_requests
+            type: BlockType
+            requests:
+              - id: request1
+                type: RequestType1
+                connectionId: connectionId1
+                properties:
+                  # ...
+              - id: request2
+                type: RequestType2
+                connectionId: connectionId2
+                properties:
+                  # ...
+            properties:
+              # ...
+            ```
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Layout
+            previous_page_id: layout
+            next_page_title: Events and Actions
+            next_page_id: events-and-actions

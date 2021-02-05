@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
   if (!state) {
-    methods.callAction({ action: get(rename, 'actions.onClose', { default: 'onClose' }) });
+    methods.triggerEvent({ name: get(rename, 'events.onClose', { default: 'onClose' }) });
   }
   if (state) {
-    methods.callAction({ action: get(rename, 'actions.onOpen', { default: 'onOpen' }) });
+    methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
   }
-  methods.callAction({ action: get(rename, 'actions.onToggle', { default: 'onToggle' }) });
+  methods.triggerEvent({ name: get(rename, 'events.onToggle', { default: 'onToggle' }) });
   setOpen(state);
 };
 

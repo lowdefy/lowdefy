@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ test('ScrollTo with no params', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo' }],
             },
           },
@@ -81,7 +81,7 @@ test('ScrollTo with no params', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockWindowScrollTo.mock.calls).toEqual([]);
 });
 
@@ -101,7 +101,7 @@ test('ScrollTo with no blockId', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo', params: { behavior: 'smooth', top: 0 } }],
             },
           },
@@ -115,7 +115,7 @@ test('ScrollTo with no blockId', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockWindowScrollTo.mock.calls).toEqual([
     [
       {
@@ -142,7 +142,7 @@ test('ScrollTo with blockId', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [{ id: 'a', type: 'ScrollTo', params: { blockId: 'root' } }],
             },
           },
@@ -156,7 +156,7 @@ test('ScrollTo with blockId', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
   expect(mockDocGetElementById.mock.calls).toEqual([['root']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([[undefined]]);
 });
@@ -177,7 +177,7 @@ test('ScrollTo with blockId and options', async () => {
               category: 'display',
               valueType: 'string',
             },
-            actions: {
+            events: {
               onClick: [
                 {
                   id: 'a',
@@ -197,7 +197,7 @@ test('ScrollTo with blockId and options', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.callAction({ action: 'onClick' });
+  button.triggerEvent({ name: 'onClick' });
 
   expect(mockDocGetElementById.mock.calls).toEqual([['a']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([

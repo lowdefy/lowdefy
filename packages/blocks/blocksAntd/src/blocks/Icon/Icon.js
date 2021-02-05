@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,21 +22,20 @@ import { omit, type } from '@lowdefy/helpers';
 const lowdefyProps = [
   'actionLog',
   'content',
+  'eventLog',
   'homePageId',
   'list',
   'loading',
-  'loading',
   'menus',
   'pageId',
-  'registerAction',
-  'registerAction',
-  'registerMethod',
+  'registerEvent',
   'registerMethod',
   'schemaErrors',
   'user',
   'validation',
 ];
-const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
+
+const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
   const propertiesObj = type.isString(properties) ? { name: properties } : properties;
   if (!type.isString(propertiesObj.name)) {
     propertiesObj.name = 'CloseCircleOutlined';
@@ -55,7 +54,7 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
   const IconComp = memo(lazy(() => import(`./icons/${propertiesObj.name}`)));
   return (
     <>
-      {actions.onClick && actions.onClick.loading && !propertiesObj.disableLoadingIcon ? (
+      {events.onClick && events.onClick.loading && !propertiesObj.disableLoadingIcon ? (
         <Loading3QuartersOutlined {...{ ...iconProps, spin: true }} />
       ) : (
         <ErrorBoundary fallback={() => <ExclamationCircleOutlined {...iconProps} />}>
@@ -63,10 +62,10 @@ const IconBlock = ({ actions, blockId, methods, properties, ...props }) => {
             <IconComp
               id={blockId}
               onClick={
-                actions.onClick &&
+                events.onClick &&
                 (() =>
-                  methods.callAction({
-                    action: 'onClick',
+                  methods.triggerEvent({
+                    name: 'onClick',
                   }))
               }
               {...iconProps} // spread props for Ant design to populate props from parent

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,13 +19,24 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import { Input } from 'antd';
 import Label from '../Label/Label';
+import useRunAfterUpdate from '../../useRunAfterUpdate';
 
 const TextAreaComp = Input.TextArea;
 
-const TextAreaBlock = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const TextAreaBlock = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -33,6 +44,7 @@ const TextAreaBlock = ({ blockId, loading, properties, required, validation, val
       methods={methods}
       content={{
         content: () => {
+          const runAfterUpdate = useRunAfterUpdate();
           return (
             <TextAreaComp
               id={`${blockId}_input`}
@@ -41,10 +53,15 @@ const TextAreaBlock = ({ blockId, loading, properties, required, validation, val
               autoFocus={properties.autoFocus}
               onChange={(event) => {
                 methods.setValue(event.target.value);
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
+                const cStart = event.target.selectionStart;
+                const cEnd = event.target.selectionEnd;
+                runAfterUpdate(() => {
+                  event.target.setSelectionRange(cStart, cEnd);
+                });
               }}
               onPressEnter={() => {
-                methods.callAction({ action: 'onPressEnter' });
+                methods.triggerEvent({ name: 'onPressEnter' });
               }}
               placeholder={properties.placeholder}
               value={value}

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,19 +23,19 @@ import Icon from '../Icon/Icon';
 
 const Title = Typography.Title;
 
-const TitleInput = ({ blockId, properties, methods, value }) => {
+const TitleInput = ({ blockId, events, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
-  const editableActions = {
+  const editableEvents = {
     onStart: () => {
       setEdit(true);
-      methods.callAction({
-        action: 'onStart',
+      methods.triggerEvent({
+        name: 'onStart',
       });
     },
     onChange: (val) => {
       setEdit(false);
       methods.setValue(val);
-      methods.callAction({ action: 'onChange', args: { value: val } });
+      methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
   return (
@@ -51,9 +51,9 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
           ? {
               text: properties.copyable.text,
               onCopy: () => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { value: properties.copyable.text },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { value: properties.copyable.text },
                 });
               },
               icon:
@@ -62,12 +62,14 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
                   [
                     <Icon
                       key="copy-icon"
+                      events={events}
                       blockId={`${blockId}_copyable_before_icon`}
                       methods={methods}
                       properties={properties.copyable.icon[0]}
                     />,
                     <Icon
                       key="copied-icon"
+                      events={events}
                       blockId={`${blockId}_copyable_after_icon`}
                       methods={methods}
                       properties={properties.copyable.icon[1]}
@@ -76,6 +78,7 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    events={events}
                     methods={methods}
                     properties={properties.copyable.icon}
                   />
@@ -92,16 +95,10 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
               rows: properties.ellipsis.rows,
               expandable: properties.ellipsis.expandable,
               suffix: properties.ellipsis.suffix,
-              // FIX: not working, might be and antd issue.
-              // symbol: properties.ellipsis.symbol && <span>{properties.ellipsis.symbol}</span>,
-              // "symbol": {
-              //   "type": "string",
-              //   "description": "Custom ... symbol of ellipsis content."
-              // }
               onExpand: (ellipsis) => {
-                methods.callAction({
-                  action: 'onExpand',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onExpand',
+                  event: { ellipsis },
                 });
               },
             }
@@ -113,6 +110,7 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
               icon: properties.editable.icon && (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
+                  events={events}
                   methods={methods}
                   properties={properties.editable.icon}
                 />
@@ -121,9 +119,9 @@ const TitleInput = ({ blockId, properties, methods, value }) => {
               editing: properties.editable.editing || editing,
               maxLength: properties.editable.maxLength,
               autoSize: properties.editable.autoSize,
-              ...editableActions,
+              ...editableEvents,
             }
-          : editableActions
+          : properties.editable !== false && editableEvents
       }
       level={properties.level}
       mark={properties.mark}

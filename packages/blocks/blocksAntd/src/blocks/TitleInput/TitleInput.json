@@ -1,7 +1,12 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "lines": 1
+    }
+  },
   "test": {
     "validation": true,
     "required": true,
@@ -19,18 +24,17 @@
         },
         "color": {
           "type": "string",
-          "description": "Title color."
-        },
-        "content": {
-          "type": "string",
-          "description": "Title text content."
+          "description": "Title color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "copyable": {
-          "description": "Provide copy text button.",
           "default": false,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Provide copy text button."
             },
             {
               "type": "object",
@@ -42,11 +46,17 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
-                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
@@ -64,10 +74,10 @@
         },
         "ellipsis": {
           "default": false,
-          "description": "Display ellipsis when text overflows a single line.",
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display ellipsis when text overflows a single line."
             },
             {
               "type": "object",
@@ -90,11 +100,11 @@
           ]
         },
         "editable": {
-          "description": "Allow paragraph editing when true, editable settings can be provided with editable object.",
-          "default": false,
+          "default": true,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow paragraph editing when true, editable settings can be provided with editable object."
             },
             {
               "type": "object",
@@ -102,7 +112,10 @@
               "properties": {
                 "icon": {
                   "type": ["string", "object"],
-                  "description": "Edit icon."
+                  "description": "Edit icon.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltip": {
                   "type": "string",
@@ -110,38 +123,12 @@
                 },
                 "editing": {
                   "type": "boolean",
+                  "default": false,
                   "description": "Control editing state."
                 },
                 "maxLength": {
                   "type": "number",
                   "description": "Max length of text area input."
-                },
-                "autoSize": {
-                  "type": ["boolean", "object"],
-                  "description": "Auto size text area input. Can be boolean or object with max and min rows.",
-                  "oneOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "description": "Auto size rows settings.",
-                      "properties": {
-                        "minRows": {
-                          "type": "number",
-                          "description": "Minimum number of rows for text area input."
-                        },
-                        "maxRows": {
-                          "type": "number",
-                          "description": "Maximum number of rows for text area input."
-                        }
-                      }
-                    }
-                  ]
-                },
-                "symbol": {
-                  "type": "string",
-                  "description": "Custom ... symbol of ellipsis content."
                 }
               }
             }
@@ -160,7 +147,8 @@
         },
         "type": {
           "type": "string",
-          "enum": ["secondary", "warning", "danger"],
+          "default": "default",
+          "enum": ["default", "secondary", "warning", "danger"],
           "description": "Additional types. Don't specify for default."
         },
         "underline": {
@@ -170,7 +158,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -184,7 +172,7 @@
         },
         "onChange": {
           "type": "array",
-          "description": "Trigger action when paragraph is changed."
+          "description": "Trigger action when title is changed."
         }
       }
     }

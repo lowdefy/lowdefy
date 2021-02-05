@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -146,4 +146,78 @@ test('aggregation options not an object', async () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBAggregation request property "options" should be an object.'
   );
+});
+
+test('$out is not allowed with write undefined', async () => {
+  const request = { pipeline: [{ $out: 'outCollection' }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+  };
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+  );
+});
+
+test('$out is not allowed with write false', async () => {
+  const request = { pipeline: [{ $out: 'outCollection' }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    write: false,
+  };
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+  );
+});
+
+test('$out is allowed with write true', async () => {
+  const request = { pipeline: [{ $out: 'outCollection' }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    write: true,
+  };
+  const res = await resolver({ request, connection });
+  expect(res).toEqual([]);
+});
+
+test('$merge is not allowed with write undefined', async () => {
+  const request = { pipeline: [{ $merge: { into: 'mergeCollection' } }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+  };
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+  );
+});
+
+test('$merge is not allowed with write false', async () => {
+  const request = { pipeline: [{ $merge: { into: 'mergeCollection' } }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    write: false,
+  };
+  await expect(resolver({ request, connection })).rejects.toThrow(
+    'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+  );
+});
+
+test('$merge is allowed with write true', async () => {
+  const request = { pipeline: [{ $merge: { into: 'mergeCollection' } }] };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    write: true,
+  };
+  const res = await resolver({ request, connection });
+  expect(res).toEqual([]);
 });

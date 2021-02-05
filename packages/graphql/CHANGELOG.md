@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/lowdefy/lowdefy/compare/v3.4.0...v3.5.0) (2021-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aws-sdk to v2.832.0 ([ed9f6d4](https://github.com/lowdefy/lowdefy/commit/ed9f6d4d2fb38b12dea5963ef408d5679cc2b8fe))
+* **deps:** Update dependency graphql to v15.5.0 ([90acf72](https://github.com/lowdefy/lowdefy/commit/90acf7289c517f9afe066cd0706c64187a39648b))
+* **graphql:** Mongodb, do not allow $out/$merge when write is false. ([92aa370](https://github.com/lowdefy/lowdefy/commit/92aa370ba037758f7e17e6c8c837960817e13ca4)), closes [#242](https://github.com/lowdefy/lowdefy/issues/242)
+
+
+### Features
+
+* **docs:** Add docs for GoogleSheet connection. ([8d2ff5d](https://github.com/lowdefy/lowdefy/commit/8d2ff5d0dd12064d809989023ff4a2c788b32aa6))
+* **graphql:** Rename args object to event. ([e3bb6f5](https://github.com/lowdefy/lowdefy/commit/e3bb6f50a652f76fc2b0fef44229cec5e175f5f1))
+
+
+
+
+
+# [3.4.0](https://github.com/lowdefy/lowdefy/compare/v3.3.0...v3.4.0) (2021-01-20)
+
+
+### Bug Fixes
+
+* **graphql:** Add request deserialize tests for entire inputs. ([98cdbd8](https://github.com/lowdefy/lowdefy/commit/98cdbd895bc038ac49e75554fccf3110b9bed504))
+* **graphql:** Deserialize request input variables. ([82e8475](https://github.com/lowdefy/lowdefy/commit/82e8475c2757e35adf24d489627738de736984d4))
+* **graphql:** Update tests operator error message. ([c534328](https://github.com/lowdefy/lowdefy/commit/c53432827c2ba05ae4cd6ac16d94c1fa108e374a))
+
+
+
+
+
 # [3.3.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.3.0) (2021-01-18)
 
 

@@ -45,14 +45,13 @@ exports[`Render default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -119,14 +118,13 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -192,14 +190,13 @@ exports[`Render properties.checkedIcon: CheckCircleOutlined - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -265,14 +262,13 @@ exports[`Render properties.checkedText: Checked - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -338,14 +334,13 @@ exports[`Render properties.color: # - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -412,14 +407,13 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -485,14 +479,13 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -558,14 +551,13 @@ exports[`Render properties.label align: right - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -631,14 +623,13 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -692,14 +683,13 @@ exports[`Render properties.label disabled: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -765,14 +755,13 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -851,14 +840,13 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -924,14 +912,13 @@ exports[`Render properties.label span: 4 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -997,14 +984,13 @@ exports[`Render properties.size: small - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1070,14 +1056,13 @@ exports[`Render properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1143,14 +1128,13 @@ exports[`Render properties.uncheckedIcon: UnlockFilled - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1270,14 +1254,13 @@ exports[`Render required = true default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1344,14 +1327,13 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1417,14 +1399,13 @@ exports[`Render required = true properties.checkedIcon: CheckCircleOutlined - va
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1490,14 +1471,13 @@ exports[`Render required = true properties.checkedText: Checked - value[0] 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1563,14 +1543,13 @@ exports[`Render required = true properties.color: # - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1637,14 +1616,13 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1710,14 +1688,13 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1783,14 +1760,13 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1856,14 +1832,13 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1917,14 +1892,13 @@ exports[`Render required = true properties.label disabled: true - value[0] 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -1990,14 +1964,13 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2076,14 +2049,13 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2149,14 +2121,13 @@ exports[`Render required = true properties.label span: 4 - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2222,14 +2193,13 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2295,14 +2265,13 @@ exports[`Render required = true properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2368,14 +2337,13 @@ exports[`Render required = true properties.uncheckedIcon: UnlockFilled - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2495,14 +2463,13 @@ exports[`Render validation.status = error default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2528,7 +2495,6 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -2598,14 +2564,13 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2631,7 +2596,6 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -2700,14 +2664,13 @@ exports[`Render validation.status = error properties.checkedIcon: CheckCircleOut
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2733,7 +2696,6 @@ exports[`Render validation.status = error properties.checkedIcon: CheckCircleOut
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -2802,14 +2764,13 @@ exports[`Render validation.status = error properties.checkedText: Checked - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2835,7 +2796,6 @@ exports[`Render validation.status = error properties.checkedText: Checked - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -2904,14 +2864,13 @@ exports[`Render validation.status = error properties.color: # - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -2937,7 +2896,6 @@ exports[`Render validation.status = error properties.color: # - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3007,14 +2965,13 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3040,7 +2997,6 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3109,14 +3065,13 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3142,7 +3097,6 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3211,14 +3165,13 @@ exports[`Render validation.status = error properties.label align: right - value[
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3244,7 +3197,6 @@ exports[`Render validation.status = error properties.label align: right - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3313,14 +3265,13 @@ exports[`Render validation.status = error properties.label colon: false - value[
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3346,7 +3297,6 @@ exports[`Render validation.status = error properties.label colon: false - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3403,14 +3353,13 @@ exports[`Render validation.status = error properties.label disabled: true - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3436,7 +3385,6 @@ exports[`Render validation.status = error properties.label disabled: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3505,14 +3453,13 @@ exports[`Render validation.status = error properties.label extra: showing extra 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3538,7 +3485,6 @@ exports[`Render validation.status = error properties.label extra: showing extra 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3615,14 +3561,13 @@ exports[`Render validation.status = error properties.label inline: true - value[
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3648,7 +3593,6 @@ exports[`Render validation.status = error properties.label inline: true - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3717,14 +3661,13 @@ exports[`Render validation.status = error properties.label span: 4 - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3750,7 +3693,6 @@ exports[`Render validation.status = error properties.label span: 4 - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3819,14 +3761,13 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3852,7 +3793,6 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3921,14 +3861,13 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -3954,7 +3893,6 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4023,14 +3961,13 @@ exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4056,7 +3993,6 @@ exports[`Render validation.status = error properties.uncheckedIcon: UnlockFilled
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4139,7 +4075,6 @@ exports[`Render validation.status = error properties.uncheckedText: Unchecked - 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4208,14 +4143,13 @@ exports[`Render validation.status = null default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4282,14 +4216,13 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4355,14 +4288,13 @@ exports[`Render validation.status = null properties.checkedIcon: CheckCircleOutl
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4428,14 +4360,13 @@ exports[`Render validation.status = null properties.checkedText: Checked - value
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4501,14 +4432,13 @@ exports[`Render validation.status = null properties.color: # - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4575,14 +4505,13 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4648,14 +4577,13 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4721,14 +4649,13 @@ exports[`Render validation.status = null properties.label align: right - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4794,14 +4721,13 @@ exports[`Render validation.status = null properties.label colon: false - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4855,14 +4781,13 @@ exports[`Render validation.status = null properties.label disabled: true - value
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -4928,14 +4853,13 @@ exports[`Render validation.status = null properties.label extra: showing extra -
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5014,14 +4938,13 @@ exports[`Render validation.status = null properties.label inline: true - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5087,14 +5010,13 @@ exports[`Render validation.status = null properties.label span: 4 - value[0] 1`]
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5160,14 +5082,13 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5233,14 +5154,13 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5306,14 +5226,13 @@ exports[`Render validation.status = null properties.uncheckedIcon: UnlockFilled 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5433,14 +5352,13 @@ exports[`Render validation.status = success default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5466,7 +5384,6 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -5531,14 +5448,13 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5564,7 +5480,6 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -5628,14 +5543,13 @@ exports[`Render validation.status = success properties.checkedIcon: CheckCircleO
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5661,7 +5575,6 @@ exports[`Render validation.status = success properties.checkedIcon: CheckCircleO
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -5725,14 +5638,13 @@ exports[`Render validation.status = success properties.checkedText: Checked - va
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5758,7 +5670,6 @@ exports[`Render validation.status = success properties.checkedText: Checked - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -5822,14 +5733,13 @@ exports[`Render validation.status = success properties.color: # - value[0] 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5855,7 +5765,6 @@ exports[`Render validation.status = success properties.color: # - value[0] 1`] =
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -5920,14 +5829,13 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -5953,7 +5861,6 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6017,14 +5924,13 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6050,7 +5956,6 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6114,14 +6019,13 @@ exports[`Render validation.status = success properties.label align: right - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6147,7 +6051,6 @@ exports[`Render validation.status = success properties.label align: right - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6211,14 +6114,13 @@ exports[`Render validation.status = success properties.label colon: false - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6244,7 +6146,6 @@ exports[`Render validation.status = success properties.label colon: false - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6296,14 +6197,13 @@ exports[`Render validation.status = success properties.label disabled: true - va
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6329,7 +6229,6 @@ exports[`Render validation.status = success properties.label disabled: true - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6393,14 +6292,13 @@ exports[`Render validation.status = success properties.label extra: showing extr
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6426,7 +6324,6 @@ exports[`Render validation.status = success properties.label extra: showing extr
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6503,14 +6400,13 @@ exports[`Render validation.status = success properties.label inline: true - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6536,7 +6432,6 @@ exports[`Render validation.status = success properties.label inline: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6600,14 +6495,13 @@ exports[`Render validation.status = success properties.label span: 4 - value[0] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6633,7 +6527,6 @@ exports[`Render validation.status = success properties.label span: 4 - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6697,14 +6590,13 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6730,7 +6622,6 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6794,14 +6685,13 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6827,7 +6717,6 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6891,14 +6780,13 @@ exports[`Render validation.status = success properties.uncheckedIcon: UnlockFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -6924,7 +6812,6 @@ exports[`Render validation.status = success properties.uncheckedIcon: UnlockFill
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7002,7 +6889,6 @@ exports[`Render validation.status = success properties.uncheckedText: Unchecked 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7066,14 +6952,13 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="default_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7099,7 +6984,6 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7169,14 +7053,13 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.autoFocus: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7202,7 +7085,6 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7271,14 +7153,13 @@ exports[`Render validation.status = warning properties.checkedIcon: CheckCircleO
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedIcon: CheckCircleOutlined_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7304,7 +7185,6 @@ exports[`Render validation.status = warning properties.checkedIcon: CheckCircleO
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7373,14 +7253,13 @@ exports[`Render validation.status = warning properties.checkedText: Checked - va
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.checkedText: Checked_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7406,7 +7285,6 @@ exports[`Render validation.status = warning properties.checkedText: Checked - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7475,14 +7353,13 @@ exports[`Render validation.status = warning properties.color: # - value[0] 1`] =
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.color: #_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7508,7 +7385,6 @@ exports[`Render validation.status = warning properties.color: # - value[0] 1`] =
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7578,14 +7454,13 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7611,7 +7486,6 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7680,14 +7554,13 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.inputStyle: CSS style applied_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7713,7 +7586,6 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7782,14 +7654,13 @@ exports[`Render validation.status = warning properties.label align: right - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label align: right_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7815,7 +7686,6 @@ exports[`Render validation.status = warning properties.label align: right - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7884,14 +7754,13 @@ exports[`Render validation.status = warning properties.label colon: false - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label colon: false_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -7917,7 +7786,6 @@ exports[`Render validation.status = warning properties.label colon: false - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7974,14 +7842,13 @@ exports[`Render validation.status = warning properties.label disabled: true - va
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label disabled: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8007,7 +7874,6 @@ exports[`Render validation.status = warning properties.label disabled: true - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8076,14 +7942,13 @@ exports[`Render validation.status = warning properties.label extra: showing extr
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label extra: showing extra_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8109,7 +7974,6 @@ exports[`Render validation.status = warning properties.label extra: showing extr
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8186,14 +8050,13 @@ exports[`Render validation.status = warning properties.label inline: true - valu
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label inline: true_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8219,7 +8082,6 @@ exports[`Render validation.status = warning properties.label inline: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8288,14 +8150,13 @@ exports[`Render validation.status = warning properties.label span: 4 - value[0] 
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.label span: 4_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8321,7 +8182,6 @@ exports[`Render validation.status = warning properties.label span: 4 - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8390,14 +8250,13 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.size: small_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8423,7 +8282,6 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8492,14 +8350,13 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.title_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8525,7 +8382,6 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8594,14 +8450,13 @@ exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFill
           >
             <span
               aria-label="loading-3-quarters"
-              className="anticon anticon-loading-3-quarters {\\"style\\":[{},null]}"
+              className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
               id="properties.uncheckedIcon: UnlockFilled_uncheckedIcon"
               required={false}
               role="img"
             >
               <svg
                 aria-hidden="true"
-                className="anticon-spin"
                 data-icon="loading-3-quarters"
                 fill="currentColor"
                 focusable="false"
@@ -8627,7 +8482,6 @@ exports[`Render validation.status = warning properties.uncheckedIcon: UnlockFill
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8710,7 +8564,6 @@ exports[`Render validation.status = warning properties.uncheckedText: Unchecked 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"

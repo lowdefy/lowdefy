@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,11 +25,21 @@ import getUniqueValues from '../../getUniqueValues';
 
 const Option = Select.Option;
 
-const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const Selector = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -51,6 +61,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon}
                   />
@@ -60,6 +71,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.clearIcon}
                   />
@@ -79,7 +91,7 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
                     ? uniqueValueOptions[newVal]
                     : uniqueValueOptions[newVal].value
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={getValueIndex(value, uniqueValueOptions)}
             >

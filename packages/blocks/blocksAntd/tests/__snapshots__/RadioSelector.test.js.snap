@@ -2785,7 +2785,6 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -2909,7 +2908,6 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3035,7 +3033,6 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3159,7 +3156,6 @@ exports[`Render validation.status = error properties.inputStyle. CSS style - val
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3283,7 +3279,6 @@ exports[`Render validation.status = error properties.label.colon: false - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3395,7 +3390,6 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3519,7 +3513,6 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3643,7 +3636,6 @@ exports[`Render validation.status = error properties.label: align_right - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3775,7 +3767,6 @@ exports[`Render validation.status = error properties.label: inline_true - value[
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -3899,7 +3890,6 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4023,7 +4013,6 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4147,7 +4136,6 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4271,7 +4259,6 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4395,7 +4382,6 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -4519,7 +4505,6 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="close-circle"
             fill="currentColor"
             focusable="false"
@@ -5957,7 +5942,6 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6076,7 +6060,6 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6197,7 +6180,6 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6316,7 +6298,6 @@ exports[`Render validation.status = success properties.inputStyle. CSS style - v
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6435,7 +6416,6 @@ exports[`Render validation.status = success properties.label.colon: false - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6542,7 +6522,6 @@ exports[`Render validation.status = success properties.label.disabled: true - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6661,7 +6640,6 @@ exports[`Render validation.status = success properties.label.extra: showingextra
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6785,7 +6763,6 @@ exports[`Render validation.status = success properties.label: align_right - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -6912,7 +6889,6 @@ exports[`Render validation.status = success properties.label: inline_true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7031,7 +7007,6 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7150,7 +7125,6 @@ exports[`Render validation.status = success properties.options-boolean - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7269,7 +7243,6 @@ exports[`Render validation.status = success properties.options-number - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7388,7 +7361,6 @@ exports[`Render validation.status = success properties.options-object - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7507,7 +7479,6 @@ exports[`Render validation.status = success properties.options-string - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7626,7 +7597,6 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="check-circle"
             fill="currentColor"
             focusable="false"
@@ -7688,7 +7658,6 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7812,7 +7781,6 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -7938,7 +7906,6 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8062,7 +8029,6 @@ exports[`Render validation.status = warning properties.inputStyle. CSS style - v
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8186,7 +8152,6 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8298,7 +8263,6 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8422,7 +8386,6 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8546,7 +8509,6 @@ exports[`Render validation.status = warning properties.label: align_right - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8678,7 +8640,6 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8802,7 +8763,6 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -8926,7 +8886,6 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9050,7 +9009,6 @@ exports[`Render validation.status = warning properties.options-number - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9174,7 +9132,6 @@ exports[`Render validation.status = warning properties.options-object - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9298,7 +9255,6 @@ exports[`Render validation.status = warning properties.options-string - value[0]
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"
@@ -9422,7 +9378,6 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         >
           <svg
             aria-hidden="true"
-            className=""
             data-icon="exclamation-circle"
             fill="currentColor"
             focusable="false"

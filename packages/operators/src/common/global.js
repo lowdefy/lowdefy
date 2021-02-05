@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,9 +16,11 @@
 
 import getFromObject from '../getFromObject';
 
-function _global({ arrayIndices, env, location, lowdefyGlobal, params }) {
+function _global({ arrayIndices, context, contexts, env, location, lowdefyGlobal, params }) {
   return getFromObject({
     arrayIndices,
+    context,
+    contexts,
     env,
     location,
     object: lowdefyGlobal,

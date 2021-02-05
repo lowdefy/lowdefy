@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 5
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,6 +18,7 @@
         },
         "orientation": {
           "type": "string",
+          "default": "center",
           "enum": ["left", "right", "center"],
           "description": "Position of title inside divider."
         },
@@ -22,6 +28,7 @@
         },
         "type": {
           "type": "string",
+          "default": "horizontal",
           "enum": ["horizontal", "vertical"],
           "description": "Direction type of divider"
         },

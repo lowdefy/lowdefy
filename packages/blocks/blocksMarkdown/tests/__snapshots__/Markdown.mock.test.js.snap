@@ -49,6 +49,10 @@ A paragraph with *emphasis* and **strong importance**.
 
 > A block quote with ~strikethrough~ and a URL: https://reactjs.org.
 
+#### Link
+
+[A link to Lowdefy](https://lowdefy.com)
+
 # Two
 
 * Lists
@@ -97,6 +101,39 @@ Json
     ]
   }
 \`\`\`
+
+Bad HTML 
+\`\`\`html
+<div onmouseover=\\"alert('alpha')\\">
+  <a href=\\"javascript:alert('bravo')\\">delta</a>
+  <img src=\\"x\\" onerror=\\"alert('charlie')\\">
+  <iframe src=\\"javascript:alert('delta')\\"></iframe>
+  <math>
+    <mi xlink:href=\\"data:x,<script>alert('echo')</script>\\"></mi>
+  </math>
+</div>
+<script>
+  alert('script tag');
+</script>
+\`\`\`
+",
+      "className": "markdown-body",
+      "plugins": Array [
+        [Function],
+      ],
+      "skipHtml": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.html-iframe - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": "No additional ADD_TAGS:
+<iframe width=\\"560\\" height=\\"315\\" src=\\"https://www.youtube.com/embed/7N7GWdlQJlU\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\\" allowfullscreen></iframe>
 ",
       "className": "markdown-body",
       "plugins": Array [

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,16 +25,18 @@ const Option = AutoComplete.Option;
 
 const AutoCompleteInput = ({
   blockId,
+  events,
   loading,
+  methods,
   properties,
   required,
   validation,
   value,
-  methods,
 }) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -63,7 +65,7 @@ const AutoCompleteInput = ({
               } else {
                 methods.setValue(newVal);
               }
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             value={type.isNone(value) ? undefined : value}
           >

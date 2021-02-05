@@ -1,7 +1,12 @@
 {
   "valueType": "array",
   "category": "list",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 80
+    }
+  },
   "test": {
     "validation": true,
     "required": true
@@ -17,36 +22,54 @@
         },
         "addToFront": {
           "type": "boolean",
+          "default": false,
           "description": "When true, add new items to the front of the list."
         },
         "hideAddButton": {
           "type": "boolean",
+          "default": false,
           "description": "When true, hide the add new item button."
         },
         "size": {
           "type": "string",
           "enum": ["small", "default", "large"],
+          "default": "default",
           "description": "When true, hide the add new item button."
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to content."
+          "description": "Css style object to applied to content.",
+          "docs": {
+            "default": "yaml"
+          }
         },
         "addItemButton": {
           "type": "object",
-          "description": "Custom add item button properties."
+          "description": "Custom add item button properties.",
+          "docs": {
+            "default": "button"
+          }
         },
         "removeItemButton": {
           "type": "object",
-          "description": "Custom remove item button properties."
+          "description": "Custom remove item button properties.",
+          "docs": {
+            "default": "button"
+          }
         },
         "footerStyle": {
           "type": "object",
-          "description": "Css style object to applied to controlled list footer."
+          "description": "Css style object to applied to controlled list footer.",
+          "docs": {
+            "default": "yaml"
+          }
         },
         "itemStyle": {
           "type": "object",
-          "description": "Css style object to applied to controlled list items."
+          "description": "Css style object to applied to controlled list items.",
+          "docs": {
+            "default": "yaml"
+          }
         },
         "noDataTitle": {
           "type": "string",

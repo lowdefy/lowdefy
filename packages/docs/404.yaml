@@ -1,0 +1,11 @@
+id: '404'
+type: Context
+style:
+  minHeight: 100vh
+blocks:
+  - id: result404
+    type: Result
+    properties:
+      status: '404'
+      title: '404'
+      subTitle: Sorry, the page you are visiting does not exist.

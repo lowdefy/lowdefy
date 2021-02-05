@@ -30,14 +30,13 @@ Array [
             }
           >
             <IconBlock
-              actions={Object {}}
               blockId="properties.list.icon_0_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -75,8 +74,9 @@ Array [
                       },
                     ],
                   },
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
+                  "triggerEvent": [Function],
                 }
               }
               properties={
@@ -111,14 +111,13 @@ Array [
             }
           >
             <IconBlock
-              actions={Object {}}
               blockId="properties.list.icon_1_icon"
               content={Object {}}
+              events={Object {}}
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -156,8 +155,9 @@ Array [
                       },
                     ],
                   },
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
+                  "triggerEvent": [Function],
                 }
               }
               properties={
@@ -209,14 +209,17 @@ Array [
             }
           >
             <IconBlock
-              actions={Object {}}
               blockId="properties.list.icon with onClick_0_icon"
               content={Object {}}
+              events={
+                Object {
+                  "onClick": Array [],
+                }
+              }
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -254,8 +257,9 @@ Array [
                       },
                     ],
                   },
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
+                  "triggerEvent": [Function],
                 }
               }
               properties={
@@ -292,14 +296,17 @@ Array [
             }
           >
             <IconBlock
-              actions={Object {}}
               blockId="properties.list.icon with onClick_1_icon"
               content={Object {}}
+              events={
+                Object {
+                  "onClick": Array [],
+                }
+              }
               list={Array []}
               menus={Array []}
               methods={
                 Object {
-                  "callAction": [Function],
                   "makeCssClass": [MockFunction] {
                     "calls": Array [
                       Array [
@@ -337,8 +344,9 @@ Array [
                       },
                     ],
                   },
-                  "registerAction": [Function],
+                  "registerEvent": [Function],
                   "registerMethod": [Function],
+                  "triggerEvent": [Function],
                 }
               }
               properties={

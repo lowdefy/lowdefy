@@ -12,14 +12,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="backgroundColor: #016e1e_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -84,8 +83,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -122,14 +122,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="backgroundColor: #016e1e_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -194,8 +193,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -275,7 +275,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -326,14 +326,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="default_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -398,8 +397,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -436,14 +436,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="default_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -508,8 +507,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -521,7 +521,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -572,14 +572,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menus: default_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -644,8 +643,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -682,9 +682,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menus: default_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -747,7 +747,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -812,8 +811,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -825,7 +825,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -876,14 +876,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menus: links[0]_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -948,8 +947,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -986,9 +986,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menus: links[0]_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -1028,7 +1028,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1093,8 +1092,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1106,7 +1106,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -1157,14 +1157,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menus: properties.menuId: menu_one_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1229,8 +1228,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1267,9 +1267,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menus: properties.menuId: menu_one_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -1332,7 +1332,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1397,8 +1396,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1411,7 +1411,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -1462,14 +1462,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menusTitle pageId_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1534,8 +1533,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1572,9 +1572,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menusTitle pageId_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -1596,7 +1596,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1661,8 +1660,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1674,7 +1674,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -1725,14 +1725,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menusTitle properties.title_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -1797,8 +1796,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -1835,9 +1835,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menusTitle properties.title_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -1860,7 +1860,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -1925,8 +1924,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -1938,7 +1938,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -1989,14 +1989,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="menusTitle url_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2061,8 +2060,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2099,9 +2099,9 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="menusTitle url_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={
             Array [
@@ -2123,7 +2123,6 @@ Array [
           }
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2188,8 +2187,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -2201,7 +2201,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -2252,14 +2252,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.MenuGroup with MenuLInks_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2324,8 +2323,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2362,14 +2362,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.MenuGroup with MenuLInks_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2434,8 +2433,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -2474,7 +2474,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -2525,14 +2525,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.danger: true_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2597,8 +2596,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2635,14 +2635,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.danger: true_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2707,8 +2706,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -2757,7 +2757,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -2808,14 +2808,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.icon_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -2880,8 +2879,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -2918,14 +2918,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.icon_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -2990,8 +2989,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -3021,7 +3021,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -3072,14 +3072,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.links_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3144,8 +3143,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3182,14 +3182,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.links_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -3254,8 +3253,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -3279,7 +3279,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -3330,14 +3330,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.subMenuCloseDelay: 3_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3402,8 +3401,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3440,14 +3440,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.subMenuCloseDelay: 3_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -3512,8 +3511,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -3553,7 +3553,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -3604,14 +3604,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.subMenuOpenDelay: 3_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3676,8 +3675,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3714,14 +3714,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.subMenuOpenDelay: 3_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -3786,8 +3785,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -3827,7 +3827,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -3878,14 +3878,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="properties.title_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -3950,8 +3949,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -3988,14 +3988,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="properties.title_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -4060,8 +4059,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -4093,7 +4093,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -4144,14 +4144,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="selectedColor: #f16e1e_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -4216,8 +4215,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -4254,14 +4254,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="selectedColor: #f16e1e_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -4326,8 +4325,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -4407,7 +4407,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -4458,14 +4458,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -4530,8 +4529,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -4568,14 +4568,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#016e1e\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="selectedColor: #f16e1e, backgroundColor: #016e1e_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -4640,8 +4639,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -4722,7 +4722,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -4773,14 +4773,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="theme: light_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -4845,8 +4844,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -4883,14 +4883,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="theme: light_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -4955,8 +4954,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -5035,7 +5035,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -5086,14 +5086,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="theme: light, selectedColor: #6C2ACB_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -5158,8 +5157,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -5196,14 +5196,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="theme: light, selectedColor: #6C2ACB_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -5268,8 +5267,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -5349,7 +5349,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },
@@ -5400,14 +5400,13 @@ Array [
       "ghost": undefined,
       "href": undefined,
       "icon": <IconBlock
-        actions={Object {}}
         blockId="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -5472,8 +5471,9 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -5510,14 +5510,13 @@ Array [
       "bodyStyle": "{\\"style\\":{\\"padding\\":\\"3.1em 0 0 0\\",\\"backgroundColor\\":\\"#91cfcf\\"},\\"options\\":{\\"styleObjectOnly\\":true}}",
       "children": <React.Fragment>
         <MenuComp
-          actions={Object {}}
           blockId="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_menu"
           content={Object {}}
+          events={Object {}}
           list={Array []}
           menus={Array []}
           methods={
             Object {
-              "callAction": [Function],
               "makeCssClass": [MockFunction] {
                 "calls": Array [
                   Array [
@@ -5582,8 +5581,9 @@ Array [
                   },
                 ],
               },
-              "registerAction": [Function],
+              "registerEvent": [Function],
               "registerMethod": [Function],
+              "triggerEvent": [Function],
             }
           }
           properties={
@@ -5664,7 +5664,7 @@ Array [
           }
           rename={
             Object {
-              "actions": Object {
+              "events": Object {
                 "onClick": "onMenuItemClick",
                 "onSelect": "onMenuItemSelect",
               },

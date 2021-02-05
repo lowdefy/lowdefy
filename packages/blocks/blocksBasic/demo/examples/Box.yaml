@@ -7,7 +7,7 @@
 - id: properties.style
   type: Box
   properties:
-    style: 
+    style:
       border: '1px solid blue'
 - id: areas.content
   type: Box
@@ -16,14 +16,14 @@
       blocks:
         - id: testArea
           type: Test
-- id: actions.onClick
+- id: events.onClick
   type: Box
   areas:
     content:
       blocks:
         - id: testArea
           type: Test
-  actions:
-    onClick: 
+  events:
+    onClick:
       - id: testAction
         type: Text

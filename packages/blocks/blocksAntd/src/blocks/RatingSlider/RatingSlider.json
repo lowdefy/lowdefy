@@ -1,7 +1,9 @@
 {
-  "valueType": "number",
+  "valueType": "any",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -18,7 +20,10 @@
         },
         "color": {
           "type": "string",
-          "description": "Rating slider color."
+          "description": "Rating slider color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -27,25 +32,36 @@
         },
         "disableIcons": {
           "type": "boolean",
+          "default": false,
           "description": "Hides minimum and maximum icons."
         },
         "disableNotApplicable": {
           "type": "boolean",
+          "default": false,
           "description": "Disables the N/A option left of slider."
         },
         "minIcon": {
           "type": ["string", "object"],
           "default": "FrownOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "maxIcon": {
           "type": ["string", "object"],
           "default": "SmileOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "label": {
           "type": "object",
@@ -55,12 +71,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -77,29 +93,35 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
-
         "min": {
           "type": "number",
           "default": 0,
@@ -143,12 +165,13 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when rating is changed."
         }
       }
     }

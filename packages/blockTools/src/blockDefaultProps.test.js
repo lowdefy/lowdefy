@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ beforeEach(() => {
 test('default', () => {
   expect(blockDefaultProps).toMatchInlineSnapshot(`
     Object {
-      "actions": Object {},
       "blockId": "undefined_id",
       "content": Object {},
+      "events": Object {},
       "list": Array [],
       "menus": Array [],
       "methods": Object {
-        "callAction": [Function],
         "makeCssClass": [MockFunction],
-        "registerAction": [Function],
+        "registerEvent": [Function],
         "registerMethod": [Function],
+        "triggerEvent": [Function],
       },
       "properties": Object {},
       "required": false,
@@ -56,8 +56,8 @@ test('default', () => {
 });
 
 test('call default methods', () => {
-  expect(blockDefaultProps.methods.callAction()).toEqual(undefined);
-  expect(blockDefaultProps.methods.registerAction()).toEqual(undefined);
-  expect(blockDefaultProps.methods.registerMethod()).toEqual(undefined);
   expect(blockDefaultProps.methods.makeCssClass({ a: 1 })).toEqual('{"style":{"a":1}}');
+  expect(blockDefaultProps.methods.registerEvent()).toEqual(undefined);
+  expect(blockDefaultProps.methods.registerMethod()).toEqual(undefined);
+  expect(blockDefaultProps.methods.triggerEvent()).toEqual(undefined);
 });

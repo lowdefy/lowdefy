@@ -1,9 +1,20 @@
-import WebParser from '../../src/webParser';
+/*
+  Copyright 2020-2021 Lowdefy, Inc
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import WebParser from '../../src/webParser';
 
 const context = {
   config: {
@@ -58,7 +69,7 @@ const arrayIndices = [1];
 test('_operator, _state', () => {
   const input = { a: { _operator: { name: '_state', params: 'string' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'state',
   });
@@ -68,7 +79,7 @@ test('_operator, _state', () => {
 test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -80,7 +91,7 @@ test('_operator.name invalid', () => {
 test('_operator.name not a string', () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -92,7 +103,7 @@ test('_operator.name not a string', () => {
 test('_operator with value not a object', () => {
   const input = { a: { _operator: 'a' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -104,7 +115,7 @@ test('_operator with value not a object', () => {
 test('_operator cannot be set to _operator', () => {
   const input = { a: { _operator: { name: '_operator' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -116,7 +127,7 @@ test('_operator cannot be set to _operator', () => {
 test('_operator, _not with no params', () => {
   const input = { a: { _operator: { name: '_not' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -124,7 +135,7 @@ test('_operator, _not with no params', () => {
 test('_operator, _json.parse with params', () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: [{ a: 'a1' }],
   });

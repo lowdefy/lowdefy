@@ -21,3 +21,32 @@
       padding: 10
     html: |
       <div style="background: green; padding: 10px;">Content green background and properties.style yellow background</div>
+- id: properties.html-iframe
+  type: Html
+  properties:
+    html: |
+      An iframe:
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+- id: properties.html-bad-code
+  type: Html
+  properties:
+    html: |
+      <h1>Link<h1>
+
+      <a href="https://lowdefy.com">Lowdefy link</a>
+
+      <font size="+10">Description</font>
+
+      <h1>Bad HTML</h1>
+
+      <div onmouseover="alert('alpha')">
+        <a href="javascript:alert('bravo')">delta</a>
+        <img src="x" onerror="alert('charlie')">
+        <iframe src="javascript:alert('delta')"></iframe>
+        <math>
+          <mi xlink:href="data:x,<script>alert('echo')</script>"></mi>
+        </math>
+      </div>
+      <script>
+        alert('script tag');
+      </script>

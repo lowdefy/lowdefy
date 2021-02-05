@@ -156,14 +156,13 @@ exports[`Render properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon object_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -194,14 +193,13 @@ exports[`Render properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="properties.icon string_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -604,6 +602,60 @@ exports[`Render properties.type: warning showIcon: false - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render with description only - value[0] 1`] = `
+<div
+  className="ant-alert ant-alert-info ant-alert-with-description"
+  data-show={true}
+>
+  <span
+    aria-label="info-circle"
+    className="anticon anticon-info-circle ant-alert-icon"
+    role="img"
+  >
+    <svg
+      aria-hidden="true"
+      data-icon="info-circle"
+      fill="currentColor"
+      focusable="false"
+      height="1em"
+      viewBox="64 64 896 896"
+      width="1em"
+    >
+      <path
+        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+      />
+      <path
+        d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
+      />
+    </svg>
+  </span>
+  <span
+    className="ant-alert-message"
+  />
+  <span
+    className="ant-alert-description"
+  >
+    This is a description for the block.
+  </span>
+</div>
+`;
+
+exports[`Render with description only and icon false - value[0] 1`] = `
+<div
+  className="ant-alert ant-alert-info ant-alert-with-description ant-alert-no-icon"
+  data-show={true}
+>
+  <span
+    className="ant-alert-message"
+  />
+  <span
+    className="ant-alert-description"
+  >
+    This is a description for the block.
+  </span>
+</div>
+`;
+
 exports[`Render with description properties.closable: true - value[0] 1`] = `
 <div
   className="ant-alert ant-alert-info ant-alert-with-description ant-alert-closable"
@@ -729,14 +781,13 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon object_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -769,14 +820,13 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
 >
   <span
     aria-label="loading-3-quarters"
-    className="anticon anticon-loading-3-quarters ant-alert-icon"
+    className="anticon anticon-loading-3-quarters anticon-spin ant-alert-icon"
     id="with description properties.icon string_icon"
     required={false}
     role="img"
   >
     <svg
       aria-hidden="true"
-      className="anticon-spin"
       data-icon="loading-3-quarters"
       fill="currentColor"
       focusable="false"
@@ -1305,6 +1355,14 @@ exports[`Test Schema properties.type: warning banner: true 2`] = `null`;
 exports[`Test Schema properties.type: warning showIcon: false 1`] = `true`;
 
 exports[`Test Schema properties.type: warning showIcon: false 2`] = `null`;
+
+exports[`Test Schema with description only 1`] = `true`;
+
+exports[`Test Schema with description only 2`] = `null`;
+
+exports[`Test Schema with description only and icon false 1`] = `true`;
+
+exports[`Test Schema with description only and icon false 2`] = `null`;
 
 exports[`Test Schema with description properties.closable: true 1`] = `true`;
 

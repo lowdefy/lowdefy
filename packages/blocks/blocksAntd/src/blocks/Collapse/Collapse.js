@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const CollapseBlock = ({ blockId, content, methods, properties }) => {
+const CollapseBlock = ({ blockId, events, content, methods, properties }) => {
   const panels =
     properties.panels ||
     Object.keys(content)
@@ -41,12 +41,13 @@ const CollapseBlock = ({ blockId, content, methods, properties }) => {
       defaultActiveKey={properties.defaultActiveKey || panels[0].key}
       bordered={properties.bordered}
       accordion={properties.accordion}
-      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
+      onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       expandIcon={
         propertiesIconExpand &&
         (({ isActive }) => (
           <Icon
             blockId={`${blockId}_expandIcon`}
+            events={events}
             properties={{ rotate: isActive ? 90 : 0, ...propertiesIconExpand }}
             methods={methods}
           />

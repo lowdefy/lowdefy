@@ -277,14 +277,13 @@ Array [
       "onPressEnter": [Function],
       "placeholder": undefined,
       "prefix": <IconBlock
-        actions={Object {}}
         blockId="properties.prefixIcon.size: 24_prefixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -356,9 +355,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -399,14 +399,13 @@ Array [
       "onPressEnter": [Function],
       "placeholder": undefined,
       "prefix": <IconBlock
-        actions={Object {}}
         blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -478,9 +477,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -584,14 +584,13 @@ Array [
       "prefix": undefined,
       "size": undefined,
       "suffix": <IconBlock
-        actions={Object {}}
         blockId="properties.suffixIcon.size 24_suffixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -663,9 +662,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -706,14 +706,13 @@ Array [
       "prefix": undefined,
       "size": undefined,
       "suffix": <IconBlock
-        actions={Object {}}
         blockId="properties.suffixIcon: AlertFilled_suffixIcon"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction] {
               "calls": Array [
                 Array [
@@ -785,9 +784,10 @@ Array [
                 },
               ],
             },
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertFilled"

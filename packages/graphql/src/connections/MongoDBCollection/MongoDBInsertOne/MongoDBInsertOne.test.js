@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ test('insertOne mongodb error', async () => {
   };
   await resolver({ request, connection });
   await expect(resolver({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error dup key'
+    'E11000 duplicate key error collection: test.insertOne index: _id_ dup key: { _id: "insertOne_mongodb_error" }'
   );
 });
 

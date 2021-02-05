@@ -41,7 +41,7 @@
     },
     "spreadsheetId": {
       "type": "string",
-      "description": "Document ID from the URL of the spreadsheet.",
+      "description": "document ID from the URL of the spreadsheet.",
       "errorMessage": {
         "type": "GoogleSheet connection property \"spreadsheetId\" should be a string."
       }

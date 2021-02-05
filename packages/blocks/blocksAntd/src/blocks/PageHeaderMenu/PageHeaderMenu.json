@@ -1,6 +1,11 @@
 {
   "category": "context",
-  "loading": false,
+  "loading": {
+    "type": "Spinner",
+    "properties": {
+      "height": "100vh"
+    }
+  },
   "test": {
     "methods": [
       {
@@ -40,7 +45,10 @@
               "properties": {
                 "style": {
                   "type": "object",
-                  "description": "Css style object to apply to logo."
+                  "description": "Css style object to apply to logo.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
                 }
               }
             }
@@ -54,53 +62,149 @@
             "theme": {
               "type": "string",
               "enum": ["light", "dark"],
+              "default": "dark",
               "description": "Header theme color."
             },
             "contentStyle": {
               "type": "object",
-              "description": "Header content css style object."
+              "description": "Header content css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "color": {
               "type": "string",
-              "description": "Header color."
+              "description": "Header color.",
+              "docs": {
+                "displayType": "color"
+              }
             },
             "style": {
               "type": "object",
-              "description": "Header css style object."
+              "description": "Header css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
         "footer": {
           "type": "object",
-          "description": "Footer properties."
+          "description": "Footer properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Footer css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
         },
         "content": {
           "type": "object",
-          "description": "Content properties."
+          "description": "Content properties.",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "type": "object",
+              "description": "Content css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
         },
         "breadcrumb": {
           "type": "object",
-          "description": "Breadcrumb properties."
+          "description": "Breadcrumb properties.",
+          "properties": {
+            "separator": {
+              "type": "string",
+              "default": "/",
+              "description": "Use a custom separator string."
+            },
+            "list": {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
+                "type": "string",
+                "description": "Title of the breadcrumb link."
+              }
+            }
+          }
         },
         "menu": {
           "type": "object",
-          "description": "Menu properties."
+          "description": "Menu properties.",
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["dark", "light"],
+              "default": "dark",
+              "description": "Color theme of menu."
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "type"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Menu item id."
+                  },
+                  "pageId": {
+                    "type": "string",
+                    "description": "Page to link to."
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "properties from menu item.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Menu item title."
+                      },
+                      "icon": {
+                        "type": ["string", "object"],
+                        "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item.",
+                        "docs": {
+                          "displayType": "icon"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "menuLg": {
           "type": "object",
-          "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes."
+          "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes.",
+          "docs": {
+            "displayType": "markdown"
+          }
         },
         "menuMd": {
           "type": "object",
-          "description": "Mobile menu properties. Overwrites menu properties on mobile screen sizes."
+          "description": "Mobile menu properties. Overwrites menu properties on mobile screen sizes.",
+          "docs": {
+            "displayType": "markdown"
+          }
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to layout."
+          "description": "Css style object to apply to layout.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

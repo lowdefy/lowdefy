@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -60,15 +60,15 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
       makeCssClass={makeCssClass}
     >
       <Component
-        methods={{
-          callAction: block.callAction,
+        methods={Object.assign(block.methods, {
           makeCssClass,
-          registerAction: block.registerAction,
+          registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
-        }}
-        actions={block.eval.actions}
+          triggerEvent: block.triggerEvent,
+        })}
         blockId={block.blockId}
         content={content}
+        events={block.eval.events}
         homePageId={rootContext.homePageId}
         key={block.blockId}
         loading={block.loading}

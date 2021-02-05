@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/lowdefy/lowdefy/compare/v3.4.0...v3.5.0) (2021-02-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency graphql to v15.5.0 ([90acf72](https://github.com/lowdefy/lowdefy/commit/90acf7289c517f9afe066cd0706c64187a39648b))
+* **renderer:** Fix context creation render loop bug. ([019dbdc](https://github.com/lowdefy/lowdefy/commit/019dbdc6465d0178da23e9c6e41bd5c3503ae686))
+* **renderer:** Fix registerMethods object. Closes [#348](https://github.com/lowdefy/lowdefy/issues/348) ([d28931f](https://github.com/lowdefy/lowdefy/commit/d28931f012f9aa52e884d58dd4982cb383b68579))
+
+
+### Features
+
+* **renderer:** Rename actions to events ([134b275](https://github.com/lowdefy/lowdefy/commit/134b2756fd7f544486d9b1f8f5b53fa566fce23f))
+* **renderer:** Rename actions to events. ([601ae65](https://github.com/lowdefy/lowdefy/commit/601ae6513e9ed2d8e5b18e3c3321405fad19c281))
+
+
+
+
+
+# [3.4.0](https://github.com/lowdefy/lowdefy/compare/v3.3.0...v3.4.0) (2021-01-20)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
 # [3.3.0](https://github.com/lowdefy/lowdefy/compare/v3.1.1...v3.3.0) (2021-01-18)
 
 

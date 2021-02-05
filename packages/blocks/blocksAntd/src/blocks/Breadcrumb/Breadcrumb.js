@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ const ItemLink = ({ link, children, className }) => {
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
+const BreadcrumbBlock = ({ blockId, events, methods, properties }) => (
   <Breadcrumb
     id={blockId}
     separator={properties.separator}
@@ -49,14 +49,14 @@ const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
       <Breadcrumb.Item
         key={index}
         onClick={
-          actions.onClick &&
-          (() => methods.callAction({ action: 'onClick', args: { link, index } }))
+          events.onClick &&
+          (() => methods.triggerEvent({ name: 'onClick', event: { link, index } }))
         }
       >
         <ItemLink
           className={methods.makeCssClass([
             {
-              cursor: actions.onClick && 'pointer',
+              cursor: events.onClick && 'pointer',
             },
             link.style,
           ])}
@@ -65,6 +65,7 @@ const BreadcrumbBlock = ({ blockId, properties, methods, actions }) => (
           {link.icon && (
             <Icon
               blockId={`${blockId}_${index}_icon`}
+              events={events}
               properties={{
                 name: type.isString(link.icon) && link.icon,
                 ...(type.isObject(link.icon) ? link.icon : {}),

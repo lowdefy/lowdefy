@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -62,22 +62,22 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
       makeCssClass={makeCssClass}
     >
       <Component
-        methods={{
-          callAction: block.callAction,
+        methods={Object.assign(block.methods, {
           makeCssClass,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
-          registerAction: block.registerAction,
+          registerEvent: block.registerEvent,
           registerMethod: block.registerMethod,
           removeItem: block.removeItem,
+          triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
-        }}
-        actions={block.eval.actions}
+        })}
         blockId={block.blockId}
-        list={contentList}
+        events={block.eval.events}
         homePageId={rootContext.homePageId}
         key={block.blockId}
+        list={contentList}
         loading={block.loading}
         menus={rootContext.menus}
         pageId={pageId}

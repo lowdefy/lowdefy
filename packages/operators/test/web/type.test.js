@@ -1,9 +1,20 @@
-import WebParser from '../../src/webParser';
+/*
+  Copyright 2020-2021 Lowdefy, Inc
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import WebParser from '../../src/webParser';
 
 const context = {
   config: {
@@ -60,7 +71,7 @@ const arrayIndices = [1];
 test('_type with on, pass', () => {
   const input = { _type: { type: 'string', on: 'a' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -68,7 +79,7 @@ test('_type with on, pass', () => {
 test('_type with on, fail', () => {
   const input = { _type: { type: 'number', on: 'b' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -76,7 +87,7 @@ test('_type with on, fail', () => {
 test('_type with key, pass', () => {
   const input = { _type: { type: 'string', key: 'string' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -84,7 +95,7 @@ test('_type with key, pass', () => {
 test('_type with key, fail', () => {
   const input = { _type: { type: 'number', key: 'string' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -92,14 +103,14 @@ test('_type with key, fail', () => {
 test('_type with null on pass', () => {
   const input = { _type: { type: 'null', on: null } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 test('_type with null on fail', () => {
   const input = { _type: { type: 'boolean', on: null } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -107,7 +118,7 @@ test('_type with null on fail', () => {
 test('_type with nonexistent key', () => {
   const input = { _type: { type: 'string', key: 'notThere' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -115,7 +126,7 @@ test('_type with nonexistent key', () => {
 test('_type with nonexistent key', () => {
   const input = { _type: { type: 'string', key: null } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -123,7 +134,7 @@ test('_type with nonexistent key', () => {
 test('_type null', () => {
   const input = { _type: null };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -135,7 +146,7 @@ test('_type null', () => {
 test('_type with non-string on', () => {
   const input = { _type: { type: 'number', on: 5 } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, args, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

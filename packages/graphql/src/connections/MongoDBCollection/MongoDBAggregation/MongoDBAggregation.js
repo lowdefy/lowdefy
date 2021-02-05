@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,9 +19,22 @@ import { serialize, deserialize } from '../serialize';
 
 import schema from './MongoDBAggregationSchema.json';
 
+function checkOutAndMerge({ pipeline, connection }) {
+  if (connection.write !== true) {
+    pipeline.forEach((stage) => {
+      if (stage.$out != null || stage.$merge != null) {
+        throw new Error(
+          'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
+        );
+      }
+    });
+  }
+}
+
 async function mongodbAggregation({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { pipeline, options } = deserializedRequest;
+  checkOutAndMerge({ pipeline, connection });
   const { collection, client } = await getCollection({ connection });
   let res;
   try {

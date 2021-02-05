@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import State from '../src/State';
 const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlobal }) => {
   const ctx = {
     pageId,
-    actionLog: [],
+    eventLog: [],
     blockId: rootBlock.blockId,
     client: rootContext.client || {},
     displayMessage: rootContext.displayMessage || {

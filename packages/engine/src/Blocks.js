@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, set, swap, type } from '@lowdefy/helpers';
+import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 
-import BlockActions from './BlockActions';
+import Events from './Events';
 import getFieldValues from './getFieldValues';
 
 class Blocks {
@@ -77,7 +77,7 @@ class Blocks {
       block.properties = type.isNone(block.properties) ? {} : block.properties;
       block.style = type.isNone(block.style) ? {} : block.style;
       block.layout = type.isNone(block.layout) ? {} : block.layout;
-      block.actions = type.isNone(block.actions) ? {} : block.actions;
+      block.events = type.isNone(block.events) ? {} : block.events;
 
       block.visibleEval = {};
       block.propertiesEval = {};
@@ -202,13 +202,13 @@ class Blocks {
         };
       }
 
-      block.BlockActions = new BlockActions({
+      block.Events = new Events({
         arrayIndices: this.arrayIndices,
         block,
         context: this.context,
       });
-      block.callAction = block.BlockActions.callAction;
-      block.registerAction = block.BlockActions.registerAction;
+      block.triggerEvent = block.Events.triggerEvent;
+      block.registerEvent = block.Events.registerEvent;
     });
     this.reset(initState); // set initial values to blocks.
   }
@@ -221,7 +221,9 @@ class Blocks {
         let blockValue = get(initState, block.field);
         if (type.isUndefined(blockValue)) {
           // default null value for block type
-          blockValue = type.enforceType(block.meta.valueType, null);
+          blockValue = type.isUndefined(block.meta.initValue)
+            ? type.enforceType(block.meta.valueType, null)
+            : block.meta.initValue;
           this.context.State.set(block.field, block.value);
           block.update = true;
         }
@@ -293,6 +295,7 @@ class Blocks {
     this.loopBlocks((block) => {
       if (block.meta.category === 'input') {
         const stateValue = get(this.context.state, block.field);
+        // TODO: related to #345
         // enforce type here? should we reassign value here??
         block.value = type.isUndefined(stateValue) ? block.value : stateValue;
       }
@@ -555,7 +558,7 @@ class Blocks {
         );
         block.eval = {
           areas: block.areasLayoutEval.output,
-          actions: type.isNone(block.BlockActions.actions) ? null : block.BlockActions.actions,
+          events: type.isNone(block.Events.events) ? null : block.Events.events,
           properties: block.propertiesEval.output,
           required: block.requiredEval.output,
           layout: block.layoutEval.output,

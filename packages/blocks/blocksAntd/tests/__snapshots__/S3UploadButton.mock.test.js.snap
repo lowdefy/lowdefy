@@ -6,18 +6,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="default_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "default__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -51,18 +61,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="default_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "default__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -101,18 +121,28 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.accept_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.accept__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -146,18 +176,28 @@ Array [
     Object {
       "accept": ".png,.jpg",
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.accept_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.accept__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -196,18 +236,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.button_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.button__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -241,18 +291,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.button_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.button__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -291,18 +351,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.disabled_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.disabled__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -336,18 +406,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.disabled_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.disabled__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -386,18 +466,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.showUploadList_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.showUploadList__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -431,18 +521,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.showUploadList_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.showUploadList__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -481,18 +581,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.singleFile_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.singleFile__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -526,18 +636,28 @@ Array [
     Object {
       "accept": undefined,
       "children": <ButtonBlock
-        actions={Object {}}
         blockId="properties.singleFile_button"
         content={Object {}}
+        events={
+          Object {
+            "__getS3PostPolicy": Array [
+              Object {
+                "id": "properties.singleFile__getS3PostPolicy",
+                "params": "s3PostPolicyRequestId",
+                "type": "Request",
+              },
+            ],
+          }
+        }
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
             "setValue": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={

@@ -1,0 +1,103 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-editing-page
+    pageTitle: Editing a page
+    section: Tutorial
+    # prefetchPages:
+    #   - tutorial-development-server
+    content:
+      - id: md1
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            #### Step 1
+
+            Go to your project repository on Github, and navigate to `pages/welcome.yaml` in the repository files.
+
+            This file contains the configuration for the welcome page on the app. It describes the UI components, called "blocks", as well as the actions on the page.
+
+            #### Step 2
+
+            To edit this configuration, click on the edit (pencil) icon at the top right. Paste the following text in the text area to replace the existing configuration:
+            ```
+            id: welcome
+            type: PageHeaderMenu
+            blocks:
+              - id: content_card
+                type: Card
+                blocks:
+                  - id: title
+                    type: Title
+                    properties:
+                      content: Hello World
+            ```
+            #### Step 3
+
+            To save these changes, we are going to make a commit in the project repository.
+      - id: md2
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            Write a message to describe the changes you have made, choose the option to create a new branch, and click "Propose changes". Then click "Create pull request".
+
+            #### Step 4
+
+            You should see Netlify start to run a set of tests on your app. Netlify will create a deploy preview. This is a version of your site where you can preview changes made to the app before you make them live. Wait for the preview deployment to finish.
+
+            #### Step 5
+
+            Click on the "Details" link of the deploy/netlify check to go to your deploy preview. You should see something like this:
+      - id: example1
+        type: PageHeaderMenu
+        properties:
+          style:
+            minHeight: 300px
+          menu:
+            links:
+              - id: welcome
+                type: MenuLink
+                properties:
+                  title: welcome
+                url: ''
+        blocks:
+          - id: content_card
+            type: Card
+            blocks:
+              - id: title
+                type: Title
+                properties:
+                  content: Hello World
+      - id: md3
+        type: MarkdownWithHtml
+        properties:
+          content: |
+            #### Step 6
+
+            If you have reviewed your changes and you are happy with the result, go back and merge the pull request on Github. This will trigger Netlify to deploy those changes to the "live" version of your app.
+
+            ### Up next
+
+            In the next section we will run a local development server.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Setup
+            previous_page_id: tutorial-setup
+            next_page_title: Development server
+            next_page_id: tutorial-development-server

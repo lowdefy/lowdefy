@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ async function buildMenu({ components, context }) {
   await Promise.all(
     missingPageWarnings.map(async (warning) => {
       await context.logger.warn(
-        `Page ${warning.pageId} referenced in menu link ${warning.menuItemId} not found.`
+        `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`
       );
     })
   );

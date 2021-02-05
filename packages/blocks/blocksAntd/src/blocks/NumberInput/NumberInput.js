@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,13 +17,22 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { type } from '@lowdefy/helpers';
 import Label from '../Label/Label';
 
-const NumberInput = ({ blockId, loading, properties, required, validation, value, methods }) => {
+const NumberInput = ({
+  blockId,
+  events,
+  loading,
+  properties,
+  required,
+  validation,
+  value,
+  methods,
+}) => {
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -39,17 +48,17 @@ const NumberInput = ({ blockId, loading, properties, required, validation, value
             placeholder={properties.placeholder}
             autoComplete="off"
             decimalSeparator={properties.decimalSeparator}
-            min={!type.isNone(properties.min) ? properties.min : -Infinity}
-            max={!type.isNone(properties.max) ? properties.max : Infinity}
-            precision={!type.isNone(properties.precision) ? properties.precision : 0}
+            min={properties.min}
+            max={properties.max}
+            precision={properties.precision}
             step={properties.step}
             size={properties.size}
             onChange={(newVal) => {
               methods.setValue(newVal);
-              methods.callAction({ action: 'onChange' });
+              methods.triggerEvent({ name: 'onChange' });
             }}
             onPressEnter={() => {
-              methods.callAction({ action: 'onPressEnter' });
+              methods.triggerEvent({ name: 'onPressEnter' });
             }}
             value={value}
           />

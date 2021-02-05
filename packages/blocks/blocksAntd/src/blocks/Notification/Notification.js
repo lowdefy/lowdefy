@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
 
-const NotificationBlock = ({ blockId, properties, methods }) => {
+const NotificationBlock = ({ blockId, events, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
@@ -30,9 +30,10 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
         btn: properties.button && (
           <Button
             blockId={`${blockId}_button`}
+            events={events}
             properties={properties.button}
             methods={methods}
-            onClick={() => methods.callAction({ action: 'onClose' })}
+            onClick={() => methods.triggerEvent({ name: 'onClose' })}
           />
         ),
         className: methods.makeCssClass(properties.notificationStyle),
@@ -42,13 +43,14 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
         closeIcon: properties.closeIcon && (
           <Icon
             blockId={`${blockId}_closeIcon`}
+            events={events}
             properties={properties.closeIcon}
             methods={methods}
           />
         ),
         message: args.message || properties.message || blockId,
-        onClose: () => methods.callAction({ action: 'onClose' }),
-        onClick: () => methods.callAction({ action: 'onClick' }),
+        onClose: () => methods.triggerEvent({ name: 'onClose' }),
+        onClick: () => methods.triggerEvent({ name: 'onClick' }),
         placement: properties.placement,
         top: properties.top,
       });

@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "lines": 1
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,40 +18,61 @@
         },
         "style": {
           "type": "object",
-          "description": "Css style object to applied to breadcrumb."
+          "description": "Css style object to applied to breadcrumb.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "list": {
-          "type": "array",
-          "description": "List of breadcrumb links.",
-          "items": {
-            "type": ["object", "string"],
-            "properties": {
-              "label": {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
                 "type": "string",
-                "description": "Label of the breadcrumb link."
-              },
-              "pageId": {
-                "type": "string",
-                "description": "Page id to link to when clicked."
-              },
-              "url": {
-                "type": "string",
-                "description": "External url link."
-              },
-              "style": {
+                "description": "Title of the breadcrumb link."
+              }
+            },
+            {
+              "type": "array",
+              "description": "List of breadcrumb links.",
+              "items": {
                 "type": "object",
-                "description": "Css style to apply to link."
-              },
-              "icon": {
-                "type": ["string", "object"],
-                "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link."
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Label of the breadcrumb link."
+                  },
+                  "pageId": {
+                    "type": "string",
+                    "description": "Page id to link to when clicked."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "External url link."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to apply to link.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
+                  },
+                  "icon": {
+                    "type": ["string", "object"],
+                    "description": "Name of an Ant Design Icon or properties of an Icon block to use an icon in breadcrumb link.",
+                    "docs": {
+                      "displayType": "icon"
+                    }
+                  }
+                }
               }
             }
-          }
+          ]
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

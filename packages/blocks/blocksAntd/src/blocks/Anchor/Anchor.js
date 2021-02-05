@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ const Tag = ({ blockId, children, className, disabled, onClick }) =>
     </a>
   );
 
-const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
+const AnchorBlock = ({ blockId, events, loading, methods, properties }) => {
   const title = type.isNone(properties.title) ? blockId : properties.title;
-  const showLoading = get(actions, 'onClick.loading') || loading;
+  const showLoading = get(events, 'onClick.loading') || loading;
   const disabled = properties.disabled || showLoading;
   return (
     <Tag
@@ -44,12 +44,13 @@ const AnchorBlock = ({ actions, blockId, loading, methods, properties }) => {
         disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
       ])}
       disabled={disabled}
-      onClick={() => methods.callAction({ action: 'onClick' })}
+      onClick={() => methods.triggerEvent({ name: 'onClick' })}
     >
       <Strong strong={properties.strong}>
         {properties.icon && (
           <Icon
             blockId={`${blockId}_icon`}
+            events={events}
             methods={methods}
             properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
           />

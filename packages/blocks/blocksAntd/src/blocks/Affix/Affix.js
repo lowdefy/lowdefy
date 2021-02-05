@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ const AffixBlock = ({ blockId, content, methods, properties }) => (
     offsetBottom={properties.offsetBottom}
     offsetTop={properties.offsetTop}
     onChange={(affixed) => {
-      methods.callAction({ action: 'onChange', args: { affixed } });
+      methods.triggerEvent({ name: 'onChange', event: { affixed } });
     }}
   >
     {content.content && content.content()}

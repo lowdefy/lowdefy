@@ -1,6 +1,11 @@
 {
   "category": "container",
-  "loading": false,
+  "loading": {
+    "type": "Spinner",
+    "properties": {
+      "height": "100vh"
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,7 +13,10 @@
       "properties": {
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to use as result image."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to use as result image.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "status": {
           "type": "string",

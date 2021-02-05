@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ test('app schema', async () => {
 
 test('invalid schema', async () => {
   const components = {
-    version: '1.0.0',
+    lowdefy: '1.0.0',
     global: 'global',
   };
   await testSchema({ components, context });
@@ -83,7 +83,7 @@ test('invalid schema', async () => {
     ['Schema not valid.'],
     [
       `--------- Schema Error ---------
-message: global should be an object.
+message: App "global" should be an object.
 path: /global
 --------------------------------`,
     ],
@@ -92,7 +92,7 @@ path: /global
 
 test('multiple schema errors', async () => {
   const components = {
-    version: '1.0.0',
+    lowdefy: '1.0.0',
     pages: [
       {
         blocks: [
@@ -124,7 +124,7 @@ path: /pages/0
     ],
     [
       `--------- Schema Error ---------
-message: Block id should be a string.
+message: Block "id" should be a string.
 path: /pages/1/id
 --------------------------------`,
     ],

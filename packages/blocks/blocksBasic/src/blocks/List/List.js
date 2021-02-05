@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Box from '../Box/Box';
 
-const List = ({ actions, blockId, methods, properties, list }) => {
+const List = ({ blockId, events, list, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('pushItem', methods.pushItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
@@ -28,8 +28,8 @@ const List = ({ actions, blockId, methods, properties, list }) => {
   }, []);
   return (
     <Box
-      actions={actions}
       blockId={blockId}
+      events={events}
       properties={{ style: properties.style }}
       methods={methods}
       content={{

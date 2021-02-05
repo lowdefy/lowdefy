@@ -6,7 +6,9 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 const packageJson = require('./package.json');
 
-const port = type.isNumber(process.argv[process.argv.findIndex((val) => val === '--port') + 1])
+const port = type.isNumber(
+  Number(process.argv[process.argv.findIndex((val) => val === '--port') + 1])
+)
   ? process.argv[process.argv.findIndex((val) => val === '--port') + 1]
   : 3002;
 
@@ -43,8 +45,8 @@ module.exports = merge(common, {
       patterns: [
         {
           from: 'src/blocks/**/*.json',
-          transformPath: (targetPath) => {
-            return path.join('meta', path.basename(targetPath));
+          to: ({ absoluteFilename }) => {
+            return path.join('meta', path.basename(absoluteFilename));
           },
           transform: addRemoteEntryUrl,
         },

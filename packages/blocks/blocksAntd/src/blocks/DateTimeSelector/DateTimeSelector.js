@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import disabledDate from '../../disabledDate';
 
 const DateTimeSelector = ({
   blockId,
+  events,
   loading,
   methods,
   properties,
@@ -43,6 +44,7 @@ const DateTimeSelector = ({
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -67,6 +69,7 @@ const DateTimeSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />
@@ -79,7 +82,7 @@ const DateTimeSelector = ({
                 secondStep: properties.secondStep || 30,
               }}
               showNow={properties.showNow}
-              disabledDate={disabledDate(properties.disabledDate)}
+              disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
                 methods.setValue(
                   !newVal
@@ -89,7 +92,7 @@ const DateTimeSelector = ({
                         .startOf(timeUnit)
                         .toDate()
                 );
-                methods.callAction({ action: 'onChange' });
+                methods.triggerEvent({ name: 'onChange' });
               }}
               value={
                 !type.isDate(value)

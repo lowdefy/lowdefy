@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,16 +17,16 @@
 import makeCssClass from './makeCssClass';
 
 const blockDefaultProps = {
-  actions: {},
   blockId: 'undefined_id',
   content: {},
+  events: {},
   list: [],
   menus: [],
   methods: {
-    callAction: () => undefined,
-    registerAction: () => undefined,
-    registerMethod: () => undefined,
     makeCssClass: makeCssClass,
+    registerEvent: () => undefined,
+    registerMethod: () => undefined,
+    triggerEvent: () => undefined,
   },
   properties: {},
   user: {},

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,38 +20,38 @@ const mockBlock = ({ meta, logger }) => {
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.5;
   global.Math = mockMath;
-  const callAction = jest.fn();
   const makeCssClass = jest.fn();
   const moveItemDown = jest.fn();
   const moveItemUp = jest.fn();
   const pushItem = jest.fn();
+  const registerEvent = jest.fn();
   const registerMethod = jest.fn();
-  const registerAction = jest.fn();
   const removeItem = jest.fn();
   const setValue = jest.fn();
+  const triggerEvent = jest.fn();
   const unshiftItem = jest.fn();
   const methods = {
-    callAction,
     makeCssClass,
     moveItemDown,
     moveItemUp,
     pushItem,
+    registerEvent,
     registerMethod,
-    registerAction,
     removeItem,
     setValue,
+    triggerEvent,
     unshiftItem,
   };
   const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
   const before = () => {
-    callAction.mockReset();
+    triggerEvent.mockReset();
     makeCssClass.mockReset();
     makeCssClass.mockImplementation(makeCssImp);
     moveItemDown.mockReset();
     moveItemUp.mockReset();
     pushItem.mockReset();
     registerMethod.mockReset();
-    registerAction.mockReset();
+    registerEvent.mockReset();
     removeItem.mockReset();
     setValue.mockReset();
     unshiftItem.mockReset();

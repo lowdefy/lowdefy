@@ -1,6 +1,11 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "lines": 1
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -13,18 +18,21 @@
         },
         "color": {
           "type": "string",
-          "description": "Title color."
+          "description": "Title color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "content": {
           "type": "string",
           "description": "Title text content."
         },
         "copyable": {
-          "description": "Provide copy text button.",
           "default": false,
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Provide copy text button."
             },
             {
               "type": "object",
@@ -36,11 +44,17 @@
                 },
                 "icon": {
                   "type": ["string", "object", "array"],
-                  "description": "Copy icon, can be an array or two icons for before and after clicked."
+                  "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
                 },
                 "tooltips": {
                   "type": ["string", "array"],
-                  "description": "Tooltip text, can be an array or two strings for before and after clicked."
+                  "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                  "docs": {
+                    "displayType": "string"
+                  }
                 }
               }
             }
@@ -58,10 +72,10 @@
         },
         "ellipsis": {
           "default": false,
-          "description": "Display ellipsis when text overflows a single line.",
           "oneOf": [
             {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display ellipsis when text overflows a single line."
             },
             {
               "type": "object",
@@ -96,6 +110,7 @@
         },
         "type": {
           "type": "string",
+          "default": "default",
           "enum": ["secondary", "warning", "danger"],
           "description": "Additional types. Don't specify for default."
         },
@@ -106,7 +121,7 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {

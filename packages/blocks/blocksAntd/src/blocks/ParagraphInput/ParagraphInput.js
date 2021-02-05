@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,19 +23,19 @@ import Icon from '../Icon/Icon';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, properties, methods, value }) => {
+const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
-  const editableActions = {
+  const editableEvents = {
     onStart: () => {
       setEdit(true);
-      methods.callAction({
-        action: 'onStart',
+      methods.triggerEvent({
+        name: 'onStart',
       });
     },
     onChange: (val) => {
       setEdit(false);
       methods.setValue(val);
-      methods.callAction({ action: 'onChange', args: { value: val } });
+      methods.triggerEvent({ name: 'onChange', event: { value: val } });
     },
   };
   return (
@@ -48,9 +48,9 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
           ? {
               text: properties.copyable.test || value,
               onCopy: () => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { value: properties.copyable.test || value },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { value: properties.copyable.test || value },
                 });
               },
               icon:
@@ -60,12 +60,14 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
                     <Icon
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
+                      events={events}
                       methods={methods}
                       properties={properties.copyable.icon[0]}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
+                      events={events}
                       methods={methods}
                       properties={properties.copyable.icon[1]}
                     />,
@@ -73,6 +75,7 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    events={events}
                     methods={methods}
                     properties={properties.copyable.icon}
                   />
@@ -89,22 +92,16 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               rows: properties.ellipsis.rows,
               expandable: properties.ellipsis.expandable,
               suffix: properties.ellipsis.suffix,
-              // FIX: not working, might be and antd issue.
-              // symbol: properties.ellipsis.symbol && <span>{properties.ellipsis.symbol}</span>,
-              // "symbol": {
-              //   "type": "string",
-              //   "description": "Custom ... symbol of ellipsis content."
-              // }
               onExpand: (ellipsis) => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { ellipsis },
                 });
               },
               onEllipsis: (ellipsis) => {
-                methods.callAction({
-                  action: 'onCopy',
-                  args: { ellipsis },
+                methods.triggerEvent({
+                  name: 'onCopy',
+                  event: { ellipsis },
                 });
               },
             }
@@ -116,6 +113,7 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               icon: properties.editable.icon && (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
+                  events={events}
                   methods={methods}
                   properties={properties.editable.icon}
                 />
@@ -124,9 +122,9 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               editing: properties.editable.editing || editing,
               maxLength: properties.editable.maxLength,
               autoSize: properties.editable.autoSize,
-              ...editableActions,
+              ...editableEvents,
             }
-          : editableActions
+          : properties.editable !== false && editableEvents
       }
       mark={properties.mark}
       strong={properties.strong}

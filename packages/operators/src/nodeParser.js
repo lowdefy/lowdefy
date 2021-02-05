@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,26 +20,29 @@ import commonOperators from './common';
 import nodeOperators from './node';
 
 class NodeParser {
-  constructor({ arrayIndices, config, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
+  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
     this.arrayIndices = arrayIndices;
-    this.config = config;
     this.input = input;
     this.lowdefyGlobal = lowdefyGlobal;
     this.secrets = secrets;
     this.state = state;
     this.urlQuery = urlQuery;
+    this.parse = this.parse.bind(this);
     this.operations = {
       ...commonOperators,
       ...nodeOperators,
     };
   }
 
-  parse({ input, args, location }) {
+  parse({ args, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
-    if (args && !type.isObject(args)) {
-      throw new Error('Operator parser args must be a object.');
+    if (event && !type.isObject(event)) {
+      throw new Error('Operator parser event must be a object.');
+    }
+    if (args && !type.isArray(args)) {
+      throw new Error('Operator parser args must be an array.');
     }
     if (location && !type.isString(location)) {
       throw new Error('Operator parser location must be a string.');
@@ -54,8 +57,8 @@ class NodeParser {
             const res = this.operations[op]({
               args,
               arrayIndices: this.arrayIndices,
-              config: this.config,
               env: 'node',
+              event,
               input: this.input,
               location,
               lowdefyGlobal: this.lowdefyGlobal,
@@ -65,11 +68,13 @@ class NodeParser {
               secrets: this.secrets,
               state: this.state,
               urlQuery: this.urlQuery,
+              parser: this,
             });
             return res;
           }
         } catch (e) {
           errors.push(e);
+          console.error(e);
           return null;
         }
       }

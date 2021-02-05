@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -79,9 +79,9 @@ const loaders = {
 const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
-  args: {},
   arrayIndices: [],
   blockId: 'contextId',
+  event: {},
   input: {},
   lowdefyGlobal: {},
   pageId: 'pageId',
@@ -243,6 +243,77 @@ test('connection does not have correct type', async () => {
   );
 });
 
+test('deserialize inputs', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        properties: {
+          event: { _event: true },
+          input: { _input: true },
+          global: { _global: true },
+          state: { _state: true },
+          urlQuery: { _url_query: true },
+          eventDate: { _event: 'date' },
+          inputDate: { _input: 'date' },
+          globalDate: { _global: 'date' },
+          stateDate: { _state: 'date' },
+          urlQueryDate: { _url_query: 'date' },
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await controller.callRequest({
+    arrayIndices: [],
+    blockId: 'contextId',
+    event: {
+      date: { _date: 0 },
+    },
+    input: {
+      date: { _date: 0 },
+    },
+    lowdefyGlobal: {
+      date: { _date: 0 },
+    },
+    pageId: 'pageId',
+    requestId: 'requestId',
+    state: {
+      date: { _date: 0 },
+    },
+    urlQuery: {
+      date: { _date: 0 },
+    },
+  });
+  expect(resolvers.TestConnection.requests.TestRequest.resolver.mock.calls).toEqual([
+    [
+      {
+        connection: {
+          connectionProperty: 'connectionProperty',
+        },
+        request: {
+          event: { date: new Date(0) },
+          input: { date: new Date(0) },
+          global: { date: new Date(0) },
+          state: { date: new Date(0) },
+          urlQuery: { date: new Date(0) },
+          eventDate: new Date(0),
+          inputDate: new Date(0),
+          globalDate: new Date(0),
+          stateDate: new Date(0),
+          urlQueryDate: new Date(0),
+        },
+      },
+    ],
+  ]);
+});
+
 test('parse request properties for operators', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
@@ -253,8 +324,8 @@ test('parse request properties for operators', async () => {
         requestId: 'requestId',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: 'value' },
           input: { _input: 'value' },
+          event: { _event: 'value' },
           global: { _global: 'value' },
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
@@ -267,13 +338,13 @@ test('parse request properties for operators', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
-    args: {
-      value: 'argValue',
-    },
     arrayIndices: [1],
     blockId: 'contextId',
     input: {
       value: 'inputValue',
+    },
+    event: {
+      value: 'eventValue',
     },
     lowdefyGlobal: {
       value: 'globalValue',
@@ -295,7 +366,7 @@ test('parse request properties for operators', async () => {
         connectionProperty: 'connectionProperty',
       },
       request: {
-        args: 'argValue',
+        event: 'eventValue',
         input: 'inputValue',
         global: 'globalValue',
         state: 'stateValue',
@@ -316,7 +387,7 @@ test('parse connection properties for operators', async () => {
         type: 'TestConnection',
         connectionId: 'testConnection',
         properties: {
-          args: { _args: 'value' },
+          event: { _event: 'value' },
           input: { _input: 'value' },
           global: { _global: 'value' },
           state: { _state: 'value' },
@@ -331,11 +402,11 @@ test('parse connection properties for operators', async () => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
   const controller = createRequestController(context);
   const res = await controller.callRequest({
-    args: {
-      value: 'argValue',
-    },
     arrayIndices: [1],
     blockId: 'contextId',
+    event: {
+      value: 'eventValue',
+    },
     input: {
       value: 'inputValue',
     },
@@ -356,7 +427,7 @@ test('parse connection properties for operators', async () => {
     id: 'request:pageId:contextId:requestId',
     response: {
       connection: {
-        args: 'argValue',
+        event: 'eventValue',
         input: 'inputValue',
         global: 'globalValue',
         state: 'stateValue',
@@ -495,7 +566,7 @@ test('request properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at requestId.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at requestId.'
   );
 });
 
@@ -518,7 +589,7 @@ test('connection properties operator error', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(RequestError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'Error: Operator Error: _state params must be of type string or object. Received: 0 at testConnection.'
+    'Error: Operator Error: _state params must be of type string, boolean or object. Received: 0 at testConnection.'
   );
 });
 
@@ -670,7 +741,7 @@ test('checkRead, read explicitly false', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow reads.'
+    'Connection "testConnection" does not allow reads.'
   );
 });
 
@@ -784,7 +855,7 @@ test('checkWrite, write explicitly false', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow writes.'
+    'Connection "testConnection" does not allow writes.'
   );
 });
 
@@ -816,6 +887,6 @@ test('checkWrite, write not set', async () => {
   const controller = createRequestController(context);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
   await expect(controller.callRequest(defaultInput)).rejects.toThrow(
-    'TestConnection connection does not allow writes.'
+    'Connection "testConnection" does not allow writes.'
   );
 });

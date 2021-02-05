@@ -1,7 +1,9 @@
 {
   "valueType": "array",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonInput"
+  },
   "test": {
     "validation": true,
     "required": true
@@ -24,7 +26,10 @@
         "clearIcon": {
           "type": ["string", "object"],
           "default": "CloseCircleOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "disabled": {
           "type": "boolean",
@@ -33,11 +38,17 @@
         },
         "inputStyle": {
           "type": "object",
-          "description": "Css style to applied to input."
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "optionsStyle": {
           "type": "object",
-          "description": "Css style to applied to option elements."
+          "description": "Css style to applied to option elements.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "label": {
           "type": "object",
@@ -47,12 +58,12 @@
             "align": {
               "type": "string",
               "enum": ["left", "right"],
-              "defaultValue": "right",
+              "default": "left",
               "description": "Align label left or right when inline."
             },
             "colon": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Append label with colon."
             },
             "extra": {
@@ -69,44 +80,63 @@
             },
             "disabled": {
               "type": "boolean",
+              "default": false,
               "description": "Hide input label."
             },
             "hasFeedback": {
               "type": "boolean",
-              "defaultValue": true,
+              "default": true,
               "description": "Display feedback extra from validation, this does not disable validation."
             },
             "inline": {
               "type": "boolean",
-              "defaultValue": false,
+              "default": false,
               "description": "Render input and label inline."
             },
             "extraStyle": {
               "type": "object",
-              "description": "Css style to applied to label extra."
+              "description": "Css style to applied to label extra.",
+              "docs": {
+                "displayType": "yaml"
+              }
             },
             "feedbackStyle": {
               "type": "object",
-              "description": "Css style to applied to label feedback."
+              "description": "Css style to applied to label feedback.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
         "options": {
-          "type": "array",
           "default": [],
-          "description": "Selector options can either be an array of primitive values, on an array of label, value pairs.",
-          "items": {
-            "anyOf": [
-              {
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "string"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "number"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "boolean"
-              },
-              {
+              }
+            },
+            {
+              "type": "array",
+              "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+              "items": {
                 "type": "object",
                 "required": ["value"],
                 "properties": {
@@ -115,18 +145,27 @@
                     "description": "Value label shown to user."
                   },
                   "value": {
-                    "anyOf": [
+                    "oneOf": [
                       {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "number"
+                        "type": "number",
+                        "description": "Value selected."
                       },
                       {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Value selected."
+                      },
+                      {
+                        "type": "object",
+                        "description": "Value selected.",
+                        "docs": {
+                          "displayType": "yaml"
+                        }
                       }
-                    ],
-                    "description": "Value selected."
+                    ]
                   },
                   "disabled": {
                     "type": "boolean",
@@ -135,8 +174,8 @@
                   }
                 }
               }
-            ]
-          }
+            }
+          ]
         },
         "placeholder": {
           "type": "string",
@@ -146,7 +185,10 @@
         "selectedIcon": {
           "type": ["string", "object"],
           "default": "CheckOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon showing when a selection is made in the drop-down list."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "showArrow": {
           "type": "boolean",
@@ -162,7 +204,10 @@
         "suffixIcon": {
           "type": ["string", "object"],
           "default": "DownOutlined",
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize at the drop-down position of the selector."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize at the drop-down position of the selector.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "title": {
           "type": "string",
@@ -175,7 +220,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when selection is changed."
         }
       }
     }

@@ -1,9 +1,20 @@
-import WebParser from '../../src/webParser';
+/*
+  Copyright 2020-2021 Lowdefy, Inc
 
-const args = {
-  string: 'args',
-  arr: [{ a: 'args1' }, { a: 'args2' }],
-};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import WebParser from '../../src/webParser';
 
 const context = {
   config: {
@@ -58,7 +69,7 @@ const arrayIndices = [1];
 test('_request by id', () => {
   const input = { a: { _request: 'string' } };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: 'request String',
   });
@@ -68,7 +79,7 @@ test('_request by id', () => {
 test('_request true gives null', () => {
   const input = { _request: true };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -80,7 +91,7 @@ test('_request true gives null', () => {
 test('_request return full array', () => {
   const input = { _request: 'arr' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([{ a: 'request a1' }, { a: 'request a2' }]);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -88,7 +99,7 @@ test('_request return full array', () => {
 test('_request return number', () => {
   const input = { _request: 'number' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(500);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -96,7 +107,7 @@ test('_request return number', () => {
 test('_request null', () => {
   const input = { _request: null };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -108,7 +119,7 @@ test('_request null', () => {
 test('_request loading true', () => {
   const input = { _request: 'not_loaded' };
   const parser = new WebParser({ context, contexts });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices, args });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

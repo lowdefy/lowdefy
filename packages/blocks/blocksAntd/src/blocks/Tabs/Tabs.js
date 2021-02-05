@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ const getAdditionalProps = ({ content, properties }) => {
   return additionalProps;
 };
 
-const TabsBlock = ({ blockId, content, methods, properties }) => {
+const TabsBlock = ({ blockId, events, content, methods, properties }) => {
   const tabs = getTabs({ content, properties });
   const additionalProps = getAdditionalProps({ content, properties });
   return (
@@ -51,15 +51,15 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
       animated={properties.animated !== undefined ? properties.animated : true}
       defaultActiveKey={properties.defaultActiveKey || tabs[0].key}
       id={blockId}
-      onChange={(activeKey) => methods.callAction({ action: 'onChange', args: { activeKey } })}
+      onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       size={properties.size || 'default'}
       tabBarStyle={methods.makeCssClass(properties.tabBarStyle, { styleObjectOnly: true })}
       tabPosition={properties.tabPosition || 'top'}
       type={properties.tabType || 'line'}
       onTabScroll={({ direction }) =>
-        methods.callAction({ action: 'onTabScroll', args: { direction } })
+        methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
-      onTabClick={(key) => methods.callAction({ action: 'onTabClick', args: { key } })}
+      onTabClick={(key) => methods.triggerEvent({ name: 'onTabClick', event: { key } })}
       {...additionalProps}
     >
       {tabs.map((tab, i) => (
@@ -69,7 +69,12 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
           tab={
             <span className={methods.makeCssClass(tab.titleStyle)}>
               {tab.icon && (
-                <Icon blockId={`${blockId}_icon`} methods={methods} properties={tab.icon} />
+                <Icon
+                  blockId={`${blockId}_icon`}
+                  events={events}
+                  methods={methods}
+                  properties={tab.icon}
+                />
               )}
               {tab.title || tab.key}
             </span>

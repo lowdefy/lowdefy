@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2021 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
 
@@ -107,10 +123,10 @@ test('add listener for _state', () => {
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _action_log', () => {
+test('add listener for _event_log', () => {
   const context = {
     id: 'own',
-    actionLog: [
+    eventLog: [
       {
         string: 'state',
       },
@@ -120,7 +136,7 @@ test('add listener for _action_log', () => {
 
   const otherContext = {
     id: 'other',
-    actionLog: [
+    eventLog: [
       {
         string: 'state-other',
       },
@@ -133,7 +149,7 @@ test('add listener for _action_log', () => {
     other: otherContext,
   };
   const input = {
-    _action_log: {
+    _event_log: {
       key: '0.string',
       contextId: 'other',
     },

@@ -1,6 +1,11 @@
 {
   "category": "container",
-  "loading": false,
+  "loading": {
+    "type": "Spinner",
+    "properties": {
+      "height": "100vh"
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,7 +13,10 @@
       "properties": {
         "style": {
           "type": "object",
-          "description": "Css style object to applied to layout."
+          "description": "Css style object to applied to layout.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     }

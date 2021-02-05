@@ -1,6 +1,8 @@
 {
   "category": "display",
-  "loading": false,
+  "loading": {
+    "type": "IconSpinner"
+  },
   "schema": {
     "properties": {
       "type": "object",
@@ -8,11 +10,14 @@
       "properties": {
         "color": {
           "type": "string",
-          "description": "Primary icon color."
+          "description": "Primary icon color.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "name": {
           "type": "string",
-          "default": "ExclamationCircle",
+          "default": "CloseCircleOutlined",
           "description": "Name of icon to be displayed.",
           "enum": [
             "AccountBookFilled",
@@ -811,7 +816,10 @@
         },
         "size": {
           "type": ["string", "number"],
-          "description": "Size of the icon."
+          "description": "Size of the icon.",
+          "docs": {
+            "displayType": "number"
+          }
         },
         "spin": {
           "type": "boolean",
@@ -821,7 +829,10 @@
 
         "style": {
           "type": "object",
-          "description": "CSS style object."
+          "description": "CSS style object.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "disableLoadingIcon": {
           "type": "boolean",
@@ -830,12 +841,13 @@
         }
       }
     },
-    "actions": {
+    "events": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "onClick": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger actions when icon is clicked."
         }
       }
     }

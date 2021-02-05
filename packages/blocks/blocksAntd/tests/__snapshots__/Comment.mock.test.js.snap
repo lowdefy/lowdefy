@@ -18,17 +18,17 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
-        actions={Object {}}
         blockId="undefined_id"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -65,17 +65,17 @@ Array [
       ],
       "author": undefined,
       "avatar": <AvatarBlock
-        actions={Object {}}
         blockId="undefined_id"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={Object {}}
@@ -117,17 +117,17 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
-        actions={Object {}}
         blockId="undefined_id"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -173,17 +173,17 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
-        actions={Object {}}
         blockId="undefined_id"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={
@@ -220,17 +220,17 @@ Array [
       ],
       "author": "Comment author",
       "avatar": <AvatarBlock
-        actions={Object {}}
         blockId="undefined_id"
         content={Object {}}
+        events={Object {}}
         list={Array []}
         menus={Array []}
         methods={
           Object {
-            "callAction": [Function],
             "makeCssClass": [MockFunction],
-            "registerAction": [Function],
+            "registerEvent": [Function],
             "registerMethod": [Function],
+            "triggerEvent": [Function],
           }
         }
         properties={

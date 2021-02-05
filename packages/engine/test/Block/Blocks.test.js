@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 
 /*
-   Copyright 2020 Lowdefy, Inc
+   Copyright 2020-2021 Lowdefy, Inc
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -191,6 +191,40 @@ test('set block enforceType value no init', () => {
   const { selector } = context.RootBlocks.map;
   expect(selector.value).toEqual([]);
   expect(context.state).toEqual({ selector: [] });
+});
+
+test('set block value to initValue in meta', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'ObjectBlock',
+            blockId: 'object_one',
+            meta: {
+              category: 'input',
+              valueType: 'object',
+              initValue: {
+                a: 1,
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { object_one } = context.RootBlocks.map;
+  expect(object_one.value).toEqual({ a: 1 });
+  expect(context.state).toEqual({ object_one: { a: 1 } });
 });
 
 test('Reset to change blocks back to initState', () => {
