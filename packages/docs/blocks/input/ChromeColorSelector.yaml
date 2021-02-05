@@ -33,7 +33,7 @@ _ref:
         path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
-    available_actions_description: |
+    event_description: |
       ###### onChange
       Trigger action when title is changed.
 

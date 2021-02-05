@@ -33,7 +33,7 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    available_actions_description: |
+    event_description: |
       ###### onClose
       Called when Alert close button is clicked.
       ###### afterClose

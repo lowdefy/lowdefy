@@ -31,7 +31,7 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    available_actions_description: |
+    event_description: |
       ###### onClick
       Called when Anchor is clicked.
     examples:

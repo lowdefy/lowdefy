@@ -229,7 +229,7 @@ blocks:
               title: 'layout:'
             - key: style
               title: 'style:'
-            - key: actions
+            - key: events
               title: 'events:'
             - key: required
               title: 'required:'
@@ -252,11 +252,11 @@ blocks:
               _ref: templates/blocks/style.yaml
           events:
             blocks:
-              - id: available_actions_description
+              - id: event_description
                 type: Markdown
                 properties:
                   content:
-                    _var: available_actions_description
+                    _var: event_description
           required:
             blocks:
               - id: block.required
