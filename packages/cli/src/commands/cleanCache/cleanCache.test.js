@@ -14,30 +14,31 @@
   limitations under the License.
 */
 import path from 'path';
-import { cleanDirectory } from '@lowdefy/node-utils';
+import fse from 'fs-extra';
+
 import cleanCache from './cleanCache';
 // eslint-disable-next-line no-unused-vars
 import startUp from '../../utils/startUp';
 
-jest.mock('@lowdefy/node-utils', () => {
-  const cleanDirectory = jest.fn();
-  return { cleanDirectory };
+jest.mock('fs-extra', () => {
+  const emptyDir = jest.fn();
+  return { emptyDir };
 });
 
 jest.mock('../../utils/startUp');
 
 beforeEach(() => {
-  cleanDirectory.mockReset();
+  fse.emptyDir.mockReset();
 });
 
 test('cleanCache', async () => {
   await cleanCache({});
   const cachePath = path.resolve(process.cwd(), './.lowdefy/.cache');
-  expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
+  expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
 });
 
 test('cleanCache baseDir', async () => {
   await cleanCache({ baseDirectory: 'baseDir' });
   const cachePath = path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache');
-  expect(cleanDirectory.mock.calls).toEqual([[cachePath]]);
+  expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
 });
