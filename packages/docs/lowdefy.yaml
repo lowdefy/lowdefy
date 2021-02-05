@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.4.0'
+lowdefy: '3.5.0'
 licence: Apache-2.0
 
 global:
@@ -23,22 +23,6 @@ global:
     span: 23
     sm:
       span: 23
-
-# types:
-#   TitleInput:
-#     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/TitleInput.json
-#   ParagraphInput:
-#     url: https://unpkg.com/@lowdefy/blocks-antd@^3.0.0/dist/meta/ParagraphInput.json
-#   DangerousHtml:
-#     url: http://localhost:3002/meta/DangerousHtml.json
-#   Html:
-#     url: http://localhost:3002/meta/Html.json
-#   DangerousMarkdown:
-#     url: http://localhost:3003/meta/DangerousMarkdown.json
-#   Markdown:
-#     url: http://localhost:3003/meta/Markdown.json
-#   MarkdownWithCode:
-#     url: http://localhost:3003/meta/MarkdownWithCode.json
 
 menus:
   - id: default
