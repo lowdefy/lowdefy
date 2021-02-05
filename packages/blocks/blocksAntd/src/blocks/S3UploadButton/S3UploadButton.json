@@ -1,6 +1,9 @@
 {
   "valueType": "object",
   "category": "input",
+  "loading": {
+    "type": "SkeletonButton"
+  },
   "schema": {
     "properties": {
       "type": "object",

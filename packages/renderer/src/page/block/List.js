@@ -62,7 +62,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
       makeCssClass={makeCssClass}
     >
       <Component
-        methods={{
+        methods={Object.assign(block.methods, {
           makeCssClass,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
@@ -72,7 +72,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
           removeItem: block.removeItem,
           triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
-        }}
+        })}
         blockId={block.blockId}
         events={block.eval.events}
         homePageId={rootContext.homePageId}

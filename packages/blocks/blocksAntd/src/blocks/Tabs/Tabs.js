@@ -43,7 +43,7 @@ const getAdditionalProps = ({ content, properties }) => {
   return additionalProps;
 };
 
-const TabsBlock = ({ blockId, content, methods, properties }) => {
+const TabsBlock = ({ blockId, events, content, methods, properties }) => {
   const tabs = getTabs({ content, properties });
   const additionalProps = getAdditionalProps({ content, properties });
   return (
@@ -69,7 +69,12 @@ const TabsBlock = ({ blockId, content, methods, properties }) => {
           tab={
             <span className={methods.makeCssClass(tab.titleStyle)}>
               {tab.icon && (
-                <Icon blockId={`${blockId}_icon`} methods={methods} properties={tab.icon} />
+                <Icon
+                  blockId={`${blockId}_icon`}
+                  events={events}
+                  methods={methods}
+                  properties={tab.icon}
+                />
               )}
               {tab.title || tab.key}
             </span>

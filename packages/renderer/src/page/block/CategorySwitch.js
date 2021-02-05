@@ -86,13 +86,13 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
           makeCssClass={makeCssClass}
         >
           <Component
-            methods={{
+            methods={Object.assign(block.methods, {
               makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               setValue: block.setValue,
               triggerEvent: block.triggerEvent,
-            }}
+            })}
             blockId={block.blockId}
             events={block.eval.events}
             homePageId={rootContext.homePageId}
@@ -118,12 +118,12 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
           makeCssClass={makeCssClass}
         >
           <Component
-            methods={{
+            methods={Object.assign(block.methods, {
               makeCssClass,
               registerEvent: block.registerEvent,
               registerMethod: block.registerMethod,
               triggerEvent: block.triggerEvent,
-            }}
+            })}
             events={block.eval.events}
             blockId={block.blockId}
             homePageId={rootContext.homePageId}

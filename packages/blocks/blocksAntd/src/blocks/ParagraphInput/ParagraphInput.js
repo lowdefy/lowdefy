@@ -23,7 +23,7 @@ import Icon from '../Icon/Icon';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, properties, methods, value }) => {
+const ParagraphInput = ({ blockId, events, properties, methods, value }) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -60,12 +60,14 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
                     <Icon
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
+                      events={events}
                       methods={methods}
                       properties={properties.copyable.icon[0]}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
+                      events={events}
                       methods={methods}
                       properties={properties.copyable.icon[1]}
                     />,
@@ -73,6 +75,7 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
                 ) : (
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
+                    events={events}
                     methods={methods}
                     properties={properties.copyable.icon}
                   />
@@ -110,6 +113,7 @@ const ParagraphInput = ({ blockId, properties, methods, value }) => {
               icon: properties.editable.icon && (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
+                  events={events}
                   methods={methods}
                   properties={properties.editable.icon}
                 />

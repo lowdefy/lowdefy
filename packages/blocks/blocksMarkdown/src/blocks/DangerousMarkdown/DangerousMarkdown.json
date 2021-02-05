@@ -1,6 +1,11 @@
 {
   "category": "container",
-  "loading": false,
+  "loading": {
+    "type": "SkeletonParagraph",
+    "properties": {
+      "lines": 7
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",

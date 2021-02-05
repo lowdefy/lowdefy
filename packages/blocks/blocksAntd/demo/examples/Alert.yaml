@@ -96,8 +96,15 @@
     closable: true
     closeText: Close Text
     message: Message closable true
-
-
+- id: with description only
+  type: Alert
+  properties:
+    description: This is a description for the block.
+- id: with description only and icon false
+  type: Alert
+  properties:
+    showIcon: false
+    description: This is a description for the block.
 - id: with description properties.message
   type: Alert
   properties:

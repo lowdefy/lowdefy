@@ -21,7 +21,7 @@ import { type } from '@lowdefy/helpers';
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
 
-const NotificationBlock = ({ blockId, properties, methods }) => {
+const NotificationBlock = ({ blockId, events, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       notification[args.status || properties.status || 'success']({
@@ -30,6 +30,7 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
         btn: properties.button && (
           <Button
             blockId={`${blockId}_button`}
+            events={events}
             properties={properties.button}
             methods={methods}
             onClick={() => methods.triggerEvent({ name: 'onClose' })}
@@ -42,6 +43,7 @@ const NotificationBlock = ({ blockId, properties, methods }) => {
         closeIcon: properties.closeIcon && (
           <Icon
             blockId={`${blockId}_closeIcon`}
+            events={events}
             properties={properties.closeIcon}
             methods={methods}
           />

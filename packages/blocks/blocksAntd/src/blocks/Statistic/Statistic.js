@@ -22,7 +22,7 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Icon from '../Icon/Icon';
 
-const StatisticBlock = ({ blockId, properties, methods }) => (
+const StatisticBlock = ({ blockId, events, properties, methods }) => (
   <Statistic
     className={methods.makeCssClass(properties.style)}
     decimalSeparator={properties.decimalSeparator}
@@ -36,6 +36,7 @@ const StatisticBlock = ({ blockId, properties, methods }) => (
       properties.prefixIcon ? (
         <Icon
           blockId={`${blockId}_prefixIcon`}
+          events={events}
           methods={methods}
           properties={properties.prefixIcon}
         />
@@ -47,6 +48,7 @@ const StatisticBlock = ({ blockId, properties, methods }) => (
       properties.suffixIcon ? (
         <Icon
           blockId={`${blockId}_suffixIcon`}
+          events={events}
           methods={methods}
           properties={properties.suffixIcon}
         />

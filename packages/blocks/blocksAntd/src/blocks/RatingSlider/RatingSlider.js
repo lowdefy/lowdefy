@@ -70,7 +70,16 @@ const styles = {
   },
 };
 
-const RatingSlider = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const RatingSlider = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   const [check, unCheck] = useState(false);
   let propertiesIconMin = serializer.copy(properties.minIcon);
   if (type.isString(propertiesIconMin)) {
@@ -91,6 +100,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
   return (
     <Label
       blockId={blockId}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -136,6 +146,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMin`}
+                events={events}
                 methods={methods}
                 properties={mergeObjects([
                   {
@@ -149,6 +160,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             )}
             <Slider
               id={`${blockId}_input`}
+              events={events}
               className={classNames(
                 methods.makeCssClass([
                   properties.color && {
@@ -201,6 +213,7 @@ const RatingSlider = ({ blockId, loading, methods, properties, required, validat
             {!properties.disableIcons && (
               <Icon
                 blockId={`${blockId}_iconMax`}
+                events={events}
                 methods={methods}
                 properties={mergeObjects([
                   {

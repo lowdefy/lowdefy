@@ -28,13 +28,14 @@ const lowdefyProps = [
   'loading',
   'menus',
   'pageId',
-  'registerAction',
+  'registerEvent',
   'registerMethod',
   'schemaErrors',
   'user',
   'validation',
 ];
-const IconBlock = ({ events, blockId, methods, properties, ...props }) => {
+
+const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
   const propertiesObj = type.isString(properties) ? { name: properties } : properties;
   if (!type.isString(propertiesObj.name)) {
     propertiesObj.name = 'CloseCircleOutlined';

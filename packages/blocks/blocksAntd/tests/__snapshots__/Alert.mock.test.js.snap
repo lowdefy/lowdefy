@@ -422,6 +422,46 @@ Array [
 ]
 `;
 
+exports[`Mock render - with description only - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": "This is a description for the block.",
+      "id": "with description only",
+      "message": false,
+      "onClose": [Function],
+      "showIcon": true,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - with description only and icon false - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "afterClose": [Function],
+      "banner": undefined,
+      "closable": undefined,
+      "closeText": undefined,
+      "description": "This is a description for the block.",
+      "id": "with description only and icon false",
+      "message": false,
+      "onClose": [Function],
+      "showIcon": false,
+      "type": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - with description properties.closable: true - value[0] - default 1`] = `
 Array [
   Array [

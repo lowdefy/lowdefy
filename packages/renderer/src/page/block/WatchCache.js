@@ -29,14 +29,14 @@ const getBlock = gql`
 `;
 
 const WatchCache = ({ block, render, rootContext }) => {
-  const { loading, error, data } = useQuery(getBlock, {
+  const { loading, error } = useQuery(getBlock, {
     variables: {
       id: `BlockClass:${block.id}`,
     },
     client: rootContext.client,
   });
 
-  if (loading || get(data, 'block.loading'))
+  if (loading)
     return (
       <Loading
         properties={get(block, 'meta.loading.properties')}

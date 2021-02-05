@@ -37,7 +37,12 @@ const AvatarBlock = ({ blockId, events, methods, properties }) => (
     ])}
     icon={
       properties.icon && (
-        <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+        <Icon
+          blockId={`${blockId}_icon`}
+          events={events}
+          properties={properties.icon}
+          methods={methods}
+        />
       )
     }
   >

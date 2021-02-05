@@ -19,13 +19,18 @@ import { Modal } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
-const ConfirmModal = ({ blockId, content, methods, properties }) => {
+const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const additionalProps = {};
       if (properties.icon) {
         additionalProps.icon = (
-          <Icon blockId={`${blockId}_icon`} properties={properties.icon} methods={methods} />
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={properties.icon}
+            methods={methods}
+          />
         );
       }
       methods.triggerEvent({ name: 'onOpen' });

@@ -1,7 +1,13 @@
 {
   "valueType": "string",
   "category": "input",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "width": 245,
+      "height": 90
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",

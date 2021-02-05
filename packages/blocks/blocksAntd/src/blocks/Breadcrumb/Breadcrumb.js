@@ -65,6 +65,7 @@ const BreadcrumbBlock = ({ blockId, events, methods, properties }) => (
           {link.icon && (
             <Icon
               blockId={`${blockId}_${index}_icon`}
+              events={events}
               properties={{
                 name: type.isString(link.icon) && link.icon,
                 ...(type.isObject(link.icon) ? link.icon : {}),

@@ -24,9 +24,10 @@ import Content from '../Content/Content';
 import Layout from '../Layout/Layout';
 import Sider from '../Sider/Sider';
 
-const PageHSCF = ({ blockId, content, properties, methods }) => (
+const PageHSCF = ({ blockId, events, content, properties, methods }) => (
   <Layout
     blockId={blockId}
+    events={events}
     methods={methods}
     properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
     content={{
@@ -35,6 +36,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
           {content.header && (
             <Header
               blockId={`${blockId}_header`}
+              events={events}
               properties={properties.header}
               methods={methods}
               content={{
@@ -44,6 +46,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
           )}
           <Layout
             blockId={`${blockId}_layout`}
+            events={events}
             methods={methods}
             properties={properties.main}
             content={{
@@ -52,6 +55,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
                   {content.sider && (
                     <Sider
                       blockId={`${blockId}_sider`}
+                      events={events}
                       properties={properties.sider}
                       methods={methods}
                       content={{
@@ -72,6 +76,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
                   {content.content && (
                     <Content
                       blockId={`${blockId}_content`}
+                      events={events}
                       properties={properties.content}
                       methods={methods}
                       content={{
@@ -86,6 +91,7 @@ const PageHSCF = ({ blockId, content, properties, methods }) => (
           {content.footer && (
             <Footer
               blockId={`${blockId}_footer`}
+              events={events}
               properties={properties.footer}
               methods={methods}
               content={{

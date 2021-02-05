@@ -1,6 +1,11 @@
 {
   "category": "context",
-  "loading": false,
+  "loading": {
+    "type": "Spinner",
+    "properties": {
+      "height": "100vh"
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",

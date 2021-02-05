@@ -1,6 +1,11 @@
 {
   "category": "list",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 80
+    }
+  },
   "schema": {
     "properties": {
       "type": "object",

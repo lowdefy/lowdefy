@@ -26,10 +26,20 @@ import disabledDate from '../../disabledDate';
 
 const MonthPicker = DatePicker.MonthPicker;
 
-const MonthSelector = ({ blockId, loading, methods, properties, required, validation, value }) => {
+const MonthSelector = ({
+  blockId,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={`${blockId}_label`}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -53,6 +63,7 @@ const MonthSelector = ({ blockId, loading, methods, properties, required, valida
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />

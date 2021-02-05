@@ -27,6 +27,7 @@ const Option = Select.Option;
 
 const MultipleSelector = ({
   blockId,
+  events,
   loading,
   methods,
   properties,
@@ -59,6 +60,7 @@ const MultipleSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.suffixIcon}
                   />
@@ -68,6 +70,7 @@ const MultipleSelector = ({
                 properties.clearIcon && (
                   <Icon
                     blockId={`${blockId}_clearIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.clearIcon}
                   />
@@ -77,6 +80,7 @@ const MultipleSelector = ({
                 properties.selectedIcon && (
                   <Icon
                     blockId={`${blockId}_selectedIcon`}
+                    events={events}
                     methods={methods}
                     properties={properties.selectedIcon}
                   />

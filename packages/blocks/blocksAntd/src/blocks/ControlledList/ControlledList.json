@@ -1,7 +1,12 @@
 {
   "valueType": "array",
   "category": "list",
-  "loading": false,
+  "loading": {
+    "type": "Skeleton",
+    "properties": {
+      "height": 80
+    }
+  },
   "test": {
     "validation": true,
     "required": true

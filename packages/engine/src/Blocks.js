@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, set, swap, type } from '@lowdefy/helpers';
+import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 
 import Events from './Events';
 import getFieldValues from './getFieldValues';

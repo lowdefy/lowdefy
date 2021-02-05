@@ -29,7 +29,16 @@ import Menu from '../Menu/Menu';
 import MobileMenu from '../MobileMenu/MobileMenu';
 import Sider from '../Sider/Sider';
 
-const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, properties }) => {
+const PageSiderMenu = ({
+  blockId,
+  events,
+  content,
+  homePageId,
+  menus,
+  methods,
+  pageId,
+  properties,
+}) => {
   const [openSiderState, setSiderOpen] = useState(
     !(properties.sider && properties.sider.initialCollapsed)
   );
@@ -105,6 +114,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
   return (
     <Layout
       blockId={blockId}
+      events={events}
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       methods={methods}
       content={{
@@ -112,6 +122,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
           <>
             <Header
               blockId={`${blockId}_header`}
+              events={events}
               methods={methods}
               properties={mergeObjects([{ style: styles.header }, properties.header])}
               content={{
@@ -128,6 +139,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
                         <MobileMenu
                           blockId={`${blockId}_mobile_menu`}
+                          events={events}
                           methods={methods}
                           menus={menus}
                           pageId={pageId}
@@ -174,6 +186,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
             />
             <Layout
               blockId={`${blockId}_layout`}
+              events={events}
               properties={properties.layout}
               methods={methods}
               content={{
@@ -181,6 +194,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                   <>
                     <Sider
                       blockId={`${blockId}_sider`}
+                      events={events}
                       methods={methods}
                       properties={mergeObjects([
                         {
@@ -200,6 +214,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                           <div style={styles.sider}>
                             <Menu
                               blockId={`${blockId}_menu`}
+                              events={events}
                               methods={methods}
                               menus={menus}
                               pageId={pageId}
@@ -231,6 +246,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                             {showSiderToggleButton && (
                               <Button
                                 blockId={`${blockId}_toggle_sider`}
+                                events={events}
                                 properties={{
                                   title: '',
                                   type: 'link',
@@ -257,6 +273,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                     />
                     <Content
                       blockId={`${blockId}_content`}
+                      events={events}
                       methods={methods}
                       properties={mergeObjects([{ style: styles.body }, properties.content])}
                       content={{
@@ -264,6 +281,8 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                           <>
                             {!type.isNone(properties.breadcrumb) ? (
                               <Breadcrumb
+                                blockId={`${blockId}_breadcrumb`}
+                                events={events}
                                 methods={methods}
                                 properties={mergeObjects([
                                   { style: { padding: '16px 0' } },
@@ -277,6 +296,7 @@ const PageSiderMenu = ({ blockId, content, homePageId, menus, methods, pageId, p
                             {content.footer && (
                               <Footer
                                 blockId={`${blockId}_footer`}
+                                events={events}
                                 methods={methods}
                                 properties={properties.footer}
                                 content={{

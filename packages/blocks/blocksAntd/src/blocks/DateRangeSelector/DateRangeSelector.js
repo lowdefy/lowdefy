@@ -34,6 +34,7 @@ const rangeValue = (value, format) => {
 
 const DateRangeSelector = ({
   blockId,
+  events,
   loading,
   methods,
   properties,
@@ -44,6 +45,7 @@ const DateRangeSelector = ({
   return (
     <Label
       blockId={blockId}
+      events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
@@ -72,6 +74,7 @@ const DateRangeSelector = ({
                 properties.suffixIcon && (
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
+                    events={events}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                     methods={methods}
                   />
