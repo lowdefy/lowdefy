@@ -83,3 +83,29 @@
   properties:
     label:
       extra: extra text added
+- id: "properties.disabledDates.min"
+  type: DateRangeSelector
+  properties:
+    disabledDates:
+      min: 2020-10-20
+- id: "properties.disabledDates.max"
+  type: DateRangeSelector
+  properties:
+    disabledDates:
+      max: 2020-10-15
+- id: "properties.disabledDates.dates"
+  type: DateRangeSelector
+  properties:
+    disabledDates:
+      dates:
+        - _date: 2020-10-26
+        - 2020-10-29
+        - 2020-11-02
+- id: "properties.disabledDates.ranges"
+  type: DateRangeSelector
+  properties:
+    disabledDates:
+      ranges:
+        - ["2020-10-26", "2020-10-29"]
+        - - 2020-11-01
+          - 2020-11-02
