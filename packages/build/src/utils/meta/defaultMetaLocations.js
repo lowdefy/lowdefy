@@ -228,30 +228,30 @@ const defaultMetaLocations = {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/WeekSelector.json`,
   },
 
-  // @lowdefy/blocks-color-selectors
+  // @lowdefy/blocks-color-selectors-selectors
   ColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/ColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/ColorSelector.json`,
   },
   ChromeColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/ChromeColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/ChromeColorSelector.json`,
   },
   CircleColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/CircleColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/CircleColorSelector.json`,
   },
   CompactColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/CompactColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/CompactColorSelector.json`,
   },
   GithubColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/GithubColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/GithubColorSelector.json`,
   },
   SliderColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/SliderColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/SliderColorSelector.json`,
   },
   SwatchesColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/SwatchesColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/SwatchesColorSelector.json`,
   },
   TwitterColorSelector: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color/meta/TwitterColorSelector.json`,
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-color-selectors/meta/TwitterColorSelector.json`,
   },
   // @lowdefy/blocks-markdown
   Markdown: {

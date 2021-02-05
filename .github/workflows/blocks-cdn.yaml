@@ -20,6 +20,12 @@ jobs:
         run: yarn
       - name: Build all
         run: yarn build
+      - name: Upload blocks-cdn.lowdefy.com/renderer
+        run: |
+          aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
       - name: Upload blocks-cdn.lowdefy.com/blocks-basic
         run: |
           aws --region eu-west-1 s3 sync packages/blocks/blocksBasic/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-basic --acl public-read --cache-control 'public, max-age=31536000'
@@ -38,15 +44,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      - name: Upload blocks-cdn.lowdefy.com/blocks-color
+      - name: Upload blocks-cdn.lowdefy.com/blocks-color-selectors
         run: |
-          aws --region eu-west-1 s3 sync packages/blocks/blocksColor/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color --acl public-read --cache-control 'public, max-age=31536000'
+          aws --region eu-west-1 s3 sync packages/blocks/blocksColorSelectors/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/blocks-color-selectors --acl public-read --cache-control 'public, max-age=31536000'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
-      - name: Upload blocks-cdn.lowdefy.com/renderer
-        run: |
-          aws --region eu-west-1 s3 sync packages/renderer/dist s3://blocks-cdn.lowdefy.com/${{ github.event.release.tag_name }}/renderer --acl public-read --cache-control 'public, max-age=31536000'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      
