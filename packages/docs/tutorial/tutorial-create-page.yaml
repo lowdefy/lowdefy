@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-add-blocks
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             Let's create a page for a form where users can log a new ticket.
@@ -106,7 +106,7 @@ _ref:
                   content: Log a ticket
                   level: 3
       - id: md3
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             #### Step 4

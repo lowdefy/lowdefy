@@ -41,7 +41,7 @@ _ref:
 
             Every `input` category block inside the context will have a value in the `state` object, with the their `id` as the key in the `state` object, unless the block is not visible, in which case the input value is removed the state object.
 
-            The only other way to modify the `state` object is to use a `SetState` action. See [`SetState`](/SetState) and [`actions`](/actions) for more details.
+            The only other way to modify the `state` object is to use a `SetState` action. See [`SetState`](/SetState) and [`events-and-actions`](/events-and-actions) for more details.
 
             # Context data objects
 

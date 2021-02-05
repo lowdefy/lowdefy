@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-editing-page
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             ##### `lowdefy.yaml`

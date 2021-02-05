@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-create-page
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             Lowdefy has a development server that allows you to develop your app locally. In this section we will start up the development server.

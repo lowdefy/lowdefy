@@ -32,7 +32,7 @@ blocks:
       title:
         _var: previous_page_title
       type: default
-    actions:
+    events:
       onClick:
         - id: link_back
           type: Link
@@ -55,7 +55,7 @@ blocks:
       title:
         _var: next_page_title
       type: default
-    actions:
+    events:
       onClick:
         - id: link_forward
           type: Link

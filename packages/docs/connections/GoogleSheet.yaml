@@ -20,7 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             ## Connections

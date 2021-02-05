@@ -41,7 +41,7 @@ _ref:
         path: ../blocks/blocksAntd/src/blocks/ParagraphInput/ParagraphInput.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
-    available_actions_description: |
+    event_description: |
       ###### onChange
       Trigger action when title is changed.
       ###### onCopy

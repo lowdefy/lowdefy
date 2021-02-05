@@ -21,7 +21,7 @@ _ref:
     # prefetchPages: []
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             Congratulations! You have completed the tutorial and built a sort-of functioning app.

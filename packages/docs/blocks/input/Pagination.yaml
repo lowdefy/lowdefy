@@ -42,7 +42,7 @@ _ref:
         path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
         transformer: templates/blocks/propertiesFormTransformer.js
 
-    available_actions_description: |
+    event_description: |
       ###### onSizeChange
       Triggered when page size is changed.
       ###### onChange

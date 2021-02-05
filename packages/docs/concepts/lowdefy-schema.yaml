@@ -20,7 +20,7 @@ _ref:
     section: Concepts
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describes different parts of the app.
@@ -142,8 +142,8 @@ _ref:
 
             # References and templates
 
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML. 
-            
+            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
+
             References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
 
             ###### lowdefy.yaml

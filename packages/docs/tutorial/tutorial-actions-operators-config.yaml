@@ -20,7 +20,7 @@ _ref:
     section: Tutorial
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             ##### `lowdefy.yaml`
@@ -117,7 +117,7 @@ _ref:
                       block: true # Make the button fill all the space available to it
                       type: default # Make the button a plain button
                       icon: ClearOutlined
-                    actions:
+                    events:
                       onClick:
                         - id: reset
                           type: Reset
@@ -130,7 +130,7 @@ _ref:
                       block: true
                       type: primary # Make the button a primary button with color
                       icon: SaveOutlined
-                    actions:
+                    events:
                       onClick:
                         - id: validate
                           type: Validate

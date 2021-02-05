@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-editing-page
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             In this tutorial we will be creating a simple ticketing app, that allow users to file new tickets, and see a list of outstanding tickets. We will be hosting this app with [Netlify](https://www.netlify.com).
@@ -57,7 +57,7 @@ _ref:
           showIcon: false
           message: If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
       - id: md2
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             #### Step 3
@@ -74,7 +74,7 @@ _ref:
           showIcon: false
           message: Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
       - id: md3
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             #### Step 4
@@ -138,7 +138,7 @@ _ref:
                             properties:
                               size: large
                               title: Let's build something
-                            actions:
+                            events:
                               onClick:
                                 - id: link_to_docs
                                   type: Link
