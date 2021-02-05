@@ -1,0 +1,35 @@
+name: Publish Blocks
+
+on:
+  pull_request:
+    branches: [ develop ]
+  # release:
+  #   types:
+  #     - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: yarn
+      - name: Build all
+        run: yarn build
+      - name: Upload to blocks-cdn.lowdefy.com
+        run: |
+          echo s3://blocks-cdn.lowdefy.com/@lowdefy/blocks-antd@${{ github.event.push.push_id }}/dist
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
+      # - name: Upload to blocks-cdn.lowdefy.com
+      #   run: |
+      #     echo s3://blocks-cdn.lowdefy.com/@lowdefy/blocks-basic@${{ github.event.push.push_id }}/dist
+      #     aws --region eu-west-1 s3 cp packages/blocks/blocksAntd/dist s3://blocks-cdn.lowdefy.com/@lowdefy/blocks-basic@${{ github.event.release.tag_name }}/dist
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_BLOCKS_CDN_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_BLOCKS_CDN_SECRET_ACCESS_KEY }}
