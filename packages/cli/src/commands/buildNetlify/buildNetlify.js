@@ -16,22 +16,14 @@
 
 import path from 'path';
 import { spawnSync } from 'child_process';
-import { cleanDirectory } from '@lowdefy/node-utils';
+import fse from 'fs-extra';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
 import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
-async function buildNetlify(options) {
-  if (process.env.NETLIFY === 'true') {
-    options.basicPrint = true;
-  }
-
-  const context = await startUp(options);
-  const netlifyDir = path.resolve(context.baseDirectory, './.lowdefy/netlify');
-  context.print.info('Starting Netlify build.');
-
+async function fetchNetlifyServer({ context, netlifyDir }) {
   context.print.spin('Fetching Lowdefy Netlify server.');
   await fetchNpmTarball({
     packageName: '@lowdefy/server-netlify',
@@ -39,20 +31,26 @@ async function buildNetlify(options) {
     directory: netlifyDir,
   });
   context.print.log('Fetched Lowdefy Netlify server.');
+}
+
+async function npmInstall({ context, netlifyDir }) {
+  await fse.copy(path.resolve(netlifyDir, 'package/package.json'), path.resolve('./package.json'));
+  await fse.remove(path.resolve('./package-lock.json'));
+  await fse.remove(path.resolve('./package-lock.json'));
+  await fse.emptyDir(path.resolve('./node_modules'));
 
   context.print.spin('npm install production.');
-  let proccessOutput = spawnSync('npm', ['install', '--production', '--legacy-peer-deps'], {
-    cwd: path.resolve(netlifyDir, 'package'),
-  });
+  let processOutput = spawnSync('npm', ['install', '--production', '--legacy-peer-deps']);
   checkChildProcessError({
     context,
-    proccessOutput,
+    processOutput: processOutput,
     message: 'Failed to npm install Netlify server.',
   });
-
   context.print.log('npm install successful.');
-  context.print.log(proccessOutput.stdout.toString('utf8'));
+  context.print.log(processOutput.stdout.toString('utf8'));
+}
 
+async function fetchBuildScript({ context }) {
   context.print.spin('Fetching Lowdefy build script.');
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
@@ -61,7 +59,10 @@ async function buildNetlify(options) {
     context,
   });
   context.print.log('Fetched Lowdefy build script.');
+  return buildScript;
+}
 
+async function build({ context, buildScript, netlifyDir }) {
   context.print.spin('Starting Lowdefy build.');
   const outputDirectory = path.resolve(netlifyDir, './package/dist/functions/graphql/build');
   await buildScript({
@@ -71,67 +72,51 @@ async function buildNetlify(options) {
     outputDirectory,
   });
   context.print.log(`Build artifacts saved at ${outputDirectory}.`);
+}
 
-  // TODO: Move files using node fs api instead of child process
-  context.print.log(`Moving output artifacts.`);
-  proccessOutput = spawnSync('cp', [
-    '-r',
+async function moveBuildArtifacts({ context, netlifyDir }) {
+  await fse.copy(
     path.resolve(netlifyDir, 'package/dist/shell'),
-    path.resolve('./.lowdefy/publish'),
-  ]);
-  checkChildProcessError({
-    context,
-    proccessOutput,
-    message: 'Failed to move publish artifacts.',
-  });
+    path.resolve('./.lowdefy/publish')
+  );
   context.print.log(`Netlify publish artifacts moved to "./lowdefy/publish".`);
+}
 
-  proccessOutput = spawnSync('cp', [
-    '-r',
+async function moveFunctions({ context, netlifyDir }) {
+  await fse.copy(
     path.resolve(netlifyDir, 'package/dist/functions'),
-    path.resolve('./.lowdefy/functions'),
-  ]);
-  checkChildProcessError({
-    context,
-    proccessOutput,
-    message: 'Failed to move functions artifacts.',
-  });
+    path.resolve('./.lowdefy/functions')
+  );
   context.print.log(`Netlify functions artifacts moved to "./lowdefy/functions".`);
+}
 
-  context.print.log(`Cleaning "./node_modules".`);
-  cleanDirectory('./node_modules');
-
-  context.print.log(`Moving Lowdefy server node_modules.`);
-  proccessOutput = spawnSync('cp', [
-    '-r',
-    path.resolve(netlifyDir, 'package/node_modules'),
-    path.resolve('./node_modules'),
-  ]);
-  checkChildProcessError({
-    context,
-    proccessOutput,
-    message: 'Failed to move node_modules.',
-  });
-
+async function movePublicAssets({ context }) {
   context.print.log(`Moving public assets.`);
-  // Make dir if it does not exist since cp will error
-  proccessOutput = spawnSync('mkdir', ['-p', path.resolve('./public')]);
-  checkChildProcessError({
-    context,
-    proccessOutput,
-    message: 'Failed to move public assets.',
-  });
-  proccessOutput = spawnSync('cp', [
-    '-r',
-    path.resolve('./public'),
-    path.resolve('./.lowdefy/publish/public'),
-  ]);
-  checkChildProcessError({
-    context,
-    proccessOutput,
-    message: 'Failed to move public assets.',
-  });
+  await fse.ensureDir(path.resolve('./public'));
+  await fse.copy(path.resolve('./public'), path.resolve('./.lowdefy/publish/public'));
   context.print.log(`Public assets moved to "./lowdefy/publish/public".`);
+}
+
+async function buildNetlify(options) {
+  if (process.env.NETLIFY === 'true') {
+    options.basicPrint = true;
+  }
+  const context = await startUp(options);
+  const netlifyDir = path.resolve(context.baseDirectory, './.lowdefy/netlify');
+
+  context.print.info('Starting build.');
+  const buildScript = await fetchBuildScript({ context });
+  await build({ context, buildScript, netlifyDir });
+
+  context.print.info('Installing Lowdefy server.');
+  await fetchNetlifyServer({ context, netlifyDir });
+  await npmInstall({ context, netlifyDir });
+
+  context.print.log(`Moving artifacts.`);
+  await moveBuildArtifacts({ context, netlifyDir });
+  await moveFunctions({ context, netlifyDir });
+  await movePublicAssets({ context });
+
   await context.sendTelemetry({
     data: {
       command: 'build-netlify',

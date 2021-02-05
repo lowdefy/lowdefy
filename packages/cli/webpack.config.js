@@ -43,7 +43,7 @@ module.exports = [
       ],
     },
     plugins: [
-      new CleanWebpackPlugin(),
+      // new CleanWebpackPlugin(),
       new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
       new ModuleFederationPlugin({
         name: 'cli',

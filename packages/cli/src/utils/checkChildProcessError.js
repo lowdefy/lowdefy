@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-function checkChildProcessError({ context, proccessOutput, message }) {
-  if (proccessOutput.status === 1) {
-    context.print.error(proccessOutput.stderr.toString('utf8'));
+function checkChildProcessError({ context, processOutput, message }) {
+  if (processOutput.status === 1) {
+    context.print.error(processOutput.stderr.toString('utf8'));
     throw new Error(message);
   }
 }
