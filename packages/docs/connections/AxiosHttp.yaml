@@ -20,7 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             The `AxiosHTTP` connection is used to connect to APIs and web servers using HTTP or HTTPS.

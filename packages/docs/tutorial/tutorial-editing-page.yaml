@@ -22,7 +22,7 @@ _ref:
     #   - tutorial-development-server
     content:
       - id: md1
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             #### Step 1
@@ -50,7 +50,7 @@ _ref:
 
             To save these changes, we are going to make a commit in the project repository.
       - id: md2
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             Write a message to describe the changes you have made, choose the option to create a new branch, and click "Propose changes". Then click "Create pull request".
@@ -83,7 +83,7 @@ _ref:
                 properties:
                   content: Hello World
       - id: md3
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             #### Step 6

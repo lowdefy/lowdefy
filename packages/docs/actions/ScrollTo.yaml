@@ -75,7 +75,7 @@ _ref:
       ```yaml
       - id: link_button
         type: Button
-        actions:
+        events:
           onClick:
             - id: link_
               type: Link

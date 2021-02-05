@@ -25,7 +25,7 @@ properties:
       background: '#FFFFFF'
 layout:
   contentGutter: 16
-actions:
+events:
   onInit:
     - id: init_default_properties
       type: SetState
@@ -110,7 +110,7 @@ blocks:
             - _var: category
             - input
       - id: state_markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         visible:
           _eq:
             - _var: category
@@ -134,7 +134,7 @@ blocks:
         properties:
           title: Block Setup
       - id: setup_markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content:
             _nunjucks:
@@ -166,7 +166,7 @@ blocks:
                                 vars:
                                   value:
                                     _state: block.layout
-                                  default_value: 
+                                  default_value:
                                     align: top
                                     span: 24
                             style:
@@ -230,7 +230,7 @@ blocks:
             - key: style
               title: 'style:'
             - key: actions
-              title: 'actions:'
+              title: 'events:'
             - key: required
               title: 'required:'
               disabled:
@@ -250,7 +250,7 @@ blocks:
           style:
             blocks:
               _ref: templates/blocks/style.yaml
-          actions:
+          events:
             blocks:
               - id: available_actions_description
                 type: Markdown

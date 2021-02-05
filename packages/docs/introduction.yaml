@@ -35,7 +35,7 @@ _ref:
           size: large
           title: Start the tutorial
           type: primary
-        actions:
+        events:
           onClick:
             - id: link_forward
               type: Link

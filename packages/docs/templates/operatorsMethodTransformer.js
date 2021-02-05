@@ -39,7 +39,7 @@ function transformer(obj) {
         title: `${operatorName}.${method.name}`,
         icon: 'LinkOutlined',
       },
-      actions: {
+      events: {
         onClick: [
           {
             id: 'scroll',
@@ -75,7 +75,7 @@ function transformer(obj) {
     });
     contentArray.push({
       id: `${method.name}_description`,
-      type: 'MarkdownWithHtml',
+      type: 'MarkdownWithCode',
       properties: {
         content: method.description,
       },
@@ -90,7 +90,7 @@ function transformer(obj) {
       });
       contentArray.push({
         id: `${method.name}_arguments`,
-        type: 'MarkdownWithHtml',
+        type: 'MarkdownWithCode',
         properties: {
           content: method.arguments,
         },
@@ -106,7 +106,7 @@ function transformer(obj) {
       });
       contentArray.push({
         id: `${method.name}_examples`,
-        type: 'MarkdownWithHtml',
+        type: 'MarkdownWithCode',
         properties: {
           content: method.examples,
         },

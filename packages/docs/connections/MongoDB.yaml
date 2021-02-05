@@ -20,7 +20,7 @@ _ref:
     section: Connections
     content:
       - id: markdown
-        type: MarkdownWithHtml
+        type: MarkdownWithCode
         properties:
           content: |
             MongoDB is a NoSQL database that stores JSON-like documents. These documents are stored in collections, which are like database tables. The fields inside these document can differ from document to document, but generally they are all more or less the same. However documents with different schemas can be stored in the same collection.
