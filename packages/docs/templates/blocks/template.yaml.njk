@@ -241,6 +241,7 @@ blocks:
                           - events:
                               _get:
                                 key: schema.events.properties
+                                default: {}
                                 from:
                                   _var: schema
                         pipeline:
@@ -270,10 +271,10 @@ blocks:
             blocks:
               - id: event_description
                 type: Markdown
-                style:
-                  '* > .markdown-body':
-                    fontSize: 14
                 properties:
+                  style:
+                    '& > .markdown-body':
+                      fontSize: 14
                   content: 
                     _nunjucks:
                       template: |
@@ -294,6 +295,7 @@ blocks:
                                 - events:
                                     _get:
                                       key: schema.events.properties
+                                      default: {}
                                       from:
                                         _var: schema
                               pipeline:
