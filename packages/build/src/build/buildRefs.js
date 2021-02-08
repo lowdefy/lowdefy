@@ -23,8 +23,13 @@ import YAML from 'js-yaml';
 import { v1 as uuid } from 'uuid';
 
 function getRefPath(refDefinition) {
-  if (type.isObject(refDefinition) && refDefinition.path) {
-    return refDefinition.path;
+  if (type.isObject(refDefinition)) {
+    if (refDefinition.path) {
+      return refDefinition.path;
+    }
+    if (refDefinition._var) {
+      return refDefinition;
+    }
   }
   if (type.isString(refDefinition)) {
     return refDefinition;
@@ -144,16 +149,16 @@ class RefBuilder {
     for (const refDef of foundRefs.values()) {
       if (refDef.path === null) {
         throw new Error(
-          `Invalid _ref definition ${JSON.stringify(refDef.original)} at file ${path}`
+          `Invalid _ref definition ${JSON.stringify({ _ref: refDef.original })} in file ${path}`
         );
       }
-      const parsedVars = JSON.parse(
-        JSON.stringify(refDef.vars),
+      const { path: parsedPath, vars: parsedVars } = JSON.parse(
+        JSON.stringify(refDef),
         refReviver.bind({ parsedFiles, vars })
       );
       // eslint-disable-next-line no-await-in-loop
       let parsedFile = await this.recursiveParseFile({
-        path: refDef.path,
+        path: parsedPath,
         // Parse vars before passing down to parse new file
         vars: parsedVars,
         count: count + 1,
