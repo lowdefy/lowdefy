@@ -109,11 +109,6 @@ test('button propertiesGetterTransformer', () => {
         Object {
           "_state": "block.properties",
         },
-        Object {
-          "field": Object {
-            "_state": "block.properties.field",
-          },
-        },
       ],
     }
   `);
