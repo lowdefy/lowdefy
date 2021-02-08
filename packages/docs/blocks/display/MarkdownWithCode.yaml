@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: MarkdownWithCode
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksMarkdown/src/blocks/MarkdownWithCode/MarkdownWithCode.json
     init_property_values:
       content: |
         ### Some JS Math:
@@ -55,6 +58,10 @@ _ref:
       _ref:
         path: ../blocks/blocksMarkdown/src/blocks/MarkdownWithCode/MarkdownWithCode.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksMarkdown/src/blocks/MarkdownWithCode/MarkdownWithCode.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Markdown headings
         properties: '{"content": "# h1 Heading \n## h2 Heading \n### h3 Heading \n#### h4 Heading \n##### h5 Heading \n###### h6 Heading"}'

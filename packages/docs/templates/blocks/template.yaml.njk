@@ -231,6 +231,22 @@ blocks:
               title: 'style:'
             - key: events
               title: 'events:'
+              disabled:
+                _not:
+                  _get:
+                    key: '0.events'
+                    from:
+                      _mql.aggregate:
+                        on: 
+                          - events:
+                              _get:
+                                key: schema.events.properties
+                                from:
+                                  _var: schema
+                        pipeline:
+                          - $project:
+                              events:
+                                $objectToArray: $events
             - key: required
               title: 'required:'
               disabled:
@@ -255,8 +271,32 @@ blocks:
               - id: event_description
                 type: Markdown
                 properties:
-                  content:
-                    _var: event_description
+                  content: 
+                    _nunjucks:
+                      template: |
+                        {% raw %}
+                        {% for event in events %}
+                          ##### {{ event.k }}:
+                          {{ event.v.description }}
+                        {% endfor %}
+                        {% endraw %}
+                      on:
+                        _get:
+                          key: '0'
+                          from:
+                            _mql.aggregate:
+                              on: 
+                                - events:
+                                    _get:
+                                      key: schema.events.properties
+                                      from:
+                                        _var: schema
+                              pipeline:
+                                - $project:
+                                    events:
+                                      $objectToArray: $events
+                          
+
           required:
             blocks:
               - id: block.required
@@ -289,3 +329,9 @@ blocks:
         block_type: {{ block_type }}
         examples:
           _var: examples
+  - _ref:
+      path: templates/blocks/schema.yaml.njk
+      vars:
+        block_type: {{ block_type }}
+        schema_definition:
+          _var: schema_definition

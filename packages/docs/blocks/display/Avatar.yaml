@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Avatar
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
     description_content: |
       Avatars can be used to represent people or objects. It supports images, Icons, or letters.
     default_properties:
@@ -31,9 +34,11 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClick
-      Called when Avatar is clicked.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
+        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic Avatar
         properties: '{"color": "#456789"}'

@@ -18,6 +18,9 @@ _ref:
     block_type: ParagraphInput
     value_type: string
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/ParagraphInput/ParagraphInput.json
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean
@@ -40,14 +43,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/ParagraphInput/ParagraphInput.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Trigger action when title is changed.
-      ###### onCopy
-      Trigger action when copy text is clicked.
-      ###### onExpand
-      Trigger action when ellipse expand is clicked.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/ParagraphInput/ParagraphInput.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: ParagraphInput input

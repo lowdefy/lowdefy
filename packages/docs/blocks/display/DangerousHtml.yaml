@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: DangerousHtml
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
     init_property_values:
       html: <a href="https://lowdefy.com">Lowdefy Website</a>
     description_content: |
@@ -37,6 +40,10 @@ _ref:
       _ref:
         path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic DangerousHtml
         properties: '{"html": "<div style=\"background: #123456; padding: 10px;\"><h1 style=\"color: white;\">A simple white title box</h1></div>"}'

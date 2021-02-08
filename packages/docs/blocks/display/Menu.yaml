@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Menu
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
     description_content: |
       A menu block used to display page links.
     default_properties:
@@ -31,6 +34,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic menu
         properties: '{}'
