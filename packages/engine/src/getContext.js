@@ -116,8 +116,8 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
       }
     });
   };
-  ctx.update();
   await ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInit' });
+  ctx.update();
   ctx.State.freezeState();
   ctx.RootBlocks.map[ctx.blockId].triggerEvent({ name: 'onInitAsync' });
   return ctx;
