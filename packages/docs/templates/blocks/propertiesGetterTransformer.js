@@ -14,77 +14,37 @@
   limitations under the License.
 */
 
-// function transformer(obj) {
-//   const blockProperties = obj.schema.properties.properties;
-//   const styleProperties = [];
-//   const optionsSelector = [];
-//   const manual = [];
-//   const oneOf = [];
-//   Object.keys(blockProperties).forEach((key) => {
-//     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'style') {
-//       styleProperties.push(key);
-//     }
-//     if (blockProperties[key].oneOf != null) {
-//       oneOf.push(key);
-//     }
-//     if (blockProperties[key].docs && blockProperties[key].docs.displayType === 'optionsSelector') {
-//       optionsSelector.push(key);
-//     }
-//     if (blockProperties[key].docs && blockProperties[key].docs.getter != null) {
-//       manual.push(key);
-//     }
-//   });
-//   const styleArray = styleProperties.map((name) => {
-//     const ret = {};
-//     ret[name] = {
-//       '_yaml.parse': {
-//         _if_none: [{ _state: `block.properties.${name}` }, ''],
-//       },
-//     };
-//     return ret;
-//   });
-//   const oneOfArray = oneOf.map((name) => {
-//     const ret = {};
-//     ret[name] = {
-//       _state: {
-//         '_string.concat': [`__${name}_`, { _state: `__${name}_type` }],
-//       },
-//     };
-//     return ret;
-//   });
-//   const optionsArray = optionsSelector.map((name) => {
-//     const ret = {};
-//     ret[name] = {
-//       _if: {
-//         test: { _eq: [{ _state: '__optionsType' }, 'Primitive'] },
-//         then: {
-//           _get: {
-//             key: '0.options',
-//             from: {
-//               '_mql.aggregate': {
-//                 pipeline: [{ $addFields: { options: '$options.primitive' } }],
-//                 on: [{ _state: 'block.properties' }],
-//               },
-//             },
-//           },
-//         },
-//         else: {
-//           _state: 'block.properties.options',
-//         },
-//       },
-//     };
-//     return ret;
-//   });
-//   const manualArray = manual.map((name) => {
-//     const ret = {};
-//     ret[name] = blockProperties[name].docs.getter;
-//     return ret;
-//   });
-//   const assignArray = [{ _state: 'block.properties' }];
-//   return {
-//     '_object.assign': assignArray.concat(styleArray, oneOfArray, optionsArray, manualArray),
-//   };
-// }
+const oneOfGetter = ({ data, options, path, underscores }) => {
+  const types = options.map((option) => {
+    if (option.type === 'array') {
+      return { data: `${option.items.type}_arr`, selector: `${option.items.type}[]` };
+    }
+    return { data: option.type, selector: option.type };
+  });
+  const branches = types.map((type, index) => {
+    const getter = propertyGetter({
+      data: 'state', // ??
+      path: `__${type.data}_${path}`,
+      property: options[index],
+      underscores: underscores,
+    });
+    return {
+      case: { _eq: [{ _state: `__type_${path}` }, type.selector] },
+      then: getter || { _state: `__${type.data}_${path}` },
+    };
+  });
+  return {
+    '_mql.expr': {
+      on: {},
+      expr: {
+        $switch: {
+          branches,
+          default: null,
+        },
+      },
+    },
+  };
+};
 
 const arrayGetter = ({ data, items, path, underscores }) => {
   const getter = propertyGetter({
@@ -126,6 +86,9 @@ const propertyGetter = ({ data, path, property, underscores }) => {
   }
   if (property.type === 'array' && property.items) {
     return arrayGetter({ data, items: property.items, path, underscores });
+  }
+  if (property.oneOf) {
+    return oneOfGetter({ data, options: property.oneOf, path, underscores });
   }
 };
 
