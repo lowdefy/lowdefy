@@ -208,6 +208,29 @@ test('array schemaArrayObject propertiesGetterTransformer', () => {
         Object {
           "_state": "block.properties",
         },
+        Object {
+          "options": Object {
+            "_array.map": Object {
+              "callback": Object {
+                "_function": Object {
+                  "__object.assign": Array [
+                    Object {
+                      "__args": "0",
+                    },
+                  ],
+                },
+              },
+              "on": Object {
+                "_if_none": Array [
+                  Object {
+                    "_state": "block.properties.options",
+                  },
+                  Array [],
+                ],
+              },
+            },
+          },
+        },
       ],
     }
   `);

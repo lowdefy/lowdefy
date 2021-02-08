@@ -86,61 +86,76 @@
 //   };
 // }
 
-const propertyGetter = ({ property, nameSpace, propertyName, getters }) => {
-  if (property.docs && property.docs.displayType === 'yaml') {
-    getters.push({
-      [propertyName]: {
-        '_yaml.parse': {
-          _if_none: [{ _state: `${nameSpace}.${propertyName}` }, ''],
+const arrayGetter = ({ data, items, path, underscores }) => {
+  const getter = propertyGetter({
+    data: 'args',
+    path: '0',
+    property: items,
+    underscores: underscores + '_',
+  });
+  if (getter) {
+    return {
+      [`${underscores}array.map`]: {
+        on: { [`${underscores}if_none`]: [{ [`${underscores}${data}`]: path }, []] },
+        callback: {
+          [`${underscores}function`]: getter,
         },
       },
-    });
-  } else if (
-    property.docs &&
-    property.docs.displayType === 'manual' &&
-    property.docs.getter != null
-  ) {
-    getters.push({ [propertyName]: property.docs.getter });
-  } else if (property.type === 'object' && property.properties) {
-    getters.push({
-      [propertyName]: makeGetters({
-        properties: property.properties,
-        nameSpace: `${nameSpace}.${propertyName}`,
-      }),
-    });
-  } else if (property.type === 'object') {
-    // for display types like button, where all properties are not specified in the schema
-    getters.push({
-      [propertyName]: { _state: `${nameSpace}.${propertyName}` },
-    });
+    };
   }
 };
 
-const makeGetters = ({ properties, nameSpace }) => {
-  const assignArray = [{ _state: nameSpace }];
+const propertyGetter = ({ data, path, property, underscores }) => {
+  if (property.docs && property.docs.displayType === 'yaml') {
+    return {
+      [`${underscores}yaml.parse`]: {
+        [`${underscores}if_none`]: [{ [`${underscores}${data}`]: path }, ''],
+      },
+    };
+  }
+  if (property.docs && property.docs.displayType === 'manual' && property.docs.getter != null) {
+    return property.docs.getter;
+  }
+  if (property.type === 'object' && property.properties) {
+    return objectGetter({
+      data,
+      path,
+      properties: property.properties,
+      underscores,
+    });
+  }
+  if (property.type === 'array' && property.items) {
+    return arrayGetter({ data, items: property.items, path, underscores });
+  }
+};
+
+const objectGetter = ({ data, path, properties, underscores }) => {
   const getters = [];
   Object.keys(properties).forEach((key) => {
-    // if (properties[key].type === 'array') {
-    //   propertyGetter({
-    //     property: properties[key].items,
-    //     nameSpace,
-    //     propertyName: `${key}.$`,
-    //     getters,
-    //   });
-    // } else {
-    propertyGetter({ property: properties[key], nameSpace, propertyName: key, getters });
-    // }
+    const getter = propertyGetter({
+      data,
+      path: `${path}.${key}`,
+      property: properties[key],
+      underscores,
+    });
+    if (getter) {
+      getters.push({ [key]: getter });
+    }
   });
   return {
-    '_object.assign': assignArray.concat(getters),
+    [`${underscores}object.assign`]: [{ [`${underscores}${data}`]: path }].concat(getters),
   };
 };
 
 const transformer = (obj) => {
-  return makeGetters({
+  const x = objectGetter({
+    data: 'state',
+    path: 'block.properties',
     properties: obj.schema.properties.properties,
-    nameSpace: 'block.properties',
+    underscores: '_',
   });
+  // console.log(JSON.stringify(x, null, 2));
+  return x;
 };
 
 module.exports = transformer;
