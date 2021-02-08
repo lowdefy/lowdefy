@@ -481,9 +481,7 @@ test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
                         "default": null,
                       },
                     },
-                    "on": Object {
-                      "_state": true,
-                    },
+                    "on": Object {},
                   },
                 },
               },
@@ -758,9 +756,7 @@ test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {
-                "_state": true,
-              },
+              "on": Object {},
             },
           },
         },
@@ -1050,9 +1046,7 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {
-                "_state": true,
-              },
+              "on": Object {},
             },
           },
         },

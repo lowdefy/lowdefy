@@ -183,9 +183,7 @@ test('oneOf propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {
-                "_state": true,
-              },
+              "on": Object {},
             },
           },
         },
@@ -458,9 +456,7 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
                   "default": null,
                 },
               },
-              "on": Object {
-                "_state": true,
-              },
+              "on": Object {},
             },
           },
         },
@@ -709,9 +705,7 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
                   "default": null,
                 },
               },
-              "on": Object {
-                "_state": true,
-              },
+              "on": Object {},
             },
           },
         },
