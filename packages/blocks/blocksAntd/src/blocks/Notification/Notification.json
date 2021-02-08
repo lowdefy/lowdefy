@@ -45,7 +45,10 @@
         },
         "button": {
           "type": "object",
-          "description": "Button object to customized the close button. Triggers onClose event when clicked."
+          "description": "Button object to customized the close button. Triggers onClose event when clicked.",
+          "docs": {
+            "displayType": "button"
+          }
         },
         "description": {
           "type": "string",
@@ -58,11 +61,17 @@
         },
         "icon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize notification icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize notification icon.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "closeIcon": {
           "type": ["string", "object"],
-          "description": "Name of an Ant Design Icon or properties of an Icon block to customize close icon."
+          "description": "Name of an Ant Design Icon or properties of an Icon block to customize close icon.",
+          "docs": {
+            "displayType": "icon"
+          }
         },
         "message": {
           "type": "string",
@@ -70,7 +79,10 @@
         },
         "notificationStyle": {
           "type": "object",
-          "description": "Css style to applied to notification."
+          "description": "Css style to applied to notification.",
+          "docs": {
+            "displayType": "yaml"
+          }
         },
         "placement": {
           "type": "string",
