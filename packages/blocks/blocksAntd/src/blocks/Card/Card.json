@@ -11,10 +11,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "title": {
-          "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
-        },
         "bordered": {
           "type": "boolean",
           "default": true,
@@ -49,6 +45,10 @@
           "enum": ["default", "small"],
           "default": "default",
           "description": "Size of the card."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to show in the title area. Overwritten by blocks in the title content area."
         }
       }
     }
