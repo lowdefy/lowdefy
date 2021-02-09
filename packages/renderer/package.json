@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/renderer",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -28,23 +28,19 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "clean": "rm -rf dist",
-    "prepublishOnly": "yarn build",
+    "prepare": "yarn build",
     "serve": "serve dist -p 3001",
-    "start": "webpack serve --config webpack.dev.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "start": "webpack serve --config webpack.dev.js"
   },
   "dependencies": {
     "@apollo/client": "3.3.7",
     "@apollo/link-context": "2.0.0-beta.3",
     "@apollo/link-error": "2.0.0-beta.3",
     "@apollo/link-retry": "2.0.0-beta.3",
-    "@lowdefy/block-tools": "3.7.0",
-    "@lowdefy/engine": "3.7.0",
-    "@lowdefy/helpers": "3.7.0",
-    "@lowdefy/layout": "3.7.0",
+    "@lowdefy/block-tools": "3.7.2",
+    "@lowdefy/engine": "3.7.2",
+    "@lowdefy/helpers": "3.7.2",
+    "@lowdefy/layout": "3.7.2",
     "graphql": "15.5.0",
     "graphql-type-json": "0.3.2",
     "react": "17.0.1",

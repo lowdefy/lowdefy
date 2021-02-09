@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-color-selectors",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "license": "Apache-2.0",
   "description": "A Lowdefy color selector blocks based on react-color.",
   "homepage": "https://lowdefy.com",
@@ -29,18 +29,13 @@
     "build": "webpack --config webpack.prod.js",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
     "start": "webpack serve --config webpack.demo.js",
     "start:dev": "webpack serve --config webpack.dev.js",
-    "test": "jest --coverage --config jest.config.js --no-cache",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch -d",
-    "version:minor": "yarn version minor -d",
-    "version:major": "yarn version major -d"
+    "test": "jest --coverage --config jest.config.js --no-cache"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.7.0",
-    "@lowdefy/blocks-antd": "3.7.0",
+    "@lowdefy/block-tools": "3.7.2",
+    "@lowdefy/blocks-antd": "3.7.2",
     "react": "17.0.1",
     "react-color": "2.19.3",
     "react-dom": "17.0.1"
@@ -50,7 +45,7 @@
     "@babel/core": "7.12.10",
     "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.10",
-    "@lowdefy/helpers": "3.7.0",
+    "@lowdefy/helpers": "3.7.2",
     "@wojtekmaj/enzyme-adapter-react-17": "0.4.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",

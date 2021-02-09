@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -29,15 +29,10 @@
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
     "test": "jest --coverage",
-    "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "3.7.0",
+    "@lowdefy/nunjucks": "3.7.2",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1"
   },

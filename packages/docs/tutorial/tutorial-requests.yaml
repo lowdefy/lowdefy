@@ -203,7 +203,7 @@ _ref:
             id: new-ticket
             type: PageHeaderMenu
             properties:
-              title: Book meeting
+              title: Loa a ticket
             layout:
               contentJustify: center # Center the contents of the page
             ################ -------- Copy from here -------- ################

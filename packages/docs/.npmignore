@@ -1,0 +1,4 @@
+.lowdefy/**
+coverage/**
+jest.config.js
+.babelrc

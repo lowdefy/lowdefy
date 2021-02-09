@@ -63,23 +63,24 @@ blocks:
       level: 2
       content:
         _var: block_type
+  {% if value_type %}
   - id: value_type
     type: Markdown
-    visible:
-      _not:
-        _eq:
-          - _var: value_type
-          - null
     properties:
-      content:
-        _nunjucks:
-          template: |
-            ```
-            value type: {{ value_type }}
-            ```
-          on:
-            value_type:
-              _var: value_type
+      content: |
+        ```
+        value type: {{ value_type }}
+        ```
+  {% endif %}
+  {% if areas %}
+  - id: areas_list
+    type: Markdown
+    properties:
+      content: |
+        ```
+        areas: {{ areas | join(', ') }}
+        ```
+  {% endif %}
   - id: description
     type: Markdown
     properties:
@@ -110,8 +111,27 @@ blocks:
           _state: block.required
         properties:
           _var: properties_getter
+        {% if areas %}
+        areas:
+          {% for area in areas %}
+          {{ area }}:
+            gutter: 0
+            style:
+              border: 1px dashed red
+            blocks:
+              - id: block_area_{{ area }}
+                type: Html
+                style:
+                  background: '#f0f2f5'
+                  textAlign: center
+                  padding: 2px 5px
+                  color: red
+                properties:
+                  html: {{ area }}
+          {% endfor %}
+        {% endif %}
       {% if methods %}
-      - id: block_divider
+      - id: method_divider
         type: Divider
         properties:
           title: Methods

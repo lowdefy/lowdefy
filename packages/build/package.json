@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/build",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -29,19 +29,14 @@
     "build": "yarn webpack",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
     "test": "jest --coverage",
-    "webpack": "webpack --config webpack.config.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "3.7.0",
-    "@lowdefy/helpers": "3.7.0",
-    "@lowdefy/node-utils": "3.7.0",
-    "@lowdefy/nunjucks": "3.7.0",
+    "@lowdefy/ajv": "3.7.2",
+    "@lowdefy/helpers": "3.7.2",
+    "@lowdefy/node-utils": "3.7.2",
+    "@lowdefy/nunjucks": "3.7.2",
     "ajv": "6.12.6",
     "axios": "0.21.1",
     "dataloader": "2.0.0",

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.7.0'
+lowdefy: '3.7.2'
 licence: Apache-2.0
 
 global:
@@ -289,6 +289,17 @@ menus:
           - id: Title
             type: MenuLink
             pageId: Title
+
+      - id: blocks_container
+        type: MenuGroup
+        properties:
+          title: Container Blocks
+          icon: ContainerOutlined
+        links:
+          - id: Card
+            type: MenuLink
+            pageId: Card
+
       - id: connections
         type: MenuGroup
         properties:
@@ -575,6 +586,8 @@ pages:
   - _ref: blocks/display/Skeleton.yaml
   - _ref: blocks/display/Statistic.yaml
   - _ref: blocks/display/Title.yaml
+
+  - _ref: blocks/container/Card.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

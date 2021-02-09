@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/color",
-  "version": "3.7.0",
+  "version": "3.7.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -29,12 +29,7 @@
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
     "test": "jest --coverage",
-    "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "prepare": "yarn build"
   },
   "dependencies": {
     "tinycolor2": "1.4.2"
