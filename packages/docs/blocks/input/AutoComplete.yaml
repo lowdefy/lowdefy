@@ -23,7 +23,7 @@ _ref:
         path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
     init_property_values:
       options:
-        - one 
+        - one
         - two
     description_content: |
       The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.

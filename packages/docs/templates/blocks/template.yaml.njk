@@ -40,9 +40,9 @@ events:
     - id: init_property_values
       type: SetState
       skip:
-        _if_none:
+        _eq:
           - _var: init_property_values
-          - true
+          - null
       params:
         block:
           properties:
@@ -50,9 +50,9 @@ events:
     - id: init_state_values
       type: SetState
       skip:
-        _if_none:
+        _eq:
           - _var: init_state_values
-          - true
+          - null
       params:
         _var: init_state_values
 
