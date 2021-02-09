@@ -11,14 +11,13 @@
     "properties": {
       "type": "object",
       "properties": {
-        "title": {
-          "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
-        },
         "defaultColor": {
           "type": "string",
           "default": "#000000",
-          "description": "Default color to display if input value is null."
+          "description": "Default color to display if input value is null.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "inputStyle": {
           "type": "object",
@@ -85,6 +84,10 @@
               }
             }
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
         }
       }
     },

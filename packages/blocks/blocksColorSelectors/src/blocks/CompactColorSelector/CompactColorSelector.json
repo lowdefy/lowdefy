@@ -12,10 +12,6 @@
     "properties": {
       "type": "object",
       "properties": {
-        "title": {
-          "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
-        },
         "colors": {
           "type": "array",
           "description": "Colors to display.",
@@ -131,6 +127,10 @@
               }
             }
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
         }
       }
     },
