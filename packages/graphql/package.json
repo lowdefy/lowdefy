@@ -28,12 +28,9 @@
   "scripts": {
     "build": "yarn webpack",
     "clean": "rm -rf dist",
+    "prepare": "yarn build",
     "test": "jest --coverage",
-    "webpack": "webpack --config webpack.config.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@lowdefy/ajv": "3.7.0",

@@ -22,6 +22,7 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
+    "clean": "rm -rf .lowdefy",
     "test": "jest --coverage"
   },
   "devDependencies": {
