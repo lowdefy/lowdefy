@@ -15,17 +15,15 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Badge
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Badge/Badge.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-
+      Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
+    init_property_values:
+      count: 1
     areas:
       - content
-      - extra
-      - title
     examples:
       - title: Basic
-        properties: '{"title": "A Card"}'
+        properties: '{"count": 20}'

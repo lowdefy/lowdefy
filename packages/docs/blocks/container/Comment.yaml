@@ -15,17 +15,18 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Comment
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Comment/Comment.json
+    init_state_values:
+      __type_block.properties.avatar: object
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-
+      A Comment renders a comment list item. It can be used as both a `display` or `container` category block.
     areas:
       - content
-      - extra
+      - actions
+      - author
       - title
     examples:
-      - title: Basic
-        properties: '{"title": "A Card"}'
+      - title: Comment
+        properties: '{"author": "The Dude", "content": "Yeah, well, you know, that’s just, like, your opinion, man.", "datetime": "18 January, 1998", "avatar": {"color": "#402B18", "content": "TD", "shape": "square"}}'

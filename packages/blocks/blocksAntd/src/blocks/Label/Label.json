@@ -25,7 +25,7 @@
         },
         "disabled": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Disable to not render a label title."
         },
         "extra": {

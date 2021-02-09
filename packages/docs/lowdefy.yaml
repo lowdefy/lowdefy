@@ -296,9 +296,42 @@ menus:
           title: Container Blocks
           icon: ContainerOutlined
         links:
+          - id: Affix
+            type: MenuLink
+            pageId: Affix
+          - id: Badge
+            type: MenuLink
+            pageId: Badge
+          - id: Box
+            type: MenuLink
+            pageId: Box
           - id: Card
             type: MenuLink
             pageId: Card
+          - id: Comment
+            type: MenuLink
+            pageId: Comment
+          - id: ConfirmModal
+            type: MenuLink
+            pageId: ConfirmModal
+          - id: Drawer
+            type: MenuLink
+            pageId: Drawer
+          - id: Label
+            type: MenuLink
+            pageId: Label
+          - id: Modal
+            type: MenuLink
+            pageId: Modal
+          - id: Result
+            type: MenuLink
+            pageId: Result
+          - id: Span
+            type: MenuLink
+            pageId: Span
+          - id: Spin
+            type: MenuLink
+            pageId: Spin
 
       - id: connections
         type: MenuGroup
@@ -587,7 +620,18 @@ pages:
   - _ref: blocks/display/Statistic.yaml
   - _ref: blocks/display/Title.yaml
 
+  - _ref: blocks/container/Affix.yaml
+  - _ref: blocks/container/Badge.yaml
+  - _ref: blocks/container/Box.yaml
   - _ref: blocks/container/Card.yaml
+  - _ref: blocks/container/Comment.yaml
+  - _ref: blocks/container/ConfirmModal.yaml
+  - _ref: blocks/container/Drawer.yaml
+  - _ref: blocks/container/Label.yaml
+  - _ref: blocks/container/Modal.yaml
+  - _ref: blocks/container/Result.yaml
+  - _ref: blocks/container/Span.yaml
+  - _ref: blocks/container/Spin.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

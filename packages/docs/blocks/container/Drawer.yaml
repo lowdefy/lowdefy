@@ -15,17 +15,30 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Drawer
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Drawer/Drawer.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
+      A panel which slides in from the edge of the screen.
+      The Drawer has a single area, `content`.
 
+      > To open the drawer, invoke a drawer method.
     areas:
       - content
-      - extra
-      - title
-    examples:
-      - title: Basic
-        properties: '{"title": "A Card"}'
+    methods:
+      - name: toggleOpen
+        onClick:
+          - id: toggleOpen
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: toggleOpen
+      - name: setOpen
+        onClick:
+          - id: setOpen
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: setOpen
+              args:
+                open: true

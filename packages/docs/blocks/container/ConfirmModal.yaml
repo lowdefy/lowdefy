@@ -15,17 +15,21 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: ConfirmModal
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/ConfirmModal/ConfirmModal.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
+      A popup container, presenting the user with a modal confirmation dialog.
+      The ConfirmModal has a single area, `content`.
 
+      > To open the confirm modal, invoke the open method.
     areas:
       - content
-      - extra
-      - title
-    examples:
-      - title: Basic
-        properties: '{"title": "A Card"}'
+    methods:
+      - name: open
+        onClick:
+          - id: open
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: open

@@ -416,6 +416,7 @@ blocks:
                     align: right
                     span: 8
                   size: small
+  {% if examples %}
   - id: examples_divider
     type: Divider
     properties:
@@ -426,6 +427,7 @@ blocks:
         block_type: {{ block_type }}
         examples:
           _var: examples
+  {% endif %}
   - _ref:
       path: templates/blocks/schema.yaml.njk
       vars:

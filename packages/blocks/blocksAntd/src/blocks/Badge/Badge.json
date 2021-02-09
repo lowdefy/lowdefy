@@ -50,7 +50,7 @@
         "status": {
           "type": "string",
           "enum": ["success", "processing", "default", "error", "warning"],
-          "default": "default",
+          "default": null,
           "description": "Set Badge as a status dot"
         },
         "text": {

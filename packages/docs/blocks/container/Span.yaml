@@ -15,17 +15,15 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Span
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksBasic/src/blocks/Span/Span.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
+      A Span is a container that places sub-blocks into a html `<span>`.
+      The Span has a single area, `content`.
 
     areas:
       - content
-      - extra
-      - title
     examples:
       - title: Basic
-        properties: '{"title": "A Card"}'
+        properties: '{"content": "Hello"}'
