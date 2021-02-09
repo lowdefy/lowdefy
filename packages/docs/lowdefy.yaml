@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.6.0'
+lowdefy: '3.7.0'
 licence: Apache-2.0
 
 global:
@@ -268,6 +268,12 @@ menus:
           - id: Menu
             type: MenuLink
             pageId: Menu
+          - id: Message
+            type: MenuLink
+            pageId: Message
+          - id: Notification
+            type: MenuLink
+            pageId: Notification
           - id: Paragraph
             type: MenuLink
             pageId: Paragraph
@@ -562,6 +568,8 @@ pages:
   - _ref: blocks/display/Markdown.yaml
   - _ref: blocks/display/MarkdownWithCode.yaml
   - _ref: blocks/display/Menu.yaml
+  - _ref: blocks/display/Message.yaml
+  - _ref: blocks/display/Notification.yaml
   - _ref: blocks/display/Paragraph.yaml
   - _ref: blocks/display/Progress.yaml
   - _ref: blocks/display/Skeleton.yaml

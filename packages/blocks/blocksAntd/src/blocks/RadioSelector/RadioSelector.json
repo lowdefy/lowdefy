@@ -127,27 +127,24 @@
                     "description": "Value label shown to user."
                   },
                   "value": {
+                    "description": "Value selected.",
                     "oneOf": [
                       {
-                        "type": "string",
-                        "description": "Value selected."
+                        "type": "string"
                       },
                       {
-                        "type": "number",
-                        "description": "Value selected."
+                        "type": "number"
                       },
                       {
-                        "type": "boolean",
-                        "description": "Value selected."
+                        "type": "boolean"
                       },
                       {
-                        "type": "object",
-                        "description": "Value selected.",
-                        "docs": {
-                          "displayType": "yaml"
-                        }
+                        "type": "object"
                       }
-                    ]
+                    ],
+                    "docs": {
+                      "displayType": "yaml"
+                    }
                   },
                   "disabled": {
                     "type": "boolean",

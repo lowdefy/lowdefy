@@ -12,17 +12,16 @@
     "properties": {
       "type": "object",
       "properties": {
-        "title": {
+        "defaultColor": {
           "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+          "description": "Default color to display if input value is null.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "disableAlpha": {
           "type": "boolean",
           "description": "Remove alpha slider and options from picker."
-        },
-        "defaultColor": {
-          "type": "string",
-          "description": "Default color to display if input value is null."
         },
         "inputStyle": {
           "type": "object",
@@ -89,6 +88,10 @@
               }
             }
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
         }
       }
     },

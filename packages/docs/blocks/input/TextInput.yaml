@@ -18,6 +18,9 @@ _ref:
     block_type: TextInput
     value_type: string
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
     description_content: |
       The `TextInput` block is a single line text input.
     default_properties:
@@ -32,12 +35,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Triggered when value is changed.
-      ###### onPressEnter
-      Triggered when enter is pressed while block is focused.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/TextInput/TextInput.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Text input

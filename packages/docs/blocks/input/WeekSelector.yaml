@@ -18,6 +18,9 @@ _ref:
     block_type: WeekSelector
     value_type: date
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
     description_content: |
       The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
 
@@ -34,10 +37,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Triggered when value is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: WeekSelector input

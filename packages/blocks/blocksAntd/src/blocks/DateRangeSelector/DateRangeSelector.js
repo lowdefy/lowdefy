@@ -63,10 +63,10 @@ const DateRangeSelector = ({
               disabled={properties.disabled}
               allowClear={properties.allowClear !== false}
               placeholder={
-                type.isArray(properties.placeholder) && [
+                (type.isArray(properties.placeholder) && [
                   properties.placeholder[0] || 'Start Date',
                   properties.placeholder[1] || 'End Date',
-                ]
+                ]) || ['Start Date', 'End Date']
               }
               format={properties.format || 'YYYY-MM-DD'}
               size={properties.size}

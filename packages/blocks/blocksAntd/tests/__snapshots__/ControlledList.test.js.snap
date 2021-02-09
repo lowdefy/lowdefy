@@ -26,7 +26,7 @@ exports[`Render default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -87,7 +87,7 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -135,7 +135,7 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -230,7 +230,7 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -265,10 +265,10 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -291,15 +291,15 @@ exports[`Render properties.removeItemButton: shape: round - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -326,10 +326,10 @@ exports[`Render properties.removeItemButton: shape: round - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -352,15 +352,15 @@ exports[`Render properties.removeItemButton: shape: square - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -413,7 +413,7 @@ exports[`Render properties.size: large - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -474,7 +474,7 @@ exports[`Render properties.size: small - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -555,7 +555,7 @@ exports[`Render properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -616,7 +616,7 @@ exports[`Render required = true default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -677,7 +677,7 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -725,7 +725,7 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -820,7 +820,7 @@ exports[`Render required = true properties.noDataTitle: No title display - value
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -855,10 +855,10 @@ exports[`Render required = true properties.noDataTitle: No title display - value
 </div>
 `;
 
-exports[`Render required = true properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render required = true properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -881,15 +881,15 @@ exports[`Render required = true properties.removeItemButton: shape: round - valu
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -916,10 +916,10 @@ exports[`Render required = true properties.removeItemButton: shape: round - valu
 </div>
 `;
 
-exports[`Render required = true properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -942,15 +942,15 @@ exports[`Render required = true properties.removeItemButton: shape: square - val
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -1003,7 +1003,7 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -1064,7 +1064,7 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -1145,7 +1145,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -1206,7 +1206,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -1267,7 +1267,7 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -1315,7 +1315,7 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -1410,7 +1410,7 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -1445,10 +1445,10 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
 </div>
 `;
 
-exports[`Render validation.status = error properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render validation.status = error properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -1471,15 +1471,15 @@ exports[`Render validation.status = error properties.removeItemButton: shape: ro
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -1506,10 +1506,10 @@ exports[`Render validation.status = error properties.removeItemButton: shape: ro
 </div>
 `;
 
-exports[`Render validation.status = error properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render validation.status = error properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -1532,15 +1532,15 @@ exports[`Render validation.status = error properties.removeItemButton: shape: sq
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -1593,7 +1593,7 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -1654,7 +1654,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -1735,7 +1735,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -1796,7 +1796,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -1857,7 +1857,7 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -1905,7 +1905,7 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -2000,7 +2000,7 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -2035,10 +2035,10 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
 </div>
 `;
 
-exports[`Render validation.status = null properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -2061,15 +2061,15 @@ exports[`Render validation.status = null properties.removeItemButton: shape: rou
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -2096,10 +2096,10 @@ exports[`Render validation.status = null properties.removeItemButton: shape: rou
 </div>
 `;
 
-exports[`Render validation.status = null properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render validation.status = null properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -2122,15 +2122,15 @@ exports[`Render validation.status = null properties.removeItemButton: shape: squ
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -2183,7 +2183,7 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -2244,7 +2244,7 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -2325,7 +2325,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -2386,7 +2386,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -2447,7 +2447,7 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -2495,7 +2495,7 @@ exports[`Render validation.status = success properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -2590,7 +2590,7 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -2625,10 +2625,10 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
 </div>
 `;
 
-exports[`Render validation.status = success properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render validation.status = success properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -2651,15 +2651,15 @@ exports[`Render validation.status = success properties.removeItemButton: shape: 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -2686,10 +2686,10 @@ exports[`Render validation.status = success properties.removeItemButton: shape: 
 </div>
 `;
 
-exports[`Render validation.status = success properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render validation.status = success properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -2712,15 +2712,15 @@ exports[`Render validation.status = success properties.removeItemButton: shape: 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -2773,7 +2773,7 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -2834,7 +2834,7 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -2915,7 +2915,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -2976,7 +2976,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="default_add_button"
         onClick={[Function]}
         type="button"
@@ -3037,7 +3037,7 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.addItemButton: title: Add new Item_add_button"
         onClick={[Function]}
         type="button"
@@ -3085,7 +3085,7 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-default"
         id="properties.addToFront: true_add_button"
         onClick={[Function]}
         type="button"
@@ -3180,7 +3180,7 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.noDataTitle: No title display_add_button"
         onClick={[Function]}
         type="button"
@@ -3215,10 +3215,10 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
 </div>
 `;
 
-exports[`Render validation.status = warning properties.removeItemButton: shape: round - value[0] 1`] = `
+exports[`Render validation.status = warning properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: round"
+  id="properties.removeItemIcon: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -3241,15 +3241,15 @@ exports[`Render validation.status = warning properties.removeItemButton: shape: 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: round_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: round_add_button_icon"
+          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -3276,10 +3276,10 @@ exports[`Render validation.status = warning properties.removeItemButton: shape: 
 </div>
 `;
 
-exports[`Render validation.status = warning properties.removeItemButton: shape: square - value[0] 1`] = `
+exports[`Render validation.status = warning properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
 <div
   className="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemButton: shape: square"
+  id="properties.removeItemIcon: name: DeleteOutlined"
 >
   <div
     className="ant-spin-nested-loading"
@@ -3302,15 +3302,15 @@ exports[`Render validation.status = warning properties.removeItemButton: shape: 
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
-        id="properties.removeItemButton: shape: square_add_button"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
+        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
         onClick={[Function]}
         type="button"
       >
         <span
           aria-label="loading-3-quarters"
           className="anticon anticon-loading-3-quarters anticon-spin {\\"style\\":[{},null]}"
-          id="properties.removeItemButton: shape: square_add_button_icon"
+          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
           required={false}
           role="img"
         >
@@ -3363,7 +3363,7 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-lg"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-lg"
         id="properties.size: large_add_button"
         onClick={[Function]}
         type="button"
@@ -3424,7 +3424,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary ant-btn-sm"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed ant-btn-sm"
         id="properties.size: small_add_button"
         onClick={[Function]}
         type="button"
@@ -3505,7 +3505,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
     >
       <br />
       <button
-        className="ant-btn {\\"style\\":[{},null]} ant-btn-primary"
+        className="ant-btn {\\"style\\":[{},null]} ant-btn-dashed"
         id="properties.title_add_button"
         onClick={[Function]}
         type="button"
@@ -3560,13 +3560,13 @@ exports[`Test Schema properties.noDataTitle: No title display 1`] = `true`;
 
 exports[`Test Schema properties.noDataTitle: No title display 2`] = `null`;
 
-exports[`Test Schema properties.removeItemButton: shape: round 1`] = `true`;
+exports[`Test Schema properties.removeItemIcon: DeleteOutlined 1`] = `true`;
 
-exports[`Test Schema properties.removeItemButton: shape: round 2`] = `null`;
+exports[`Test Schema properties.removeItemIcon: DeleteOutlined 2`] = `null`;
 
-exports[`Test Schema properties.removeItemButton: shape: square 1`] = `true`;
+exports[`Test Schema properties.removeItemIcon: name: DeleteOutlined 1`] = `true`;
 
-exports[`Test Schema properties.removeItemButton: shape: square 2`] = `null`;
+exports[`Test Schema properties.removeItemIcon: name: DeleteOutlined 2`] = `null`;
 
 exports[`Test Schema properties.size: large 1`] = `true`;
 

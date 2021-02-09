@@ -15,28 +15,35 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: ColorSelector
-    value_type: string
-    category: input
+    block_type: Message
+    category: display
     description_content: |
-      A color selector component.
+      Display a popup message on the page.
+
+      > To display a message, invoke the open method.
     default_properties:
       _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
+        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
         transformer: templates/blocks/defaultValueTransformer.js
     properties_getter:
       _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
+        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
         transformer: templates/blocks/propertiesGetterTransformer.js
     properties_form:
       _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
+        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
     event_description: |
-      ###### onChange
-      Trigger action when title is changed.
-
+      ###### onClose
+      Trigger actions when message is closed.
     examples:
-      - title: ColorSelector input
-        properties: '{"defaultColor": "#123456", "width": 170}'
+      - title: Message
+        properties: '{"content": "Hello"}'
+    methods:
+      - name: open
+        onClick:
+          - id: open
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: open

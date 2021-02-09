@@ -14,32 +14,12 @@
   limitations under the License.
 */
 
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background: #f1f1f1;
-}
-
-.skeleton::before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: -100%;
-  max-width: 600px;
-  top: 0;
-  height: 200%;
-  width: 100%;
-  background: linear-gradient(to right, transparent 0%, #eaeaea 50%, transparent 100%);
-  background: -webkit-linear-gradient(to right, transparent 0%, #eaeaea 50%, transparent 100%);
-  animation: load 1.8s infinite;
-  /* transform: rotate(45deg); */
-}
-
-@keyframes load {
-  from {
-    left: -100%;
+const reviver = (key, value) => {
+  if (key !== 'docs') {
+    return value;
   }
-  to {
-    left: 100%;
-  }
-}
+};
+
+const transformer = (obj) => JSON.parse(JSON.stringify(obj), reviver);
+
+module.exports = transformer;

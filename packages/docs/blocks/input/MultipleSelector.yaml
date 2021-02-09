@@ -18,15 +18,16 @@ _ref:
     block_type: MultipleSelector
     value_type: any[]
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/MultipleSelector/MultipleSelector.json
     init_state_values:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:
-        - label: First 
+        - label: First
+          value: 1
         - label: Second
-      __type___object_arr_block.properties.options.0.value: string
-      __type___object_arr_block.properties.options.1.value: string
-      __string___object_arr_block.properties.options.0.value: one
-      __string___object_arr_block.properties.options.1.value: two
+          value: 2
 
     description_content: |
       The `MultipleSelector` block is a drop down selector that allows a user to select multiple values from a set of options.
@@ -47,10 +48,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/MultipleSelector/MultipleSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Triggered when value is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/MultipleSelector/MultipleSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: MultipleSelector input

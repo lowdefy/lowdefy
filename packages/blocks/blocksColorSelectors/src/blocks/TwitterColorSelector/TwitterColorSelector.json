@@ -11,10 +11,6 @@
     "properties": {
       "type": "object",
       "properties": {
-        "title": {
-          "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
-        },
         "colors": {
           "type": "array",
           "description": "Colors to display.",
@@ -31,26 +27,18 @@
             "#9900EF"
           ],
           "items": {
-            "type": "string"
+            "type": "string",
+            "docs": {
+              "displayType": "color"
+            }
           }
         },
         "defaultColor": {
           "type": "string",
           "default": "#000000",
-          "description": "Default color to display if input value is null."
-        },
-        "triangle": {
-          "type": "string",
-          "enum": ["hide", "top-left", "top-right"],
-          "default": "hide",
-          "description": "Show triangle on color selector border."
-        },
-        "width": {
-          "type": ["string", "number"],
-          "description": "Color selector width.",
-          "default": "100%",
+          "description": "Default color to display if input value is null.",
           "docs": {
-            "displayType": "string"
+            "displayType": "color"
           }
         },
         "label": {
@@ -110,6 +98,24 @@
                 "displayType": "yaml"
               }
             }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        },
+        "triangle": {
+          "type": "string",
+          "enum": ["hide", "top-left", "top-right"],
+          "default": "hide",
+          "description": "Show triangle on color selector border."
+        },
+        "width": {
+          "type": ["string", "number"],
+          "description": "Color selector width.",
+          "default": "100%",
+          "docs": {
+            "displayType": "string"
           }
         }
       }

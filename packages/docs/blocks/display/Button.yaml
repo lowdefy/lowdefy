@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Button
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
     description_content: |
       Button block.
     default_properties:
@@ -31,9 +34,11 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Button/Button.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClick
-      Called when the button is clicked.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
+        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic button
         properties: '{"title": "Click me"}'
