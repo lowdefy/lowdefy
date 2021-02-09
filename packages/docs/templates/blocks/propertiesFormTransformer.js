@@ -199,6 +199,8 @@ function makeBlockDefinition({
         return block;
       case 'yaml':
         block.type = 'TextArea';
+        block.properties.placeholder = 'Type YAML here';
+        block.properties.autoSize = { minRows: 2 };
         return block;
       case 'text-area':
         block.type = 'TextArea';
