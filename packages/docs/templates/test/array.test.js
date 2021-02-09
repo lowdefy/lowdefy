@@ -900,9 +900,13 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
                       "_global": "settings_input_layout",
                     },
                     "properties": Object {
+                      "autoSize": Object {
+                        "minRows": 2,
+                      },
                       "label": Object {
                         "disabled": true,
                       },
+                      "placeholder": "Type YAML here",
                       "size": "small",
                       "title": "$",
                     },
@@ -1105,9 +1109,13 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                       "_global": "settings_input_layout",
                     },
                     "properties": Object {
+                      "autoSize": Object {
+                        "minRows": 2,
+                      },
                       "label": Object {
                         "disabled": true,
                       },
+                      "placeholder": "Type YAML here",
                       "size": "small",
                       "title": "$",
                     },
@@ -1134,11 +1142,15 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
                   "_global": "settings_input_layout",
                 },
                 "properties": Object {
+                  "autoSize": Object {
+                    "minRows": 2,
+                  },
                   "label": Object {
                     "align": "right",
                     "extra": undefined,
                     "span": 8,
                   },
+                  "placeholder": "Type YAML here",
                   "size": "small",
                   "title": "obj",
                 },

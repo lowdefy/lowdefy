@@ -29,11 +29,15 @@ test('yaml propertiesFormTransformer', () => {
           "_global": "settings_input_layout",
         },
         "properties": Object {
+          "autoSize": Object {
+            "minRows": 2,
+          },
           "label": Object {
             "align": "right",
             "extra": "description",
             "span": 8,
           },
+          "placeholder": "Type YAML here",
           "size": "small",
           "title": "field",
         },
@@ -130,11 +134,15 @@ test('yaml schemaNested propertiesFormTransformer', () => {
               "_global": "settings_input_layout",
             },
             "properties": Object {
+              "autoSize": Object {
+                "minRows": 2,
+              },
               "label": Object {
                 "align": "right",
                 "extra": "field description",
                 "span": 8,
               },
+              "placeholder": "Type YAML here",
               "size": "small",
               "title": "field",
             },
@@ -262,9 +270,13 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
               "_global": "settings_input_layout",
             },
             "properties": Object {
+              "autoSize": Object {
+                "minRows": 2,
+              },
               "label": Object {
                 "disabled": true,
               },
+              "placeholder": "Type YAML here",
               "size": "small",
               "title": "$",
             },
@@ -407,11 +419,15 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
                   "_global": "settings_input_layout",
                 },
                 "properties": Object {
+                  "autoSize": Object {
+                    "minRows": 2,
+                  },
                   "label": Object {
                     "align": "right",
                     "extra": "yaml description",
                     "span": 8,
                   },
+                  "placeholder": "Type YAML here",
                   "size": "small",
                   "title": "yaml",
                 },

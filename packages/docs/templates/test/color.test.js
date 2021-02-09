@@ -29,6 +29,25 @@ test('color propertiesFormTransformer', () => {
           "_global": "settings_input_layout",
         },
         "properties": Object {
+          "circleSize": 14,
+          "circleSpacing": 8,
+          "colors": Array [
+            "#f5222d",
+            "#fa541c",
+            "#fa8c16",
+            "#faad14",
+            "#fadb14",
+            "#a0d911",
+            "#52c41a",
+            "#13c2c2",
+            "#1890ff",
+            "#2f54eb",
+            "#722ed1",
+            "#eb2f96",
+            "#595959",
+            "#bfbfbf",
+            "#d9d9d9",
+          ],
           "label": Object {
             "align": "right",
             "extra": "description",
@@ -38,7 +57,7 @@ test('color propertiesFormTransformer', () => {
           "title": "field",
         },
         "required": false,
-        "type": "TwitterColorSelector",
+        "type": "CircleColorSelector",
       },
     ]
   `);
