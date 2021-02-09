@@ -197,6 +197,9 @@ function makeBlockDefinition({
       case 'date':
         block.type = 'DateSelector';
         return block;
+      case 'dateRange':
+        block.type = 'DateRangeSelector';
+        return block;
       case 'yaml':
         block.type = 'TextArea';
         block.properties.placeholder = 'Type YAML here';

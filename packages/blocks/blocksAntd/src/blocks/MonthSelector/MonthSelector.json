@@ -50,19 +50,11 @@
               "type": "array",
               "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
               "items": {
-                "oneOf": [
-                  {
-                    "type": "string",
-                    "description": "Specific dates to be disabled. "
-                  },
-                  {
-                    "type": "object",
-                    "description": "Specific dates to be disabled. ",
-                    "docs": {
-                      "displayType": "date"
-                    }
-                  }
-                ]
+                "type": ["string", "object"],
+                "description": "Specific dates to be disabled.",
+                "docs": {
+                  "displayType": "date"
+                }
               }
             },
             "ranges": {
@@ -70,20 +62,12 @@
               "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
               "items": {
                 "type": "array",
+                "description": "Specific date ranges to be disabled.",
                 "items": {
-                  "oneOf": [
-                    {
-                      "type": "string",
-                      "description": "Specific dates to be disabled. "
-                    },
-                    {
-                      "type": "object",
-                      "description": "Specific dates to be disabled. ",
-                      "docs": {
-                        "displayType": "date"
-                      }
-                    }
-                  ]
+                  "type": ["string", "object"]
+                },
+                "docs": {
+                  "displayType": "dateRange"
                 }
               }
             }
