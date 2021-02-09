@@ -192,7 +192,26 @@ function makeBlockDefinition({
         };
         return block;
       case 'color':
-        block.type = 'TwitterColorSelector';
+        block.type = 'CircleColorSelector';
+        block.properties.circleSize = 14;
+        block.properties.circleSpacing = 8;
+        block.properties.colors = [
+          '#f5222d',
+          '#fa541c',
+          '#fa8c16',
+          '#faad14',
+          '#fadb14',
+          '#a0d911',
+          '#52c41a',
+          '#13c2c2',
+          '#1890ff',
+          '#2f54eb',
+          '#722ed1',
+          '#eb2f96',
+          '#595959',
+          '#bfbfbf',
+          '#d9d9d9',
+        ];
         return block;
       case 'date':
         block.type = 'DateSelector';
