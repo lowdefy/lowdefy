@@ -18,16 +18,14 @@ _ref:
     block_type: ButtonSelector
     value_type: any
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
+    schema: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
     init_state_values:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:
         - label: First
-          value: 1
+          value: '1'
         - label: Second
-          value: 2
+          value: '2'
 
     description_content: |
       The `ButtonSelector` block allows a user to select a single value from a set of options. The user cannot deselect an option once they have selected an input.
@@ -35,22 +33,6 @@ _ref:
       The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
       > Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: ButtonSelector input

@@ -17,30 +17,13 @@ _ref:
   vars:
     block_type: Statistic
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
+    schema: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
     init_state_values:
       __type_block.properties.value: number
       __number_block.properties.value: 33.3
     description_content: |
       A statistic block renders indicator numbers.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
-        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic statistic
         properties: '{ "value": 99.5, "prefixIcon": "AlertTwoTone" }'

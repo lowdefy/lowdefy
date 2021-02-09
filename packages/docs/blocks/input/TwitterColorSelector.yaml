@@ -18,27 +18,9 @@ _ref:
     block_type: TwitterColorSelector
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
+    schema: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
     description_content: |
       A color selector component similar to the twitter color selector..
-    default_properties:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: TwitterColorSelector input

@@ -17,9 +17,7 @@ _ref:
   vars:
     block_type: DangerousMarkdown
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
+    schema: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
     init_property_values:
       content: |
         ## Some Html content:
@@ -33,22 +31,6 @@ _ref:
       > 
       > In short, it is strongly advised to never render any user input DangerousMarkdown content, only render hardcoded or trusted markdown and HTML content.
     
-    default_properties:
-      _ref:
-        path: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
-        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: DangerousMarkdown headings
         properties: '{"DOMPurifyOptions": {"ADD_TAGS": ["iframe"]}, "content": "# Markdown with an iframe: \n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'

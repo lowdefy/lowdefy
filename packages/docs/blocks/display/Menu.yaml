@@ -17,27 +17,10 @@ _ref:
   vars:
     block_type: Menu
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    schema: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
     description_content: |
       A menu block used to display page links.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/schemaTransformer.js
+      
     examples:
       - title: Basic menu
         properties: '{}'

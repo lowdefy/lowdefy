@@ -18,29 +18,11 @@ _ref:
     block_type: MonthSelector
     value_type: date
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
+    schema: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
     description_content: |
       The `MonthSelector` block allows a user to select a month. The value is a date object, with day and time values of midnight on the first day of the month GMT.
 
       > Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `WeekSelector`.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: MonthSelector input

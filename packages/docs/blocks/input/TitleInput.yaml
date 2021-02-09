@@ -18,9 +18,7 @@ _ref:
     block_type: TitleInput
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+    schema: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean
@@ -31,22 +29,6 @@ _ref:
       block_id: Click edit to change the title.
     description_content: |
       The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Title input

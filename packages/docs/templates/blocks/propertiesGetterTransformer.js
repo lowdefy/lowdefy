@@ -106,19 +106,18 @@ const objectGetter = ({ data, path, properties, underscores }) => {
     }
   });
   return {
-    [`${underscores}object.assign`]: [{ [`${underscores}${data}`]: path }].concat(getters),
+    [`${underscores}object.assign`]: [
+      { [`${underscores}${data}`]: { key: path, default: {} } },
+    ].concat(getters),
   };
 };
 
-const transformer = (obj) => {
-  const x = objectGetter({
+const transformer = (obj) =>
+  objectGetter({
     data: 'state',
     path: 'block.properties',
     properties: obj.schema.properties.properties,
     underscores: '_',
   });
-  // console.log(JSON.stringify(x, null, 2));
-  return x;
-};
 
 module.exports = transformer;

@@ -36,7 +36,10 @@ events:
             span: 24
           visible: true
           properties:
-            _var: default_properties
+            _ref:
+              path: 
+                _var: schema
+              transformer: templates/blocks/defaultValueTransformer.js
     - id: init_property_values
       type: SetState
       skip:
@@ -110,7 +113,10 @@ blocks:
         required:
           _state: block.required
         properties:
-          _var: properties_getter
+          _ref:
+            path: 
+              _var: schema
+            transformer: templates/blocks/propertiesGetterTransformer.js
         {% if areas %}
         areas:
           {% for area in areas %}
@@ -248,7 +254,10 @@ blocks:
                                 vars:
                                   value:
                                     _object.assign:
-                                      - _var: properties_getter
+                                      - _ref:
+                                          path: 
+                                            _var: schema
+                                          transformer: templates/blocks/propertiesGetterTransformer.js
                                       - label:
                                           _ref:
                                             path: templates/blocks/filter_default_value.yaml
@@ -257,7 +266,10 @@ blocks:
                                                 _get:
                                                   key: label
                                                   from:
-                                                    _var: properties_getter
+                                                    _ref:
+                                                      path: 
+                                                        _var: schema
+                                                      transformer: templates/blocks/propertiesGetterTransformer.js
                                               default_value:
                                                 span: null
                                                 align: left
@@ -269,7 +281,10 @@ blocks:
                                                 extraStyle: {}
                                                 feedbackStyle: {}
                                   default_value:
-                                    _var: default_properties
+                                    _ref:
+                                      path: 
+                                        _var: schema
+                                      transformer: templates/blocks/defaultValueTransformer.js
                           default_value:
                             required: false
                             visible: true
@@ -311,7 +326,9 @@ blocks:
                                 key: schema.events.properties
                                 default: {}
                                 from:
-                                  _var: schema
+                                  _ref:
+                                    path: 
+                                      _var: schema
                         pipeline:
                           - $project:
                               events:
@@ -328,7 +345,10 @@ blocks:
         areas:
           properties:
             blocks:
-              _var: properties_form
+              _ref:
+                path: 
+                  _var: schema
+                transformer: templates/blocks/propertiesFormTransformer.js
           layout:
             blocks:
               _ref: templates/blocks/layout.yaml
@@ -365,7 +385,9 @@ blocks:
                                       key: schema.events.properties
                                       default: {}
                                       from:
-                                        _var: schema
+                                        _ref:
+                                          path:
+                                            _var: schema
                               pipeline:
                                 - $project:
                                     events:
@@ -409,4 +431,8 @@ blocks:
       vars:
         block_type: {{ block_type }}
         schema_definition:
-          _var: schema_definition
+          _ref:
+            path: 
+              _var: schema
+            transformer: templates/blocks/schemaTransformer.js
+          

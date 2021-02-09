@@ -145,7 +145,10 @@ test('oneOf propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
@@ -414,7 +417,10 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
@@ -447,7 +453,10 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
                       "then": Object {
                         "_object.assign": Array [
                           Object {
-                            "_state": "__object_block.properties.field",
+                            "_state": Object {
+                              "default": Object {},
+                              "key": "__object_block.properties.field",
+                            },
                           },
                         ],
                       },
@@ -664,7 +673,10 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {

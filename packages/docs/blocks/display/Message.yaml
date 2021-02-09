@@ -17,25 +17,12 @@ _ref:
   vars:
     block_type: Message
     category: display
+    schema: ../blocks/blocksAntd/src/blocks/Message/Message.json
     description_content: |
       Display a popup message on the page.
 
       > To display a message, invoke the open method.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Message/Message.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClose
-      Trigger actions when message is closed.
+
     examples:
       - title: Message
         properties: '{"content": "Hello"}'

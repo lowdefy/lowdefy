@@ -18,30 +18,12 @@ _ref:
     block_type: TextArea
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+    schema: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
     init_state_values:
       __type_block.properties.autoSize: boolean
       __boolean_block.properties.autoSize: true
     description_content: |
       The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: TextArea input

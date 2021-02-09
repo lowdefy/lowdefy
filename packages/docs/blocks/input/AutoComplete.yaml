@@ -18,9 +18,7 @@ _ref:
     block_type: AutoComplete
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+    schema: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
     init_property_values:
       options:
         - one
@@ -29,22 +27,6 @@ _ref:
       The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
 
       >If you need the user to select only from a list of options, use a block like the `Selector` block instead.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Autocomplete input

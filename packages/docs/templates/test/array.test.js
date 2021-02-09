@@ -62,7 +62,10 @@ test('array propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
       ],
     }
@@ -206,7 +209,10 @@ test('array schemaArrayObject propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -215,7 +221,10 @@ test('array schemaArrayObject propertiesGetterTransformer', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                   ],
                 },
@@ -440,7 +449,10 @@ test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -718,7 +730,10 @@ test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -991,7 +1006,10 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -1194,7 +1212,10 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr1": Object {
@@ -1203,7 +1224,10 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                     Object {
                       "obj": Object {

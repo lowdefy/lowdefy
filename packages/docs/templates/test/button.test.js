@@ -107,7 +107,10 @@ test('button propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
       ],
     }
