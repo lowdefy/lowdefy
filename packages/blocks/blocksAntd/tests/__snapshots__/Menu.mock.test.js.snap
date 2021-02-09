@@ -6,11 +6,13 @@ Array [
     Object {
       "children": Array [],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "default",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -162,11 +164,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menus: default",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -456,11 +460,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menus: links[0]",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -750,11 +756,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menus: properties.menuId: menu_one",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -863,11 +871,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menusTitle pageId",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -977,11 +987,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menusTitle properties.title",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -1090,11 +1102,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "menusTitle url",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -1770,6 +1784,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},null,null,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -1777,10 +1794,1275 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
         "menu_item_1_2_2",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: inline, defaultOpenKeys: page_1_2_2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [
+        "menu_group_1",
+      ],
+      "id": "mode: inline, defaultOpenKeys: page_1_2_2",
+      "inlineCollapsed": undefined,
+      "inlineIndent": undefined,
+      "mode": "inline",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        undefined,
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: inline, pageId: page_1_2_2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [
+        "menu_group_1",
+      ],
+      "id": "mode: inline, pageId: page_1_2_2",
+      "inlineCollapsed": undefined,
+      "inlineIndent": undefined,
+      "mode": "inline",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_1_2_2",
       ],
       "subMenuCloseDelay": undefined,
       "subMenuOpenDelay": undefined,
@@ -3048,6 +4330,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, selectedColor: #f16e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -3055,6 +4340,7 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -4380,6 +5666,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -4387,10 +5676,1277 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
         "menu_item_1_2_2",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: inline, selectedKeys: [page_2, page_3] - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
+      "id": "mode: inline, selectedKeys: [page_2, page_3]",
+      "inlineCollapsed": undefined,
+      "inlineIndent": undefined,
+      "mode": "inline",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_2",
+        "page_3",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: inline, selectedKeys: [page_2, page_3], pageId: page_1_2_2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
+      "id": "mode: inline, selectedKeys: [page_2, page_3], pageId: page_1_2_2",
+      "inlineCollapsed": undefined,
+      "inlineIndent": undefined,
+      "mode": "inline",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_2",
+        "page_3",
       ],
       "subMenuCloseDelay": undefined,
       "subMenuOpenDelay": undefined,
@@ -5010,6 +7566,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, theme: light",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -5017,6 +7576,7 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -6918,6 +9478,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#cea7f2 !important\\",\\"color\\":\\"#6e2bcc !important\\",\\"& > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"& > * > *\\":{\\"color\\":\\"#6e2bcc !important\\"},\\"borderColor\\":\\"#6e2bcc !important\\",\\"&:after\\":{\\"borderColor\\":\\"#6e2bcc !important\\"}}},null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, theme: light, selectedColor: #6C2ACB",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -6925,6 +9488,7 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -8880,6 +11444,9 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#91cfcf !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},null]}",
+      "defaultOpenKeys": Array [
+        undefined,
+      ],
       "id": "mode: inline, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "inlineCollapsed": undefined,
       "inlineIndent": undefined,
@@ -8887,6 +11454,7 @@ Array [
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -9564,15 +12132,645 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "mode: vertical, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
         "menu_item_1_2_2",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: vertical, pageId: page_1_2_2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
+      "id": "mode: vertical, pageId: page_1_2_2",
+      "mode": "vertical",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_1_2_2",
       ],
       "subMenuCloseDelay": undefined,
       "subMenuOpenDelay": undefined,
@@ -10840,11 +14038,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
+      "defaultOpenKeys": Array [],
       "id": "mode: vertical, selectedColor: #f16e1e",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -12170,15 +15370,1275 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},false,null]}",
+      "defaultOpenKeys": Array [],
       "id": "mode: vertical, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
         "menu_item_1_2_2",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: vertical, selectedKeys: [page_2, page_3] - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
+      "id": "mode: vertical, selectedKeys: [page_2, page_3]",
+      "mode": "vertical",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_2",
+        "page_3",
+      ],
+      "subMenuCloseDelay": undefined,
+      "subMenuOpenDelay": undefined,
+      "theme": "dark",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - mode: vertical, selectedKeys: [page_2, page_3], pageId: page_1_2_2 - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          className="{\\"style\\":[{\\"& > ul\\":{}}]}"
+          popupClassName="{\\"style\\":[null,null,null]}"
+          title={
+            <MenuTitle
+              id="menu_group_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "title": "Menu Group 1",
+                }
+              }
+            />
+          }
+        >
+          <mockConstructor>
+            <MenuTitle
+              id="menu_item_1_1"
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              pageId="page_1_1"
+              properties={
+                Object {
+                  "title": "Menu Item one",
+                }
+              }
+            />
+          </mockConstructor>
+          <mockConstructor
+            title={
+              <MenuTitle
+                id="menu_item_1_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                properties={
+                  Object {
+                    "title": "Menu Group",
+                  }
+                }
+              />
+            }
+          >
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_1"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_1"
+                properties={
+                  Object {
+                    "title": "Menu Group one",
+                  }
+                }
+              />
+            </mockConstructor>
+            <mockConstructor>
+              <MenuTitle
+                id="menu_item_1_2_2"
+                methods={
+                  Object {
+                    "makeCssClass": [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Array [
+                            Object {
+                              "display": false,
+                              "lineHeight": "64px",
+                            },
+                            undefined,
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            Object {
+                              "& > ul": Object {
+                                "backgroundColor": undefined,
+                              },
+                            },
+                          ],
+                        ],
+                        Array [
+                          Array [
+                            undefined,
+                            undefined,
+                            undefined,
+                          ],
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                        },
+                        Object {
+                          "type": "return",
+                          "value": "{\\"style\\":[null,null,null]}",
+                        },
+                      ],
+                    },
+                    "registerEvent": [Function],
+                    "registerMethod": [Function],
+                    "triggerEvent": [Function],
+                  }
+                }
+                pageId="page_1_2_2"
+                properties={
+                  Object {
+                    "title": "Menu Group two",
+                  }
+                }
+              />
+            </mockConstructor>
+          </mockConstructor>
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_2"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_2"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 2",
+              }
+            }
+          />
+        </mockConstructor>,
+        <mockConstructor
+          icon={
+            <IconBlock
+              blockId="menu_item_3_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Array [
+                          Object {
+                            "display": false,
+                            "lineHeight": "64px",
+                          },
+                          undefined,
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          Object {
+                            "& > ul": Object {
+                              "backgroundColor": undefined,
+                            },
+                          },
+                        ],
+                      ],
+                      Array [
+                        Array [
+                          undefined,
+                          undefined,
+                          undefined,
+                        ],
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                      },
+                      Object {
+                        "type": "return",
+                        "value": "{\\"style\\":[null,null,null]}",
+                      },
+                    ],
+                  },
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties="VideoCameraFilled"
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+        >
+          <MenuTitle
+            id="menu_item_3"
+            methods={
+              Object {
+                "makeCssClass": [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Array [
+                        Object {
+                          "display": false,
+                          "lineHeight": "64px",
+                        },
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        Object {
+                          "& > ul": Object {
+                            "backgroundColor": undefined,
+                          },
+                        },
+                      ],
+                    ],
+                    Array [
+                      Array [
+                        undefined,
+                        undefined,
+                        undefined,
+                      ],
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[{\\"& > ul\\":{}}]}",
+                    },
+                    Object {
+                      "type": "return",
+                      "value": "{\\"style\\":[null,null,null]}",
+                    },
+                  ],
+                },
+                "registerEvent": [Function],
+                "registerMethod": [Function],
+                "triggerEvent": [Function],
+              }
+            }
+            pageId="page_3"
+            properties={
+              Object {
+                "icon": "VideoCameraFilled",
+                "title": "Title Menu Item 3",
+              }
+            }
+          />
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
+      "id": "mode: vertical, selectedKeys: [page_2, page_3], pageId: page_1_2_2",
+      "mode": "vertical",
+      "onClick": [Function],
+      "onOpenChange": [Function],
+      "onSelect": [Function],
+      "selectable": true,
+      "selectedKeys": Array [
+        "page_2",
+        "page_3",
       ],
       "subMenuCloseDelay": undefined,
       "subMenuOpenDelay": undefined,
@@ -12798,11 +17258,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "mode: vertical, theme: light",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -14758,11 +19220,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},{\\"backgroundColor\\":\\"#016e1e !important\\"},false,{\\"& > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu-selected\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item:hover\\":{\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}},\\"& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected\\":{\\"backgroundColor\\":\\"#ffca99 !important\\",\\"color\\":\\"#f26f1d !important\\",\\"& > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"& > * > *\\":{\\"color\\":\\"#f26f1d !important\\"},\\"borderColor\\":\\"#f26f1d !important\\",\\"&:after\\":{\\"borderColor\\":\\"#f26f1d !important\\"}}},null]}",
+      "defaultOpenKeys": Array [],
       "id": "mode: vertical, theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         "menu_item_1_1",
         "menu_item_3",
@@ -14978,11 +19442,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.MenuGroup with MenuLInks",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -15338,11 +19804,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.danger: true",
       "mode": "vertical",
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -15540,11 +20008,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.icon",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -15634,11 +20104,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.links",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -15854,11 +20326,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.subMenuCloseDelay: 3",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -16073,11 +20547,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.subMenuOpenDelay: 3",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
@@ -16277,11 +20753,13 @@ Array [
         </mockConstructor>,
       ],
       "className": "{\\"style\\":[{\\"lineHeight\\":\\"64px\\",\\"display\\":false},null,null,null,null]}",
+      "defaultOpenKeys": Array [],
       "id": "properties.title",
       "mode": undefined,
       "onClick": [Function],
       "onOpenChange": [Function],
       "onSelect": [Function],
+      "selectable": true,
       "selectedKeys": Array [
         undefined,
       ],
