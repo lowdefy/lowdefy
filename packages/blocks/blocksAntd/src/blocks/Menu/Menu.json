@@ -38,6 +38,14 @@
             "description": "A menu item 'id' to be displayed as selected."
           }
         },
+        "defaultOpenKeys": {
+          "type": "array",
+          "description": "Array with the keys of default opened sub menus.",
+          "items": {
+            "type": "string",
+            "description": "A menu item 'id' which should be open by default."
+          }
+        },
         "subMenuCloseDelay": {
           "type": "number",
           "description": "Delay time to hide submenu when mouse leaves (in seconds)."

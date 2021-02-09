@@ -111,6 +111,25 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
         properties.style,
       ])}
       theme={theme}
+      selectable={true}
+      defaultOpenKeys={
+        properties.defaultOpenKeys ||
+        (properties.mode === 'inline' && [
+          (
+            menu.find((link) =>
+              (link.links || [])
+                .map((subLink) =>
+                  subLink.links
+                    ? subLink.links.map((subSubLink) => subSubLink.pageId)
+                    : [subLink.pageId]
+                )
+                .flat()
+                .some((link) => (properties.selectedKeys || [pageId]).indexOf(link) !== -1)
+            ) || {}
+          ).id,
+        ]) ||
+        []
+      }
       selectedKeys={properties.selectedKeys || [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
@@ -160,7 +179,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                       '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected': nestedColorsBg,
                     },
                 ])}
-                key={link.id}
+                key={link.pageId || link.id}
                 title={
                   <MenuTitle
                     linkStyle={link.style}
@@ -186,7 +205,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                     case 'MenuGroup':
                       return (
                         <Menu.ItemGroup
-                          key={subLink.id}
+                          key={subLink.pageId || subLink.id}
                           title={
                             <MenuTitle
                               linkStyle={subLink.style}
@@ -198,7 +217,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                         >
                           {subLink.links.map((subLinkGroup) => (
                             <Menu.Item
-                              key={subLinkGroup.id}
+                              key={subLinkGroup.pageId || subLinkGroup.id}
                               danger={get(subLinkGroup, 'properties.danger')}
                               icon={
                                 subLinkGroup.properties &&
@@ -228,7 +247,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                     default:
                       return (
                         <Menu.Item
-                          key={subLink.id}
+                          key={subLink.pageId || subLink.id}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
@@ -260,7 +279,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
           default:
             return (
               <Menu.Item
-                key={link.id}
+                key={link.pageId || link.id}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
