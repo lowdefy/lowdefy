@@ -27,6 +27,9 @@ const testSchemaProperties = {
   eventLog: {
     type: 'array',
   },
+  pageId: {
+    type: 'string',
+  },
   blockId: {
     type: 'string',
   },
