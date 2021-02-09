@@ -25,9 +25,9 @@ _ref:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:
         - label: First
-          value: 1
+          value: '1'
         - label: Second
-          value: 2
+          value: '2'
 
     description_content: |
       The `Selector` block is a drop down selector that allows a user to select a single value from a set of options.
