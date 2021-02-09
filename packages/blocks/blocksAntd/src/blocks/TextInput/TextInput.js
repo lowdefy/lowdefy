@@ -87,7 +87,7 @@ const TextInput = ({
                 ))
               }
               size={properties.size}
-              allowClear={properties.allowClear !== false}
+              allowClear={properties.allowClear}
             />
           );
         },

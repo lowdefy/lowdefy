@@ -15,7 +15,7 @@
       "properties": {
         "allowClear": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Allow the user to clear their input."
         },
         "autoFocus": {

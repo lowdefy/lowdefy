@@ -65,7 +65,7 @@ const TextAreaBlock = ({
               }}
               placeholder={properties.placeholder}
               value={value}
-              allowClear={properties.allowClear !== false}
+              allowClear={properties.allowClear}
               autoSize={
                 properties.rows
                   ? { minRows: properties.rows, maxRows: properties.rows }
