@@ -33,7 +33,6 @@
     "lerna:version": "lerna version --no-git-tag-version",
     "lerna:publish": "lerna publish from-git",
     "postversion": "yarn install",
-    "prepare": "lerna run prepare",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "lerna run test",
     "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format'"

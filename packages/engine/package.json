@@ -29,13 +29,8 @@
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
     "test:watch": "jest --coverage --watch",
-    "test": "jest --coverage",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@lowdefy/helpers": "3.7.1",
