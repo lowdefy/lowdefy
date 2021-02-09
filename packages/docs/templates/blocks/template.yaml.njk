@@ -101,6 +101,45 @@ blocks:
           _state: block.required
         properties:
           _var: properties_getter
+      {% if methods %}
+      - id: block_divider
+        type: Divider
+        properties:
+          title: Methods
+      {% for method in methods %}
+      - id: method_button
+        type: Button
+        layout:
+          span: 12
+        properties:
+          title: {{ method.name }}
+        events:
+          onClick:
+            _var: methods.{{ loop.index0 }}.onClick
+      - id: method_args
+        type: MarkdownWithCode
+        layout:
+          span: 12
+        properties:
+          content:
+            _nunjucks:
+              template: |
+                {% raw %}
+                ```yaml
+                onClick:
+                {{ value | safe }}
+                ```
+                {% endraw %}
+              on:
+                value:
+                  _yaml.stringify:
+                    on:
+                      _var: methods.{{ loop.index0 }}.onClick
+                    options:
+                      sortKeys: false
+
+      {% endfor %}
+      {% endif %}
       - id: state_divider
         type: Divider
         properties:
