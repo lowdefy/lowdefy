@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Progress
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Progress/Progress.json
     init_property_values:
       percent: 30
     description_content: |
@@ -33,6 +36,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Progress/Progress.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Progress/Progress.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic progress
         properties: '{"percent": 60, "strokeColor": "#fcb900", "status": "active"}'

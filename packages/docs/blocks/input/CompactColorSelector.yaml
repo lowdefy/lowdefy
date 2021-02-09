@@ -18,6 +18,9 @@ _ref:
     block_type: CompactColorSelector
     value_type: string
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksColorSelectors/src/blocks/CompactColorSelector/CompactColorSelector.json
     description_content: |
       A compact color selector component.
     default_properties:
@@ -32,10 +35,10 @@ _ref:
       _ref:
         path: ../blocks/blocksColorSelectors/src/blocks/CompactColorSelector/CompactColorSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Trigger action when title is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksColorSelectors/src/blocks/CompactColorSelector/CompactColorSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: CompactColorSelector input
