@@ -18,6 +18,9 @@ _ref:
     block_type: ChromeColorSelector
     value_type: string
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
     description_content: |
       A color selector component similar to the chrome developer tools color selector.
     default_properties:
@@ -32,10 +35,10 @@ _ref:
       _ref:
         path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Trigger action when title is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: ChromeColorSelector input

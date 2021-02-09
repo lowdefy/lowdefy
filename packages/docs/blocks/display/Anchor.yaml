@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Anchor
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
     description_content: |
       Anchor link block. Creates a clickable icon and/ or text.
     default_properties:
@@ -31,9 +34,11 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClick
-      Called when Anchor is clicked.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
+        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic Anchor
         properties: '{"title": "Basic Anchor"}'

@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Paragraph
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean
@@ -38,6 +41,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic paragraph
         properties: '{"content": "Lowdefy simplifies creating software that helps manage internal data - think web apps, admin panels, BI dashboards, CRUD and workflow apps. Within most companies the need exist to connect to a variety of data sources and execute actions on such data. This must be done without compromising data security while respecting complex data integrity rules."}'

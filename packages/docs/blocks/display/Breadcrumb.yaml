@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Breadcrumb
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
     init_state_values:
       __type_block.properties.list: string[]
       __string_arr_block.properties.list:
@@ -36,9 +39,11 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClick
-      Triggered when breadcrumb item is clicked. Provides clicked link and index as args.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
+        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic Breadcrumb
         properties: '{"list": ["Page One","Page Two"]}'

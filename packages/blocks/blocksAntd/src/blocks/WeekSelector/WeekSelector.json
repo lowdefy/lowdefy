@@ -195,7 +195,8 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when week is changed."
         }
       }
     }

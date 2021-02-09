@@ -18,6 +18,9 @@ _ref:
     block_type: DateTimeSelector
     value_type: date
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
     description_content: |
       The `DateTimeSelector` block allows a user to select a date and a time from a calender.
 
@@ -36,10 +39,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Triggered when value is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: DateTimeSelector input
