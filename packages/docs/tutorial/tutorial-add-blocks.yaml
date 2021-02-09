@@ -27,7 +27,7 @@ _ref:
           content: |
             We would like to add an input form with the following fields:
 
-            - A title for the meeting.
+            - A title for the ticket.
             - The type of ticket. This should be a selection from a list of types.
             - A description of the ticket.
 

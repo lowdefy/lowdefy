@@ -152,14 +152,14 @@ _ref:
               - id: page_heading
                 type: Title
                 properties:
-                  content: Book a meeting room
+                  content: Log a ticket
                   level: 3
               - id: ticket_title
                 type: TextInput
                 required: true
                 properties:
                   title: Title
-              - id: meeting_room
+              - id: ticket_type
                 type: ButtonSelector
                 required: true
                 properties:
@@ -319,7 +319,7 @@ _ref:
               type: SetState
               params:
                 example3_number_of_attendees: 2 - 3
-                example3_meeting_room: Boardroom
+                example3_ticket_type: Bug report
         blocks:
           - id: example3_content_card
             type: Card
