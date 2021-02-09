@@ -34,13 +34,8 @@
     "cli": "yarn node ./dist/index.js",
     "cli:build": "yarn build && yarn node ./dist/index.js",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
     "test": "FORCE_COLOR=3 jest --coverage",
-    "webpack": "webpack --config webpack.config.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "3.7.0",

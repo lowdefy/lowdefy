@@ -30,12 +30,7 @@
     "clean": "rm -rf dist",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
-    "prepare": "yarn build",
-    "prepublishOnly": "yarn build",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major"
+    "prepare": "yarn build"
   },
   "dependencies": {
     "@lowdefy/helpers": "3.7.0",

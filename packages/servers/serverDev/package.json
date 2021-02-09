@@ -28,12 +28,8 @@
     "babel": "babel src --out-dir dist",
     "build": "yarn webpack && yarn babel",
     "clean": "rm -rf dist && rm -rf dev",
-    "prepublishOnly": "yarn build",
+    "prepare": "yarn build",
     "start": "nodemon dist/server.js",
-    "version:prerelease": "yarn version prerelease",
-    "version:patch": "yarn version patch",
-    "version:minor": "yarn version minor",
-    "version:major": "yarn version major",
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
