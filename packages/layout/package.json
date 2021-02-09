@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/layout",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,8 +38,8 @@
     "version:major": "yarn version major"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.7.0",
-    "@lowdefy/helpers": "3.7.0",
+    "@lowdefy/block-tools": "3.7.1",
+    "@lowdefy/helpers": "3.7.1",
     "antd": "4.4.2",
     "react": "17.0.1",
     "react-dom": "17.0.1"
