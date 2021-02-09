@@ -28,39 +28,14 @@ exports[`Render default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -137,40 +112,15 @@ exports[`Render properties.autoFocus: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -205,39 +155,14 @@ exports[`Render properties.autoSize: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -272,40 +197,15 @@ exports[`Render properties.disabled: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -340,39 +240,14 @@ exports[`Render properties.label align: right - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -407,39 +282,14 @@ exports[`Render properties.label colon: false - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -462,39 +312,14 @@ exports[`Render properties.label disabled: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -529,39 +354,14 @@ exports[`Render properties.label extra: showing extra - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
     <div
@@ -609,39 +409,14 @@ exports[`Render properties.label inline: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -676,39 +451,14 @@ exports[`Render properties.label span: 12 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -743,39 +493,14 @@ exports[`Render properties.minRows: 2  maxRows: 6 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -810,40 +535,15 @@ exports[`Render properties.placeholder: Type your text here - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -878,39 +578,14 @@ exports[`Render properties.rows: 5 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -945,39 +620,14 @@ exports[`Render properties.title: My TextArea Title - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1012,39 +662,14 @@ exports[`Render required = true default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1121,40 +746,15 @@ exports[`Render required = true properties.autoFocus: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1189,39 +789,14 @@ exports[`Render required = true properties.autoSize: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1256,40 +831,15 @@ exports[`Render required = true properties.disabled: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1324,39 +874,14 @@ exports[`Render required = true properties.label align: right - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1391,39 +916,14 @@ exports[`Render required = true properties.label colon: false - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1446,39 +946,14 @@ exports[`Render required = true properties.label disabled: true - value[0] 1`] =
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1513,39 +988,14 @@ exports[`Render required = true properties.label extra: showing extra - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
     <div
@@ -1593,39 +1043,14 @@ exports[`Render required = true properties.label inline: true - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1660,39 +1085,14 @@ exports[`Render required = true properties.label span: 12 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1727,39 +1127,14 @@ exports[`Render required = true properties.minRows: 2  maxRows: 6 - value[0] 1`]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1794,40 +1169,15 @@ exports[`Render required = true properties.placeholder: Type your text here - va
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1862,39 +1212,14 @@ exports[`Render required = true properties.rows: 5 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1929,39 +1254,14 @@ exports[`Render required = true properties.title: My TextArea Title - value[0] 1
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -1996,39 +1296,14 @@ exports[`Render validation.status = error default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2161,40 +1436,15 @@ exports[`Render validation.status = error properties.autoFocus: true - value[0] 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2257,39 +1507,14 @@ exports[`Render validation.status = error properties.autoSize: true - value[0] 1
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2352,40 +1577,15 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2448,39 +1648,14 @@ exports[`Render validation.status = error properties.label align: right - value[
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2543,39 +1718,14 @@ exports[`Render validation.status = error properties.label colon: false - value[
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2626,39 +1776,14 @@ exports[`Render validation.status = error properties.label disabled: true - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2721,39 +1846,14 @@ exports[`Render validation.status = error properties.label extra: showing extra 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2824,39 +1924,14 @@ exports[`Render validation.status = error properties.label inline: true - value[
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -2919,39 +1994,14 @@ exports[`Render validation.status = error properties.label span: 12 - value[0] 1
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -3014,39 +2064,14 @@ exports[`Render validation.status = error properties.minRows: 2  maxRows: 6 - va
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -3109,40 +2134,15 @@ exports[`Render validation.status = error properties.placeholder: Type your text
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -3205,39 +2205,14 @@ exports[`Render validation.status = error properties.rows: 5 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -3300,39 +2275,14 @@ exports[`Render validation.status = error properties.title: My TextArea Title - 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -3395,39 +2345,14 @@ exports[`Render validation.status = null default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3504,40 +2429,15 @@ exports[`Render validation.status = null properties.autoFocus: true - value[0] 1
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3572,39 +2472,14 @@ exports[`Render validation.status = null properties.autoSize: true - value[0] 1`
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3639,40 +2514,15 @@ exports[`Render validation.status = null properties.disabled: true - value[0] 1`
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3707,39 +2557,14 @@ exports[`Render validation.status = null properties.label align: right - value[0
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3774,39 +2599,14 @@ exports[`Render validation.status = null properties.label colon: false - value[0
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3829,39 +2629,14 @@ exports[`Render validation.status = null properties.label disabled: true - value
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -3896,39 +2671,14 @@ exports[`Render validation.status = null properties.label extra: showing extra -
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
     <div
@@ -3976,39 +2726,14 @@ exports[`Render validation.status = null properties.label inline: true - value[0
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4043,39 +2768,14 @@ exports[`Render validation.status = null properties.label span: 12 - value[0] 1`
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4110,39 +2810,14 @@ exports[`Render validation.status = null properties.minRows: 2  maxRows: 6 - val
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4177,40 +2852,15 @@ exports[`Render validation.status = null properties.placeholder: Type your text 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4245,39 +2895,14 @@ exports[`Render validation.status = null properties.rows: 5 - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4312,39 +2937,14 @@ exports[`Render validation.status = null properties.title: My TextArea Title - v
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
     </div>
   </div>
@@ -4379,39 +2979,14 @@ exports[`Render validation.status = success default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4534,40 +3109,15 @@ exports[`Render validation.status = success properties.autoFocus: true - value[0
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4625,39 +3175,14 @@ exports[`Render validation.status = success properties.autoSize: true - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4715,40 +3240,15 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4806,39 +3306,14 @@ exports[`Render validation.status = success properties.label align: right - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4896,39 +3371,14 @@ exports[`Render validation.status = success properties.label colon: false - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -4974,39 +3424,14 @@ exports[`Render validation.status = success properties.label disabled: true - va
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5064,39 +3489,14 @@ exports[`Render validation.status = success properties.label extra: showing extr
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5167,39 +3567,14 @@ exports[`Render validation.status = success properties.label inline: true - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5257,39 +3632,14 @@ exports[`Render validation.status = success properties.label span: 12 - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5347,39 +3697,14 @@ exports[`Render validation.status = success properties.minRows: 2  maxRows: 6 - 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5437,40 +3762,15 @@ exports[`Render validation.status = success properties.placeholder: Type your te
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5528,39 +3828,14 @@ exports[`Render validation.status = success properties.rows: 5 - value[0] 1`] = 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5618,39 +3893,14 @@ exports[`Render validation.status = success properties.title: My TextArea Title 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5708,39 +3958,14 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="default_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="default_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5873,40 +4098,15 @@ exports[`Render validation.status = warning properties.autoFocus: true - value[0
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            autoFocus={true}
-            className="ant-input {}"
-            id="properties.autoFocus: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          autoFocus={true}
+          className="ant-input {}"
+          id="properties.autoFocus: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -5969,39 +4169,14 @@ exports[`Render validation.status = warning properties.autoSize: true - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.autoSize: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.autoSize: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6064,40 +4239,15 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {} ant-input-disabled"
-            disabled={true}
-            id="properties.disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {} ant-input-disabled"
+          disabled={true}
+          id="properties.disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6160,39 +4310,14 @@ exports[`Render validation.status = warning properties.label align: right - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label align: right_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label align: right_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6255,39 +4380,14 @@ exports[`Render validation.status = warning properties.label colon: false - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label colon: false_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label colon: false_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6338,39 +4438,14 @@ exports[`Render validation.status = warning properties.label disabled: true - va
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label disabled: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label disabled: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6433,39 +4508,14 @@ exports[`Render validation.status = warning properties.label extra: showing extr
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label extra: showing extra_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label extra: showing extra_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6536,39 +4586,14 @@ exports[`Render validation.status = warning properties.label inline: true - valu
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label inline: true_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label inline: true_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6631,39 +4656,14 @@ exports[`Render validation.status = warning properties.label span: 12 - value[0]
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.label span: 12_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.label span: 12_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6726,39 +4726,14 @@ exports[`Render validation.status = warning properties.minRows: 2  maxRows: 6 - 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.minRows: 2  maxRows: 6_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.minRows: 2  maxRows: 6_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6821,40 +4796,15 @@ exports[`Render validation.status = warning properties.placeholder: Type your te
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.placeholder: Type your text here_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            placeholder="Type your text here"
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.placeholder: Type your text here_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          placeholder="Type your text here"
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -6917,39 +4867,14 @@ exports[`Render validation.status = warning properties.rows: 5 - value[0] 1`] = 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.rows: 5_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.rows: 5_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"
@@ -7012,39 +4937,14 @@ exports[`Render validation.status = warning properties.title: My TextArea Title 
       <div
         className="ant-form-item-control-input-content"
       >
-        <span
-          className="{} ant-input-affix-wrapper ant-input-affix-wrapper-textarea-with-clear-btn"
-        >
-          <textarea
-            className="ant-input {}"
-            id="properties.title: My TextArea Title_input"
-            onChange={[Function]}
-            onKeyDown={[Function]}
-            style={Object {}}
-            value=""
-          />
-          <span
-            aria-label="close-circle"
-            className="anticon anticon-close-circle ant-input-textarea-clear-icon ant-input-textarea-clear-icon-hidden"
-            onClick={[Function]}
-            role="button"
-            tabIndex={-1}
-          >
-            <svg
-              aria-hidden="true"
-              data-icon="close-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
-            >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"
-              />
-            </svg>
-          </span>
-        </span>
+        <textarea
+          className="ant-input {}"
+          id="properties.title: My TextArea Title_input"
+          onChange={[Function]}
+          onKeyDown={[Function]}
+          style={Object {}}
+          value=""
+        />
       </div>
       <span
         className="ant-form-item-children-icon"

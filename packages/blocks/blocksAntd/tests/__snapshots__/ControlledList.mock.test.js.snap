@@ -55,7 +55,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -137,7 +137,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add new Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -220,7 +220,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "default",
             }
           }
           required={false}
@@ -321,7 +321,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -348,7 +348,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.removeItemButton: shape: round - value[0] - default 1`] = `
+exports[`Mock render - properties.removeItemIcon: DeleteOutlined - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -359,7 +359,7 @@ Array [
       >
         <br />
         <ButtonBlock
-          blockId="properties.removeItemButton: shape: round_add_button"
+          blockId="properties.removeItemIcon: DeleteOutlined_add_button"
           content={Object {}}
           events={Object {}}
           list={Array []}
@@ -403,7 +403,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -418,7 +418,7 @@ Array [
         />
       </div>,
       "header": undefined,
-      "id": "properties.removeItemButton: shape: round",
+      "id": "properties.removeItemIcon: DeleteOutlined",
       "locale": Object {
         "emptyText": "No Items",
       },
@@ -430,7 +430,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.removeItemButton: shape: square - value[0] - default 1`] = `
+exports[`Mock render - properties.removeItemIcon: name: DeleteOutlined - value[0] - default 1`] = `
 Array [
   Array [
     Object {
@@ -441,7 +441,7 @@ Array [
       >
         <br />
         <ButtonBlock
-          blockId="properties.removeItemButton: shape: square_add_button"
+          blockId="properties.removeItemIcon: name: DeleteOutlined_add_button"
           content={Object {}}
           events={Object {}}
           list={Array []}
@@ -485,7 +485,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -500,7 +500,7 @@ Array [
         />
       </div>,
       "header": undefined,
-      "id": "properties.removeItemButton: shape: square",
+      "id": "properties.removeItemIcon: name: DeleteOutlined",
       "locale": Object {
         "emptyText": "No Items",
       },
@@ -567,7 +567,7 @@ Array [
               "icon": "PlusOutlined",
               "size": "large",
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -649,7 +649,7 @@ Array [
               "icon": "PlusOutlined",
               "size": "small",
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
@@ -746,7 +746,7 @@ Array [
               "icon": "PlusOutlined",
               "size": undefined,
               "title": "Add Item",
-              "type": "primary",
+              "type": "dashed",
             }
           }
           required={false}
