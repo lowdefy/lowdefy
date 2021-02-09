@@ -17,27 +17,9 @@ _ref:
   vars:
     block_type: Avatar
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
+    schema: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
     description_content: |
       Avatars can be used to represent people or objects. It supports images, Icons, or letters.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Basic Avatar

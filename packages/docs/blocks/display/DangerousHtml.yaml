@@ -17,9 +17,7 @@ _ref:
   vars:
     block_type: DangerousHtml
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
+    schema: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
     init_property_values:
       html: <a href="https://lowdefy.com">Lowdefy Website</a>
     description_content: |
@@ -28,22 +26,7 @@ _ref:
       > The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block. 
       > 
       > In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksBasic/src/blocks/DangerousHtml/DangerousHtml.json
-        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic DangerousHtml
         properties: '{"html": "<div style=\"background: #123456; padding: 10px;\"><h1 style=\"color: white;\">A simple white title box</h1></div>"}'

@@ -18,27 +18,9 @@ _ref:
     block_type: ColorSelector
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
+    schema: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
     description_content: |
       A color selector component.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ColorSelector/ColorSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: ColorSelector input
