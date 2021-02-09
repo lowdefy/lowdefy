@@ -90,13 +90,19 @@ test('object propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.field",
+                "_state": Object {
+                  "default": Object {},
+                  "key": "block.properties.field",
+                },
               },
             ],
           },
@@ -308,19 +314,28 @@ test('object schemaNested propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.field",
+                "_state": Object {
+                  "default": Object {},
+                  "key": "block.properties.field",
+                },
               },
               Object {
                 "obj": Object {
                   "_object.assign": Array [
                     Object {
-                      "_state": "block.properties.field.obj",
+                      "_state": Object {
+                        "default": Object {},
+                        "key": "block.properties.field.obj",
+                      },
                     },
                   ],
                 },

@@ -53,7 +53,10 @@ test('yaml propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
@@ -172,13 +175,19 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "obj": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.obj",
+                "_state": Object {
+                  "default": Object {},
+                  "key": "block.properties.obj",
+                },
               },
               Object {
                 "field": Object {
@@ -306,7 +315,10 @@ test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr": Object {
@@ -471,7 +483,10 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr": Object {
@@ -480,7 +495,10 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                     Object {
                       "yaml": Object {
