@@ -39,14 +39,23 @@ events:
             _var: default_properties
     - id: init_property_values
       type: SetState
+      skip:
+        _eq:
+          - _var: init_property_values
+          - null
       params:
         block:
           properties:
             _var: init_property_values
     - id: init_state_values
       type: SetState
+      skip:
+        _eq:
+          - _var: init_state_values
+          - null
       params:
         _var: init_state_values
+
 blocks:
   - id: title
     type: Title
@@ -276,7 +285,7 @@ blocks:
                     key: '0.events'
                     from:
                       _mql.aggregate:
-                        on: 
+                        on:
                           - events:
                               _get:
                                 key: schema.events.properties
@@ -314,13 +323,13 @@ blocks:
                   style:
                     '& > .markdown-body':
                       fontSize: 14
-                  content: 
+                  content:
                     _nunjucks:
                       template: |
                         {% raw %}
                         {% for event in events %}
                             {{ event.k }}:
-                            
+
                           {{ event.v.description }}
 
                         {% endfor %}
@@ -330,7 +339,7 @@ blocks:
                           key: '0'
                           from:
                             _mql.aggregate:
-                              on: 
+                              on:
                                 - events:
                                     _get:
                                       key: schema.events.properties
@@ -341,7 +350,7 @@ blocks:
                                 - $project:
                                     events:
                                       $objectToArray: $events
-                          
+
 
           required:
             blocks:

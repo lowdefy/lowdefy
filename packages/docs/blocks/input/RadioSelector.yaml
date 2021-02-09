@@ -24,12 +24,10 @@ _ref:
     init_state_values:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:
-        - label: First 
+        - label: First
+          value: 1
         - label: Second
-      __type___object_arr_block.properties.options.0.value: string
-      __type___object_arr_block.properties.options.1.value: string
-      __string___object_arr_block.properties.options.0.value: one
-      __string___object_arr_block.properties.options.1.value: two
+          value: 2
 
     description_content: |
       The `RadioSelector` block is a set of radio buttons that allow a user to select a single value from a set of options.

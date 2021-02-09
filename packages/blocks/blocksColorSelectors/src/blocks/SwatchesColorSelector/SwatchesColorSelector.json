@@ -11,38 +11,25 @@
     "properties": {
       "type": "object",
       "properties": {
-        "title": {
-          "type": "string",
-          "description": "Title to describe the input component, if no title is specified the block id is displayed."
-        },
-        "defaultColor": {
-          "type": "string",
-          "default": "#000000",
-          "description": "Default color to display if input value is null."
-        },
-        "inputStyle": {
-          "type": "object",
-          "description": "Css style to applied to input.",
-          "docs": {
-            "displayType": "yaml"
-          }
-        },
         "colors": {
           "type": "array",
           "description": "List of swatch colors options to display.",
           "items": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "docs": {
+                "displayType": "color"
+              }
             }
           }
         },
-        "width": {
-          "type": ["string", "number"],
-          "description": "Color selector width.",
-          "default": "100%",
+        "defaultColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default color to display if input value is null.",
           "docs": {
-            "displayType": "string"
+            "displayType": "color"
           }
         },
         "height": {
@@ -51,6 +38,13 @@
           "default": "135px",
           "docs": {
             "displayType": "string"
+          }
+        },
+        "inputStyle": {
+          "type": "object",
+          "description": "Css style to applied to input.",
+          "docs": {
+            "displayType": "yaml"
           }
         },
         "label": {
@@ -110,6 +104,18 @@
                 "displayType": "yaml"
               }
             }
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Title to describe the input component, if no title is specified the block id is displayed."
+        },
+        "width": {
+          "type": ["string", "number"],
+          "description": "Color selector width.",
+          "default": "100%",
+          "docs": {
+            "displayType": "string"
           }
         }
       }

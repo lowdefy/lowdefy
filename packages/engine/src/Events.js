@@ -43,7 +43,7 @@ class Events {
           input: action.skip,
           location: this.block.blockId,
         });
-        if (skip.output) {
+        if (skip.output === true) {
           results.unshift({ actionId: action.id, actionType: action.type, skipped: true });
           this.callRec(event, actions.slice(1), results, resolve, reject);
         } else {
