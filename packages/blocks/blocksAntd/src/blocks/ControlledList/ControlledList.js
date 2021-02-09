@@ -20,6 +20,7 @@ import { List, Typography } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Button from '../Button/Button';
+import Icon from '../Icon/Icon';
 
 const ControlledListBlock = ({ blockId, events, properties, list, methods }) => {
   useEffect(() => {
@@ -65,7 +66,7 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
                 properties={{
                   title: get(properties, 'addItemButton.title ') || 'Add Item',
                   size: properties.size,
-                  type: 'primary',
+                  type: 'default',
                   icon: 'PlusOutlined',
                   ...properties.addItemButton,
                 }}
@@ -86,7 +87,7 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
               events={events}
               properties={{
                 title: get(properties, 'addItemButton.title ') || 'Add Item',
-                type: 'primary',
+                type: 'dashed',
                 size: properties.size,
                 icon: 'PlusOutlined',
                 ...properties.addItemButton,
@@ -104,19 +105,24 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
         <List.Item
           key={`${blockId}_${i}`}
           className={methods.makeCssClass([styles.item, properties.itemStyle])}
-          actions={
+          extra={
             !properties.hideRemoveButton && [
               // eslint-disable-next-line react/jsx-key
-              <Button
-                blockId={`${blockId}_${i}_remove_button`}
+              <Icon
+                blockId={`${blockId}_${i}_remove_icon`}
                 events={events}
                 properties={{
-                  title: '',
-                  type: 'danger',
-                  shape: 'circle',
-                  size: 'small',
-                  icon: { name: 'DeleteOutlined' },
-                  ...properties.removeItemButton,
+                  name: 'MinusCircleOutlined',
+                  ...properties.removeItemIcon,
+                  style: {
+                    paddingLeft:
+                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
+                    fontSize:
+                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
+                    ...(properties.removeItemIcon && properties.removeItemIcon.style
+                      ? properties.removeItemIcon.style
+                      : {}),
+                  },
                 }}
                 methods={methods}
                 onClick={() => methods.removeItem(i)}

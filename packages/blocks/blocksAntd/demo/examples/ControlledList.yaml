@@ -31,15 +31,13 @@
   properties:
     addItemButton:
       title: Add new Item
-- id: "properties.removeItemButton:
-    shape: round"
+- id: "properties.removeItemIcon: DeleteOutlined"
   type: ControlledList
   properties:
-    removeItemButton:
-      shape: round
-- id: "properties.removeItemButton:
-    shape: square"
+    removeItemIcon: DeleteOutlined
+- id: "properties.removeItemIcon:
+    name: DeleteOutlined"
   type: ControlledList
   properties:
-    removeItemButton:
-      shape: square
+    removeItemIcon:
+      name: DeleteOutlined
