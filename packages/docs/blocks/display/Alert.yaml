@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Alert
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
     init_property_values:
       message: Alerts help to highlight important information.
     description_content: |
@@ -33,11 +36,11 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
         transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClose
-      Called when Alert close button is clicked.
-      ###### afterClose
-      Called after Alert has been closed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
+        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic Alert
         properties: '{"message": "Basic Alert"}'

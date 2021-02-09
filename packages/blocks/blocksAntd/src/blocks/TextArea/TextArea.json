@@ -138,10 +138,12 @@
       "additionalProperties": false,
       "properties": {
         "onChange": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when text input is changed."
         },
         "onPressEnter": {
-          "type": "array"
+          "type": "array",
+          "description": "Trigger action when enter is pressed while text input is focused."
         }
       }
     }

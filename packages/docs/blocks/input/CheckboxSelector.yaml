@@ -18,6 +18,9 @@ _ref:
     block_type: CheckboxSelector
     value_type: any[]
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/CheckboxSelector/CheckboxSelector.json
     init_state_values:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:
@@ -47,10 +50,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/CheckboxSelector/CheckboxSelector.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onChange
-      Triggered when value is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/CheckboxSelector/CheckboxSelector.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: CheckboxSelector input

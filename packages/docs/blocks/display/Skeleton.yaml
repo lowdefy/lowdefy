@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Skeleton
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
     description_content: |
       Skeleton block to use as a loading place holder.
     default_properties:
@@ -31,6 +34,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic skeleton
         properties: '{}'

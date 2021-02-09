@@ -18,6 +18,9 @@ _ref:
     block_type: Pagination
     value_type: object
     category: input
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
     init_property_values:
       pageSizeOptions: [10, 20, 30, 40]
     init_state_values:
@@ -41,12 +44,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
         transformer: templates/blocks/propertiesFormTransformer.js
-
-    event_description: |
-      ###### onSizeChange
-      Triggered when page size is changed.
-      ###### onChange
-      Triggered when current page is changed.
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
+        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Pagination input

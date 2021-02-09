@@ -17,6 +17,9 @@ _ref:
   vars:
     block_type: Title
     category: display
+    schema:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Title/Title.json
     init_state_values:
       __type_block.properties.value: number
       __number_block.properties.value: 33.3
@@ -36,6 +39,10 @@ _ref:
       _ref:
         path: ../blocks/blocksAntd/src/blocks/Title/Title.json
         transformer: templates/blocks/propertiesFormTransformer.js
+    schema_definition:
+      _ref:
+        path: ../blocks/blocksAntd/src/blocks/Title/Title.json
+        transformer: templates/blocks/schemaTransformer.js
     examples:
       - title: Basic title
         properties: '{ "content": "Display this title." }'
