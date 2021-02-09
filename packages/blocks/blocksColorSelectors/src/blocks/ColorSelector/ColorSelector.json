@@ -30,13 +30,19 @@
             "#ba68c8"
           ],
           "items": {
-            "type": "string"
+            "type": "string",
+            "docs": {
+              "displayType": "color"
+            }
           }
         },
         "defaultColor": {
           "type": "string",
           "default": "#000000",
-          "description": "Default color to display if input value is null."
+          "description": "Default color to display if input value is null.",
+          "docs": {
+            "displayType": "color"
+          }
         },
         "inputStyle": {
           "type": "object",

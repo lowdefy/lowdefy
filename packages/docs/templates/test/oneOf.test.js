@@ -585,11 +585,15 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
                   "_global": "settings_input_layout",
                 },
                 "properties": Object {
+                  "autoSize": Object {
+                    "minRows": 2,
+                  },
                   "label": Object {
                     "align": "right",
                     "extra": "object description",
                     "span": 8,
                   },
+                  "placeholder": "Type YAML here",
                   "size": "small",
                   "title": "field",
                 },

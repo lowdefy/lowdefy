@@ -720,3 +720,95 @@ test('triggerEvent skip', async () => {
     ]
   `);
 });
+
+test('triggerEvent skip tests === true', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: 'Truthy' }],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+    initState: { textInput: 'init' },
+  });
+  const { button } = context.RootBlocks.map;
+  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events).toMatchInlineSnapshot(`
+    Object {
+      "onClick": Object {
+        "history": Array [],
+        "loading": true,
+        "trigger": [Function],
+      },
+    }
+  `);
+  await promise;
+  expect(button.Events.events).toMatchInlineSnapshot(`
+    Object {
+      "onClick": Object {
+        "history": Array [
+          Object {
+            "event": Object {
+              "x": 1,
+            },
+            "success": Array [
+              null,
+            ],
+            "timestamp": Object {
+              "date": 0,
+            },
+          },
+        ],
+        "loading": false,
+        "trigger": [Function],
+      },
+    }
+  `);
+  expect(context.eventLog).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "blockId": "button",
+        "eventName": "onClick",
+        "response": Array [
+          Object {
+            "event": Object {
+              "x": 1,
+            },
+            "id": "a",
+            "params": Object {
+              "a": "a",
+            },
+            "skip": "Truthy",
+            "skipped": false,
+            "successMessage": undefined,
+            "type": "SetState",
+          },
+        ],
+        "status": "success",
+        "timestamp": Object {
+          "date": 0,
+        },
+      },
+    ]
+  `);
+});
