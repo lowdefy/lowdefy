@@ -1773,6 +1773,124 @@ Array [
 ]
 `;
 
+exports[`Mock render - properties.sider.theme: dark - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "children": <React.Fragment>
+        <HeaderBlock
+          blockId="properties.sider.theme: dark_header"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          events={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
+              "registerEvent": [Function],
+              "registerMethod": [Function],
+              "triggerEvent": [Function],
+            }
+          }
+          properties={
+            Object {
+              "style": Object {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row-reverse",
+                "lg": Object {
+                  "padding": "0 46px",
+                },
+                "md": Object {
+                  "padding": "0 30px",
+                },
+                "padding": "0 46px",
+                "sm": Object {
+                  "padding": "0 15px",
+                },
+              },
+            }
+          }
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+        <LayoutBlock
+          blockId="properties.sider.theme: dark_layout"
+          content={
+            Object {
+              "content": [Function],
+            }
+          }
+          events={Object {}}
+          list={Array []}
+          menus={Array []}
+          methods={
+            Object {
+              "makeCssClass": [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "minHeight": "100vh",
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "type": "return",
+                    "value": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+                  },
+                ],
+              },
+              "registerEvent": [Function],
+              "registerMethod": [Function],
+              "triggerEvent": [Function],
+            }
+          }
+          properties={Object {}}
+          required={false}
+          user={Object {}}
+          validation={
+            Object {
+              "errors": Array [],
+              "status": null,
+              "warnings": Array [],
+            }
+          }
+        />
+      </React.Fragment>,
+      "className": "{\\"style\\":{\\"minHeight\\":\\"100vh\\"}}",
+      "id": "properties.sider.theme: dark",
+    },
+    Object {},
+  ],
+]
+`;
+
 exports[`Mock render - properties.style - value[0] - default 1`] = `
 Array [
   Array [
