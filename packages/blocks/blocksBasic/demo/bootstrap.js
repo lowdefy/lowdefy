@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import Blocks from '../src';
 import Examples from './Examples';
 import './app.css';
@@ -37,9 +36,4 @@ const Demo = () => {
 
 export default Demo;
 
-render(
-  <BrowserRouter>
-    <Demo />
-  </BrowserRouter>,
-  document.querySelector('#root')
-);
+render(<Demo />, document.querySelector('#root'));

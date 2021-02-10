@@ -2803,7 +2803,6 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
     webpack: 5.18.0
@@ -2887,7 +2886,6 @@ __metadata:
     react: 17.0.1
     react-dom: 17.0.1
     react-markdown: 5.0.3
-    react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
     style-loader: 2.0.0
