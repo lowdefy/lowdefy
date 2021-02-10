@@ -6,7 +6,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "default",
       "precision": undefined,
@@ -27,7 +26,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": ",",
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.decimalSeparator: ','",
       "precision": undefined,
@@ -48,7 +46,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": ",",
-      "formatter": undefined,
       "groupSeparator": ".",
       "id": "properties.groupSeparator: ','",
       "precision": undefined,
@@ -69,7 +66,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.precision: 2",
       "precision": 2,
@@ -90,7 +86,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.prefix: R",
       "precision": undefined,
@@ -111,7 +106,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.prefixIcon: AccountBookFilled",
       "precision": undefined,
@@ -168,7 +162,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.suffix: Rand",
       "precision": undefined,
@@ -189,7 +182,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.suffixIcon: AccountBookFilled",
       "precision": undefined,
@@ -246,7 +238,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.title",
       "precision": undefined,
@@ -261,122 +252,12 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: intlListFormat - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "className": "{}",
-      "decimalSeparator": undefined,
-      "formatter": [Function],
-      "groupSeparator": undefined,
-      "id": "properties.type: intlListFormat",
-      "precision": undefined,
-      "prefix": "",
-      "suffix": "",
-      "title": undefined,
-      "value": Array [
-        "Motorcycle",
-        "Bus",
-        "Car",
-      ],
-      "valueStyle": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.type: intlNumberFormat - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "className": "{}",
-      "decimalSeparator": undefined,
-      "formatter": [Function],
-      "groupSeparator": undefined,
-      "id": "properties.type: intlNumberFormat",
-      "precision": undefined,
-      "prefix": "",
-      "suffix": "",
-      "title": undefined,
-      "value": 3.45,
-      "valueStyle": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.type: intlRelativeTimeFormat - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "className": "{}",
-      "decimalSeparator": undefined,
-      "formatter": [Function],
-      "groupSeparator": undefined,
-      "id": "properties.type: intlRelativeTimeFormat",
-      "precision": undefined,
-      "prefix": "",
-      "suffix": "",
-      "title": undefined,
-      "value": -3,
-      "valueStyle": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.type: momentFormat - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "className": "{}",
-      "decimalSeparator": undefined,
-      "formatter": [Function],
-      "groupSeparator": undefined,
-      "id": "properties.type: momentFormat",
-      "precision": undefined,
-      "prefix": "",
-      "suffix": "",
-      "title": undefined,
-      "value": "2019-06-13T08:20:23.000Z",
-      "valueStyle": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
-exports[`Mock render - properties.type: momentHumanizeDuration - value[0] - default 1`] = `
-Array [
-  Array [
-    Object {
-      "className": "{}",
-      "decimalSeparator": undefined,
-      "formatter": [Function],
-      "groupSeparator": undefined,
-      "id": "properties.type: momentHumanizeDuration",
-      "precision": undefined,
-      "prefix": "",
-      "suffix": "",
-      "title": undefined,
-      "value": -245923000,
-      "valueStyle": undefined,
-    },
-    Object {},
-  ],
-]
-`;
-
 exports[`Mock render - properties.value: '3.45' as string - value[0] - default 1`] = `
 Array [
   Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.value: '3.45' as string",
       "precision": undefined,
@@ -397,7 +278,6 @@ Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
-      "formatter": undefined,
       "groupSeparator": undefined,
       "id": "properties.value: 3.45 as number",
       "precision": undefined,

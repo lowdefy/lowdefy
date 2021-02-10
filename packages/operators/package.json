@@ -33,6 +33,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
+    "@lowdefy/format": "3.7.2",
     "@lowdefy/helpers": "3.7.2",
     "@lowdefy/nunjucks": "3.7.2",
     "deep-diff": "1.0.2",
