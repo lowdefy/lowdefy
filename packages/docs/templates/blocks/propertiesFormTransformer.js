@@ -278,6 +278,7 @@ function makeBlockDefinition({
           '#bfbfbf',
           '#d9d9d9',
         ];
+        block.properties.showValue = true;
         return block;
       case 'date':
         block.type = 'DateSelector';
