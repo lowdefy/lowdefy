@@ -5,8 +5,7 @@ Array [
   Array [
     Object {
       "circleSize": 50,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "circleSize_input",
@@ -22,9 +21,8 @@ exports[`Mock render - circleSpacing - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
+      "circleSize": 28,
       "circleSpacing": 1,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
       "color": "#000000",
       "colors": undefined,
       "id": "circleSpacing_input",
@@ -40,9 +38,8 @@ exports[`Mock render - colors - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": Array [
         "#123456",
@@ -61,9 +58,8 @@ exports[`Mock render - default - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "default_input",
@@ -79,9 +75,8 @@ exports[`Mock render - defaultColor - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#FF0000",
       "colors": undefined,
       "id": "defaultColor_input",
@@ -97,9 +92,8 @@ exports[`Mock render - inputStyle - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},{\\"border\\":\\"3px solid blue\\"}]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "inputStyle_input",
@@ -115,12 +109,45 @@ exports[`Mock render - label-disabled - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "label-disabled_input",
+      "onChangeComplete": [Function],
+      "width": "100%",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - showValue - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "circleSize": 28,
+      "circleSpacing": 14,
+      "color": "#000000",
+      "colors": undefined,
+      "id": "showValue_input",
+      "onChangeComplete": [Function],
+      "width": "100%",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - showValue, value - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "circleSize": 28,
+      "circleSpacing": 14,
+      "color": "#000000",
+      "colors": undefined,
+      "id": "showValue, value_input",
       "onChangeComplete": [Function],
       "width": "100%",
     },
@@ -133,12 +160,28 @@ exports[`Mock render - title - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "title_input",
+      "onChangeComplete": [Function],
+      "width": "100%",
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - valueStyle - value[0] - default 1`] = `
+Array [
+  Array [
+    Object {
+      "circleSize": 28,
+      "circleSpacing": 14,
+      "color": "#000000",
+      "colors": undefined,
+      "id": "valueStyle_input",
       "onChangeComplete": [Function],
       "width": "100%",
     },
@@ -151,9 +194,8 @@ exports[`Mock render - width - value[0] - default 1`] = `
 Array [
   Array [
     Object {
-      "circleSize": undefined,
-      "circleSpacing": undefined,
-      "className": "{\\"style\\":[{\\"marginBottom\\":\\"0px !important\\"},null]}",
+      "circleSize": 28,
+      "circleSpacing": 14,
       "color": "#000000",
       "colors": undefined,
       "id": "width_input",
