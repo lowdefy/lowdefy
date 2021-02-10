@@ -38,7 +38,7 @@ const MonthSelector = ({
 }) => {
   return (
     <Label
-      blockId={`${blockId}_label`}
+      blockId={blockId}
       events={events}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
@@ -64,8 +64,8 @@ const MonthSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
+                    methods={methods}
                   />
                 )
               }
