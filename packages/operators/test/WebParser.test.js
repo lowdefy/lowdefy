@@ -456,3 +456,13 @@ test('parse _function operator', () => {
   expect(output(1, 2)).toEqual({ state: 'state', args: [1, 2] });
   expect(errors).toEqual([]);
 });
+
+test('parse _format operator', () => {
+  const input = {
+    '_format.momentFormat': { params: { format: 'D MMM YYYY' }, on: { _date: 0 } },
+  };
+  const parser = new WebParser({ context, contexts });
+  const { output, errors } = parser.parse({ input, location: 'locationId' });
+  expect(output).toMatchInlineSnapshot(`"1 Jan 1970"`);
+  expect(errors).toEqual([]);
+});
