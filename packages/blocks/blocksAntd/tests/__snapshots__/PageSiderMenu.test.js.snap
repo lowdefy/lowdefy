@@ -104,7 +104,7 @@ exports[`Render default - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="default_toggle_sider_affix"
           >
             <div
@@ -277,7 +277,7 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.breadcrumb.list_toggle_sider_affix"
           >
             <div
@@ -484,7 +484,7 @@ exports[`Render properties.content.style - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.content.style_toggle_sider_affix"
           >
             <div
@@ -657,7 +657,7 @@ exports[`Render properties.footer.style - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.footer.style_toggle_sider_affix"
           >
             <div
@@ -932,7 +932,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.header.color_toggle_sider_affix"
           >
             <div
@@ -1115,7 +1115,7 @@ exports[`Render properties.header.style - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.header.style_toggle_sider_affix"
           >
             <div
@@ -1375,7 +1375,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.header.theme: light_toggle_sider_affix"
           >
             <div
@@ -1635,7 +1635,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.logo.alt_toggle_sider_affix"
           >
             <div
@@ -1895,7 +1895,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.logo.src_toggle_sider_affix"
           >
             <div
@@ -2068,7 +2068,7 @@ exports[`Render properties.logo.style - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.logo.style_toggle_sider_affix"
           >
             <div
@@ -2328,7 +2328,7 @@ exports[`Render properties.menu - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.menu_toggle_sider_affix"
           >
             <div
@@ -2588,7 +2588,7 @@ exports[`Render properties.menu.selectedColor - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.menu.selectedColor_toggle_sider_affix"
           >
             <div
@@ -2848,7 +2848,7 @@ exports[`Render properties.sider.color - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.sider.color_toggle_sider_affix"
           >
             <div
@@ -3032,7 +3032,7 @@ exports[`Render properties.sider.initialCollapsed - value[0] 1`] = `
             </div>
           </div>
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.sider.initialCollapsed_toggle_sider_affix"
           >
             <div
@@ -3216,7 +3216,7 @@ exports[`Render properties.sider.style - value[0] 1`] = `
             </div>
           </div>
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.sider.style_toggle_sider_affix"
           >
             <div
@@ -3389,7 +3389,7 @@ exports[`Render properties.sider.theme: dark - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.sider.theme: dark_toggle_sider_affix"
           >
             <div
@@ -3562,7 +3562,7 @@ exports[`Render properties.style - value[0] 1`] = `
             }
           />
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.style_toggle_sider_affix"
           >
             <div
@@ -3746,7 +3746,7 @@ exports[`Render properties.toggleSiderButton.hide - value[0] 1`] = `
             </div>
           </div>
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.toggleSiderButton.hide_toggle_sider_affix"
           >
             <div
@@ -3930,7 +3930,7 @@ exports[`Render properties.toggleSiderButton.type - value[0] 1`] = `
             </div>
           </div>
           <div
-            className="{\\"style\\":{\\"background\\":\\"#900\\"}}"
+            className="{}"
             id="properties.toggleSiderButton.type_toggle_sider_affix"
           >
             <div
