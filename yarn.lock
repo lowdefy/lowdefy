@@ -2739,7 +2739,6 @@ __metadata:
     "@babel/preset-react": 7.12.10
     "@lowdefy/block-tools": 3.7.2
     "@lowdefy/color": 3.7.2
-    "@lowdefy/format": 3.7.2
     "@lowdefy/helpers": 3.7.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     antd: 4.4.2
@@ -3183,6 +3182,7 @@ __metadata:
     "@babel/cli": 7.12.10
     "@babel/core": 7.12.10
     "@babel/preset-env": 7.12.11
+    "@lowdefy/format": 3.7.2
     "@lowdefy/helpers": 3.7.2
     "@lowdefy/nunjucks": 3.7.2
     babel-jest: 26.6.3

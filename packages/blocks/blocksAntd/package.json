@@ -41,7 +41,6 @@
     "@ant-design/icons": "4.4.0",
     "@lowdefy/block-tools": "3.7.2",
     "@lowdefy/color": "3.7.2",
-    "@lowdefy/format": "3.7.2",
     "@lowdefy/helpers": "3.7.2",
     "antd": "4.4.2",
     "classnames": "2.2.6",
