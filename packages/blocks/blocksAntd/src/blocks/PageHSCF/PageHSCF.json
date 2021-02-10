@@ -146,13 +146,19 @@
           "properties": {
             "style": {
               "type": "object",
-              "description": "Footer css style object."
+              "description": "Footer css style object.",
+              "docs": {
+                "displayType": "yaml"
+              }
             }
           }
         },
         "style": {
           "type": "object",
-          "description": "Css style object to apply to layout."
+          "description": "Css style object to apply to layout.",
+          "docs": {
+            "displayType": "yaml"
+          }
         }
       }
     },

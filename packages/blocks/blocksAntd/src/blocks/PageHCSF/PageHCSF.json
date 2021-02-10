@@ -132,8 +132,10 @@
             },
             "width": {
               "type": ["string", "number"],
-              "default": "string",
-              "description": "width of the sidebar"
+              "description": "width of the sidebar",
+              "docs": {
+                "displayType": "string"
+              }
             }
           }
         },
