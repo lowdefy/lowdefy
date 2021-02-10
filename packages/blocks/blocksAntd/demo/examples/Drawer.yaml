@@ -45,7 +45,3 @@
   type: Drawer
   properties:
     keyboard: false
-# - id: "properties.open: true"
-#   type: Drawer
-#   properties:
-#     open: true
