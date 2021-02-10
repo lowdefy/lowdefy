@@ -79,6 +79,10 @@ _ref:
                       # ...
             ```
 
+            # The event object
+
+            When events are triggered, the can provide a data object describing the event (e.g. a description of the clicked item or uploaded file). This data object can be accessed using the [`_event`](/_event) operator in an action definition.
+
             # Context initialisation events
 
             Four events are always defined for [`context`](/context) type blocks:
