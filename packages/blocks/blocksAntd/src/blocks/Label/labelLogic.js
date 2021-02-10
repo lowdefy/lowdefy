@@ -41,7 +41,7 @@ const labelLogic = ({
     : properties.title;
   label = label === '' ? null : label;
   // trim colon when colon is set, and the user inputs a colon, because antd class renders a colon
-  if (label && properties.colon && label.trim() !== '') {
+  if (type.isString(label) && properties.colon && label.trim() !== '') {
     label = label.replace(/[:|：]\s*$/, '');
   }
   const rowClassName = classNames({
