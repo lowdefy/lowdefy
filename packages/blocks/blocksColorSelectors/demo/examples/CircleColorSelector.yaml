@@ -34,3 +34,19 @@
   properties:
     label: 
       disabled: true
+- id: showValue
+  type: CircleColorSelector
+  properties:
+    showValue: true
+- id: showValue, value
+  type: CircleColorSelector
+  value: '#ababab'
+  properties:
+    showValue: true
+- id: valueStyle
+  type: CircleColorSelector
+  properties:
+    showValue: true
+    valueStyle:
+      color: red
+      fontSize: 32

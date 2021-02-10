@@ -16,16 +16,20 @@
 
 import React from 'react';
 import { Affix } from 'antd';
+import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
-const AffixBlock = ({ blockId, content, methods, properties }) => (
+const AffixBlock = ({ blockId, content, methods, properties, rename }) => (
   <Affix
     id={blockId}
     className={methods.makeCssClass(properties.style)}
     offsetBottom={properties.offsetBottom}
     offsetTop={properties.offsetTop}
     onChange={(affixed) => {
-      methods.triggerEvent({ name: 'onChange', event: { affixed } });
+      methods.triggerEvent({
+        name: get(rename, 'events.onChange', { default: 'onChange' }),
+        event: { affixed },
+      });
     }}
   >
     {content.content && content.content()}

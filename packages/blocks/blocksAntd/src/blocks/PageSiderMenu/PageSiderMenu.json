@@ -151,6 +151,11 @@
               "type": ["string", "number"],
               "default": "string",
               "description": "width of the sidebar"
+            },
+            "hideToggleButton": {
+              "type": "boolean",
+              "description": "Hide toggle button in sider.",
+              "default": false
             }
           }
         },

@@ -20,13 +20,19 @@ import Blocks from '../src';
 import Examples from './Examples';
 import './app.css';
 
-const Demo = () => (
-  <div id="page">
-    {Object.keys(Blocks).map((key) => (
-      <Examples key={key} type={key} Component={Blocks[key]} />
-    ))}
-  </div>
-);
+const Demo = () => {
+  let blocks = Object.keys(Blocks);
+  if (document.location.pathname[1] && Blocks[document.location.pathname.substring(1)]) {
+    blocks = [document.location.pathname.substring(1)];
+  }
+  return (
+    <div id="page">
+      {blocks.map((key) => (
+        <Examples key={key} type={key} Component={Blocks[key]} />
+      ))}
+    </div>
+  );
+};
 
 export default Demo;
 

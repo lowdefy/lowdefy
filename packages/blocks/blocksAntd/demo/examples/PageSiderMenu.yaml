@@ -6,11 +6,13 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -23,12 +25,14 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
           pageId: Alert
+          type: MenuLink
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
@@ -40,11 +44,13 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -63,11 +69,13 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -80,11 +88,13 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -98,11 +108,13 @@
       selectedColor: "#a30331"
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -115,11 +127,13 @@
     menu:
       links:
         - id: Introduction
+          type: MenuLink
           pageId: introduction
           properties:
             icon: RocketOutlined
             title: Introduction
         - id: alert
+          type: MenuLink
           pageId: Alert
           properties:
             icon: ExclamationCircleOutlined
@@ -166,6 +180,11 @@
   areas:
     sider:
       blocks: []
+- id: "properties.sider.theme: dark"
+  type: PageHeaderMenu
+  properties:
+    sider:
+      theme: dark
 - id: "properties.toggleSiderButton.type"
   type: PageHeaderMenu
   properties:

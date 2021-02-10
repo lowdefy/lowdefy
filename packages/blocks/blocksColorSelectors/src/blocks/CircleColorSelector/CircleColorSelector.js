@@ -25,27 +25,53 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
       blockId={blockId}
       loading={loading}
       methods={methods}
-      properties={{ title: properties.title, size: properties.size, ...properties.label }}
+      properties={{
+        title: properties.title,
+        size: properties.size,
+        style: { alignSelf: 'center' },
+        ...properties.label,
+      }}
       required={required}
       validation={validation}
       content={{
         content: () => (
-          <CirclePicker
-            id={`${blockId}_input`}
+          <div
             className={methods.makeCssClass([
-              { marginBottom: '0px !important' },
+              {
+                display: 'flex',
+                alignItems: 'center',
+              },
               properties.inputStyle,
             ])}
-            circleSize={properties.circleSize}
-            circleSpacing={properties.circleSpacing}
-            color={value || properties.defaultColor || '#000000'}
-            colors={properties.colors}
-            width={properties.width || '100%'}
-            onChangeComplete={(color) => {
-              methods.setValue(color.hex ? color.hex : '#000000');
-              methods.triggerEvent({ name: 'onChange' });
-            }}
-          />
+          >
+            {properties.showValue && (
+              <div
+                className={methods.makeCssClass([
+                  {
+                    paddingRight: properties.circleSpacing || 14,
+                    textAlign: 'center',
+                    fontFamily: 'monospace',
+                    whiteSpace: 'nowrap',
+                  },
+                  properties.valueStyle,
+                ])}
+              >
+                {value || '-------'}
+              </div>
+            )}
+            <CirclePicker
+              id={`${blockId}_input`}
+              circleSize={properties.circleSize || 28}
+              circleSpacing={properties.circleSpacing || 14}
+              color={value || properties.defaultColor || '#000000'}
+              colors={properties.colors}
+              width={properties.width || '100%'}
+              onChangeComplete={(color) => {
+                methods.setValue(color.hex || '#000000');
+                methods.triggerEvent({ name: 'onChange' });
+              }}
+            />
+          </div>
         ),
       }}
     />

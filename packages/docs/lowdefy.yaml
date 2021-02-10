@@ -280,9 +280,9 @@ menus:
           - id: Progress
             type: MenuLink
             pageId: Progress
-          - id: Skeleton
-            type: MenuLink
-            pageId: Skeleton
+          # - id: Skeleton
+          #   type: MenuLink
+          #   pageId: Skeleton
           - id: Statistic
             type: MenuLink
             pageId: Statistic
@@ -616,7 +616,7 @@ pages:
   - _ref: blocks/display/Notification.yaml
   - _ref: blocks/display/Paragraph.yaml
   - _ref: blocks/display/Progress.yaml
-  - _ref: blocks/display/Skeleton.yaml
+  # - _ref: blocks/display/Skeleton.yaml
   - _ref: blocks/display/Statistic.yaml
   - _ref: blocks/display/Title.yaml
 

@@ -63,11 +63,6 @@
           "default": true,
           "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked."
         },
-        "open": {
-          "type": "boolean",
-          "default": false,
-          "description": "Set the modal as open or closed using a property instead of actions."
-        },
         "okText": {
           "type": "string",
           "default": "Ok",
