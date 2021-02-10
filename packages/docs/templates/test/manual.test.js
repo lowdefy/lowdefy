@@ -39,11 +39,12 @@ test('manual propertiesFormTransformer', () => {
 });
 
 test('manual propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -151,11 +152,12 @@ test('manual schemaNested propertiesFormTransformer', () => {
 });
 
 test('manual schemaNested propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaNested)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -165,6 +167,7 @@ test('manual schemaNested propertiesGetterTransformer', () => {
             "_object.assign": Array [
               Object {
                 "_state": Object {
+                  "contextId": "Block:Block:{}",
                   "default": Object {},
                   "key": "block.properties.obj",
                 },

@@ -37,7 +37,7 @@ events:
           visible: true
           properties:
             _ref:
-              path: 
+              path:
                 _var: schema
               transformer: templates/blocks/defaultValueTransformer.js
     - id: init_property_values
@@ -108,14 +108,18 @@ blocks:
             _if_none:
               - _state: style_block_input
               - ''
+        {% if category != "context" %}
         visible:
           _state: block.visible
+        {% endif %}
         required:
           _state: block.required
         properties:
           _ref:
-            path: 
+            path:
               _var: schema
+            vars:
+              block_type: {{ block_type }}
             transformer: templates/blocks/propertiesGetterTransformer.js
         {% if areas %}
         areas:
@@ -255,8 +259,10 @@ blocks:
                                   value:
                                     _object.assign:
                                       - _ref:
-                                          path: 
+                                          path:
                                             _var: schema
+                                          vars:
+                                            block_type: {{ block_type }}
                                           transformer: templates/blocks/propertiesGetterTransformer.js
                                       - label:
                                           _ref:
@@ -267,8 +273,10 @@ blocks:
                                                   key: label
                                                   from:
                                                     _ref:
-                                                      path: 
+                                                      path:
                                                         _var: schema
+                                                      vars:
+                                                        block_type: {{ block_type }}
                                                       transformer: templates/blocks/propertiesGetterTransformer.js
                                               default_value:
                                                 span: null
@@ -282,7 +290,7 @@ blocks:
                                                 feedbackStyle: {}
                                   default_value:
                                     _ref:
-                                      path: 
+                                      path:
                                         _var: schema
                                       transformer: templates/blocks/defaultValueTransformer.js
                           default_value:
@@ -327,7 +335,7 @@ blocks:
                                 default: {}
                                 from:
                                   _ref:
-                                    path: 
+                                    path:
                                       _var: schema
                         pipeline:
                           - $project:
@@ -342,11 +350,15 @@ blocks:
                     - input
             - key: visible
               title: 'visible:'
+              disabled:
+                _eq:
+                  - _var: category
+                  - context
         areas:
           properties:
             blocks:
               _ref:
-                path: 
+                path:
                   _var: schema
                 transformer: templates/blocks/propertiesFormTransformer.js
           layout:
@@ -405,6 +417,7 @@ blocks:
                     align: right
                     span: 8
                   size: small
+          {% if category != "context" %}
           visible:
             blocks:
               - id: block.visible
@@ -416,6 +429,7 @@ blocks:
                     align: right
                     span: 8
                   size: small
+          {% endif %}
   {% if examples %}
   - id: examples_divider
     type: Divider
@@ -434,7 +448,7 @@ blocks:
         block_type: {{ block_type }}
         schema_definition:
           _ref:
-            path: 
+            path:
               _var: schema
             transformer: templates/blocks/schemaTransformer.js
-          
+
