@@ -87,7 +87,7 @@ test('button propertiesFormTransformer', () => {
             "type": "ButtonSelector",
           },
         ],
-        "id": "button_card",
+        "id": "block.properties.field_button_card",
         "layout": Object {
           "contentGutter": 0,
         },

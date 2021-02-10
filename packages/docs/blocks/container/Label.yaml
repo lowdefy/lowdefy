@@ -15,17 +15,16 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Label
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Label/Label.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-
+      A container that provides a label for a input block. Most input block use Label by default.
+    init_property_values:
+      title: Input title
     areas:
       - content
-      - extra
-      - title
+      # - label
     examples:
       - title: Basic
-        properties: '{"title": "A Card"}'
+        properties: '{"title": "Title"}'

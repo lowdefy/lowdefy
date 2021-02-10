@@ -15,17 +15,14 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Spin
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Spin/Spin.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-
+      A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
     areas:
       - content
-      - extra
-      - title
+      # - indicator
     examples:
       - title: Basic
-        properties: '{"title": "A Card"}'
+        properties: '{}'

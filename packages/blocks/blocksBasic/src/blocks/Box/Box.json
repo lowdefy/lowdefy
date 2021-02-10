@@ -8,7 +8,7 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "Box content string, alternatively provide and list of blocks as Box content."
+          "description": "Box content string. Overrides the \"content\" content area."
         },
         "style": {
           "type": "object",

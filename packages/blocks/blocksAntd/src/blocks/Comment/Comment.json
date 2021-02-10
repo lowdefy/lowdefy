@@ -10,18 +10,26 @@
       "properties": {
         "author": {
           "type": "string",
-          "description": "Comment author title."
+          "description": "Comment author title. Overrides the \"author\" content area."
         },
         "avatar": {
-          "type": ["string", "object"],
-          "description": "Comment avatar.",
-          "docs": {
-            "displayType": "string"
-          }
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Source URL of a avatar image."
+            },
+            {
+              "type": "object",
+              "description": "Avatar block properties.",
+              "docs": {
+                "displayType": "avatar"
+              }
+            }
+          ]
         },
         "content": {
           "type": "string",
-          "description": "Comment content."
+          "description": "Comment content. Overrides the \"content\" content area."
         },
         "datetime": {
           "type": "object",

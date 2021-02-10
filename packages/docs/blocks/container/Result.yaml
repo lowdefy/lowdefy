@@ -15,17 +15,14 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Card
+    block_type: Result
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../blocks/blocksAntd/src/blocks/Result/Result.json
     description_content: |
-      A Card container places blocks on a white background with a card border.
-      The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-
+      Used to provide feedback the results of a task or error.
     areas:
       - content
       - extra
-      - title
     examples:
       - title: Basic
-        properties: '{"title": "A Card"}'
+        properties: '{"status": "500", "title": "An error occurred"}'

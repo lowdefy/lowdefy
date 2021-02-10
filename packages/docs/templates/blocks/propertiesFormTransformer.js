@@ -14,8 +14,74 @@
   limitations under the License.
 */
 
-const button = (propertyName) => ({
-  id: 'button_card',
+const avatar = (path) => ({
+  id: `${path}_avatar_card`,
+  type: 'Card',
+  layout: {
+    contentGutter: 0,
+  },
+  properties: {
+    size: 'small',
+    title: 'avatar:',
+    inner: true,
+  },
+  blocks: [
+    {
+      id: `${path}.color`,
+      type: 'CircleColorSelector',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'color',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'The background color of the avatar. Should be a hex color string.',
+        },
+        circleSize: 14,
+        circleSpacing: 8,
+        colors: [
+          '#f5222d',
+          '#fa541c',
+          '#fa8c16',
+          '#faad14',
+          '#fadb14',
+          '#a0d911',
+          '#52c41a',
+          '#13c2c2',
+          '#1890ff',
+          '#2f54eb',
+          '#722ed1',
+          '#eb2f96',
+          '#595959',
+          '#bfbfbf',
+          '#d9d9d9',
+        ],
+      },
+    },
+    {
+      id: `${path}.content`,
+      type: 'TextInput',
+      layout: {
+        _global: 'settings_input_layout',
+      },
+      properties: {
+        title: 'content',
+        size: 'small',
+        label: {
+          span: 8,
+          align: 'right',
+          extra: 'Text to display inside avatar.',
+        },
+      },
+    },
+  ],
+});
+
+const button = (path) => ({
+  id: `${path}_button_card`,
   type: 'Card',
   layout: {
     contentGutter: 0,
@@ -27,7 +93,7 @@ const button = (propertyName) => ({
   },
   blocks: [
     {
-      id: `block.properties.${propertyName}.icon`,
+      id: `${path}.icon`,
       type: 'Selector',
       layout: {
         _global: 'settings_input_layout',
@@ -46,7 +112,7 @@ const button = (propertyName) => ({
       },
     },
     {
-      id: `block.properties.${propertyName}.title`,
+      id: `${path}.title`,
       type: 'TextInput',
       layout: {
         _global: 'settings_input_layout',
@@ -62,7 +128,7 @@ const button = (propertyName) => ({
       },
     },
     {
-      id: `block.properties.${propertyName}.type`,
+      id: `${path}.type`,
       type: 'ButtonSelector',
       layout: {
         _global: 'settings_input_layout',
@@ -228,7 +294,9 @@ function makeBlockDefinition({
         block.type = 'TextArea';
         return block;
       case 'button':
-        return button(propertyName);
+        return button(`${nameSpace}${propertyName}`);
+      case 'avatar':
+        return avatar(`${nameSpace}${propertyName}`);
       default:
         propertyDescription.type = propertyDescription.docs.displayType;
         break;
