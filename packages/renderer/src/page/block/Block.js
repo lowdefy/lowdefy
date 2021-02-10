@@ -16,30 +16,32 @@
 
 import React, { Suspense } from 'react';
 
-import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
+import { ErrorBoundary } from '@lowdefy/block-tools';
 
 import LoadBlock from './LoadBlock';
+import LoadingBlock from './LoadingBlock';
 import CategorySwitch from './CategorySwitch';
 import WatchCache from './WatchCache';
 
 const Block = ({ block, Blocks, context, pageId, rootContext }) => {
+  const Loading = (
+    <LoadingBlock
+      blockId={block.blockId}
+      meta={block.meta}
+      highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+    />
+  );
   return (
     <ErrorBoundary>
-      <Suspense
-        fallback={
-          <Loading
-            properties={get(block, 'meta.loading.properties')}
-            type={get(block, 'meta.loading.type')}
-          />
-        }
-      >
+      <Suspense fallback={Loading}>
         <LoadBlock
           meta={block.meta}
+          Loading={Loading}
           render={(Comp) => (
             <WatchCache
               block={block}
               rootContext={rootContext}
+              Loading={Loading}
               render={() => (
                 <CategorySwitch
                   Component={Comp}
