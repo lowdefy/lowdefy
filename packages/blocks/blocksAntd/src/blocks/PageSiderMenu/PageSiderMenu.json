@@ -161,6 +161,7 @@
         },
         "toggleSiderButton": {
           "type": "object",
+          "description": "Toggle sider button properties.",
           "docs": {
             "displayType": "button"
           }
