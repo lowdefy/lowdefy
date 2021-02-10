@@ -245,7 +245,7 @@ const PageSiderMenu = ({
                               <Affix
                                 blockId={`${blockId}_toggle_sider_affix`}
                                 events={events}
-                                properties={{ offsetBottom: 0, style: { background: '#900' } }}
+                                properties={{ offsetBottom: 0 }}
                                 methods={methods}
                                 rename={{
                                   events: {
