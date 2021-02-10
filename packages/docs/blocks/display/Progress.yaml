@@ -24,6 +24,10 @@ _ref:
       Display the current progress as a percentage of completion.
 
     examples:
-      - title: Basic progress
-        properties: '{"percent": 60, "strokeColor": "#fcb900", "status": "active"}'
+      - title: Line progress
+        properties: '{"type": "line", "percent": 60, "strokeColor": "#fcb900", "status": "active"}'
+      - title: Circle progress
+        properties: '{"type": "circle", "percent": 60, "strokeColor": "#52c41a"}'
+      - title: Dashboard progress
+        properties: '{"type": "dashboard", "percent": 60, "strokeColor": "#1890ff"}'
       
