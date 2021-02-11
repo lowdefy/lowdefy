@@ -58,7 +58,7 @@
         type: Link
         params:
           pageId: tutorial-setup
-- id: concepts_button
+- id: community_button
   type: Button
   visible:
     _not:
@@ -72,7 +72,7 @@
   layout:
     flex: 1 0 auto
   properties:
-    title: How Stuff Works
+    title: Join the Community
     type: text
     size: large
   events:
@@ -80,7 +80,7 @@
       - id: website_link
         type: Link
         params:
-          pageId: overview
+          url: https://github.com/lowdefy/lowdefy/discussions
 - id: github_button
   type: Button
   layout:
