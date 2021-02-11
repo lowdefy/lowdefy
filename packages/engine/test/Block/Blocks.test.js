@@ -1158,10 +1158,10 @@ test('max recuse limit', () => {
   });
   const { a, c } = context.RootBlocks.map;
 
-  expect(context.state).toEqual({ c: null });
-  expect(a.visibleEval.output).toEqual(false); // false due to 20 rec cycles
+  expect(context.state).toEqual({ a: 'a', c: null });
+  expect(a.visibleEval.output).toEqual(true);
 
   c.setValue('show d');
   expect(c.value).toBe('show d');
-  expect(context.state).toEqual({ a: 'a', c: 'show d', d: 'd', e: 'e' });
+  expect(context.state).toEqual({ c: 'show d', d: 'd', e: 'e' });
 });

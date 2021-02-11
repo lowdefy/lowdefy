@@ -263,3 +263,50 @@ test('container blocks visibility toggle fields in state with nested containers 
   expect(text.visibleEval.output).toEqual(true);
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
+
+test('visibleParent. If container visible is null, child blocks should still be evaluated', () => {
+  const rootBlock = {
+    blockId: 'root',
+    type: 'Context',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'container',
+            type: 'Box',
+            meta: {
+              category: 'container',
+            },
+            visible: {
+              _state: 'notThere', // will evaluate to null
+            },
+            areas: {
+              content: {
+                blocks: [
+                  {
+                    type: 'TextInput',
+                    blockId: 'text',
+                    meta: {
+                      category: 'input',
+                      valueType: 'string',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  expect(context.RootBlocks.map.container.eval.visible).toBe(null);
+  expect(context.RootBlocks.map.text.eval.visible).toBe(true);
+});
