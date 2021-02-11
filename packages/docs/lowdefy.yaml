@@ -271,6 +271,9 @@ menus:
           - id: Message
             type: MenuLink
             pageId: Message
+          - id: MobileMenu
+            type: MenuLink
+            pageId: MobileMenu
           - id: Notification
             type: MenuLink
             pageId: Notification
@@ -308,6 +311,9 @@ menus:
           - id: Card
             type: MenuLink
             pageId: Card
+          - id: Collapse
+            type: MenuLink
+            pageId: Collapse
           - id: Comment
             type: MenuLink
             pageId: Comment
@@ -332,6 +338,9 @@ menus:
           - id: Spin
             type: MenuLink
             pageId: Spin
+          - id: Tabs
+            type: MenuLink
+            pageId: Tabs
 
       - id: blocks_context
         type: MenuGroup
@@ -644,6 +653,7 @@ pages:
   - _ref: blocks/display/MarkdownWithCode.yaml
   - _ref: blocks/display/Menu.yaml
   - _ref: blocks/display/Message.yaml
+  - _ref: blocks/display/MobileMenu.yaml
   - _ref: blocks/display/Notification.yaml
   - _ref: blocks/display/Paragraph.yaml
   - _ref: blocks/display/Progress.yaml
@@ -655,6 +665,7 @@ pages:
   - _ref: blocks/container/Badge.yaml
   - _ref: blocks/container/Box.yaml
   - _ref: blocks/container/Card.yaml
+  - _ref: blocks/container/Collapse.yaml
   - _ref: blocks/container/Comment.yaml
   - _ref: blocks/container/ConfirmModal.yaml
   - _ref: blocks/container/Drawer.yaml
@@ -663,6 +674,7 @@ pages:
   - _ref: blocks/container/Result.yaml
   - _ref: blocks/container/Span.yaml
   - _ref: blocks/container/Spin.yaml
+  - _ref: blocks/container/Tabs.yaml
 
   - _ref: blocks/context/Context.yaml
   - _ref: blocks/context/PageHCF.yaml
