@@ -114,20 +114,21 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
       selectable={true}
       defaultOpenKeys={
         properties.defaultOpenKeys ||
-        (properties.mode === 'inline' && [
-          (
-            menu.find((link) =>
-              (link.links || [])
-                .map((subLink) =>
-                  subLink.links
-                    ? subLink.links.map((subSubLink) => subSubLink.pageId)
-                    : [subLink.pageId]
-                )
-                .flat()
-                .some((link) => (properties.selectedKeys || [pageId]).indexOf(link) !== -1)
-            ) || {}
-          ).id,
-        ]) ||
+        (properties.mode === 'inline' &&
+          properties.collapsed !== true && [
+            (
+              menu.find((link) =>
+                (link.links || [])
+                  .map((subLink) =>
+                    subLink.links
+                      ? subLink.links.map((subSubLink) => subSubLink.pageId)
+                      : [subLink.pageId]
+                  )
+                  .flat()
+                  .some((link) => (properties.selectedKeys || [pageId]).indexOf(link) !== -1)
+              ) || {}
+            ).id,
+          ]) ||
         []
       }
       selectedKeys={properties.selectedKeys || [pageId]}
