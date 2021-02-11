@@ -1,0 +1,501 @@
+ # Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{% if not hideFeedback %}     
+- id: feedback_divider
+  type: Divider
+- id: feedback_title
+  type: Title
+  style:
+    textAlign: center
+  properties:
+    content: Was this helpful?
+    level: 3
+- id: feedback_rating_box
+  type: Box
+  style: 
+    margin: auto
+  layout:
+    size: 300
+  areas:
+    content:
+      justify: space-around
+      align: middle
+      gutter: 16
+      blocks:
+        - id: cry_anchor
+          type: Anchor
+          layout:
+            size: auto
+          style:
+            fontSize:
+              _if:
+                test: 
+                  _eq:
+                    - _state: feedback.score
+                    - cry
+                then: 48
+                else: 32
+          properties:
+            title: 😭
+            type: text
+          events:
+            onClick:
+              - id: resize
+                type: SetState
+                params:
+                  feedback.score: cry
+        - id: sad_anchor
+          type: Anchor
+          layout:
+            size: auto
+          style:
+            fontSize:
+              _if:
+                test: 
+                  _eq:
+                    - _state: feedback.score
+                    - sad
+                then: 48
+                else: 32
+          properties:
+            title: 😟
+            type: text
+          events:
+            onClick:
+              - id: resize
+                type: SetState
+                params:
+                  feedback.score: sad
+        - id: smile_anchor
+          type: Anchor
+          layout:
+            size: auto
+          style:
+            fontSize:
+              _if:
+                test: 
+                  _eq:
+                    - _state: feedback.score
+                    - smile
+                then: 48
+                else: 32
+          properties:
+            title: 😊
+            type: text
+          events:
+            onClick:
+              - id: resize
+                type: SetState
+                params:
+                  feedback.score: smile
+        - id: happy_anchor
+          type: Anchor
+          layout:
+            size: auto
+          style:
+            fontSize:
+              _if:
+                test: 
+                  _eq:
+                    - _state: feedback.score
+                    - happy
+                then: 48
+                else: 32
+          properties:
+            title: 😀
+            type: text
+          events:
+            onClick:
+              - id: resize
+                type: SetState
+                params:
+                  feedback.score: happy
+        - id: feedback.email
+          type: TextInput
+          visible:
+            _if_none:
+              - _state: feedback.score
+              - false
+          properties:
+            title: Email
+            placeholder: Your email address
+        - id: feedback.text
+          type: TextArea
+          visible:
+            _if_none:
+              - _state: feedback.score
+              - false
+          properties:
+            title: Feedback
+            rows: 5
+            placeholder: 
+              _if:
+                test: 
+                  _or:
+                    - _eq:
+                        - _state: feedback.score
+                        - happy
+                    - _eq:
+                        - _state: feedback.score
+                        - smile
+                then: What made you smile?
+                else: How can we improve?
+        - id: fb_box
+          type: Box
+          visible:
+            _if_none:
+              - _state: feedback.score
+              - false
+          layout:
+            contentJustify: end
+          blocks:
+            - id: feedback.send
+              type: Button
+              layout:
+                size: auto
+              properties:
+                title: Send
+                icon: SendOutlined
+                color: '#1890ff'
+{% if filePath %}
+- id: edit_on_gh_box
+  type: Box
+  style:
+    lg:
+      paddingRight: 40
+  layout:
+    contentJustify: end
+  blocks:
+    - id: edit_on_github
+      type: Anchor
+      layout:
+        size: auto
+      properties:
+        title: Edit this page on Github
+      events:
+        onClick:
+          - id: edit_page
+            type: Link
+            params:
+              newWindow: true
+              url: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
+{% endif %} 
+
+{% endif %}  
+
+- id: footer_divider
+  type: Divider
+- id: footer_box
+  type: Box
+  layout:
+    contentGutter: 46
+  blocks:
+    - id: footer_logo_box
+      type: Box
+      visible:
+        _not:
+          _or: 
+            - _eq:
+                - _media: size
+                - sm
+            - _eq:
+                - _media: size
+                - xs
+      layout:
+        span: 6
+      blocks:
+        - id: footer_logo
+          type: Html
+          properties:
+            html: |
+              <p><a href="https://lowdefy.com"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
+              <p style="font-size: 0.85rem;" >Build internal tools with YAML.</p>
+              <p><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
+        - id: social_links
+          type: Box
+          layout:
+            contentJustify: space-around
+            size: 200
+          blocks:
+            - id: lowdefy_twitter
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: TwitterOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_twitter  
+                    type: Link
+                    params:
+                      url: https://twitter.com/lowdefy
+            - id: lowdefy_community
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: CommentOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_community
+                    type: Link
+                    params:
+                      url: https://github.com/lowdefy/lowdefy/discussions
+            - id: lowdefy_github
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: GithubOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_github 
+                    type: Link
+                    params:
+                      url: https://github.com/lowdefy/lowdefy
+            - id: lowdefy_youtube
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: YoutubeOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_youtube 
+                    type: Link
+                    params:
+                      url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg
+    - id: footer_cta_box
+      type: Box
+      layout:
+        span: 12
+        align: middle
+      blocks:
+        - id: footer_cta
+          type: Title
+          style:
+            textAlign: center
+          properties:
+            content: Subscribe to our newsletter
+            level: 3
+            color: '#1890ff'
+        - id: footer_cta_paragraph
+          type: Paragraph
+          style:
+            textAlign: center
+          properties:
+            content: Receive the latest Lowdefy updates in your inbox.
+        - id: subscribe_box
+          type: Box
+          layout:
+            contentGutter: [12, 0]
+            contentJustify: center
+          blocks:
+            - id: subscribe_email
+              type: TextInput
+              layout:
+                flex: 0 1 250px
+              properties:
+                size: large
+                placeholder: Enter your email
+                label:
+                  disabled: true
+            - id: subscribe_button 
+              type: Button
+              layout:
+                flex: 0 1 auto
+              properties:
+                title: Subscribe
+                color: '#1890ff'
+                size: large
+    - id: footer_links
+      type: Box
+      layout:
+        span: 6
+        contentGutter: 8
+      blocks:
+        - id: why_anchor
+          type: Anchor
+          properties:
+            title: Why Lowdefy
+            type: text
+            size: large
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  url: https://lowdefy.com
+        - id: tutorial_anchor
+          type: Anchor
+          properties:
+            title: Quick Start Tutorial
+            type: text
+            size: large
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  pageId: tutorial-development-server
+        - id: netlify_anchor
+          type: Anchor
+          properties:
+            title: Deploy to Netlify
+            type: text
+            size: large
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  pageId: tutorial-setup
+        - id: concepts_anchor
+          type: Anchor
+          properties:
+            title: How Lowdefy Works
+            type: text
+            size: large
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  pageId: overview
+        - id: github_anchor
+          type: Anchor
+          properties:
+            title: Github Repository
+            type: text
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  url: https://github.com/lowdefy/lowdefy
+        - id: changelog_anchor
+          type: Anchor
+          properties:
+            title: Version Changelog
+            type: text
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  url: https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
+        - id: license_anchor
+          type: Anchor
+          properties:
+            title: Appache-2.0 License
+            type: text
+          events:
+            onClick:
+              - id: website_link
+                type: Link
+                params:
+                  url: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
+    - id: footer_logo_box_sm
+      type: Box
+      visible:
+        _or: 
+          - _eq:
+              - _media: size
+              - sm
+          - _eq:
+              - _media: size
+              - xs
+      layout:
+        contentJustify: center
+      blocks:
+        - id: footer_logo
+          type: Html
+          properties:
+            html: |
+              <p style="text-align: center;"><a href="https://lowdefy.com"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
+              <p style="text-align: center; font-size: 0.85rem;" >Build internal tools with YAML.</p>
+              <p style="text-align: center;"><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
+        - id: social_links
+          type: Box
+          layout:
+            contentJustify: space-around
+            size: 200
+          blocks:
+            - id: lowdefy_twitter
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: TwitterOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_twitter  
+                    type: Link
+                    params:
+                      url: https://twitter.com/lowdefy
+            - id: lowdefy_community
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: CommentOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_community
+                    type: Link
+                    params:
+                      url: https://github.com/lowdefy/lowdefy/discussions
+            - id: lowdefy_github
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: GithubOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_github 
+                    type: Link
+                    params:
+                      url: https://github.com/lowdefy/lowdefy
+            - id: lowdefy_youtube
+              type: Icon
+              layout:
+                size: auto
+              properties:
+                name: YoutubeOutlined
+                size: 24
+              events:
+                onClick:
+                  - id: link_youtube 
+                    type: Link
+                    params:
+                      url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg
+    - id: lowdefy_cc_box
+      type: Box
+      blocks:
+        - id: lowdefy_cc
+          type: Html
+          properties:
+            html: |
+              <div style="text-align: center; font-size: 12px; margin-top: 42px;">© 2021 Lowdefy, Inc. - Give. Easy. Value.</div>
+
+

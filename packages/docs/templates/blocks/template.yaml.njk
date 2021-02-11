@@ -23,6 +23,9 @@ properties:
   layout:
     style:
       background: '#FFFFFF'
+  footer:
+    style:
+      background: '#FFFFFF'
 layout:
   contentGutter: 16
 events:
@@ -59,396 +62,410 @@ events:
       params:
         _var: init_state_values
 
-blocks:
-  - id: title
-    type: Title
-    properties:
-      level: 2
-      content:
-        _var: block_type
-  {% if value_type %}
-  - id: value_type
-    type: Markdown
-    properties:
-      content: |
-        ```
-        value type: {{ value_type }}
-        ```
-  {% endif %}
-  {% if areas %}
-  - id: areas_list
-    type: Markdown
-    properties:
-      content: |
-        ```
-        areas: {{ areas | join(', ') }}
-        ```
-  {% endif %}
-  - id: description
-    type: Markdown
-    properties:
-      content:
-        _var: description_content
-  - id: left_column
-    type: Box
-    layout:
-      span: 12
+areas:
+  header:
     blocks:
-      - id: block_divider
-        type: Divider
+      _ref: templates/header.yaml
+  footer:
+    blocks:
+      _ref: 
+        path: templates/footer.yaml.njk
+        vars:
+          hideFeedback:
+            _var: hideFeedback
+          githubLink:
+            _var: githubLink
+  content:
+    blocks:
+      - id: title
+        type: Title
         properties:
-          title: Block
-      - id: block_id
-        type:
-          _var: block_type
-        layout:
-          _state: block.layout
-        style:
-          _yaml.parse:
-            _if_none:
-              - _state: style_block_input
-              - ''
-        {% if category != "context" %}
-        visible:
-          _state: block.visible
-        {% endif %}
-        required:
-          _state: block.required
-        properties:
-          _ref:
-            path:
-              _var: schema
-            vars:
-              block_type: {{ block_type }}
-            transformer: templates/blocks/propertiesGetterTransformer.js
-        {% if areas %}
-        areas:
-          {% for area in areas %}
-          {{ area }}:
-            gutter: 0
-            style:
-              border: 1px dashed red
-            blocks:
-              - id: block_area_{{ area }}
-                type: Html
-                style:
-                  background: '#f0f2f5'
-                  textAlign: center
-                  padding: 2px 5px
-                  color: red
-                properties:
-                  html: {{ area }}
-          {% endfor %}
-        {% endif %}
-      {% if methods %}
-      - id: method_divider
-        type: Divider
-        properties:
-          title: Methods
-      {% for method in methods %}
-      - id: method_button
-        type: Button
-        layout:
-          span: 12
-        properties:
-          title: {{ method.name }}
-        events:
-          onClick:
-            _var: methods.{{ loop.index0 }}.onClick
-      - id: method_args
-        type: MarkdownWithCode
-        layout:
-          span: 12
-        properties:
+          level: 2
           content:
-            _nunjucks:
-              template: |
-                {% raw %}
-                ```yaml
-                onClick:
-                {{ value | safe }}
-                ```
-                {% endraw %}
-              on:
-                value:
-                  _yaml.stringify:
-                    on:
-                      _var: methods.{{ loop.index0 }}.onClick
-                    options:
-                      sortKeys: false
-
-      {% endfor %}
+            _var: block_type
+      {% if value_type %}
+      - id: value_type
+        type: Markdown
+        properties:
+          content: |
+            ```
+            value type: {{ value_type }}
+            ```
       {% endif %}
-      - id: state_divider
-        type: Divider
+      {% if areas %}
+      - id: areas_list
+        type: Markdown
         properties:
-          title: State
-        visible:
-          _eq:
-            - _var: category
-            - input
-      - id: state_markdown
-        type: MarkdownWithCode
-        visible:
-          _eq:
-            - _var: category
-            - input
+          content: |
+            ```
+            areas: {{ areas | join(', ') }}
+            ```
+      {% endif %}
+      - id: description
+        type: Markdown
         properties:
           content:
-            _nunjucks:
-              template: |
-                {% raw %}
-                ```yaml
-                {{ value | safe }}
-                ```
-                {% endraw %}
-              on:
-                value:
-                  _yaml.stringify:
-                    - block_id:
-                        _state: block_id
-      - id: setup_divider
-        type: Divider
-        properties:
-          title: Block Setup
-      - id: setup_markdown
-        type: MarkdownWithCode
-        properties:
-          content:
-            _nunjucks:
-              template: |
-                {% raw %}
-                ```yaml
-                {{ value | safe }}
-                ```
-                {% endraw %}
-              on:
-                value:
-                  _yaml.stringify:
-                    options:
-                      sortKeys: false
-                    on:
-                      _ref:
-                        path: templates/blocks/filter_default_value.yaml
-                        vars:
-                          value:
-                            id: block_id
-                            type: {{ block_type }}
-                            required:
-                              _state: block.required
-                            visible:
-                              _state: block.visible
-                            layout:
-                              _ref:
-                                path: templates/blocks/filter_default_value.yaml
-                                vars:
-                                  value:
-                                    _state: block.layout
-                                  default_value:
-                                    align: top
-                                    span: 24
-                            style:
-                              _yaml.parse:
-                                _if_none:
-                                  - _state: style_block_input
-                                  - ''
-                            properties:
-                              _ref:
-                                path: templates/blocks/filter_default_value.yaml
-                                vars:
-                                  value:
-                                    _object.assign:
-                                      - _ref:
-                                          path:
-                                            _var: schema
-                                          vars:
-                                            block_type: {{ block_type }}
-                                          transformer: templates/blocks/propertiesGetterTransformer.js
-                                      - label:
-                                          _ref:
-                                            path: templates/blocks/filter_default_value.yaml
-                                            vars:
-                                              value:
-                                                _get:
-                                                  key: label
-                                                  from:
-                                                    _ref:
-                                                      path:
-                                                        _var: schema
-                                                      vars:
-                                                        block_type: {{ block_type }}
-                                                      transformer: templates/blocks/propertiesGetterTransformer.js
-                                              default_value:
-                                                span: null
-                                                align: left
-                                                inline: false
-                                                disabled: false
-                                                hasFeedback: true
-                                                colon: true
-                                                extra: null
-                                                extraStyle: {}
-                                                feedbackStyle: {}
-                                  default_value:
-                                    _ref:
-                                      path:
-                                        _var: schema
-                                      transformer: templates/blocks/defaultValueTransformer.js
-                          default_value:
-                            required: false
-                            visible: true
-                            layout: {}
-                            properties: {}
-
-
-  - id: right_column
-    type: Box
-    layout:
-      span: 12
-    blocks:
-      - id: settings_divider
-        type: Divider
-        properties:
-          title: Settings
-      - id: settings_collapse
-        type: Collapse
-        properties:
-          defaultActiveKey: properties
-          panels:
-            - key: properties
-              title: 'properties:'
-            - key: layout
-              title: 'layout:'
-            - key: style
-              title: 'style:'
-            - key: events
-              title: 'events:'
-              disabled:
-                _not:
-                  _get:
-                    key: '0.events'
-                    from:
-                      _mql.aggregate:
-                        on:
-                          - events:
-                              _get:
-                                key: schema.events.properties
-                                default: {}
-                                from:
-                                  _ref:
-                                    path:
-                                      _var: schema
-                        pipeline:
-                          - $project:
-                              events:
-                                $objectToArray: $events
-            - key: required
-              title: 'required:'
-              disabled:
-                _not:
-                  _eq:
-                    - _var: category
-                    - input
-            - key: visible
-              title: 'visible:'
-              disabled:
-                _eq:
-                  - _var: category
-                  - context
-        areas:
-          properties:
-            blocks:
+            _var: description_content
+      - id: left_column
+        type: Box
+        layout:
+          span: 12
+        blocks:
+          - id: block_divider
+            type: Divider
+            properties:
+              title: Block
+          - id: block_id
+            type:
+              _var: block_type
+            layout:
+              _state: block.layout
+            style:
+              _yaml.parse:
+                _if_none:
+                  - _state: style_block_input
+                  - ''
+            {% if category != "context" %}
+            visible:
+              _state: block.visible
+            {% endif %}
+            required:
+              _state: block.required
+            properties:
               _ref:
                 path:
                   _var: schema
-                transformer: templates/blocks/propertiesFormTransformer.js
-          layout:
-            blocks:
-              _ref: templates/blocks/layout.yaml
-          style:
-            blocks:
-              _ref: templates/blocks/style.yaml
-          events:
-            blocks:
-              - id: event_description
-                type: Markdown
-                properties:
-                  style:
-                    '& > .markdown-body':
-                      fontSize: 14
-                  content:
-                    _nunjucks:
-                      template: |
-                        {% raw %}
-                        {% for event in events %}
-                            {{ event.k }}:
+                vars:
+                  block_type: {{ block_type }}
+                transformer: templates/blocks/propertiesGetterTransformer.js
+            {% if areas %}
+            areas:
+              {% for area in areas %}
+              {{ area }}:
+                gutter: 0
+                style:
+                  border: 1px dashed red
+                blocks:
+                  - id: block_area_{{ area }}
+                    type: Html
+                    style:
+                      background: '#f0f2f5'
+                      textAlign: center
+                      padding: 2px 5px
+                      color: red
+                    properties:
+                      html: {{ area }}
+              {% endfor %}
+            {% endif %}
+          {% if methods %}
+          - id: method_divider
+            type: Divider
+            properties:
+              title: Methods
+          {% for method in methods %}
+          - id: method_button
+            type: Button
+            layout:
+              span: 12
+            properties:
+              title: {{ method.name }}
+            events:
+              onClick:
+                _var: methods.{{ loop.index0 }}.onClick
+          - id: method_args
+            type: MarkdownWithCode
+            layout:
+              span: 12
+            properties:
+              content:
+                _nunjucks:
+                  template: |
+                    {% raw %}
+                    ```yaml
+                    onClick:
+                    {{ value | safe }}
+                    ```
+                    {% endraw %}
+                  on:
+                    value:
+                      _yaml.stringify:
+                        on:
+                          _var: methods.{{ loop.index0 }}.onClick
+                        options:
+                          sortKeys: false
 
-                          {{ event.v.description }}
-
-                        {% endfor %}
-                        {% endraw %}
-                      on:
-                        _get:
-                          key: '0'
-                          from:
-                            _mql.aggregate:
-                              on:
-                                - events:
-                                    _get:
-                                      key: schema.events.properties
-                                      default: {}
-                                      from:
+          {% endfor %}
+          {% endif %}
+          - id: state_divider
+            type: Divider
+            properties:
+              title: State
+            visible:
+              _eq:
+                - _var: category
+                - input
+          - id: state_markdown
+            type: MarkdownWithCode
+            visible:
+              _eq:
+                - _var: category
+                - input
+            properties:
+              content:
+                _nunjucks:
+                  template: |
+                    {% raw %}
+                    ```yaml
+                    {{ value | safe }}
+                    ```
+                    {% endraw %}
+                  on:
+                    value:
+                      _yaml.stringify:
+                        - block_id:
+                            _state: block_id
+          - id: setup_divider
+            type: Divider
+            properties:
+              title: Block Setup
+          - id: setup_markdown
+            type: MarkdownWithCode
+            properties:
+              content:
+                _nunjucks:
+                  template: |
+                    {% raw %}
+                    ```yaml
+                    {{ value | safe }}
+                    ```
+                    {% endraw %}
+                  on:
+                    value:
+                      _yaml.stringify:
+                        options:
+                          sortKeys: false
+                        on:
+                          _ref:
+                            path: templates/blocks/filter_default_value.yaml
+                            vars:
+                              value:
+                                id: block_id
+                                type: {{ block_type }}
+                                required:
+                                  _state: block.required
+                                visible:
+                                  _state: block.visible
+                                layout:
+                                  _ref:
+                                    path: templates/blocks/filter_default_value.yaml
+                                    vars:
+                                      value:
+                                        _state: block.layout
+                                      default_value:
+                                        align: top
+                                        span: 24
+                                style:
+                                  _yaml.parse:
+                                    _if_none:
+                                      - _state: style_block_input
+                                      - ''
+                                properties:
+                                  _ref:
+                                    path: templates/blocks/filter_default_value.yaml
+                                    vars:
+                                      value:
+                                        _object.assign:
+                                          - _ref:
+                                              path:
+                                                _var: schema
+                                              vars:
+                                                block_type: {{ block_type }}
+                                              transformer: templates/blocks/propertiesGetterTransformer.js
+                                          - label:
+                                              _ref:
+                                                path: templates/blocks/filter_default_value.yaml
+                                                vars:
+                                                  value:
+                                                    _get:
+                                                      key: label
+                                                      from:
+                                                        _ref:
+                                                          path:
+                                                            _var: schema
+                                                          vars:
+                                                            block_type: {{ block_type }}
+                                                          transformer: templates/blocks/propertiesGetterTransformer.js
+                                                  default_value:
+                                                    span: null
+                                                    align: left
+                                                    inline: false
+                                                    disabled: false
+                                                    hasFeedback: true
+                                                    colon: true
+                                                    extra: null
+                                                    extraStyle: {}
+                                                    feedbackStyle: {}
+                                      default_value:
                                         _ref:
                                           path:
                                             _var: schema
-                              pipeline:
-                                - $project:
-                                    events:
-                                      $objectToArray: $events
+                                          transformer: templates/blocks/defaultValueTransformer.js
+                              default_value:
+                                required: false
+                                visible: true
+                                layout: {}
+                                properties: {}
 
 
-          required:
-            blocks:
-              - id: block.required
-                type: Switch
-                properties:
-                  title: required
-                  label:
-                    extra: Toggle if the field is indicated as compulsory and required when the Validate action is called.
-                    align: right
-                    span: 8
-                  size: small
-          {% if category != "context" %}
-          visible:
-            blocks:
-              - id: block.visible
-                type: Switch
-                properties:
-                  title: visible
-                  label:
-                    extra: Toggle if block is visible and has a value in state.
-                    align: right
-                    span: 8
-                  size: small
-          {% endif %}
-  {% if examples %}
-  - id: examples_divider
-    type: Divider
-    properties:
-      title: Examples
-  - _ref:
-      path: templates/blocks/examples.yaml.njk
-      vars:
-        block_type: {{ block_type }}
-        examples:
-          _var: examples
-  {% endif %}
-  - _ref:
-      path: templates/blocks/schema.yaml.njk
-      vars:
-        block_type: {{ block_type }}
-        schema_definition:
-          _ref:
-            path:
-              _var: schema
-            transformer: templates/blocks/schemaTransformer.js
+      - id: right_column
+        type: Box
+        layout:
+          span: 12
+        blocks:
+          - id: settings_divider
+            type: Divider
+            properties:
+              title: Settings
+          - id: settings_collapse
+            type: Collapse
+            properties:
+              defaultActiveKey: properties
+              panels:
+                - key: properties
+                  title: 'properties:'
+                - key: layout
+                  title: 'layout:'
+                - key: style
+                  title: 'style:'
+                - key: events
+                  title: 'events:'
+                  disabled:
+                    _not:
+                      _get:
+                        key: '0.events'
+                        from:
+                          _mql.aggregate:
+                            on:
+                              - events:
+                                  _get:
+                                    key: schema.events.properties
+                                    default: {}
+                                    from:
+                                      _ref:
+                                        path:
+                                          _var: schema
+                            pipeline:
+                              - $project:
+                                  events:
+                                    $objectToArray: $events
+                - key: required
+                  title: 'required:'
+                  disabled:
+                    _not:
+                      _eq:
+                        - _var: category
+                        - input
+                - key: visible
+                  title: 'visible:'
+                  disabled:
+                    _eq:
+                      - _var: category
+                      - context
+            areas:
+              properties:
+                blocks:
+                  _ref:
+                    path:
+                      _var: schema
+                    transformer: templates/blocks/propertiesFormTransformer.js
+              layout:
+                blocks:
+                  _ref: templates/blocks/layout.yaml
+              style:
+                blocks:
+                  _ref: templates/blocks/style.yaml
+              events:
+                blocks:
+                  - id: event_description
+                    type: Markdown
+                    properties:
+                      style:
+                        '& > .markdown-body':
+                          fontSize: 14
+                      content:
+                        _nunjucks:
+                          template: |
+                            {% raw %}
+                            {% for event in events %}
+                                {{ event.k }}:
+
+                              {{ event.v.description }}
+
+                            {% endfor %}
+                            {% endraw %}
+                          on:
+                            _get:
+                              key: '0'
+                              from:
+                                _mql.aggregate:
+                                  on:
+                                    - events:
+                                        _get:
+                                          key: schema.events.properties
+                                          default: {}
+                                          from:
+                                            _ref:
+                                              path:
+                                                _var: schema
+                                  pipeline:
+                                    - $project:
+                                        events:
+                                          $objectToArray: $events
+
+
+              required:
+                blocks:
+                  - id: block.required
+                    type: Switch
+                    properties:
+                      title: required
+                      label:
+                        extra: Toggle if the field is indicated as compulsory and required when the Validate action is called.
+                        align: right
+                        span: 8
+                      size: small
+              {% if category != "context" %}
+              visible:
+                blocks:
+                  - id: block.visible
+                    type: Switch
+                    properties:
+                      title: visible
+                      label:
+                        extra: Toggle if block is visible and has a value in state.
+                        align: right
+                        span: 8
+                      size: small
+              {% endif %}
+      {% if examples %}
+      - id: examples_divider
+        type: Divider
+        properties:
+          title: Examples
+      - _ref:
+          path: templates/blocks/examples.yaml.njk
+          vars:
+            block_type: {{ block_type }}
+            examples:
+              _var: examples
+      {% endif %}
+      - _ref:
+          path: templates/blocks/schema.yaml.njk
+          vars:
+            block_type: {{ block_type }}
+            schema_definition:
+              _ref:
+                path:
+                  _var: schema
+                transformer: templates/blocks/schemaTransformer.js
 
