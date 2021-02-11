@@ -18,6 +18,7 @@ _ref:
     block_type: PageHeaderMenu
     category: context
     schema: ../blocks/blocksAntd/src/blocks/PageHeaderMenu/PageHeaderMenu.json
+    filePath: blocks/context/PageHeaderMenu.yaml
     description_content: |
       The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
 

@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _if
     pageTitle: _if
+    filePath: operators/_if.yaml
     types: |
       ```
       (arguments: {test: boolean, then: any, else: any}): any

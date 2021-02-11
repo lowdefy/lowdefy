@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _menu
     pageTitle: _menu
+    filePath: operators/_menu.yaml
     types: |
       ```
       (menuId: string): object

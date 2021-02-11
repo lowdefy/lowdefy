@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _and
     pageTitle: _and
+    filePath: operators/_and.yaml
     types: |
       ```
       (values: any[]): boolean

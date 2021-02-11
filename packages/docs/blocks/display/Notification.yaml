@@ -18,6 +18,7 @@ _ref:
     block_type: Notification
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
+    filePath: blocks/display/Notification.yaml
     description_content: |
       Display a popup notification on the page.
 

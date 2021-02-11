@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _product
     pageTitle: _product
+    filePath: operators/_product.yaml
     types: |
       ```
       (values: any[]): number

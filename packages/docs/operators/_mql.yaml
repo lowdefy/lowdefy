@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _mql
     pageTitle: _mql
+    filePath: operators/_mql.yaml
     description: |
       The `_mql` operator uses the [`mingo`](https://www.npmjs.com/package/mingo) package to evaluate MongoDB query language statements as an operator.
     methods:

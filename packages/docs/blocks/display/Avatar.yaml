@@ -18,6 +18,7 @@ _ref:
     block_type: Avatar
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Avatar/Avatar.json
+    filePath: blocks/display/Avatar.yaml
     description_content: |
       Avatars can be used to represent people or objects. It supports images, Icons, or letters.
 

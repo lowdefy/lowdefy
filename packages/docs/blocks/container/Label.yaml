@@ -18,6 +18,7 @@ _ref:
     block_type: Label
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Label/Label.json
+    filePath: blocks/container/Label.yaml
     description_content: |
       A container that provides a label for a input block. Most input block use Label by default.
     init_property_values:

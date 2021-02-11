@@ -18,6 +18,7 @@ _ref:
     block_type: Modal
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Modal/Modal.json
+    filePath: blocks/container/Modal.yaml
     description_content: |
       A popup container, presenting the user with a modal dialog.
       The Modal has a `content` and a `footer` content area. The default `footer` area is the `Ok` and `Cancel` buttons; defining a `footer` area overwrites these buttons.

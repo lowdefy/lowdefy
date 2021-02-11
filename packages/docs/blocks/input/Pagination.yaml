@@ -19,6 +19,7 @@ _ref:
     value_type: object
     category: input
     schema: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
+    filePath: blocks/input/Pagination.yaml
     init_property_values:
       pageSizeOptions: [10, 20, 30, 40]
     init_state_values:

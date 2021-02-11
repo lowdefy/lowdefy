@@ -19,6 +19,7 @@ _ref:
     value_type: any
     category: input
     schema: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
+    filePath: blocks/input/ButtonSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]
       __object_arr_block.properties.options:

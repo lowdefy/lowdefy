@@ -18,6 +18,7 @@ _ref:
     block_type: Comment
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Comment/Comment.json
+    filePath: blocks/container/Comment.yaml
     init_state_values:
       __type_block.properties.avatar: object
     description_content: |

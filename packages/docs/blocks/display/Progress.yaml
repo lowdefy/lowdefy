@@ -18,6 +18,7 @@ _ref:
     block_type: Progress
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Progress/Progress.json
+    filePath: blocks/display/Progress.yaml
     init_property_values:
       percent: 30
     description_content: |

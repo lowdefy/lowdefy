@@ -18,6 +18,7 @@ _ref:
     block_type: Markdown
     category: display
     schema: ../blocks/blocksMarkdown/src/blocks/Markdown/Markdown.json
+    filePath: blocks/display/Markdown.yaml
     init_property_values:
       content: |
         ### Welcome to Lowdefy 

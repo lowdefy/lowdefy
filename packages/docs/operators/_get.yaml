@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _get
     pageTitle: _get
+    filePath: operators/_get.yaml
     types: |
       ```
       (arguments: {

@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: NotificationAction
     pageTitle: Notification
+    filePath: actions/Notification.yaml
     types: |
       ```
       (params: {

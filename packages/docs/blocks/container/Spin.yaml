@@ -18,6 +18,7 @@ _ref:
     block_type: Spin
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Spin/Spin.json
+    filePath: blocks/container/Spin.yaml
     description_content: |
       A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
     areas:

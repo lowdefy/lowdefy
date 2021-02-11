@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _list_contexts
     pageTitle: _list_contexts
+    filePath: operators/_list_contexts.yaml
     types: |
       ```
       (value: any): string[]

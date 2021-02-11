@@ -18,6 +18,7 @@ _ref:
     block_type: Box
     category: container
     schema: ../blocks/blocksBasic/src/blocks/Box/Box.json
+    filePath: blocks/container/Box.yaml
     description_content: |
       A Box is a container that places sub-blocks into a html `<div>`.
       The Box has a single area, `content`.

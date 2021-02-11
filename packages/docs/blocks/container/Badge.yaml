@@ -18,6 +18,7 @@ _ref:
     block_type: Badge
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Badge/Badge.json
+    filePath: blocks/container/Badge.yaml
     description_content: |
       Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
     init_property_values:

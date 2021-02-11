@@ -19,6 +19,7 @@ _ref:
     value_type: string
     category: input
     schema: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+    filePath: blocks/input/TextArea.yaml
     init_state_values:
       __type_block.properties.autoSize: boolean
       __boolean_block.properties.autoSize: true

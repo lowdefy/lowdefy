@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _divide
     pageTitle: _divide
+    filePath: operators/_divide.yaml
     types: |
       ```
       ([numerator: number, denominator: number]): number

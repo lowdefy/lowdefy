@@ -18,6 +18,7 @@ _ref:
     block_type: Breadcrumb
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
+    filePath: blocks/display/Breadcrumb.yaml
     init_state_values:
       __type_block.properties.list: string[]
       __string_arr_block.properties.list:

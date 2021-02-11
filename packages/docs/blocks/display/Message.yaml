@@ -18,6 +18,7 @@ _ref:
     block_type: Message
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Message/Message.json
+    filePath: blocks/display/Message.yaml
     description_content: |
       Display a popup message on the page.
 

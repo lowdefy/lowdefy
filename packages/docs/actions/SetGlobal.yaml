@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: SetGlobal
     pageTitle: SetGlobal
+    filePath: actions/SetGlobal.yaml
     types: |
       ```
       (toSet: object): void

@@ -18,6 +18,7 @@ _ref:
     block_type: MarkdownWithCode
     category: display
     schema: ../blocks/blocksMarkdown/src/blocks/MarkdownWithCode/MarkdownWithCode.json
+    filePath: blocks/display/MarkdownWithCode.yaml
     init_property_values:
       content: |
         ### Some JS Math:

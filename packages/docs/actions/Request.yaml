@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: Request
     pageTitle: Request
+    filePath: actions/Request.yaml
     types: |
       ```
       (void): void

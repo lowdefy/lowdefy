@@ -18,6 +18,7 @@ _ref:
     block_type: DangerousMarkdown
     category: display
     schema: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
+    filePath: blocks/display/DangerousMarkdown.yaml
     init_property_values:
       content: |
         ## Some Html content:

@@ -18,6 +18,7 @@ _ref:
     block_type: Skeleton
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
+    filePath: blocks/display/Skeleton.yaml
     description_content: |
       Skeleton block to use as a loading place holder.
 

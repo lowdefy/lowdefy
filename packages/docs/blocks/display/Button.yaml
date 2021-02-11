@@ -18,6 +18,7 @@ _ref:
     block_type: Button
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Button/Button.json
+    filePath: blocks/display/Button.yaml
     description_content: |
       Button block.
 

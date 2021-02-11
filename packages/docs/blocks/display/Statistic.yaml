@@ -18,6 +18,7 @@ _ref:
     block_type: Statistic
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Statistic/Statistic.json
+    filePath: blocks/display/Statistic.yaml
     init_state_values:
       __type_block.properties.value: number
       __number_block.properties.value: 33.3

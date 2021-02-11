@@ -18,6 +18,7 @@ _ref:
     block_type: ConfirmModal
     category: container
     schema: ../blocks/blocksAntd/src/blocks/ConfirmModal/ConfirmModal.json
+    filePath: blocks/container/ConfirmModal.yaml
     description_content: |
       A popup container, presenting the user with a modal confirmation dialog.
       The ConfirmModal has a single area, `content`.
