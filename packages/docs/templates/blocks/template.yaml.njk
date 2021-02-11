@@ -80,9 +80,15 @@ blocks:
     type: Markdown
     properties:
       content: |
+        {% if user_defined_areas -%}
+        ```
+        areas: [key]
+        ```
+        {% else %}
         ```
         areas: {{ areas | join(', ') }}
         ```
+        {% endif %}
   {% endif %}
   - id: description
     type: Markdown

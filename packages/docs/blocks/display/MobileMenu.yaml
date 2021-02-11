@@ -15,11 +15,11 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Menu
+    block_type: MobileMenu
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    schema: ../blocks/blocksAntd/src/blocks/MobileMenu/MobileMenu.json
     description_content: |
-      A menu block used to display page links.
+      A menu designed for mobile devices. Renders a button that opens a Drawer with the menu inside. This menu is used by default in `PageHeaderMenu` and `PageSiderMenu` on mobile devices.
     init_state_values:
       block.properties.links:
         - id: home
@@ -45,3 +45,6 @@ _ref:
                 - id: page3
                   type: MenuLink
                   pageId: page3
+    examples:
+      - title: Default
+        properties: '{}'
