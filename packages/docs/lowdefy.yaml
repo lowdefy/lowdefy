@@ -333,6 +333,37 @@ menus:
             type: MenuLink
             pageId: Spin
 
+      - id: blocks_context
+        type: MenuGroup
+        properties:
+          title: Context Blocks
+          icon: GroupOutlined
+        links:
+          - id: Context
+            type: MenuLink
+            pageId: Context
+          - id: PageHCF
+            type: MenuLink
+            pageId: PageHCF
+          - id: PageHCF
+            type: MenuLink
+            pageId: PageHCF
+          - id: PageHCSF
+            type: MenuLink
+            pageId: PageHCSF
+          - id: PageHeaderMenu
+            type: MenuLink
+            pageId: PageHeaderMenu
+          - id: PageHSCF
+            type: MenuLink
+            pageId: PageHSCF
+          - id: PageSHCF
+            type: MenuLink
+            pageId: PageSHCF
+          - id: PageSiderMenu
+            type: MenuLink
+            pageId: PageSiderMenu
+
       - id: connections
         type: MenuGroup
         properties:
@@ -632,6 +663,14 @@ pages:
   - _ref: blocks/container/Result.yaml
   - _ref: blocks/container/Span.yaml
   - _ref: blocks/container/Spin.yaml
+
+  - _ref: blocks/context/Context.yaml
+  - _ref: blocks/context/PageHCF.yaml
+  - _ref: blocks/context/PageHCSF.yaml
+  - _ref: blocks/context/PageHeaderMenu.yaml
+  - _ref: blocks/context/PageHSCF.yaml
+  - _ref: blocks/context/PageSHCF.yaml
+  - _ref: blocks/context/PageSiderMenu.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

@@ -86,11 +86,12 @@ test('object propertiesFormTransformer', () => {
 });
 
 test('object propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -100,6 +101,7 @@ test('object propertiesGetterTransformer', () => {
             "_object.assign": Array [
               Object {
                 "_state": Object {
+                  "contextId": "Block:Block:{}",
                   "default": Object {},
                   "key": "block.properties.field",
                 },
@@ -310,11 +312,12 @@ test('object schemaNested propertiesFormTransformer', () => {
 });
 
 test('object schemaNested propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaNested)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -324,6 +327,7 @@ test('object schemaNested propertiesGetterTransformer', () => {
             "_object.assign": Array [
               Object {
                 "_state": Object {
+                  "contextId": "Block:Block:{}",
                   "default": Object {},
                   "key": "block.properties.field",
                 },
@@ -333,6 +337,7 @@ test('object schemaNested propertiesGetterTransformer', () => {
                   "_object.assign": Array [
                     Object {
                       "_state": Object {
+                        "contextId": "Block:Block:{}",
                         "default": Object {},
                         "key": "block.properties.field.obj",
                       },

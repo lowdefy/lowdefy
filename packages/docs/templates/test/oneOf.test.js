@@ -141,11 +141,12 @@ test('oneOf propertiesFormTransformer', () => {
 });
 
 test('oneOf propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -166,7 +167,10 @@ test('oneOf propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__number_block.properties.field",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__number_block.properties.field",
+                        },
                       },
                     },
                     Object {
@@ -179,7 +183,10 @@ test('oneOf propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__string_block.properties.field",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__string_block.properties.field",
+                        },
                       },
                     },
                   ],
@@ -413,11 +420,12 @@ test('oneOf schemaStrObj propertiesFormTransformer', () => {
 });
 
 test('oneOf schemaStrObj propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaStrObj)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaStrObj, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -438,7 +446,10 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__string_block.properties.field",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__string_block.properties.field",
+                        },
                       },
                     },
                     Object {
@@ -454,6 +465,7 @@ test('oneOf schemaStrObj propertiesGetterTransformer', () => {
                         "_object.assign": Array [
                           Object {
                             "_state": Object {
+                              "contextId": "Block:Block:{}",
                               "default": Object {},
                               "key": "__object_block.properties.field",
                             },
@@ -669,11 +681,13 @@ test('oneOf propertiesFormTransformer schemaOneOfStrYaml', () => {
 });
 
 test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
-  expect(propertiesGetterTransformer(schemaOneOfStrYaml)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaOneOfStrYaml, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
           "_state": Object {
+            "contextId": "Block:Block:{}",
             "default": Object {},
             "key": "block.properties",
           },
@@ -694,7 +708,10 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__string_block.properties.field",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__string_block.properties.field",
+                        },
                       },
                     },
                     Object {
@@ -710,7 +727,10 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
                         "_yaml.parse": Object {
                           "_if_none": Array [
                             Object {
-                              "_state": "__object_block.properties.field",
+                              "_state": Object {
+                                "contextId": "Block:Block:{}",
+                                "key": "__object_block.properties.field",
+                              },
                             },
                             "",
                           ],

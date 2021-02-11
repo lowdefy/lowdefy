@@ -185,14 +185,14 @@
           "type": "object",
           "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes.",
           "docs": {
-            "displayType": "markdown"
+            "displayType": "yaml"
           }
         },
         "menuMd": {
           "type": "object",
           "description": "Mobile menu properties. Overwrites menu properties on mobile screen sizes.",
           "docs": {
-            "displayType": "markdown"
+            "displayType": "yaml"
           }
         },
         "style": {

@@ -150,7 +150,10 @@
             "width": {
               "type": ["string", "number"],
               "default": "string",
-              "description": "width of the sidebar"
+              "description": "width of the sidebar",
+              "docs": {
+                "displayType": "string"
+              }
             },
             "hideToggleButton": {
               "type": "boolean",
@@ -220,7 +223,7 @@
             "theme": {
               "type": "string",
               "enum": ["dark", "light"],
-              "default": "dark",
+              "default": "light",
               "description": "Color theme of menu."
             },
             "links": {
@@ -263,14 +266,14 @@
           "type": "object",
           "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes.",
           "docs": {
-            "displayType": "markdown"
+            "displayType": "yaml"
           }
         },
         "menuMd": {
           "type": "object",
           "description": "Mobile menu properies. Overwrites menu properties on mobile screen sizes.",
           "docs": {
-            "displayType": "markdown"
+            "displayType": "yaml"
           }
         },
         "style": {
