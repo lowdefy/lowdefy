@@ -21,7 +21,7 @@ import Blocks from '../src/Blocks';
 import Requests from '../src/Requests';
 import State from '../src/State';
 
-const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlobal }) => {
+const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowdefyGlobal }) => {
   const ctx = {
     pageId,
     eventLog: [],
@@ -41,7 +41,7 @@ const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlo
     rootBlock,
     routeHistory: [], // init new routeHistory for each test
     showValidationErrors: false,
-    state: initState || {},
+    state: {},
     urlQuery: rootContext.urlQuery || {},
     updateBlock: rootContext.updateBlock || (() => {}),
     window: rootContext.window,
@@ -58,6 +58,13 @@ const testContext = ({ rootContext, rootBlock, pageId, initState, initLowdefyGlo
   ctx.update = () => {
     ctx.RootBlocks.update();
   };
+  if (initState) {
+    Object.keys(initState).forEach((key) => {
+      ctx.State.set(key, initState[key]);
+    });
+    ctx.RootBlocks.reset();
+    ctx.update();
+  }
   ctx.update();
   ctx.State.freezeState();
   return ctx;
