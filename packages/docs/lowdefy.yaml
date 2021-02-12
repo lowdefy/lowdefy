@@ -24,10 +24,6 @@ global:
     sm:
       span: 23
 
-types:
-  Anchor:
-    url: http://localhost:3002/meta/Anchor.json
-
 menus:
   - id: default
     links:
