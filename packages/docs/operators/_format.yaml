@@ -1,0 +1,85 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _format
+    pageTitle: _format
+    description: |
+      The `_format` operator converts objects to strings, using a specified format. It can only be used on the web-client (not in requests or connections).
+    methods:
+      - name: intlDateTimeFormat
+        types: |
+          ```
+          (arguments: {
+            on: date
+            params?: {},
+          })
+          ```
+        description: |
+          The `_format.intlDateTimeFormat` provides language-sensitive date and time formatting, based on [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat). If no locale is provide, the users default locale will be used.
+        arguments: |
+          ###### object
+            - `on: date`: The date object to format.
+            - `params: object`:
+              - `locale: string`: A string with a BCP 47 language tag, or an array of such strings.
+              - `options: object`: [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) options.
+        # examples: |
+        #   ###### Decode a base64 string:
+        #   ```yaml
+        #   _base64.decode: SGVsbG8=
+        #   ```
+        #   Returns: `"Hello"`.
+      - name: intlListFormat
+        types: |
+          ```
+          (arguments: {
+            on: any
+            params?: {},
+          })
+          ```
+      - name: intlNumberFormat
+        types: |
+          ```
+          (arguments: {
+            on: any
+            params?: {},
+          })
+          ```
+      - name: intlRelativeTimeFormat
+        types: |
+          ```
+          (arguments: {
+            on: any
+            params?: {},
+          })
+          ```
+      - name: momentFormat
+        types: |
+          ```
+          (arguments: {
+            on: any
+            params?: {},
+          })
+          ```
+      - name: momentHumanizeDuration
+        types: |
+          ```
+          (arguments: {
+            on: any
+            params?: {},
+          })
+          ```

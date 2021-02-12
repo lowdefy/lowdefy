@@ -470,6 +470,9 @@ menus:
           - id: _event
             type: MenuLink
             pageId: _event
+          - id: _format
+            type: MenuLink
+            pageId: _format
           - id: _function
             type: MenuLink
             pageId: _function
@@ -491,6 +494,9 @@ menus:
           - id: _if_none
             type: MenuLink
             pageId: _if_none
+          - id: _index
+            type: MenuLink
+            pageId: _index
           - id: _input
             type: MenuLink
             pageId: _input
@@ -709,6 +715,7 @@ pages:
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
   - _ref: operators/_event.yaml
+  - _ref: operators/_format.yaml
   - _ref: operators/_function.yaml
   - _ref: operators/_get.yaml
   - _ref: operators/_global.yaml
@@ -716,6 +723,7 @@ pages:
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_index.yaml
   - _ref: operators/_input.yaml
   - _ref: operators/_json.yaml
   - _ref: operators/_list_contexts.yaml
