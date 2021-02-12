@@ -49,7 +49,6 @@
                 else: 32
           properties:
             title: 😭
-            type: text
           events:
             onClick:
               - id: resize
@@ -71,7 +70,6 @@
                 else: 32
           properties:
             title: 😟
-            type: text
           events:
             onClick:
               - id: resize
@@ -93,7 +91,6 @@
                 else: 32
           properties:
             title: 😊
-            type: text
           events:
             onClick:
               - id: resize
@@ -115,7 +112,6 @@
                 else: 32
           properties:
             title: 😀
-            type: text
           events:
             onClick:
               - id: resize
@@ -184,13 +180,8 @@
         size: auto
       properties:
         title: Edit this page on Github
-      events:
-        onClick:
-          - id: edit_page
-            type: Link
-            params:
-              newTab: true
-              url: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
+        href: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
+        newTab: true
 {% endif %} 
 
 {% endif %}  
@@ -334,83 +325,44 @@
           type: Anchor
           properties:
             title: Why Lowdefy
-            type: text
-            size: large
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  url: https://lowdefy.com
+            href: https://lowdefy.com
+            ref: 'noopener'
         - id: tutorial_anchor
           type: Anchor
           properties:
             title: Quick Start Tutorial
-            type: text
-            size: large
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  pageId: tutorial-development-server
+            href: /tutorial-development-server
+            rel: 'noopener'
         - id: netlify_anchor
           type: Anchor
           properties:
             title: Deploy to Netlify
-            type: text
-            size: large
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  pageId: tutorial-setup
+            href: /tutorial-setup
+            rel: 'noopener'
         - id: concepts_anchor
           type: Anchor
           properties:
             title: How Lowdefy Works
-            type: text
-            size: large
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  pageId: overview
+            href: /overview
+            rel: 'noopener'
         - id: github_anchor
           type: Anchor
           properties:
             title: Github Repository
-            type: text
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  url: https://github.com/lowdefy/lowdefy
+            href: https://github.com/lowdefy/lowdefy
+            newTab: true
         - id: changelog_anchor
           type: Anchor
           properties:
             title: Version Changelog
-            type: text
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  url: https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
+            href: https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
+            newTab: true
         - id: license_anchor
           type: Anchor
           properties:
             title: Appache-2.0 License
-            type: text
-          events:
-            onClick:
-              - id: website_link
-                type: Link
-                params:
-                  url: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
+            href: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
+            newTab: true
     - id: footer_logo_box_sm
       type: Box
       visible:
@@ -428,7 +380,7 @@
           type: Html
           properties:
             html: |
-              <p style="text-align: center;"><a href="https://lowdefy.com"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
+              <p style="text-align: center;"><a href="https://lowdefy.com" ref="noopener"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
               <p style="text-align: center; font-size: 0.85rem;" >Build internal tools with YAML.</p>
               <p style="text-align: center;"><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
         - id: social_links
@@ -450,6 +402,7 @@
                     type: Link
                     params:
                       url: https://twitter.com/lowdefy
+                      newTab: true
             - id: lowdefy_community
               type: Icon
               layout:
@@ -463,6 +416,7 @@
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy/discussions
+                      newTab: true
             - id: lowdefy_github
               type: Icon
               layout:
@@ -476,6 +430,7 @@
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy
+                      newTab: true
             - id: lowdefy_youtube
               type: Icon
               layout:
@@ -489,6 +444,7 @@
                     type: Link
                     params:
                       url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg
+                      newTab: true
     - id: lowdefy_cc_box
       type: Box
       blocks:
