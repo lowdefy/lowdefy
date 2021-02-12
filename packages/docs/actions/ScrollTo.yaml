@@ -93,6 +93,7 @@ _ref:
         type: ScrollTo
         params:
           blockId: my_block
-          block: center
-          inline: center
+          options:
+            block: center
+            inline: center
       ```
