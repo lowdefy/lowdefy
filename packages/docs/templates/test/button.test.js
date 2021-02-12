@@ -87,7 +87,7 @@ test('button propertiesFormTransformer', () => {
             "type": "ButtonSelector",
           },
         ],
-        "id": "button_card",
+        "id": "block.properties.field_button_card",
         "layout": Object {
           "contentGutter": 0,
         },
@@ -103,11 +103,15 @@ test('button propertiesFormTransformer', () => {
 });
 
 test('button propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
       ],
     }

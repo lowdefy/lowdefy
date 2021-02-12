@@ -3,7 +3,7 @@
 exports[`Render default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -12,10 +12,10 @@ exports[`Render default - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -67,7 +67,7 @@ exports[`Render default - value[0] 1`] = `
 exports[`Render properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -76,10 +76,10 @@ exports[`Render properties.disabledDates.dates - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -131,7 +131,7 @@ exports[`Render properties.disabledDates.dates - value[0] 1`] = `
 exports[`Render properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -140,10 +140,10 @@ exports[`Render properties.disabledDates.max - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -195,7 +195,7 @@ exports[`Render properties.disabledDates.max - value[0] 1`] = `
 exports[`Render properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -204,10 +204,10 @@ exports[`Render properties.disabledDates.min - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -259,7 +259,7 @@ exports[`Render properties.disabledDates.min - value[0] 1`] = `
 exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -268,10 +268,10 @@ exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -323,7 +323,7 @@ exports[`Render properties.disabledDates.ranges - value[0] 1`] = `
 exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -332,10 +332,10 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -387,7 +387,7 @@ exports[`Render properties.inputStyle: CSS style applied - value[0] 1`] = `
 exports[`Render properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -396,7 +396,7 @@ exports[`Render properties.title - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -451,7 +451,7 @@ exports[`Render properties.title - value[0] 1`] = `
 exports[`Render property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -460,10 +460,10 @@ exports[`Render property.allowClear: false - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -515,7 +515,7 @@ exports[`Render property.allowClear: false - value[0] 1`] = `
 exports[`Render property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -524,10 +524,10 @@ exports[`Render property.autoFocus: true - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -580,7 +580,7 @@ exports[`Render property.autoFocus: true - value[0] 1`] = `
 exports[`Render property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -589,10 +589,10 @@ exports[`Render property.disabled: true - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -645,7 +645,7 @@ exports[`Render property.disabled: true - value[0] 1`] = `
 exports[`Render property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -654,10 +654,10 @@ exports[`Render property.format: YYYY-MMMM - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -709,7 +709,7 @@ exports[`Render property.format: YYYY-MMMM - value[0] 1`] = `
 exports[`Render property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -718,10 +718,10 @@ exports[`Render property.label align: right - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -773,7 +773,7 @@ exports[`Render property.label align: right - value[0] 1`] = `
 exports[`Render property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -782,10 +782,10 @@ exports[`Render property.label colon: true - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -837,7 +837,7 @@ exports[`Render property.label colon: true - value[0] 1`] = `
 exports[`Render property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -889,7 +889,7 @@ exports[`Render property.label disabled: true - value[0] 1`] = `
 exports[`Render property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -898,10 +898,10 @@ exports[`Render property.label extra: extra text added - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -958,7 +958,7 @@ exports[`Render property.label extra: extra text added - value[0] 1`] = `
 exports[`Render property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -971,10 +971,10 @@ exports[`Render property.label inline: true - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -1030,7 +1030,7 @@ exports[`Render property.label inline: true - value[0] 1`] = `
 exports[`Render property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -1039,10 +1039,10 @@ exports[`Render property.label span: 5 - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -1094,7 +1094,7 @@ exports[`Render property.label span: 5 - value[0] 1`] = `
 exports[`Render property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -1103,10 +1103,10 @@ exports[`Render property.placeholder: - Select this Month - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -1158,7 +1158,7 @@ exports[`Render property.placeholder: - Select this Month - value[0] 1`] = `
 exports[`Render property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -1167,10 +1167,10 @@ exports[`Render property.size: large - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -1222,7 +1222,7 @@ exports[`Render property.size: large - value[0] 1`] = `
 exports[`Render property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -1231,10 +1231,10 @@ exports[`Render property.size: small - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -1286,7 +1286,7 @@ exports[`Render property.size: small - value[0] 1`] = `
 exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -1295,10 +1295,10 @@ exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -1375,7 +1375,7 @@ exports[`Render property.suffixIcon: CalendarFilled - value[0] 1`] = `
 exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -1384,10 +1384,10 @@ exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div
@@ -1464,7 +1464,7 @@ exports[`Render property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 exports[`Render required = true default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -1473,10 +1473,10 @@ exports[`Render required = true default - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -1528,7 +1528,7 @@ exports[`Render required = true default - value[0] 1`] = `
 exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -1537,10 +1537,10 @@ exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = 
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -1592,7 +1592,7 @@ exports[`Render required = true properties.disabledDates.dates - value[0] 1`] = 
 exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -1601,10 +1601,10 @@ exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -1656,7 +1656,7 @@ exports[`Render required = true properties.disabledDates.max - value[0] 1`] = `
 exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -1665,10 +1665,10 @@ exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -1720,7 +1720,7 @@ exports[`Render required = true properties.disabledDates.min - value[0] 1`] = `
 exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -1729,10 +1729,10 @@ exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] =
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -1784,7 +1784,7 @@ exports[`Render required = true properties.disabledDates.ranges - value[0] 1`] =
 exports[`Render required = true properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -1793,10 +1793,10 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -1848,7 +1848,7 @@ exports[`Render required = true properties.inputStyle: CSS style applied - value
 exports[`Render required = true properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -1857,7 +1857,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -1912,7 +1912,7 @@ exports[`Render required = true properties.title - value[0] 1`] = `
 exports[`Render required = true property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -1921,10 +1921,10 @@ exports[`Render required = true property.allowClear: false - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -1976,7 +1976,7 @@ exports[`Render required = true property.allowClear: false - value[0] 1`] = `
 exports[`Render required = true property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -1985,10 +1985,10 @@ exports[`Render required = true property.autoFocus: true - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -2041,7 +2041,7 @@ exports[`Render required = true property.autoFocus: true - value[0] 1`] = `
 exports[`Render required = true property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -2050,10 +2050,10 @@ exports[`Render required = true property.disabled: true - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -2106,7 +2106,7 @@ exports[`Render required = true property.disabled: true - value[0] 1`] = `
 exports[`Render required = true property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -2115,10 +2115,10 @@ exports[`Render required = true property.format: YYYY-MMMM - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -2170,7 +2170,7 @@ exports[`Render required = true property.format: YYYY-MMMM - value[0] 1`] = `
 exports[`Render required = true property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -2179,10 +2179,10 @@ exports[`Render required = true property.label align: right - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -2234,7 +2234,7 @@ exports[`Render required = true property.label align: right - value[0] 1`] = `
 exports[`Render required = true property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -2243,10 +2243,10 @@ exports[`Render required = true property.label colon: true - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -2298,7 +2298,7 @@ exports[`Render required = true property.label colon: true - value[0] 1`] = `
 exports[`Render required = true property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -2350,7 +2350,7 @@ exports[`Render required = true property.label disabled: true - value[0] 1`] = `
 exports[`Render required = true property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -2359,10 +2359,10 @@ exports[`Render required = true property.label extra: extra text added - value[0
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -2419,7 +2419,7 @@ exports[`Render required = true property.label extra: extra text added - value[0
 exports[`Render required = true property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -2432,10 +2432,10 @@ exports[`Render required = true property.label inline: true - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -2491,7 +2491,7 @@ exports[`Render required = true property.label inline: true - value[0] 1`] = `
 exports[`Render required = true property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -2500,10 +2500,10 @@ exports[`Render required = true property.label span: 5 - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -2555,7 +2555,7 @@ exports[`Render required = true property.label span: 5 - value[0] 1`] = `
 exports[`Render required = true property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -2564,10 +2564,10 @@ exports[`Render required = true property.placeholder: - Select this Month - valu
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -2619,7 +2619,7 @@ exports[`Render required = true property.placeholder: - Select this Month - valu
 exports[`Render required = true property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -2628,10 +2628,10 @@ exports[`Render required = true property.size: large - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -2683,7 +2683,7 @@ exports[`Render required = true property.size: large - value[0] 1`] = `
 exports[`Render required = true property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -2692,10 +2692,10 @@ exports[`Render required = true property.size: small - value[0] 1`] = `
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -2747,7 +2747,7 @@ exports[`Render required = true property.size: small - value[0] 1`] = `
 exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -2756,10 +2756,10 @@ exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -2836,7 +2836,7 @@ exports[`Render required = true property.suffixIcon: CalendarFilled - value[0] 1
 exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -2845,10 +2845,10 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value
   >
     <label
       className="ant-form-item-required {\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div
@@ -2925,7 +2925,7 @@ exports[`Render required = true property.suffixIcon: CalendarFilled.blue - value
 exports[`Render validation.status = error default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -2934,10 +2934,10 @@ exports[`Render validation.status = error default - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -3017,7 +3017,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
 exports[`Render validation.status = error properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -3026,10 +3026,10 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -3109,7 +3109,7 @@ exports[`Render validation.status = error properties.disabledDates.dates - value
 exports[`Render validation.status = error properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -3118,10 +3118,10 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -3201,7 +3201,7 @@ exports[`Render validation.status = error properties.disabledDates.max - value[0
 exports[`Render validation.status = error properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -3210,10 +3210,10 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -3293,7 +3293,7 @@ exports[`Render validation.status = error properties.disabledDates.min - value[0
 exports[`Render validation.status = error properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -3302,10 +3302,10 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -3385,7 +3385,7 @@ exports[`Render validation.status = error properties.disabledDates.ranges - valu
 exports[`Render validation.status = error properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -3394,10 +3394,10 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -3477,7 +3477,7 @@ exports[`Render validation.status = error properties.inputStyle: CSS style appli
 exports[`Render validation.status = error properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -3486,7 +3486,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -3569,7 +3569,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
 exports[`Render validation.status = error property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -3578,10 +3578,10 @@ exports[`Render validation.status = error property.allowClear: false - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -3661,7 +3661,7 @@ exports[`Render validation.status = error property.allowClear: false - value[0] 
 exports[`Render validation.status = error property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -3670,10 +3670,10 @@ exports[`Render validation.status = error property.autoFocus: true - value[0] 1`
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -3754,7 +3754,7 @@ exports[`Render validation.status = error property.autoFocus: true - value[0] 1`
 exports[`Render validation.status = error property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -3763,10 +3763,10 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -3847,7 +3847,7 @@ exports[`Render validation.status = error property.disabled: true - value[0] 1`]
 exports[`Render validation.status = error property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -3856,10 +3856,10 @@ exports[`Render validation.status = error property.format: YYYY-MMMM - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -3939,7 +3939,7 @@ exports[`Render validation.status = error property.format: YYYY-MMMM - value[0] 
 exports[`Render validation.status = error property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -3948,10 +3948,10 @@ exports[`Render validation.status = error property.label align: right - value[0]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -4031,7 +4031,7 @@ exports[`Render validation.status = error property.label align: right - value[0]
 exports[`Render validation.status = error property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -4040,10 +4040,10 @@ exports[`Render validation.status = error property.label colon: true - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -4123,7 +4123,7 @@ exports[`Render validation.status = error property.label colon: true - value[0] 
 exports[`Render validation.status = error property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -4203,7 +4203,7 @@ exports[`Render validation.status = error property.label disabled: true - value[
 exports[`Render validation.status = error property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -4212,10 +4212,10 @@ exports[`Render validation.status = error property.label extra: extra text added
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -4295,7 +4295,7 @@ exports[`Render validation.status = error property.label extra: extra text added
 exports[`Render validation.status = error property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -4308,10 +4308,10 @@ exports[`Render validation.status = error property.label inline: true - value[0]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -4395,7 +4395,7 @@ exports[`Render validation.status = error property.label inline: true - value[0]
 exports[`Render validation.status = error property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -4404,10 +4404,10 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -4487,7 +4487,7 @@ exports[`Render validation.status = error property.label span: 5 - value[0] 1`] 
 exports[`Render validation.status = error property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -4496,10 +4496,10 @@ exports[`Render validation.status = error property.placeholder: - Select this Mo
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -4579,7 +4579,7 @@ exports[`Render validation.status = error property.placeholder: - Select this Mo
 exports[`Render validation.status = error property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -4588,10 +4588,10 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -4671,7 +4671,7 @@ exports[`Render validation.status = error property.size: large - value[0] 1`] = 
 exports[`Render validation.status = error property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -4680,10 +4680,10 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -4763,7 +4763,7 @@ exports[`Render validation.status = error property.size: small - value[0] 1`] = 
 exports[`Render validation.status = error property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -4772,10 +4772,10 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -4880,7 +4880,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled - 
 exports[`Render validation.status = error property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-error {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -4889,10 +4889,10 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div
@@ -4997,7 +4997,7 @@ exports[`Render validation.status = error property.suffixIcon: CalendarFilled.bl
 exports[`Render validation.status = null default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -5006,10 +5006,10 @@ exports[`Render validation.status = null default - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -5061,7 +5061,7 @@ exports[`Render validation.status = null default - value[0] 1`] = `
 exports[`Render validation.status = null properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -5070,10 +5070,10 @@ exports[`Render validation.status = null properties.disabledDates.dates - value[
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -5125,7 +5125,7 @@ exports[`Render validation.status = null properties.disabledDates.dates - value[
 exports[`Render validation.status = null properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -5134,10 +5134,10 @@ exports[`Render validation.status = null properties.disabledDates.max - value[0]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -5189,7 +5189,7 @@ exports[`Render validation.status = null properties.disabledDates.max - value[0]
 exports[`Render validation.status = null properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -5198,10 +5198,10 @@ exports[`Render validation.status = null properties.disabledDates.min - value[0]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -5253,7 +5253,7 @@ exports[`Render validation.status = null properties.disabledDates.min - value[0]
 exports[`Render validation.status = null properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -5262,10 +5262,10 @@ exports[`Render validation.status = null properties.disabledDates.ranges - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -5317,7 +5317,7 @@ exports[`Render validation.status = null properties.disabledDates.ranges - value
 exports[`Render validation.status = null properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -5326,10 +5326,10 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -5381,7 +5381,7 @@ exports[`Render validation.status = null properties.inputStyle: CSS style applie
 exports[`Render validation.status = null properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -5390,7 +5390,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -5445,7 +5445,7 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
 exports[`Render validation.status = null property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -5454,10 +5454,10 @@ exports[`Render validation.status = null property.allowClear: false - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -5509,7 +5509,7 @@ exports[`Render validation.status = null property.allowClear: false - value[0] 1
 exports[`Render validation.status = null property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -5518,10 +5518,10 @@ exports[`Render validation.status = null property.autoFocus: true - value[0] 1`]
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -5574,7 +5574,7 @@ exports[`Render validation.status = null property.autoFocus: true - value[0] 1`]
 exports[`Render validation.status = null property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -5583,10 +5583,10 @@ exports[`Render validation.status = null property.disabled: true - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -5639,7 +5639,7 @@ exports[`Render validation.status = null property.disabled: true - value[0] 1`] 
 exports[`Render validation.status = null property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -5648,10 +5648,10 @@ exports[`Render validation.status = null property.format: YYYY-MMMM - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -5703,7 +5703,7 @@ exports[`Render validation.status = null property.format: YYYY-MMMM - value[0] 1
 exports[`Render validation.status = null property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -5712,10 +5712,10 @@ exports[`Render validation.status = null property.label align: right - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -5767,7 +5767,7 @@ exports[`Render validation.status = null property.label align: right - value[0] 
 exports[`Render validation.status = null property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -5776,10 +5776,10 @@ exports[`Render validation.status = null property.label colon: true - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -5831,7 +5831,7 @@ exports[`Render validation.status = null property.label colon: true - value[0] 1
 exports[`Render validation.status = null property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -5883,7 +5883,7 @@ exports[`Render validation.status = null property.label disabled: true - value[0
 exports[`Render validation.status = null property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -5892,10 +5892,10 @@ exports[`Render validation.status = null property.label extra: extra text added 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -5952,7 +5952,7 @@ exports[`Render validation.status = null property.label extra: extra text added 
 exports[`Render validation.status = null property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -5965,10 +5965,10 @@ exports[`Render validation.status = null property.label inline: true - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -6024,7 +6024,7 @@ exports[`Render validation.status = null property.label inline: true - value[0] 
 exports[`Render validation.status = null property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -6033,10 +6033,10 @@ exports[`Render validation.status = null property.label span: 5 - value[0] 1`] =
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -6088,7 +6088,7 @@ exports[`Render validation.status = null property.label span: 5 - value[0] 1`] =
 exports[`Render validation.status = null property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -6097,10 +6097,10 @@ exports[`Render validation.status = null property.placeholder: - Select this Mon
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -6152,7 +6152,7 @@ exports[`Render validation.status = null property.placeholder: - Select this Mon
 exports[`Render validation.status = null property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -6161,10 +6161,10 @@ exports[`Render validation.status = null property.size: large - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -6216,7 +6216,7 @@ exports[`Render validation.status = null property.size: large - value[0] 1`] = `
 exports[`Render validation.status = null property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -6225,10 +6225,10 @@ exports[`Render validation.status = null property.size: small - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -6280,7 +6280,7 @@ exports[`Render validation.status = null property.size: small - value[0] 1`] = `
 exports[`Render validation.status = null property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -6289,10 +6289,10 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled - v
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -6369,7 +6369,7 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled - v
 exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -6378,10 +6378,10 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div
@@ -6458,7 +6458,7 @@ exports[`Render validation.status = null property.suffixIcon: CalendarFilled.blu
 exports[`Render validation.status = success default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -6467,10 +6467,10 @@ exports[`Render validation.status = success default - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -6545,7 +6545,7 @@ exports[`Render validation.status = success default - value[0] 1`] = `
 exports[`Render validation.status = success properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -6554,10 +6554,10 @@ exports[`Render validation.status = success properties.disabledDates.dates - val
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -6632,7 +6632,7 @@ exports[`Render validation.status = success properties.disabledDates.dates - val
 exports[`Render validation.status = success properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -6641,10 +6641,10 @@ exports[`Render validation.status = success properties.disabledDates.max - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -6719,7 +6719,7 @@ exports[`Render validation.status = success properties.disabledDates.max - value
 exports[`Render validation.status = success properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -6728,10 +6728,10 @@ exports[`Render validation.status = success properties.disabledDates.min - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -6806,7 +6806,7 @@ exports[`Render validation.status = success properties.disabledDates.min - value
 exports[`Render validation.status = success properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -6815,10 +6815,10 @@ exports[`Render validation.status = success properties.disabledDates.ranges - va
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -6893,7 +6893,7 @@ exports[`Render validation.status = success properties.disabledDates.ranges - va
 exports[`Render validation.status = success properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -6902,10 +6902,10 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -6980,7 +6980,7 @@ exports[`Render validation.status = success properties.inputStyle: CSS style app
 exports[`Render validation.status = success properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -6989,7 +6989,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -7067,7 +7067,7 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
 exports[`Render validation.status = success property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -7076,10 +7076,10 @@ exports[`Render validation.status = success property.allowClear: false - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -7154,7 +7154,7 @@ exports[`Render validation.status = success property.allowClear: false - value[0
 exports[`Render validation.status = success property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -7163,10 +7163,10 @@ exports[`Render validation.status = success property.autoFocus: true - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -7242,7 +7242,7 @@ exports[`Render validation.status = success property.autoFocus: true - value[0] 
 exports[`Render validation.status = success property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -7251,10 +7251,10 @@ exports[`Render validation.status = success property.disabled: true - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -7330,7 +7330,7 @@ exports[`Render validation.status = success property.disabled: true - value[0] 1
 exports[`Render validation.status = success property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -7339,10 +7339,10 @@ exports[`Render validation.status = success property.format: YYYY-MMMM - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -7417,7 +7417,7 @@ exports[`Render validation.status = success property.format: YYYY-MMMM - value[0
 exports[`Render validation.status = success property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -7426,10 +7426,10 @@ exports[`Render validation.status = success property.label align: right - value[
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -7504,7 +7504,7 @@ exports[`Render validation.status = success property.label align: right - value[
 exports[`Render validation.status = success property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -7513,10 +7513,10 @@ exports[`Render validation.status = success property.label colon: true - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -7591,7 +7591,7 @@ exports[`Render validation.status = success property.label colon: true - value[0
 exports[`Render validation.status = success property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -7666,7 +7666,7 @@ exports[`Render validation.status = success property.label disabled: true - valu
 exports[`Render validation.status = success property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -7675,10 +7675,10 @@ exports[`Render validation.status = success property.label extra: extra text add
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -7758,7 +7758,7 @@ exports[`Render validation.status = success property.label extra: extra text add
 exports[`Render validation.status = success property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -7771,10 +7771,10 @@ exports[`Render validation.status = success property.label inline: true - value[
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -7853,7 +7853,7 @@ exports[`Render validation.status = success property.label inline: true - value[
 exports[`Render validation.status = success property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -7862,10 +7862,10 @@ exports[`Render validation.status = success property.label span: 5 - value[0] 1`
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -7940,7 +7940,7 @@ exports[`Render validation.status = success property.label span: 5 - value[0] 1`
 exports[`Render validation.status = success property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -7949,10 +7949,10 @@ exports[`Render validation.status = success property.placeholder: - Select this 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -8027,7 +8027,7 @@ exports[`Render validation.status = success property.placeholder: - Select this 
 exports[`Render validation.status = success property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -8036,10 +8036,10 @@ exports[`Render validation.status = success property.size: large - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -8114,7 +8114,7 @@ exports[`Render validation.status = success property.size: large - value[0] 1`] 
 exports[`Render validation.status = success property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -8123,10 +8123,10 @@ exports[`Render validation.status = success property.size: small - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -8201,7 +8201,7 @@ exports[`Render validation.status = success property.size: small - value[0] 1`] 
 exports[`Render validation.status = success property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -8210,10 +8210,10 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -8313,7 +8313,7 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled 
 exports[`Render validation.status = success property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-success {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -8322,10 +8322,10 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div
@@ -8425,7 +8425,7 @@ exports[`Render validation.status = success property.suffixIcon: CalendarFilled.
 exports[`Render validation.status = warning default - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="default_label"
+  id="default"
   style={Object {}}
 >
   <div
@@ -8434,10 +8434,10 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="default_label_input"
-      title="default_label"
+      htmlFor="default_input"
+      title="default"
     >
-      default_label
+      default
     </label>
   </div>
   <div
@@ -8517,7 +8517,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
 exports[`Render validation.status = warning properties.disabledDates.dates - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.dates_label"
+  id="properties.disabledDates.dates"
   style={Object {}}
 >
   <div
@@ -8526,10 +8526,10 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.dates_label_input"
-      title="properties.disabledDates.dates_label"
+      htmlFor="properties.disabledDates.dates_input"
+      title="properties.disabledDates.dates"
     >
-      properties.disabledDates.dates_label
+      properties.disabledDates.dates
     </label>
   </div>
   <div
@@ -8609,7 +8609,7 @@ exports[`Render validation.status = warning properties.disabledDates.dates - val
 exports[`Render validation.status = warning properties.disabledDates.max - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.max_label"
+  id="properties.disabledDates.max"
   style={Object {}}
 >
   <div
@@ -8618,10 +8618,10 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.max_label_input"
-      title="properties.disabledDates.max_label"
+      htmlFor="properties.disabledDates.max_input"
+      title="properties.disabledDates.max"
     >
-      properties.disabledDates.max_label
+      properties.disabledDates.max
     </label>
   </div>
   <div
@@ -8701,7 +8701,7 @@ exports[`Render validation.status = warning properties.disabledDates.max - value
 exports[`Render validation.status = warning properties.disabledDates.min - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.min_label"
+  id="properties.disabledDates.min"
   style={Object {}}
 >
   <div
@@ -8710,10 +8710,10 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.min_label_input"
-      title="properties.disabledDates.min_label"
+      htmlFor="properties.disabledDates.min_input"
+      title="properties.disabledDates.min"
     >
-      properties.disabledDates.min_label
+      properties.disabledDates.min
     </label>
   </div>
   <div
@@ -8793,7 +8793,7 @@ exports[`Render validation.status = warning properties.disabledDates.min - value
 exports[`Render validation.status = warning properties.disabledDates.ranges - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.disabledDates.ranges_label"
+  id="properties.disabledDates.ranges"
   style={Object {}}
 >
   <div
@@ -8802,10 +8802,10 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.disabledDates.ranges_label_input"
-      title="properties.disabledDates.ranges_label"
+      htmlFor="properties.disabledDates.ranges_input"
+      title="properties.disabledDates.ranges"
     >
-      properties.disabledDates.ranges_label
+      properties.disabledDates.ranges
     </label>
   </div>
   <div
@@ -8885,7 +8885,7 @@ exports[`Render validation.status = warning properties.disabledDates.ranges - va
 exports[`Render validation.status = warning properties.inputStyle: CSS style applied - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.inputStyle: CSS style applied_label"
+  id="properties.inputStyle: CSS style applied"
   style={Object {}}
 >
   <div
@@ -8894,10 +8894,10 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.inputStyle: CSS style applied_label_input"
-      title="properties.inputStyle: CSS style applied_label"
+      htmlFor="properties.inputStyle: CSS style applied_input"
+      title="properties.inputStyle: CSS style applied"
     >
-      properties.inputStyle: CSS style applied_label
+      properties.inputStyle: CSS style applied
     </label>
   </div>
   <div
@@ -8977,7 +8977,7 @@ exports[`Render validation.status = warning properties.inputStyle: CSS style app
 exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="properties.title_label"
+  id="properties.title"
   style={Object {}}
 >
   <div
@@ -8986,7 +8986,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="properties.title_label_input"
+      htmlFor="properties.title_input"
       title="Month selector"
     >
       Month selector
@@ -9069,7 +9069,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
 exports[`Render validation.status = warning property.allowClear: false - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.allowClear: false_label"
+  id="property.allowClear: false"
   style={Object {}}
 >
   <div
@@ -9078,10 +9078,10 @@ exports[`Render validation.status = warning property.allowClear: false - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.allowClear: false_label_input"
-      title="property.allowClear: false_label"
+      htmlFor="property.allowClear: false_input"
+      title="property.allowClear: false"
     >
-      property.allowClear: false_label
+      property.allowClear: false
     </label>
   </div>
   <div
@@ -9161,7 +9161,7 @@ exports[`Render validation.status = warning property.allowClear: false - value[0
 exports[`Render validation.status = warning property.autoFocus: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.autoFocus: true_label"
+  id="property.autoFocus: true"
   style={Object {}}
 >
   <div
@@ -9170,10 +9170,10 @@ exports[`Render validation.status = warning property.autoFocus: true - value[0] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.autoFocus: true_label_input"
-      title="property.autoFocus: true_label"
+      htmlFor="property.autoFocus: true_input"
+      title="property.autoFocus: true"
     >
-      property.autoFocus: true_label
+      property.autoFocus: true
     </label>
   </div>
   <div
@@ -9254,7 +9254,7 @@ exports[`Render validation.status = warning property.autoFocus: true - value[0] 
 exports[`Render validation.status = warning property.disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.disabled: true_label"
+  id="property.disabled: true"
   style={Object {}}
 >
   <div
@@ -9263,10 +9263,10 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.disabled: true_label_input"
-      title="property.disabled: true_label"
+      htmlFor="property.disabled: true_input"
+      title="property.disabled: true"
     >
-      property.disabled: true_label
+      property.disabled: true
     </label>
   </div>
   <div
@@ -9347,7 +9347,7 @@ exports[`Render validation.status = warning property.disabled: true - value[0] 1
 exports[`Render validation.status = warning property.format: YYYY-MMMM - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.format: YYYY-MMMM_label"
+  id="property.format: YYYY-MMMM"
   style={Object {}}
 >
   <div
@@ -9356,10 +9356,10 @@ exports[`Render validation.status = warning property.format: YYYY-MMMM - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.format: YYYY-MMMM_label_input"
-      title="property.format: YYYY-MMMM_label"
+      htmlFor="property.format: YYYY-MMMM_input"
+      title="property.format: YYYY-MMMM"
     >
-      property.format: YYYY-MMMM_label
+      property.format: YYYY-MMMM
     </label>
   </div>
   <div
@@ -9439,7 +9439,7 @@ exports[`Render validation.status = warning property.format: YYYY-MMMM - value[0
 exports[`Render validation.status = warning property.label align: right - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label align: right_label"
+  id="property.label align: right"
   style={Object {}}
 >
   <div
@@ -9448,10 +9448,10 @@ exports[`Render validation.status = warning property.label align: right - value[
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label align: right_label_input"
-      title="property.label align: right_label"
+      htmlFor="property.label align: right_input"
+      title="property.label align: right"
     >
-      property.label align: right_label
+      property.label align: right
     </label>
   </div>
   <div
@@ -9531,7 +9531,7 @@ exports[`Render validation.status = warning property.label align: right - value[
 exports[`Render validation.status = warning property.label colon: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label colon: true_label"
+  id="property.label colon: true"
   style={Object {}}
 >
   <div
@@ -9540,10 +9540,10 @@ exports[`Render validation.status = warning property.label colon: true - value[0
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label colon: true_label_input"
-      title="property.label colon: true_label"
+      htmlFor="property.label colon: true_input"
+      title="property.label colon: true"
     >
-      property.label colon: true_label
+      property.label colon: true
     </label>
   </div>
   <div
@@ -9623,7 +9623,7 @@ exports[`Render validation.status = warning property.label colon: true - value[0
 exports[`Render validation.status = warning property.label disabled: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label disabled: true_label"
+  id="property.label disabled: true"
   style={Object {}}
 >
   <div
@@ -9703,7 +9703,7 @@ exports[`Render validation.status = warning property.label disabled: true - valu
 exports[`Render validation.status = warning property.label extra: extra text added - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label extra: extra text added_label"
+  id="property.label extra: extra text added"
   style={Object {}}
 >
   <div
@@ -9712,10 +9712,10 @@ exports[`Render validation.status = warning property.label extra: extra text add
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label extra: extra text added_label_input"
-      title="property.label extra: extra text added_label"
+      htmlFor="property.label extra: extra text added_input"
+      title="property.label extra: extra text added"
     >
-      property.label extra: extra text added_label
+      property.label extra: extra text added
     </label>
   </div>
   <div
@@ -9795,7 +9795,7 @@ exports[`Render validation.status = warning property.label extra: extra text add
 exports[`Render validation.status = warning property.label inline: true - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}"
-  id="property.label inline: true_label"
+  id="property.label inline: true"
   style={Object {}}
 >
   <div
@@ -9808,10 +9808,10 @@ exports[`Render validation.status = warning property.label inline: true - value[
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label inline: true_label_input"
-      title="property.label inline: true_label"
+      htmlFor="property.label inline: true_input"
+      title="property.label inline: true"
     >
-      property.label inline: true_label
+      property.label inline: true
     </label>
   </div>
   <div
@@ -9895,7 +9895,7 @@ exports[`Render validation.status = warning property.label inline: true - value[
 exports[`Render validation.status = warning property.label span: 5 - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.label span: 5_label"
+  id="property.label span: 5"
   style={Object {}}
 >
   <div
@@ -9904,10 +9904,10 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.label span: 5_label_input"
-      title="property.label span: 5_label"
+      htmlFor="property.label span: 5_input"
+      title="property.label span: 5"
     >
-      property.label span: 5_label
+      property.label span: 5
     </label>
   </div>
   <div
@@ -9987,7 +9987,7 @@ exports[`Render validation.status = warning property.label span: 5 - value[0] 1`
 exports[`Render validation.status = warning property.placeholder: - Select this Month - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.placeholder: - Select this Month_label"
+  id="property.placeholder: - Select this Month"
   style={Object {}}
 >
   <div
@@ -9996,10 +9996,10 @@ exports[`Render validation.status = warning property.placeholder: - Select this 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.placeholder: - Select this Month_label_input"
-      title="property.placeholder: - Select this Month_label"
+      htmlFor="property.placeholder: - Select this Month_input"
+      title="property.placeholder: - Select this Month"
     >
-      property.placeholder: - Select this Month_label
+      property.placeholder: - Select this Month
     </label>
   </div>
   <div
@@ -10079,7 +10079,7 @@ exports[`Render validation.status = warning property.placeholder: - Select this 
 exports[`Render validation.status = warning property.size: large - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: large_label"
+  id="property.size: large"
   style={Object {}}
 >
   <div
@@ -10088,10 +10088,10 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":40},null]}"
-      htmlFor="property.size: large_label_input"
-      title="property.size: large_label"
+      htmlFor="property.size: large_input"
+      title="property.size: large"
     >
-      property.size: large_label
+      property.size: large
     </label>
   </div>
   <div
@@ -10171,7 +10171,7 @@ exports[`Render validation.status = warning property.size: large - value[0] 1`] 
 exports[`Render validation.status = warning property.size: small - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.size: small_label"
+  id="property.size: small"
   style={Object {}}
 >
   <div
@@ -10180,10 +10180,10 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}"
-      htmlFor="property.size: small_label_input"
-      title="property.size: small_label"
+      htmlFor="property.size: small_input"
+      title="property.size: small"
     >
-      property.size: small_label
+      property.size: small
     </label>
   </div>
   <div
@@ -10263,7 +10263,7 @@ exports[`Render validation.status = warning property.size: small - value[0] 1`] 
 exports[`Render validation.status = warning property.suffixIcon: CalendarFilled - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled_label"
+  id="property.suffixIcon: CalendarFilled"
   style={Object {}}
 >
   <div
@@ -10272,10 +10272,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled_label_input"
-      title="property.suffixIcon: CalendarFilled_label"
+      htmlFor="property.suffixIcon: CalendarFilled_input"
+      title="property.suffixIcon: CalendarFilled"
     >
-      property.suffixIcon: CalendarFilled_label
+      property.suffixIcon: CalendarFilled
     </label>
   </div>
   <div
@@ -10380,7 +10380,7 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled 
 exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.blue - value[0] 1`] = `
 <div
   className="ant-row ant-form-item ant-form-item-has-feedback ant-form-item-has-warning {\\"style\\":{\\"marginBottom\\":0}}"
-  id="property.suffixIcon: CalendarFilled.blue_label"
+  id="property.suffixIcon: CalendarFilled.blue"
   style={Object {}}
 >
   <div
@@ -10389,10 +10389,10 @@ exports[`Render validation.status = warning property.suffixIcon: CalendarFilled.
   >
     <label
       className="{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}"
-      htmlFor="property.suffixIcon: CalendarFilled.blue_label_input"
-      title="property.suffixIcon: CalendarFilled.blue_label"
+      htmlFor="property.suffixIcon: CalendarFilled.blue_input"
+      title="property.suffixIcon: CalendarFilled.blue"
     >
-      property.suffixIcon: CalendarFilled.blue_label
+      property.suffixIcon: CalendarFilled.blue
     </label>
   </div>
   <div

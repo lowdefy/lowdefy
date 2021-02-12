@@ -18,29 +18,12 @@ _ref:
     block_type: WeekSelector
     value_type: date
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
+    schema: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
+    filePath: blocks/input/WeekSelector.yaml
     description_content: |
       The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
 
       > Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `MonthSelector`.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: WeekSelector input

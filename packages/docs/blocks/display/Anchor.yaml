@@ -17,28 +17,12 @@ _ref:
   vars:
     block_type: Anchor
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
+    schema: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
+    filePath: blocks/display/Anchor.yaml
     description_content: |
       Anchor link block. Creates a clickable icon and/ or text.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
-        transformer: templates/blocks/schemaTransformer.js
 
+      > When changing the relationship (`rel`) property of the linked URL, make sure you understand the security implications. Read more about link types [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
     examples:
       - title: Basic Anchor
         properties: '{"title": "Basic Anchor"}'

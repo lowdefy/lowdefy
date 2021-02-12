@@ -16,29 +16,13 @@ _ref:
   path: templates/blocks/template.yaml.njk
   vars:
     block_type: Card
-    category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    category: container
+    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    filePath: blocks/container/Card.yaml
     description_content: |
       A Card container places blocks on a white background with a card border.
       The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Card/Card.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Card/Card.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Card/Card.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Card/Card.json
-        transformer: templates/blocks/schemaTransformer.js
+
     areas:
       - content
       - extra

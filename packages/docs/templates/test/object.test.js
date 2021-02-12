@@ -86,17 +86,25 @@ test('object propertiesFormTransformer', () => {
 });
 
 test('object propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.field",
+                "_state": Object {
+                  "contextId": "Block:Block:{}",
+                  "default": Object {},
+                  "key": "block.properties.field",
+                },
               },
             ],
           },
@@ -304,23 +312,35 @@ test('object schemaNested propertiesFormTransformer', () => {
 });
 
 test('object schemaNested propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaNested)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.field",
+                "_state": Object {
+                  "contextId": "Block:Block:{}",
+                  "default": Object {},
+                  "key": "block.properties.field",
+                },
               },
               Object {
                 "obj": Object {
                   "_object.assign": Array [
                     Object {
-                      "_state": "block.properties.field.obj",
+                      "_state": Object {
+                        "contextId": "Block:Block:{}",
+                        "default": Object {},
+                        "key": "block.properties.field.obj",
+                      },
                     },
                   ],
                 },

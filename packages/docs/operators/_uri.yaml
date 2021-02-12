@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _uri
     pageTitle: _uri
+    filePath: operators/_uri.yaml
     description: |
       The `_uri` operator [encodes and decodes](https://en.wikipedia.org/wiki/Percent-encoding) Uniform Resource Identifiers (URI). It encodes characters that are not in the limited US-ASCII characters legal within a URI.
     methods:

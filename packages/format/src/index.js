@@ -21,7 +21,7 @@ import intlRelativeTimeFormat from './intlRelativeTimeFormat';
 import momentFormat from './momentFormat';
 import momentHumanizeDuration from './momentHumanizeDuration';
 
-const formatters = {
+export {
   intlDateTimeFormat,
   intlListFormat,
   intlNumberFormat,
@@ -30,14 +30,11 @@ const formatters = {
   momentHumanizeDuration,
 };
 
-function getFormatter(name, params = {}) {
-  if (!name) {
-    return (val) => val;
-  }
-  if (!Object.keys(formatters).includes(name)) {
-    throw new Error(`Invalid Formatter: "${name}" does not exist`);
-  }
-  return formatters[name](params);
-}
-
-export default getFormatter;
+export default {
+  intlDateTimeFormat,
+  intlListFormat,
+  intlNumberFormat,
+  intlRelativeTimeFormat,
+  momentFormat,
+  momentHumanizeDuration,
+};

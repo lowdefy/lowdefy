@@ -51,7 +51,12 @@ const Examples = ({ type, Component }) => {
         return (
           <div key key={`${block.id}`}>
             {values.map((initialValue, v) => {
-              const props = stubBlockProps({ block, meta, logger, initialValue });
+              const props = stubBlockProps({
+                block,
+                meta,
+                logger,
+                initialValue: block.value || initialValue,
+              });
               return (
                 <div key={`${block.id}_value[${v}]`}>
                   <h4 style={{ borderTop: '1px solid #b1b1b1', padding: 10, margin: 10 }}>

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-const oneOfGetter = ({ data, options, path, underscores }) => {
+const oneOfGetter = ({ contextId, options, path, underscores }) => {
   const types = options.map((option) => {
     if (option.type === 'array') {
       return { data: `${option.items.type}_arr`, selector: `${option.items.type}[]` };
@@ -23,14 +23,15 @@ const oneOfGetter = ({ data, options, path, underscores }) => {
   });
   const branches = types.map((type, index) => {
     const getter = propertyGetter({
-      data: 'state', // ??
+      contextId,
+      data: 'state',
       path: `__${type.data}_${path}`,
       property: options[index],
       underscores: underscores,
     });
     return {
       case: { _eq: [{ _state: `__type_${path}` }, type.selector] },
-      then: getter || { _state: `__${type.data}_${path}` },
+      then: getter || { _state: { key: `__${type.data}_${path}`, contextId } },
     };
   });
   return {
@@ -46,8 +47,9 @@ const oneOfGetter = ({ data, options, path, underscores }) => {
   };
 };
 
-const arrayGetter = ({ data, items, path, underscores }) => {
+const arrayGetter = ({ contextId, data, items, path, underscores }) => {
   const getter = propertyGetter({
+    contextId: undefined, // Cannot use contextId with _args
     data: 'args',
     path: '0',
     property: items,
@@ -56,7 +58,9 @@ const arrayGetter = ({ data, items, path, underscores }) => {
   if (getter) {
     return {
       [`${underscores}array.map`]: {
-        on: { [`${underscores}if_none`]: [{ [`${underscores}${data}`]: path }, []] },
+        on: {
+          [`${underscores}if_none`]: [{ [`${underscores}${data}`]: { key: path, contextId } }, []],
+        },
         callback: {
           [`${underscores}function`]: getter,
         },
@@ -65,11 +69,11 @@ const arrayGetter = ({ data, items, path, underscores }) => {
   }
 };
 
-const propertyGetter = ({ data, path, property, underscores }) => {
+const propertyGetter = ({ contextId, data, path, property, underscores }) => {
   if (property.docs && property.docs.displayType === 'yaml') {
     return {
       [`${underscores}yaml.parse`]: {
-        [`${underscores}if_none`]: [{ [`${underscores}${data}`]: path }, ''],
+        [`${underscores}if_none`]: [{ [`${underscores}${data}`]: { key: path, contextId } }, ''],
       },
     };
   }
@@ -78,6 +82,7 @@ const propertyGetter = ({ data, path, property, underscores }) => {
   }
   if (property.type === 'object' && property.properties) {
     return objectGetter({
+      contextId,
       data,
       path,
       properties: property.properties,
@@ -85,17 +90,18 @@ const propertyGetter = ({ data, path, property, underscores }) => {
     });
   }
   if (property.type === 'array' && property.items) {
-    return arrayGetter({ data, items: property.items, path, underscores });
+    return arrayGetter({ contextId, data, items: property.items, path, underscores });
   }
   if (property.oneOf) {
-    return oneOfGetter({ data, options: property.oneOf, path, underscores });
+    return oneOfGetter({ contextId, data, options: property.oneOf, path, underscores });
   }
 };
 
-const objectGetter = ({ data, path, properties, underscores }) => {
+const objectGetter = ({ contextId, data, path, properties, underscores }) => {
   const getters = [];
   Object.keys(properties).forEach((key) => {
     const getter = propertyGetter({
+      contextId,
       data,
       path: `${path}.${key}`,
       property: properties[key],
@@ -106,19 +112,21 @@ const objectGetter = ({ data, path, properties, underscores }) => {
     }
   });
   return {
-    [`${underscores}object.assign`]: [{ [`${underscores}${data}`]: path }].concat(getters),
+    [`${underscores}object.assign`]: [
+      { [`${underscores}${data}`]: { key: path, contextId, default: {} } },
+    ].concat(getters),
   };
 };
 
-const transformer = (obj) => {
-  const x = objectGetter({
+const transformer = (obj, vars) => {
+  const contextId = `${vars.block_type}:${vars.block_type}:{}`;
+  return objectGetter({
+    contextId,
     data: 'state',
     path: 'block.properties',
     properties: obj.schema.properties.properties,
     underscores: '_',
   });
-  // console.log(JSON.stringify(x, null, 2));
-  return x;
 };
 
 module.exports = transformer;

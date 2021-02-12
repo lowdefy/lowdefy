@@ -18,31 +18,14 @@ _ref:
     block_type: S3UploadButton
     value_type: object
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
+    schema: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
+    filePath: blocks/input/S3UploadButton.yaml
     description_content: |
       The `S3UploadButton` block allows a user to to upload a file to AWS S3.
 
       The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
 
       The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: S3UploadButtonBlock

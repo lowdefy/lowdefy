@@ -19,6 +19,7 @@ _ref:
     pageTitle: Next steps
     section: Tutorial
     # prefetchPages: []
+    filePath: tutorial/next-steps.yaml
     content:
       - id: md1
         type: MarkdownWithCode

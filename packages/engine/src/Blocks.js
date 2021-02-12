@@ -225,7 +225,6 @@ class Blocks {
             ? type.enforceType(block.meta.valueType, null)
             : block.meta.initValue;
           this.context.State.set(block.field, block.value);
-          block.update = true;
         }
         if (get(block, 'meta.category') === 'list') {
           // load list value into list blocks
@@ -300,7 +299,7 @@ class Blocks {
         block.value = type.isUndefined(stateValue) ? block.value : stateValue;
       }
       const beforeVisible = block.visibleEval ? block.visibleEval.output : true;
-      if (!visibleParent) {
+      if (visibleParent === false) {
         block.visibleEval.output = false;
       } else {
         block.visibleEval = this.context.parser.parse({

@@ -18,31 +18,14 @@ _ref:
     block_type: DateTimeSelector
     value_type: date
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
+    schema: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
+    filePath: blocks/input/DateTimeSelector.yaml
     description_content: |
       The `DateTimeSelector` block allows a user to select a date and a time from a calender.
 
       By default, the time selected by the user is converted to GMT time, based on the timezone of the user. The selector will also display the selected time in the correct timezone for that user. If the `selectGMT` property is set to true, the value of the selector will be the time selected by the user as GMT time, and not in the timezone of the user.
 
       > Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateTimeSelector/DateTimeSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: DateTimeSelector input

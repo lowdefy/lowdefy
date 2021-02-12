@@ -17,27 +17,13 @@ _ref:
   vars:
     block_type: Notification
     category: display
+    schema: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
+    filePath: blocks/display/Notification.yaml
     description_content: |
       Display a popup notification on the page.
 
       > To display a notification, invoke the open method.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    event_description: |
-      ###### onClose
-      Trigger actions when notification is closed.
-      ###### onClose
-      Trigger actions when notification is clicked.
+      
     examples:
       - title: Notification
         properties: '{"description": "Hello"}'

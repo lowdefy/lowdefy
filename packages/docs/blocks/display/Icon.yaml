@@ -17,27 +17,11 @@ _ref:
   vars:
     block_type: Icon
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
+    schema: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
+    filePath: blocks/display/Icon.yaml
     description_content: |
       A Icon component. Render Ant Design and other icons
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Icon/Icon.json
-        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic icon
         properties: '{"name": "ThunderboltFilled", "color": "orange", "size": 30}'

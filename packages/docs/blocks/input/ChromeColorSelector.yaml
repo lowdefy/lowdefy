@@ -18,27 +18,10 @@ _ref:
     block_type: ChromeColorSelector
     value_type: string
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
+    schema: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
+    filePath: blocks/input/ChromeColorSelector.yaml
     description_content: |
       A color selector component similar to the chrome developer tools color selector.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: ChromeColorSelector input

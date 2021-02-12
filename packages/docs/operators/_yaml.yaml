@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _yaml
     pageTitle: _yaml
+    filePath: operators/_yaml.yaml
     description: |
       The `_yaml` parses and writes YAML strings.
     methods:

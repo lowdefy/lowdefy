@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/lowdefy/lowdefy/compare/v3.7.2...v3.8.0) (2021-02-12)
+
+
+### Bug Fixes
+
+* **renderer:** Loading must render inside BlockLayout. ([e1bced9](https://github.com/lowdefy/lowdefy/commit/e1bced9843df832084fb724322de074ad64f792f))
+
+
+
+
+
 ## [3.7.2](https://github.com/lowdefy/lowdefy/compare/v3.7.1...v3.7.2) (2021-02-09)
 
 

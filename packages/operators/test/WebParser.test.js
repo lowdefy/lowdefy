@@ -446,13 +446,46 @@ describe('parse operators', () => {
     expect(res.output).toEqual('urlQuery');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
-});
 
-test('parse _function operator', () => {
-  const input = { _function: { state: { __state: 'string' }, args: { __args: true } } };
-  const parser = new WebParser({ context, contexts });
-  const { output, errors } = parser.parse({ input, location: 'locationId' });
-  expect(output).toBeInstanceOf(Function);
-  expect(output(1, 2)).toEqual({ state: 'state', args: [1, 2] });
-  expect(errors).toEqual([]);
+  test('parse _function operator', () => {
+    const input = { _function: { state: { __state: 'string' }, args: { __args: true } } };
+    const parser = new WebParser({ context, contexts });
+    const { output, errors } = parser.parse({ input, location: 'locationId' });
+    expect(output).toBeInstanceOf(Function);
+    expect(output(1, 2)).toEqual({ state: 'state', args: [1, 2] });
+    expect(errors).toEqual([]);
+  });
+
+  test('parse _format operator', () => {
+    const input = {
+      '_format.momentFormat': { params: { format: 'D MMM YYYY' }, on: { _date: 0 } },
+    };
+    const parser = new WebParser({ context, contexts });
+    const { output, errors } = parser.parse({ input, location: 'locationId' });
+    expect(output).toMatchInlineSnapshot(`"1 Jan 1970"`);
+    expect(errors).toEqual([]);
+  });
+
+  test('parse _experimental_unsafe_js operator', () => {
+    const input = {
+      '_experimental_unsafe_js.function': {
+        body: `{
+    return args[0] + args[1]
+  }`,
+      },
+    };
+    const parser = new WebParser({ context, contexts });
+    const { output, errors } = parser.parse({ input, location: 'locationId' });
+    expect(output).toBeInstanceOf(Function);
+    expect(output(1, 2)).toEqual(3);
+    expect(errors).toEqual([]);
+  });
+
+  test('parse _index operator', () => {
+    const input = { _index: 0 };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, location: 'locationId', arrayIndices: [3, 2] });
+    expect(res.output).toEqual(3);
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
 });

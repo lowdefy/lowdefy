@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _subtract
     pageTitle: _subtract
+    filePath: operators/_subtract.yaml
     types: |
       ```
       ([minuend: number, subtrahend: number]): number

@@ -36,6 +36,27 @@
   properties:
     strong: true
     title: Strong
+- id: properties.href
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+- id: properties.href, title and target
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+    newTab: true
+    title: New tab Website
+- id: properties.href and target
+  type: Anchor
+  properties:
+    href: /Button
+    newTab: true
+    title: To Button
+- id: properties.href and rel
+  type: Anchor
+  properties:
+    href: https://lowdefy.com
+    rel: "noopener"
 - id: properties.style
   type: Anchor
   properties:

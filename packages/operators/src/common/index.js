@@ -21,6 +21,7 @@ import _date from './date';
 import _divide from './divide';
 import _eq from './eq';
 import _event from './event';
+import _experimental_unsafe_js from './experimental_unsafe_js';
 import _function from './function';
 import _get from './get';
 import _global from './global';
@@ -28,6 +29,7 @@ import _gt from './gt';
 import _gte from './gte';
 import _if from './if';
 import _if_none from './if_none';
+import _index from './_index';
 import _input from './input';
 import _json from './json';
 import _log from './log';
@@ -60,6 +62,7 @@ export default {
   _divide,
   _eq,
   _event,
+  _experimental_unsafe_js,
   _function,
   _get,
   _global,
@@ -67,6 +70,7 @@ export default {
   _gte,
   _if_none,
   _if,
+  _index,
   _input,
   _json,
   _log,

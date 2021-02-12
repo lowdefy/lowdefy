@@ -56,6 +56,11 @@ test('arrayIndices with 1 index, more than 1 $', () => {
   expect(applyArrayIndices([1], 'a.$.a.$.b')).toEqual('a.1.a.$.b');
 });
 
+test('name is a number', () => {
+  expect(applyArrayIndices([], 1)).toEqual(1);
+  expect(applyArrayIndices([], 3.14)).toEqual(3.14);
+});
+
 test('does not modify arrayIndices', () => {
   const arrayIndices = [1];
   expect(applyArrayIndices(arrayIndices, 'a.$')).toEqual('a.1');

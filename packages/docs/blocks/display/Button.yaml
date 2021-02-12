@@ -17,27 +17,10 @@ _ref:
   vars:
     block_type: Button
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
+    schema: ../blocks/blocksAntd/src/blocks/Button/Button.json
+    filePath: blocks/display/Button.yaml
     description_content: |
       Button block.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Button/Button.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Basic button

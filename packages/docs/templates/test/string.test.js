@@ -42,11 +42,15 @@ test('string propertiesFormTransformer', () => {
 });
 
 test('string propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
       ],
     }

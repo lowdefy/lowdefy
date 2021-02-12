@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _random
     pageTitle: _random
+    filePath: operators/_random.yaml
     types: |
       ```
       (type: string): string | number

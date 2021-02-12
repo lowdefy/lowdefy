@@ -18,6 +18,7 @@ _ref:
     pageId: operators
     pageTitle: Operators
     section: Concepts
+    filePath: concepts/operators.yaml
     content:
       - id: md1
         type: Markdown

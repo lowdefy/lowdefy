@@ -15,9 +15,7 @@
 */
 
 import React from 'react';
-import { get } from '@lowdefy/helpers';
 import { useQuery, gql } from '@apollo/client';
-import { Loading } from '@lowdefy/block-tools';
 
 const getBlock = gql`
   query getBlock($id: String!) {
@@ -28,7 +26,7 @@ const getBlock = gql`
   }
 `;
 
-const WatchCache = ({ block, render, rootContext }) => {
+const WatchCache = ({ block, render, rootContext, Loading }) => {
   const { loading, error } = useQuery(getBlock, {
     variables: {
       id: `BlockClass:${block.id}`,
@@ -36,13 +34,7 @@ const WatchCache = ({ block, render, rootContext }) => {
     client: rootContext.client,
   });
 
-  if (loading)
-    return (
-      <Loading
-        properties={get(block, 'meta.loading.properties')}
-        type={get(block, 'meta.loading.type')}
-      />
-    );
+  if (loading) return Loading;
   if (error) throw error;
 
   return render();

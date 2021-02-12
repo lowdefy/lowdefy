@@ -18,6 +18,7 @@ _ref:
     pageId: context-and-state
     pageTitle: Context and State
     section: Concepts
+    filePath: concepts/context-and-state.yaml
     content:
       - id: md1
         type: Markdown
@@ -42,6 +43,19 @@ _ref:
             Every `input` category block inside the context will have a value in the `state` object, with the their `id` as the key in the `state` object, unless the block is not visible, in which case the input value is removed the state object.
 
             The only other way to modify the `state` object is to use a `SetState` action. See [`SetState`](/SetState) and [`events-and-actions`](/events-and-actions) for more details.
+
+            Contexts remain even as users navigate to new pages, so if a user returns to a page, the state as they left it will remain.
+
+            # Url queries
+
+            A new context is created for each distinct URL query parameters seen by the app. This means that if a page is open with two different URL queries, two different contexts, with separate `state` objects will be created.
+
+            # Context IDs
+
+            Each context created has a identifier with the following structure:
+            ```
+            {pageId}:{blockId}:{JSON stringified urlQuery object}
+            ```
 
             # Context data objects
 

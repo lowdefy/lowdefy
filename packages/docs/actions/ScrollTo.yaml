@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: ScrollTo
     pageTitle: ScrollTo
+    filePath: actions/ScrollTo.yaml
     types: |
       ```
       (params: {

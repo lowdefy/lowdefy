@@ -4145,7 +4145,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:7.12.10"],
             ["@lowdefy/block-tools", "workspace:packages/blockTools"],
             ["@lowdefy/color", "workspace:packages/color"],
-            ["@lowdefy/format", "workspace:packages/format"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@wojtekmaj/enzyme-adapter-react-17", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:0.4.1"],
             ["antd", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.2"],
@@ -4211,7 +4210,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
-            ["react-router-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.2.0"],
             ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["style-loader", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:2.0.0"],
             ["webpack", "virtual:beb4c218366cad8c4da96fe997fe88a6dbf8be39fc0c58c2a268588a03658c7ba45d103fbf636a724af6c876096f657636ab125613932f8c99e093546f94adb0#npm:5.18.0"],
@@ -4299,7 +4297,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
-            ["react-router-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:5.2.0"],
             ["react-syntax-highlighter", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:15.4.3"],
             ["remark-gfm", "npm:1.0.0"],
             ["style-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:2.0.0"],
@@ -4623,6 +4620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.10"],
             ["@babel/core", "npm:7.12.10"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.11"],
+            ["@lowdefy/format", "workspace:packages/format"],
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["@lowdefy/nunjucks", "workspace:packages/nunjucks"],
             ["babel-jest", "virtual:caddf51df4928b33a437ca87b8f5ddfb6205ebd6d8231f74d4ee7223f3866e6f815b221aa1e2bd33e98915f701e95bae72a93d2288b49a34a6246bdbc2a4a132#npm:26.6.3"],
@@ -22649,7 +22647,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-markdown", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.0.3"],
             ["@types/mdast", "npm:3.0.3"],
             ["@types/react", null],
-            ["@types/types__react", null],
             ["@types/unist", "npm:2.0.3"],
             ["html-to-react", "virtual:e9b5aa40df013decb51b37c9e6a54daea574b4fcc3a4af0126ec5e1fd5f5281487c5ac666d1e9e7d46d97aeccd87d7b25bbcd8f745b7c4e524680608667117fc#npm:1.4.5"],
             ["mdast-add-list-metadata", "npm:1.0.1"],
@@ -22663,7 +22660,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "packagePeers": [
             "@types/react",
-            "@types/types__react",
             "react"
           ],
           "linkType": "HARD",
@@ -29033,7 +29029,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 936:
+/***/ 807:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -29073,7 +29069,12 @@ const Filename = {
   nodeModules: `node_modules`,
   manifest: `package.json`,
   lockfile: `yarn.lock`,
+
+  /**
+   * @deprecated
+   */
   pnpJs: `.pnp.js`,
+  pnpCjs: `.pnp.cjs`,
   rc: `.yarnrc.yml`
 };
 const npath = Object.create((external_path_default()));
@@ -29950,24 +29951,62 @@ class NodeFS extends BasePortableFakeFS {
     return this.realFs.existsSync(npath.fromPortablePath(p));
   }
 
-  async statPromise(p) {
+  async statPromise(p, opts) {
     return await new Promise((resolve, reject) => {
-      this.realFs.stat(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      if (opts) {
+        this.realFs.stat(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+      } else {
+        this.realFs.stat(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      }
     });
   }
 
-  statSync(p) {
-    return this.realFs.statSync(npath.fromPortablePath(p));
+  statSync(p, opts) {
+    if (opts) {
+      return this.realFs.statSync(npath.fromPortablePath(p), opts);
+    } else {
+      return this.realFs.statSync(npath.fromPortablePath(p));
+    }
   }
 
-  async lstatPromise(p) {
+  async fstatPromise(fd, opts) {
     return await new Promise((resolve, reject) => {
-      this.realFs.lstat(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      if (opts) {
+        // @ts-expect-error - The node typings doesn't know about the options
+        this.realFs.fstat(fd, opts, this.makeCallback(resolve, reject));
+      } else {
+        this.realFs.fstat(fd, this.makeCallback(resolve, reject));
+      }
     });
   }
 
-  lstatSync(p) {
-    return this.realFs.lstatSync(npath.fromPortablePath(p));
+  fstatSync(fd, opts) {
+    if (opts) {
+      // @ts-expect-error - The node typings doesn't know about the options
+      return this.realFs.fstatSync(fd, opts);
+    } else {
+      return this.realFs.fstatSync(fd);
+    }
+  }
+
+  async lstatPromise(p, opts) {
+    return await new Promise((resolve, reject) => {
+      if (opts) {
+        // @ts-expect-error - TS does not know this takes options
+        this.realFs.lstat(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+      } else {
+        this.realFs.lstat(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      }
+    });
+  }
+
+  lstatSync(p, opts) {
+    if (opts) {
+      // @ts-expect-error - TS does not know this takes options
+      return this.realFs.lstatSync(npath.fromPortablePath(p), opts);
+    } else {
+      return this.realFs.lstatSync(npath.fromPortablePath(p));
+    }
   }
 
   async chmodPromise(p, mask) {
@@ -30321,20 +30360,28 @@ class ProxiedFS extends FakeFS {
     return this.baseFs.accessPromise(this.mapToBase(p), mode);
   }
 
-  async statPromise(p) {
-    return this.baseFs.statPromise(this.mapToBase(p));
+  async statPromise(p, opts) {
+    return this.baseFs.statPromise(this.mapToBase(p), opts);
   }
 
-  statSync(p) {
-    return this.baseFs.statSync(this.mapToBase(p));
+  statSync(p, opts) {
+    return this.baseFs.statSync(this.mapToBase(p), opts);
   }
 
-  async lstatPromise(p) {
-    return this.baseFs.lstatPromise(this.mapToBase(p));
+  async fstatPromise(fd, opts) {
+    return this.baseFs.fstatPromise(fd, opts);
   }
 
-  lstatSync(p) {
-    return this.baseFs.lstatSync(this.mapToBase(p));
+  fstatSync(fd, opts) {
+    return this.baseFs.fstatSync(fd, opts);
+  }
+
+  async lstatPromise(p, opts) {
+    return this.baseFs.lstatPromise(this.mapToBase(p), opts);
+  }
+
+  lstatSync(p, opts) {
+    return this.baseFs.lstatSync(this.mapToBase(p), opts);
   }
 
   async chmodPromise(p, mask) {
@@ -30581,7 +30628,10 @@ class VirtualFS extends ProxiedFS {
   }
 
   mapToBase(p) {
-    return VirtualFS.resolveVirtual(p);
+    if (this.pathUtils.isAbsolute(p)) return VirtualFS.resolveVirtual(p);
+    const resolvedRoot = VirtualFS.resolveVirtual(this.baseFs.resolve(PortablePath.dot));
+    const resolvedP = VirtualFS.resolveVirtual(this.baseFs.resolve(p));
+    return ppath.relative(resolvedRoot, resolvedP);
   }
 
   mapFromBase(p) {
@@ -30671,6 +30721,7 @@ const constants_S_IFREG = 0o100000;
 const constants_S_IFLNK = 0o120000;
 // CONCATENATED MODULE: ../yarnpkg-fslib/sources/statUtils.ts
 
+
 class DirEntry {
   constructor() {
     this.name = ``;
@@ -30708,9 +30759,21 @@ class DirEntry {
 }
 class StatEntry {
   constructor() {
+    this.uid = 0;
+    this.gid = 0;
+    this.size = 0;
+    this.blksize = 0;
+    this.atimeMs = 0;
+    this.mtimeMs = 0;
+    this.ctimeMs = 0;
+    this.birthtimeMs = 0;
+    this.atime = new Date(0);
+    this.mtime = new Date(0);
+    this.ctime = new Date(0);
+    this.birthtime = new Date(0);
     this.dev = 0;
     this.ino = 0;
-    this.mode = 0;
+    this.mode = constants_S_IFREG | 0o644;
     this.nlink = 1;
     this.rdev = 0;
     this.blocks = 1;
@@ -30745,29 +30808,113 @@ class StatEntry {
   }
 
 }
+class BigIntStatsEntry {
+  constructor() {
+    this.uid = BigInt(0);
+    this.gid = BigInt(0);
+    this.size = BigInt(0);
+    this.blksize = BigInt(0);
+    this.atimeMs = BigInt(0);
+    this.mtimeMs = BigInt(0);
+    this.ctimeMs = BigInt(0);
+    this.birthtimeMs = BigInt(0);
+    this.atimeNs = BigInt(0);
+    this.mtimeNs = BigInt(0);
+    this.ctimeNs = BigInt(0);
+    this.birthtimeNs = BigInt(0);
+    this.atime = new Date(0);
+    this.mtime = new Date(0);
+    this.ctime = new Date(0);
+    this.birthtime = new Date(0);
+    this.dev = BigInt(0);
+    this.ino = BigInt(0);
+    this.mode = BigInt(constants_S_IFREG | 0o644);
+    this.nlink = BigInt(1);
+    this.rdev = BigInt(0);
+    this.blocks = BigInt(1);
+  }
+
+  isBlockDevice() {
+    return false;
+  }
+
+  isCharacterDevice() {
+    return false;
+  }
+
+  isDirectory() {
+    return (this.mode & BigInt(constants_S_IFMT)) === BigInt(constants_S_IFDIR);
+  }
+
+  isFIFO() {
+    return false;
+  }
+
+  isFile() {
+    return (this.mode & BigInt(constants_S_IFMT)) === BigInt(constants_S_IFREG);
+  }
+
+  isSocket() {
+    return false;
+  }
+
+  isSymbolicLink() {
+    return (this.mode & BigInt(constants_S_IFMT)) === BigInt(constants_S_IFLNK);
+  }
+
+}
 function makeDefaultStats() {
-  return Object.assign(new StatEntry(), {
-    uid: 0,
-    gid: 0,
-    size: 0,
-    blksize: 0,
-    atimeMs: 0,
-    mtimeMs: 0,
-    ctimeMs: 0,
-    birthtimeMs: 0,
-    atime: new Date(0),
-    mtime: new Date(0),
-    ctime: new Date(0),
-    birthtime: new Date(0),
-    mode: constants_S_IFREG | 0o644
-  });
+  return new StatEntry();
 }
 function makeEmptyStats() {
-  return Object.assign(makeDefaultStats(), {
-    nlink: 0,
-    blocks: 0,
-    mode: 0
-  });
+  return clearStats(makeDefaultStats());
+}
+/**
+ * Mutates the provided stats object to zero it out then returns it for convenience
+ */
+
+function clearStats(stats) {
+  for (const key in stats) {
+    if (Object.prototype.hasOwnProperty.call(stats, key)) {
+      const element = stats[key];
+
+      if (typeof element === `number`) {
+        // @ts-expect-error Typescript can't tell that stats[key] is a number
+        stats[key] = 0;
+      } else if (typeof element === `bigint`) {
+        // @ts-expect-error Typescript can't tell that stats[key] is a bigint
+        stats[key] = BigInt(0);
+      } else if (external_util_namespaceObject.types.isDate(element)) {
+        // @ts-expect-error Typescript can't tell that stats[key] is a bigint
+        stats[key] = new Date(0);
+      }
+    }
+  }
+
+  return stats;
+}
+function convertToBigIntStats(stats) {
+  const bigintStats = new BigIntStatsEntry();
+
+  for (const key in stats) {
+    if (Object.prototype.hasOwnProperty.call(stats, key)) {
+      const element = stats[key];
+
+      if (typeof element === `number`) {
+        // @ts-expect-error Typescript isn't able to tell this is valid
+        bigintStats[key] = BigInt(element);
+      } else if (external_util_namespaceObject.types.isDate(element)) {
+        // @ts-expect-error Typescript isn't able to tell this is valid
+        bigintStats[key] = new Date(element);
+      }
+    }
+  }
+
+  bigintStats.atimeNs = bigintStats.atimeMs * BigInt(1e6);
+  bigintStats.mtimeNs = bigintStats.mtimeMs * BigInt(1e6);
+  bigintStats.ctimeNs = bigintStats.ctimeMs * BigInt(1e6);
+  bigintStats.birthtimeNs = bigintStats.birthtimeMs * BigInt(1e6);
+  return bigintStats;
 }
 function areStatsEqual(a, b) {
   if (a.atimeMs !== b.atimeMs) return false;
@@ -30791,6 +30938,12 @@ function areStatsEqual(a, b) {
   if (a.rdev !== b.rdev) return false;
   if (a.size !== b.size) return false;
   if (a.uid !== b.uid) return false;
+  const aN = a;
+  const bN = b;
+  if (aN.atimeNs !== bN.atimeNs) return false;
+  if (aN.mtimeNs !== bN.mtimeNs) return false;
+  if (aN.ctimeNs !== bN.ctimeNs) return false;
+  if (aN.birthtimeNs !== bN.birthtimeNs) return false;
   return true;
 }
 // CONCATENATED MODULE: ../yarnpkg-fslib/sources/algorithms/watchFile/CustomStatWatcher.ts
@@ -30867,10 +31020,13 @@ class CustomStatWatcher extends external_events_namespaceObject.EventEmitter {
 
   stat() {
     try {
-      return this.fakeFs.statSync(this.path);
+      return this.fakeFs.statSync(this.path, {
+        bigint: this.bigint
+      });
     } catch (error) {
       if (error.code === `ENOENT`) {
-        return makeEmptyStats();
+        const statInstance = this.bigint ? new BigIntStatsEntry() : new StatEntry();
+        return clearStats(statInstance);
       } else {
         throw error;
       }
@@ -31456,29 +31612,45 @@ class ZipFS extends BasePortableFakeFS {
     }
   }
 
-  async statPromise(p) {
-    return this.statSync(p);
+  async statPromise(p, opts) {
+    return this.statSync(p, opts);
   }
 
-  statSync(p) {
+  statSync(p, opts) {
     const resolvedP = this.resolveFilename(`stat '${p}'`, p);
     if (!this.entries.has(resolvedP) && !this.listings.has(resolvedP)) throw ENOENT(`stat '${p}'`);
     if (p[p.length - 1] === `/` && !this.listings.has(resolvedP)) throw ENOTDIR(`stat '${p}'`);
-    return this.statImpl(`stat '${p}'`, resolvedP);
+    return this.statImpl(`stat '${p}'`, resolvedP, opts);
   }
 
-  async lstatPromise(p) {
-    return this.lstatSync(p);
+  async fstatPromise(fd, opts) {
+    return this.fstatSync(fd, opts);
   }
 
-  lstatSync(p) {
+  fstatSync(fd, opts) {
+    const entry = this.fds.get(fd);
+    if (typeof entry === `undefined`) throw EBADF(`fstatSync`);
+    const {
+      p
+    } = entry;
+    const resolvedP = this.resolveFilename(`stat '${p}'`, p);
+    if (!this.entries.has(resolvedP) && !this.listings.has(resolvedP)) throw ENOENT(`stat '${p}'`);
+    if (p[p.length - 1] === `/` && !this.listings.has(resolvedP)) throw ENOTDIR(`stat '${p}'`);
+    return this.statImpl(`fstat '${p}'`, resolvedP, opts);
+  }
+
+  async lstatPromise(p, opts) {
+    return this.lstatSync(p, opts);
+  }
+
+  lstatSync(p, opts) {
     const resolvedP = this.resolveFilename(`lstat '${p}'`, p, false);
     if (!this.entries.has(resolvedP) && !this.listings.has(resolvedP)) throw ENOENT(`lstat '${p}'`);
     if (p[p.length - 1] === `/` && !this.listings.has(resolvedP)) throw ENOTDIR(`lstat '${p}'`);
-    return this.statImpl(`lstat '${p}'`, resolvedP);
+    return this.statImpl(`lstat '${p}'`, resolvedP, opts);
   }
 
-  statImpl(reason, p) {
+  statImpl(reason, p, opts = {}) {
     const entry = this.entries.get(p); // File, or explicit directory
 
     if (typeof entry !== `undefined`) {
@@ -31501,7 +31673,7 @@ class ZipFS extends BasePortableFakeFS {
       const type = this.listings.has(p) ? constants_S_IFDIR : this.isSymbolicLink(entry) ? constants_S_IFLNK : constants_S_IFREG;
       const defaultMode = type === constants_S_IFDIR ? 0o755 : 0o644;
       const mode = type | this.getUnixMode(entry, defaultMode) & 0o777;
-      return Object.assign(new StatEntry(), {
+      const statInstance = Object.assign(new StatEntry(), {
         uid,
         gid,
         size,
@@ -31517,6 +31689,7 @@ class ZipFS extends BasePortableFakeFS {
         mtimeMs,
         mode
       });
+      return opts.bigint === true ? convertToBigIntStats(statInstance) : statInstance;
     } // Implicit directory
 
 
@@ -31535,7 +31708,7 @@ class ZipFS extends BasePortableFakeFS {
       const ctime = new Date(ctimeMs);
       const mtime = new Date(mtimeMs);
       const mode = constants_S_IFDIR | 0o755;
-      return Object.assign(new StatEntry(), {
+      const statInstance = Object.assign(new StatEntry(), {
         uid,
         gid,
         size,
@@ -31551,6 +31724,7 @@ class ZipFS extends BasePortableFakeFS {
         mtimeMs,
         mode
       });
+      return opts.bigint === true ? convertToBigIntStats(statInstance) : statInstance;
     }
 
     throw new Error(`Unreachable`);
@@ -32209,6 +32383,7 @@ class ZipFS extends BasePortableFakeFS {
 
 
 
+
 const ZIP_FD = 0x80000000;
 const FILE_PARTS_REGEX = /.*?(?<!\/)\.zip(?=\/|$)/;
 class ZipOpenFS extends BasePortableFakeFS {
@@ -32338,9 +32513,7 @@ class ZipOpenFS extends BasePortableFakeFS {
   async readPromise(fd, buffer, offset, length, position) {
     if ((fd & ZIP_FD) === 0) return await this.baseFs.readPromise(fd, buffer, offset, length, position);
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, read`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`read`);
     const [zipFs, realFd] = entry;
     return await zipFs.readPromise(realFd, buffer, offset, length, position);
   }
@@ -32348,9 +32521,7 @@ class ZipOpenFS extends BasePortableFakeFS {
   readSync(fd, buffer, offset, length, position) {
     if ((fd & ZIP_FD) === 0) return this.baseFs.readSync(fd, buffer, offset, length, position);
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, read`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`readSync`);
     const [zipFs, realFd] = entry;
     return zipFs.readSync(realFd, buffer, offset, length, position);
   }
@@ -32365,9 +32536,7 @@ class ZipOpenFS extends BasePortableFakeFS {
     }
 
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, write`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`write`);
     const [zipFs, realFd] = entry;
 
     if (typeof buffer === `string`) {
@@ -32387,9 +32556,7 @@ class ZipOpenFS extends BasePortableFakeFS {
     }
 
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, write`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`writeSync`);
     const [zipFs, realFd] = entry;
 
     if (typeof buffer === `string`) {
@@ -32402,9 +32569,7 @@ class ZipOpenFS extends BasePortableFakeFS {
   async closePromise(fd) {
     if ((fd & ZIP_FD) === 0) return await this.baseFs.closePromise(fd);
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, close`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`close`);
     this.fdMap.delete(fd);
     const [zipFs, realFd] = entry;
     return await zipFs.closePromise(realFd);
@@ -32413,9 +32578,7 @@ class ZipOpenFS extends BasePortableFakeFS {
   closeSync(fd) {
     if ((fd & ZIP_FD) === 0) return this.baseFs.closeSync(fd);
     const entry = this.fdMap.get(fd);
-    if (typeof entry === `undefined`) throw Object.assign(new Error(`EBADF: bad file descriptor, close`), {
-      code: `EBADF`
-    });
+    if (typeof entry === `undefined`) throw EBADF(`closeSync`);
     this.fdMap.delete(fd);
     const [zipFs, realFd] = entry;
     return zipFs.closeSync(realFd);
@@ -32519,43 +32682,59 @@ class ZipOpenFS extends BasePortableFakeFS {
     });
   }
 
-  async statPromise(p) {
+  async statPromise(p, opts) {
     return await this.makeCallPromise(p, async () => {
-      return await this.baseFs.statPromise(p);
+      return await this.baseFs.statPromise(p, opts);
     }, async (zipFs, {
       subPath
     }) => {
-      return await zipFs.statPromise(subPath);
+      return await zipFs.statPromise(subPath, opts);
     });
   }
 
-  statSync(p) {
+  statSync(p, opts) {
     return this.makeCallSync(p, () => {
-      return this.baseFs.statSync(p);
+      return this.baseFs.statSync(p, opts);
     }, (zipFs, {
       subPath
     }) => {
-      return zipFs.statSync(subPath);
+      return zipFs.statSync(subPath, opts);
     });
   }
 
-  async lstatPromise(p) {
+  async fstatPromise(fd, opts) {
+    if ((fd & ZIP_FD) === 0) return this.baseFs.fstatPromise(fd, opts);
+    const entry = this.fdMap.get(fd);
+    if (typeof entry === `undefined`) throw EBADF(`fstat`);
+    const [zipFs, realFd] = entry;
+    return zipFs.fstatPromise(realFd, opts);
+  }
+
+  fstatSync(fd, opts) {
+    if ((fd & ZIP_FD) === 0) return this.baseFs.fstatSync(fd, opts);
+    const entry = this.fdMap.get(fd);
+    if (typeof entry === `undefined`) throw EBADF(`fstatSync`);
+    const [zipFs, realFd] = entry;
+    return zipFs.fstatSync(realFd, opts);
+  }
+
+  async lstatPromise(p, opts) {
     return await this.makeCallPromise(p, async () => {
-      return await this.baseFs.lstatPromise(p);
+      return await this.baseFs.lstatPromise(p, opts);
     }, async (zipFs, {
       subPath
     }) => {
-      return await zipFs.lstatPromise(subPath);
+      return await zipFs.lstatPromise(subPath, opts);
     });
   }
 
-  lstatSync(p) {
+  lstatSync(p, opts) {
     return this.makeCallSync(p, () => {
-      return this.baseFs.lstatSync(p);
+      return this.baseFs.lstatSync(p, opts);
     }, (zipFs, {
       subPath
     }) => {
-      return zipFs.lstatSync(subPath);
+      return zipFs.lstatSync(subPath, opts);
     });
   }
 
@@ -33397,41 +33576,47 @@ var external_module_default = /*#__PURE__*/__webpack_require__.n(external_module
 const external_string_decoder_namespaceObject = require("string_decoder");;
 var external_string_decoder_default = /*#__PURE__*/__webpack_require__.n(external_string_decoder_namespaceObject);
 
-// CONCATENATED MODULE: ../yarnpkg-fslib/sources/index.ts
+// CONCATENATED MODULE: external "url"
+const external_url_namespaceObject = require("url");;
+// CONCATENATED MODULE: ../yarnpkg-fslib/sources/URLFS.ts
 
 
 
+/**
+ * Adds support for file URLs to the wrapped `baseFs`, but *not* inside the typings.
+ *
+ * Only exists for compatibility with Node's behavior.
+ *
+ * Automatically wraps all FS instances passed to `patchFs` & `extendFs`.
+ *
+ * Don't use it!
+ */
 
+class URLFS extends ProxiedFS {
+  constructor(baseFs) {
+    super(npath);
+    this.baseFs = baseFs;
+  }
 
+  mapFromBase(path) {
+    return path;
+  }
 
+  mapToBase(path) {
+    if (path instanceof external_url_namespaceObject.URL) return (0,external_url_namespaceObject.fileURLToPath)(path);
+    return path;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function getTempName(prefix) {
-  const tmpdir = npath.toPortablePath(external_os_default().tmpdir());
-  const hash = Math.ceil(Math.random() * 0x100000000).toString(16).padStart(8, `0`);
-  return ppath.join(tmpdir, `${prefix}${hash}`);
 }
+// CONCATENATED MODULE: ../yarnpkg-fslib/sources/patchFs.ts
 
+
+const SYNC_IMPLEMENTATIONS = new Set([`accessSync`, `appendFileSync`, `createReadStream`, `chmodSync`, `chownSync`, `closeSync`, `copyFileSync`, `linkSync`, `lstatSync`, `fstatSync`, `lutimesSync`, `mkdirSync`, `openSync`, `opendirSync`, `readSync`, `readlinkSync`, `readFileSync`, `readdirSync`, `readlinkSync`, `realpathSync`, `renameSync`, `rmdirSync`, `statSync`, `symlinkSync`, `truncateSync`, `unlinkSync`, `unwatchFile`, `utimesSync`, `watch`, `watchFile`, `writeFileSync`, `writeSync`]);
+const ASYNC_IMPLEMENTATIONS = new Set([`accessPromise`, `appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `copyFilePromise`, `linkPromise`, `fstatPromise`, `lstatPromise`, `lutimesPromise`, `mkdirPromise`, `openPromise`, `opendirPromise`, `readdirPromise`, `realpathPromise`, `readFilePromise`, `readdirPromise`, `readlinkPromise`, `renamePromise`, `rmdirPromise`, `statPromise`, `symlinkPromise`, `truncatePromise`, `unlinkPromise`, `utimesPromise`, `writeFilePromise`, `writeSync`]);
+const FILEHANDLE_IMPLEMENTATIONS = new Set([`appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `readPromise`, `readFilePromise`, `statPromise`, `truncatePromise`, `utimesPromise`, `writePromise`, `writeFilePromise`]);
 function patchFs(patchedFs, fakeFs) {
-  const SYNC_IMPLEMENTATIONS = new Set([`accessSync`, `appendFileSync`, `createReadStream`, `chmodSync`, `chownSync`, `closeSync`, `copyFileSync`, `linkSync`, `lstatSync`, `lutimesSync`, `mkdirSync`, `openSync`, `opendirSync`, `readSync`, `readlinkSync`, `readFileSync`, `readdirSync`, `readlinkSync`, `realpathSync`, `renameSync`, `rmdirSync`, `statSync`, `symlinkSync`, `truncateSync`, `unlinkSync`, `unwatchFile`, `utimesSync`, `watch`, `watchFile`, `writeFileSync`, `writeSync`]);
-  const ASYNC_IMPLEMENTATIONS = new Set([`accessPromise`, `appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `copyFilePromise`, `linkPromise`, `lstatPromise`, `lutimesPromise`, `mkdirPromise`, `openPromise`, `opendirPromise`, `readdirPromise`, `realpathPromise`, `readFilePromise`, `readdirPromise`, `readlinkPromise`, `renamePromise`, `rmdirPromise`, `statPromise`, `symlinkPromise`, `truncatePromise`, `unlinkPromise`, `utimesPromise`, `writeFilePromise`, `writeSync`]);
-  const FILEHANDLE_IMPLEMENTATIONS = new Set([`appendFilePromise`, `chmodPromise`, `chownPromise`, `closePromise`, `readPromise`, `readFilePromise`, `statPromise`, `truncatePromise`, `utimesPromise`, `writePromise`, `writeFilePromise`]);
+  // We wrap the `fakeFs` with a `URLFS` to add support for URL instances
+  fakeFs = new URLFS(fakeFs);
 
   const setupFn = (target, name, replacement) => {
     const orig = target[name];
@@ -33587,121 +33772,6 @@ function extendFs(realFs, fakeFs) {
   patchFs(patchedFs, fakeFs);
   return patchedFs;
 }
-const tmpdirs = new Set();
-let cleanExitRegistered = false;
-
-function registerCleanExit() {
-  if (cleanExitRegistered) return;
-  cleanExitRegistered = true;
-  process.once(`exit`, () => {
-    xfs.rmtempSync();
-  });
-}
-
-const xfs = Object.assign(new NodeFS(), {
-  detachTemp(p) {
-    tmpdirs.delete(p);
-  },
-
-  mktempSync(cb) {
-    registerCleanExit();
-
-    while (true) {
-      const p = getTempName(`xfs-`);
-
-      try {
-        this.mkdirSync(p);
-      } catch (error) {
-        if (error.code === `EEXIST`) {
-          continue;
-        } else {
-          throw error;
-        }
-      }
-
-      const realP = this.realpathSync(p);
-      tmpdirs.add(realP);
-
-      if (typeof cb !== `undefined`) {
-        try {
-          return cb(realP);
-        } finally {
-          if (tmpdirs.has(realP)) {
-            tmpdirs.delete(realP);
-
-            try {
-              this.removeSync(realP);
-            } catch (_a) {// Too bad if there's an error
-            }
-          }
-        }
-      } else {
-        return p;
-      }
-    }
-  },
-
-  async mktempPromise(cb) {
-    registerCleanExit();
-
-    while (true) {
-      const p = getTempName(`xfs-`);
-
-      try {
-        await this.mkdirPromise(p);
-      } catch (error) {
-        if (error.code === `EEXIST`) {
-          continue;
-        } else {
-          throw error;
-        }
-      }
-
-      const realP = await this.realpathPromise(p);
-      tmpdirs.add(realP);
-
-      if (typeof cb !== `undefined`) {
-        try {
-          return await cb(realP);
-        } finally {
-          if (tmpdirs.has(realP)) {
-            tmpdirs.delete(realP);
-
-            try {
-              await this.removePromise(realP);
-            } catch (_a) {// Too bad if there's an error
-            }
-          }
-        }
-      } else {
-        return realP;
-      }
-    }
-  },
-
-  async rmtempPromise() {
-    await Promise.all(Array.from(tmpdirs.values()).map(async p => {
-      try {
-        await xfs.removePromise(p, {
-          maxRetries: 0
-        });
-        tmpdirs.delete(p);
-      } catch (_a) {// Too bad if there's an error
-      }
-    }));
-  },
-
-  rmtempSync() {
-    for (const p of tmpdirs) {
-      try {
-        xfs.removeSync(p);
-        tmpdirs.delete(p);
-      } catch (_a) {// Too bad if there's an error
-      }
-    }
-  }
-
-});
 // CONCATENATED MODULE: ../yarnpkg-fslib/sources/PosixFS.ts
 
 
@@ -33720,8 +33790,6 @@ class PosixFS extends ProxiedFS {
   }
 
 }
-// CONCATENATED MODULE: external "url"
-const external_url_namespaceObject = require("url");;
 // CONCATENATED MODULE: ./sources/loader/internalTools.ts
 
 var ErrorCode;
@@ -33902,13 +33970,27 @@ function applyPatch(pnpapi, opts) {
   }
 
   function getIssuerSpecsFromModule(module) {
+    var _a;
+
     const issuer = getIssuerModule(module);
-    const issuerPath = issuer !== null ? npath.dirname(issuer.filename) : process.cwd();
-    return [{
-      apiPath: opts.manager.getApiPathFromParent(issuer),
-      path: issuerPath,
-      module
-    }];
+
+    if (issuer !== null) {
+      const path = npath.dirname(issuer.filename);
+      const apiPath = opts.manager.getApiPathFromParent(issuer);
+      return [{
+        apiPath,
+        path,
+        module
+      }];
+    } else {
+      const path = process.cwd();
+      const apiPath = (_a = opts.manager.findApiPathFor(npath.join(path, `[file]`))) !== null && _a !== void 0 ? _a : opts.manager.getApiPathFromParent(null);
+      return [{
+        apiPath,
+        path,
+        module
+      }];
+    }
   }
 
   function makeFakeParent(path) {
@@ -34057,36 +34139,41 @@ function hydrateRuntimeState(data, {
   const portablePath = npath.toPortablePath(basePath);
   const absolutePortablePath = ppath.resolve(portablePath);
   const ignorePattern = data.ignorePatternData !== null ? new RegExp(data.ignorePatternData) : null;
+  const packageLocatorsByLocations = new Map();
+  const packageLocationLengths = new Set();
   const packageRegistry = new Map(data.packageRegistryData.map(([packageName, packageStoreData]) => {
     return [packageName, new Map(packageStoreData.map(([packageReference, packageInformationData]) => {
+      if (packageName === null !== (packageReference === null)) throw new Error(`Assertion failed: The name and reference should be null, or neither should`);
+
+      if (!packageInformationData.discardFromLookup) {
+        // @ts-expect-error: TypeScript isn't smart enough to understand the type assertion
+        const packageLocator = {
+          name: packageName,
+          reference: packageReference
+        };
+        packageLocatorsByLocations.set(packageInformationData.packageLocation, packageLocator);
+        packageLocationLengths.add(packageInformationData.packageLocation.length);
+      }
+
+      let resolvedPackageLocation = null;
       return [packageReference, {
-        // We use ppath.join instead of ppath.resolve because:
-        // 1) packageInformationData.packageLocation is a relative path when part of the SerializedState
-        // 2) ppath.join preserves trailing slashes
-        packageLocation: ppath.join(absolutePortablePath, packageInformationData.packageLocation),
         packageDependencies: new Map(packageInformationData.packageDependencies),
         packagePeers: new Set(packageInformationData.packagePeers),
         linkType: packageInformationData.linkType,
-        discardFromLookup: packageInformationData.discardFromLookup || false
+        discardFromLookup: packageInformationData.discardFromLookup || false,
+
+        // we only need this for packages that are used by the currently running script
+        // this is a lazy getter because `ppath.join` has some overhead
+        get packageLocation() {
+          // We use ppath.join instead of ppath.resolve because:
+          // 1) packageInformationData.packageLocation is a relative path when part of the SerializedState
+          // 2) ppath.join preserves trailing slashes
+          return resolvedPackageLocation || (resolvedPackageLocation = ppath.join(absolutePortablePath, packageInformationData.packageLocation));
+        }
+
       }];
     }))];
   }));
-  const packageLocatorsByLocations = new Map();
-  const packageLocationLengths = new Set();
-
-  for (const [packageName, storeData] of data.packageRegistryData) {
-    for (const [packageReference, packageInformationData] of storeData) {
-      if (packageName === null !== (packageReference === null)) throw new Error(`Assertion failed: The name and reference should be null, or neither should`);
-      if (packageInformationData.discardFromLookup) continue; // @ts-expect-error: TypeScript isn't smart enough to understand the type assertion
-
-      const packageLocator = {
-        name: packageName,
-        reference: packageReference
-      };
-      packageLocatorsByLocations.set(packageInformationData.packageLocation, packageLocator);
-      packageLocationLengths.add(packageInformationData.packageLocation.length);
-    }
-  }
 
   for (const location of data.locationBlacklistData) packageLocatorsByLocations.set(location, null);
 
@@ -34333,14 +34420,6 @@ function makeApi(runtimeState, opts) {
     return fakeModule;
   }
   /**
-   * Normalize path to posix format.
-   */
-
-
-  function normalizePath(p) {
-    return npath.toPortablePath(p);
-  }
-  /**
    * Forward the resolution to the next resolver (usually the native one)
    */
 
@@ -34487,9 +34566,9 @@ function makeApi(runtimeState, opts) {
 
   function findPackageLocator(location) {
     if (isPathIgnored(location)) return null;
-    let relativeLocation = normalizePath(ppath.relative(runtimeState.basePath, location));
+    let relativeLocation = ppath.relative(runtimeState.basePath, location);
     if (!relativeLocation.match(isStrictRegExp)) relativeLocation = `./${relativeLocation}`;
-    if (location.match(isDirRegExp) && !relativeLocation.endsWith(`/`)) relativeLocation = `${relativeLocation}/`;
+    if (!relativeLocation.endsWith(`/`)) relativeLocation = `${relativeLocation}/`;
     let from = 0; // If someone wants to use a binary search to go from O(n) to O(log n), be my guest
 
     while (from < packageLocationLengths.length && packageLocationLengths[from] > relativeLocation.length) from += 1;
@@ -34600,177 +34679,177 @@ function makeApi(runtimeState, opts) {
 
 
       findPackageLocator(unqualifiedPath);
-    } // Things are more hairy if it's a package require - we then need to figure out which package is needed, and in
-    // particular the exact version for the given location on the dependency tree
-    else {
-        if (!issuer) {
-          throw internalTools_makeError(ErrorCode.API_ERROR, `The resolveToUnqualified function must be called with a valid issuer when the path isn't a builtin nor absolute`, {
+    } else {
+      // Things are more hairy if it's a package require - we then need to figure out which package is needed, and in
+      // particular the exact version for the given location on the dependency tree
+      if (!issuer) {
+        throw internalTools_makeError(ErrorCode.API_ERROR, `The resolveToUnqualified function must be called with a valid issuer when the path isn't a builtin nor absolute`, {
+          request: requestForDisplay,
+          issuer: issuerForDisplay
+        });
+      }
+
+      const [, dependencyName, subPath] = dependencyNameMatch;
+      const issuerLocator = findPackageLocator(issuer); // If the issuer file doesn't seem to be owned by a package managed through pnp, then we resort to using the next
+      // resolution algorithm in the chain, usually the native Node resolution one
+
+      if (!issuerLocator) {
+        const result = callNativeResolution(request, issuer);
+
+        if (result === false) {
+          throw internalTools_makeError(ErrorCode.BUILTIN_NODE_RESOLUTION_FAILED, `The builtin node resolution algorithm was unable to resolve the requested module (it didn't go through the pnp resolver because the issuer doesn't seem to be part of the Yarn-managed dependency tree).\n\nRequire path: "${requestForDisplay}"\nRequired by: ${issuerForDisplay}\n`, {
             request: requestForDisplay,
             issuer: issuerForDisplay
           });
         }
 
-        const [, dependencyName, subPath] = dependencyNameMatch;
-        const issuerLocator = findPackageLocator(issuer); // If the issuer file doesn't seem to be owned by a package managed through pnp, then we resort to using the next
-        // resolution algorithm in the chain, usually the native Node resolution one
+        return npath.toPortablePath(result);
+      }
 
-        if (!issuerLocator) {
-          const result = callNativeResolution(request, issuer);
+      const issuerInformation = getPackageInformationSafe(issuerLocator); // We obtain the dependency reference in regard to the package that request it
 
-          if (result === false) {
-            throw internalTools_makeError(ErrorCode.BUILTIN_NODE_RESOLUTION_FAILED, `The builtin node resolution algorithm was unable to resolve the requested module (it didn't go through the pnp resolver because the issuer doesn't seem to be part of the Yarn-managed dependency tree).\n\nRequire path: "${requestForDisplay}"\nRequired by: ${issuerForDisplay}\n`, {
-              request: requestForDisplay,
-              issuer: issuerForDisplay
-            });
-          }
+      let dependencyReference = issuerInformation.packageDependencies.get(dependencyName);
+      let fallbackReference = null; // If we can't find it, we check if we can potentially load it from the packages that have been defined as potential fallbacks.
+      // It's a bit of a hack, but it improves compatibility with the existing Node ecosystem. Hopefully we should eventually be able
+      // to kill this logic and become stricter once pnp gets enough traction and the affected packages fix themselves.
 
-          return npath.toPortablePath(result);
-        }
+      if (dependencyReference == null) {
+        if (issuerLocator.name !== null) {
+          // To allow programs to become gradually stricter, starting from the v2 we enforce that workspaces cannot depend on fallbacks.
+          // This works by having a list containing all their locators, and checking when a fallback is required whether it's one of them.
+          const exclusionEntry = runtimeState.fallbackExclusionList.get(issuerLocator.name);
+          const canUseFallbacks = !exclusionEntry || !exclusionEntry.has(issuerLocator.reference);
 
-        const issuerInformation = getPackageInformationSafe(issuerLocator); // We obtain the dependency reference in regard to the package that request it
+          if (canUseFallbacks) {
+            for (let t = 0, T = fallbackLocators.length; t < T; ++t) {
+              const fallbackInformation = getPackageInformationSafe(fallbackLocators[t]);
+              const reference = fallbackInformation.packageDependencies.get(dependencyName);
+              if (reference == null) continue;
+              if (alwaysWarnOnFallback) fallbackReference = reference;else dependencyReference = reference;
+              break;
+            }
 
-        let dependencyReference = issuerInformation.packageDependencies.get(dependencyName);
-        let fallbackReference = null; // If we can't find it, we check if we can potentially load it from the packages that have been defined as potential fallbacks.
-        // It's a bit of a hack, but it improves compatibility with the existing Node ecosystem. Hopefully we should eventually be able
-        // to kill this logic and become stricter once pnp gets enough traction and the affected packages fix themselves.
+            if (runtimeState.enableTopLevelFallback) {
+              if (dependencyReference == null && fallbackReference === null) {
+                const reference = runtimeState.fallbackPool.get(dependencyName);
 
-        if (dependencyReference == null) {
-          if (issuerLocator.name !== null) {
-            // To allow programs to become gradually stricter, starting from the v2 we enforce that workspaces cannot depend on fallbacks.
-            // This works by having a list containing all their locators, and checking when a fallback is required whether it's one of them.
-            const exclusionEntry = runtimeState.fallbackExclusionList.get(issuerLocator.name);
-            const canUseFallbacks = !exclusionEntry || !exclusionEntry.has(issuerLocator.reference);
-
-            if (canUseFallbacks) {
-              for (let t = 0, T = fallbackLocators.length; t < T; ++t) {
-                const fallbackInformation = getPackageInformationSafe(fallbackLocators[t]);
-                const reference = fallbackInformation.packageDependencies.get(dependencyName);
-                if (reference == null) continue;
-                if (alwaysWarnOnFallback) fallbackReference = reference;else dependencyReference = reference;
-                break;
-              }
-
-              if (runtimeState.enableTopLevelFallback) {
-                if (dependencyReference == null && fallbackReference === null) {
-                  const reference = runtimeState.fallbackPool.get(dependencyName);
-
-                  if (reference != null) {
-                    fallbackReference = reference;
-                  }
+                if (reference != null) {
+                  fallbackReference = reference;
                 }
               }
             }
           }
-        } // If we can't find the path, and if the package making the request is the top-level, we can offer nicer error messages
+        }
+      } // If we can't find the path, and if the package making the request is the top-level, we can offer nicer error messages
 
 
-        let error = null;
+      let error = null;
 
-        if (dependencyReference === null) {
+      if (dependencyReference === null) {
+        if (isDependencyTreeRoot(issuerLocator)) {
+          error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `Your application tried to access ${dependencyName} (a peer dependency); this isn't allowed as there is no ancestor to satisfy the requirement. Use a devDependency if needed.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
+            request: requestForDisplay,
+            issuer: issuerForDisplay,
+            dependencyName
+          });
+        } else {
+          const brokenAncestors = findBrokenPeerDependencies(dependencyName, issuerLocator);
+
+          if (brokenAncestors.every(ancestor => isDependencyTreeRoot(ancestor))) {
+            error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName} (a peer dependency) but it isn't provided by your application; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n${brokenAncestors.map(ancestorLocator => `Ancestor breaking the chain: ${ancestorLocator.name}@${ancestorLocator.reference}\n`).join(``)}\n`, {
+              request: requestForDisplay,
+              issuer: issuerForDisplay,
+              issuerLocator: Object.assign({}, issuerLocator),
+              dependencyName,
+              brokenAncestors
+            });
+          } else {
+            error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName} (a peer dependency) but it isn't provided by its ancestors; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n${brokenAncestors.map(ancestorLocator => `Ancestor breaking the chain: ${ancestorLocator.name}@${ancestorLocator.reference}\n`).join(``)}\n`, {
+              request: requestForDisplay,
+              issuer: issuerForDisplay,
+              issuerLocator: Object.assign({}, issuerLocator),
+              dependencyName,
+              brokenAncestors
+            });
+          }
+        }
+      } else if (dependencyReference === undefined) {
+        if (!considerBuiltins && builtinModules.has(request)) {
           if (isDependencyTreeRoot(issuerLocator)) {
-            error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `Your application tried to access ${dependencyName} (a peer dependency); this isn't allowed as there is no ancestor to satisfy the requirement. Use a devDependency if needed.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
+            error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `Your application tried to access ${dependencyName}. While this module is usually interpreted as a Node builtin, your resolver is running inside a non-Node resolution context where such builtins are ignored. Since ${dependencyName} isn't otherwise declared in your dependencies, this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
               request: requestForDisplay,
               issuer: issuerForDisplay,
               dependencyName
             });
           } else {
-            const brokenAncestors = findBrokenPeerDependencies(dependencyName, issuerLocator);
-
-            if (brokenAncestors.every(ancestor => isDependencyTreeRoot(ancestor))) {
-              error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName} (a peer dependency) but it isn't provided by your application; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n${brokenAncestors.map(ancestorLocator => `Ancestor breaking the chain: ${ancestorLocator.name}@${ancestorLocator.reference}\n`).join(``)}\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                issuerLocator: Object.assign({}, issuerLocator),
-                dependencyName,
-                brokenAncestors
-              });
-            } else {
-              error = internalTools_makeError(ErrorCode.MISSING_PEER_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName} (a peer dependency) but it isn't provided by its ancestors; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n${brokenAncestors.map(ancestorLocator => `Ancestor breaking the chain: ${ancestorLocator.name}@${ancestorLocator.reference}\n`).join(``)}\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                issuerLocator: Object.assign({}, issuerLocator),
-                dependencyName,
-                brokenAncestors
-              });
-            }
+            error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName}. While this module is usually interpreted as a Node builtin, your resolver is running inside a non-Node resolution context where such builtins are ignored. Since ${dependencyName} isn't otherwise declared in ${issuerLocator.name}'s dependencies, this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
+              request: requestForDisplay,
+              issuer: issuerForDisplay,
+              issuerLocator: Object.assign({}, issuerLocator),
+              dependencyName
+            });
           }
-        } else if (dependencyReference === undefined) {
-          if (!considerBuiltins && builtinModules.has(request)) {
-            if (isDependencyTreeRoot(issuerLocator)) {
-              error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `Your application tried to access ${dependencyName}. While this module is usually interpreted as a Node builtin, your resolver is running inside a non-Node resolution context where such builtins are ignored. Since ${dependencyName} isn't otherwise declared in your dependencies, this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                dependencyName
-              });
-            } else {
-              error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName}. While this module is usually interpreted as a Node builtin, your resolver is running inside a non-Node resolution context where such builtins are ignored. Since ${dependencyName} isn't otherwise declared in ${issuerLocator.name}'s dependencies, this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                issuerLocator: Object.assign({}, issuerLocator),
-                dependencyName
-              });
-            }
-          } else {
-            if (isDependencyTreeRoot(issuerLocator)) {
-              error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `Your application tried to access ${dependencyName}, but it isn't declared in your dependencies; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                dependencyName
-              });
-            } else {
-              error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName}, but it isn't declared in its dependencies; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n`, {
-                request: requestForDisplay,
-                issuer: issuerForDisplay,
-                issuerLocator: Object.assign({}, issuerLocator),
-                dependencyName
-              });
-            }
-          }
-        }
-
-        if (dependencyReference == null) {
-          if (fallbackReference === null || error === null) throw error || new Error(`Assertion failed: Expected an error to have been set`);
-          dependencyReference = fallbackReference;
-          const message = error.message.replace(/\n.*/g, ``);
-          error.message = message;
-
-          if (!emittedWarnings.has(message)) {
-            emittedWarnings.add(message);
-            process.emitWarning(error);
-          }
-        } // We need to check that the package exists on the filesystem, because it might not have been installed
-
-
-        const dependencyLocator = Array.isArray(dependencyReference) ? {
-          name: dependencyReference[0],
-          reference: dependencyReference[1]
-        } : {
-          name: dependencyName,
-          reference: dependencyReference
-        };
-        const dependencyInformation = getPackageInformationSafe(dependencyLocator);
-
-        if (!dependencyInformation.packageLocation) {
-          throw internalTools_makeError(ErrorCode.MISSING_DEPENDENCY, `A dependency seems valid but didn't get installed for some reason. This might be caused by a partial install, such as dev vs prod.\n\nRequired package: ${dependencyLocator.name}@${dependencyLocator.reference} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n`, {
-            request: requestForDisplay,
-            issuer: issuerForDisplay,
-            dependencyLocator: Object.assign({}, dependencyLocator)
-          });
-        } // Now that we know which package we should resolve to, we only have to find out the file location
-        // packageLocation is always absolute as it's returned by getPackageInformationSafe
-
-
-        const dependencyLocation = dependencyInformation.packageLocation;
-
-        if (subPath) {
-          // We use ppath.join instead of ppath.resolve because:
-          // 1) subPath is always a relative path
-          // 2) ppath.join preserves trailing slashes
-          unqualifiedPath = ppath.join(dependencyLocation, subPath);
         } else {
-          unqualifiedPath = dependencyLocation;
+          if (isDependencyTreeRoot(issuerLocator)) {
+            error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `Your application tried to access ${dependencyName}, but it isn't declared in your dependencies; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerForDisplay}\n`, {
+              request: requestForDisplay,
+              issuer: issuerForDisplay,
+              dependencyName
+            });
+          } else {
+            error = internalTools_makeError(ErrorCode.UNDECLARED_DEPENDENCY, `${issuerLocator.name} tried to access ${dependencyName}, but it isn't declared in its dependencies; this makes the require call ambiguous and unsound.\n\nRequired package: ${dependencyName} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n`, {
+              request: requestForDisplay,
+              issuer: issuerForDisplay,
+              issuerLocator: Object.assign({}, issuerLocator),
+              dependencyName
+            });
+          }
         }
       }
+
+      if (dependencyReference == null) {
+        if (fallbackReference === null || error === null) throw error || new Error(`Assertion failed: Expected an error to have been set`);
+        dependencyReference = fallbackReference;
+        const message = error.message.replace(/\n.*/g, ``);
+        error.message = message;
+
+        if (!emittedWarnings.has(message) && debugLevel !== 0) {
+          emittedWarnings.add(message);
+          process.emitWarning(error);
+        }
+      } // We need to check that the package exists on the filesystem, because it might not have been installed
+
+
+      const dependencyLocator = Array.isArray(dependencyReference) ? {
+        name: dependencyReference[0],
+        reference: dependencyReference[1]
+      } : {
+        name: dependencyName,
+        reference: dependencyReference
+      };
+      const dependencyInformation = getPackageInformationSafe(dependencyLocator);
+
+      if (!dependencyInformation.packageLocation) {
+        throw internalTools_makeError(ErrorCode.MISSING_DEPENDENCY, `A dependency seems valid but didn't get installed for some reason. This might be caused by a partial install, such as dev vs prod.\n\nRequired package: ${dependencyLocator.name}@${dependencyLocator.reference} (via "${requestForDisplay}")\nRequired by: ${issuerLocator.name}@${issuerLocator.reference} (via ${issuerForDisplay})\n`, {
+          request: requestForDisplay,
+          issuer: issuerForDisplay,
+          dependencyLocator: Object.assign({}, dependencyLocator)
+        });
+      } // Now that we know which package we should resolve to, we only have to find out the file location
+      // packageLocation is always absolute as it's returned by getPackageInformationSafe
+
+
+      const dependencyLocation = dependencyInformation.packageLocation;
+
+      if (subPath) {
+        // We use ppath.join instead of ppath.resolve because:
+        // 1) subPath is always a relative path
+        // 2) ppath.join preserves trailing slashes
+        unqualifiedPath = ppath.join(dependencyLocation, subPath);
+      } else {
+        unqualifiedPath = dependencyLocation;
+      }
+    }
 
     return ppath.normalize(unqualifiedPath);
   }
@@ -34903,6 +34982,132 @@ function makeApi(runtimeState, opts) {
     })
   };
 }
+// CONCATENATED MODULE: ../yarnpkg-fslib/sources/xfs.ts
+
+
+
+
+function getTempName(prefix) {
+  const tmpdir = npath.toPortablePath(external_os_default().tmpdir());
+  const hash = Math.ceil(Math.random() * 0x100000000).toString(16).padStart(8, `0`);
+  return ppath.join(tmpdir, `${prefix}${hash}`);
+}
+
+const tmpdirs = new Set();
+let cleanExitRegistered = false;
+
+function registerCleanExit() {
+  if (cleanExitRegistered) return;
+  cleanExitRegistered = true;
+  process.once(`exit`, () => {
+    xfs.rmtempSync();
+  });
+}
+
+const xfs = Object.assign(new NodeFS(), {
+  detachTemp(p) {
+    tmpdirs.delete(p);
+  },
+
+  mktempSync(cb) {
+    registerCleanExit();
+
+    while (true) {
+      const p = getTempName(`xfs-`);
+
+      try {
+        this.mkdirSync(p);
+      } catch (error) {
+        if (error.code === `EEXIST`) {
+          continue;
+        } else {
+          throw error;
+        }
+      }
+
+      const realP = this.realpathSync(p);
+      tmpdirs.add(realP);
+
+      if (typeof cb !== `undefined`) {
+        try {
+          return cb(realP);
+        } finally {
+          if (tmpdirs.has(realP)) {
+            tmpdirs.delete(realP);
+
+            try {
+              this.removeSync(realP);
+            } catch (_a) {// Too bad if there's an error
+            }
+          }
+        }
+      } else {
+        return realP;
+      }
+    }
+  },
+
+  async mktempPromise(cb) {
+    registerCleanExit();
+
+    while (true) {
+      const p = getTempName(`xfs-`);
+
+      try {
+        await this.mkdirPromise(p);
+      } catch (error) {
+        if (error.code === `EEXIST`) {
+          continue;
+        } else {
+          throw error;
+        }
+      }
+
+      const realP = await this.realpathPromise(p);
+      tmpdirs.add(realP);
+
+      if (typeof cb !== `undefined`) {
+        try {
+          return await cb(realP);
+        } finally {
+          if (tmpdirs.has(realP)) {
+            tmpdirs.delete(realP);
+
+            try {
+              await this.removePromise(realP);
+            } catch (_a) {// Too bad if there's an error
+            }
+          }
+        }
+      } else {
+        return realP;
+      }
+    }
+  },
+
+  async rmtempPromise() {
+    await Promise.all(Array.from(tmpdirs.values()).map(async p => {
+      try {
+        await xfs.removePromise(p, {
+          maxRetries: 0
+        });
+        tmpdirs.delete(p);
+      } catch (_a) {// Too bad if there's an error
+      }
+    }));
+  },
+
+  rmtempSync() {
+    for (const p of tmpdirs) {
+      try {
+        xfs.removeSync(p);
+        tmpdirs.delete(p);
+      } catch (_a) {// Too bad if there's an error
+      }
+    }
+  }
+
+});
 // CONCATENATED MODULE: ./sources/loader/makeManager.ts
 
 
@@ -35001,10 +35206,12 @@ function makeManager(pnpapi, opts) {
       curr = next;
       const cached = findApiPathCache.get(curr);
       if (cached !== undefined) return addToCacheAndReturn(start, curr, cached);
-      const candidate = ppath.join(curr, `.pnp.js`);
-      if (xfs.existsSync(candidate) && xfs.statSync(candidate).isFile()) return addToCacheAndReturn(start, curr, candidate);
-      const cjsCandidate = ppath.join(curr, `.pnp.cjs`);
-      if (xfs.existsSync(cjsCandidate) && xfs.statSync(cjsCandidate).isFile()) return addToCacheAndReturn(start, curr, cjsCandidate);
+      const cjsCandidate = ppath.join(curr, Filename.pnpCjs);
+      if (xfs.existsSync(cjsCandidate) && xfs.statSync(cjsCandidate).isFile()) return addToCacheAndReturn(start, curr, cjsCandidate); // We still support .pnp.js files to improve multi-project compatibility.
+      // TODO: Remove support for .pnp.js files after they stop being used.
+
+      const legacyCjsCandidate = ppath.join(curr, Filename.pnpJs);
+      if (xfs.existsSync(legacyCjsCandidate) && xfs.statSync(legacyCjsCandidate).isFile()) return addToCacheAndReturn(start, curr, legacyCjsCandidate);
       next = ppath.dirname(curr);
     } while (curr !== PortablePath.root);
 
@@ -39630,7 +39837,7 @@ module.exports = require("path");;
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(936);
+/******/ 	return __webpack_require__(807);
 /******/ })()
 .default;
 });

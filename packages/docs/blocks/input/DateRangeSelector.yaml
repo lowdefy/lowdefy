@@ -18,29 +18,12 @@ _ref:
     block_type: DateRangeSelector
     value_type: date[]
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
+    schema: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
+    filePath: blocks/input/DateRangeSelector.yaml
     description_content: |
       The `DateRangeSelector` block allows the user to choose a start date and an end date for a date range. The selected range is saved as an array with two date elements, the start and end dates.
 
       > Other date type blocks are `DateSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/DateRangeSelector/DateRangeSelector.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: DateRangeSelector input

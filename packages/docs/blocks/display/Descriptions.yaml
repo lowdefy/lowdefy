@@ -17,9 +17,8 @@ _ref:
   vars:
     block_type: Descriptions
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+    schema: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+    filePath: blocks/display/Descriptions.yaml
     init_state_values:
       __type_block.properties.column: number
       __type_block.properties.items: object[]
@@ -36,22 +35,7 @@ _ref:
 
     description_content: |
       Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
-        transformer: templates/blocks/schemaTransformer.js
+
     examples:
       - title: Basic descriptions
         properties: '{"items": {"Location": "South Africa", "Temperature": 22, "Date": "2021-02-02"}}'

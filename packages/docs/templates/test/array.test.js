@@ -58,11 +58,15 @@ test('array propertiesFormTransformer', () => {
 });
 
 test('array propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
       ],
     }
@@ -202,11 +206,16 @@ test('array schemaArrayObject propertiesFormTransformer', () => {
 });
 
 test('array schemaArrayObject propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaArrayObject)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaArrayObject, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -215,7 +224,11 @@ test('array schemaArrayObject propertiesGetterTransformer', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "contextId": undefined,
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                   ],
                 },
@@ -223,7 +236,10 @@ test('array schemaArrayObject propertiesGetterTransformer', () => {
               "on": Object {
                 "_if_none": Array [
                   Object {
-                    "_state": "block.properties.options",
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.options",
+                    },
                   },
                   Array [],
                 ],
@@ -436,11 +452,16 @@ test('array schemaOneOfPrimitive propertiesFormTransformer', () => {
 });
 
 test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaOneOfPrimitive)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaOneOfPrimitive, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -461,7 +482,10 @@ test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
                               ],
                             },
                             "then": Object {
-                              "_state": "__string_0",
+                              "_state": Object {
+                                "contextId": undefined,
+                                "key": "__string_0",
+                              },
                             },
                           },
                           Object {
@@ -474,7 +498,10 @@ test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
                               ],
                             },
                             "then": Object {
-                              "_state": "__number_0",
+                              "_state": Object {
+                                "contextId": undefined,
+                                "key": "__number_0",
+                              },
                             },
                           },
                         ],
@@ -488,7 +515,10 @@ test('array schemaOneOfPrimitive propertiesGetterTransformer', () => {
               "on": Object {
                 "_if_none": Array [
                   Object {
-                    "_state": "block.properties.options",
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.options",
+                    },
                   },
                   Array [],
                 ],
@@ -714,11 +744,16 @@ test('array schemaPrimitiveOneOf propertiesFormTransformer', () => {
 });
 
 test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaPrimitiveOneOf)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaPrimitiveOneOf, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -736,7 +771,10 @@ test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__string_arr_block.properties.options",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__string_arr_block.properties.options",
+                        },
                       },
                     },
                     Object {
@@ -749,7 +787,10 @@ test('array schemaPrimitiveOneOf propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__number_arr_block.properties.options",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__number_arr_block.properties.options",
+                        },
                       },
                     },
                   ],
@@ -987,11 +1028,16 @@ test('array schemaOneOfArrayStrArrayYaml propertiesFormTransformer', () => {
 });
 
 test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaOneOfArrayStrArrayYaml)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaOneOfArrayStrArrayYaml, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "options": Object {
@@ -1009,7 +1055,10 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                         ],
                       },
                       "then": Object {
-                        "_state": "__string_arr_block.properties.options",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "__string_arr_block.properties.options",
+                        },
                       },
                     },
                     Object {
@@ -1028,7 +1077,10 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                               "__yaml.parse": Object {
                                 "__if_none": Array [
                                   Object {
-                                    "__args": "0",
+                                    "__args": Object {
+                                      "contextId": undefined,
+                                      "key": "0",
+                                    },
                                   },
                                   "",
                                 ],
@@ -1038,7 +1090,10 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                           "on": Object {
                             "_if_none": Array [
                               Object {
-                                "_state": "__object_arr_block.properties.options",
+                                "_state": Object {
+                                  "contextId": "Block:Block:{}",
+                                  "key": "__object_arr_block.properties.options",
+                                },
                               },
                               Array [],
                             ],
@@ -1190,11 +1245,16 @@ test('array propertiesFormTransformer schemaNestedArray', () => {
 });
 
 test('array propertiesGetterTransformer schemaNestedArray', () => {
-  expect(propertiesGetterTransformer(schemaNestedArray)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaNestedArray, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr1": Object {
@@ -1203,14 +1263,21 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "contextId": undefined,
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                     Object {
                       "obj": Object {
                         "__yaml.parse": Object {
                           "__if_none": Array [
                             Object {
-                              "__args": "0.obj",
+                              "__args": Object {
+                                "contextId": undefined,
+                                "key": "0.obj",
+                              },
                             },
                             "",
                           ],
@@ -1225,7 +1292,10 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                               "___yaml.parse": Object {
                                 "___if_none": Array [
                                   Object {
-                                    "___args": "0",
+                                    "___args": Object {
+                                      "contextId": undefined,
+                                      "key": "0",
+                                    },
                                   },
                                   "",
                                 ],
@@ -1235,7 +1305,10 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                           "on": Object {
                             "__if_none": Array [
                               Object {
-                                "__args": "0.arr2",
+                                "__args": Object {
+                                  "contextId": undefined,
+                                  "key": "0.arr2",
+                                },
                               },
                               Array [],
                             ],
@@ -1249,7 +1322,10 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
               "on": Object {
                 "_if_none": Array [
                   Object {
-                    "_state": "block.properties.arr1",
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.arr1",
+                    },
                   },
                   Array [],
                 ],

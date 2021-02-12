@@ -17,9 +17,8 @@ _ref:
   vars:
     block_type: Breadcrumb
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
+    schema: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
+    filePath: blocks/display/Breadcrumb.yaml
     init_state_values:
       __type_block.properties.list: string[]
       __string_arr_block.properties.list:
@@ -27,22 +26,6 @@ _ref:
         - Second
     description_content: |
       A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy with provided links.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Basic Breadcrumb

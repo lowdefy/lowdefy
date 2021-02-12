@@ -16,6 +16,7 @@
 
 import _event_log from './event_log';
 import _base64 from './base64';
+import _format from './format';
 import _list_contexts from './list_contexts';
 import _media from './media';
 import _menu from './menu';
@@ -25,6 +26,7 @@ import _request_details from './request_details';
 export default {
   _event_log,
   _base64,
+  _format,
   _list_contexts,
   _media,
   _menu,

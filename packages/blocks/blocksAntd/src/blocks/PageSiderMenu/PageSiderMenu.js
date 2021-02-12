@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
+import Affix from '../Affix/Affix';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
 import Button from '../Button/Button';
 import Content from '../Content/Content';
@@ -52,9 +53,6 @@ const PageSiderMenu = ({
       setSiderOpen(open);
     });
   });
-  const showSiderToggleButton = !(
-    properties.toggleSiderButton && properties.toggleSiderButton.hide
-  );
   const styles = {
     layout: { minHeight: '100vh' },
     header: {
@@ -223,6 +221,7 @@ const PageSiderMenu = ({
                                   mode: 'inline',
                                   theme: get(properties, 'sider.theme') || 'light',
                                   backgroundColor: get(properties, 'sider.color'),
+                                  collapsed: !openSiderState,
                                 },
                                 properties.menu,
                                 properties.menuLg,
@@ -243,27 +242,52 @@ const PageSiderMenu = ({
                             <div style={{ flex: '1 0 auto' }}>
                               {content.sider && content.sider()}
                             </div>
-                            {showSiderToggleButton && (
-                              <Button
-                                blockId={`${blockId}_toggle_sider`}
+                            {!get(properties, 'sider.hideToggleButton') && (
+                              <Affix
+                                blockId={`${blockId}_toggle_sider_affix`}
                                 events={events}
-                                properties={{
-                                  title: '',
-                                  type: 'link',
-                                  block: true,
-                                  icon: {
-                                    name: openSiderState
-                                      ? 'MenuFoldOutlined'
-                                      : 'MenuUnfoldOutlined',
-                                  },
-                                  ...(properties.toggleSiderButton || {}),
-                                }}
+                                properties={{ offsetBottom: 0 }}
                                 methods={methods}
-                                onClick={() => methods.toggleSiderOpen()}
                                 rename={{
                                   events: {
-                                    onClick: 'onToggleSider',
+                                    onChange: 'onChangeToggleSiderAffix',
                                   },
+                                }}
+                                content={{
+                                  content: () => (
+                                    <div
+                                      style={{
+                                        background:
+                                          get(properties, 'sider.color') ||
+                                          (get(properties, 'sider.theme') === 'dark'
+                                            ? '#30393e'
+                                            : 'white'),
+                                      }}
+                                    >
+                                      <Button
+                                        blockId={`${blockId}_toggle_sider`}
+                                        events={events}
+                                        properties={{
+                                          title: '',
+                                          type: 'link',
+                                          block: true,
+                                          icon: {
+                                            name: openSiderState
+                                              ? 'MenuFoldOutlined'
+                                              : 'MenuUnfoldOutlined',
+                                          },
+                                          ...(properties.toggleSiderButton || {}),
+                                        }}
+                                        methods={methods}
+                                        onClick={() => methods.toggleSiderOpen()}
+                                        rename={{
+                                          events: {
+                                            onClick: 'onToggleSider',
+                                          },
+                                        }}
+                                      />
+                                    </div>
+                                  ),
                                 }}
                               />
                             )}

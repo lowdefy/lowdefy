@@ -44,6 +44,18 @@ test('_operator.name invalid', () => {
   `);
 });
 
+test('_operator.name not allowed to include "experimental"', () => {
+  const input = { a: { _operator: { name: '_experimental_unsafe_js' } } };
+  const parser = new NodeParser({ state });
+  const res = parser.parse({ input, location: 'locationId' });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors).toMatchInlineSnapshot(`
+    Array [
+      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_unsafe_js"} at locationId.],
+    ]
+  `);
+});
+
 test('_operator.name not a string', () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new NodeParser({ state });

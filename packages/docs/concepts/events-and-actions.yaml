@@ -18,6 +18,7 @@ _ref:
     pageId: events-and-actions
     pageTitle: Events and Actions
     section: Concepts
+    filePath: concepts/events-and-actions.yaml
     content:
       - id: md1
         type: Markdown
@@ -78,6 +79,10 @@ _ref:
                     params:
                       # ...
             ```
+
+            # The event object
+
+            When events are triggered, the can provide a data object describing the event (e.g. a description of the clicked item or uploaded file). This data object can be accessed using the [`_event`](/_event) operator in an action definition.
 
             # Context initialisation events
 

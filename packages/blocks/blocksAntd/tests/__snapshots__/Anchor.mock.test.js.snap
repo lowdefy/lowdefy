@@ -4,6 +4,14 @@ exports[`Mock render - default - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.disabled - value[0] - default 1`] = `Array []`;
 
+exports[`Mock render - properties.href - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.href and rel - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.href and target - value[0] - default 1`] = `Array []`;
+
+exports[`Mock render - properties.href, title and target - value[0] - default 1`] = `Array []`;
+
 exports[`Mock render - properties.icon and properties.title - value[0] - default 1`] = `Array []`;
 
 exports[`Mock render - properties.icon object - value[0] - default 1`] = `Array []`;

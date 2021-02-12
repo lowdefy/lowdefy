@@ -18,6 +18,7 @@ _ref:
     pageId: tutorial-actions-operators
     pageTitle: Interactive pages
     section: Tutorial
+    filePath: tutorial/tutorial-actions-operators.yaml
     # prefetchPages:
     #   - tutorial-requests
     content:

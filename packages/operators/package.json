@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "3.7.2",
+  "version": "3.8.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -33,8 +33,9 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.7.2",
-    "@lowdefy/nunjucks": "3.7.2",
+    "@lowdefy/format": "3.8.0",
+    "@lowdefy/helpers": "3.8.0",
+    "@lowdefy/nunjucks": "3.8.0",
     "deep-diff": "1.0.2",
     "js-yaml": "4.0.0",
     "mingo": "4.1.0",

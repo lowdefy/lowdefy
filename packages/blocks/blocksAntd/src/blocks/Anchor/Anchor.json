@@ -23,6 +23,20 @@
             "displayType": "icon"
           }
         },
+        "href": {
+          "type": "string",
+          "description": "Anchor element href property."
+        },
+        "rel": {
+          "type": "string",
+          "default": "noopener noreferrer",
+          "description": "The relationship of the linked URL as space-separated link types."
+        },
+        "newTab": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open link in a new tab when the anchor link is clicked."
+        },
         "strong": {
           "type": "boolean",
           "default": false,

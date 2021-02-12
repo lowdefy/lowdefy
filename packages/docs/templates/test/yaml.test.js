@@ -49,18 +49,25 @@ test('yaml propertiesFormTransformer', () => {
 });
 
 test('yaml propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schema)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schema, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "field": Object {
             "_yaml.parse": Object {
               "_if_none": Array [
                 Object {
-                  "_state": "block.properties.field",
+                  "_state": Object {
+                    "contextId": "Block:Block:{}",
+                    "key": "block.properties.field",
+                  },
                 },
                 "",
               ],
@@ -168,24 +175,35 @@ test('yaml schemaNested propertiesFormTransformer', () => {
 });
 
 test('yaml schemaNested propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaNested)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaNested, { block_type: 'Block' })).toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "obj": Object {
             "_object.assign": Array [
               Object {
-                "_state": "block.properties.obj",
+                "_state": Object {
+                  "contextId": "Block:Block:{}",
+                  "default": Object {},
+                  "key": "block.properties.obj",
+                },
               },
               Object {
                 "field": Object {
                   "_yaml.parse": Object {
                     "_if_none": Array [
                       Object {
-                        "_state": "block.properties.obj.field",
+                        "_state": Object {
+                          "contextId": "Block:Block:{}",
+                          "key": "block.properties.obj.field",
+                        },
                       },
                       "",
                     ],
@@ -302,11 +320,16 @@ test('yaml schemaYamlInArray propertiesFormTransformer', () => {
 });
 
 test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaYamlInArray)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaYamlInArray, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr": Object {
@@ -316,7 +339,10 @@ test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
                   "__yaml.parse": Object {
                     "__if_none": Array [
                       Object {
-                        "__args": "0",
+                        "__args": Object {
+                          "contextId": undefined,
+                          "key": "0",
+                        },
                       },
                       "",
                     ],
@@ -326,7 +352,10 @@ test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
               "on": Object {
                 "_if_none": Array [
                   Object {
-                    "_state": "block.properties.arr",
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.arr",
+                    },
                   },
                   Array [],
                 ],
@@ -467,11 +496,16 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
 });
 
 test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
-  expect(propertiesGetterTransformer(schemaYamlInObjectInArray)).toMatchInlineSnapshot(`
+  expect(propertiesGetterTransformer(schemaYamlInObjectInArray, { block_type: 'Block' }))
+    .toMatchInlineSnapshot(`
     Object {
       "_object.assign": Array [
         Object {
-          "_state": "block.properties",
+          "_state": Object {
+            "contextId": "Block:Block:{}",
+            "default": Object {},
+            "key": "block.properties",
+          },
         },
         Object {
           "arr": Object {
@@ -480,14 +514,21 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
                 "_function": Object {
                   "__object.assign": Array [
                     Object {
-                      "__args": "0",
+                      "__args": Object {
+                        "contextId": undefined,
+                        "default": Object {},
+                        "key": "0",
+                      },
                     },
                     Object {
                       "yaml": Object {
                         "__yaml.parse": Object {
                           "__if_none": Array [
                             Object {
-                              "__args": "0.yaml",
+                              "__args": Object {
+                                "contextId": undefined,
+                                "key": "0.yaml",
+                              },
                             },
                             "",
                           ],
@@ -500,7 +541,10 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
               "on": Object {
                 "_if_none": Array [
                   Object {
-                    "_state": "block.properties.arr",
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.arr",
+                    },
                   },
                   Array [],
                 ],

@@ -52,7 +52,7 @@ const ModalBlock = ({ blockId, content, properties, events, methods }) => {
         id={`${blockId}_modal`}
         title={properties.title}
         bodyStyle={methods.makeCssClass(properties.bodyStyle, { styleObjectOnly: true })}
-        visible={type.isBoolean(properties.open) ? properties.open : openState}
+        visible={openState}
         onOk={async () => {
           await methods.triggerEvent({ name: 'onOk' });
           // the visible should only close if actions finished successfully

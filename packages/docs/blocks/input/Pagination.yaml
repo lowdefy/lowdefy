@@ -18,9 +18,8 @@ _ref:
     block_type: Pagination
     value_type: object
     category: input
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
+    schema: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
+    filePath: blocks/input/Pagination.yaml
     init_property_values:
       pageSizeOptions: [10, 20, 30, 40]
     init_state_values:
@@ -32,22 +31,6 @@ _ref:
       The `Pagination` controls user input for pagination purposes.
       
       > This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
-        transformer: templates/blocks/schemaTransformer.js
 
     examples:
       - title: Pagination input

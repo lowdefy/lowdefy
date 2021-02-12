@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: MessageAction
     pageTitle: Message
+    filePath: actions/Message.yaml
     types: |
       ```
       (params: {

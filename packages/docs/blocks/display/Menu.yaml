@@ -17,28 +17,32 @@ _ref:
   vars:
     block_type: Menu
     category: display
-    schema:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    schema: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    filePath: blocks/display/Menu.yaml
     description_content: |
       A menu block used to display page links.
-    default_properties:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/defaultValueTransformer.js
-    properties_getter:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/propertiesGetterTransformer.js
-    properties_form:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/propertiesFormTransformer.js
-    schema_definition:
-      _ref:
-        path: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
-        transformer: templates/blocks/schemaTransformer.js
-    examples:
-      - title: Basic menu
-        properties: '{}'
-      
+    init_state_values:
+      block.properties.links:
+        - id: home
+          type: MenuLink
+          pageId: home
+          properties:
+            icon: HomeOutlined
+            title: Home
+        - id: pages
+          type: MenuGroup
+          properties:
+            title: Pages
+            icon: LayoutOutlined
+          links:
+            - id: page1
+              type: MenuLink
+              pageId: page1
+              properties:
+                title: Page 1
+            - id: more_pages
+              type: MenuGroup
+              links:
+                - id: page3
+                  type: MenuLink
+                  pageId: page3

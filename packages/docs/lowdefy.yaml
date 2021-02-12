@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.7.2'
+lowdefy: '3.8.0'
 licence: Apache-2.0
 
 global:
@@ -271,6 +271,9 @@ menus:
           - id: Message
             type: MenuLink
             pageId: Message
+          - id: MobileMenu
+            type: MenuLink
+            pageId: MobileMenu
           - id: Notification
             type: MenuLink
             pageId: Notification
@@ -280,9 +283,9 @@ menus:
           - id: Progress
             type: MenuLink
             pageId: Progress
-          - id: Skeleton
-            type: MenuLink
-            pageId: Skeleton
+          # - id: Skeleton
+          #   type: MenuLink
+          #   pageId: Skeleton
           - id: Statistic
             type: MenuLink
             pageId: Statistic
@@ -296,9 +299,79 @@ menus:
           title: Container Blocks
           icon: ContainerOutlined
         links:
+          - id: Affix
+            type: MenuLink
+            pageId: Affix
+          - id: Badge
+            type: MenuLink
+            pageId: Badge
+          - id: Box
+            type: MenuLink
+            pageId: Box
           - id: Card
             type: MenuLink
             pageId: Card
+          - id: Collapse
+            type: MenuLink
+            pageId: Collapse
+          - id: Comment
+            type: MenuLink
+            pageId: Comment
+          - id: ConfirmModal
+            type: MenuLink
+            pageId: ConfirmModal
+          - id: Drawer
+            type: MenuLink
+            pageId: Drawer
+          - id: Label
+            type: MenuLink
+            pageId: Label
+          - id: Modal
+            type: MenuLink
+            pageId: Modal
+          - id: Result
+            type: MenuLink
+            pageId: Result
+          - id: Span
+            type: MenuLink
+            pageId: Span
+          - id: Spin
+            type: MenuLink
+            pageId: Spin
+          - id: Tabs
+            type: MenuLink
+            pageId: Tabs
+
+      - id: blocks_context
+        type: MenuGroup
+        properties:
+          title: Context Blocks
+          icon: GroupOutlined
+        links:
+          - id: Context
+            type: MenuLink
+            pageId: Context
+          - id: PageHCF
+            type: MenuLink
+            pageId: PageHCF
+          - id: PageHCF
+            type: MenuLink
+            pageId: PageHCF
+          - id: PageHCSF
+            type: MenuLink
+            pageId: PageHCSF
+          - id: PageHeaderMenu
+            type: MenuLink
+            pageId: PageHeaderMenu
+          - id: PageHSCF
+            type: MenuLink
+            pageId: PageHSCF
+          - id: PageSHCF
+            type: MenuLink
+            pageId: PageSHCF
+          - id: PageSiderMenu
+            type: MenuLink
+            pageId: PageSiderMenu
 
       - id: connections
         type: MenuGroup
@@ -397,6 +470,9 @@ menus:
           - id: _event
             type: MenuLink
             pageId: _event
+          - id: _format
+            type: MenuLink
+            pageId: _format
           - id: _function
             type: MenuLink
             pageId: _function
@@ -418,6 +494,9 @@ menus:
           - id: _if_none
             type: MenuLink
             pageId: _if_none
+          - id: _index
+            type: MenuLink
+            pageId: _index
           - id: _input
             type: MenuLink
             pageId: _input
@@ -580,14 +659,36 @@ pages:
   - _ref: blocks/display/MarkdownWithCode.yaml
   - _ref: blocks/display/Menu.yaml
   - _ref: blocks/display/Message.yaml
+  - _ref: blocks/display/MobileMenu.yaml
   - _ref: blocks/display/Notification.yaml
   - _ref: blocks/display/Paragraph.yaml
   - _ref: blocks/display/Progress.yaml
-  - _ref: blocks/display/Skeleton.yaml
+  # - _ref: blocks/display/Skeleton.yaml
   - _ref: blocks/display/Statistic.yaml
   - _ref: blocks/display/Title.yaml
 
+  - _ref: blocks/container/Affix.yaml
+  - _ref: blocks/container/Badge.yaml
+  - _ref: blocks/container/Box.yaml
   - _ref: blocks/container/Card.yaml
+  - _ref: blocks/container/Collapse.yaml
+  - _ref: blocks/container/Comment.yaml
+  - _ref: blocks/container/ConfirmModal.yaml
+  - _ref: blocks/container/Drawer.yaml
+  - _ref: blocks/container/Label.yaml
+  - _ref: blocks/container/Modal.yaml
+  - _ref: blocks/container/Result.yaml
+  - _ref: blocks/container/Span.yaml
+  - _ref: blocks/container/Spin.yaml
+  - _ref: blocks/container/Tabs.yaml
+
+  - _ref: blocks/context/Context.yaml
+  - _ref: blocks/context/PageHCF.yaml
+  - _ref: blocks/context/PageHCSF.yaml
+  - _ref: blocks/context/PageHeaderMenu.yaml
+  - _ref: blocks/context/PageHSCF.yaml
+  - _ref: blocks/context/PageSHCF.yaml
+  - _ref: blocks/context/PageSiderMenu.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml
@@ -614,6 +715,7 @@ pages:
   - _ref: operators/_divide.yaml
   - _ref: operators/_eq.yaml
   - _ref: operators/_event.yaml
+  - _ref: operators/_format.yaml
   - _ref: operators/_function.yaml
   - _ref: operators/_get.yaml
   - _ref: operators/_global.yaml
@@ -621,6 +723,7 @@ pages:
   - _ref: operators/_gte.yaml
   - _ref: operators/_if.yaml
   - _ref: operators/_if_none.yaml
+  - _ref: operators/_index.yaml
   - _ref: operators/_input.yaml
   - _ref: operators/_json.yaml
   - _ref: operators/_list_contexts.yaml

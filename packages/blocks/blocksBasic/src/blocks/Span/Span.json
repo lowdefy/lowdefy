@@ -8,7 +8,7 @@
       "properties": {
         "content": {
           "type": "string",
-          "description": "Span content string, alternatively provide and list of blocks as Span content."
+          "description": "Span content string. Overrides the \"content\" content area."
         },
         "style": {
           "type": "object",

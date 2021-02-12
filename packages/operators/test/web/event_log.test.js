@@ -120,7 +120,7 @@ test('_event_log null', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _event_log params must be of type string, boolean or object. Received: null at locationId.],
+      [Error: Operator Error: _event_log params must be of type string, integer, boolean or object. Received: null at locationId.],
     ]
   `);
 });
@@ -201,7 +201,7 @@ test('_event_log param object invalid', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _event_log.key must be of type string. Received: {"other":true} at locationId.],
+      [Error: Operator Error: _event_log.key must be of type string or integer. Received: {"other":true} at locationId.],
     ]
   `);
 });
@@ -215,7 +215,7 @@ test('_event_log param array', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _event_log params must be of type string, boolean or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _event_log params must be of type string, integer, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });

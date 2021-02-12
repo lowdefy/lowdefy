@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: introduction
     pageTitle: Introduction
+    filePath: introduction.yaml
     content:
       - id: markdown
         type: Markdown

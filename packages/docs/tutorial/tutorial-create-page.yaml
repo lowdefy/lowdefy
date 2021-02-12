@@ -18,6 +18,7 @@ _ref:
     pageId: tutorial-create-page
     pageTitle: Creating a page
     section: Tutorial
+    filePath: tutorial/tutorial-create-page.yaml
     # prefetchPages:
     #   - tutorial-add-blocks
     content:

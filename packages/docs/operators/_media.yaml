@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _media
     pageTitle: _media
+    filePath: operators/_media.yaml
     types: |
       ```
       (key: string): any

@@ -13,11 +13,13 @@
       "properties": {
         "circleSize": {
           "type": "number",
-          "description": "Pixel value for circle size."
+          "description": "Pixel value for circle size.",
+          "default": 28
         },
         "circleSpacing": {
           "type": "number",
-          "description": "Pixel value for spacing between circles."
+          "description": "Pixel value for spacing between circles.",
+          "default": 14
         },
         "colors": {
           "type": "array",
@@ -63,6 +65,18 @@
           "docs": {
             "displayType": "yaml"
           }
+        },
+        "valueStyle": {
+          "type": "object",
+          "description": "Css style to applied to value text when is displayed.",
+          "docs": {
+            "displayType": "yaml"
+          }
+        },
+        "showValue": {
+          "type": "boolean",
+          "description": "Display the selector value next to the circle selector.",
+          "default": false
         },
         "label": {
           "type": "object",
