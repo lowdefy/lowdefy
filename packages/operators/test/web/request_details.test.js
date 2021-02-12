@@ -95,7 +95,7 @@ test('_request_details null', () => {
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _request_details params must be of type string, boolean or object. Received: null at locationId.],
+      [Error: Operator Error: _request_details params must be of type string, integer, boolean or object. Received: null at locationId.],
     ]
   `);
 });
@@ -166,7 +166,7 @@ test('_request_details param object invalid', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _request_details.key must be of type string. Received: {"other":true} at locationId.],
+      [Error: Operator Error: _request_details.key must be of type string or integer. Received: {"other":true} at locationId.],
     ]
   `);
 });
@@ -180,7 +180,7 @@ test('_request_details param array', () => {
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: _request_details params must be of type string, boolean or object. Received: ["string"] at locationId.],
+      [Error: Operator Error: _request_details params must be of type string, integer, boolean or object. Received: ["string"] at locationId.],
     ]
   `);
 });

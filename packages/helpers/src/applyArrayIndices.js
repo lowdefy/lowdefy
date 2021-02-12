@@ -19,6 +19,7 @@ import type from './type';
 const applyArrayIndices = (arrayIndices, name) => {
   if (!type.isArray(arrayIndices)) return name;
   if (arrayIndices.length === 0) return name;
+  if (type.isNumber(name)) return name;
   const copy = JSON.parse(JSON.stringify(arrayIndices));
   const index = copy.shift();
   let newName;
