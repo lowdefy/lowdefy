@@ -415,3 +415,18 @@ test('parse _function operator', () => {
   expect(output(1, 2)).toEqual({ state: 'value', args: [1, 2] });
   expect(errors).toEqual([]);
 });
+
+test('parse _experimental_unsafe_js operator', () => {
+  const input = {
+    '_experimental_unsafe_js.function': {
+      body: `{
+    return args[0] + args[1]
+  }`,
+    },
+  };
+  const parser = new NodeParser({});
+  const { output, errors } = parser.parse({ input, location: 'locationId' });
+  expect(output).toBeInstanceOf(Function);
+  expect(output(1, 2)).toEqual(3);
+  expect(errors).toEqual([]);
+});
