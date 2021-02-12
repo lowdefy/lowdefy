@@ -18,6 +18,7 @@ _ref:
     pageId: events-and-actions
     pageTitle: Events and Actions
     section: Concepts
+    filePath: concepts/events-and-actions.yaml
     content:
       - id: md1
         type: Markdown

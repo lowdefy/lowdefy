@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _diff
     pageTitle: _diff
+    filePath: operators/_diff.yaml
     description: |
       > The `_diff` operator is only useable on the Lowdefy server, and not on the web client. Therefore it can only be used in requests and connections.
     methods:

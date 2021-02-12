@@ -19,6 +19,7 @@ _ref:
     value_type: date
     category: input
     schema: ../blocks/blocksAntd/src/blocks/WeekSelector/WeekSelector.json
+    filePath: blocks/input/WeekSelector.yaml
     description_content: |
       The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
 

@@ -18,6 +18,7 @@ _ref:
     block_type: PageHCF
     category: context
     schema: ../blocks/blocksAntd/src/blocks/PageHCF/PageHCF.json
+    filePath: blocks/context/PageHCF.yaml
     description_content: |
       Page HCF provides a minimal layout structure for a page container with a header, content and footer area.
 

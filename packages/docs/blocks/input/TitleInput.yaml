@@ -19,6 +19,7 @@ _ref:
     value_type: string
     category: input
     schema: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+    filePath: blocks/input/TitleInput.yaml
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean

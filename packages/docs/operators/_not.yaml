@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _not
     pageTitle: _not
+    filePath: operators/_not.yaml
     types: |
       ```
       (value: any): boolean

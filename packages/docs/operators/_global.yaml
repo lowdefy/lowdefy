@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _global
     pageTitle: _global
+    filePath: operators/_global.yaml
     types: |
       ```
       (key: string): any

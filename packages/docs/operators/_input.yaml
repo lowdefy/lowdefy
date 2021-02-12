@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _input
     pageTitle: _input
+    filePath: operators/_input.yaml
     types: |
       ```
       (key: string): any

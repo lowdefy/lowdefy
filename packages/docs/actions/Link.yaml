@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: Link
     pageTitle: Link
+    filePath: actions/Link.yaml
     types: |
       ```
       (pageId: string): void

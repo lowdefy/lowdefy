@@ -18,6 +18,7 @@ _ref:
     block_type: Paragraph
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Paragraph/Paragraph.json
+    filePath: blocks/display/Paragraph.yaml
     init_state_values:
       __type_block.properties.copyable: boolean
       __type_block.properties.ellipsis: boolean

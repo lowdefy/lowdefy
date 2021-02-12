@@ -18,6 +18,7 @@ _ref:
     block_type: Result
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Result/Result.json
+    filePath: blocks/container/Result.yaml
     description_content: |
       Used to provide feedback the results of a task or error.
     areas:

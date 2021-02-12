@@ -19,6 +19,7 @@ _ref:
     value_type: object
     category: input
     schema: ../blocks/blocksAntd/src/blocks/S3UploadButton/S3UploadButton.json
+    filePath: blocks/input/S3UploadButton.yaml
     description_content: |
       The `S3UploadButton` block allows a user to to upload a file to AWS S3.
 

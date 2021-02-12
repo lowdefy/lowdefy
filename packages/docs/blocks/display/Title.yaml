@@ -18,6 +18,7 @@ _ref:
     block_type: Title
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Title/Title.json
+    filePath: blocks/display/Title.yaml
     init_state_values:
       __type_block.properties.value: number
       __number_block.properties.value: 33.3

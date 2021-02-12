@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: SetState
     pageTitle: SetState
+    filePath: actions/SetState.yaml
     types: |
       ```
       (toSet: object): void

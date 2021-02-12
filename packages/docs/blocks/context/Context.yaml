@@ -18,6 +18,7 @@ _ref:
     block_type: Context
     category: context
     schema: ../blocks/blocksBasic/src/blocks/Context/Context.json
+    filePath: blocks/context/Context.yaml
     description_content: |
       The `Context` block creates a new context. It can be used at a page level to create the context for the page, or it can be used inside a page to create a separate context (for example to create a new context for a web form).
 

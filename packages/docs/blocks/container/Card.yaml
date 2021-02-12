@@ -18,6 +18,7 @@ _ref:
     block_type: Card
     category: container
     schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    filePath: blocks/container/Card.yaml
     description_content: |
       A Card container places blocks on a white background with a card border.
       The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.

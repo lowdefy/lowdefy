@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _url_query
     pageTitle: _url_query
+    filePath: operators/_url_query.yaml
     types: |
       ```
       (key: string): any

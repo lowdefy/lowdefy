@@ -18,6 +18,7 @@ _ref:
     block_type: Html
     category: display
     schema: ../blocks/blocksBasic/src/blocks/Html/Html.json
+    filePath: blocks/display/Html.yaml
     init_property_values:
       html: <a href="https://lowdefy.com">Lowdefy Website</a>
     description_content: |

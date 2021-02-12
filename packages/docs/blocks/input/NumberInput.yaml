@@ -19,6 +19,7 @@ _ref:
     value_type: number
     category: input
     schema: ../blocks/blocksAntd/src/blocks/NumberInput/NumberInput.json
+    filePath: blocks/input/NumberInput.yaml
     description_content: |
       The `NumberInput` allows a user to input a number.
 

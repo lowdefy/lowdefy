@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _array
     pageTitle: _array
+    filePath: operators/_array.yaml
     description: |
       The `_array` operator can be used to run javascript [`Array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) methods.
     methods:

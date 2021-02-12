@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _regex
     pageTitle: _regex
+    filePath: operators/_regex.yaml
     types: |
       ```
       (pattern: string): boolean

@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _date
     pageTitle: _date
+    filePath: operators/_date.yaml
     types: |
       ```
       (dateString: string): date

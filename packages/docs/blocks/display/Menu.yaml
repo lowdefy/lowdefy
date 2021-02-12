@@ -18,6 +18,7 @@ _ref:
     block_type: Menu
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    filePath: blocks/display/Menu.yaml
     description_content: |
       A menu block used to display page links.
     init_state_values:

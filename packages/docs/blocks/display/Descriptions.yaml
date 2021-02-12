@@ -18,6 +18,7 @@ _ref:
     block_type: Descriptions
     category: display
     schema: ../blocks/blocksAntd/src/blocks/Descriptions/Descriptions.json
+    filePath: blocks/display/Descriptions.yaml
     init_state_values:
       __type_block.properties.column: number
       __type_block.properties.items: object[]

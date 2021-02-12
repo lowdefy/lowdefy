@@ -19,6 +19,7 @@ _ref:
     value_type: string
     category: input
     schema: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+    filePath: blocks/input/AutoComplete.yaml
     init_property_values:
       options:
         - one

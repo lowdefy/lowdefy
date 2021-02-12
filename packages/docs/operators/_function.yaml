@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _function
     pageTitle: _function
+    filePath: operators/_function.yaml
     types: |
       ```
       (definition: any): function

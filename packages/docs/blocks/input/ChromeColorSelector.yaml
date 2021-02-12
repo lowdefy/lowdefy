@@ -19,6 +19,7 @@ _ref:
     value_type: string
     category: input
     schema: ../blocks/blocksColorSelectors/src/blocks/ChromeColorSelector/ChromeColorSelector.json
+    filePath: blocks/input/ChromeColorSelector.yaml
     description_content: |
       A color selector component similar to the chrome developer tools color selector.
 

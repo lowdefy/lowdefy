@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: CallMethod
     pageTitle: CallMethod
+    filePath: actions/CallMethod.yaml
     types: |
       ```
       (params: {

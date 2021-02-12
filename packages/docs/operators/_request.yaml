@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _request
     pageTitle: _request
+    filePath: operators/_request.yaml
     types: |
       ```
       (requestId: string): any

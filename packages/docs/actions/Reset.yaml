@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: Reset
     pageTitle: Reset
+    filePath: actions/Reset.yaml
     types: |
       ```
       (void): void

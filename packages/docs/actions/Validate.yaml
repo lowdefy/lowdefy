@@ -17,6 +17,7 @@ _ref:
   vars:
     pageId: Validate
     pageTitle: Validate
+    filePath: actions/Validate.yaml
     types: |
       ```
       (void): void

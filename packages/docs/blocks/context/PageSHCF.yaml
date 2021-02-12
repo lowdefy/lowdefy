@@ -18,6 +18,7 @@ _ref:
     block_type: PageSHCF
     category: context
     schema: ../blocks/blocksAntd/src/blocks/PageSHCF/PageSHCF.json
+    filePath: blocks/context/PageSHCF.yaml
     description_content: |
       Page SHCF provides a minimal layout structure for a page container with a sider, header, content, and footer arrangement.
 

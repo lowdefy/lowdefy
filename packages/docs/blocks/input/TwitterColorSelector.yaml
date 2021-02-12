@@ -19,6 +19,7 @@ _ref:
     value_type: string
     category: input
     schema: ../blocks/blocksColorSelectors/src/blocks/TwitterColorSelector/TwitterColorSelector.json
+    filePath: blocks/input/TwitterColorSelector.yaml
     description_content: |
       A color selector component similar to the twitter color selector..
 

@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _gte
     pageTitle: _gte
+    filePath: operators/_gte.yaml
     types: |
       ```
       ([value1: any, value2: any]): boolean

@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _lte
     pageTitle: _lte
+    filePath: operators/_lte.yaml
     types: |
       ```
       ([value1: any, value2: any]): boolean

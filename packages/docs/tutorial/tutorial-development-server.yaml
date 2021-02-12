@@ -18,6 +18,7 @@ _ref:
     pageId: tutorial-development-server
     pageTitle: Development server
     section: Tutorial
+    filePath: tutorial/tutorial-development-server.yaml
     # prefetchPages:
     #   - tutorial-create-page
     content:

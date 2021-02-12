@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _nunjucks
     pageTitle: _nunjucks
+    filePath: operators/_nunjucks.yaml
     types: |
       ```
       (template: string): string

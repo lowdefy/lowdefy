@@ -18,6 +18,7 @@ _ref:
     pageId: tutorial-setup
     pageTitle: Deploy your app
     section: Tutorial
+    filePath: tutorial/tutorial-setup.yaml
     # prefetchPages:
     #   - tutorial-editing-page
     content:
