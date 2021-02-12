@@ -100,7 +100,7 @@ test('Link with pageId', async () => {
   expect(context.routeHistory).toEqual(['/page1']);
 });
 
-test('Link with pageId, newWindow and urlQuery', async () => {
+test('Link with pageId, newTab and urlQuery', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -121,7 +121,7 @@ test('Link with pageId, newWindow and urlQuery', async () => {
                 {
                   id: 'a',
                   type: 'Link',
-                  params: { pageId: 'page1', newWindow: true, urlQuery: { a: 1 } },
+                  params: { pageId: 'page1', newTab: true, urlQuery: { a: 1 } },
                 },
               ],
             },
@@ -180,7 +180,7 @@ test('Link with url', async () => {
   expect(context.window.location.href).toEqual('https://test.lowdefy.com');
 });
 
-test('Link with url and newWindow', async () => {
+test('Link with url and newTab', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -201,7 +201,7 @@ test('Link with url and newWindow', async () => {
                 {
                   id: 'a',
                   type: 'Link',
-                  params: { url: 'https://test.lowdefy.com', newWindow: true },
+                  params: { url: 'https://test.lowdefy.com', newTab: true },
                 },
               ],
             },
@@ -301,7 +301,7 @@ test('Link with pageId and input', async () => {
   expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
 });
 
-test('Link with pageId and input and newWindow', async () => {
+test('Link with pageId and input and newTab', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -322,7 +322,7 @@ test('Link with pageId and input and newWindow', async () => {
                 {
                   id: 'a',
                   type: 'Link',
-                  params: { pageId: 'page1', input: { data: 1 }, newWindow: true },
+                  params: { pageId: 'page1', input: { data: 1 }, newTab: true },
                 },
               ],
             },
