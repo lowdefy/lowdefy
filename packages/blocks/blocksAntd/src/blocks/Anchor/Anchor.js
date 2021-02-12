@@ -21,19 +21,30 @@ import { blockDefaultProps } from '@lowdefy/block-tools';
 import Icon from '../Icon/Icon';
 
 const Strong = ({ children, strong }) => (strong ? <b>{children}</b> : <>{children}</>);
-const Tag = ({ blockId, children, className, disabled, onClick }) =>
+const Tag = ({ blockId, children, className, disabled, href, newTab, rel, onClick }) =>
   disabled ? (
     <span id={blockId} className={className}>
       {children}
     </span>
   ) : (
-    <a id={blockId} className={className} onClick={onClick}>
+    <a
+      id={blockId}
+      className={className}
+      href={href}
+      onClick={onClick}
+      rel={rel || 'noopener noreferrer'}
+      target={newTab ? '_blank' : '_self'}
+    >
       {children}
     </a>
   );
 
 const AnchorBlock = ({ blockId, events, loading, methods, properties }) => {
-  const title = type.isNone(properties.title) ? blockId : properties.title;
+  const title = type.isNone(properties.title)
+    ? type.isNone(properties.href)
+      ? properties.href
+      : blockId
+    : properties.title;
   const showLoading = get(events, 'onClick.loading') || loading;
   const disabled = properties.disabled || showLoading;
   return (
@@ -44,6 +55,9 @@ const AnchorBlock = ({ blockId, events, loading, methods, properties }) => {
         disabled && { color: '#BEBEBE', cursor: 'not-allowed' },
       ])}
       disabled={disabled}
+      href={properties.href}
+      rel={properties.rel}
+      newTab={properties.newTab}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
     >
       <Strong strong={properties.strong}>

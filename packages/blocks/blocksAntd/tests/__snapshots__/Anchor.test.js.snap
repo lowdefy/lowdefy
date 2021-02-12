@@ -5,8 +5,10 @@ exports[`Render default - value[0] 1`] = `
   className="{\\"style\\":[null,null]}"
   id="default"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
-   default
+   undefined
 </a>
 `;
 
@@ -19,11 +21,65 @@ exports[`Render properties.disabled - value[0] 1`] = `
 </span>
 `;
 
+exports[`Render properties.href - value[0] 1`] = `
+<a
+  className="{\\"style\\":[null,null]}"
+  href="https://lowdefy.com"
+  id="properties.href"
+  onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
+>
+   properties.href
+</a>
+`;
+
+exports[`Render properties.href and rel - value[0] 1`] = `
+<a
+  className="{\\"style\\":[null,null]}"
+  href="https://lowdefy.com"
+  id="properties.href and rel"
+  onClick={[Function]}
+  rel="noopener"
+  target="_self"
+>
+   properties.href and rel
+</a>
+`;
+
+exports[`Render properties.href and target - value[0] 1`] = `
+<a
+  className="{\\"style\\":[null,null]}"
+  href="/Button"
+  id="properties.href and target"
+  onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_blank"
+>
+   To Button
+</a>
+`;
+
+exports[`Render properties.href, title and target - value[0] 1`] = `
+<a
+  className="{\\"style\\":[null,null]}"
+  href="https://lowdefy.com"
+  id="properties.href, title and target"
+  onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_blank"
+>
+   New tab Website
+</a>
+`;
+
 exports[`Render properties.icon and properties.title - value[0] 1`] = `
 <a
   className="{\\"style\\":[null,null]}"
   id="properties.icon and properties.title"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
   <span
     aria-label="loading-3-quarters"
@@ -55,6 +111,8 @@ exports[`Render properties.icon object - value[0] 1`] = `
   className="{\\"style\\":[null,null]}"
   id="properties.icon object"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
   <span
     aria-label="loading-3-quarters"
@@ -86,6 +144,8 @@ exports[`Render properties.icon string - value[0] 1`] = `
   className="{\\"style\\":[null,null]}"
   id="properties.icon string"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
   <span
     aria-label="loading-3-quarters"
@@ -108,7 +168,7 @@ exports[`Render properties.icon string - value[0] 1`] = `
       />
     </svg>
   </span>
-   properties.icon string
+   undefined
 </a>
 `;
 
@@ -147,6 +207,8 @@ exports[`Render properties.strong - value[0] 1`] = `
   className="{\\"style\\":[null,null]}"
   id="properties.strong"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
   <b>
      Strong
@@ -159,6 +221,8 @@ exports[`Render properties.style - value[0] 1`] = `
   className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":18},null]}"
   id="properties.style"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
    Click here
 </a>
@@ -169,6 +233,8 @@ exports[`Render properties.style with icon - value[0] 1`] = `
   className="{\\"style\\":[{\\"color\\":\\"green !important\\",\\"fontSize\\":8},null]}"
   id="properties.style with icon"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
   <span
     aria-label="loading-3-quarters"
@@ -200,6 +266,8 @@ exports[`Render properties.title - value[0] 1`] = `
   className="{\\"style\\":[null,null]}"
   id="properties.title"
   onClick={[Function]}
+  rel="noopener noreferrer"
+  target="_self"
 >
    Anchor title
 </a>
@@ -212,6 +280,22 @@ exports[`Test Schema default 2`] = `null`;
 exports[`Test Schema properties.disabled 1`] = `true`;
 
 exports[`Test Schema properties.disabled 2`] = `null`;
+
+exports[`Test Schema properties.href 1`] = `true`;
+
+exports[`Test Schema properties.href 2`] = `null`;
+
+exports[`Test Schema properties.href and rel 1`] = `true`;
+
+exports[`Test Schema properties.href and rel 2`] = `null`;
+
+exports[`Test Schema properties.href and target 1`] = `true`;
+
+exports[`Test Schema properties.href and target 2`] = `null`;
+
+exports[`Test Schema properties.href, title and target 1`] = `true`;
+
+exports[`Test Schema properties.href, title and target 2`] = `null`;
 
 exports[`Test Schema properties.icon and properties.title 1`] = `true`;
 
