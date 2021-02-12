@@ -29,6 +29,7 @@ import _gt from './gt';
 import _gte from './gte';
 import _if from './if';
 import _if_none from './if_none';
+import _index from './_index';
 import _input from './input';
 import _json from './json';
 import _log from './log';
@@ -69,6 +70,7 @@ export default {
   _gte,
   _if_none,
   _if,
+  _index,
   _input,
   _json,
   _log,
