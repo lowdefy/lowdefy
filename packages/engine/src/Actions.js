@@ -309,7 +309,7 @@ class Actions {
           });
           this.context.allInputs[nextContextId] = parsedParams.input;
         }
-        if (parsedParams.newWindow) {
+        if (parsedParams.newTab) {
           this.context.window
             .open(`${this.context.window.location.origin}/${pageId}${lowdefyUrlQuery}`, '_blank')
             .focus();
@@ -317,13 +317,13 @@ class Actions {
           this.context.routeHistory.push(`/${pageId}${lowdefyUrlQuery}`);
         }
       } else if (parsedParams.url) {
-        if (parsedParams.newWindow) {
+        if (parsedParams.newTab) {
           this.context.window.open(`${parsedParams.url}${lowdefyUrlQuery}`, '_blank').focus();
         } else {
           this.context.window.location.href = `${parsedParams.url}${lowdefyUrlQuery}`;
         }
       } else if (parsedParams.home) {
-        if (parsedParams.newWindow) {
+        if (parsedParams.newTab) {
           this.context.window
             .open(`${this.context.window.location.origin}/${lowdefyUrlQuery}`, '_blank')
             .focus();

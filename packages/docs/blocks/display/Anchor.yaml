@@ -22,6 +22,7 @@ _ref:
     description_content: |
       Anchor link block. Creates a clickable icon and/ or text.
 
+      > When changing the relationship (`rel`) property of the linked URL, make sure you understand the security implications. Read more about link types [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
     examples:
       - title: Basic Anchor
         properties: '{"title": "Basic Anchor"}'

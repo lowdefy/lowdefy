@@ -25,7 +25,7 @@ _ref:
         pageId?: string,
         home?: boolean,
         url?: string,
-        newWindow?:boolean,
+        newTab?:boolean,
         input?: object,
         urlQuery? object
       }): void
@@ -42,7 +42,7 @@ _ref:
       - `pageId: string`: The pageId of a page in the app to link to.
       - `home: boolean`: Link to the home page. This is either the configured public or authenticated homepage, or the first page in the default menu visible to the user.
       - `url: string`: Link to an external url.
-      - `newWindow: boolean`: Open the link in a new window.
+      - `newTab: boolean`: Open the link in a new tab.
       - `input: object`: Object to set as the input for the linked page.
       - `urlQuery: object`: Object to set as the urlQuery for the linked page.
 
@@ -78,13 +78,13 @@ _ref:
           url: www.lowdefy.com
       ```
 
-      ###### Open a link in a new window:
+      ###### Open a link in a new tab:
       ```yaml
-      - id: link_new_window
+      - id: link_new_tab
         type: Link
         params:
           pageId: my_page_id
-          newWindow: true
+          newTab: true
       ```
 
       ###### Set the urlQuery of the page that is linked to:
