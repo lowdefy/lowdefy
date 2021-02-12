@@ -57,6 +57,36 @@ test('get a field from an object, key as param', () => {
   expect(res).toEqual('string');
 });
 
+test('get a field from an array, integer index, shorthand', () => {
+  const params = 1;
+  const res = getFromObject({
+    params,
+    object: [1, 2, 3],
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(2);
+});
+
+test('get a field from an array, integer index', () => {
+  const params = { key: 1 };
+  const res = getFromObject({
+    params,
+    object: [1, 2, 3],
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(2);
+});
+
 test('get a field from an object, shorthand, not found returns null', () => {
   const params = 'not_there';
   const res = getFromObject({
@@ -218,7 +248,7 @@ test('params not correct type', () => {
       location,
       env: 'node',
     })
-  ).toThrow('Operator Error: _operator params must be of type string, boolean or object.');
+  ).toThrow('Operator Error: _operator params must be of type string, integer, boolean or object.');
 });
 
 test('params key not a string', () => {
@@ -233,7 +263,7 @@ test('params key not a string', () => {
       location,
       env: 'node',
     })
-  ).toThrow('Operator Error: _operator.key must be of type string.');
+  ).toThrow('Operator Error: _operator.key must be of type string or integer.');
 });
 
 test('replace arrayIndices', () => {
