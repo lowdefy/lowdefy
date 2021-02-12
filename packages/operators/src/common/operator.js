@@ -32,6 +32,13 @@ function _operator(options) {
       )} at ${location}.`
     );
   }
+  if (params.name.includes('experimental')) {
+    throw new Error(
+      `Operator Error: Experimental operators cannot be used with _operator. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
   const [operator, methodName] = params.name.split('.');
   if (Object.prototype.hasOwnProperty.call(operations, operator)) {
     return operations[operator]({
