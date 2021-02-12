@@ -29,10 +29,10 @@ function getFromObject({
   env,
 }) {
   if (params === true) params = { all: true };
-  if (type.isString(params)) params = { key: params };
+  if (type.isString(params) || type.isInt(params)) params = { key: params };
   if (!type.isObject(params)) {
     throw new Error(
-      `Operator Error: ${operator} params must be of type string, boolean or object. Received: ${JSON.stringify(
+      `Operator Error: ${operator} params must be of type string, integer, boolean or object. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );
@@ -56,9 +56,9 @@ function getFromObject({
     });
   }
   if (params.all === true) return serializer.copy(object);
-  if (!type.isString(params.key)) {
+  if (!type.isString(params.key) && !type.isInt(params.key)) {
     throw new Error(
-      `Operator Error: ${operator}.key must be of type string. Received: ${JSON.stringify(
+      `Operator Error: ${operator}.key must be of type string or integer. Received: ${JSON.stringify(
         params
       )} at ${location}.`
     );

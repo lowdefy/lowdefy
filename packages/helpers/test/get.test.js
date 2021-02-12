@@ -130,6 +130,11 @@ test('return arr', () => {
   expect(get(objOne, 'a.b')).toEqual([]);
 });
 
+test('get by array index', () => {
+  const arr = [0, 1, 2];
+  expect(get(arr, 1)).toEqual(1);
+});
+
 // tests from
 // https://github.com/jonschlinkert/get-value/blob/master/test/units.js
 

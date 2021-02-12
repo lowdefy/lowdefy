@@ -130,13 +130,9 @@ test('_get from: null', () => {
 });
 
 test('_get key: int', () => {
-  const input = { _get: { from: object, key: 1 } };
+  const input = { _get: { from: [1, 2, 3], key: 1 } };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _get.key takes a string. Received {"from":{"string":"Some String","number":42,"arr":[{"a":"a1"},{"a":"a2"}]},"key":1} at locationId.],
-    ]
-  `);
+  expect(res.output).toBe(2);
+  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

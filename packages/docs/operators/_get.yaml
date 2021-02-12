@@ -23,7 +23,7 @@ _ref:
       ```
       (arguments: {
         from: any[] | object,
-        key: string,
+        key: string | integer,
         default?: any,
       }): any
       ```
@@ -33,7 +33,7 @@ _ref:
     arguments: |
       ###### object
         - `from: any[] | object`: __Required__ - The object to get the value from.
-        - `key: string`: __Required__ - The value of the key in the `from` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported.
+        - `key: string`: __Required__ - The value of the key or array index to get from the `from` object or array. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported.
         - `default: any`: A value to return if the `key` is not found in `from`. By default, `null` is returned if a value is not found.
 
     examples: |

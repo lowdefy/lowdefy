@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+import getFromObject from '../getFromObject';
 
-function _get({ params, location, arrayIndices }) {
+function _get({ arrayIndices, env, location, params }) {
   if (!type.isObject(params)) {
     throw new Error(
       `Operator Error: _get takes an object as params. Received: ${JSON.stringify(
@@ -24,17 +25,20 @@ function _get({ params, location, arrayIndices }) {
       )} at ${location}.`
     );
   }
-
-  if (!type.isString(params.key)) {
+  if (!type.isObject(params.from) && !type.isArray(params.from)) {
     throw new Error(
-      `Operator Error: _get.key takes a string. Received ${JSON.stringify(params)} at ${location}.`
+      `Operator Error: _get.from is not an object or array. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
     );
   }
-  if (!type.isObject(params.from) && !type.isArray(params.from)) {
-    return null;
-  }
-  return get(params.from, applyArrayIndices(arrayIndices, params.key), {
-    default: get(params, 'default', { default: null }),
+  return getFromObject({
+    arrayIndices,
+    env,
+    location,
+    object: params.from,
+    operator: '_get',
+    params,
   });
 }
 

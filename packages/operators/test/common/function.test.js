@@ -52,7 +52,7 @@ test('NodeParser, _function throws on parser errors', () => {
   const params = { __state: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
-    'Error: Operator Error: _state params must be of type string, boolean or object. Received: [] at location.'
+    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at location.'
   );
 });
 
@@ -78,6 +78,6 @@ test('WebParser, _function throws on parser errors', () => {
   const params = { __state: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
-    'Error: Operator Error: _state params must be of type string, boolean or object. Received: [] at location.'
+    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at location.'
   );
 });
