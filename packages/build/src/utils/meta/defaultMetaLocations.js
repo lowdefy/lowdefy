@@ -212,8 +212,8 @@ const defaultMetaLocations = {
   TextInput: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TextInput.json`,
   },
-  Timeline: {
-    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Timeline.json`,
+  TimelineList: {
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/TimelineList.json`,
   },
   Title: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-antd/meta/Title.json`,
