@@ -34,7 +34,3 @@ _ref:
       The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
       > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `Selector`.
-
-    examples:
-      - title: RadioSelector input
-        properties: '{"title": "RadioSelector input", "options": ["Option 1", "Option 2"]}'

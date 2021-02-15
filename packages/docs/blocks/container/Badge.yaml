@@ -25,6 +25,3 @@ _ref:
       count: 1
     areas:
       - content
-    examples:
-      - title: Basic
-        properties: '{"count": 20}'

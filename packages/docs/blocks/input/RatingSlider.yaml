@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/RatingSlider.yaml
     description_content: |
       The `RatingSlider` block allows a user to choose a numerical value on a slider input. It is typically used for scores or ratings. It has the option to have a "Not Applicable" checkbox, which leaves the value as null.
-
-    examples:
-      - title: RatingSlider input
-        properties: '{"title": "RatingSlider input"}'

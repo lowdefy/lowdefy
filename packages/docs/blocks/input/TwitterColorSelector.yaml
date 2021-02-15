@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/TwitterColorSelector.yaml
     description_content: |
       A color selector component similar to the twitter color selector..
-
-    examples:
-      - title: TwitterColorSelector input
-        properties: '{"defaultColor": "#123456", "width": 170}'

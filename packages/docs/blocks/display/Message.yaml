@@ -24,9 +24,6 @@ _ref:
 
       > To display a message, invoke the open method.
 
-    examples:
-      - title: Message
-        properties: '{"content": "Hello"}'
     methods:
       - name: open
         onClick:

@@ -24,6 +24,3 @@ _ref:
     description_content: |
       Alert is used to render user feedback messages in a Alert styled frame.
 
-    examples:
-      - title: Basic Alert
-        properties: '{"message": "Basic Alert"}'

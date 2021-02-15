@@ -34,4 +34,13 @@ _ref:
     
     examples:
       - title: DangerousMarkdown headings
-        properties: '{"DOMPurifyOptions": {"ADD_TAGS": ["iframe"]}, "content": "# Markdown with an iframe: \n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'
+        block:
+          id: iframes_example
+          type: DangerousMarkdown
+          properties:
+            DOMPurifyOptions": 
+              ADD_TAGS": 
+                - iframe
+            content: |
+              # Markdown with an iframe:
+              <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

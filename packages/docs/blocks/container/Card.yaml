@@ -27,6 +27,3 @@ _ref:
       - content
       - extra
       - title
-    examples:
-      - title: Basic
-        properties: '{"title": "A Card"}'

@@ -22,6 +22,3 @@ _ref:
     description_content: |
       Avatars can be used to represent people or objects. It supports images, Icons, or letters.
 
-    examples:
-      - title: Basic Avatar
-        properties: '{"color": "#456789"}'

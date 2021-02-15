@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/SliderColorSelector.yaml
     description_content: |
       A slider color selector component.
-
-    examples:
-      - title: SliderColorSelector input
-        properties: '{"defaultColor": "#123456", "width": 170}'

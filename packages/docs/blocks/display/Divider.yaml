@@ -22,7 +22,4 @@ _ref:
     description_content: |
       A divider line. Can be used horizontally or vertically.
 
-    examples:
-      - title: Basic divider
-        properties: '{"title": "A Divider Title"}'
       
