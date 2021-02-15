@@ -23,7 +23,7 @@ const document = {
   getElementById: mockDocGetElementById,
 };
 const mockDocGetElementByIdImp = (id) => {
-  return { id, scrollIntoView: mockElemScrollIntoView };
+  if (id === 'root') return { id, scrollIntoView: mockElemScrollIntoView };
 };
 
 // Mock window
@@ -82,7 +82,7 @@ test('ScrollTo with no params', async () => {
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
-  expect(mockWindowScrollTo.mock.calls).toEqual([]);
+  expect(mockWindowScrollTo.mock.calls).toEqual([[{}]]);
 });
 
 test('ScrollTo with no blockId', async () => {
@@ -182,7 +182,7 @@ test('ScrollTo with blockId and options', async () => {
                 {
                   id: 'a',
                   type: 'ScrollTo',
-                  params: { blockId: 'a', options: { behavior: 'smooth' } },
+                  params: { blockId: 'root', options: { behavior: 'smooth' } },
                 },
               ],
             },
@@ -199,7 +199,7 @@ test('ScrollTo with blockId and options', async () => {
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
 
-  expect(mockDocGetElementById.mock.calls).toEqual([['a']]);
+  expect(mockDocGetElementById.mock.calls).toEqual([['root']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([
     [
       {
@@ -207,4 +207,40 @@ test('ScrollTo with blockId and options', async () => {
       },
     ],
   ]);
+});
+
+test('ScrollTo with blockId, block not found', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'ScrollTo', params: { blockId: 'not_there' } }],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.triggerEvent({ name: 'onClick' });
+  expect(mockDocGetElementById.mock.calls).toEqual([['not_there']]);
+  expect(mockElemScrollIntoView.mock.calls).toEqual([]);
+  expect(mockWindowScrollTo.mock.calls).toEqual([]);
 });

@@ -16,54 +16,8 @@
 
 import testContext from '../testContext';
 
-// Mock apollo client
-const mockReqResponses = {
-  req_one: {
-    data: {
-      request: {
-        id: 'req_one',
-        success: true,
-        response: 1,
-      },
-    },
-  },
-  req_two: {
-    data: {
-      request: {
-        id: 'req_two',
-        success: true,
-        response: 2,
-      },
-    },
-  },
-};
-
-const mockQuery = jest.fn();
-const mockQueryImp = ({ variables }) => {
-  const { requestInput } = variables;
-  const { requestId } = requestInput;
-  return new Promise((resolve, reject) => {
-    if (requestId === 'req_error') {
-      reject(mockReqResponses[requestId]);
-    }
-    resolve(mockReqResponses[requestId]);
-  });
-};
-
-const client = {
-  query: mockQuery,
-};
-
 const pageId = 'one';
-
-const rootContext = {
-  client,
-};
-
-beforeEach(() => {
-  mockQuery.mockReset();
-  mockQuery.mockImplementation(mockQueryImp);
-});
+const rootContext = {};
 
 test('Reset one field', () => {
   const rootBlock = {

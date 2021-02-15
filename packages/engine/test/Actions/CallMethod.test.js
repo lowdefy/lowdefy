@@ -19,6 +19,18 @@ import testContext from '../testContext';
 const pageId = 'one';
 const rootContext = {};
 
+const RealDate = Date;
+const mockDate = jest.fn(() => ({ date: 0 }));
+mockDate.now = jest.fn(() => 0);
+
+beforeAll(() => {
+  global.Date = mockDate;
+});
+
+afterAll(() => {
+  global.Date = RealDate;
+});
+
 test('CallMethod with no args, synchronous method', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
   const rootBlock = {
@@ -68,23 +80,19 @@ test('CallMethod with no args, synchronous method', async () => {
 
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual([
-    {
-      event: undefined,
-      id: 'a',
-      params: {
-        blockId: 'textInput',
-        method: 'blockMethod',
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        args: [],
       },
-      response: {
-        args: [undefined],
-      },
-      skipped: false,
-      successMessage: undefined,
-      type: 'CallMethod',
-    },
-  ]);
-  expect(blockMethod.mock.calls).toEqual([[undefined]]);
+    ],
+    success: true,
+    timestamp: new Date(),
+  });
+  expect(blockMethod.mock.calls).toEqual([[]]);
 });
 
 test('CallMethod method return a promise', async () => {
@@ -125,7 +133,7 @@ test('CallMethod method return a promise', async () => {
                 {
                   id: 'a',
                   type: 'CallMethod',
-                  params: { blockId: 'textInput', method: 'blockMethod', args: 'arg' },
+                  params: { blockId: 'textInput', method: 'blockMethod', args: ['arg'] },
                 },
               ],
             },
@@ -144,27 +152,24 @@ test('CallMethod method return a promise', async () => {
 
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual([
-    {
-      event: undefined,
-      id: 'a',
-      params: {
-        blockId: 'textInput',
-        method: 'blockMethod',
-        args: 'arg',
-      },
-      response: {
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
         args: ['arg'],
       },
-      skipped: false,
-      successMessage: undefined,
-      type: 'CallMethod',
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
     },
-  ]);
+  });
   expect(calls).toEqual([['arg']]);
 });
 
-test('CallMethod with single arg, synchronous method', async () => {
+test('CallMethod with args not an array', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
   const rootBlock = {
     blockId: 'root',
@@ -213,27 +218,28 @@ test('CallMethod with single arg, synchronous method', async () => {
 
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual([
-    {
-      event: undefined,
-      id: 'a',
-      params: {
-        blockId: 'textInput',
-        method: 'blockMethod',
-        args: 'arg',
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'CallMethod',
+        error: new Error(
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
+        ),
       },
-      response: {
-        args: ['arg'],
-      },
-      skipped: false,
-      successMessage: undefined,
-      type: 'CallMethod',
+    ],
+    success: false,
+    timestamp: {
+      date: 0,
     },
-  ]);
-  expect(blockMethod.mock.calls).toEqual([['arg']]);
+  });
+  expect(blockMethod.mock.calls).toEqual([]);
 });
 
-test('CallMethod with positional args, synchronous method', async () => {
+test('CallMethod with multiple positional args, synchronous method', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
   const rootBlock = {
     blockId: 'root',
@@ -282,97 +288,21 @@ test('CallMethod with positional args, synchronous method', async () => {
 
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual([
-    {
-      event: undefined,
-      id: 'a',
-      params: {
-        blockId: 'textInput',
-        method: 'blockMethod',
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
         args: ['arg1', 'arg2'],
       },
-      response: {
-        args: ['arg1', 'arg2'],
-      },
-      skipped: false,
-      successMessage: undefined,
-      type: 'CallMethod',
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
     },
-  ]);
-  expect(blockMethod.mock.calls).toEqual([['arg1', 'arg2']]);
-});
-
-test('CallMethod with object args, synchronous method', async () => {
-  const blockMethod = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: {
-                    blockId: 'textInput',
-                    method: 'blockMethod',
-                    args: { a1: 'arg1', a2: 'arg2' },
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
   });
-  const { button, textInput } = context.RootBlocks.map;
-
-  textInput.registerMethod('blockMethod', blockMethod);
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual([
-    {
-      event: undefined,
-      id: 'a',
-      params: {
-        blockId: 'textInput',
-        method: 'blockMethod',
-        args: { a1: 'arg1', a2: 'arg2' },
-      },
-      response: {
-        args: [{ a1: 'arg1', a2: 'arg2' }],
-      },
-      skipped: false,
-      successMessage: undefined,
-      type: 'CallMethod',
-    },
-  ]);
-  expect(blockMethod.mock.calls).toEqual([[{ a1: 'arg1', a2: 'arg2' }]]);
+  expect(blockMethod.mock.calls).toEqual([['arg1', 'arg2']]);
 });
 
 test('CallMethod of block in array by explicit id', async () => {
@@ -421,7 +351,7 @@ test('CallMethod of block in array by explicit id', async () => {
                 {
                   id: 'a',
                   type: 'CallMethod',
-                  params: { blockId: 'list.0.textInput', method: 'blockMethod', args: 'arg' },
+                  params: { blockId: 'list.0.textInput', method: 'blockMethod', args: ['arg'] },
                 },
               ],
             },
@@ -493,7 +423,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
                           params: {
                             blockId: 'list.$.textInput',
                             method: 'blockMethod',
-                            args: 'arg',
+                            args: ['arg'],
                           },
                         },
                       ],
