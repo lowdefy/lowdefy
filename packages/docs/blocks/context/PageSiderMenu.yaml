@@ -21,7 +21,31 @@ _ref:
     filePath: blocks/context/PageSiderMenu.yaml
     description_content: |
       The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
-
+    init_state_values:
+      block.properties.menu.links:
+        - id: home
+          type: MenuLink
+          pageId: home
+          properties:
+            icon: HomeOutlined
+            title: Home
+        - id: pages
+          type: MenuGroup
+          properties:
+            title: Pages
+            icon: LayoutOutlined
+          links:
+            - id: page1
+              type: MenuLink
+              pageId: page1
+              properties:
+                title: Page 1
+            - id: more_pages
+              type: MenuGroup
+              links:
+                - id: page3
+                  type: MenuLink
+                  pageId: page3
     areas:
       - content
       - footer

@@ -25,8 +25,4 @@ _ref:
       __boolean_block.properties.autoSize: true
     description_content: |
       The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
-
-    examples:
-      - title: TextArea input
-        properties: '{"title": "TextArea input"}'
       

@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/SwatchesColorSelector.yaml
     description_content: |
       A swatches color selector component.
-
-    examples:
-      - title: SwatchesColorSelector input
-        properties: '{"defaultColor": "#123456", "width": "100%"}'

@@ -25,6 +25,3 @@ _ref:
 
     areas:
       - content
-    examples:
-      - title: Basic
-        properties: '{"content": "Hello"}'

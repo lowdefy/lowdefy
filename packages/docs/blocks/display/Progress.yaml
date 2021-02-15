@@ -26,9 +26,28 @@ _ref:
 
     examples:
       - title: Line progress
-        properties: '{"type": "line", "percent": 60, "strokeColor": "#fcb900", "status": "active"}'
+        block:
+          id: line_example
+          type: Progress
+          properties: 
+            type: line
+            percent: 60
+            strokeColor: "#fcb900"
+            status: active
       - title: Circle progress
-        properties: '{"type": "circle", "percent": 60, "strokeColor": "#52c41a"}'
+        block:
+          id: circle_example
+          type: Progress
+          properties: 
+            type: circle 
+            percent: 60
+            strokeColor: "#52c41a"
       - title: Dashboard progress
-        properties: '{"type": "dashboard", "percent": 60, "strokeColor": "#1890ff"}'
+        block:
+          id: dashboard_example
+          type: Progress
+          properties: 
+            type: dashboard
+            percent: 60
+            strokeColor: "#1890ff"
       

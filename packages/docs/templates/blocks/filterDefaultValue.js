@@ -24,8 +24,7 @@ function filterDefaultValue(...args) {
     const keys = [...path];
     const key = keys.shift();
     const value = obj[key];
-    if (value === undefined) return value;
-    if (keys.length > 0) return getNestedValue(value, keys);
+    if (keys.length > 0 && isObject(value)) return getNestedValue(value, keys);
     return value;
   };
 

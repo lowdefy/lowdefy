@@ -27,7 +27,4 @@ _ref:
     description_content: |
       A title component. Corresponds to html h1, h2, h3 and h4 elements.
 
-    examples:
-      - title: Basic title
-        properties: '{ "content": "Display this title." }'
       

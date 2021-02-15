@@ -24,14 +24,36 @@ _ref:
       The `TextInput` block is a single line text input.
 
     examples:
-      - title: Text input
-        properties: '{"title": "Text input"}'
       - title: Required text input
-        required: true
-        properties: '{"title": "Required text input"}'
+        block:
+          id: required_example
+          type: TextInput
+          required: true
+          properties:
+            title: Required text input
       - title: Placeholder
-        properties: '{"placeholder": "Placeholder"}'
+        block:
+          id: placeholder_example
+          type: TextInput
+          properties:
+            placeholder: Placeholder
       - title: Prefix and suffix text
-        properties: '{"label": {"extra":"Prefix and suffix text"}, "prefix": "The cat", "placeholder": "chased", "suffix": "the rat."}'
+        block:
+          id: prefix_suffix_example
+          type: TextInput
+          properties: 
+            label: 
+              extra: Prefix and suffix text
+            prefix: The cat
+            placeholder: chased 
+            suffix: the rat
       - title: User name
-        properties: '{"title": "First Name", "suffixIcon": "UserOutlined", "placeholder": "Your name", "label": {"span": 6}}'
+        block:
+          id: username
+          type: TextInput
+          properties: 
+            title: First Name
+            suffixIcon: UserOutlined
+            placeholder: Your name
+            label: 
+              span: 6

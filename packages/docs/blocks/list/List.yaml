@@ -1,0 +1,131 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: List
+    category: list
+    schema: ../blocks/blocksBasic/src/blocks/List/List.json
+    filePath: blocks/list/List.yaml
+    description_content: |
+      The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+    areas:
+      - content
+    methods:
+      - name: pushItem
+        onClick:
+        - id: pushItem
+          type: CallMethod
+          params:
+            blockId: block_id
+            method: pushItem
+      - name: unshiftItem
+        onClick:
+          - id: unshiftItem
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: unshiftItem
+      - name: removeItem at index 1
+        onClick:
+          - id: removeItem
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: removeItem
+              args: 1
+      - name: for index 1 moveItemDown
+        onClick:
+          - id: moveItemDown
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: moveItemDown
+              args: 1
+      - name: for index 1 moveItemUp
+        onClick:
+          - id: moveItemUp
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: moveItemUp
+              args: 1
+    examples:
+      - title: Message
+        description: A todo list.
+        block:
+          id: todo_app
+          type: Box
+          blocks:
+            - id: todo_input
+              type: TextInput
+              layout:
+                grow: 1
+              properties:
+                label:
+                  disabled: true
+                  a: 
+                    _log: 
+                      _state: true
+                placeholder: Write something todo...
+            - id: add_item
+              type: Button
+              layout:
+                shrink: 1
+              properties:
+                title: Add item
+                icon: PlusOutlined
+              events:
+                onClick:
+                  - id: add
+                    type: SetState
+                    params:
+                      todos:
+                        _array.concat:
+                          - [_state: todo_input]
+                          - _state: todos
+                      todo_input: null
+            - id: todos
+              type: List
+              blocks:
+                - id: todo_tiem
+                  type: Title
+                  properties:
+                    content:
+                      _log:
+                        _state: todos.$
+                    level: 4
+                - id: remove_item
+                  type: Icon
+                  properties:
+                    name: MinusCircleOutlined
+                    size: 28
+                  events:
+                    onClick:
+                      - id: remove
+                        type: CallMethod
+                        params:
+                          _log:
+                            blockId: todos
+                            method: removeItem
+                            args:
+                              _index: 0
+
+        extra:
+          id: ex_id
+          type: Paragraph
+          properties:
+            content: asdfa dsdf asdf
+

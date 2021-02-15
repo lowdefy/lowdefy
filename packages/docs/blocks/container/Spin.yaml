@@ -24,6 +24,4 @@ _ref:
     areas:
       - content
       # - indicator
-    examples:
-      - title: Basic
-        properties: '{}'
+

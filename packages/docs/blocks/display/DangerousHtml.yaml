@@ -30,11 +30,34 @@ _ref:
 
     examples:
       - title: Basic DangerousHtml
-        properties: '{"html": "<div style=\"background: #123456; padding: 10px;\"><h1 style=\"color: white;\">A simple white title box</h1></div>"}'
+        block:
+          id: basic_example
+          type: DangerousHtml
+          properties: 
+            html: |
+              <div style="background: #123456; padding: 10px;"><h1 style="color: white;">A simple white title box</h1></div>
       - title: DangerousHtml with iframes sanitized
-        properties: '{"html": "The iframe was removed: <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\"  allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'
-      - title: DangerousHtml with iframes enabled
-        properties: '{"DOMPurifyOptions": {"ADD_TAGS": ["iframe"]}, "html": "The iframe was not removed: <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/7N7GWdlQJlU\" frameborder=\"0\"  allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"}'
+        block:
+          id: sanitized_iframes_example
+          type: DangerousHtml
+          properties: 
+            html: |
+              The iframe was removed: <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>      - title: DangerousHtml with iframes enabled
+      - title: DangerousHtml with iframes not sanitized
+        block:
+          id: iframes_example
+          type: DangerousHtml
+          properties:
+            DOMPurifyOptions: 
+              ADD_TAGS: 
+                - iframe
+            html: |
+              The iframe was not removed: <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       - title: DangerousHtml basic sanitization
-        properties: '{"html": "<div style=\"color: red; border: 2px dashed blue; padding: 10px;\"><script>alert(\"hello world\")</script><img src=x onerror=alert(\"img\") />A little bit of bad html sanitized.</div>"}'
+        block:
+          id: sanitized_example
+          type: DangerousHtml
+          properties: 
+            html: |
+              <div style="color: red; border: 2px dashed blue; padding: 10px;"><script>alert("hello world")</script><img src=x onerror=alert("img") />A little bit of bad html sanitized.</div>
   

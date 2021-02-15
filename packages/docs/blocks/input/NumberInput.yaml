@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/NumberInput.yaml
     description_content: |
       The `NumberInput` allows a user to input a number.
-
-    examples:
-      - title: Number input
-        properties: '{"title": "Number input"}'
