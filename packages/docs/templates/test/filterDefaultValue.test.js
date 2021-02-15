@@ -74,3 +74,17 @@ test('remove a default value', () => {
     },
   });
 });
+
+test('only recurse getNestedValue on objects', () => {
+  const value = {
+    a: {
+      b: { c: 1 },
+    },
+  };
+  const defaultValue = {
+    a: {
+      b: null,
+    },
+  };
+  expect(filterDefaultValue(value, defaultValue)).toEqual({ a: { b: { c: 1 } } });
+});
