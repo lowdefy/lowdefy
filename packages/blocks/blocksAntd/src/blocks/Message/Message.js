@@ -24,7 +24,7 @@ import Icon from '../Icon/Icon';
 const MessageBlock = ({ blockId, events, properties, methods }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
-      message[args.status || properties.status || 'success']({
+      return message[args.status || properties.status || 'success']({
         id: `${blockId}_message`,
         content: args.content || properties.content || blockId,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
@@ -33,7 +33,7 @@ const MessageBlock = ({ blockId, events, properties, methods }) => {
           <Icon
             blockId={`${blockId}_icon`}
             events={events}
-            properties={properties.icon}
+            properties={args.icon || properties.icon}
             methods={methods}
           />
         ),
