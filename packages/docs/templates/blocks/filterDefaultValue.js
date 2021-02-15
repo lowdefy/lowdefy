@@ -17,7 +17,7 @@
 function filterDefaultValue(...args) {
   const [value, defaultValue] = args;
 
-  const isObject = (obj) => typeof obj === 'object' && obj !== null;
+  const isObject = (obj) => typeof obj === 'object' && obj !== null && !Array.isArray(obj);
   const isEmptyObject = (obj) => isObject(obj) && Object.keys(obj).length === 0;
 
   const getNestedValue = (obj, path) => {
