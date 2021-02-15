@@ -21,7 +21,8 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
 import Icon from '../Icon/Icon';
 
-const TimelineList = ({ blockId, events, list, methods, properties }) => {
+// TODO: need to pass value to list blocks to render item level settings.
+const TimelineList = ({ blockId, events, list, methods, properties, value }) => {
   const other = {};
   if (properties.mode) {
     other.mode = properties.mode;
@@ -45,26 +46,28 @@ const TimelineList = ({ blockId, events, list, methods, properties }) => {
       {...other}
     >
       {(list || []).map((child, i) => {
-        let icon = serializer.copy(get(properties, `data.${i}.${properties.iconField || 'icon'}`));
-        let styleDot = get(properties, `data.${i}.${properties.iconField || 'style'}`);
+        let icon = serializer.copy(get(value, `${i}.${properties.iconField || 'icon'}`));
+        let style = get(value, `${i}.${properties.styleField || 'style'}`);
         if (type.isString(icon)) {
           icon = { name: icon };
         }
-        if (!type.isObject(styleDot)) {
-          styleDot = {};
+        if (!type.isObject(style)) {
+          style = {};
         }
+        const color = get(value, `${i}.${properties.colorField || 'color'}`);
         return (
           <Timeline.Item
             key={`${blockId}_${i}`}
-            color={get(properties, `data.${i}.${properties.colorField || 'color'}`)}
-            position={get(properties, `data.${i}.${properties.positionField || 'position'}`)}
+            color={color}
+            position={get(value, `${i}.${properties.positionField || 'position'}`)}
+            label={get(value, `${i}.${properties.labelField || 'label'}`)}
             dot={
               icon && (
                 <Icon
                   blockId={`${blockId}_${i}_icon`}
                   events={events}
                   methods={methods}
-                  properties={mergeObjects([icon, { style: styleDot }])}
+                  properties={mergeObjects([{ style, color }, icon])}
                 />
               )
             }
