@@ -20,6 +20,14 @@ properties:
     theme: light
   sider:
     width: 256px
+    initialCollapsed: 
+      _or: 
+        - _eq:
+            - _media: size
+            - md
+        - _eq:
+            - _media: size
+            - lg
   layout:
     style:
       background: '#FFFFFF'
@@ -73,8 +81,8 @@ areas:
         vars:
           hideFeedback:
             _var: hideFeedback
-          githubLink:
-            _var: githubLink
+          filePath:
+            _var: filePath
   content:
     blocks:
       - id: title
@@ -182,6 +190,8 @@ areas:
             type: Button
             layout:
               span: 12
+              md:
+                span: 24
             properties:
               title: {{ method.name }}
             events:
@@ -191,6 +201,8 @@ areas:
             type: MarkdownWithCode
             layout:
               span: 12
+              md:
+                span: 24
             properties:
               content:
                 _nunjucks:
@@ -211,20 +223,13 @@ areas:
 
           {% endfor %}
           {% endif %}
+          {% if category == 'input' %}
           - id: state_divider
             type: Divider
             properties:
               title: State
-            visible:
-              _eq:
-                - _var: category
-                - input
           - id: state_markdown
             type: MarkdownWithCode
-            visible:
-              _eq:
-                - _var: category
-                - input
             properties:
               content:
                 _nunjucks:
@@ -239,6 +244,7 @@ areas:
                       _yaml.stringify:
                         - block_id:
                             _state: block_id
+          {% endif %}
           - id: setup_divider
             type: Divider
             properties:
@@ -431,7 +437,8 @@ areas:
         properties:
           title: Examples
       - _ref:
-          path: templates/blocks/examples.yaml.njk
+          path: README.md
+          transformer: templates/blocks/exampleTransformer.js          
           vars:
             block_type: {{ block_type }}
             examples:
