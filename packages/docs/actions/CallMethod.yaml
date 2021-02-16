@@ -23,7 +23,7 @@ _ref:
       (params: {
         blockId: string,
         method: string,
-        args?: any
+        args?: any[]
       }): void
       ```
     description: |
@@ -32,7 +32,8 @@ _ref:
       ###### object
         - `blockId: string`: __Required__ - The id of the block.
         - `method: string`: __Required__ - The name of the method that should be called.
-        - `args: any`: The arguments with which the method should be called. If this is an array, each item will be a positional argument to the method, else the args are only the first argument. (The arguments are spread if they are an array).
+        - `args: any[]`: The array of positional arguments with which the method should be called.
+
     examples: |
       ###### Open a modal:
       ```yaml
@@ -51,6 +52,6 @@ _ref:
           blockId: my_message
           method: open
           args:
-            content: Hello
-            duration: 4
+            - content: Hello
+              duration: 4
       ```

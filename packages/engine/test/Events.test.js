@@ -20,17 +20,6 @@ import testContext from './testContext';
 
 const pageId = 'one';
 
-const mockLoadingCallback = jest.fn();
-const mockLoading = jest.fn(() => mockLoadingCallback);
-const mockSuccess = jest.fn();
-const mockError = jest.fn();
-
-const displayMessage = {
-  loading: mockLoading,
-  error: mockError,
-  success: mockSuccess,
-};
-
 const mockReqResponses = {
   request1: {
     data: {
@@ -65,7 +54,6 @@ mockDate.now = jest.fn(() => 0);
 
 const rootContext = {
   client,
-  displayMessage,
 };
 
 beforeEach(() => {
@@ -77,11 +65,6 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-  mockLoadingCallback.mockReset();
-  mockLoading.mockReset();
-  mockLoading.mockImplementation(() => mockLoadingCallback);
-  mockSuccess.mockReset();
-  mockError.mockReset();
   mockQuery.mockReset();
   mockQuery.mockImplementation(mockQueryImp);
 });
@@ -114,18 +97,15 @@ test('init Events', () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
-        "history": Array [],
-        "loading": false,
-        "trigger": [Function],
-      },
-    }
-  `);
+  expect(button.Events.events).toEqual({
+    onClick: {
+      history: [],
+      loading: false,
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+    },
+  });
 });
 
 test('triggerEvent no event defined', async () => {
@@ -153,7 +133,6 @@ test('triggerEvent no event defined', async () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -190,26 +169,40 @@ test('triggerEvent x1', async () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
-        "history": Array [],
-        "loading": true,
-        "trigger": [Function],
-      },
-    }
-  `);
+  expect(button.Events.events).toEqual({
+    onClick: {
+      history: [],
+      loading: true,
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+    },
+  });
   await promise;
-  expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
-  expect(button.Events.events.onClick.history[0].success.length).toEqual(1);
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: {
+      x: 1,
+    },
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'SetState',
+        response: undefined,
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
+    },
+  });
+
   expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
-test('triggerEvent x2', async () => {
+test('triggerEvent, 2 actions', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -241,12 +234,11 @@ test('triggerEvent x2', async () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
-  expect(button.Events.events.onClick.history[0].success.length).toEqual(2);
+  expect(button.Events.events.onClick.history[0].responses.length).toEqual(2);
   expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
@@ -272,7 +264,6 @@ test('triggerEvent error', async () => {
                   id: 'e',
                   type: 'Error',
                   params: { a: 'a' },
-                  error: 'Error: invalid action type',
                 },
               ],
             },
@@ -285,308 +276,27 @@ test('triggerEvent error', async () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(button.Events.events.onClick.history[0].error.length).toEqual(1);
-  expect(button.Events.events.onClick.loading).toEqual(false);
-  expect(button.Events.events.onClick.history[0].error).toMatchInlineSnapshot(`
-    Array [
-      Object {
-        "error": Object {
-          "error": [Error: Invalid action: {"id":"e","type":"Error","params":{"a":"a"},"error":"Error: invalid action type"}],
-          "message": "Invalid action: {\\"id\\":\\"e\\",\\"type\\":\\"Error\\",\\"params\\":{\\"a\\":\\"a\\"},\\"error\\":\\"Error: invalid action type\\"}",
-          "name": "Error",
-        },
-        "errorMessage": "Error: invalid action type",
-        "event": Object {
-          "x": 1,
-        },
-        "id": "e",
-        "params": Object {
-          "a": "a",
-        },
-        "skipped": false,
-        "type": "Error",
-      },
-    ]
-  `);
-});
-
-test('messages: loading and success', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: {
+      x: 1,
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetState',
-                  params: { a: 'a' },
-                  success: 'successMessage',
-                  error: 'errorMessage',
-                },
-              ],
-            },
-          },
-        ],
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'e',
+        actionType: 'Error',
+        error: new Error('Invalid action type "Error" at "button".'),
       },
+    ],
+    success: false,
+    timestamp: {
+      date: 0,
     },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
   });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(1);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
-  expect(mockSuccess).toHaveBeenCalledTimes(1);
-  expect(mockError).toHaveBeenCalledTimes(0);
-});
-
-test('messages: success and hideLoading', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetState',
-                  params: { a: 'a' },
-                  success: 'successMessage',
-                  error: 'errorMessage',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', hideLoading: true, event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(0);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(0);
-  expect(mockSuccess).toHaveBeenCalledTimes(1);
-  expect(mockError).toHaveBeenCalledTimes(0);
-});
-
-test('messages: no success and loading', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, error: 'errorMessage' }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(1);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
-  expect(mockSuccess).toHaveBeenCalledTimes(0);
-  expect(mockError).toHaveBeenCalledTimes(0);
-});
-
-test('messages: error and loading', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetState',
-                  params: { _state: null },
-                  success: 'successMessage',
-                  error: 'errorMessage',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(1);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
-  expect(mockSuccess).toHaveBeenCalledTimes(0);
-  expect(mockError).toHaveBeenCalledTimes(1);
-});
-
-test('messages: default error and loading', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetState',
-                  params: { _state: null },
-                  success: 'successMessage',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(1);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(1);
-  expect(mockSuccess).toHaveBeenCalledTimes(0);
-  expect(mockError).toHaveBeenCalledTimes(1);
-  expect(mockError.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        "Failed to set state due to parser error.",
-        6,
-      ],
-    ]
-  `);
-});
-
-test('messages: error and hideLoading', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetState',
-                  params: { _state: null },
-                  success: 'successMessage',
-                  error: 'errorMessage',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-    initState: { textInput: 'init' },
-  });
-  const { button } = context.RootBlocks.map;
-  await button.triggerEvent({ name: 'onClick', hideLoading: true, event: { x: 1 } });
-  expect(mockLoading).toHaveBeenCalledTimes(0);
-  expect(mockLoadingCallback).toHaveBeenCalledTimes(0);
-  expect(mockSuccess).toHaveBeenCalledTimes(0);
-  expect(mockError).toHaveBeenCalledTimes(1);
 });
 
 test('registerEvent then triggerEvent x1', async () => {
@@ -614,27 +324,38 @@ test('registerEvent then triggerEvent x1', async () => {
     rootContext,
     rootBlock,
     pageId,
-    initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
   button.Events.registerEvent({
     name: 'onClick',
     actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
   });
-  expect(button.Events.events.onClick).toMatchInlineSnapshot(`
-    Object {
-      "history": Array [],
-      "loading": false,
-      "trigger": [Function],
-    }
-  `);
-  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
-  expect(button.Events.events.onClick.trigger).toBeInstanceOf(Function);
-  expect(button.Events.events.onClick.loading).toEqual(true);
-  await promise;
-  expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
-  expect(button.Events.events.onClick.history[0].success.length).toEqual(1);
-  expect(button.Events.events.onClick.loading).toEqual(false);
+  expect(button.Events.events).toEqual({
+    onClick: {
+      history: [],
+      loading: false,
+      actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+    },
+  });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: {
+      x: 1,
+    },
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'SetState',
+        response: undefined,
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
+    },
+  });
 });
 
 test('triggerEvent skip', async () => {
@@ -668,35 +389,41 @@ test('triggerEvent skip', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "history": Array [],
-        "loading": true,
-        "trigger": [Function],
-      },
-    }
-  `);
-  await promise;
-  expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
+        "actions": Array [
+          Object {
+            "id": "a",
+            "params": Object {
+              "a": "a",
+            },
+            "skip": true,
+            "type": "SetState",
+          },
+        ],
         "history": Array [
           Object {
+            "blockId": "button",
             "event": Object {
               "x": 1,
             },
-            "success": Array [
-              null,
+            "eventName": "onClick",
+            "responses": Array [
+              Object {
+                "actionId": "a",
+                "actionType": "SetState",
+                "skipped": true,
+              },
             ],
+            "success": true,
             "timestamp": Object {
               "date": 0,
             },
           },
         ],
         "loading": false,
-        "trigger": [Function],
       },
     }
   `);
@@ -704,15 +431,18 @@ test('triggerEvent skip', async () => {
     Array [
       Object {
         "blockId": "button",
+        "event": Object {
+          "x": 1,
+        },
         "eventName": "onClick",
-        "response": Array [
+        "responses": Array [
           Object {
             "actionId": "a",
             "actionType": "SetState",
             "skipped": true,
           },
         ],
-        "status": "success",
+        "success": true,
         "timestamp": Object {
           "date": 0,
         },
@@ -752,35 +482,41 @@ test('triggerEvent skip tests === true', async () => {
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
-  const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
+  await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
       "onClick": Object {
-        "history": Array [],
-        "loading": true,
-        "trigger": [Function],
-      },
-    }
-  `);
-  await promise;
-  expect(button.Events.events).toMatchInlineSnapshot(`
-    Object {
-      "onClick": Object {
+        "actions": Array [
+          Object {
+            "id": "a",
+            "params": Object {
+              "a": "a",
+            },
+            "skip": "Truthy",
+            "type": "SetState",
+          },
+        ],
         "history": Array [
           Object {
+            "blockId": "button",
             "event": Object {
               "x": 1,
             },
-            "success": Array [
-              null,
+            "eventName": "onClick",
+            "responses": Array [
+              Object {
+                "actionId": "a",
+                "actionType": "SetState",
+                "response": undefined,
+              },
             ],
+            "success": true,
             "timestamp": Object {
               "date": 0,
             },
           },
         ],
         "loading": false,
-        "trigger": [Function],
       },
     }
   `);
@@ -788,27 +524,62 @@ test('triggerEvent skip tests === true', async () => {
     Array [
       Object {
         "blockId": "button",
+        "event": Object {
+          "x": 1,
+        },
         "eventName": "onClick",
-        "response": Array [
+        "responses": Array [
           Object {
-            "event": Object {
-              "x": 1,
-            },
-            "id": "a",
-            "params": Object {
-              "a": "a",
-            },
-            "skip": "Truthy",
-            "skipped": false,
-            "successMessage": undefined,
-            "type": "SetState",
+            "actionId": "a",
+            "actionType": "SetState",
+            "response": undefined,
           },
         ],
-        "status": "success",
+        "success": true,
         "timestamp": Object {
           "date": 0,
         },
       },
     ]
   `);
+});
+
+test('Actions array defaults', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: null,
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.Events.registerEvent({
+    name: 'registered',
+    actions: null,
+  });
+  expect(button.Events.events).toEqual({
+    onClick: { actions: [], history: [], loading: false },
+    registered: { actions: [], history: [], loading: false },
+  });
 });

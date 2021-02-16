@@ -1,6 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-promise-reject-errors */
-
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -17,353 +14,116 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, set, type, urlQuery } from '@lowdefy/helpers';
-
-import makeContextId from './makeContextId';
+import { type } from '@lowdefy/helpers';
+import actions from './actions/index.js';
 
 class Actions {
   constructor(context) {
     this.context = context;
+    this.callAction = this.callAction.bind(this);
+    this.callActions = this.callActions.bind(this);
+    this.displayMessage = this.displayMessage.bind(this);
+    this.actions = actions;
+  }
 
-    this.build = this.build.bind(this);
-    this.callMethod = this.callMethod.bind(this);
-    this.request = this.request.bind(this);
-    this.link = this.link.bind(this);
-    this.message = this.message.bind(this);
-    this.reset = this.reset.bind(this);
-    this.scrollTo = this.scrollTo.bind(this);
-    this.setGlobal = this.setGlobal.bind(this);
-    this.setState = this.setState.bind(this);
-    this.validate = this.validate.bind(this);
-
-    this.actions = {
-      CallMethod: this.callMethod,
-      Request: this.request,
-      Link: this.link,
-      Message: this.message,
-      Reset: this.reset,
-      ScrollTo: this.scrollTo,
-      SetGlobal: this.setGlobal,
-      SetState: this.setState,
-      Validate: this.validate,
+  async callActions({ actions, arrayIndices, block, event, eventName }) {
+    const responses = [];
+    let success = true;
+    try {
+      for (const action of actions) {
+        const response = await this.callAction({ action, arrayIndices, block, event });
+        responses.push(response);
+      }
+    } catch (error) {
+      responses.push(error);
+      console.log(error);
+      success = false;
+    }
+    return {
+      blockId: block.blockId,
+      event,
+      eventName,
+      responses,
+      timestamp: new Date(),
+      success,
     };
   }
 
-  static invalidAction(action) {
-    return () =>
-      Promise.reject({
-        errorMessage: action.error || 'Invalid action',
-        error: new Error(`Invalid action: ${JSON.stringify(action)}`),
-      });
-  }
-
-  build(actions) {
-    return actions.map((action) => ({
-      ...action,
-      fn: ({ event, arrayIndices, blockId }) =>
-        get(this.actions, action.type, { default: Actions.invalidAction(action) })(
-          action.params,
-          action.success,
-          action.error,
-          event,
-          arrayIndices,
-          blockId
-        ),
-    }));
-  }
-
-  reset(_, successMessage, errorMessage) {
-    try {
-      this.context.State.resetState();
-      this.context.RootBlocks.reset(
-        serializer.deserializeFromString(this.context.State.frozenState)
-      );
-      this.context.update();
-      // Consider firing onReset and onResetAsync actions
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to reset page.', error });
+  async callAction({ action, arrayIndices, block, event }) {
+    if (!actions[action.type]) {
+      throw {
+        actionId: action.id,
+        actionType: action.type,
+        error: new Error(`Invalid action type "${action.type}" at "${block.blockId}".`),
+      };
     }
-  }
-
-  async callMethod(params, successMessage, errorMessage, _, arrayIndices) {
-    // TODO: add callMethod on block and use instead
-    try {
-      const { blockId, method, args } = params;
-      const blockMethod = this.context.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)]
-        .methods[method];
-      let response;
-      if (type.isArray(args)) {
-        response = await blockMethod(...args);
-      } else {
-        response = await blockMethod(args);
-      }
-      return { successMessage, response };
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to callMethod.', error });
-    }
-  }
-
-  request(params, successMessage, errorMessage, event, arrayIndices) {
-    if (type.isNone(params)) {
-      // Should this resolve or error
-      return Promise.resolve();
-    }
-    if (params.all === true) {
-      return this.context.Requests.callRequests({ event, arrayIndices })
-        .then((response) => ({ successMessage, response }))
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    }
-    if (type.isString(params)) {
-      return this.context.Requests.callRequest({ requestId: params, event, arrayIndices })
-        .then((response) => ({ successMessage, response }))
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    }
-    if (type.isArray(params)) {
-      return this.context.Requests.callRequests({ requestIds: params, event, arrayIndices })
-        .then((response) => ({ successMessage, response }))
-        .catch((error) => {
-          if (errorMessage) {
-            return Promise.reject({ errorMessage, error });
-          }
-          try {
-            const { displayTitle, displayMessage } = error.graphQLErrors[0].extensions;
-            return Promise.reject({ errorMessage: `${displayTitle}: ${displayMessage}`, error });
-          } catch (e) {
-            // Not a graphQLError, displayTitle, displayMessage do not exist
-          }
-          return Promise.reject({ errorMessage: error.message, error });
-        });
-    }
-    return Promise.reject({
-      errorMessage: errorMessage || `Failed to call request.`,
-      error: new Error(`Invalid _request params: ${params}`),
+    const { output: parsedAction, errors: parserErrors } = this.context.parser.parse({
+      event,
+      arrayIndices,
+      input: action,
+      location: block.blockId,
     });
-  }
-
-  message(params = {}, successMessage, errorMessage, event, arrayIndices, blockId) {
+    if (parserErrors.length > 0) {
+      throw {
+        actionId: action.id,
+        actionType: action.type,
+        error: parserErrors[0],
+      };
+    }
+    if (parsedAction.skip === true) {
+      return { actionId: action.id, actionType: action.type, skipped: true };
+    }
+    const messages = parsedAction.messages || {};
+    let response;
+    const closeLoading = this.displayMessage({
+      defaultMessage: 'Loading',
+      duration: 0,
+      message: messages.loading,
+      status: 'loading',
+    });
     try {
-      const { output: parsed, errors: parseErrors } = this.context.parser.parse({
-        event,
+      response = await actions[action.type]({
         arrayIndices,
-        input: params,
-        location: blockId,
+        context: this.context,
+        event,
+        params: parsedAction.params,
       });
-      if (parseErrors.length > 0) {
-        return Promise.reject({
-          errorMessage: errorMessage || `Message failed.`,
-          error: parseErrors,
-        });
-      }
-      this.context.displayMessage[parsed.status || 'success']({
-        content: parsed.content || 'Success',
-        duration: type.isNone(parsed.duration) ? 5 : parsed.duration,
-      });
-      return Promise.resolve({ successMessage });
     } catch (error) {
-      return Promise.reject({
-        errorMessage: errorMessage || `Message failed.`,
+      closeLoading();
+      this.displayMessage({
+        defaultMessage: 'Action unsuccessful',
+        duration: 6,
+        hideExplicitly: true,
+        message: messages.error,
+        status: 'error',
+      });
+      throw {
+        actionId: action.id,
+        actionType: action.type,
         error,
-      });
+      };
     }
-  }
-
-  setState(value, successMessage, errorMessage, event, arrayIndices, blockId) {
-    try {
-      const { output: parsed, errors: stateParseErrors } = this.context.parser.parse({
-        event,
-        arrayIndices,
-        input: value,
-        location: blockId,
-      });
-      if (stateParseErrors.length > 0) {
-        return Promise.reject({
-          errorMessage: errorMessage || 'Failed to set state due to parser error.',
-          error: stateParseErrors,
-        });
-      }
-      Object.keys(parsed).forEach((key) => {
-        this.context.State.set(applyArrayIndices(arrayIndices, key), parsed[key]);
-      });
-      this.context.RootBlocks.reset();
-      this.context.update();
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to set state.', error });
-    }
-    return Promise.resolve({ successMessage });
-  }
-
-  setGlobal(value, successMessage, errorMessage, event, arrayIndices, blockId) {
-    try {
-      const { output: parsed, errors: globalParseErrors } = this.context.parser.parse({
-        event,
-        arrayIndices,
-        input: value,
-        location: blockId,
-      });
-      if (globalParseErrors.length > 0) {
-        return Promise.reject({
-          errorMessage: errorMessage || 'Failed to set global due to parser error.',
-          error: globalParseErrors,
-        });
-      }
-      Object.keys(parsed).forEach((key) => {
-        set(this.context.lowdefyGlobal, applyArrayIndices(arrayIndices, key), parsed[key]);
-      });
-      this.context.RootBlocks.reset();
-      this.context.update();
-    } catch (error) {
-      // log e
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to set global.', error });
-    }
-    return Promise.resolve({ successMessage });
-  }
-
-  scrollTo(params, successMessage, errorMessage, event, arrayIndices, blockId) {
-    const { output: parsedParams, errors: parserErrors } = this.context.parser.parse({
-      event,
-      arrayIndices,
-      input: params,
-      location: blockId,
+    closeLoading();
+    this.displayMessage({
+      defaultMessage: 'Success',
+      message: messages.success,
+      status: 'success',
     });
-    if (parserErrors.length > 0) {
-      return Promise.reject({
-        errorMessage: errorMessage || 'Failed to scroll due to parser error.',
-        error: parserErrors,
-      });
-    }
-    try {
-      if (parsedParams) {
-        if (parsedParams.blockId) {
-          const element = this.context.document.getElementById(parsedParams.blockId);
-          if (element) {
-            element.scrollIntoView(parsedParams.options);
-          }
-        } else {
-          this.context.window.scrollTo(parsedParams);
-        }
-      }
-    } catch (error) {
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to scroll.', error });
-    }
-    return Promise.resolve({ successMessage });
+    return { actionId: action.id, actionType: action.type, response };
   }
 
-  link(params, successMessage, errorMessage, event, arrayIndices, blockId) {
-    const { output: parsedParams, errors: parserErrors } = this.context.parser.parse({
-      event,
-      arrayIndices,
-      input: params,
-      location: blockId,
-    });
-    if (parserErrors.length > 0) {
-      return Promise.reject({
-        errorMessage: errorMessage || 'Failed to follow page link due to parser error.',
-        error: parserErrors,
+  displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
+    let close = () => undefined;
+
+    if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
+      close = this.context.displayMessage({
+        content: type.isString(message) ? message : defaultMessage,
+        duration,
+        status,
       });
     }
-    try {
-      const lowdefyUrlQuery = type.isNone(parsedParams.urlQuery)
-        ? ''
-        : `?${urlQuery.stringify(parsedParams.urlQuery)}`;
 
-      let pageId;
-      if (type.isString(parsedParams)) {
-        // eslint-disable-next-line no-const-assign
-        pageId = parsedParams;
-      }
-      if (parsedParams.pageId) {
-        pageId = parsedParams.pageId;
-      }
-      if (pageId) {
-        // set input for page before changing
-        if (!type.isNone(parsedParams.input)) {
-          const nextContextId = makeContextId({
-            pageId,
-            search: parsedParams.urlQuery,
-            blockId: pageId,
-          });
-          this.context.allInputs[nextContextId] = parsedParams.input;
-        }
-        if (parsedParams.newTab) {
-          this.context.window
-            .open(`${this.context.window.location.origin}/${pageId}${lowdefyUrlQuery}`, '_blank')
-            .focus();
-        } else {
-          this.context.routeHistory.push(`/${pageId}${lowdefyUrlQuery}`);
-        }
-      } else if (parsedParams.url) {
-        if (parsedParams.newTab) {
-          this.context.window.open(`${parsedParams.url}${lowdefyUrlQuery}`, '_blank').focus();
-        } else {
-          this.context.window.location.href = `${parsedParams.url}${lowdefyUrlQuery}`;
-        }
-      } else if (parsedParams.home) {
-        if (parsedParams.newTab) {
-          this.context.window
-            .open(`${this.context.window.location.origin}/${lowdefyUrlQuery}`, '_blank')
-            .focus();
-        } else {
-          this.context.routeHistory.push(`/${lowdefyUrlQuery}`);
-        }
-      }
-    } catch (error) {
-      return Promise.reject({ errorMessage: errorMessage || 'Failed to follow link.', error });
-    }
-    return Promise.resolve({ successMessage });
-  }
-
-  validate(params, successMessage, errorMessage) {
-    try {
-      if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
-        throw new Error('Invalid validate params.');
-      }
-      this.context.showValidationErrors = true;
-      let validationErrors = this.context.RootBlocks.validate();
-      if (params) {
-        const blockIds = type.isString(params) ? [params] : params;
-        validationErrors = validationErrors.filter((block) => {
-          return blockIds.includes(block.blockId);
-        });
-      }
-
-      if (validationErrors.length > 0) {
-        return Promise.reject({
-          errorMessage:
-            errorMessage ||
-            `Your input has ${validationErrors.length} validation error${
-              validationErrors.length !== 1 ? 's' : ''
-            }.`,
-        });
-      }
-    } catch (error) {
-      return Promise.reject({ errorMessage: 'Failed to validate page input.', error });
-    }
-    return Promise.resolve({ successMessage });
+    return close;
   }
 }
 

@@ -32,6 +32,18 @@ const rootContext = {
   window,
 };
 
+const RealDate = Date;
+const mockDate = jest.fn(() => ({ date: 0 }));
+mockDate.now = jest.fn(() => 0);
+
+beforeAll(() => {
+  global.Date = mockDate;
+});
+
+afterAll(() => {
+  global.Date = RealDate;
+});
+
 test('Link with home and urlQuery', async () => {
   const rootBlock = {
     blockId: 'root',
@@ -340,4 +352,162 @@ test('Link with pageId and input and newTab', async () => {
   button.triggerEvent({ name: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1', '_blank']]);
   expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
+});
+
+test('Link with home and newTab, urlQuery', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                { id: 'a', type: 'Link', params: { home: true, newTab: true, urlQuery: { a: 1 } } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.triggerEvent({ name: 'onClick' });
+  expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/?a=1', '_blank']]);
+});
+
+test('Link with pageId as string param', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Link', params: 'page1' }],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.triggerEvent({ name: 'onClick' });
+  expect(context.routeHistory).toEqual(['/page1']);
+});
+
+test('Link with invalid params', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [{ id: 'a', type: 'Link', params: {} }],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'Link',
+        error: new Error('Invalid Link action.'),
+      },
+    ],
+    success: false,
+    timestamp: { date: 0 },
+  });
+});
+
+test('Link with pageId, input and urlQuery', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Link',
+                  params: { pageId: 'page1', input: { input: 1 }, urlQuery: { urlQuery: 1 } },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.triggerEvent({ name: 'onClick' });
+  expect(context.routeHistory).toEqual(['/page1?urlQuery=1']);
+  expect(context.allInputs['page1:page1:{"urlQuery":1}']).toEqual({ input: 1 });
 });
