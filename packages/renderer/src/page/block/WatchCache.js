@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 
 const getBlock = gql`
