@@ -372,7 +372,18 @@ menus:
           - id: PageSiderMenu
             type: MenuLink
             pageId: PageSiderMenu
-
+      - id: blocks_list
+        type: MenuGroup
+        properties:
+          title: List Blocks
+          icon: OrderedListOutlined
+        links:
+          - id: ControlledList
+            type: MenuLink
+            pageId: ControlledList
+          - id: List
+            type: MenuLink
+            pageId: List
       - id: connections
         type: MenuGroup
         properties:
@@ -689,6 +700,10 @@ pages:
   - _ref: blocks/context/PageHSCF.yaml
   - _ref: blocks/context/PageSHCF.yaml
   - _ref: blocks/context/PageSiderMenu.yaml
+
+  - _ref: blocks/list/ControlledList.yaml
+  - _ref: blocks/list/List.yaml
+  # - _ref: blocks/list/TimelineList.yaml
 
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml

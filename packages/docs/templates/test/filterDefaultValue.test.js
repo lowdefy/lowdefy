@@ -45,7 +45,7 @@ test('remove a default value', () => {
   expect(filterDefaultValue(value, defaultValue)).toEqual({ b: 2 });
 });
 
-test('remove a default value', () => {
+test('remove a default value but keep arrays', () => {
   const value = {
     a: {
       b: 1,
@@ -69,6 +69,7 @@ test('remove a default value', () => {
       c: false,
       d: true,
     },
+    e: ['1', '2'],
     g: {
       h: 4,
     },

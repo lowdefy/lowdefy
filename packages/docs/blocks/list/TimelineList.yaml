@@ -15,19 +15,46 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: List
+    block_type: TimelineList
     category: list
-    schema: ../blocks/blocksBasic/src/blocks/List/List.json
-    filePath: blocks/list/List.yaml
+    schema: ../blocks/blocksAntd/src/blocks/TimelineList/TimelineList.json
+    filePath: blocks/TimelineList/TimelineList.yaml
     description_content: |
-      The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+      The TimelineList block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+
+      The timeline nodes can be customized based on the array data.
     areas:
       - content
     init_state_values:
-      todos: 
-        - Bake a 🧁   
-        - Eat a🍦
-        - Phone a 🦖
+      shipment_events:
+        - type: Order Placed
+          icon: ShoppingCartTwoTone
+          color: '#2f54eb'
+          orderNumber: 2112
+          timestamp: 
+            _date: '2021-02-10T20:30:00.000Z'
+          item:
+            code: ax2m-83kl9-ck
+            title: Useless Glue
+        - type: Shipped
+          icon: GiftTwoTone
+          color: '#fa8c16'
+          orderNumber: 2112
+          timestamp: 
+            _date: '2021-02-11T08:33:00.000Z'
+        - type: Cleared Customs
+          icon: FileDoneTwoTone
+          color: '#13c2c2'
+          orderNumber: 2112
+          timestamp: 
+            _date: '2021-02-11T16:12:00.000Z'
+        - type: Delivered
+          icon: CheckCircleTwoTone
+          color: '#52c41a'
+          orderNumber: 2112
+          timestamp: 
+            _date: '2021-02-11T16:12:00.000Z'
+
     methods:
       - name: pushItem
         onClick:
@@ -68,12 +95,10 @@ _ref:
               method: moveItemUp
               args: 1
     examples:
-      - title: Todo List
+      - title: Shipment Event Log
         block:
-          id: todo_app
-          type: Box
-          layout:
-            contentGutter: 16
+          id: shipment_events
+          type: TimelineList
           blocks:
             - id: todo_input
               type: TextInput
@@ -83,51 +108,6 @@ _ref:
                 label:
                   disabled: true
                 placeholder: Write something todo...
-            - id: add_item
-              type: Button
-              layout:
-                shrink: 1
-              properties:
-                title: Add item
-                icon: PlusOutlined
-              events:
-                onClick:
-                  - id: add
-                    type: SetState
-                    params:
-                      todos:
-                        _array.concat:
-                          - [_state: todo_input]
-                          - _state: todos
-                      todo_input: null
-            - id: todos
-              type: List
-              layout:
-                contentGutter: 16
-              blocks:
-                - id: todos.$
-                  type: TitleInput
-                  layout:
-                    grow: 1
-                  properties:
-                    level: 4
-                - id: remove_item
-                  type: Icon
-                  layout:
-                    shrink: 1
-                  properties:
-                    name: MinusCircleOutlined
-                    size: 18
-                  events:
-                    onClick:
-                      - id: remove
-                        type: CallMethod
-                        params:
-                          blockId: todos
-                          method: removeItem
-                          args:
-                            _index: 0
-
         extra:
           id: ex_state
           type: MarkdownWithCode
@@ -137,7 +117,7 @@ _ref:
             content: 
               _nunjucks:
                 template: |
-                  ###### Todos State Value:
+                  ###### Shipment Events State Value:
                   ```yaml
                   {{ value | safe }}
                   ```
@@ -145,7 +125,8 @@ _ref:
                   value:
                     _yaml.stringify:
                       on:
-                        todos: 
-                          _state: todos
+                        shipment_events: 
+                          _state: shipment_events
                       options:
                         sortKeys: false 
+            
