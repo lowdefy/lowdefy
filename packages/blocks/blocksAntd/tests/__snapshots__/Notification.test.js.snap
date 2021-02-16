@@ -73,29 +73,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         onClick={[Function]}
@@ -152,29 +133,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertOutlined"
@@ -282,29 +244,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -628,29 +571,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         onClick={[Function]}
@@ -707,29 +631,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertOutlined"
@@ -837,29 +742,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -1183,29 +1069,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         onClick={[Function]}
@@ -1262,29 +1129,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertOutlined"
@@ -1392,29 +1240,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -1740,29 +1569,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         onClick={[Function]}
@@ -1819,29 +1629,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertOutlined"
@@ -1949,29 +1740,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"
@@ -2293,29 +2065,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         onClick={[Function]}
@@ -2372,29 +2125,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AlertOutlined"
@@ -2502,29 +2236,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction],
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AccountBookFilled"

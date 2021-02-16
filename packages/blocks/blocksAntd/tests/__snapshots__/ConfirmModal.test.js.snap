@@ -190,43 +190,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AndroidFilled"
@@ -904,43 +871,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AndroidFilled"
@@ -1618,43 +1552,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AndroidFilled"
@@ -2340,43 +2241,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AndroidFilled"
@@ -3046,43 +2914,10 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  undefined,
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{}",
-                },
-              ],
-            },
-            "moveItemDown": [MockFunction],
-            "moveItemUp": [MockFunction],
-            "open": [Function],
-            "pushItem": [MockFunction],
-            "registerEvent": [MockFunction],
+            "makeCssClass": [MockFunction],
+            "registerEvent": [Function],
             "registerMethod": [Function],
-            "removeItem": [MockFunction],
-            "setValue": [MockFunction],
-            "triggerEvent": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "name": "onOpen",
-                  },
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            },
-            "unshiftItem": [MockFunction],
+            "triggerEvent": [Function],
           }
         }
         properties="AndroidFilled"

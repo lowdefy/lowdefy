@@ -21,5 +21,19 @@ import ButtonSelector from '../src/blocks/ButtonSelector/ButtonSelector';
 import examples from '../demo/examples/ButtonSelector.yaml';
 import meta from '../src/blocks/ButtonSelector/ButtonSelector.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: ButtonSelector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

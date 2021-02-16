@@ -20,6 +20,19 @@ import Tabs from '../src/blocks/Tabs/Tabs';
 import examples from '../demo/examples/Tabs.yaml';
 import meta from '../src/blocks/Tabs/Tabs.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
 // FIX: TypeError: Cannot read property 'addEventListener' of null
 // runRenderTests({ examples, Block: Tabs, meta });
 runBlockSchemaTests({ examples, meta });

@@ -21,5 +21,19 @@ import TextInput from '../src/blocks/TextInput/TextInput';
 import examples from '../demo/examples/TextInput.yaml';
 import meta from '../src/blocks/TextInput/TextInput.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: TextInput, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

@@ -20,5 +20,19 @@ import Affix from '../src/blocks/Affix/Affix';
 import examples from '../demo/examples/Affix.yaml';
 import meta from '../src/blocks/Affix/Affix.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: Affix, meta });
 runBlockSchemaTests({ examples, meta });

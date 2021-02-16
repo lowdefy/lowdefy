@@ -21,5 +21,19 @@ import Selector from '../src/blocks/Selector/Selector';
 import examples from '../demo/examples/Selector.yaml';
 import meta from '../src/blocks/Selector/Selector.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: Selector, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });
