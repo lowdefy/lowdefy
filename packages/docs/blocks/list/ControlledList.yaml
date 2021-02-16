@@ -45,7 +45,8 @@ _ref:
             params:
               blockId: block_id
               method: removeItem
-              args: 1
+              args: 
+                - 1
       - name: for index 1 moveItemDown
         onClick:
           - id: moveItemDown
@@ -53,7 +54,8 @@ _ref:
             params:
               blockId: block_id
               method: moveItemDown
-              args: 1
+              args: 
+                - 1
       - name: for index 1 moveItemUp
         onClick:
           - id: moveItemUp
@@ -61,7 +63,8 @@ _ref:
             params:
               blockId: block_id
               method: moveItemUp
-              args: 1
+              args: 
+                - 1
     init_state_values:
       todos:  
         - Add the noodles.
