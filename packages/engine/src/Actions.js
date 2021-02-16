@@ -36,6 +36,7 @@ class Actions {
       }
     } catch (error) {
       responses.push(error);
+      console.log(error);
       success = false;
     }
     return {
