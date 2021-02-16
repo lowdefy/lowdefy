@@ -64,10 +64,13 @@ _ref:
             ### SendGridMailSend
 
             #### Properties
+
+            ##### object
+            A `mail description`:
             - `to: email | email[]`: __Required__ - Email address or addresses to send to.
-            - `cc: email | email[]`: __Required__ - Email address to cc in communication.
-            - `bcc: email | email[]`: __Required__ - Email address to bcc in communication.
-            - `replyTo: email | email[]`: __Required__ - Email address to reply to.
+            - `cc: email | email[]`: Email address to cc in communication.
+            - `bcc: email | email[]`: Email address to bcc in communication.
+            - `replyTo: email | email[]`: Email address to reply to.
             - `subject: string`: Email subject.
             - `text: string`: Email message in plain text format.
             - `html: string`: Email message in html format.
@@ -78,6 +81,8 @@ _ref:
               - `filename: string`: __Required__ - Name of the attachment file.
               - `type: string`: The mime type of the content you are attaching. For example, `text/plain` or `text/html`.
             
+            ##### array
+            An array of `mail description` objects can also be provided. 
 
             ### Examples
 
