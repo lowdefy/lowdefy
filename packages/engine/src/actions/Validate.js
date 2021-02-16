@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function Request({ context, params }) {
+async function Validate({ context, params }) {
   if (!type.isNone(params) && !type.isString(params) && !type.isArray(params)) {
     throw new Error('Invalid validate params.');
   }
@@ -37,4 +37,4 @@ async function Request({ context, params }) {
   }
 }
 
-export default Request;
+export default Validate;
