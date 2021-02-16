@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.9.0](https://github.com/lowdefy/lowdefy/compare/v3.8.0...v3.9.0) (2021-02-16)
+
+
+### Bug Fixes
+
+* **blocksColorSelectors:** Include block value test. ([9da9c32](https://github.com/lowdefy/lowdefy/commit/9da9c322f61ae10fd1123a3852ce6bff096fa329))
+
+
+
+
+
 # [3.8.0](https://github.com/lowdefy/lowdefy/compare/v3.7.2...v3.8.0) (2021-02-12)
 
 
