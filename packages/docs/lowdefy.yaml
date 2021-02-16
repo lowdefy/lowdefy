@@ -372,7 +372,18 @@ menus:
           - id: PageSiderMenu
             type: MenuLink
             pageId: PageSiderMenu
-
+      - id: blocks_list
+        type: MenuGroup
+        properties:
+          title: List Blocks
+          icon: OrderedListOutlined
+        links:
+          - id: ControlledList
+            type: MenuLink
+            pageId: ControlledList
+          - id: List
+            type: MenuLink
+            pageId: List
       - id: connections
         type: MenuGroup
         properties:
@@ -397,6 +408,9 @@ menus:
           - id: MongoDB
             type: MenuLink
             pageId: MongoDB
+          - id: SendGridMail
+            type: MenuLink
+            pageId: SendGridMail
       - id: actions
         type: MenuGroup
         properties:
@@ -690,10 +704,15 @@ pages:
   - _ref: blocks/context/PageSHCF.yaml
   - _ref: blocks/context/PageSiderMenu.yaml
 
+  - _ref: blocks/list/ControlledList.yaml
+  - _ref: blocks/list/List.yaml
+  # - _ref: blocks/list/TimelineList.yaml
+
   - _ref: connections/AWSS3.yaml
   - _ref: connections/AxiosHttp.yaml
   - _ref: connections/GoogleSheet.yaml
   - _ref: connections/MongoDB.yaml
+  - _ref: connections/SendGridMail.yaml
 
   - _ref: actions/CallMethod.yaml
   - _ref: actions/Link.yaml

@@ -35,44 +35,31 @@
           "default": false,
           "description": "Reverse timeline nodes."
         },
+        "iconField": {
+          "type": "string",
+          "description": "Use a custom icon field. Defaults to 'icon'."
+        },
+        "styleField": {
+          "type": "string",
+          "description": "Use a custom style field. Defaults to 'style'."
+        },
+        "colorField": {
+          "type": "string",
+          "description": "Use a custom color field. Defaults to 'color'."
+        },
+        "positionField": {
+          "type": "string",
+          "description": "Use a custom position field. Defaults to 'position'."
+        },
+        "labelField": {
+          "type": "string",
+          "description": "Use a custom label field. Defaults to 'label'."
+        },
         "mode": {
           "type": "string",
           "enum": ["left", "right", "alternate"],
           "default": "left",
           "description": "By sending alternate the timeline will distribute the nodes to the left and right."
-        },
-        "data": {
-          "type": "array",
-          "description": "Timeline items.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "color": {
-                "type": "string",
-                "description": "Customize dot color.",
-                "docs": {
-                  "displayType": "color"
-                }
-              },
-              "position": {
-                "type": "string",
-                "enum": ["left", "right"],
-                "default": "left",
-                "description": "Customize node position."
-              },
-              "label": {
-                "type": "string",
-                "description": "Set the label."
-              },
-              "iconField": {
-                "type": ["string", "object"],
-                "description": "Name of an Ant Design Icon or properties of an Icon block to customize the item timeline icon.",
-                "docs": {
-                  "displayType": "icon"
-                }
-              }
-            }
-          }
         }
       }
     }
