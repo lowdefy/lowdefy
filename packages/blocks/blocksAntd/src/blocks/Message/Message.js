@@ -29,7 +29,7 @@ const MessageBlock = ({ blockId, events, properties, methods }) => {
         content: args.content || properties.content || blockId,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
-        icon: properties.icon && (
+        icon: (args.icon || properties.icon) && (
           <Icon
             blockId={`${blockId}_icon`}
             events={events}
