@@ -41,15 +41,9 @@
             },
             "style": {
               "type": "object",
-              "description": "Logo properties.",
-              "properties": {
-                "style": {
-                  "type": "object",
-                  "description": "Css style object to apply to logo.",
-                  "docs": {
-                    "displayType": "yaml"
-                  }
-                }
+              "description": "Css style object to apply to logo.",
+              "docs": {
+                "displayType": "yaml"
               }
             }
           }

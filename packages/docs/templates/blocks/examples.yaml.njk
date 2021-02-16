@@ -21,38 +21,49 @@ blocks:
   - id: example_title_{{ loop.index }}
     type: Markdown
     properties:
-      content: '##### {{ example.title }}'
-  - id: example_block_{{ loop.index }}
-    type: {{ block_type }}
+      content: |
+        ##### {{ example.title }}
+      {% if example.description %}
+        
+        {{ example.description }}
+      {% endif %}
+  - id: example_block_box_{{ loop.index }}
+    type: Box
     layout:
       span: 12
-    required: {{ example.required }}
-    properties:
-      _json.parse: '{{ example.properties | safe }}'
-  - id: example_config_{{ loop.index }}
+    blocks:
+      - id: example_block_{{ loop.index }}
+        type: {{ block_type }}
+        required: {{ example.required }}
+        properties:
+          _json.parse: '{{ example.properties | safe }}'
+  - id: example_config_box_{{ loop.index }}
+    type: Box
     layout:
       span: 12
-    type: MarkdownWithCode
-    properties:
-      content:
-        _nunjucks:
-          template: |
-            {% raw %}
-            ```yaml
-            id: {{ id }}
-            type: {{ type }}
-            {% if required %}required: {{ required }} {% endif -%}
-            properties:
-              {{ properties | safe | indent(2) }}
-            ```
-            {% endraw %}
-          on:
-            id: example_{{ loop.index }}
-            type: {{ block_type }}
-            required: {{ example.required }}
-            properties:
-              _yaml.stringify:
-                - _json.parse: '{{ example.properties | safe }}'
+    blocks:
+      - id: example_config_{{ loop.index }}
+        type: MarkdownWithCode
+        properties:
+          content:
+            _nunjucks:
+              template: |
+                {% raw %}
+                ```yaml
+                id: {{ id }}
+                type: {{ type }}
+                {% if required %}required: {{ required }} {% endif -%}
+                properties:
+                  {{ properties | safe | indent(2) }}
+                ```
+                {% endraw %}
+              on:
+                id: example_{{ loop.index }}
+                type: {{ block_type }}
+                required: {{ example.required }}
+                properties:
+                  _yaml.stringify:
+                    - _json.parse: '{{ example.properties | safe }}'
   - id: example_divider_{{ loop.index }}
     type: Divider
 {% endfor %}

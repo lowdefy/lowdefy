@@ -22,7 +22,3 @@ _ref:
     filePath: blocks/input/Switch.yaml
     description_content: |
       The `Switch` block is an on/off input. It has a boolean value (true/false).
-
-    examples:
-      - title: Switch input
-        properties: '{"title": "Switch input"}'

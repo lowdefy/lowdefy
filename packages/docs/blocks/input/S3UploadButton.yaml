@@ -26,7 +26,3 @@ _ref:
       The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
 
       The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
-
-    examples:
-      - title: S3UploadButtonBlock
-        properties: '{"s3PostPolicyRequestId": "my_request_id"}'

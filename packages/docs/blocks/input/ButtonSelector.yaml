@@ -35,6 +35,3 @@ _ref:
 
       > Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
 
-    examples:
-      - title: ButtonSelector input
-        properties: '{"title": "ButtonSelector input", "options": ["Option 1", "Option 2"]}'

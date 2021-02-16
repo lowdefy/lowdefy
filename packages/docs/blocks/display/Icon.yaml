@@ -22,7 +22,4 @@ _ref:
     description_content: |
       A Icon component. Render Ant Design and other icons
 
-    examples:
-      - title: Basic icon
-        properties: '{"name": "ThunderboltFilled", "color": "orange", "size": 30}'
       

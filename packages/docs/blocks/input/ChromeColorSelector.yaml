@@ -23,6 +23,3 @@ _ref:
     description_content: |
       A color selector component similar to the chrome developer tools color selector.
 
-    examples:
-      - title: ChromeColorSelector input
-        properties: '{"defaultColor": "#123456", "width": 170}'

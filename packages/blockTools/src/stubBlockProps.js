@@ -22,7 +22,7 @@ import schemaTest from './schemaTest';
 const validate = {};
 
 const stubBlockProps = ({ block, meta, logger, initialValue }) => {
-  const [value, setState] = useState(type.enforceType(meta.valueType, initialValue));
+  const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
   };

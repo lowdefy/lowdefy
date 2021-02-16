@@ -31,7 +31,3 @@ _ref:
       The `Pagination` controls user input for pagination purposes.
       
       > This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.
-
-    examples:
-      - title: Pagination input
-        properties: '{"total": 200}'

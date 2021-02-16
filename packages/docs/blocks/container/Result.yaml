@@ -25,5 +25,10 @@ _ref:
       - content
       - extra
     examples:
-      - title: Basic
-        properties: '{"status": "500", "title": "An error occurred"}'
+      - title: 500 Error
+        block:
+          id: error_example
+          type: Result
+          properties: 
+            status: 500
+            title: An error occurred

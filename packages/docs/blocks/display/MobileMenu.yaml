@@ -45,6 +45,4 @@ _ref:
                 - id: page3
                   type: MenuLink
                   pageId: page3
-    examples:
-      - title: Default
-        properties: '{}'
+

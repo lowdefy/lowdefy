@@ -24,9 +24,6 @@ _ref:
 
       > To display a notification, invoke the open method.
       
-    examples:
-      - title: Notification
-        properties: '{"description": "Hello"}'
     methods:
       - name: open
         onClick:

@@ -23,6 +23,3 @@ _ref:
     description_content: |
       A color selector component similar to the Github color selector.
 
-    examples:
-      - title: GithubColorSelector input
-        properties: '{"defaultColor": "#123456", "width": 170}'

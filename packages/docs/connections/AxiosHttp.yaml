@@ -46,7 +46,7 @@ _ref:
 
             #### Properties
 
-            - `url: string`: _String_ - The server URL that will be used for the request.
+            - `url: string`: The server URL that will be used for the request.
             - `method: enum`: Default: `'get'` - The request method to be used when making the request. Options are:
               - `'get'`
               - `'delete'`
@@ -56,7 +56,7 @@ _ref:
               - `'put'`
               - `'patch'`
             - `baseURL: string`: `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
-            - `headers`: _Object_ - An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
+            - `headers: object`: An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
             - `params: object`: An object with URL parameters to be sent with the request.
             - `data: string | object`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
             - `timeout: number`: Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.

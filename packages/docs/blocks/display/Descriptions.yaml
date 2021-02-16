@@ -37,6 +37,13 @@ _ref:
       Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
 
     examples:
-      - title: Basic descriptions
-        properties: '{"items": {"Location": "South Africa", "Temperature": 22, "Date": "2021-02-02"}}'
+      - title: Object data example
+        block:
+          id: object_example
+          type: Descriptions
+          properties: 
+            items: 
+              Location: South Africa 
+              Temperature: 22
+              Date: 2021-02-02
       

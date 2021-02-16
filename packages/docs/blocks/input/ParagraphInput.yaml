@@ -30,7 +30,3 @@ _ref:
       block_id: Click edit to change the paragraph content.
     description_content: |
       The `ParagraphInput` block can display a paragraph, yet allow the user to click a edit icon and change the paragraph content. This is useful when the UI renders an existing document with a paragraph, which a user must be able to edit.
-
-    examples:
-      - title: ParagraphInput input
-        properties: '{"title": "Paragraph input"}'

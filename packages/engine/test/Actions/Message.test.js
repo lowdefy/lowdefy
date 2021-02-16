@@ -17,18 +17,11 @@
 import testContext from '../testContext';
 
 // Mock message
-const mockMessageSuccess = jest.fn();
-const mockMessageError = jest.fn();
-const displayMessage = {
-  loading: () => jest.fn(),
-  error: mockMessageError,
-  success: mockMessageSuccess,
-};
-
+const mockMessage = jest.fn(() => () => undefined);
 const pageId = 'one';
 
 const rootContext = {
-  displayMessage,
+  displayMessage: mockMessage,
 };
 
 test('Message with content', async () => {
@@ -68,18 +61,16 @@ test('Message with content', async () => {
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
-  expect(mockMessageError.mock.calls).toEqual([]);
-  expect(mockMessageSuccess.mock.calls).toEqual([
+  expect(mockMessage.mock.calls).toEqual([
     [
       {
-        duration: 5,
         content: 'test',
       },
     ],
   ]);
 });
 
-test('Message with status error and content', async () => {
+test('Message with all params', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -100,7 +91,12 @@ test('Message with status error and content', async () => {
                 {
                   id: 'a',
                   type: 'Message',
-                  params: { content: 'err', status: 'error' },
+                  params: {
+                    content: 'content',
+                    duration: 6,
+                    icon: 'FireOutlined',
+                    status: 'error',
+                  },
                 },
               ],
             },
@@ -116,12 +112,13 @@ test('Message with status error and content', async () => {
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
-  expect(mockMessageSuccess.mock.calls).toEqual([]);
-  expect(mockMessageError.mock.calls).toEqual([
+  expect(mockMessage.mock.calls).toEqual([
     [
       {
-        duration: 5,
-        content: 'err',
+        content: 'content',
+        duration: 6,
+        icon: 'FireOutlined',
+        status: 'error',
       },
     ],
   ]);
@@ -163,11 +160,9 @@ test('Message with no params', async () => {
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
-  expect(mockMessageError.mock.calls).toEqual([]);
-  expect(mockMessageSuccess.mock.calls).toEqual([
+  expect(mockMessage.mock.calls).toEqual([
     [
       {
-        duration: 5,
         content: 'Success',
       },
     ],

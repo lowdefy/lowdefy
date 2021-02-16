@@ -30,4 +30,14 @@ _ref:
       - title
     examples:
       - title: Comment
-        properties: '{"author": "The Dude", "content": "Yeah, well, you know, that’s just, like, your opinion, man.", "datetime": "18 January, 1998", "avatar": {"color": "#402B18", "content": "TD", "shape": "square"}}'
+        block:
+          id: comment_ex
+          type: Comment
+          properties: 
+            author: The Dude
+            content: Yeah, well, you know, that’s just, like, your opinion, man.
+            datetime: 18 January, 1998
+            avatar: 
+              color: "#402B18"
+              content: TD
+              shape: square

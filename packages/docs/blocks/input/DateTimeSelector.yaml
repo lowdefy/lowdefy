@@ -27,6 +27,3 @@ _ref:
 
       > Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
 
-    examples:
-      - title: DateTimeSelector input
-        properties: '{"title": "DateTimeSelector input" }'

@@ -22,6 +22,7 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
+import DisplayMessage from './page/DisplayMessage';
 import Page from './page/Page';
 import createUpdateBlock from './page/block/updateBlock';
 
@@ -33,6 +34,13 @@ const documentContext = document;
 const Components = {};
 const contexts = {};
 const input = {};
+
+let displayMessage = () => () => undefined;
+const displayMessageMethods = {
+  registerMethod: (_, method) => {
+    displayMessage = method;
+  },
+};
 
 const GET_ROOT = gql`
   fragment MenuLinkFragment on MenuLink {
@@ -90,16 +98,7 @@ const RootContext = ({ children, client }) => {
         input,
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
-        displayMessage: {
-          loading: (message) => {
-            console.log('Start loading', message);
-            return () => {
-              console.log('End loading');
-            };
-          },
-          error: (message) => console.log(message),
-          success: (message) => console.log(message),
-        },
+        displayMessage,
         updateBlock: createUpdateBlock(client),
         window: windowContext,
       })}
@@ -120,6 +119,7 @@ const Root = ({ gqlUri }) => {
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
+        <DisplayMessage methods={displayMessageMethods} />
         <RootContext client={client}>
           {(rootContext) => {
             return (

@@ -26,6 +26,4 @@ _ref:
     areas:
       - content
       # - label
-    examples:
-      - title: Basic
-        properties: '{"title": "Title"}'
+

@@ -30,7 +30,3 @@ _ref:
       block_id: Click edit to change the title.
     description_content: |
       The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
-
-    examples:
-      - title: Title input
-        properties: '{"title": "Title input"}'

@@ -35,11 +35,15 @@ const runRenderTests = ({
     reset();
     before();
   });
-  const values = meta.values
-    ? [type.enforceType(meta.valueType, null), ...meta.values]
-    : [type.enforceType(meta.valueType, null)];
 
   examples.forEach((ex) => {
+    const values = [type.enforceType(meta.valueType, null)];
+    if (!type.isNone(ex.value)) {
+      values.push(ex.value);
+    }
+    if (type.isArray(meta.values)) {
+      values.push(...meta.values);
+    }
     values.forEach((value, v) => {
       test(`Render ${ex.id} - value[${v}]`, () => {
         // create shell to setup react hooks with getProps before render;

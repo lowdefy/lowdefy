@@ -27,11 +27,7 @@ const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowde
     eventLog: [],
     blockId: rootBlock.blockId,
     client: rootContext.client || {},
-    displayMessage: rootContext.displayMessage || {
-      loading: () => () => {},
-      error: () => {},
-      success: () => {},
-    },
+    displayMessage: rootContext.displayMessage || (() => () => undefined),
     document: rootContext.document,
     input: rootContext.input || {},
     allInputs: {},

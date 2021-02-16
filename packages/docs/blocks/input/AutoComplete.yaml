@@ -29,6 +29,3 @@ _ref:
 
       >If you need the user to select only from a list of options, use a block like the `Selector` block instead.
 
-    examples:
-      - title: Autocomplete input
-        properties: '{"title": "Autocomplete input", "options": ["Option 1", "Option 2"]}'

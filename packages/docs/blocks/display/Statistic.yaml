@@ -27,5 +27,11 @@ _ref:
 
     examples:
       - title: Basic statistic
-        properties: '{ "value": 99.5, "prefixIcon": "AlertTwoTone" }'
+        block:
+          id: basic_example
+          type: Statistic
+          properties: 
+            value: 99.5
+            prefixIcon: AlertTwoTone
+            
       

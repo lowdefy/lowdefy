@@ -20,6 +20,14 @@ properties:
     theme: light
   sider:
     width: 256px
+    initialCollapsed: 
+      _or: 
+        - _eq:
+            - _media: size
+            - md
+        - _eq:
+            - _media: size
+            - lg
   layout:
     style:
       background: '#FFFFFF'
@@ -68,13 +76,13 @@ areas:
       _ref: templates/header.yaml
   footer:
     blocks:
-      _ref: 
+      _ref:
         path: templates/footer.yaml.njk
         vars:
           hideFeedback:
             _var: hideFeedback
-          githubLink:
-            _var: githubLink
+          filePath:
+            _var: filePath
   content:
     blocks:
       - id: title
@@ -138,12 +146,21 @@ areas:
             required:
               _state: block.required
             properties:
-              _ref:
-                path:
-                  _var: schema
-                vars:
-                  block_type: {{ block_type }}
-                transformer: templates/blocks/propertiesGetterTransformer.js
+              _experimental_unsafe_js.evaluate:
+                file:
+                    _ref: templates/blocks/filterDefaultValue.js
+                args:
+                  - _ref:
+                          path:
+                            _var: schema
+                          vars:
+                            block_type: {{ block_type }}
+                          transformer: templates/blocks/propertiesGetterTransformer.js
+                  - _ref:
+                      path:
+                        _var: schema
+                      transformer: templates/blocks/defaultValueTransformer.js
+
             {% if areas %}
             areas:
               {% for area in areas %}
@@ -173,6 +190,8 @@ areas:
             type: Button
             layout:
               span: 12
+              md:
+                span: 24
             properties:
               title: {{ method.name }}
             events:
@@ -182,6 +201,8 @@ areas:
             type: MarkdownWithCode
             layout:
               span: 12
+              md:
+                span: 24
             properties:
               content:
                 _nunjucks:
@@ -202,20 +223,13 @@ areas:
 
           {% endfor %}
           {% endif %}
+          {% if category == 'input' %}
           - id: state_divider
             type: Divider
             properties:
               title: State
-            visible:
-              _eq:
-                - _var: category
-                - input
           - id: state_markdown
             type: MarkdownWithCode
-            visible:
-              _eq:
-                - _var: category
-                - input
             properties:
               content:
                 _nunjucks:
@@ -230,6 +244,7 @@ areas:
                       _yaml.stringify:
                         - block_id:
                             _state: block_id
+          {% endif %}
           - id: setup_divider
             type: Divider
             properties:
@@ -251,25 +266,18 @@ areas:
                         options:
                           sortKeys: false
                         on:
-                          _ref:
-                            path: templates/blocks/filter_default_value.yaml
-                            vars:
-                              value:
-                                id: block_id
+                          _experimental_unsafe_js.evaluate:
+                            file:
+                              _ref: templates/blocks/filterDefaultValue.js
+                            args:
+                              - id: block_id
                                 type: {{ block_type }}
                                 required:
                                   _state: block.required
                                 visible:
                                   _state: block.visible
                                 layout:
-                                  _ref:
-                                    path: templates/blocks/filter_default_value.yaml
-                                    vars:
-                                      value:
-                                        _state: block.layout
-                                      default_value:
-                                        align: top
-                                        span: 24
+                                  _state: block.layout
                                 style:
                                   _yaml.parse:
                                     _if_none:
@@ -277,51 +285,21 @@ areas:
                                       - ''
                                 properties:
                                   _ref:
-                                    path: templates/blocks/filter_default_value.yaml
+                                    path:
+                                      _var: schema
                                     vars:
-                                      value:
-                                        _object.assign:
-                                          - _ref:
-                                              path:
-                                                _var: schema
-                                              vars:
-                                                block_type: {{ block_type }}
-                                              transformer: templates/blocks/propertiesGetterTransformer.js
-                                          - label:
-                                              _ref:
-                                                path: templates/blocks/filter_default_value.yaml
-                                                vars:
-                                                  value:
-                                                    _get:
-                                                      key: label
-                                                      from:
-                                                        _ref:
-                                                          path:
-                                                            _var: schema
-                                                          vars:
-                                                            block_type: {{ block_type }}
-                                                          transformer: templates/blocks/propertiesGetterTransformer.js
-                                                  default_value:
-                                                    span: null
-                                                    align: left
-                                                    inline: false
-                                                    disabled: false
-                                                    hasFeedback: true
-                                                    colon: true
-                                                    extra: null
-                                                    extraStyle: {}
-                                                    feedbackStyle: {}
-                                      default_value:
-                                        _ref:
-                                          path:
-                                            _var: schema
-                                          transformer: templates/blocks/defaultValueTransformer.js
-                              default_value:
-                                required: false
+                                      block_type: {{ block_type }}
+                                    transformer: templates/blocks/propertiesGetterTransformer.js
+                              - required: false
                                 visible: true
-                                layout: {}
-                                properties: {}
-
+                                layout:
+                                  align: top
+                                  span: 24
+                                properties:
+                                  _ref:
+                                    path:
+                                      _var: schema
+                                    transformer: templates/blocks/defaultValueTransformer.js
 
       - id: right_column
         type: Box
@@ -459,7 +437,8 @@ areas:
         properties:
           title: Examples
       - _ref:
-          path: templates/blocks/examples.yaml.njk
+          path: README.md
+          transformer: templates/blocks/exampleTransformer.js          
           vars:
             block_type: {{ block_type }}
             examples:
