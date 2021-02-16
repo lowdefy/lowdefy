@@ -44,7 +44,6 @@ const WeekSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -64,7 +63,6 @@ const WeekSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
                   />
                 )

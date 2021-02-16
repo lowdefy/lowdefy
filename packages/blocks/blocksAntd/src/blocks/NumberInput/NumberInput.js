@@ -37,7 +37,6 @@ const NumberInput = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <InputNumber

@@ -36,7 +36,6 @@ const StatisticBlock = ({ blockId, events, properties, methods }) => (
         <Icon
           blockId={`${blockId}_prefixIcon`}
           events={events}
-          methods={methods}
           properties={properties.prefixIcon}
         />
       ) : (
@@ -48,7 +47,6 @@ const StatisticBlock = ({ blockId, events, properties, methods }) => (
         <Icon
           blockId={`${blockId}_suffixIcon`}
           events={events}
-          methods={methods}
           properties={properties.suffixIcon}
         />
       ) : (

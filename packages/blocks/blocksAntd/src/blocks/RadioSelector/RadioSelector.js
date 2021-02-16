@@ -44,7 +44,6 @@ const RadioSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <RadioGroup

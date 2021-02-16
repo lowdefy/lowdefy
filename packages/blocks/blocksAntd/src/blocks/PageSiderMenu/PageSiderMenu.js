@@ -114,14 +114,12 @@ const PageSiderMenu = ({
       blockId={blockId}
       events={events}
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
-      methods={methods}
       content={{
         content: () => (
           <>
             <Header
               blockId={`${blockId}_header`}
               events={events}
-              methods={methods}
               properties={mergeObjects([{ style: styles.header }, properties.header])}
               content={{
                 content: () => (
@@ -186,7 +184,6 @@ const PageSiderMenu = ({
               blockId={`${blockId}_layout`}
               events={events}
               properties={properties.layout}
-              methods={methods}
               content={{
                 content: () => (
                   <>
@@ -298,7 +295,6 @@ const PageSiderMenu = ({
                     <Content
                       blockId={`${blockId}_content`}
                       events={events}
-                      methods={methods}
                       properties={mergeObjects([{ style: styles.body }, properties.content])}
                       content={{
                         content: () => (
@@ -312,6 +308,11 @@ const PageSiderMenu = ({
                                   { style: { padding: '16px 0' } },
                                   properties.breadcrumb,
                                 ])}
+                                rename={{
+                                  events: {
+                                    onClick: 'onBreadcrumbClick',
+                                  },
+                                }}
                               />
                             ) : (
                               <div className={methods.makeCssClass(styles.noBreadcrumb)} />
@@ -321,7 +322,6 @@ const PageSiderMenu = ({
                               <Footer
                                 blockId={`${blockId}_footer`}
                                 events={events}
-                                methods={methods}
                                 properties={properties.footer}
                                 content={{
                                   content: () => content.footer(),

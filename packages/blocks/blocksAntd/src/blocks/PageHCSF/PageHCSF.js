@@ -28,7 +28,6 @@ const PageHCSF = ({ blockId, events, content, properties, methods }) => (
   <Layout
     blockId={blockId}
     events={events}
-    methods={methods}
     properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
     content={{
       content: () => (
@@ -38,7 +37,6 @@ const PageHCSF = ({ blockId, events, content, properties, methods }) => (
               blockId={`${blockId}_header`}
               events={events}
               properties={properties.header}
-              methods={methods}
               content={{
                 content: () => content.header(),
               }}
@@ -47,7 +45,6 @@ const PageHCSF = ({ blockId, events, content, properties, methods }) => (
           <Layout
             blockId={`${blockId}_layout`}
             events={events}
-            methods={methods}
             properties={properties.main}
             content={{
               content: () => (
@@ -57,7 +54,6 @@ const PageHCSF = ({ blockId, events, content, properties, methods }) => (
                       blockId={`${blockId}_content`}
                       events={events}
                       properties={properties.content}
-                      methods={methods}
                       content={{
                         content: () => content.content(),
                       }}
@@ -93,7 +89,6 @@ const PageHCSF = ({ blockId, events, content, properties, methods }) => (
               blockId={`${blockId}_footer`}
               events={events}
               properties={properties.footer}
-              methods={methods}
               content={{
                 content: () => content.footer(),
               }}

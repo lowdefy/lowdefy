@@ -52,12 +52,7 @@ const ButtonBlock = ({ blockId, events, loading, methods, onClick, properties, r
       type={get(properties, 'type', { default: 'primary' })}
       icon={
         properties.icon && (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            methods={methods}
-            properties={properties.icon}
-          />
+          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
         )
       }
       onClick={onClick || (() => methods.triggerEvent({ name: onClickActionName }))}

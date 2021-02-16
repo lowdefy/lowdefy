@@ -70,7 +70,6 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
                   icon: 'PlusOutlined',
                   ...properties.addItemButton,
                 }}
-                methods={methods}
                 onClick={() => methods.unshiftItem()}
               />
             )}
@@ -92,7 +91,6 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
                 icon: 'PlusOutlined',
                 ...properties.addItemButton,
               }}
-              methods={methods}
               onClick={() => methods.pushItem()}
             />
           </div>
@@ -124,7 +122,6 @@ const ControlledListBlock = ({ blockId, events, properties, list, methods }) => 
                       : {}),
                   },
                 }}
-                methods={methods}
                 onClick={() => methods.removeItem(i)}
               />,
             ]
