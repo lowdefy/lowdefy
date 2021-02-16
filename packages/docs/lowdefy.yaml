@@ -130,6 +130,22 @@ menus:
             pageId: operators
             properties:
               title: Operators
+          - id: secrets
+            type: MenuLink
+            pageId: secrets
+            properties:
+              title: Secrets
+          - id: deployment
+            type: MenuLink
+            pageId: deployment
+            properties:
+              title: Deployment
+          - id: lists
+            type: MenuLink
+            pageId: lists
+            properties:
+              title: Lists
+
       - id: blocks_input
         type: MenuGroup
         properties:
@@ -628,6 +644,10 @@ pages:
   - _ref: concepts/connections-and-requests.yaml
   - _ref: concepts/events-and-actions.yaml
   - _ref: concepts/operators.yaml
+  - _ref: concepts/deployment.yaml
+  - _ref: concepts/secrets.yaml
+  - _ref: concepts/deployment.yaml
+  - _ref: concepts/lists.yaml
 
   - _ref: blocks/input/AutoComplete.yaml
   - _ref: blocks/input/ButtonSelector.yaml
