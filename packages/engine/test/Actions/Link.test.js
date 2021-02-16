@@ -470,3 +470,44 @@ test('Link with invalid params', async () => {
     timestamp: { date: 0 },
   });
 });
+
+test('Link with pageId, input and urlQuery', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+              valueType: 'string',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'Link',
+                  params: { pageId: 'page1', input: { input: 1 }, urlQuery: { urlQuery: 1 } },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button } = context.RootBlocks.map;
+  button.triggerEvent({ name: 'onClick' });
+  expect(context.routeHistory).toEqual(['/page1?urlQuery=1']);
+  expect(context.allInputs['page1:page1:{"urlQuery":1}']).toEqual({ input: 1 });
+});

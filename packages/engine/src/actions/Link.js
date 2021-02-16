@@ -31,7 +31,7 @@ async function Link({ context, params }) {
     if (!type.isNone(params.input)) {
       const nextContextId = makeContextId({
         pageId,
-        search: params.urlQuery,
+        urlQuery: params.urlQuery,
         blockId: pageId,
       });
       context.allInputs[nextContextId] = params.input;
