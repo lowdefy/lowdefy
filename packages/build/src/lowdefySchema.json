@@ -345,18 +345,7 @@
             "type": "Action \"type\" should be a string."
           }
         },
-        "success": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Action \"success\" should be a string."
-          }
-        },
-        "error": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Action \"error\" should be a string."
-          }
-        },
+        "messages": {},
         "skip": {},
         "params": {}
       },

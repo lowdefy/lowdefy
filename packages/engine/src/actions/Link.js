@@ -55,8 +55,9 @@ async function Link({ context, params }) {
     } else {
       context.routeHistory.push(`/${lowdefyUrlQuery}`);
     }
+  } else {
+    throw new Error(`Invalid Link action params. Received "${JSON.stringify(params)}".`);
   }
-  throw new Error('Invalid Link action.');
 }
 
 export default Link;
