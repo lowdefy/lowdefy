@@ -86,7 +86,11 @@ test('CallMethod with no args, synchronous method', async () => {
     eventName: 'onClick',
     responses: [
       {
-        args: [],
+        actionId: 'a',
+        actionType: 'CallMethod',
+        response: {
+          args: [],
+        },
       },
     ],
     success: true,
@@ -158,7 +162,11 @@ test('CallMethod method return a promise', async () => {
     eventName: 'onClick',
     responses: [
       {
-        args: ['arg'],
+        actionId: 'a',
+        actionType: 'CallMethod',
+        response: {
+          args: ['arg'],
+        },
       },
     ],
     success: true,
@@ -294,7 +302,11 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
     eventName: 'onClick',
     responses: [
       {
-        args: ['arg1', 'arg2'],
+        actionId: 'a',
+        actionType: 'CallMethod',
+        response: {
+          args: ['arg1', 'arg2'],
+        },
       },
     ],
     success: true,

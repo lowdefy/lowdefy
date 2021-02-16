@@ -106,9 +106,9 @@ class Actions {
     this.displayMessage({
       defaultMessage: 'Success',
       message: messages.success,
-      status: 'error',
+      status: 'success',
     });
-    return response;
+    return { actionId: action.id, actionType: action.type, response };
   }
 
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {

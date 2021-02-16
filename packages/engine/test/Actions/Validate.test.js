@@ -159,7 +159,13 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [undefined],
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+        response: undefined,
+      },
+    ],
     success: true,
     timestamp: {
       date: 0,
@@ -278,7 +284,13 @@ test('Validate only one field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [undefined],
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+        response: undefined,
+      },
+    ],
     success: true,
     timestamp: {
       date: 0,
@@ -427,7 +439,13 @@ test('Validate list of fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [undefined],
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+        response: undefined,
+      },
+    ],
     success: true,
     timestamp: {
       date: 0,
@@ -440,7 +458,7 @@ test('Validate list of fields', async () => {
   });
 });
 
-test('Validate all fields', async () => {
+test('Invalid Validate params', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
