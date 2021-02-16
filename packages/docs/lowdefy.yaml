@@ -408,6 +408,9 @@ menus:
           - id: MongoDB
             type: MenuLink
             pageId: MongoDB
+          - id: SendGridMail
+            type: MenuLink
+            pageId: SendGridMail
       - id: actions
         type: MenuGroup
         properties:
@@ -709,6 +712,7 @@ pages:
   - _ref: connections/AxiosHttp.yaml
   - _ref: connections/GoogleSheet.yaml
   - _ref: connections/MongoDB.yaml
+  - _ref: connections/SendGridMail.yaml
 
   - _ref: actions/CallMethod.yaml
   - _ref: actions/Link.yaml
