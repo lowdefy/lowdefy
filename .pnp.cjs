@@ -4680,7 +4680,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:4.0.0"],
             ["less", "npm:4.1.1"],
-            ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.3.0"],
+            ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:8.0.0"],
             ["moment", "npm:2.29.1"],
             ["rc-animate", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:3.1.1"],
             ["react", "npm:17.0.1"],
@@ -4766,7 +4766,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:4.0.0"],
             ["less", "npm:4.1.1"],
-            ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.3.0"],
+            ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:8.0.0"],
             ["react", "npm:17.0.1"],
             ["react-color", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:2.19.3"],
             ["react-dom", "virtual:22157ea722f8d6428f1fcf0a6f7f6c7d6b902d9c785256c60a65fe6cd0db76ebccc7c1457ee047df0ba6909ff018e300c4f4957a60f5b670089810dfc417af9b#npm:17.0.1"],
@@ -5056,7 +5056,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
             ["less", "npm:4.1.1"],
-            ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.3.0"],
+            ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.0.0"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
             ["react", "npm:17.0.1"],
@@ -18224,23 +18224,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["less-loader", [
-        ["npm:7.3.0", {
-          "packageLocation": "./.yarn/cache/less-loader-npm-7.3.0-f45256a34d-79f6e6ebd7.zip/node_modules/less-loader/",
+        ["npm:8.0.0", {
+          "packageLocation": "./.yarn/cache/less-loader-npm-8.0.0-42ad996dcb-3f1bdb06cb.zip/node_modules/less-loader/",
           "packageDependencies": [
-            ["less-loader", "npm:7.3.0"]
+            ["less-loader", "npm:8.0.0"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.3.0", {
-          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-939200e37e/0/cache/less-loader-npm-7.3.0-f45256a34d-79f6e6ebd7.zip/node_modules/less-loader/",
+        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:8.0.0", {
+          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-7a38d57df7/0/cache/less-loader-npm-8.0.0-42ad996dcb-3f1bdb06cb.zip/node_modules/less-loader/",
           "packageDependencies": [
-            ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:7.3.0"],
+            ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:8.0.0"],
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
             ["less", "npm:4.1.1"],
-            ["loader-utils", "npm:2.0.0"],
-            ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.22.0"]
           ],
           "packagePeers": [
@@ -18251,16 +18249,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.3.0", {
-          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-5d0bfd5e50/0/cache/less-loader-npm-7.3.0-f45256a34d-79f6e6ebd7.zip/node_modules/less-loader/",
+        ["virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.0.0", {
+          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-6c9ade13ef/0/cache/less-loader-npm-8.0.0-42ad996dcb-3f1bdb06cb.zip/node_modules/less-loader/",
           "packageDependencies": [
-            ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:7.3.0"],
+            ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.0.0"],
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
             ["less", "npm:4.1.1"],
-            ["loader-utils", "npm:2.0.0"],
-            ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.22.0"]
           ],
           "packagePeers": [
@@ -18271,16 +18267,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.3.0", {
-          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-188f03771a/0/cache/less-loader-npm-7.3.0-f45256a34d-79f6e6ebd7.zip/node_modules/less-loader/",
+        ["virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:8.0.0", {
+          "packageLocation": "./.yarn/$$virtual/less-loader-virtual-9cf22e0ec3/0/cache/less-loader-npm-8.0.0-42ad996dcb-3f1bdb06cb.zip/node_modules/less-loader/",
           "packageDependencies": [
-            ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:7.3.0"],
+            ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:8.0.0"],
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
             ["less", "npm:4.1.1"],
-            ["loader-utils", "npm:2.0.0"],
-            ["schema-utils", "npm:3.0.0"],
             ["webpack", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.22.0"]
           ],
           "packagePeers": [
