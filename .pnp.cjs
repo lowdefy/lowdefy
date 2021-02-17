@@ -175,6 +175,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ctrl/tinycolor", "npm:3.3.3"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/@ant-design-colors-npm-6.0.0-8629027ebe-130e6af2ca.zip/node_modules/@ant-design/colors/",
+          "packageDependencies": [
+            ["@ant-design/colors", "npm:6.0.0"],
+            ["@ctrl/tinycolor", "npm:3.4.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@ant-design/css-animation", [
@@ -194,17 +202,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.0", {
-          "packageLocation": "./.yarn/$$virtual/@ant-design-icons-virtual-8f1bec6f4d/0/cache/@ant-design-icons-npm-4.4.0-09db7ce767-d78fb5caf5.zip/node_modules/@ant-design/icons/",
+        ["npm:4.5.0", {
+          "packageLocation": "./.yarn/cache/@ant-design-icons-npm-4.5.0-e553ac5f4d-87a2ee2efd.zip/node_modules/@ant-design/icons/",
           "packageDependencies": [
-            ["@ant-design/icons", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.0"],
+            ["@ant-design/icons", "npm:4.5.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.5.0", {
+          "packageLocation": "./.yarn/$$virtual/@ant-design-icons-virtual-6352806d05/0/cache/@ant-design-icons-npm-4.5.0-e553ac5f4d-87a2ee2efd.zip/node_modules/@ant-design/icons/",
+          "packageDependencies": [
+            ["@ant-design/icons", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.5.0"],
+            ["@ant-design/colors", "npm:6.0.0"],
+            ["@ant-design/icons-svg", "npm:4.1.0"],
+            ["@babel/runtime", "npm:7.12.5"],
+            ["@types/react", null],
+            ["classnames", "npm:2.2.6"],
+            ["insert-css", "npm:2.0.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
+            ["react", "npm:17.0.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8457618cb3904bbc119c8565763d2128bfdd5b2c39e144599d3d99aed8395fe55d449cbf78fa458c8e5627885c36fbd16cc712435574d406b58d8f29f56afa67#npm:4.4.0", {
+          "packageLocation": "./.yarn/$$virtual/@ant-design-icons-virtual-ad7d7c6479/0/cache/@ant-design-icons-npm-4.4.0-09db7ce767-d78fb5caf5.zip/node_modules/@ant-design/icons/",
+          "packageDependencies": [
+            ["@ant-design/icons", "virtual:8457618cb3904bbc119c8565763d2128bfdd5b2c39e144599d3d99aed8395fe55d449cbf78fa458c8e5627885c36fbd16cc712435574d406b58d8f29f56afa67#npm:4.4.0"],
             ["@ant-design/colors", "npm:5.0.1"],
             ["@ant-design/icons-svg", "npm:4.1.0"],
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
             ["classnames", "npm:2.2.6"],
             ["insert-css", "npm:2.0.0"],
-            ["rc-util", "virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
             ["react", "npm:17.0.1"]
           ],
           "packagePeers": [
@@ -3202,6 +3236,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ctrl/tinycolor", "npm:3.3.3"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:3.4.0", {
+          "packageLocation": "./.yarn/cache/@ctrl-tinycolor-npm-3.4.0-5c020477bc-59a30b5d96.zip/node_modules/@ctrl/tinycolor/",
+          "packageDependencies": [
+            ["@ctrl/tinycolor", "npm:3.4.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@discoveryjs/json-ext", [
@@ -4606,7 +4647,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/blocks/blocksAntd/",
           "packageDependencies": [
             ["@lowdefy/blocks-antd", "workspace:packages/blocks/blocksAntd"],
-            ["@ant-design/icons", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.0"],
+            ["@ant-design/icons", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.5.0"],
             ["@babel/cli", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.16"],
             ["@babel/core", "npm:7.12.16"],
             ["@babel/preset-env", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:7.12.16"],
@@ -7940,7 +7981,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["antd", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.2"],
             ["@ant-design/css-animation", "npm:1.7.3"],
-            ["@ant-design/icons", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:4.4.0"],
+            ["@ant-design/icons", "virtual:8457618cb3904bbc119c8565763d2128bfdd5b2c39e144599d3d99aed8395fe55d449cbf78fa458c8e5627885c36fbd16cc712435574d406b58d8f29f56afa67#npm:4.4.0"],
             ["@ant-design/react-slick", "virtual:8457618cb3904bbc119c8565763d2128bfdd5b2c39e144599d3d99aed8395fe55d449cbf78fa458c8e5627885c36fbd16cc712435574d406b58d8f29f56afa67#npm:0.26.3"],
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
@@ -21990,7 +22031,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
             ["classnames", "npm:2.2.6"],
-            ["rc-util", "virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
             ["react", "npm:17.0.1"]
           ],
           "packagePeers": [
@@ -22071,7 +22112,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
             ["async-validator", "npm:3.5.1"],
-            ["rc-util", "virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
             ["react", "npm:17.0.1"]
           ],
           "packagePeers": [
@@ -22112,7 +22153,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rc-menu", "virtual:899635cb713b5c33a6e6d4b3b2ffc70949d2cda4807ffd1f5173aabf8eda736612d7db03a5b8b275bd010e3c92ead8af1a4b4be506c3e396ef9c6d0d7c723e64#npm:8.10.5"],
             ["rc-textarea", "virtual:899635cb713b5c33a6e6d4b3b2ffc70949d2cda4807ffd1f5173aabf8eda736612d7db03a5b8b275bd010e3c92ead8af1a4b4be506c3e396ef9c6d0d7c723e64#npm:0.3.4"],
             ["rc-trigger", "npm:4.4.3"],
-            ["rc-util", "virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
             ["react", "npm:17.0.1"]
           ],
           "packagePeers": [
@@ -22897,10 +22938,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0", {
-          "packageLocation": "./.yarn/$$virtual/rc-util-virtual-327aa2d6c1/0/cache/rc-util-npm-5.7.0-bdc90de661-b15423c992.zip/node_modules/rc-util/",
+        ["virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0", {
+          "packageLocation": "./.yarn/$$virtual/rc-util-virtual-9c411d5833/0/cache/rc-util-npm-5.7.0-bdc90de661-b15423c992.zip/node_modules/rc-util/",
           "packageDependencies": [
-            ["rc-util", "virtual:8f1bec6f4d7ce0883482ca39c870e9b6b6f7c1c148d9a982f48d3de4e24b48b77781ece705fce857b24c86da583cc6627bbdf4bf8c2ecb64b9b7f0b498613be9#npm:5.7.0"],
+            ["rc-util", "virtual:6352806d05a57b09904c85db94ab5d4e6595291fcd13c53c319c72bfcccab8b5232a645de952733de49ac14c7c427244c86e41b7a238f400fd4b0786aad56d68#npm:5.7.0"],
             ["@babel/runtime", "npm:7.12.5"],
             ["@types/react", null],
             ["@types/react-dom", null],
