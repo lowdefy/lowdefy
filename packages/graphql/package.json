@@ -53,9 +53,9 @@
     "mongodb": "3.6.3"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.10",
-    "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.11",
+    "@babel/cli": "7.12.16",
+    "@babel/core": "7.12.16",
+    "@babel/preset-env": "7.12.16",
     "@shelf/jest-mongodb": "1.2.3",
     "apollo-server-testing": "2.19.2",
     "babel-jest": "26.6.3",
