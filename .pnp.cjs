@@ -4805,7 +4805,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["enzyme", "npm:3.11.0"],
             ["html-webpack-plugin", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.1.0"],
             ["identity-obj-proxy", "npm:3.0.0"],
-            ["imports-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:1.2.0"],
+            ["imports-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:2.0.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
             ["path-browserify", "npm:1.0.1"],
@@ -16252,20 +16252,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["imports-loader", [
-        ["npm:1.2.0", {
-          "packageLocation": "./.yarn/cache/imports-loader-npm-1.2.0-956967b9fd-01390daa02.zip/node_modules/imports-loader/",
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/imports-loader-npm-2.0.0-bc2f24d29f-9d1c73008d.zip/node_modules/imports-loader/",
           "packageDependencies": [
-            ["imports-loader", "npm:1.2.0"]
+            ["imports-loader", "npm:2.0.0"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:1.2.0", {
-          "packageLocation": "./.yarn/$$virtual/imports-loader-virtual-2eb0827f41/0/cache/imports-loader-npm-1.2.0-956967b9fd-01390daa02.zip/node_modules/imports-loader/",
+        ["virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:2.0.0", {
+          "packageLocation": "./.yarn/$$virtual/imports-loader-virtual-29fb583466/0/cache/imports-loader-npm-2.0.0-bc2f24d29f-9d1c73008d.zip/node_modules/imports-loader/",
           "packageDependencies": [
-            ["imports-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:1.2.0"],
+            ["imports-loader", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:2.0.0"],
             ["@types/webpack", null],
             ["loader-utils", "npm:2.0.0"],
-            ["schema-utils", "npm:3.0.0"],
             ["source-map", "npm:0.6.1"],
             ["strip-comments", "npm:2.0.1"],
             ["webpack", "virtual:e2db836d8f34654c61170d202b04baf4b7028aba30358270e340a8e3c7b1ba4f897b5728bebf64b994f49b964b078ad188bdc5c748c985bd669dfba0be813e6e#npm:5.22.0"]
