@@ -3518,7 +3518,7 @@ __metadata:
     "@lowdefy/helpers": 3.9.0
     babel-jest: 26.6.3
     jest: 26.6.3
-    nunjucks: 3.2.2
+    nunjucks: 3.2.3
     nunjucks-date-filter: 0.1.1
   languageName: unknown
   linkType: soft
@@ -15107,7 +15107,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nunjucks@npm:*, nunjucks@npm:3.2.2":
+"nunjucks@npm:*":
   version: 3.2.2
   resolution: "nunjucks@npm:3.2.2"
   dependencies:
@@ -15121,6 +15121,24 @@ fsevents@^1.2.7:
   bin:
     nunjucks-precompile: bin/precompile
   checksum: ad7ac5ab621d30375ae8bd5e2f1fa4c87e652079179b63a8dc6d0fdb483ab283ba042f38675553a56db606a1accec19c1aade37b2e437520ab4e398b5f1dfbdd
+  languageName: node
+  linkType: hard
+
+"nunjucks@npm:3.2.3":
+  version: 3.2.3
+  resolution: "nunjucks@npm:3.2.3"
+  dependencies:
+    a-sync-waterfall: ^1.0.0
+    asap: ^2.0.3
+    commander: ^5.1.0
+  peerDependencies:
+    chokidar: ^3.3.0
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  bin:
+    nunjucks-precompile: bin/precompile
+  checksum: 5cf89eb605ee3f59d988ee8c01e180a3a909222d860e2aba42c7b69f1bda239f8a54bb4c0a60b5f0be0288eb3b7e49e0d5344cacf95d21c6d232ee921161a066
   languageName: node
   linkType: hard
 

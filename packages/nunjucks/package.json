@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "3.9.0",
-    "nunjucks": "3.2.2",
+    "nunjucks": "3.2.3",
     "nunjucks-date-filter": "0.1.1"
   },
   "devDependencies": {

@@ -5122,7 +5122,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/helpers"],
             ["babel-jest", "virtual:4a7337632ff6e9ee5a1c45a62a9ff4cc325a9367b21424babda93e269fe01b671e885bc41bdeebafb83c81f2a8eebbf0102043354a4e58905f61c8c3387cda1e#npm:26.6.3"],
             ["jest", "npm:26.6.3"],
-            ["nunjucks", "npm:3.2.2"],
+            ["nunjucks", "virtual:e63ad9bfa6ec53905cba84fb75f4e50334e3a53802ae3db1253f0c0ffaa0b90dd4a8266023fa69cfaf46281a2d69949c0e5f69029277d4d1fddfbbc9c01e4d03#npm:3.2.3"],
             ["nunjucks-date-filter", "npm:0.1.1"]
           ],
           "linkType": "SOFT",
@@ -20247,6 +20247,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["asap", "npm:2.0.6"],
             ["chokidar", "npm:3.5.1"],
             ["commander", "npm:5.1.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.2.3", {
+          "packageLocation": "./.yarn/cache/nunjucks-npm-3.2.3-ae8b5fd14c-5cf89eb605.zip/node_modules/nunjucks/",
+          "packageDependencies": [
+            ["nunjucks", "npm:3.2.3"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:e63ad9bfa6ec53905cba84fb75f4e50334e3a53802ae3db1253f0c0ffaa0b90dd4a8266023fa69cfaf46281a2d69949c0e5f69029277d4d1fddfbbc9c01e4d03#npm:3.2.3", {
+          "packageLocation": "./.yarn/$$virtual/nunjucks-virtual-45061312a7/0/cache/nunjucks-npm-3.2.3-ae8b5fd14c-5cf89eb605.zip/node_modules/nunjucks/",
+          "packageDependencies": [
+            ["nunjucks", "virtual:e63ad9bfa6ec53905cba84fb75f4e50334e3a53802ae3db1253f0c0ffaa0b90dd4a8266023fa69cfaf46281a2d69949c0e5f69029277d4d1fddfbbc9c01e4d03#npm:3.2.3"],
+            ["@types/chokidar", null],
+            ["a-sync-waterfall", "npm:1.0.1"],
+            ["asap", "npm:2.0.6"],
+            ["chokidar", null],
+            ["commander", "npm:5.1.0"]
+          ],
+          "packagePeers": [
+            "@types/chokidar",
+            "chokidar"
           ],
           "linkType": "HARD",
         }]
