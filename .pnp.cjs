@@ -4846,7 +4846,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dataloader", "npm:2.0.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
-            ["json5", "npm:2.1.3"],
+            ["json5", "npm:2.2.0"],
             ["uuid", "npm:8.3.2"],
             ["webpack", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:5.22.0"],
             ["webpack-cli", "virtual:aad21d373d6721af7549b2798c35c4ea25d83c122770abeaa0a4343ba20d55700fd9e3c5fa3289a7e6f591d09e8790df14d525c719ca4729b178b8644cca082a#npm:4.5.0"]
@@ -17986,6 +17986,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/json5-npm-2.1.3-b71ec6bcca-957e493710.zip/node_modules/json5/",
           "packageDependencies": [
             ["json5", "npm:2.1.3"],
+            ["minimist", "npm:1.2.5"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.2.0", {
+          "packageLocation": "./.yarn/cache/json5-npm-2.2.0-da49dc7cb5-07b1f90c28.zip/node_modules/json5/",
+          "packageDependencies": [
+            ["json5", "npm:2.2.0"],
             ["minimist", "npm:1.2.5"]
           ],
           "linkType": "HARD",
