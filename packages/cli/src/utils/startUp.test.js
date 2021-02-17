@@ -136,3 +136,17 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
     print,
   });
 });
+
+test('startUp, lowdefyFileNotRequired true', async () => {
+  const context = {};
+  await startUp({ context, options: {}, command: 'command', lowdefyFileNotRequired: true });
+  expect(context).toEqual({
+    baseDirectory: path.resolve(process.cwd()),
+    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliVersion: 'cliVersion',
+    command: 'command',
+    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    sendTelemetry: 'sendTelemetry',
+    print,
+  });
+});

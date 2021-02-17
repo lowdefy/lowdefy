@@ -23,7 +23,7 @@ import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 import packageJson from '../../package.json';
 const { version: cliVersion } = packageJson;
 
-async function startUp({ context, options = {}, command }) {
+async function startUp({ context, options = {}, command, lowdefyFileNotRequired }) {
   context.command = command;
   context.cliVersion = cliVersion;
   context.print = createPrint({
@@ -38,13 +38,17 @@ async function startUp({ context, options = {}, command }) {
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
-  const { appId, disableTelemetry, lowdefyVersion } = await getConfig(context);
-  context.appId = appId;
-  context.disableTelemetry = disableTelemetry;
-  context.lowdefyVersion = lowdefyVersion;
-  context.print.log(`Running 'lowdefy ${command}'. Lowdefy app version ${lowdefyVersion}.`);
-  context.sendTelemetry = getSendTelemetry(context);
+  if (!lowdefyFileNotRequired) {
+    const { appId, disableTelemetry, lowdefyVersion } = await getConfig(context);
+    context.appId = appId;
+    context.disableTelemetry = disableTelemetry;
+    context.lowdefyVersion = lowdefyVersion;
+    context.print.log(`Running 'lowdefy ${command}'. Lowdefy app version ${lowdefyVersion}.`);
+  } else {
+    context.print.log(`Running 'lowdefy ${command}'.`);
+  }
   await checkForUpdatedVersions(context);
+  context.sendTelemetry = getSendTelemetry(context);
   return context;
 }
 

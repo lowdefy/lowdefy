@@ -20,6 +20,7 @@ import build from './commands/build/build.js';
 import buildNetlify from './commands/buildNetlify/buildNetlify.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
 import dev from './commands/dev/dev.js';
+import init from './commands/init/init.js';
 import runCommand from './utils/runCommand';
 
 const { description, version } = packageJson;
@@ -70,5 +71,11 @@ program
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
   .action(runCommand(dev));
+
+program
+  .command('init')
+  .description('Initialize a Lowdefy project.')
+  .usage(`[options]`)
+  .action(runCommand(init));
 
 program.parse(process.argv);
