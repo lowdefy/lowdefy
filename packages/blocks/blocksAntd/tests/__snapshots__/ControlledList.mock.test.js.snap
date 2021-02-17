@@ -18,35 +18,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -100,35 +75,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -183,35 +133,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -284,35 +209,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -366,35 +266,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -448,35 +323,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -530,35 +380,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -612,35 +437,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}
@@ -694,50 +494,10 @@ Array [
           menus={Array []}
           methods={
             Object {
-              "makeCssClass": [MockFunction] {
-                "calls": Array [
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                  Array [
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "flexWrap": "nowrap",
-                        "justifyContent": "space-between",
-                      },
-                      undefined,
-                    ],
-                  ],
-                ],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                  Object {
-                    "type": "return",
-                    "value": "{\\"style\\":[{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"row\\",\\"flexWrap\\":\\"nowrap\\",\\"justifyContent\\":\\"space-between\\"},null]}",
-                  },
-                ],
-              },
-              "moveItemDown": [Function],
-              "moveItemUp": [Function],
-              "pushItem": [Function],
+              "makeCssClass": [Function],
               "registerEvent": [Function],
               "registerMethod": [Function],
-              "removeItem": [Function],
               "triggerEvent": [Function],
-              "unshiftItem": [Function],
             }
           }
           onClick={[Function]}

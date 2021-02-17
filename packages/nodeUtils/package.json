@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -32,13 +32,13 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.9.0",
+    "@lowdefy/helpers": "3.10.0",
     "rimraf": "3.0.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.10",
-    "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.11",
+    "@babel/cli": "7.12.16",
+    "@babel/core": "7.12.16",
+    "@babel/preset-env": "7.12.16",
     "babel-jest": "26.6.3",
     "jest": "26.6.3",
     "jest-diff": "26.6.2"

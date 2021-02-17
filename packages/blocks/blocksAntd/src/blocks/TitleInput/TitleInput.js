@@ -64,14 +64,12 @@ const TitleInput = ({ blockId, events, properties, methods, value }) => {
                       key="copy-icon"
                       events={events}
                       blockId={`${blockId}_copyable_before_icon`}
-                      methods={methods}
                       properties={properties.copyable.icon[0]}
                     />,
                     <Icon
                       key="copied-icon"
                       events={events}
                       blockId={`${blockId}_copyable_after_icon`}
-                      methods={methods}
                       properties={properties.copyable.icon[1]}
                     />,
                   ]
@@ -79,7 +77,6 @@ const TitleInput = ({ blockId, events, properties, methods, value }) => {
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
                     events={events}
-                    methods={methods}
                     properties={properties.copyable.icon}
                   />
                 )),
@@ -111,7 +108,6 @@ const TitleInput = ({ blockId, events, properties, methods, value }) => {
                 <Icon
                   blockId={`${blockId}_editable_icon`}
                   events={events}
-                  methods={methods}
                   properties={properties.editable.icon}
                 />
               ),

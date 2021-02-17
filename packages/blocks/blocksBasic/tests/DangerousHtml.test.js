@@ -24,6 +24,20 @@ import { DangerousHtml } from '../src';
 import examples from '../demo/examples/Html.yaml';
 import meta from '../src/blocks/Html/Html.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: DangerousHtml, meta });
 runBlockSchemaTests({ examples, meta });
 

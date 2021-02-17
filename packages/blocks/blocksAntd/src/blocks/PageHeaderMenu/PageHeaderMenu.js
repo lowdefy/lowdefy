@@ -100,7 +100,6 @@ const PageHeaderMenu = ({
     <Layout
       blockId={blockId}
       events={events}
-      methods={methods}
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       content={{
         content: () => (
@@ -108,7 +107,6 @@ const PageHeaderMenu = ({
             <Header
               blockId={`${blockId}_header`}
               events={events}
-              methods={methods}
               properties={mergeObjects([
                 {
                   style: styles.header,
@@ -178,7 +176,6 @@ const PageHeaderMenu = ({
             <Content
               blockId={`${blockId}_content`}
               events={events}
-              methods={methods}
               properties={mergeObjects([properties.content, { style: styles.body }])}
               content={{
                 content: () => (
@@ -192,6 +189,11 @@ const PageHeaderMenu = ({
                           properties.breadcrumb,
                           { style: { padding: '16px 0' } },
                         ])}
+                        rename={{
+                          events: {
+                            onClick: 'onBreadcrumbClick',
+                          },
+                        }}
                       />
                     ) : (
                       <div className={methods.makeCssClass(styles.noBreadcrumb)} />
@@ -205,7 +207,6 @@ const PageHeaderMenu = ({
               <Footer
                 blockId={`${blockId}_footer`}
                 events={events}
-                methods={methods}
                 properties={properties.footer}
                 content={{
                   content: () => content.footer(),

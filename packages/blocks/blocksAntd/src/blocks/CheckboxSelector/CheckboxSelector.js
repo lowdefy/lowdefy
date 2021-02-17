@@ -42,7 +42,6 @@ const CheckboxSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <Checkbox.Group

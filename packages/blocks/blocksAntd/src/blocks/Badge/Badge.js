@@ -26,12 +26,7 @@ const BadgeBlock = ({ blockId, events, content, properties, methods }) => (
     color={properties.color}
     count={
       (properties.icon && (
-        <Icon
-          blockId={`${blockId}_icon`}
-          events={events}
-          properties={properties.icon}
-          methods={methods}
-        />
+        <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
       )) ||
       properties.count
     }

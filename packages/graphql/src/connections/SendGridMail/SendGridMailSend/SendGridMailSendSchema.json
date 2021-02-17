@@ -129,7 +129,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "The mime type of the content you are attaching. For example, “text/plain” or “text/html”.",
+                "description": "The mime type of the content you are attaching. For example, 'text/plain' or 'text/html'.",
                 "errorMessage": {
                   "type": "SendGridMailSend request property \"type\" should be a string."
                 }
@@ -168,7 +168,8 @@
           }
         },
         "sendAt": {
-          "type": "integer"
+          "type": "integer",
+          "description": "A unix timestamp allowing you to specify when you want your email to be delivered. You can't schedule more than 72 hours in advance."
         },
         "templateId": {
           "type": "string",

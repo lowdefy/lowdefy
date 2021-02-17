@@ -14,83 +14,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -123,83 +49,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -238,83 +90,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -347,83 +125,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -462,83 +166,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -571,83 +201,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -695,83 +251,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -810,87 +292,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "&.ant-switch-checked": Object {
-                        "backgroundColor": "#f44336 !important",
-                      },
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -923,87 +327,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "&.ant-switch-checked": Object {
-                        "backgroundColor": "#f44336 !important",
-                      },
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"&.ant-switch-checked\\":{\\"backgroundColor\\":\\"#f44336 !important\\"}},null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1042,83 +368,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1151,83 +403,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1266,85 +444,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    Object {
-                      "border": "2px solid red",
-                    },
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1377,85 +479,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    Object {
-                      "border": "2px solid red",
-                    },
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,{\\"border\\":\\"2px solid red\\"}]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1494,83 +520,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1603,83 +555,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1718,83 +596,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1827,83 +631,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -1942,83 +672,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2051,83 +707,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2166,83 +748,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2275,83 +783,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2390,83 +824,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": "inherit",
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": false,
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2499,83 +859,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": "inherit",
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": false,
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2614,83 +900,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2723,83 +935,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2838,83 +976,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 0,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 24,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": -4,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": -4,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -2947,83 +1011,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 0,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 24,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": -4,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": -4,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":24},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":-4},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -3062,83 +1052,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -3171,83 +1087,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -3286,83 +1128,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -3395,83 +1163,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }
@@ -3510,83 +1204,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    undefined,
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[null,null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }

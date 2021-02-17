@@ -78,7 +78,6 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     blockId: block.blockId,
     client: rootContext.client,
     config: rootContext.config,
-    displayMessage: rootContext.displayMessage,
     document: rootContext.document,
     input: rootContext.input[contextId] || {},
     allInputs: rootContext.input,

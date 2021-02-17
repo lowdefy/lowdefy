@@ -20,5 +20,19 @@ import PageHSCF from '../src/blocks/PageHSCF/PageHSCF';
 import examples from '../demo/examples/PageHSCF.yaml';
 import meta from '../src/blocks/PageHSCF/PageHSCF.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: PageHSCF, meta });
 runBlockSchemaTests({ examples, meta });

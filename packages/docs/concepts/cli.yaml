@@ -29,13 +29,13 @@ _ref:
             We recommend running the CLI using `npx`, to always use the latest version:
 
             ```
-            npx @lowdefy/cli@latest <command>
+            npx lowdefy@latest <command>
             ```
 
             or, to use a specific version:
 
             ```
-            npx @lowdefy/cli@version <command>
+            npx lowdefy@version <command>
             ```
 
             Alternative, you can install the CLI globally or to a npm project (with a `package.json` file) via npm. The CLI can then be used using `lowdefy` as the executable name:
@@ -56,7 +56,7 @@ _ref:
             ## build-netlify
             The `build-netlify` command creates a production build for the [Netlify](https://www.netlify.com) web hosting service. It is designed to run as the Netlify build command.
 
-            We recommend setting the build command to `npx @lowdefy/cli@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
+            We recommend setting the build command to `npx lowdefy@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
 
             - `--base-directory <base-directory>`: Change base directory. The default is the current working directory (The base directory should rather be configured in the Netlify build settings).
 

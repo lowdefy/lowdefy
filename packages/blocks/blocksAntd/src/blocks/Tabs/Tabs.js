@@ -69,12 +69,7 @@ const TabsBlock = ({ blockId, events, content, methods, properties }) => {
           tab={
             <span className={methods.makeCssClass(tab.titleStyle)}>
               {tab.icon && (
-                <Icon
-                  blockId={`${blockId}_icon`}
-                  events={events}
-                  methods={methods}
-                  properties={tab.icon}
-                />
+                <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />
               )}
               {tab.title || tab.key}
             </span>

@@ -32,13 +32,13 @@ beforeEach(() => {
 });
 
 test('cleanCache', async () => {
-  await cleanCache({});
+  await cleanCache({ context: {} });
   const cachePath = path.resolve(process.cwd(), './.lowdefy/.cache');
   expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
 });
 
 test('cleanCache baseDir', async () => {
-  await cleanCache({ baseDirectory: 'baseDir' });
+  await cleanCache({ context: {}, options: { baseDirectory: 'baseDir' } });
   const cachePath = path.resolve(process.cwd(), 'baseDir/.lowdefy/.cache');
   expect(fse.emptyDir.mock.calls).toEqual([[cachePath]]);
 });

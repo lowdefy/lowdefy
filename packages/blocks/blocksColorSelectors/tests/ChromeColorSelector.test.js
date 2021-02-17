@@ -20,6 +20,20 @@ import { ChromeColorSelector } from '../src';
 import examples from '../demo/examples/ChromeColorSelector.yaml';
 import meta from '../src/blocks/ChromeColorSelector/ChromeColorSelector.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 // FIX: Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
 // runRenderTests({ examples, Block: ChromeColorSelector, meta });
 runBlockSchemaTests({ examples, meta });

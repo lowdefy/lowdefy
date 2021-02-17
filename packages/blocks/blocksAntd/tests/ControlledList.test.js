@@ -21,5 +21,19 @@ import ControlledList from '../src/blocks/ControlledList/ControlledList';
 import examples from '../demo/examples/ControlledList.yaml';
 import meta from '../src/blocks/ControlledList/ControlledList.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: ControlledList, meta, validationsExamples });
 runBlockSchemaTests({ examples, meta });

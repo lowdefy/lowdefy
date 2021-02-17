@@ -34,7 +34,6 @@ const MessageBlock = ({ blockId, events, properties, methods }) => {
             blockId={`${blockId}_icon`}
             events={events}
             properties={args.icon || properties.icon}
-            methods={methods}
           />
         ),
         className: methods.makeCssClass(properties.messageStyle),

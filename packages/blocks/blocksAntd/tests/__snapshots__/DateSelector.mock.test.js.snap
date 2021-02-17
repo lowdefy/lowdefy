@@ -480,94 +480,9 @@ Array [
         menus={Array []}
         methods={
           Object {
-            "makeCssClass": [MockFunction] {
-              "calls": Array [
-                Array [
-                  Object {
-                    "flexWrap": undefined,
-                    "marginBottom": 0,
-                  },
-                ],
-                Array [
-                  Object {
-                    "marginBottom": 8,
-                    "overflow": "visible",
-                    "whiteSpace": "normal",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "height": "fit-content !important",
-                      "minHeight": 32,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "marginTop": 0,
-                    },
-                    undefined,
-                  ],
-                ],
-                Array [
-                  Object {
-                    "width": "100%",
-                  },
-                ],
-                Array [
-                  Array [
-                    Object {
-                      "width": "100%",
-                    },
-                    undefined,
-                  ],
-                ],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"marginBottom\\":0}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"height\\":\\"fit-content !important\\",\\"minHeight\\":32},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"marginTop\\":0},null]}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":{\\"width\\":\\"100%\\"}}",
-                },
-                Object {
-                  "type": "return",
-                  "value": "{\\"style\\":[{\\"width\\":\\"100%\\"},null]}",
-                },
-              ],
-            },
+            "makeCssClass": [Function],
             "registerEvent": [Function],
             "registerMethod": [Function],
-            "setValue": [Function],
             "triggerEvent": [Function],
           }
         }

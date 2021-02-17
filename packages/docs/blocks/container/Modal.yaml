@@ -43,4 +43,4 @@ _ref:
               blockId: block_id
               method: setOpen
               args:
-                open: true
+                - open: true

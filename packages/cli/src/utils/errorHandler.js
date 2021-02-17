@@ -20,12 +20,7 @@ import packageJson from '../../package.json';
 
 const { version: cliVersion } = packageJson;
 
-/* TODO:
-  - log lowdefy version
-  - log command
-  - respect disable telemetry
-*/
-async function logError(error) {
+async function logError({ error, context = {} }) {
   try {
     await axios.request({
       method: 'post',
@@ -36,6 +31,8 @@ async function logError(error) {
       data: {
         source: 'cli',
         cliVersion,
+        command: context.command,
+        lowdefyVersion: context.lowdefyVersion,
         message: error.message,
         name: error.name,
         stack: error.stack,
@@ -46,19 +43,12 @@ async function logError(error) {
   }
 }
 
-function errorHandler(fn, options = {}) {
-  async function run(...args) {
-    try {
-      const res = await fn(...args);
-      return res;
-    } catch (error) {
-      const print = createPrint();
-      print.error(error.message);
-      await logError(error);
-      // TODO: Stay alive feature
-    }
+async function errorHandler({ context, error }) {
+  const print = createPrint();
+  print.error(error.message);
+  if (!context.disableTelemetry) {
+    await logError({ context, error });
   }
-  return run;
 }
 
 export default errorHandler;

@@ -31,16 +31,8 @@ const windowContext = window;
 // eslint-disable-next-line no-undef
 const documentContext = document;
 
-const Components = {};
 const contexts = {};
 const input = {};
-
-let displayMessage = () => () => undefined;
-const displayMessageMethods = {
-  registerMethod: (_, method) => {
-    displayMessage = method;
-  },
-};
 
 const GET_ROOT = gql`
   fragment MenuLinkFragment on MenuLink {
@@ -91,14 +83,12 @@ const RootContext = ({ children, client }) => {
     <>
       {children({
         client,
-        Components,
         contexts,
         document: documentContext,
         homePageId: get(data, 'menu.homePageId'),
         input,
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
-        displayMessage,
         updateBlock: createUpdateBlock(client),
         window: windowContext,
       })}
@@ -119,9 +109,18 @@ const Root = ({ gqlUri }) => {
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
-        <DisplayMessage methods={displayMessageMethods} />
+        <DisplayMessage
+          methods={{
+            registerMethod: (_, method) => {
+              windowContext.displayMessage = method;
+            },
+          }}
+        />
         <RootContext client={client}>
           {(rootContext) => {
+            if (process.env.NODE_ENV === 'development') {
+              windowContext.Lowdefy = { rootContext };
+            }
             return (
               <>
                 <Switch>

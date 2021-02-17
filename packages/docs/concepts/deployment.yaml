@@ -1,0 +1,80 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: deployment
+    pageTitle: Deployment
+    section: Concepts
+    filePath: concepts/deployment.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Lowdefy apps can be deployed to the following hosting platforms:
+
+            - Netlify
+
+            ## Deploy to Netlify
+
+            #### Step 1
+
+            Your project will need to be hosted as a Github repository.
+
+            #### Step 2
+
+            Link your Github project to Netlify.
+
+            - Once logged in to Netlify, click the "New site from git" button.
+            - Choose Github, and authorise Netlify to access your repositories.
+            - Select your repository.
+
+            > If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
+
+            #### Step 3
+
+            Configure your Netlify deployment.
+
+            - Set your build command to `npx lowdefy@latest build-netlify`.
+            - Set your publish directory to `.lowdefy/publish`.
+            - Review the other settings, and deploy your site.
+
+            > Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
+
+            #### Step 4
+
+            Configure the Lowdefy backend server.
+
+            - Click the "Site settings" button.
+            - Choose the "Functions" section in the left menu.
+            - Edit the settings and set your functions directory to `.lowdefy/functions`.
+
+            #### Step 5
+
+            Redeploy your site.
+
+            - Go to the "Deploys" tab.
+            - Click the "Trigger deploy" button and deploy your site.
+            - Wait for you site to finish deploying.
+
+            On the "Site overview" tab you will find your site url.
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Secrets
+            previous_page_id: secrets
+            next_page_title: Lists
+            next_page_id: lists

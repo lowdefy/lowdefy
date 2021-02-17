@@ -19,8 +19,8 @@ import fse from 'fs-extra';
 import startUp from '../../utils/startUp';
 import getFederatedModule from '../../utils/getFederatedModule';
 
-async function build(options) {
-  const context = await startUp(options);
+async function build({ context, options }) {
+  await startUp({ context, options, command: 'build' });
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
@@ -38,11 +38,7 @@ async function build(options) {
     configDirectory: context.baseDirectory,
     outputDirectory: context.outputDirectory,
   });
-  await context.sendTelemetry({
-    data: {
-      command: 'build',
-    },
-  });
+  await context.sendTelemetry();
   context.print.log(`Build artifacts saved at ${context.outputDirectory}.`);
   context.print.succeed(`Build successful.`);
 }

@@ -74,8 +74,9 @@ test('Link with home and urlQuery', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/?a=1']);
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId', async () => {
@@ -108,8 +109,9 @@ test('Link with pageId', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1']);
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId, newTab and urlQuery', async () => {
@@ -148,8 +150,9 @@ test('Link with pageId, newTab and urlQuery', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1?a=1', '_blank']]);
+  expect(res.success).toBe(true);
 });
 
 test('Link with url', async () => {
@@ -188,8 +191,9 @@ test('Link with url', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.window.location.href).toEqual('https://test.lowdefy.com');
+  expect(res.success).toBe(true);
 });
 
 test('Link with url and newTab', async () => {
@@ -228,8 +232,9 @@ test('Link with url and newTab', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['https://test.lowdefy.com', '_blank']]);
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId and urlQuery', async () => {
@@ -268,8 +273,9 @@ test('Link with pageId and urlQuery', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1?data=1']);
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId and input', async () => {
@@ -308,9 +314,10 @@ test('Link with pageId and input', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1']);
   expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId and input and newTab', async () => {
@@ -349,9 +356,10 @@ test('Link with pageId and input and newTab', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1', '_blank']]);
   expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
+  expect(res.success).toBe(true);
 });
 
 test('Link with home and newTab, urlQuery', async () => {
@@ -386,8 +394,9 @@ test('Link with home and newTab, urlQuery', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/?a=1', '_blank']]);
+  expect(res.success).toBe(true);
 });
 
 test('Link with pageId as string param', async () => {
@@ -420,8 +429,9 @@ test('Link with pageId as string param', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1']);
+  expect(res.success).toBe(true);
 });
 
 test('Link with invalid params', async () => {
@@ -463,7 +473,7 @@ test('Link with invalid params', async () => {
       {
         actionId: 'a',
         actionType: 'Link',
-        error: new Error('Invalid Link action.'),
+        error: new Error('Invalid Link action params. Received "{}".'),
       },
     ],
     success: false,
@@ -507,7 +517,8 @@ test('Link with pageId, input and urlQuery', async () => {
     pageId,
   });
   const { button } = context.RootBlocks.map;
-  button.triggerEvent({ name: 'onClick' });
+  const res = await button.triggerEvent({ name: 'onClick' });
   expect(context.routeHistory).toEqual(['/page1?urlQuery=1']);
   expect(context.allInputs['page1:page1:{"urlQuery":1}']).toEqual({ input: 1 });
+  expect(res.success).toBe(true);
 });

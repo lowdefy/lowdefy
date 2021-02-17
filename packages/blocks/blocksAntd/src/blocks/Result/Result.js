@@ -28,12 +28,7 @@ const ResultBlock = ({ blockId, events, content, methods, properties }) => (
     status={properties.status}
     icon={
       properties.icon && (
-        <Icon
-          blockId={`${blockId}_icon`}
-          events={events}
-          methods={methods}
-          properties={properties.icon}
-        />
+        <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
       )
     }
     extra={content.extra && content.extra({ justifyContent: 'center' })}

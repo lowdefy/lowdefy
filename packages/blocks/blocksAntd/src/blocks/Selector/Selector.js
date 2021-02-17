@@ -44,7 +44,6 @@ const Selector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -62,7 +61,6 @@ const Selector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.suffixIcon}
                   />
                 )
@@ -72,7 +70,6 @@ const Selector = ({
                   <Icon
                     blockId={`${blockId}_clearIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.clearIcon}
                   />
                 )

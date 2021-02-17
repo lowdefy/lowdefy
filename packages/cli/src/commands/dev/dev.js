@@ -34,8 +34,8 @@ async function serverSetup({ context, options }) {
   return getExpress({ context, gqlServer, options });
 }
 
-async function dev(options) {
-  const context = await prepare(options);
+async function dev({ context, options }) {
+  await prepare({ context, options });
   const initialBuildPromise = initialBuild({ context });
   const serverSetupPromise = serverSetup({ context, options });
 
@@ -55,7 +55,6 @@ async function dev(options) {
 
   await context.sendTelemetry({
     data: {
-      command: 'dev',
       type: 'startup',
     },
   });

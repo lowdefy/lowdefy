@@ -97,11 +97,11 @@ async function movePublicAssets({ context }) {
   context.print.log(`Public assets moved to "./lowdefy/publish/public".`);
 }
 
-async function buildNetlify(options) {
+async function buildNetlify({ context, options }) {
   if (process.env.NETLIFY === 'true') {
     options.basicPrint = true;
   }
-  const context = await startUp(options);
+  await startUp({ context, options, command: 'build-netlify' });
   const netlifyDir = path.resolve(context.baseDirectory, './.lowdefy/netlify');
 
   context.print.info('Starting build.');
@@ -119,7 +119,6 @@ async function buildNetlify(options) {
 
   await context.sendTelemetry({
     data: {
-      command: 'build-netlify',
       netlify: process.env.NETLIFY === 'true',
     },
   });
