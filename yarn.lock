@@ -2937,51 +2937,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/cli@workspace:packages/cli":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/cli@workspace:packages/cli"
-  dependencies:
-    "@babel/cli": 7.12.16
-    "@babel/core": 7.12.16
-    "@babel/preset-env": 7.12.16
-    "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.9.0
-    "@lowdefy/helpers": 3.9.0
-    "@lowdefy/node-utils": 3.9.0
-    apollo-server-express: 2.21.0
-    axios: 0.21.1
-    babel-jest: 26.6.3
-    babel-loader: 8.2.2
-    chalk: 4.1.0
-    chokidar: 3.5.1
-    clean-webpack-plugin: 3.0.0
-    commander: 6.2.1
-    copy-webpack-plugin: 7.0.0
-    css-loader: 5.0.2
-    decompress: 4.2.1
-    decompress-targz: 4.1.1
-    dotenv: 8.2.0
-    express: 4.17.1
-    fs-extra: 9.1.0
-    graphql: 15.5.0
-    html-webpack-plugin: 5.1.0
-    inquirer: 7.3.3
-    jest: 26.6.3
-    js-yaml: 4.0.0
-    opener: 1.5.2
-    ora: 5.3.0
-    react: 17.0.1
-    react-dom: 17.0.1
-    reload: 3.1.1
-    style-loader: 2.0.0
-    uuid: 8.3.2
-    webpack: 5.22.0
-    webpack-cli: 4.5.0
-  bin:
-    lowdefy: dist/index.js
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/color@3.9.0, @lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
@@ -13283,6 +13238,51 @@ fsevents@^1.2.7:
   checksum: 9d57f7bc81da9a167dca46f9cc986dd18b0ae822811c69c2374f4945418234bb1ee102ca3a34bacf74e3bee122b27eed15604e57d5e1974f6fef8984861ed9ca
   languageName: node
   linkType: hard
+
+"lowdefy@workspace:packages/cli":
+  version: 0.0.0-use.local
+  resolution: "lowdefy@workspace:packages/cli"
+  dependencies:
+    "@babel/cli": 7.12.16
+    "@babel/core": 7.12.16
+    "@babel/preset-env": 7.12.16
+    "@babel/preset-react": 7.12.13
+    "@lowdefy/block-tools": 3.9.0
+    "@lowdefy/helpers": 3.9.0
+    "@lowdefy/node-utils": 3.9.0
+    apollo-server-express: 2.21.0
+    axios: 0.21.1
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    chalk: 4.1.0
+    chokidar: 3.5.1
+    clean-webpack-plugin: 3.0.0
+    commander: 6.2.1
+    copy-webpack-plugin: 7.0.0
+    css-loader: 5.0.2
+    decompress: 4.2.1
+    decompress-targz: 4.1.1
+    dotenv: 8.2.0
+    express: 4.17.1
+    fs-extra: 9.1.0
+    graphql: 15.5.0
+    html-webpack-plugin: 5.1.0
+    inquirer: 7.3.3
+    jest: 26.6.3
+    js-yaml: 4.0.0
+    opener: 1.5.2
+    ora: 5.3.0
+    react: 17.0.1
+    react-dom: 17.0.1
+    reload: 3.1.1
+    style-loader: 2.0.0
+    uuid: 8.3.2
+    webpack: 5.22.0
+    webpack-cli: 4.5.0
+  bin:
+    lowdefy: dist/index.js
+  languageName: unknown
+  linkType: soft
 
 "lower-case@npm:^2.0.2":
   version: 2.0.2
