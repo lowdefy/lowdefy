@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency apollo-server packages to v2.21.0 ([276012c](https://github.com/lowdefy/lowdefy/commit/276012c48283be64e60cbe00f7d8acf695773725))
+* **deps:** Update dependency aws-sdk to v2.845.0. ([55f5ef7](https://github.com/lowdefy/lowdefy/commit/55f5ef79340d76c74a4fefef8b401ac0603714fd))
+* **deps:** Update dependency mingo to v4.1.1. ([efdb838](https://github.com/lowdefy/lowdefy/commit/efdb838fdf3b002f5799e04c5d5de1dc721dabdc))
+* **deps:** Update dependency mongodb to v3.6.4. ([5a82096](https://github.com/lowdefy/lowdefy/commit/5a820966382377c92ec600ea94fb5faa07e76d7a))
+* **deps:** Update dependency webpack to v5.22.0. ([bb9f69e](https://github.com/lowdefy/lowdefy/commit/bb9f69e29cbce728932ab512e12122ce3dc349cc))
+* **deps:** Update dependency webpack-cli to v4.5.0. ([445d55c](https://github.com/lowdefy/lowdefy/commit/445d55ca12f720be9f09632a319c319323c7041c))
+* **graphql:** Add descriptions to SendGridMailSendSchema. ([edefaa7](https://github.com/lowdefy/lowdefy/commit/edefaa7e52df68f328ead03e5fbd58ae5f2e43c9))
+* **graphql:** Add saslprep dependancy for mongodb. ([4d1137a](https://github.com/lowdefy/lowdefy/commit/4d1137af842bec80d1fbc7f131ef86cb66339244))
+
+
+
+
+
 # [3.9.0](https://github.com/lowdefy/lowdefy/compare/v3.8.0...v3.9.0) (2021-02-16)
 
 

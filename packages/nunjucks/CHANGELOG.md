@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency nunjucks to v3.2.3. ([741616e](https://github.com/lowdefy/lowdefy/commit/741616e4e46544deac297fcf4dea034b6e2174c5))
+
+
+
+
+
 # [3.9.0](https://github.com/lowdefy/lowdefy/compare/v3.8.0...v3.9.0) (2021-02-16)
 
 **Note:** Version bump only for package @lowdefy/nunjucks

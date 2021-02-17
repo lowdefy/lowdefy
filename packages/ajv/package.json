@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -32,7 +32,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "3.9.0",
+    "@lowdefy/nunjucks": "3.10.0",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1"
   },
