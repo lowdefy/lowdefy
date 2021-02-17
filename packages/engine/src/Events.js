@@ -54,7 +54,7 @@ class Events {
       return Promise.resolve();
     }
     eventDescription.loading = true;
-    this.block.update;
+    this.block.update = true;
     this.context.update();
 
     const result = await this.context.Actions.callActions({
