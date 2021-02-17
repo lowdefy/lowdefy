@@ -32,20 +32,20 @@ const NotificationBlock = ({ blockId, events, properties, methods }) => {
             blockId={`${blockId}_button`}
             events={events}
             properties={properties.button}
-            methods={methods}
             onClick={() => methods.triggerEvent({ name: 'onClose' })}
           />
         ),
         className: methods.makeCssClass(properties.notificationStyle),
         description: args.description || properties.description,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        icon: properties.icon && <Icon properties={properties.icon} methods={methods} />,
+        icon: properties.icon && (
+          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+        ),
         closeIcon: properties.closeIcon && (
           <Icon
             blockId={`${blockId}_closeIcon`}
             events={events}
             properties={properties.closeIcon}
-            methods={methods}
           />
         ),
         message: args.message || properties.message || blockId,

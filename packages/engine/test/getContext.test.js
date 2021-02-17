@@ -17,7 +17,6 @@
 import getContext from '../src/getContext';
 
 const updateBlock = () => jest.fn();
-const displayMessage = { loading: () => jest.fn(), error: jest.fn(), success: jest.fn() };
 const pageId = 'pageId';
 const client = {};
 
@@ -25,7 +24,6 @@ test('block is required input', async () => {
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -38,7 +36,6 @@ test('memoize context', async () => {
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -53,11 +50,63 @@ test('memoize context', async () => {
   expect(c1).toBe(c2);
 });
 
+test('create context', async () => {
+  const rootContext = {
+    client: { client: true },
+    config: { config: true },
+    contexts: {},
+    document: { document: true },
+    input: { contextId: { input: true } },
+    lowdefyGlobal: { lowdefyGlobal: true },
+    menus: [{ id: 'default' }],
+    routeHistory: ['routeHistory'],
+    updateBlock,
+    urlQuery: { urlQuery: true },
+    window: { window: true },
+  };
+  const block = {
+    blockId: 'blockId',
+    meta: {
+      type: 'context',
+    },
+  };
+  const context = await getContext({ block, contextId: 'contextId', pageId, rootContext });
+  expect(context.Actions).toBeDefined();
+  expect(context.Requests).toBeDefined();
+  expect(context.RootBlocks).toBeDefined();
+  expect(context.State).toBeDefined();
+  expect(context.allInputs).toEqual({ contextId: { input: true } });
+  expect(context.blockId).toEqual('blockId');
+  expect(context.client).toEqual({ client: true });
+  expect(context.config).toEqual({ config: true });
+  expect(context.document).toEqual({ document: true });
+  expect(context.eventLog).toEqual([]);
+  expect(context.id).toEqual('contextId');
+  expect(context.input).toEqual({ input: true });
+  expect(context.lowdefyGlobal).toEqual({ lowdefyGlobal: true });
+  expect(context.menus).toEqual([
+    {
+      id: 'default',
+    },
+  ]);
+  expect(context.pageId).toEqual('pageId');
+  expect(context.parser).toBeDefined();
+  expect(context.requests).toEqual({});
+  expect(context.rootBlock).toBeDefined();
+  expect(context.routeHistory).toEqual(['routeHistory']);
+  expect(context.showValidationErrors).toEqual(false);
+  expect(context.state).toEqual({});
+  expect(context.update).toBeDefined();
+  expect(context.updateBlock).toBeDefined();
+  expect(context.updateListeners).toEqual(new Set());
+  expect(context.urlQuery).toEqual({ urlQuery: true });
+  expect(context.window).toEqual({ window: true });
+});
+
 test('call update for listening contexts', async () => {
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -86,7 +135,6 @@ test('remove contextId from updateListeners if not found', async () => {
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -108,7 +156,6 @@ test('remove contextId from updateListeners if equal to own contextId', async ()
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -130,7 +177,6 @@ test('update memoized context', async () => {
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };
@@ -151,7 +197,6 @@ test('call update for nested contexts and prevent circular loop structure', asyn
   const rootContext = {
     client,
     contexts: {},
-    displayMessage,
     input: {},
     updateBlock,
   };

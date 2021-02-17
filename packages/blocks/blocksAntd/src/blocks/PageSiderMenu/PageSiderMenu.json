@@ -306,6 +306,14 @@
         "onToggleMenuGroup": {
           "type": "array",
           "description": "Trigger action when mobile menu group is opened."
+        },
+        "onBreadcrumbClick": {
+          "type": "array",
+          "description": "Trigger action when a breadcrumb item is clicked."
+        },
+        "onChangeToggleSiderAffix": {
+          "type": "array",
+          "description": "Trigger action when sider collapse button affix triggers a onChange event."
         }
       }
     }

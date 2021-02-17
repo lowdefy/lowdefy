@@ -102,7 +102,6 @@ const RatingSlider = ({
       blockId={blockId}
       events={events}
       loading={loading}
-      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -146,7 +145,6 @@ const RatingSlider = ({
               <Icon
                 blockId={`${blockId}_iconMin`}
                 events={events}
-                methods={methods}
                 properties={mergeObjects([
                   {
                     name: 'FrownOutlined',
@@ -213,7 +211,6 @@ const RatingSlider = ({
               <Icon
                 blockId={`${blockId}_iconMax`}
                 events={events}
-                methods={methods}
                 properties={mergeObjects([
                   {
                     name: 'SmileOutlined',

@@ -24,12 +24,7 @@ const AlertBlock = ({ blockId, events, methods, properties }) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
-      <Icon
-        blockId={`${blockId}_icon`}
-        events={events}
-        methods={methods}
-        properties={properties.icon}
-      />
+      <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
     );
   }
   return (

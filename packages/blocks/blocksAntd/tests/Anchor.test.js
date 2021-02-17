@@ -20,5 +20,23 @@ import Anchor from '../src/blocks/Anchor/Anchor';
 import examples from '../demo/examples/Anchor.yaml';
 import meta from '../src/blocks/Anchor/Anchor.json';
 
-runRenderTests({ examples, Block: Anchor, meta });
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
+runRenderTests({
+  examples,
+  Block: Anchor,
+  meta,
+});
 runBlockSchemaTests({ examples, meta });

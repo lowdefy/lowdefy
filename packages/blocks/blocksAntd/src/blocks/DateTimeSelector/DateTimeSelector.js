@@ -17,7 +17,7 @@
 import React from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 import Label from '../Label/Label';
@@ -49,7 +49,6 @@ const DateTimeSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -71,7 +70,6 @@ const DateTimeSelector = ({
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
-                    methods={methods}
                   />
                 )
               }

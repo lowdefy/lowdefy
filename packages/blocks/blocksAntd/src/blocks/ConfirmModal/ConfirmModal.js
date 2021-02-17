@@ -25,12 +25,7 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
       const additionalProps = {};
       if (properties.icon) {
         additionalProps.icon = (
-          <Icon
-            blockId={`${blockId}_icon`}
-            events={events}
-            properties={properties.icon}
-            methods={methods}
-          />
+          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
         );
       }
       methods.triggerEvent({ name: 'onOpen' });

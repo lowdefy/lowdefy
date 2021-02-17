@@ -40,7 +40,6 @@ const MultipleSelector = ({
     <Label
       blockId={blockId}
       loading={loading}
-      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -61,7 +60,6 @@ const MultipleSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.suffixIcon}
                   />
                 )
@@ -71,7 +69,6 @@ const MultipleSelector = ({
                   <Icon
                     blockId={`${blockId}_clearIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.clearIcon}
                   />
                 )
@@ -81,7 +78,6 @@ const MultipleSelector = ({
                   <Icon
                     blockId={`${blockId}_selectedIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.selectedIcon}
                   />
                 )
