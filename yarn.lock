@@ -85,7 +85,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.3.7, @apollo/client@npm:^3.0.0-beta.23":
+"@apollo/client@npm:3.3.11":
+  version: 3.3.11
+  resolution: "@apollo/client@npm:3.3.11"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@types/zen-observable": ^0.8.0
+    "@wry/context": ^0.5.2
+    "@wry/equality": ^0.3.0
+    fast-json-stable-stringify: ^2.0.0
+    graphql-tag: ^2.12.0
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.14.0
+    prop-types: ^15.7.2
+    symbol-observable: ^2.0.0
+    ts-invariant: ^0.6.0
+    tslib: ^1.10.0
+    zen-observable: ^0.8.14
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: 512f62f956c1d51ad1a32d51cca56295e41f685cbcf2b623366b22a85b0bc6487338f8d90dbff6eae311eff9eb342c67a6adf577633851a9cbd85618c229e66b
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.0.0-beta.23":
   version: 3.3.7
   resolution: "@apollo/client@npm:3.3.7"
   dependencies:
@@ -3516,7 +3546,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/renderer@workspace:packages/renderer"
   dependencies:
-    "@apollo/client": 3.3.7
+    "@apollo/client": 3.3.11
     "@apollo/link-context": 2.0.0-beta.3
     "@apollo/link-error": 2.0.0-beta.3
     "@apollo/link-retry": 2.0.0-beta.3
@@ -10740,6 +10770,17 @@ fsevents@^1.2.7:
   peerDependencies:
     graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 400355590180cce2f39df5c599cad20ee982bb7e4a63ad70857aa0fe2e82e3ef6233a4db2b80a03e6dfa84bf3ecb13dc2947936eaf31753c94876e22be45ea78
+  languageName: node
+  linkType: hard
+
+"graphql-tag@npm:^2.12.0":
+  version: 2.12.1
+  resolution: "graphql-tag@npm:2.12.1"
+  dependencies:
+    tslib: ^1.14.1
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 24598a32799130942d6a86346794798fd3b4533fbc9c2f76af3546ea099778803387ead881c8099db76c6607d3064c970b3e59607d057554d14f82627a536d22
   languageName: node
   linkType: hard
 

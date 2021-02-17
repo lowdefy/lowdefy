@@ -289,6 +289,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@apollo/client", [
+        ["npm:3.3.11", {
+          "packageLocation": "./.yarn/cache/@apollo-client-npm-3.3.11-d530cb03e8-512f62f956.zip/node_modules/@apollo/client/",
+          "packageDependencies": [
+            ["@apollo/client", "npm:3.3.11"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["npm:3.3.7", {
           "packageLocation": "./.yarn/cache/@apollo-client-npm-3.3.7-55a3f3f675-eb06152f3e.zip/node_modules/@apollo/client/",
           "packageDependencies": [
@@ -329,10 +336,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.7", {
-          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-ee73bbef9b/0/cache/@apollo-client-npm-3.3.7-55a3f3f675-eb06152f3e.zip/node_modules/@apollo/client/",
+        ["virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11", {
+          "packageLocation": "./.yarn/$$virtual/@apollo-client-virtual-ae680006fe/0/cache/@apollo-client-npm-3.3.11-d530cb03e8-512f62f956.zip/node_modules/@apollo/client/",
           "packageDependencies": [
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.7"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11"],
             ["@graphql-typed-document-node/core", "virtual:f68f27197e66b23360d2bbb9e7b056e8eb709834f221573922b396c8d01011ceb7ca06d2ab802cc2c99a8be3b43884d7d4d4b6435f4ffebd87dd4f9642f2bb4d#npm:3.1.0"],
             ["@types/graphql", null],
             ["@types/react", null],
@@ -342,7 +349,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@wry/equality", "npm:0.3.1"],
             ["fast-json-stable-stringify", "npm:2.1.0"],
             ["graphql", "npm:15.5.0"],
-            ["graphql-tag", "virtual:a16e5c5447b91c14a809b030855c80ef93c1dd54a4fd5cebbd34a7d1f2dcb61b9cbc0073497f97ad3f2c57fb0980b5f998c8565bb8970a878527df7e6186e831#npm:2.11.0"],
+            ["graphql-tag", "virtual:ae680006fe969582dc3e7c3517498f6a6af54e95ab70b0473e23f67be831704f439437968ac3a45fc53f3c7b47aea124c867f5c01366e993bf3f8ba13aa7f183#npm:2.12.1"],
             ["hoist-non-react-statics", "npm:3.3.2"],
             ["optimism", "npm:0.14.0"],
             ["prop-types", "npm:15.7.2"],
@@ -5147,7 +5154,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/renderer/",
           "packageDependencies": [
             ["@lowdefy/renderer", "workspace:packages/renderer"],
-            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.7"],
+            ["@apollo/client", "virtual:e7dd2bdbec1b3ec399e5f3318d0a58728583b58181f43cb8f4f372a1b2b9707e2ffcf76bd80aad3c5c64a731754028a8070020628ca4fa0a02fe260c179762ae#npm:3.3.11"],
             ["@apollo/link-context", "npm:2.0.0-beta.3"],
             ["@apollo/link-error", "npm:2.0.0-beta.3"],
             ["@apollo/link-retry", "npm:2.0.0-beta.3"],
@@ -15172,12 +15179,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:2.12.1", {
+          "packageLocation": "./.yarn/cache/graphql-tag-npm-2.12.1-1d042bf4e1-24598a3279.zip/node_modules/graphql-tag/",
+          "packageDependencies": [
+            ["graphql-tag", "npm:2.12.1"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:a16e5c5447b91c14a809b030855c80ef93c1dd54a4fd5cebbd34a7d1f2dcb61b9cbc0073497f97ad3f2c57fb0980b5f998c8565bb8970a878527df7e6186e831#npm:2.11.0", {
           "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-10b6104b6a/0/cache/graphql-tag-npm-2.11.0-d505ecf590-4003555901.zip/node_modules/graphql-tag/",
           "packageDependencies": [
             ["graphql-tag", "virtual:a16e5c5447b91c14a809b030855c80ef93c1dd54a4fd5cebbd34a7d1f2dcb61b9cbc0073497f97ad3f2c57fb0980b5f998c8565bb8970a878527df7e6186e831#npm:2.11.0"],
             ["@types/graphql", null],
             ["graphql", "npm:15.5.0"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:ae680006fe969582dc3e7c3517498f6a6af54e95ab70b0473e23f67be831704f439437968ac3a45fc53f3c7b47aea124c867f5c01366e993bf3f8ba13aa7f183#npm:2.12.1", {
+          "packageLocation": "./.yarn/$$virtual/graphql-tag-virtual-a0414d36d2/0/cache/graphql-tag-npm-2.12.1-1d042bf4e1-24598a3279.zip/node_modules/graphql-tag/",
+          "packageDependencies": [
+            ["graphql-tag", "virtual:ae680006fe969582dc3e7c3517498f6a6af54e95ab70b0473e23f67be831704f439437968ac3a45fc53f3c7b47aea124c867f5c01366e993bf3f8ba13aa7f183#npm:2.12.1"],
+            ["@types/graphql", null],
+            ["graphql", "npm:15.5.0"],
+            ["tslib", "npm:1.14.1"]
           ],
           "packagePeers": [
             "@types/graphql",
