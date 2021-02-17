@@ -3026,7 +3026,7 @@ __metadata:
     jest: 26.6.3
     jest-serializer-html: 7.0.0
     js-yaml: 4.0.0
-    less: 3.13.0
+    less: 4.1.1
     less-loader: 7.3.0
     moment: 2.29.1
     rc-animate: 3.1.1
@@ -3108,7 +3108,7 @@ __metadata:
     jest: 26.6.3
     jest-serializer-html: 7.0.0
     js-yaml: 4.0.0
-    less: 3.13.0
+    less: 4.1.1
     less-loader: 7.3.0
     react: 17.0.1
     react-color: 2.19.3
@@ -3378,7 +3378,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
-    less: 3.13.0
+    less: 4.1.1
     less-loader: 7.3.0
     path-browserify: 1.0.1
     process: 0.11.10
@@ -7649,6 +7649,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"copy-anything@npm:^2.0.1":
+  version: 2.0.3
+  resolution: "copy-anything@npm:2.0.3"
+  dependencies:
+    is-what: ^3.12.0
+  checksum: ea938e0ec79ed51b000e69498fb6f43f9416128370afc0fbf3d32f64c4f4b8b9103a9e7974627fb753498a477da1f1102fb1b638db898a0ba10b3438bb81fa11
+  languageName: node
+  linkType: hard
+
 "copy-concurrently@npm:^1.0.0":
   version: 1.0.5
   resolution: "copy-concurrently@npm:1.0.5"
@@ -11301,7 +11310,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.24":
+"iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.24, iconv-lite@npm:^0.4.4":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
   dependencies:
@@ -12165,6 +12174,13 @@ fsevents@^1.2.7:
   version: 0.2.1
   resolution: "is-utf8@npm:0.2.1"
   checksum: c72f604d72b72f6a57f9b2e22c9b6f480e869b3f0efe141bd1dfbc36655225043ca8c1316ff8e343ef641cf80868c9e4a37345492f31402abd5ab68e09367977
+  languageName: node
+  linkType: hard
+
+"is-what@npm:^3.12.0":
+  version: 3.12.0
+  resolution: "is-what@npm:3.12.0"
+  checksum: d343342b1c2a013fe5afe05bf6e08c75c113d9d33dd61a3dd180551c6eed45811c3d9184be695e67ca36da0bc2921c396d4c7409bfce22418dfbc66a9e906771
   languageName: node
   linkType: hard
 
@@ -13200,16 +13216,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"less@npm:3.13.0":
-  version: 3.13.0
-  resolution: "less@npm:3.13.0"
+"less@npm:4.1.1":
+  version: 4.1.1
+  resolution: "less@npm:4.1.1"
   dependencies:
+    copy-anything: ^2.0.1
     errno: ^0.1.1
     graceful-fs: ^4.1.2
     image-size: ~0.5.0
     make-dir: ^2.1.0
     mime: ^1.4.1
-    native-request: ^1.0.5
+    needle: ^2.5.2
+    parse-node-version: ^1.0.1
     source-map: ~0.6.0
     tslib: ^1.10.0
   dependenciesMeta:
@@ -13223,13 +13241,13 @@ fsevents@^1.2.7:
       optional: true
     mime:
       optional: true
-    native-request:
+    needle:
       optional: true
     source-map:
       optional: true
   bin:
-    lessc: ./bin/lessc
-  checksum: b294e1d467b48e1391f98249f97aaba598080720c539ee3eb4a13967d779696ff582c4631c68dd8c9ef3b0ad38b3cf63b1b60746c56a76fc24b24b9cd14f82ae
+    lessc: bin/lessc
+  checksum: a4fb3be59be0fdcc289c24f09e3b856a63d1bb9fa444209a712ce11b2944dad04007ad04c1d3b2708d2df58dbfaec6d8af7a96da80731c359c8927bfe2a97409
   languageName: node
   linkType: hard
 
@@ -14557,13 +14575,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"native-request@npm:^1.0.5":
-  version: 1.0.8
-  resolution: "native-request@npm:1.0.8"
-  checksum: bbb5ec150fe3bec61e76f8170641e0519348bb7de5b1c67fc757c5ca61dc7c539a0984d00c3d89e0b8b8e1fe6d6e52aed144eb725bc0a8693d4dc1633e15cb7a
-  languageName: node
-  linkType: hard
-
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -14585,6 +14596,19 @@ fsevents@^1.2.7:
     nearley-unparse: bin/nearley-unparse.js
     nearleyc: bin/nearleyc.js
   checksum: 0c4bdd9230f76b4b9aa4340c186a6e07898dbb62157bb5a5f0a90f1c02ba5fd4b44e98c216bb8863cc2eaf717a14a01769d4aa4e8000046381d60ec5d44afd69
+  languageName: node
+  linkType: hard
+
+"needle@npm:^2.5.2":
+  version: 2.6.0
+  resolution: "needle@npm:2.6.0"
+  dependencies:
+    debug: ^3.2.6
+    iconv-lite: ^0.4.4
+    sax: ^1.2.4
+  bin:
+    needle: bin/needle
+  checksum: 0a00060d586b984ccfe89ba95228a9510ec258eeba62349450d590ea5a92831cd997b191f211220bd112236fc8734c7e6cd64d674b7e6d55784fa992d9e3a7a4
   languageName: node
   linkType: hard
 
@@ -15590,6 +15614,13 @@ fsevents@^1.2.7:
     json-parse-even-better-errors: ^2.3.0
     lines-and-columns: ^1.1.6
   checksum: 65b1e494a51862340248f542666712830c7b6f4d632ca099520eeacb163275f35cbbcf72643cab1d8a71c3cdf87dcd0a7e03c685c7ac1068d24b49c915a7e884
+  languageName: node
+  linkType: hard
+
+"parse-node-version@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "parse-node-version@npm:1.0.1"
+  checksum: 79ae38178715cd9ebec482d876b8bc773c98e017ccdb50d40937e9d65ece0ebf7eef507ed100e182e352b0bacfe2acba6b3b3b7ae978be20a79a91a4853bb27b
   languageName: node
   linkType: hard
 
@@ -18120,7 +18151,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"sax@npm:>=0.6.0":
+"sax@npm:>=0.6.0, sax@npm:^1.2.4":
   version: 1.2.4
   resolution: "sax@npm:1.2.4"
   checksum: 9d7668d69105e89e2c1a4b2fdc12c72e1a2f78b825f7b4a8a2ea5cdfebf70920bd17715bed55264c3b3959616a0695f8ad2d098bf6944fbd0953ee9c695dceef
