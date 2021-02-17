@@ -23,10 +23,9 @@ import packageJson from '../../package.json';
 
 const { version: cliVersion } = packageJson;
 
-async function startUp(options = {}) {
-  const context = {
-    cliVersion,
-  };
+async function startUp({ context, options = {}, command }) {
+  context.command = command;
+  context.cliVersion = cliVersion;
 
   context.print = createPrint({
     basic: options.basicPrint,

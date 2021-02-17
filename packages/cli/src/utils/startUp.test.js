@@ -33,7 +33,8 @@ jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 jest.mock('./getSendTelemetry', () => () => 'sendTelemetry');
 
 test('startUp, options undefined', async () => {
-  const context = await startUp();
+  const context = {};
+  await startUp({ context });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
@@ -48,7 +49,8 @@ test('startUp, options undefined', async () => {
 });
 
 test('startUp, options empty', async () => {
-  const context = await startUp({});
+  const context = {};
+  await startUp({ context, options: {} });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
@@ -63,7 +65,8 @@ test('startUp, options empty', async () => {
 });
 
 test('startUp, options baseDirectory', async () => {
-  const context = await startUp({ baseDirectory: './baseDirectory' });
+  const context = {};
+  await startUp({ context, options: { baseDirectory: './baseDirectory' } });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
@@ -78,7 +81,8 @@ test('startUp, options baseDirectory', async () => {
 });
 
 test('startUp, options outputDirectory', async () => {
-  const context = await startUp({ outputDirectory: './outputDirectory' });
+  const context = {};
+  await startUp({ context, options: { outputDirectory: './outputDirectory' } });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
@@ -93,10 +97,15 @@ test('startUp, options outputDirectory', async () => {
 });
 
 test('startUp, options baseDirectory and outputDirectory', async () => {
-  const context = await startUp({
-    baseDirectory: './baseDirectory',
-    outputDirectory: './outputDirectory',
+  const context = {};
+  await startUp({
+    context,
+    options: {
+      baseDirectory: './baseDirectory',
+      outputDirectory: './outputDirectory',
+    },
   });
+
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),

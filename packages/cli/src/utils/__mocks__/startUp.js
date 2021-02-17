@@ -17,20 +17,17 @@
 import path from 'path';
 import { cacheDirectoryPath, outputDirectoryPath } from '../directories';
 
-async function mockStartUp(options = {}) {
-  const context = {
-    cliVersion: 'cliVersion',
-    appId: 'appId',
-    disableTelemetry: false,
-    lowdefyVersion: 'lowdefyVersion',
-    sendTelemetry: jest.fn(),
-    print: {
-      info: jest.fn(),
-      succeed: jest.fn(),
-      log: jest.fn(),
-    },
+async function mockStartUp({ context, options = {} }) {
+  context.cliVersion = 'cliVersion';
+  context.appId = 'appId';
+  context.disableTelemetry = false;
+  context.lowdefyVersion = 'lowdefyVersion';
+  context.sendTelemetry = jest.fn();
+  context.print = {
+    info: jest.fn(),
+    succeed: jest.fn(),
+    log: jest.fn(),
   };
-
   context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
   context.cacheDirectory = path.resolve(context.baseDirectory, cacheDirectoryPath);
 
@@ -39,7 +36,6 @@ async function mockStartUp(options = {}) {
   } else {
     context.outputDirectory = path.resolve(context.baseDirectory, outputDirectoryPath);
   }
-
   return context;
 }
 

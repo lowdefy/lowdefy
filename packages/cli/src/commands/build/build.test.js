@@ -33,7 +33,7 @@ jest.mock('../../utils/startUp');
 test('build', async () => {
   const cacheDirectory = path.resolve(process.cwd(), '.lowdefy/.cache');
   const outputDirectory = path.resolve(process.cwd(), '.lowdefy/build');
-  await build({});
+  await build({ context: {} });
   const { default: buildScript } = getFederatedModule();
   expect(buildScript).toHaveBeenCalledTimes(1);
   expect(buildScript.mock.calls[0][0].outputDirectory).toEqual(outputDirectory);

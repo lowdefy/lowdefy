@@ -13,21 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import path from 'path';
-import dotenv from 'dotenv';
-import fse from 'fs-extra';
 
-import startUp from '../../utils/startUp';
+import errorHandler from './errorHandler';
 
-async function prepare({ context, options }) {
-  dotenv.config({ silent: true });
-  // Setup
-  if (!options.port) options.port = 3000;
-  await startUp({ context, options });
-  context.print.log(
-    `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
-  );
-  await fse.emptyDir(path.resolve(context.cacheDirectory, './meta'));
+function runCommand(fn) {
+  async function run(options) {
+    const context = {};
+    try {
+      const res = await fn({ context, options });
+      return res;
+    } catch (error) {
+      await errorHandler({ context, error });
+    }
+  }
+  return run;
 }
 
-export default prepare;
+export default runCommand;
