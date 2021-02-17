@@ -1,5 +1,5 @@
 {
-  "name": "@lowdefy/cli",
+  "name": "lowdefy",
   "version": "3.9.0",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
@@ -21,9 +21,7 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "bin": {
-    "lowdefy": "dist/index.js"
-  },
+  "bin": "dist/index.js",
   "files": [
     "dist/*"
   ],

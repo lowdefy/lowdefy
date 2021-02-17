@@ -49,7 +49,7 @@ _ref:
             You can run the CLI with `npx`. This will run the latest version of the cli. To start the the development server, run
 
             ```
-            npx @lowdefy/cli dev
+            npx lowdefy@latest dev
             ```
 
             This will open a window in your browser with the local version of your app.
