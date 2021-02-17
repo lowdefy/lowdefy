@@ -42,7 +42,6 @@ const DateSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -64,7 +63,6 @@ const DateSelector = ({
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
                     properties={properties.suffixIcon || 'CalendarOutlined'}
-                    methods={methods}
                   />
                 )
               }

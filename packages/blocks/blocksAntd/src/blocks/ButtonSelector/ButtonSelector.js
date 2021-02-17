@@ -42,7 +42,6 @@ const ButtonSelector = ({
       validation={validation}
       required={required}
       loading={loading}
-      methods={methods}
       content={{
         content: () => (
           <Radio.Group

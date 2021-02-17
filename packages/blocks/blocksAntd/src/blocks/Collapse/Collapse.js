@@ -49,7 +49,6 @@ const CollapseBlock = ({ blockId, events, content, methods, properties }) => {
             blockId={`${blockId}_expandIcon`}
             events={events}
             properties={{ rotate: isActive ? 90 : 0, ...propertiesIconExpand }}
-            methods={methods}
           />
         ))
       }

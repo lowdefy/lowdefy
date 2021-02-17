@@ -39,7 +39,7 @@ const CommentBlock = ({ blockId, content, properties, methods }) => {
       author={properties.author || (content.author && content.author())}
       content={properties.content || (content.content && content.content())}
       datetime={properties.datetime}
-      avatar={<Avatar methods={methods} properties={avatar} />}
+      avatar={<Avatar properties={avatar} />}
     >
       {content.children && content.children()}
     </Comment>

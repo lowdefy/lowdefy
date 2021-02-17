@@ -45,7 +45,6 @@ const SwitchBlock = ({
       blockId={blockId}
       events={events}
       loading={loading}
-      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -71,7 +70,6 @@ const SwitchBlock = ({
                 <Icon
                   blockId={`${blockId}_checkedIcon`}
                   events={events}
-                  methods={methods}
                   properties={{
                     name: 'CheckOutlined',
                     ...(propertiesIconChecked || {}),
@@ -86,7 +84,6 @@ const SwitchBlock = ({
                 <Icon
                   blockId={`${blockId}_uncheckedIcon`}
                   events={events}
-                  methods={methods}
                   properties={{
                     name: 'CloseOutlined',
                     ...(propertiesIconUnchecked || {}),

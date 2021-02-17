@@ -32,17 +32,17 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 const getTitle = (id, properties, defaultTitle) =>
   (properties && properties.title) || defaultTitle || id;
 
-const MenuTitle = ({ id, methods, pageId, properties, url, linkStyle }) =>
+const MenuTitle = ({ id, makeCssClass, pageId, properties, url, linkStyle }) =>
   type.isString(pageId) ? (
-    <Link to={`/${pageId}`} className={methods.makeCssClass([linkStyle])}>
+    <Link to={`/${pageId}`} className={makeCssClass([linkStyle])}>
       {getTitle(id, properties, pageId)}
     </Link>
   ) : type.isString(url) ? (
-    <a href={url} className={methods.makeCssClass([linkStyle])}>
+    <a href={url} className={makeCssClass([linkStyle])}>
       {getTitle(id, properties, url)}
     </a>
   ) : (
-    <span className={methods.makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>
+    <span className={makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>
   );
 
 const getNestedColors = (menuColor, background) => {
@@ -185,7 +185,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                   <MenuTitle
                     linkStyle={link.style}
                     id={link.id}
-                    methods={methods}
+                    makeCssClass={methods.makeCssClass}
                     properties={link.properties}
                   />
                 }
@@ -195,7 +195,6 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                     <Icon
                       blockId={`${link.id}_icon`}
                       events={events}
-                      methods={methods}
                       properties={link.properties.icon}
                     />
                   )
@@ -211,7 +210,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                             <MenuTitle
                               linkStyle={subLink.style}
                               id={subLink.id}
-                              methods={methods}
+                              makeCssClass={methods.makeCssClass}
                               properties={subLink.properties}
                             />
                           }
@@ -226,7 +225,6 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                                   <Icon
                                     blockId={`${subLinkGroup.id}_icon`}
                                     events={events}
-                                    methods={methods}
                                     properties={subLinkGroup.properties.icon}
                                   />
                                 )
@@ -235,7 +233,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                               <MenuTitle
                                 linkStyle={subLinkGroup.style}
                                 id={subLinkGroup.id}
-                                methods={methods}
+                                makeCssClass={methods.makeCssClass}
                                 pageId={subLinkGroup.pageId}
                                 properties={subLinkGroup.properties}
                                 url={subLinkGroup.url}
@@ -256,7 +254,6 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                               <Icon
                                 blockId={`${subLink.id}_icon`}
                                 events={events}
-                                methods={methods}
                                 properties={subLink.properties.icon}
                               />
                             )
@@ -265,7 +262,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                           <MenuTitle
                             linkStyle={subLink.style}
                             id={subLink.id}
-                            methods={methods}
+                            makeCssClass={methods.makeCssClass}
                             pageId={subLink.pageId}
                             properties={subLink.properties}
                             url={subLink.url}
@@ -288,7 +285,6 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                     <Icon
                       blockId={`${link.id}_icon`}
                       events={events}
-                      methods={methods}
                       properties={link.properties.icon}
                     />
                   )
@@ -297,7 +293,7 @@ const MenuComp = ({ blockId, events, methods, menus, pageId, properties, rename 
                 <MenuTitle
                   linkStyle={link.style}
                   id={link.id}
-                  methods={methods}
+                  makeCssClass={methods.makeCssClass}
                   pageId={link.pageId}
                   properties={link.properties}
                   url={link.url}

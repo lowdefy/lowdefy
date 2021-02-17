@@ -37,7 +37,6 @@ const TextInput = ({
       blockId={blockId}
       events={events}
       loading={loading}
-      methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -70,7 +69,6 @@ const TextInput = ({
                   <Icon
                     blockId={`${blockId}_prefixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.prefixIcon}
                   />
                 ))
@@ -81,7 +79,6 @@ const TextInput = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    methods={methods}
                     properties={properties.suffixIcon}
                   />
                 ))

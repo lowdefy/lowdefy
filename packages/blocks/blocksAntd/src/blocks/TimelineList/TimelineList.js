@@ -37,7 +37,6 @@ const TimelineList = ({ blockId, events, list, methods, properties, value }) => 
           <Icon
             blockId={`${blockId}_pendingDotIcon`}
             events={events}
-            methods={methods}
             properties={mergeObjects([{ style: { fontSize: 16 } }, properties.pendingDotIcon])}
           />
         )
@@ -66,7 +65,6 @@ const TimelineList = ({ blockId, events, list, methods, properties, value }) => 
                 <Icon
                   blockId={`${blockId}_${i}_icon`}
                   events={events}
-                  methods={methods}
                   properties={mergeObjects([{ style, color }, icon])}
                 />
               )

@@ -27,7 +27,6 @@ const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowde
     eventLog: [],
     blockId: rootBlock.blockId,
     client: rootContext.client || {},
-    displayMessage: rootContext.displayMessage || (() => () => undefined),
     document: rootContext.document,
     input: rootContext.input || {},
     allInputs: {},
@@ -40,7 +39,10 @@ const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowde
     state: {},
     urlQuery: rootContext.urlQuery || {},
     updateBlock: rootContext.updateBlock || (() => {}),
-    window: rootContext.window,
+    window: {
+      ...rootContext.window,
+      displayMessage: rootContext.displayMessage || (() => () => undefined),
+    },
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });
   ctx.State = new State(ctx);

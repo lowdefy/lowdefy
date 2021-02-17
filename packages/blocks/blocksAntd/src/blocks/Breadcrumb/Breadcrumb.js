@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { type } from '@lowdefy/helpers';
+import { type, get } from '@lowdefy/helpers';
 import { Link } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-tools';
@@ -39,47 +39,49 @@ const ItemLink = ({ link, children, className }) => {
   return <span className={className}>{children}</span>;
 };
 
-const BreadcrumbBlock = ({ blockId, events, methods, properties }) => (
-  <Breadcrumb
-    id={blockId}
-    separator={properties.separator}
-    className={methods.makeCssClass(properties.style)}
-  >
-    {(properties.list || []).map((link, index) => (
-      <Breadcrumb.Item
-        key={index}
-        onClick={
-          events.onClick &&
-          (() => methods.triggerEvent({ name: 'onClick', event: { link, index } }))
-        }
-      >
-        <ItemLink
-          className={methods.makeCssClass([
-            {
-              cursor: events.onClick && 'pointer',
-            },
-            link.style,
-          ])}
-          link={link}
+const BreadcrumbBlock = ({ blockId, events, methods, properties, rename }) => {
+  const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
+  return (
+    <Breadcrumb
+      id={blockId}
+      separator={properties.separator}
+      className={methods.makeCssClass(properties.style)}
+    >
+      {(properties.list || []).map((link, index) => (
+        <Breadcrumb.Item
+          key={index}
+          onClick={
+            events[onClickActionName] &&
+            (() => methods.triggerEvent({ name: onClickActionName, event: { link, index } }))
+          }
         >
-          {link.icon && (
-            <Icon
-              blockId={`${blockId}_${index}_icon`}
-              events={events}
-              properties={{
-                name: type.isString(link.icon) && link.icon,
-                ...(type.isObject(link.icon) ? link.icon : {}),
-                style: { paddingRight: 8, ...(link.icon.style || {}) },
-              }}
-              methods={methods}
-            />
-          )}
-          {type.isString(link) ? link : link.label || link.pageId || link.url || `Link ${index}`}
-        </ItemLink>
-      </Breadcrumb.Item>
-    ))}
-  </Breadcrumb>
-);
+          <ItemLink
+            className={methods.makeCssClass([
+              {
+                cursor: events[onClickActionName] && 'pointer',
+              },
+              link.style,
+            ])}
+            link={link}
+          >
+            {link.icon && (
+              <Icon
+                blockId={`${blockId}_${index}_icon`}
+                events={events}
+                properties={{
+                  name: type.isString(link.icon) && link.icon,
+                  ...(type.isObject(link.icon) ? link.icon : {}),
+                  style: { paddingRight: 8, ...(link.icon.style || {}) },
+                }}
+              />
+            )}
+            {type.isString(link) ? link : link.label || link.pageId || link.url || `Link ${index}`}
+          </ItemLink>
+        </Breadcrumb.Item>
+      ))}
+    </Breadcrumb>
+  );
+};
 
 BreadcrumbBlock.defaultProps = blockDefaultProps;
 

@@ -50,14 +50,12 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
                       key="copy-icon"
                       blockId={`${blockId}_copyable_before_icon`}
                       events={events}
-                      methods={methods}
                       properties={properties.copyable.icon[0]}
                     />,
                     <Icon
                       key="copied-icon"
                       blockId={`${blockId}_copyable_after_icon`}
                       events={events}
-                      methods={methods}
                       properties={properties.copyable.icon[1]}
                     />,
                   ]
@@ -65,7 +63,6 @@ const TitleBlock = ({ blockId, events, properties, methods }) => {
                   <Icon
                     blockId={`${blockId}_copyable_icon`}
                     events={events}
-                    methods={methods}
                     properties={properties.copyable.icon}
                   />
                 )),

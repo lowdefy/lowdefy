@@ -20,5 +20,19 @@ import Menu from '../src/blocks/Menu/Menu';
 import examples from '../demo/examples/Menu.yaml';
 import meta from '../src/blocks/Menu/Menu.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: (style, op) => JSON.stringify({ style, options: op }),
+      },
+    },
+  };
+});
+
 runRenderTests({ examples, Block: Menu, meta });
 runBlockSchemaTests({ examples, meta });

@@ -24,6 +24,20 @@ import ConfirmModal from '../src/blocks/ConfirmModal/ConfirmModal';
 import examples from '../demo/examples/ConfirmModal.yaml';
 import meta from '../src/blocks/ConfirmModal/ConfirmModal.json';
 
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
 jest.mock('antd/lib/modal', () => {
   return {
     confirm: jest.fn(),

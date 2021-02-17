@@ -20,10 +20,19 @@ import { MemoryRouter } from 'react-router-dom';
 
 import mockBlock from './mockBlock';
 
-const runMockRenderTests = ({ Block, enzyme, examples, logger, meta, mocks }) => {
+const runMockRenderTests = ({
+  Block,
+  enzyme,
+  examples,
+  logger,
+  meta,
+  mocks,
+  reset = () => null,
+}) => {
   const { before, methods, getProps } = mockBlock({ meta, logger });
 
   beforeEach(() => {
+    reset();
     before();
   });
   const values = meta.values

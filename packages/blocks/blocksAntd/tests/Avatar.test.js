@@ -20,5 +20,23 @@ import Avatar from '../src/blocks/Avatar/Avatar';
 import examples from '../demo/examples/Avatar.yaml';
 import meta from '../src/blocks/Avatar/Avatar.json';
 
-runRenderTests({ examples, Block: Avatar, meta });
+jest.mock('@lowdefy/block-tools', () => {
+  const originalModule = jest.requireActual('@lowdefy/block-tools');
+  return {
+    ...originalModule,
+    blockDefaultProps: {
+      ...originalModule.blockDefaultProps,
+      methods: {
+        ...originalModule.blockDefaultProps.methods,
+        makeCssClass: jest.fn((style, op) => JSON.stringify({ style, options: op })),
+      },
+    },
+  };
+});
+
+runRenderTests({
+  examples,
+  Block: Avatar,
+  meta,
+});
 runBlockSchemaTests({ examples, meta });
