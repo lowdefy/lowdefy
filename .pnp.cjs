@@ -4679,7 +4679,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:4.0.0"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:8.0.0"],
             ["moment", "npm:2.29.1"],
             ["rc-animate", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:3.1.1"],
@@ -4765,7 +4765,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "npm:26.6.3"],
             ["jest-serializer-html", "npm:7.0.0"],
             ["js-yaml", "npm:4.0.0"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:8.0.0"],
             ["react", "npm:17.0.1"],
             ["react-color", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:2.19.3"],
@@ -5055,7 +5055,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest", "npm:26.6.3"],
             ["js-yaml", "npm:4.0.0"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["less-loader", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:8.0.0"],
             ["path-browserify", "npm:1.0.1"],
             ["process", "npm:0.11.10"],
@@ -11235,16 +11235,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["copy-anything", [
-        ["npm:2.0.3", {
-          "packageLocation": "./.yarn/cache/copy-anything-npm-2.0.3-fb13168fff-ea938e0ec7.zip/node_modules/copy-anything/",
-          "packageDependencies": [
-            ["copy-anything", "npm:2.0.3"],
-            ["is-what", "npm:3.12.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["copy-concurrently", [
         ["npm:1.0.5", {
           "packageLocation": "./.yarn/cache/copy-concurrently-npm-1.0.5-a20f3c4b55-62ad9de2dc.zip/node_modules/copy-concurrently/",
@@ -17084,15 +17074,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["is-what", [
-        ["npm:3.12.0", {
-          "packageLocation": "./.yarn/cache/is-what-npm-3.12.0-593e86a010-d343342b1c.zip/node_modules/is-what/",
-          "packageDependencies": [
-            ["is-what", "npm:3.12.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["is-windows", [
         ["npm:1.0.2", {
           "packageLocation": "./.yarn/cache/is-windows-npm-1.0.2-898cd6f3d7-dd1ed8339a.zip/node_modules/is-windows/",
@@ -18205,18 +18186,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["less", [
-        ["npm:4.1.1", {
-          "packageLocation": "./.yarn/cache/less-npm-4.1.1-0eec77fbe1-a4fb3be59b.zip/node_modules/less/",
+        ["npm:3.13.0", {
+          "packageLocation": "./.yarn/cache/less-npm-3.13.0-93c0c187ca-b294e1d467.zip/node_modules/less/",
           "packageDependencies": [
-            ["less", "npm:4.1.1"],
-            ["copy-anything", "npm:2.0.3"],
+            ["less", "npm:3.13.0"],
             ["errno", "npm:0.1.8"],
             ["graceful-fs", "npm:4.2.4"],
             ["image-size", "npm:0.5.5"],
             ["make-dir", "npm:2.1.0"],
             ["mime", "npm:1.6.0"],
-            ["needle", "npm:2.6.0"],
-            ["parse-node-version", "npm:1.0.1"],
+            ["native-request", "npm:1.0.8"],
             ["source-map", "npm:0.6.1"],
             ["tslib", "npm:1.14.1"]
           ],
@@ -18238,7 +18217,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["webpack", "virtual:03b50f68d1bc1bcd2c564b153fc8a0f3f73d722ae5563251798eadf289b054849d6a1f3602228c617458c9af844d044431bcc00bb48aa96b362ca9055e633014#npm:5.22.0"]
           ],
           "packagePeers": [
@@ -18256,7 +18235,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["webpack", "virtual:54dfdd95092c538917b1daf717721dd3beca716f0768958f8123e1439693d909b26a74c88b3fb65b402559e626be2accab32554fb8a3874e699047fe18793f5e#npm:5.22.0"]
           ],
           "packagePeers": [
@@ -18274,7 +18253,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/less", null],
             ["@types/webpack", null],
             ["klona", "npm:2.0.4"],
-            ["less", "npm:4.1.1"],
+            ["less", "npm:3.13.0"],
             ["webpack", "virtual:885b7c7699c189719052a46b1a9ec1286757c4ac6b604c1386cca53720d793c5403bf2f82e8d576afe6e296a65179038188b229308256e2723b9e95f9bb39b0d#npm:5.22.0"]
           ],
           "packagePeers": [
@@ -19787,6 +19766,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["native-request", [
+        ["npm:1.0.8", {
+          "packageLocation": "./.yarn/cache/native-request-npm-1.0.8-0ae6c1b99f-bbb5ec150f.zip/node_modules/native-request/",
+          "packageDependencies": [
+            ["native-request", "npm:1.0.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["natural-compare", [
         ["npm:1.4.0", {
           "packageLocation": "./.yarn/cache/natural-compare-npm-1.4.0-97b75b362d-2daf93d9bb.zip/node_modules/natural-compare/",
@@ -19805,18 +19793,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["moo", "npm:0.5.1"],
             ["railroad-diagrams", "npm:1.0.0"],
             ["randexp", "npm:0.4.6"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["needle", [
-        ["npm:2.6.0", {
-          "packageLocation": "./.yarn/cache/needle-npm-2.6.0-11708fcd8b-0a00060d58.zip/node_modules/needle/",
-          "packageDependencies": [
-            ["needle", "npm:2.6.0"],
-            ["debug", "virtual:8bb97bed484f021974a05538f31c077871d2363ce26ebed59b11577446762350604c9011c0660ae55b141dd86d888615a377ccccd7a87c5e54ae38233a22d5a9#npm:3.2.7"],
-            ["iconv-lite", "npm:0.4.24"],
-            ["sax", "npm:1.2.4"]
           ],
           "linkType": "HARD",
         }]
@@ -20920,15 +20896,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["error-ex", "npm:1.3.2"],
             ["json-parse-even-better-errors", "npm:2.3.1"],
             ["lines-and-columns", "npm:1.1.6"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["parse-node-version", [
-        ["npm:1.0.1", {
-          "packageLocation": "./.yarn/cache/parse-node-version-npm-1.0.1-7dd3b14751-79ae381787.zip/node_modules/parse-node-version/",
-          "packageDependencies": [
-            ["parse-node-version", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
