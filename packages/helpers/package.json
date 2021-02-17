@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "lodash.merge": "4.6.2",
-    "query-string": "6.13.8"
+    "query-string": "6.14.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.16",

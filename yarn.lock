@@ -3432,7 +3432,7 @@ __metadata:
     jest: 26.6.3
     jest-diff: 26.6.2
     lodash.merge: 4.6.2
-    query-string: 6.13.8
+    query-string: 6.14.0
   languageName: unknown
   linkType: soft
 
@@ -9930,6 +9930,13 @@ __metadata:
   dependencies:
     to-regex-range: ^5.0.1
   checksum: efca43d59b487ad4bc0b2b1cb9e51617c75a7b0159db51fa190c75c3d634ea5fad1ff4750d7c14346add4cd065e3c46e8f99af333edf2b4ec2a424f87e491a85
+  languageName: node
+  linkType: hard
+
+"filter-obj@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "filter-obj@npm:1.1.0"
+  checksum: 1049ac0c306198edf2c090375f7a80545a01e798b4996dbde13398a263cd923b5eb8a240dfadb03260621249a404a686e1a55980c6e59af70ee3880323998703
   languageName: node
   linkType: hard
 
@@ -16493,7 +16500,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"query-string@npm:6.13.8, query-string@npm:^6.13.8":
+"query-string@npm:6.14.0":
+  version: 6.14.0
+  resolution: "query-string@npm:6.14.0"
+  dependencies:
+    decode-uri-component: ^0.2.0
+    filter-obj: ^1.1.0
+    split-on-first: ^1.0.0
+    strict-uri-encode: ^2.0.0
+  checksum: 70af3a82fe9babc51b72ed9d68cd5485754ee84456b8d1ab80c8f8fdda9302630513b91d96ed89e701cbdf04619bbcde1695b061ea47b91b099c9f79e4080bba
+  languageName: node
+  linkType: hard
+
+"query-string@npm:^6.13.8":
   version: 6.13.8
   resolution: "query-string@npm:6.13.8"
   dependencies:
