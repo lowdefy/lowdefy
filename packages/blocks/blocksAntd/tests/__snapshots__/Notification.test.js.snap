@@ -237,7 +237,7 @@ Array [
       "description": "Args description",
       "duration": undefined,
       "icon": <IconBlock
-        blockId="undefined_id"
+        blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -735,7 +735,7 @@ Array [
       "description": undefined,
       "duration": 1,
       "icon": <IconBlock
-        blockId="undefined_id"
+        blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1233,7 +1233,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
-        blockId="undefined_id"
+        blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -1733,7 +1733,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
-        blockId="undefined_id"
+        blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}
@@ -2229,7 +2229,7 @@ Array [
       "description": undefined,
       "duration": undefined,
       "icon": <IconBlock
-        blockId="undefined_id"
+        blockId="properties.icon_icon"
         content={Object {}}
         events={Object {}}
         list={Array []}

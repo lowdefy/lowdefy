@@ -38,7 +38,9 @@ const NotificationBlock = ({ blockId, events, properties, methods }) => {
         className: methods.makeCssClass(properties.notificationStyle),
         description: args.description || properties.description,
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
-        icon: properties.icon && <Icon properties={properties.icon} />,
+        icon: properties.icon && (
+          <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
+        ),
         closeIcon: properties.closeIcon && (
           <Icon
             blockId={`${blockId}_closeIcon`}

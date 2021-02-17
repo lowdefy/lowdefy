@@ -20,9 +20,6 @@ import Anchor from '../src/blocks/Anchor/Anchor';
 import examples from '../demo/examples/Anchor.yaml';
 import meta from '../src/blocks/Anchor/Anchor.json';
 
-const makeCssClass = jest.fn();
-const makeCssImp = (style, op) => JSON.stringify({ style, options: op });
-
 jest.mock('@lowdefy/block-tools', () => {
   const originalModule = jest.requireActual('@lowdefy/block-tools');
   return {
@@ -41,9 +38,5 @@ runRenderTests({
   examples,
   Block: Anchor,
   meta,
-  reset: () => {
-    makeCssClass.mockReset();
-    makeCssClass.mockImplementation(makeCssImp);
-  },
 });
 runBlockSchemaTests({ examples, meta });
