@@ -38,7 +38,6 @@ program
     '--output-directory <output-directory>',
     'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
   )
-  .passCommandToAction(false)
   .action(errorHandler(build));
 
 program
@@ -49,7 +48,6 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .passCommandToAction(false)
   .action(errorHandler(buildNetlify));
 
 program
@@ -60,7 +58,6 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .passCommandToAction(false)
   .action(errorHandler(cleanCache));
 
 program
@@ -72,7 +69,6 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
-  .passCommandToAction(false)
   .action(errorHandler(dev));
 
 program.parse(process.argv);
