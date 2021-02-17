@@ -33,13 +33,13 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "3.9.0",
-    "nunjucks": "3.2.2",
+    "nunjucks": "3.2.3",
     "nunjucks-date-filter": "0.1.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.10",
-    "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.11",
+    "@babel/cli": "7.12.16",
+    "@babel/core": "7.12.16",
+    "@babel/preset-env": "7.12.16",
     "babel-jest": "26.6.3",
     "jest": "26.6.3"
   },
