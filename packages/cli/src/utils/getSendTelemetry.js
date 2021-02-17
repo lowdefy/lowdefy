@@ -15,11 +15,11 @@
 */
 
 import axios from 'axios';
-function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion }) {
+function getSendTelemetry({ appId, cliVersion, command, disableTelemetry, lowdefyVersion }) {
   if (disableTelemetry) {
     return () => {};
   }
-  async function sendTelemetry({ data }) {
+  async function sendTelemetry({ data = {} } = {}) {
     try {
       await axios.request({
         method: 'post',
@@ -31,6 +31,7 @@ function getSendTelemetry({ appId, cliVersion, disableTelemetry, lowdefyVersion 
           ...data,
           appId,
           cliVersion,
+          command,
           lowdefyVersion,
         },
       });

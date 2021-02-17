@@ -20,7 +20,8 @@ import build from './commands/build/build.js';
 import buildNetlify from './commands/buildNetlify/buildNetlify.js';
 import cleanCache from './commands/cleanCache/cleanCache.js';
 import dev from './commands/dev/dev.js';
-import errorHandler from './utils/errorHandler';
+import init from './commands/init/init.js';
+import runCommand from './utils/runCommand';
 
 const { description, version } = packageJson;
 
@@ -38,8 +39,7 @@ program
     '--output-directory <output-directory>',
     'Change the directory to which build artifacts are saved. Default is "<base-directory>/.lowdefy/build".'
   )
-  .passCommandToAction(false)
-  .action(errorHandler(build));
+  .action(runCommand(build));
 
 program
   .command('build-netlify')
@@ -49,8 +49,7 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .passCommandToAction(false)
-  .action(errorHandler(buildNetlify));
+  .action(runCommand(buildNetlify));
 
 program
   .command('clean-cache')
@@ -60,8 +59,7 @@ program
     '--base-directory <base-directory>',
     'Change base directory. Default is the current working directory.'
   )
-  .passCommandToAction(false)
-  .action(errorHandler(cleanCache));
+  .action(runCommand(cleanCache));
 
 program
   .command('dev')
@@ -72,7 +70,12 @@ program
     'Change base directory. Default is the current working directory.'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
-  .passCommandToAction(false)
-  .action(errorHandler(dev));
+  .action(runCommand(dev));
+
+program
+  .command('init')
+  .description('Initialize a Lowdefy project.')
+  .usage(`[options]`)
+  .action(runCommand(init));
 
 program.parse(process.argv);

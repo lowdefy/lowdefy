@@ -32,50 +32,20 @@ jest.mock('axios');
 
 const print = createPrint();
 
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 beforeEach(() => {
   print.error.mockReset();
 });
 
-test('Error boundary with synchronous function', async () => {
-  const fn = jest.fn(() => 1 + 1);
-  const wrapped = errorHandler(fn);
-  const res = await wrapped();
-  expect(res).toBe(2);
-  expect(fn).toHaveBeenCalled();
-});
+test('Print and log error with full context', async () => {
+  const error = new Error('Test error');
+  const context = {
+    lowdefyVersion: 'lowdefyVersion',
+    command: 'command',
+    disableTelemetry: false,
+  };
+  await errorHandler({ context, error });
 
-test('Error boundary with asynchronous function', async () => {
-  const fn = jest.fn(async () => {
-    await wait(3);
-    return 4;
-  });
-  const wrapped = errorHandler(fn);
-  const res = await wrapped();
-  expect(res).toBe(4);
-  expect(fn).toHaveBeenCalled();
-});
-
-test('Pass args to synchronous function', async () => {
-  const fn = jest.fn((arg1, arg2) => ({ arg1, arg2 }));
-  const wrapped = errorHandler(fn);
-  const res = await wrapped('1', '2');
-  expect(res).toEqual({ arg1: '1', arg2: '2' });
-});
-
-test('Catch error synchronous function', async () => {
-  const fn = jest.fn(() => {
-    throw new Error('Error');
-  });
-  const wrapped = errorHandler(fn);
-  await wrapped();
-  expect(fn).toHaveBeenCalled();
-  expect(print.error.mock.calls).toEqual([['Error']]);
+  expect(print.error.mock.calls).toEqual([['Test error']]);
   const axiosAgruments = axios.request.mock.calls[0][0];
   expect(axiosAgruments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -83,21 +53,20 @@ test('Catch error synchronous function', async () => {
   expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
   expect(axiosAgruments.method).toEqual('post');
   expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosAgruments.data.message).toEqual('Error');
+  expect(axiosAgruments.data.message).toEqual('Test error');
   expect(axiosAgruments.data.name).toEqual('Error');
   expect(axiosAgruments.data.source).toEqual('cli');
-  expect(axiosAgruments.data.stack).toMatch('Error: Error');
+  expect(axiosAgruments.data.stack).toMatch('Error: Test error');
+  expect(axiosAgruments.data.lowdefyVersion).toEqual('lowdefyVersion');
+  expect(axiosAgruments.data.command).toEqual('command');
 });
 
-test('Catch error asynchronous function', async () => {
-  const fn = jest.fn(async () => {
-    await wait(3);
-    throw new Error('Async Error');
-  });
-  const wrapped = errorHandler(fn);
-  await wrapped();
-  expect(fn).toHaveBeenCalled();
-  expect(print.error.mock.calls).toEqual([['Async Error']]);
+test('Print and log error with empty context', async () => {
+  const error = new Error('Test error');
+  const context = {};
+  await errorHandler({ context, error });
+
+  expect(print.error.mock.calls).toEqual([['Test error']]);
   const axiosAgruments = axios.request.mock.calls[0][0];
   expect(axiosAgruments.headers).toEqual({
     'User-Agent': 'Lowdefy CLI vcliVersion',
@@ -105,11 +74,77 @@ test('Catch error asynchronous function', async () => {
   expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
   expect(axiosAgruments.method).toEqual('post');
   expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosAgruments.data.message).toEqual('Async Error');
+  expect(axiosAgruments.data.message).toEqual('Test error');
   expect(axiosAgruments.data.name).toEqual('Error');
   expect(axiosAgruments.data.source).toEqual('cli');
-  expect(axiosAgruments.data.stack).toMatch('Error: Async Error');
+  expect(axiosAgruments.data.stack).toMatch('Error: Test error');
+  expect(axiosAgruments.data.lowdefyVersion).toBe(undefined);
+  expect(axiosAgruments.data.command).toBe(undefined);
 });
+
+test('Do not log error if telemetry is disabled', async () => {
+  const error = new Error('Test error');
+  const context = {
+    lowdefyVersion: 'lowdefyVersion',
+    command: 'command',
+    disableTelemetry: true,
+  };
+  await errorHandler({ context, error });
+
+  expect(print.error.mock.calls).toEqual([['Test error']]);
+  expect(axios.request.mock.calls).toEqual([]);
+});
+
+test('Pass if logError fails', async () => {
+  let didThrow = false;
+  axios.request.mockImplementationOnce(() => {
+    didThrow = true;
+    throw new Error('Network error');
+  });
+  const error = new Error('Test error');
+  const context = {
+    lowdefyVersion: 'lowdefyVersion',
+    command: 'command',
+    disableTelemetry: false,
+  };
+  await errorHandler({ context, error });
+  expect(print.error.mock.calls).toEqual([['Test error']]);
+  expect(axios.request.mock.calls.length).toBe(1);
+  expect(didThrow).toBe(true);
+});
+
+// test('Catch error synchronous function', async () => {
+//   const fn = jest.fn(() => {
+//     throw new Error('Error');
+//   });
+//   const wrapped = errorHandler(fn);
+//   await wrapped();
+//   expect(fn).toHaveBeenCalled();
+
+//   const error =
+// });
+
+// test('Catch error asynchronous function', async () => {
+//   const fn = jest.fn(async () => {
+//     await wait(3);
+//     throw new Error('Async Error');
+//   });
+//   const wrapped = errorHandler(fn);
+//   await wrapped();
+//   expect(fn).toHaveBeenCalled();
+//   expect(print.error.mock.calls).toEqual([['Async Error']]);
+//   const axiosAgruments = axios.request.mock.calls[0][0];
+//   expect(axiosAgruments.headers).toEqual({
+//     'User-Agent': 'Lowdefy CLI vcliVersion',
+//   });
+//   expect(axiosAgruments.url).toEqual('https://api.lowdefy.net/errors');
+//   expect(axiosAgruments.method).toEqual('post');
+//   expect(axiosAgruments.data.cliVersion).toEqual('cliVersion');
+//   expect(axiosAgruments.data.message).toEqual('Async Error');
+//   expect(axiosAgruments.data.name).toEqual('Error');
+//   expect(axiosAgruments.data.source).toEqual('cli');
+//   expect(axiosAgruments.data.stack).toMatch('Error: Async Error');
+// });
 
 // test('Catch error synchronous function, stay alive', async () => {
 //   const fn = jest.fn(() => {

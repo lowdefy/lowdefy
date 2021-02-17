@@ -17,15 +17,11 @@
 import fse from 'fs-extra';
 import startUp from '../../utils/startUp';
 
-async function cleanCache(options) {
-  const context = await startUp(options);
+async function cleanCache({ context, options }) {
+  await startUp({ context, options, command: 'clean-cache' });
   context.print.log(`Cleaning cache at "${context.cacheDirectory}".`);
   await fse.emptyDir(context.cacheDirectory);
-  await context.sendTelemetry({
-    data: {
-      command: 'clean-cache',
-    },
-  });
+  await context.sendTelemetry();
   context.print.succeed(`Cache cleaned.`);
 }
 
