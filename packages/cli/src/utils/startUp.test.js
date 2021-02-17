@@ -17,6 +17,8 @@
 import path from 'path';
 import startUp from './startUp';
 // eslint-disable-next-line no-unused-vars
+import checkForUpdatedVersions from './checkForUpdatedVersions';
+// eslint-disable-next-line no-unused-vars
 import createPrint from './print';
 // eslint-disable-next-line no-unused-vars
 import getConfig from './getConfig';
@@ -28,71 +30,85 @@ import packageJson from '../../package.json';
 jest.mock('./getConfig', () => async () =>
   Promise.resolve({ appId: 'appId', disableTelemetry: true, lowdefyVersion: 'lowdefyVersion' })
 );
-jest.mock('./print', () => () => 'print');
+jest.mock('./print', () => {
+  const error = jest.fn();
+  const log = jest.fn();
+  return () => ({
+    error,
+    log,
+  });
+});
 jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 jest.mock('./getSendTelemetry', () => () => 'sendTelemetry');
+jest.mock('./checkForUpdatedVersions', () => () => 'checkForUpdatedVersions');
+
+const print = createPrint();
 
 test('startUp, options undefined', async () => {
   const context = {};
-  await startUp({ context });
+  await startUp({ context, command: 'command' });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliVersion: 'cliVersion',
+    command: 'command',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
-    print: 'print',
+    print,
   });
 });
 
 test('startUp, options empty', async () => {
   const context = {};
-  await startUp({ context, options: {} });
+  await startUp({ context, options: {}, command: 'command' });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliVersion: 'cliVersion',
+    command: 'command',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
-    print: 'print',
+    print,
   });
 });
 
 test('startUp, options baseDirectory', async () => {
   const context = {};
-  await startUp({ context, options: { baseDirectory: './baseDirectory' } });
+  await startUp({ context, options: { baseDirectory: './baseDirectory' }, command: 'command' });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
     cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
     cliVersion: 'cliVersion',
+    command: 'command',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
     outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
     sendTelemetry: 'sendTelemetry',
-    print: 'print',
+    print,
   });
 });
 
 test('startUp, options outputDirectory', async () => {
   const context = {};
-  await startUp({ context, options: { outputDirectory: './outputDirectory' } });
+  await startUp({ context, options: { outputDirectory: './outputDirectory' }, command: 'command' });
   expect(context).toEqual({
     appId: 'appId',
     baseDirectory: path.resolve(process.cwd()),
     cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
     cliVersion: 'cliVersion',
+    command: 'command',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
-    print: 'print',
+    print,
   });
 });
 
@@ -104,6 +120,7 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
       baseDirectory: './baseDirectory',
       outputDirectory: './outputDirectory',
     },
+    command: 'command',
   });
 
   expect(context).toEqual({
@@ -111,10 +128,11 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
     baseDirectory: path.resolve(process.cwd(), 'baseDirectory'),
     cacheDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/.cache'),
     cliVersion: 'cliVersion',
+    command: 'command',
     disableTelemetry: true,
     lowdefyVersion: 'lowdefyVersion',
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
     sendTelemetry: 'sendTelemetry',
-    print: 'print',
+    print,
   });
 });

@@ -15,18 +15,17 @@
 */
 
 import path from 'path';
+import checkForUpdatedVersions from './checkForUpdatedVersions';
 import getConfig from './getConfig';
 import getSendTelemetry from './getSendTelemetry';
 import createPrint from './print';
 import { cacheDirectoryPath, outputDirectoryPath } from './directories';
 import packageJson from '../../package.json';
-
 const { version: cliVersion } = packageJson;
 
 async function startUp({ context, options = {}, command }) {
   context.command = command;
   context.cliVersion = cliVersion;
-
   context.print = createPrint({
     basic: options.basicPrint,
   });
@@ -43,7 +42,9 @@ async function startUp({ context, options = {}, command }) {
   context.appId = appId;
   context.disableTelemetry = disableTelemetry;
   context.lowdefyVersion = lowdefyVersion;
+  context.print.log(`Running 'lowdefy ${command}'. Lowdefy app version ${lowdefyVersion}.`);
   context.sendTelemetry = getSendTelemetry(context);
+  await checkForUpdatedVersions(context);
   return context;
 }
 
