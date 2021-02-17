@@ -50,7 +50,8 @@
     "graphql-type-json": "0.3.2",
     "mingo": "4.1.1",
     "moment": "2.29.1",
-    "mongodb": "3.6.4"
+    "mongodb": "3.6.4",
+    "saslprep": "1.0.3"
   },
   "devDependencies": {
     "@babel/cli": "7.12.16",

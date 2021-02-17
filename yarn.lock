@@ -3416,6 +3416,7 @@ __metadata:
     mingo: 4.1.1
     moment: 2.29.1
     mongodb: 3.6.4
+    saslprep: 1.0.3
     webpack: 5.22.0
     webpack-cli: 4.5.0
   languageName: unknown
@@ -18236,7 +18237,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"saslprep@npm:^1.0.0":
+"saslprep@npm:1.0.3, saslprep@npm:^1.0.0":
   version: 1.0.3
   resolution: "saslprep@npm:1.0.3"
   dependencies:

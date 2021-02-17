@@ -4993,6 +4993,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mingo", "npm:4.1.1"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
+            ["saslprep", "npm:1.0.3"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.22.0"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.5.0"]
           ],
