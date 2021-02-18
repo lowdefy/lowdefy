@@ -25,6 +25,9 @@ function _get({ arrayIndices, env, location, params }) {
       )} at ${location}.`
     );
   }
+
+  if (params.from === null) return null;
+
   if (!type.isObject(params.from) && !type.isArray(params.from)) {
     throw new Error(
       `Operator Error: _get.from is not an object or array. Received: ${JSON.stringify(
