@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            > __NOTE__: Blocks run javascript on your site - this can lead to potential security vulnerabilities. __Make sure you trust the block publisher or even better, deploy your own blocks.__
+            > __NOTE__: Blocks run javascript on your site - this can lead to potential security vulnerabilities. __Make sure you trust the block publisher or even better, host your own blocks.__
             
             Blocks in Lowdefy are simple, most often state-less, [React components](https://reactjs.org/docs/components-and-props.html). Lowdefy uses [webpack module federation](https://webpack.js.org/concepts/module-federation/) to implement a micro front-end strategy. This means blocks are imported at load time, and not part of the Lowdefy app build. 
 
@@ -72,8 +72,8 @@ _ref:
             #### 1. Clone the blocks template repository
 
             To develop a custom block, first clone the [Lowdefy blocks template repository](https://github.com/lowdefy/blocks-template). This template provides a project structure for building a custom block. This structure can be modified to you preferences with the following exceptions:
-            - Keep the webpack configuration to ensure your custom block works with the Lowdefy block module federation.
-            - Blocks needs meta data in the block schema format which Lowdefy uses to intemperate how to render your block.
+            - Keep the webpack configuration to ensure your custom block works with Lowdefy block module federation.
+            - Blocks need meta data in the block schema format which Lowdefy uses to interpret how to render your block.
 
             #### 2. Start your local block server
 
@@ -149,9 +149,9 @@ _ref:
 
             ## Deploying Custom Blocks
 
-            Both the block meta data and block React component needs to be built by webpack and hosted on a network accessible static file server for any Lowdefy apps use the custom block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure URL is pointing to where your block is hosted.
+            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure URL is pointing to where your block is hosted.
 
-            The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some instances which can result in a unreliable user experience. It is this best to deploy you blocks to your own static file servers.
+            The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some cases which can result in a unreliable user experience. It is thus best to deploy you blocks to your own static file servers.
 
             We are working on a Lowdefy blocks CDN to improve this developer experience in the future.
             
