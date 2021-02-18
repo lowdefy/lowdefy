@@ -31,7 +31,8 @@ test('global incorrect type', async () => {
     data: 'global',
   };
   const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
+  expect(res).toEqual(`
+--------- Schema Error ---------
 message: should be object
 path: /global
 --------------------------------`);
@@ -70,7 +71,8 @@ test('page id missing', async () => {
     },
   };
   const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
+  expect(res).toEqual(`
+--------- Schema Error ---------
 message: should have required property 'id'
 path: /pages/0
 --------------------------------`);
@@ -99,7 +101,8 @@ test('page type missing', async () => {
     },
   };
   const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
+  expect(res).toEqual(`
+--------- Schema Error ---------
 message: should have required property 'type'
 path: /pages/0
 --------------------------------`);
@@ -125,7 +128,8 @@ test('id incorrect type', async () => {
     data: 1,
   };
   const res = formatErrorMessage(error, app);
-  expect(res).toEqual(`--------- Schema Error ---------
+  expect(res).toEqual(`
+--------- Schema Error ---------
 message: should be string
 path: /pages/0/id
 --------------------------------`);
