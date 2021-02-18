@@ -117,6 +117,21 @@ test('get a field from an object, key as param, not found returns null', () => {
   expect(res).toEqual(null);
 });
 
+test('If key is null, null is returned', () => {
+  const params = { key: null };
+  const res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual(null);
+});
+
 test('get an entire object, shorthand', () => {
   const params = true;
   const res = getFromObject({

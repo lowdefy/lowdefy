@@ -447,6 +447,14 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _get operator', () => {
+    const input = { _get: { key: 'key', from: { key: 'value' } } };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('value');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _function operator', () => {
     const input = { _function: { state: { __state: 'string' }, args: { __args: true } } };
     const parser = new WebParser({ context, contexts });

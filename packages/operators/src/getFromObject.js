@@ -38,6 +38,8 @@ function getFromObject({
     );
   }
 
+  if (params.key === null) return null;
+
   if (params.contextId) {
     if (env === 'node') {
       throw new Error(

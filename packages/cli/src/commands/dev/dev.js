@@ -22,6 +22,7 @@ import getBuild from './getBuild';
 import getExpress from './getExpress';
 import getGraphQL from './getGraphQL';
 import prepare from './prepare';
+import versionWatcher from './versionWatcher';
 
 async function initialBuild({ context }) {
   const build = await getBuild({ context });
@@ -46,6 +47,7 @@ async function dev({ context, options }) {
 
   buildWatcher({ build, context, reloadFn });
   envWatcher({ context });
+  versionWatcher({ context });
 
   context.print.log('Starting Lowdefy development server.');
   expressApp.listen(expressApp.get('port'), function () {
