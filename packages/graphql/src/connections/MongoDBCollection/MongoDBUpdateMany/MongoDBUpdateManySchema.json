@@ -12,7 +12,7 @@
       }
     },
     "update": {
-      "type": "object",
+      "type": ["object", "array"],
       "description": "The update operations to be applied to the documents.",
       "errorMessage": {
         "type": "MongoDBUpdateMany request property \"update\" should be an object."
