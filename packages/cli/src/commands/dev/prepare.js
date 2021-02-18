@@ -23,7 +23,7 @@ async function prepare({ context, options }) {
   dotenv.config({ silent: true });
   // Setup
   if (!options.port) options.port = 3000;
-  await startUp({ context, options });
+  await startUp({ context, options, command: 'dev' });
   context.print.log(
     `Cleaning block meta cache at "${path.resolve(context.cacheDirectory, './meta')}".`
   );
