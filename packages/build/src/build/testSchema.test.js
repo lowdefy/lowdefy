@@ -82,7 +82,8 @@ test('invalid schema', async () => {
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
-      `--------- Schema Error ---------
+      `
+--------- Schema Error ---------
 message: App "global" should be an object.
 path: /global
 --------------------------------`,
@@ -111,25 +112,29 @@ test('multiple schema errors', async () => {
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
-      `--------- Schema Error ---------
+      `
+--------- Schema Error ---------
 message: Block should have required property "id".
 path: /pages/0
 --------------------------------`,
     ],
     [
-      `--------- Schema Error ---------
+      `
+--------- Schema Error ---------
 message: Block should have required property "type".
 path: /pages/0
 --------------------------------`,
     ],
     [
-      `--------- Schema Error ---------
+      `
+--------- Schema Error ---------
 message: Block "id" should be a string.
 path: /pages/1/id
 --------------------------------`,
     ],
     [
-      `--------- Schema Error ---------
+      `
+--------- Schema Error ---------
 message: Block should have required property "type".
 path: /pages/1
 --------------------------------`,

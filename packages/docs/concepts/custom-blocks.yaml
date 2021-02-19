@@ -1,0 +1,163 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: custom-blocks
+    pageTitle: Custom Blocks
+    section: Concepts
+    filePath: concepts/custom-blocks.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            > __NOTE__: Blocks run javascript on your site - this can lead to potential security vulnerabilities. __Make sure you trust the block publisher or even better, host your own blocks.__
+            
+            Blocks in Lowdefy are simple, most often state-less, [React components](https://reactjs.org/docs/components-and-props.html). Lowdefy uses [webpack module federation](https://webpack.js.org/concepts/module-federation/) to implement a micro front-end strategy. This means blocks are imported at load time, and not part of the Lowdefy app build. 
+
+            The decoupling of blocks provides the considerable advantages:
+            - Block developers can extend the UI capabilities of Lowdefy by building blocks for the community to utilize.
+            - Lowdefy app developers can use community blocks to experiment and extend their apps.
+            - Lowdefy blocks are simple, most often stateless React components, thus blocks can be developed fast and can be used inside Lowdefy apps with ease.
+            - The build process is simple and fast since you only build the code for your block, and not the entire application.
+            - The Lowdefy engine takes care off the application state, the the block only has to concern itself which a easy application interface.
+
+            ## Using Custom Blocks
+
+            To use a custom block type inside a Lowdefy app, configure the `types` object in the root of the Lowdefy config. For example to use a AmCharts block we can add a `AmChartsXY` type to the `types`.
+
+            ```yaml
+            name: dashboard-app
+            lowdefy: 3.10.0
+            types:
+              AmChartsXY:
+                url: https://blocks-cdn.lowdefy.com/v3.10.0/blocks-amcharts/meta/AmChartsXY.json
+            # ...
+            pages:
+              - id: dashboard
+                type: PageHeaderMenu
+                blocks:
+                  - id: my_chart
+                    type: AmChartsXY
+                    properties:
+                      #...
+            #...
+            ```
+
+            By default Lowdefy build apps with a set of pre-configured, default block types to make it easier to build apps, for example using [`Button`](/Button), [`TextInput`](/TextInput), [`Box`](/Box), etc. All the blocks documented in the Lowdefy docs are default types. We will continue to build out this list of default blocks to make it as easy as possible to build excellent feature rich apps. 
+
+            It is possible to overwrite the default a block type by simply defining a url for the default type in the `types` object. This is especially useful when you need to use a older version of a block, or would like to do something unique.
+
+            #### Examples of Custom Blocks
+            
+            ##### AmCharts:
+
+            [AmChart](https://www.amcharts.com/) enables you to render powerful javascript charts. We have created the [AmCharts Lowdefy blocks](https://github.com/lowdefy/blocks-amcharts) making it easy to use highly customizable charts in your apps.
+
+            ## Steps to develop a custom block
+            
+            #### 1. Clone the blocks template repository
+
+            To develop a custom block, first clone the [Lowdefy blocks template repository](https://github.com/lowdefy/blocks-template). This template provides a project structure for building a custom block. This structure can be modified to you preferences with the following exceptions:
+            - Keep the webpack configuration to ensure your custom block works with Lowdefy block module federation.
+            - Blocks need meta data in the block schema format which Lowdefy uses to interpret how to render your block.
+
+            #### 2. Start your local block server
+
+            Once the repository is cloned, `yarn install` the block dependencies. Then start the local block server by running `yarn start`. The default is to start you block server on `http://localhost:3002`. Open `http://localhost:3002/meta/DisplayBlock.json` in your browser and confirm the the block meta data is served. 
+
+            You can create multiple blocks in the same repository, or run multiple block servers from different block repositories. Use `yarn start --port {{ port_number }}` when you need to run multiple block servers.
+
+            #### 3. Configure your block types
+
+            In your `lowdefy.yaml` file, add your custom block type to the `types` object with the local path.
+
+             ```yaml
+            name: dashboard-app
+            lowdefy: 3.10.0
+            types:
+              MyCustomBlock:
+                url: http://localhost:3002/meta/MyCustomBlock.json
+            # ...
+            ```
+
+            You can then test your block locally by running `npx lowdefy@latest dev` to develop your Lowdefy app together with your custom block. 
+
+            #### 4. Code your Lowdefy block
+
+            A Lowdefy block consist of two files, your schema file and your React component. With Lowdefy we tried to keep blocks stateless and let the Lowdefy engine mange application state. 
+            
+            For most applications this is fine and it simplifies the block logic, the result is "smaller" blocks and more flexibility to the Lowdefy app builder. It is up to the block develop to decide where this boundary between configurability and complexity lies for the Lowdefy app develop, for example some UI elements like a Calender is better to be state-full and packaged as one piece than to bread the Calender up into various smaller blocks. With that said, it is worth mentioning that every time the block properties changes, Lowdefy will rerender the entire block, this can have a performance impact when block become large and complex.
+
+            ### Block schema definition
+            
+            - `category: enum`: How this block should be rendered in the Lowdefy app. Can be either `display`, `input`, `container`, `context` or `list`.
+            - `valueType: enum`: For blocks of the `input` block category, a block enforces a default value type is state. This can be either a `boolean`, `number`, `string`, `object` or `array`.
+            - `loading: boolean | object`: Settings for the default loading skeleton to render while the block is in a loading status. `false` will render a empty div element while `true` will render default block skeleton based on the block category. Else a `object` con be provided for more refined settings, see the [loading loading placeholder types](/blocks) for more detials  A Lowdefy app developer can over write these defaults by defining the `loading` settings when configuring a block.
+            - `schema: object`: Provide a valid [JSON-Schema](https://json-schema.org/) definition for the block `properties` and `events`.
+
+            ### Block React Component Props
+
+            - `blockId: string`: The block's id within the Lowdefy app, this is useful for setting a unique `id` on DOM elements.
+            - `content: object`: Passed to `container` and `context` block categories. The `content` object with methods to render sub blocks into content areas. The method name is the same as the area key, for example, 'content.content()` renders a blocks default `content` area.
+            - `events: object`: All events defined on the block in the Lowdefy app config.
+              - `[event_key]: object`: Event keys gives a handle name to the event details.
+                - `loading: boolean`: True while the list of actions are being evaluated.
+                - `actions: actionObjects[]`: The list of evaluated [Lowdefy action objects](https://docs.lowdefy.com/events-and-actions) which will be  evaluated by the Lowdefy engine.
+                - `history: object[]`: A list of objects logging the event calls and responses.
+                  - `blockId: string`: The block id from which the event was called.
+                  - `event: object`: The event object passed to the event.
+                  - `eventName: string`: The event name which which triggerEvent was called.
+                  - `success: boolean`: True if all actions for the event executed without throwing any errors.
+                  - `timestamp: datetime`: Timestamp for when the event was completed.  
+                  - `responses: object[]`: The list of action responses.
+                    - `actionId: string`: The id of the triggered action.
+                    - `actionsType: string`: The type of action called.
+                    - `error: Error: If the action throw an error.
+                    - `response: any`: The returned result of the action.
+                    - `skipped: boolean`: True if the action was skipped.
+            - `methods: object`: All application methods built into Lowdefy, available for the block.
+              - `makeCssClass(cssObject | cssObject[]): string`: This methods creates a css class for the block to apply to DOM elements. Css classes are created using [Emotion](https://emotion.sh/docs/introduction). If a list of cssObject are given the cssObjects are shallow merged with the preceding objects properties being overwritten by the latter. Any valid css style object can be passed, including media queries. Default media queries are built in:
+                - `xs?: object`: Css object applied for screen media with max width of 576px.
+                - `sm?: object`: Css object applied for screen media with min width of 576px.
+                - `md?: object`: Css object applied for screen media with min width of 768px.
+                - `lg?: object`: Css object applied for screen media with min width of 992px.
+                - `xl?: object`: Css object applied for screen media with min width of 1200px.
+                - `xxl?: object`: Css object applied for screen media with min width of 1600px.
+              - `registerEvent(event: { name: string, actions: actionObjects[] })`: This method can be used to register internal actions for the block to trigger, and overwrites the user config if user defined actions are provided for the same event key.
+              - `registerMethod(methodName: string, fn(any))`: This method allows the block developed to expose a method to the Lowdefy app developer via the [`CallMethod`](https://docs.lowdefy.com/CallMethod) action. When the method name for the block id is triggered via a `CallMethod` action, `fn` is evaluated.
+              - `triggerEvent({name: string, event?: any })`: This methods triggers a event when called, like `onClick` for when a button is clicked. Optionally, event data can be passed which will be available inside the event actions through the [`_event`](https://docs.lowdefy.com/_event) operator.
+            - `properties: object`: The properties object provides all the block settings defined in the Lowdefy config, operators can be used when defining block properties and evaluated operators are passed to the block. When the evaluated result of these properties change, the block rerenders to display the updated block.
+            - `required: boolean`: For blocks of the `input` category, whether or not a input value is required. Required can be defined by operators and the evaluated result is passed to the block. The [`Validate`](https://docs.lowdefy.com/Validate) action will check if the required values are present else raise `validation` errors and suspend further block actions in the event queue.
+            - `validation: object`: For blocks of the `input` category, the validation property provides result of `Validate` relevant relevant to the specific block. See [block validation](/blocks) for more details.
+              - `status: enum`: The validation status result. Can be `error`, `success` or `warning`. Only validation which results in an `error` status will suspend further block actions in the event queue.
+              - `errors: string[]`: The list of error messaged raised whiled block validation was evaluated, for this block.
+              - `warnings: string[]`: The list of warnings messaged raised whiled block validation was evaluated, for this block.
+
+            ## Deploying Custom Blocks
+
+            Both the block metadata and block React component need to be built by webpack and hosted on a publicly accessible static file server. Any Lowdefy app can then load and use the block. You also need to set the `remoteEntryUrl` in `webpack.prod.js` in order to build the correct block meta data, make sure URL is pointing to where your block is hosted.
+
+            The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some cases which can result in a unreliable user experience. It is thus best to deploy you blocks to your own static file servers.
+
+            We are working on a Lowdefy blocks CDN to improve this developer experience in the future.
+            
+
+
+
+
+
+
