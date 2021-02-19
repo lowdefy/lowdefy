@@ -22,6 +22,12 @@ test('swap', () => {
   expect(arr).toEqual([0, 1, 3, 2, 4]);
 });
 
+test('swap', () => {
+  const arr = [0, 1, 2, 3, 4];
+  swap(arr, 0, 3);
+  expect(arr).toEqual([3, 1, 2, 0, 4]);
+});
+
 test('swap out of bounds', () => {
   const arr = [0, 1, 2, 3, 4];
   swap(arr, -1, 3);
