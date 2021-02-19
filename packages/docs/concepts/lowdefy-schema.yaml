@@ -209,6 +209,8 @@ _ref:
 
             Major version updates may include major breaking changes or architecture changes. You might need to make more changes to your configuration to be compatible with the new version. We don't intend to release major versions regularly, and try to minimize breaking changes.
 
+            As the project grows, we will release a long term support (LTS) version, that will continue to receive patches, but won't have any breaking changes.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
