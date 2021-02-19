@@ -4,6 +4,12 @@
   "license": "Apache-2.0",
   "description": "Lowdefy markdown blocks.",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks",
+    "markdown",
+    "react-markdown"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },
