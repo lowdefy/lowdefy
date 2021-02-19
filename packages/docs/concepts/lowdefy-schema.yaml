@@ -196,6 +196,21 @@ _ref:
             Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. If a file ends with the `.njk` file extension, the file will first be hydrated as a Nunjucks template, using the `vars` as template variables. If the file ends with `.yaml.njk` or `.json.njk`, the output of the template will then be parsed. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
 
             Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
+
+            # Lowdefy versions and version updates
+
+            Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is in the early stages of development and under active development, with new versions published on a regular basis.
+
+            To update the version of your app, change the `lowdefy` version field in the `lowdefy.yaml` file, and redeploy the app. You might also need to make some changes to your app configuration to be compatible with the new version.
+
+            Patch updates only contain fixes, and you should be safe to update to a patched version without any changes to your app. Since we are actively developing new features, most releases will be minor version updates, and patches won't be made to older versions.
+
+            Minor version changes include new features. At this stage, since the project is still in early development, they might also have minor breaking changes to individual blocks, actions, operators or connections. Please check the [changelog](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md) to see if any configuration changes are needed before updating.
+
+            Major version updates may include major breaking changes or architecture changes. You might need to make more changes to your configuration to be compatible with the new version. We don't intend to release major versions regularly, and try to minimize breaking changes.
+
+            As the project grows, we will release a long term support (LTS) version, that will continue to receive patches, but won't have any breaking changes.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
