@@ -4,6 +4,10 @@
   "license": "Apache-2.0",
   "description": "Basic html Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },

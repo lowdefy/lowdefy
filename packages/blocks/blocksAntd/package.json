@@ -4,6 +4,12 @@
   "license": "Apache-2.0",
   "description": "Lowdefy Ant Design Blocks",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks",
+    "antd",
+    "ant design"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },

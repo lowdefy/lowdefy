@@ -4,6 +4,10 @@
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "cli"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },

@@ -4,6 +4,11 @@
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "documentation",
+    "docs"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },
