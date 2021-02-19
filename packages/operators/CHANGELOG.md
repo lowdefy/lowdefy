@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* **operators:** Getter operators should not error if key is null. ([d080e5a](https://github.com/lowdefy/lowdefy/commit/d080e5aac405795ade11bf9bc296fc59d8266e60))
+
+
+
+
+
 # [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
 
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* **graphql:** Include saslprep in webpack build for mongodb. ([19e048e](https://github.com/lowdefy/lowdefy/commit/19e048eda39bf30fac4716ebdd4c2aea0261ad7e))
+* **graphql:** MongoDB updates can use aggregation pipelines. ([8e9653c](https://github.com/lowdefy/lowdefy/commit/8e9653c09ebe390b64d4071056e3b08b86a80471))
+
+
+
+
+
 # [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
 
 
