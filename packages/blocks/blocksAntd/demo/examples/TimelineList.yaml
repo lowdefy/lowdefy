@@ -1,8 +1,8 @@
 - id: default
   type: TimelineList
-- id: "properties.mode: alternate"
+- id: 'properties.mode: alternate'
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -14,6 +14,16 @@
       position: left
   properties:
     mode: alternate
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title
@@ -29,9 +39,9 @@
       properties:
         content: >
           Text 3
-- id: "properties.mode: right"
+- id: 'properties.mode: right'
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -43,6 +53,16 @@
       position: left
   properties:
     mode: right
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title
@@ -58,9 +78,9 @@
       properties:
         content: >
           Text 3
-- id: "properties.mode: left"
+- id: 'properties.mode: left'
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -72,6 +92,16 @@
       position: left
   properties:
     mode: left
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title
@@ -87,9 +117,9 @@
       properties:
         content: >
           Text 3
-- id: "properties.reverse: true"
+- id: 'properties.reverse: true'
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -101,6 +131,16 @@
       position: left
   properties:
     reverse: true
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title
@@ -116,9 +156,9 @@
       properties:
         content: >
           Text 3
-- id: "properties.pending: true"
+- id: 'properties.pending: true'
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -130,6 +170,16 @@
       position: left
   properties:
     pending: true
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title
@@ -145,9 +195,9 @@
       properties:
         content: >
           Text 3
-- id: "properties.pendingDotIcon: "
+- id: 'properties.pendingDotIcon: '
   type: TimelineList
-  value: 
+  value:
     - icon: FireOutlined
       color: red
       position: left
@@ -160,6 +210,16 @@
   properties:
     pending: true
     pendingDotIcon: FireFilled
+    data:
+      - icon: FireOutlined
+        color: red
+        position: left
+      - icon: SettingOutlined
+        color: green
+        position: right
+      - icon: RocketOutlined
+        color: blue
+        position: left
   blocks:
     - id: Title 1
       type: Title

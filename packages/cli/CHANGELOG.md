@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* **cli:** Give dev command name to startup function. ([1ce7e3f](https://github.com/lowdefy/lowdefy/commit/1ce7e3fcf41669e5861ff8a5f25bd640179cfbfd))
+* **cli:** Stop dev server if lowdefy version changes ([a944cc8](https://github.com/lowdefy/lowdefy/commit/a944cc819ee60df6371ae3cff1747ec14889c5dc)), closes [#447](https://github.com/lowdefy/lowdefy/issues/447)
+
+
+
+
+
 # [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
 
 

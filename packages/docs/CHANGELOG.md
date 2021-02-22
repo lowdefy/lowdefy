@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* **docs:** Add comment on LTS version. ([fdf4361](https://github.com/lowdefy/lowdefy/commit/fdf4361516f2b4c87d327406ad8ab89237df2117))
+* **docs:** Add custom blocks. ([501664a](https://github.com/lowdefy/lowdefy/commit/501664ab1ce8d1e48d8a617fef626b4332d04814))
+* **docs:** Add versions and updates section. ([168175e](https://github.com/lowdefy/lowdefy/commit/168175e149d46c06e4a854b4f413a123f795257d))
+* **docs:** Update custom blocks concepts. ([f5bdd5d](https://github.com/lowdefy/lowdefy/commit/f5bdd5d2011cd5168d8322a25cfcb0d0eb7c808c))
+* **graphql:** MongoDB updates can use aggregation pipelines. ([8e9653c](https://github.com/lowdefy/lowdefy/commit/8e9653c09ebe390b64d4071056e3b08b86a80471))
+
+
+
+
+
 # [3.10.0](https://github.com/lowdefy/lowdefy/compare/v3.9.0...v3.10.0) (2021-02-17)
 
 

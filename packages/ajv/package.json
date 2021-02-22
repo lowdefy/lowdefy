@@ -1,9 +1,15 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "3.10.0",
+  "version": "3.10.1",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "ajv",
+    "json schema",
+    "json schema validator"
+  ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
   },
@@ -32,7 +38,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "3.10.0",
+    "@lowdefy/nunjucks": "3.10.1",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1"
   },

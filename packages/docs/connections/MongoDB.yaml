@@ -333,7 +333,7 @@ _ref:
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
-            - `update: object`: __Required__ - The update operations to be applied to the document.
+            - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
             - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
               - `arrayFilters: string[]`: Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
@@ -385,7 +385,7 @@ _ref:
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
-            - `update: object`: __Required__ - The update operations to be applied to the document.
+            - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
             - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
               - `arrayFilters: string[]`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.

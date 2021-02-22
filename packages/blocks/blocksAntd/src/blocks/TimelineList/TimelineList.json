@@ -11,6 +11,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "data": {
+          "type": "array"
+        },
         "style": {
           "type": "object",
           "description": "Css style object to apply to timeline.",

@@ -21,7 +21,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.mode: alternate_0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -33,7 +69,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.mode: alternate_1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -45,7 +117,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.mode: alternate_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -75,7 +183,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.mode: left_0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -87,7 +231,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.mode: left_1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -99,7 +279,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.mode: left_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -129,7 +345,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.mode: right_0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -141,7 +393,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.mode: right_1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -153,7 +441,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.mode: right_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -183,7 +507,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.pending: true_0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -195,7 +555,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.pending: true_1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -207,7 +603,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.pending: true_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -236,7 +668,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.pendingDotIcon: _0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -248,7 +716,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.pendingDotIcon: _1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -260,7 +764,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.pendingDotIcon: _2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -319,7 +859,43 @@ Array [
   Array [
     Object {
       "children": Array [
-        <mockConstructor>
+        <mockConstructor
+          color="red"
+          dot={
+            <IconBlock
+              blockId="properties.reverse: true_0_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "FireOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {
@@ -331,7 +907,43 @@ Array [
             Title 1
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="green"
+          dot={
+            <IconBlock
+              blockId="properties.reverse: true_1_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "SettingOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
           <div
             style={
               Object {
@@ -343,7 +955,43 @@ Array [
             Text 2
           </div>
         </mockConstructor>,
-        <mockConstructor>
+        <mockConstructor
+          color="blue"
+          dot={
+            <IconBlock
+              blockId="properties.reverse: true_2_icon"
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "RocketOutlined",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
           <div
             style={
               Object {

@@ -19,3 +19,6 @@ packages/graphql/globalConfig.json
 packages/graphql/node_modules/**
 packages/server/dev/**
 packages/cli/lowdefy.yaml
+packages/servers/serverDev/lowdefy.yaml
+packages/servers/serverDocker/lowdefy.yaml
+packages/servers/serverNetlify/lowdefy.yaml

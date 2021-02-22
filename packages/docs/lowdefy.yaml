@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.10.0'
+lowdefy: '3.10.1'
 licence: Apache-2.0
 
 global:
@@ -145,6 +145,11 @@ menus:
             pageId: lists
             properties:
               title: Lists
+          - id: custom-blocks
+            type: MenuLink
+            pageId: custom-blocks
+            properties:
+              title: Custom Blocks
 
       - id: blocks_input
         type: MenuGroup
@@ -648,6 +653,7 @@ pages:
   - _ref: concepts/secrets.yaml
   - _ref: concepts/deployment.yaml
   - _ref: concepts/lists.yaml
+  - _ref: concepts/custom-blocks.yaml
 
   - _ref: blocks/input/AutoComplete.yaml
   - _ref: blocks/input/ButtonSelector.yaml

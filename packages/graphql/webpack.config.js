@@ -2,6 +2,10 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { dependencies, devDependencies } = require('./package.json');
 
+const externals = [...Object.keys(dependencies), ...Object.keys(devDependencies)].filter(
+  (name) => name !== 'saslprep'
+);
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -12,7 +16,7 @@ module.exports = {
   mode: 'production',
   target: 'node',
   node: false,
-  externals: [...Object.keys(dependencies), ...Object.keys(devDependencies)],
+  externals,
   module: {
     rules: [
       {
