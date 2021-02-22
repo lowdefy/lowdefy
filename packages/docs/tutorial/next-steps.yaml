@@ -18,7 +18,8 @@ _ref:
     pageId: next-steps
     pageTitle: Next steps
     section: Tutorial
-    # prefetchPages: []
+    prefetchPages:
+      - overview
     filePath: tutorial/next-steps.yaml
     content:
       - id: md1
@@ -35,7 +36,7 @@ _ref:
 
             ### Understand the concepts
 
-            To get a more in-depth understanding of how everything works, you can start [here](/context).
+            To get a more in-depth understanding of how everything works, you can start [here](/overview).
 
             ### Play with blocks
 

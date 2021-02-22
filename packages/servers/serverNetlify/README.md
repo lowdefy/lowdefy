@@ -48,7 +48,7 @@ On the "Site overview" tab you will find your site url.
 
 ## More Lowdefy resources
 
-- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-setup
+- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy docs - https://docs.lowdefy.com
 - Lowdefy website - https://lowdefy.com
 - Community forum - https://github.com/lowdefy/lowdefy/discussions

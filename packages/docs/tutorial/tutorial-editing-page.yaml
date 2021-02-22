@@ -19,8 +19,8 @@ _ref:
     pageTitle: Editing a page
     section: Tutorial
     filePath: tutorial/tutorial-editing-page.yaml
-    # prefetchPages:
-    #   - tutorial-development-server
+    prefetchPages:
+      - tutorial-development-server
     content:
       - id: md1
         type: MarkdownWithCode
@@ -99,6 +99,6 @@ _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Setup
-            previous_page_id: tutorial-setup
+            previous_page_id: tutorial-start
             next_page_title: Development server
             next_page_id: tutorial-development-server

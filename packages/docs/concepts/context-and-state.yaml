@@ -63,7 +63,7 @@ _ref:
 
             - [`_global`](/_global): The `global` object is a single app level data object defined in the Lowdefy [config root](/lowdefy-schema). This object is the same for every `context`, it is also passed between the client and server. If the [`SetGlobal`](/SetGlobal) action is called, it is not consistent between clients, like different users, or a single user with multiple tabs open.
 
-            - [`_state`](/_state): A `state` object is unique to a `context` and every [`input` block](/blocks) maintains a value in it's parent `state` object. This `state` object is passed to the server when requests are called. The [`SetState`](/SetState) action can be used to modify the value of a `state` object in the same `context` from which [`SetState`](/SetState) is called.
+            - [`_state`](/_state): A `state` object is unique to a `context` and every [`input` block](/blocks) maintains a value in it's parent `state` object. This `state` object is passed to the server when requests are called. The [`SetState`](/SetState) action can be used to modify the value of a `state` object in the same `context` from which `SetState` is called.
 
             - [`_url_query`](/_url_query): The `urlQuery` object is used to access variables set in the url. Url query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onEnter`](/events-and-actions) event. __Note that any variables set to `urlQuery` will be publicly visible__.
 

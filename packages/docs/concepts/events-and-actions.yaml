@@ -44,7 +44,7 @@ _ref:
 
             Each action has an `id`, unique to that action chain, and a `type` field which are required.
 
-            Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have arguments relating to that event, like what the new value of an input is, or the row that was clicked in a table. These arguments can be used in the action `params` using the [`_args`](/_args) operator.
+            Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have data relating to that event, like what the new value of an input is, or the row that was clicked in a table. The `event` object can be used in the action using the [`_event`](/_event) operator.
 
             Actions can also have a `skip` field. Operators in the `skip` field are also evaluated before an action is executed, and if the evaluated result is `true`, that action is skipped and the next action is executed.
 
@@ -55,6 +55,10 @@ _ref:
             - `id: string`: __Required__ - A identifier for the action. It must be unique within the action chain it is defined in.
             - `type: string`: __Required__ - The action type to be used. It must be a valid action type.
             - `skip: boolean`: The test that determines whether the action will be skipped or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
+            - `messages: object`:  __Operators are evaluated__.
+              -  `error: boolean | string`: If `boolean`, whether an error message should be displayed if the action throws an error. Error messages are shown by default. If a `string`, the error message to show to the user.
+              -  `loading: boolean | string`: If `boolean`, whether a loading message should be displayed while the action is executing. Loading messages are not shown by default. If a `string`, the loading message to show to the user.
+              -  `success: boolean | string`: If `boolean`, whether a success message should be displayed if the action completes successfully. Success messages are not shown by default. If a `string`, the success message to show to the user.
             - `params: object`: The input passed to the action. __Operators are evaluated__.
 
             ###### Events and actions definition example:

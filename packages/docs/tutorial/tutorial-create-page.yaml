@@ -19,8 +19,8 @@ _ref:
     pageTitle: Creating a page
     section: Tutorial
     filePath: tutorial/tutorial-create-page.yaml
-    # prefetchPages:
-    #   - tutorial-add-blocks
+    prefetchPages:
+      - tutorial-add-blocks
     content:
       - id: md1
         type: MarkdownWithCode

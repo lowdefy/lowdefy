@@ -19,8 +19,6 @@ _ref:
     pageTitle: Making a booking form config
     section: Tutorial
     filePath: tutorial/tutorial-add-blocks-config.yaml
-    # prefetchPages:
-    #   - tutorial-editing-page
     content:
       - id: md1
         type: MarkdownWithCode

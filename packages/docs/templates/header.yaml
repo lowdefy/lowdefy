@@ -16,7 +16,7 @@
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - md
@@ -42,7 +42,7 @@
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - sm
@@ -57,15 +57,15 @@
     size: large
   events:
     onClick:
-      - id: website_link
+      - id: tutorial_link
         type: Link
         params:
-          pageId: tutorial-setup
+          pageId: tutorial-start
 - id: community_button
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - sm

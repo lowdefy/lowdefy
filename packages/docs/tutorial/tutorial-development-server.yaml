@@ -19,8 +19,8 @@ _ref:
     pageTitle: Development server
     section: Tutorial
     filePath: tutorial/tutorial-development-server.yaml
-    # prefetchPages:
-    #   - tutorial-create-page
+    prefetchPages:
+      - tutorial-create-page
     content:
       - id: md1
         type: MarkdownWithCode

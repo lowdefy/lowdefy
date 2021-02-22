@@ -316,8 +316,8 @@ _ref:
             - `offset`: _Number_ - Number of grid cells to shift the block to the right.
             - `pull`: _Number_ - Shift the block this number of cells to the left. This will make it overlap above with previous blocks.
             - `push`: _Number_ - Shift the block this number of cells to the right. This will make it overlap under with the following blocks.
-            - `shrink`: _Number_ - Set the [`flex-shrink`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default 1.
-            - `size`: _String_ | _Number_ - Set the [`flex-basis`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default `auto`.
+            - `shrink`: _Number_ - Set the [`flex-shrink`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink) CSS property. Default 1.
+            - `size`: _String_ | _Number_ - Set the [`flex-basis`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis) CSS property. Default `auto`.
             - `span`: _Number_ - Number of grid cells the block should occupy.
 
             ### Block layout properties usage examples:
@@ -336,14 +336,14 @@ _ref:
             - title: Push example
               key: push
         areas:
-          align: 
+          align:
             blocks:
               - id: markdown_align_examples
                 type: Markdown
                 style:
                   marginTop: 16px
                 properties:
-                  content: | 
+                  content: |
                     ```
                     - id: container
                       type: Container
@@ -467,7 +467,7 @@ _ref:
                           html: |
                             <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
           offset:
-            blocks:      
+            blocks:
               - id: markdown_offset_example
                 type: Markdown
                 style:
@@ -659,7 +659,7 @@ _ref:
             - title: Gutter example
               key: gutter
             - title: Justify example
-              key: justify  
+              key: justify
         areas:
           align:
             blocks:
@@ -1404,7 +1404,7 @@ _ref:
                             properties:
                               html: |
                                 <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 15</div>
-      
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

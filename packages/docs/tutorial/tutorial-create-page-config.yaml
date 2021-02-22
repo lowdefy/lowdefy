@@ -19,8 +19,6 @@ _ref:
     pageTitle: Creating a page config
     section: Tutorial
     filePath: tutorial/tutorial-create-page-config.yaml
-    # prefetchPages:
-    #   - tutorial-editing-page
     content:
       - id: md1
         type: MarkdownWithCode

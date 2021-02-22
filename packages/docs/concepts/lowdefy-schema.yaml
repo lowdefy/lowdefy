@@ -33,7 +33,7 @@ _ref:
             - `cli: object`: An object with configuration for the CLI.
             - `config: object`: An object with app configuration like the home page pageId.
             - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
-            - `connections: object[]`: An array of [`connection`](\connections-and-requests) objects.
+            - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
             - `types: object`: An object to customize and add block types.
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.

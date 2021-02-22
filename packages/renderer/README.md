@@ -22,7 +22,7 @@ A Lowdefy server serves a lightweight shell, that loads the renderer using modul
 
 ## More Lowdefy resources
 
-- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-setup
+- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy docs - https://docs.lowdefy.com
 - Lowdefy website - https://lowdefy.com
 - Community forum - https://github.com/lowdefy/lowdefy/discussions

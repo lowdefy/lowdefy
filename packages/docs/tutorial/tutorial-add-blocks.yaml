@@ -19,8 +19,8 @@ _ref:
     pageTitle: Adding blocks
     section: Tutorial
     filePath: tutorial/tutorial-add-blocks.yaml
-    # prefetchPages:
-    #   - tutorial-actions-operators
+    prefetchPages:
+      - tutorial-actions-operators
     content:
       - id: md1
         type: MarkdownWithCode
@@ -89,7 +89,7 @@ _ref:
             ################ -------- Copy to here ---------- ################
             ```
 
-            >  If you would like to see how your config should look at this point, you can find it [here](tutorial-add-blocks-config).
+            >  If you would like to see how your config should look at this point, you can find it [here](/tutorial-add-blocks-config).
 
             #### Step 2
 
@@ -163,13 +163,13 @@ _ref:
 
             Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 5 block categories, namely display, input, container, list, and context.
 
-            The first block on a page needs to be a [context](/context) block. For now, it is enough to understand that this context allows the Lowdefy magic to happen.
+            The first block on a page needs to be a [context](/context-and-state) block. For now, it is enough to understand that this context allows the Lowdefy magic to happen.
 
             All blocks need to have an `id` that identifies the block. This id should be unique in that block's context.
 
             ### Up next
 
-            Currently our form doesn't do very much. In the next section we will use [actions](actions) and [operators](operators) to make it more interactive.
+            Currently our form doesn't do very much. In the next section we will use [actions](/events-and-actions) and [operators](/operators) to make it more interactive.
 
       - _ref:
           path: templates/navigation_buttons.yaml

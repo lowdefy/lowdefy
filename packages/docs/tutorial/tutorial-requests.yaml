@@ -19,13 +19,14 @@ _ref:
     pageTitle: Requests
     section: Tutorial
     filePath: tutorial/tutorial-requests.yaml
-    # prefetchPages: []
+    prefetchPages:
+      - next-steps
     content:
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](\GoogleSheet). To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
+            We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](/GoogleSheet) connection. To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
 
             ### Creating a Google Sheet and getting credentials
 

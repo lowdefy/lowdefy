@@ -15,12 +15,12 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: tutorial-setup
+    pageId: tutorial-start
     pageTitle: Deploy your app
     section: Tutorial
-    filePath: tutorial/tutorial-setup.yaml
-    # prefetchPages:
-    #   - tutorial-editing-page
+    filePath: tutorial/tutorial-start.yaml
+    prefetchPages:
+      - tutorial-editing-page
     content:
       - id: md1
         type: MarkdownWithCode

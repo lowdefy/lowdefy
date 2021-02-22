@@ -19,14 +19,14 @@ _ref:
     pageTitle: Interactive pages
     section: Tutorial
     filePath: tutorial/tutorial-actions-operators.yaml
-    # prefetchPages:
-    #   - tutorial-requests
+    prefetchPages:
+      - tutorial-requests
     content:
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](tutorial-add-blocks-config).
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](/tutorial-add-blocks-config).
 
             ## Adding a reset button
 
@@ -210,7 +210,7 @@ _ref:
 
             ## Hiding blocks
 
-            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](\_eq) [`operator`](\operators) to test if the ticket type is equal to `Bug report`
+            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Bug report`
 
             #### Step 1
             Add the following [`ButtonSelector`](ButtonSelector) to your app.
@@ -253,9 +253,9 @@ _ref:
 
             If the visible field value is `false`, the block won't be rendered. To change this value while our app is running, we use an operator. Operators evaluate every time something in the app changes, like when a user provides an input.
 
-            We used the [`_eq`](\_eq) operator to check the ticket type is 'Bug report'.
+            We used the [`_eq`](/_eq) operator to check the ticket type is 'Bug report'.
 
-            To get the value of the `ticket_type` input, we use the [`_state`](\_state) operator. This get a value from the page's [`state`](\context). _The `state` is an object where data the app needs is stored_. All inputs automatically write their values to state, and you can also set values in `state` by using the [`SetState`](\SetState) action.
+            To get the value of the `ticket_type` input, we use the [`_state`](/_state) operator. This get a value from the page's [`state`](/context-and-state). _The `state` is an object where data the app needs is stored_. All inputs automatically write their values to state, and you can also set values in `state` by using the [`SetState`](/SetState) action.
 
             ## Validation rules
 

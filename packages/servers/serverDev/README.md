@@ -17,7 +17,7 @@ To make changes to the server, you need to run `yarn build` in dependencies that
 
 ## More Lowdefy resources
 
-- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-setup
+- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy docs - https://docs.lowdefy.com
 - Lowdefy website - https://lowdefy.com
 - Community forum - https://github.com/lowdefy/lowdefy/discussions

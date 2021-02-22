@@ -39,9 +39,9 @@ menus:
           title: Tutorial
           icon: RocketOutlined
         links:
-          - id: tutorial-setup
+          - id: tutorial-start
             type: MenuLink
-            pageId: tutorial-setup
+            pageId: tutorial-start
             properties:
               title: Deploy your app
           - id: tutorial-editing-page
@@ -628,7 +628,7 @@ menus:
 
 pages:
   - _ref: introduction.yaml
-  - _ref: tutorial/tutorial-setup.yaml
+  - _ref: tutorial/tutorial-start.yaml
   - _ref: tutorial/tutorial-editing-page.yaml
   - _ref: tutorial/tutorial-development-server.yaml
   - _ref: tutorial/tutorial-create-page.yaml

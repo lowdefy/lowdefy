@@ -18,6 +18,8 @@ _ref:
     pageId: introduction
     pageTitle: Introduction
     filePath: introduction.yaml
+    prefetchPages:
+      - tutorial-start
     content:
       - id: markdown
         type: Markdown
@@ -41,7 +43,7 @@ _ref:
             - id: link_forward
               type: Link
               params:
-                pageId: tutorial-setup
+                pageId: tutorial-start
             - id: scroll_to_top
               type: ScrollTo
               params:

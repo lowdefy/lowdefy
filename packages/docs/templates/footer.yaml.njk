@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% if not hideFeedback %}     
+{% if not hideFeedback %}
 - id: feedback_divider
   type: Divider
 - id: feedback_title
@@ -24,7 +24,7 @@
     level: 3
 - id: feedback_rating_box
   type: Box
-  style: 
+  style:
     margin: auto
   layout:
     size: 300
@@ -41,7 +41,7 @@
           style:
             fontSize:
               _if:
-                test: 
+                test:
                   _eq:
                     - _state: feedback.score
                     - cry
@@ -62,7 +62,7 @@
           style:
             fontSize:
               _if:
-                test: 
+                test:
                   _eq:
                     - _state: feedback.score
                     - sad
@@ -83,7 +83,7 @@
           style:
             fontSize:
               _if:
-                test: 
+                test:
                   _eq:
                     - _state: feedback.score
                     - smile
@@ -104,7 +104,7 @@
           style:
             fontSize:
               _if:
-                test: 
+                test:
                   _eq:
                     - _state: feedback.score
                     - happy
@@ -136,9 +136,9 @@
           properties:
             title: Feedback
             rows: 5
-            placeholder: 
+            placeholder:
               _if:
-                test: 
+                test:
                   _or:
                     - _eq:
                         - _state: feedback.score
@@ -182,9 +182,9 @@
         title: Edit this page on Github
         href: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
         newTab: true
-{% endif %} 
+{% endif %}
 
-{% endif %}  
+{% endif %}
 
 - id: footer_divider
   type: Divider
@@ -197,7 +197,7 @@
       type: Box
       visible:
         _not:
-          _or: 
+          _or:
             - _eq:
                 - _media: size
                 - sm
@@ -229,7 +229,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_twitter  
+                  - id: link_twitter
                     type: Link
                     params:
                       url: https://twitter.com/lowdefy
@@ -255,7 +255,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_github 
+                  - id: link_github
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy
@@ -268,7 +268,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_youtube 
+                  - id: link_youtube
                     type: Link
                     params:
                       url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg
@@ -307,7 +307,7 @@
                 placeholder: Enter your email
                 label:
                   disabled: true
-            - id: subscribe_button 
+            - id: subscribe_button
               type: Button
               layout:
                 flex: 0 1 auto
@@ -337,7 +337,7 @@
           type: Anchor
           properties:
             title: Deploy to Netlify
-            href: /tutorial-setup
+            href: /tutorial-start
             rel: 'noopener'
         - id: concepts_anchor
           type: Anchor
@@ -366,7 +366,7 @@
     - id: footer_logo_box_sm
       type: Box
       visible:
-        _or: 
+        _or:
           - _eq:
               - _media: size
               - sm
@@ -398,7 +398,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_twitter  
+                  - id: link_twitter
                     type: Link
                     params:
                       url: https://twitter.com/lowdefy
@@ -426,7 +426,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_github 
+                  - id: link_github
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy
@@ -440,7 +440,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_youtube 
+                  - id: link_youtube
                     type: Link
                     params:
                       url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg
