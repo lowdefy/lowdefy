@@ -17,11 +17,24 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+
+const closeLoader = jest.fn();
+const displayMessage = jest.fn();
+const rootContext = {
+  window: {
+    displayMessage,
+  },
+};
 
 const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
+
+beforeEach(() => {
+  displayMessage.mockReset();
+  closeLoader.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
+});
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -125,6 +138,19 @@ test('Validate all fields', async () => {
     status: 'error',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Your input has 2 validation errors.",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
   text1.setValue('text1');
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
@@ -153,6 +179,19 @@ test('Validate all fields', async () => {
     status: 'error',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Your input has 1 validation error.",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
   text2.setValue('text2');
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
@@ -181,6 +220,7 @@ test('Validate all fields', async () => {
     status: 'success',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
 });
 
 test('Validate only one field', async () => {
@@ -278,6 +318,19 @@ test('Validate only one field', async () => {
     status: 'error',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Your input has 1 validation error.",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
   text1.setValue('text1');
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
@@ -306,6 +359,7 @@ test('Validate only one field', async () => {
     status: 'error',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
 });
 
 test('Validate list of fields', async () => {
@@ -418,6 +472,19 @@ test('Validate list of fields', async () => {
       date: 0,
     },
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Your input has 1 validation error.",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
   text2.setValue('text2');
   expect(text1.validationEval.output).toEqual({
     errors: [],
@@ -456,6 +523,7 @@ test('Validate list of fields', async () => {
     status: 'error',
     warnings: [],
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
 });
 
 test('Invalid Validate params', async () => {
@@ -510,4 +578,15 @@ test('Invalid Validate params', async () => {
       date: 0,
     },
   });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Action unsuccessful",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
 });

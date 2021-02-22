@@ -91,7 +91,7 @@ class Actions {
     } catch (error) {
       closeLoading();
       this.displayMessage({
-        defaultMessage: 'Action unsuccessful',
+        defaultMessage: error.lowdefyMessage || 'Action unsuccessful',
         duration: 6,
         hideExplicitly: true,
         message: messages.error,

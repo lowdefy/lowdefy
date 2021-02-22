@@ -21,7 +21,9 @@ const mockMessage = jest.fn(() => () => undefined);
 const pageId = 'one';
 
 const rootContext = {
-  displayMessage: mockMessage,
+  window: {
+    displayMessage: mockMessage,
+  },
 };
 
 test('Message with content', async () => {

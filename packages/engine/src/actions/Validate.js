@@ -29,11 +29,12 @@ async function Validate({ context, params }) {
     });
   }
   if (validationErrors.length > 0) {
-    throw new Error(
-      `Your input has ${validationErrors.length} validation error${
-        validationErrors.length !== 1 ? 's' : ''
-      }.`
-    );
+    const message = `Your input has ${validationErrors.length} validation error${
+      validationErrors.length !== 1 ? 's' : ''
+    }.`;
+    const error = new Error(message);
+    error.lowdefyMessage = message;
+    throw error;
   }
 }
 

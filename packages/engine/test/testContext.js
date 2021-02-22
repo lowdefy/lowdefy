@@ -40,8 +40,8 @@ const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowde
     urlQuery: rootContext.urlQuery || {},
     updateBlock: rootContext.updateBlock || (() => {}),
     window: {
+      displayMessage: () => () => undefined,
       ...rootContext.window,
-      displayMessage: rootContext.displayMessage || (() => () => undefined),
     },
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });
