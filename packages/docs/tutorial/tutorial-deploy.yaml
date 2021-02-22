@@ -1,0 +1,49 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: tutorial-deploy
+    pageTitle: Deploy to Netlify
+    section: Tutorial
+    filePath: tutorial/tutorial-deploy.yaml
+    prefetchPages:
+      - next-steps
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            [Netlify](https://www.netlify.com) is a web app hosting service that is a great match for Lowdefy. They have great integrations with GitHub, GitLab, and Bitbucket, which make it easy to set up a continuous deployment process to deploy your apps.
+
+            ### Requirements
+
+            You will need to have the following:
+
+            - A Github account. You can create one [here](https://github.com/join).
+            - A Netlify account. You can create one [here](https://app.netlify.com/signup). It is easiest if you sign up with your Github account.
+
+            ### Up next
+
+            This is the end of the tutorial. If you have any feedback or suggestions, we would greatly appreciate that. You can start a new discussion [here](https://github.com/lowdefy/lowdefy/discussions).
+
+            Our next steps will show you some of the things you could do next.
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Requests
+            previous_page_id: tutorial-requests
+            next_page_title: Next steps
+            next_page_id: next-steps

@@ -47,11 +47,13 @@ _ref:
                     pageId: new-ticket
 
             pages:
-              - _ref: pages/welcome.yaml
-              - _ref: pages/booking.yaml
+              - _ref: new-ticket.yaml
+              - id: welcome
+                type: PageHeaderMenu
+                #...
             ```
 
-            ##### `pages/booking.yaml`
+            ##### `new-ticket.yaml`
 
             ```yaml
             id: new-ticket

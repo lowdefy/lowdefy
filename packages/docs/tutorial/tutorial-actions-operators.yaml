@@ -28,7 +28,7 @@ _ref:
           content: |
             If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](/tutorial-add-blocks-config).
 
-            ## Adding a reset button
+            ## Configuring the reset button
 
             The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
 
@@ -36,7 +36,7 @@ _ref:
 
             Copy the following into the definition of the reset button:
 
-            ##### `pages/new-ticket.yaml`
+            ##### `new-ticket.yaml`
             ```yaml
             id: new-ticket
             # ...
@@ -105,7 +105,7 @@ _ref:
             #### Step 2
             Add the validate action like this:
 
-            ##### `pages/new-ticket.yaml`
+            ##### `new-ticket.yaml`
             ```yaml
             id: new-ticket
             # ...

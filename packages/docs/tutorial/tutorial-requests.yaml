@@ -20,7 +20,7 @@ _ref:
     section: Tutorial
     filePath: tutorial/tutorial-requests.yaml
     prefetchPages:
-      - next-steps
+      - tutorial-deploy
     content:
       - id: md1
         type: MarkdownWithCode
@@ -83,7 +83,7 @@ _ref:
 
             #### Step 11
 
-            To use the private on Netlify, we need to base64 encode it, so it can be used in an environment variable. The easiest way to do this is to use the `btoa` function in a web browser console. On any webpage, right-click and choose "Inspect/Inspect Element". Then select the console tab. Enter the the following, using the `private_key` from your credentials file:
+            We will be deploying our app using Netlify. To use the private key on Netlify, we need to base64 encode it, so it can be used in an environment variable. The easiest way to do this is to use the `btoa` function in a web browser console. On any webpage, right-click and choose "Inspect/Inspect Element". Then select the console tab. Enter the the following, using the `private_key` from your credentials file:
 
             ```js
             btoa("-----BEGIN PRIVATE KEY-----\cmHM04djsk...kpO7EXuQ=\n-----END PRIVATE KEY-----\n")
@@ -94,8 +94,8 @@ _ref:
         type: Alert
         properties:
           type: warning
-          showIcon: false
-          message: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
+          message: Warning
+          description: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
 
       - id: md2
         type: MarkdownWithCode
@@ -116,8 +116,8 @@ _ref:
         type: Alert
         properties:
           type: warning
-          showIcon: false
-          message: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you started from the project template.
+          message: Warning
+          description: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you used the CLI init command.
       - id: md3
         type: MarkdownWithCode
         properties:
@@ -125,14 +125,6 @@ _ref:
             #### Step 12
 
             Because we changed the environment variables, we need to restart the dev server. Press "Ctrl + c" in the terminal, and run `npx lowdefy@latest dev` again to restart the server.
-
-            #### Step 13
-
-            To be able to use these secrets in our live app, we also need to add them in Netlify. Go to your project on Netlify. Go to "Site settings", then "Build and deploy" in the left menu. Scroll down and select "Edit variables" in the "Environment" section.
-
-            #### Step 14
-
-            Add the same variables (`LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL` and `LOWDEFY_SECRET_SHEETS_PRIVATE_KEY`) with their values and save.
 
             #### Step 15
 
@@ -142,7 +134,9 @@ _ref:
 
             We created a Google Cloud Platform (GCP) project, and created a service account in that project that we can use to access Google sheets. This gave us the credentials we need for the [`GoogleSheet`](/GoogleSheet) connection.
 
-            We set up these credentials for our local dev environment using a `.env` file, and for our Netlify app using the Netlify console.
+            We set up these credentials for our local dev environment using a `.env` file. The `.env` file sets [environment variables](https://en.wikipedia.org/wiki/Environment_variable) in the process the server is running in.
+
+            Because we set environment variables that start with `LOWDEFY_SECRET_`, these values become part of the [`secrets`](/Secrets) object, and can be accessed using the [`_secret`](/_secret) operator.
 
             ### Using the Google Sheets connection
 
@@ -279,13 +273,12 @@ _ref:
 
             ### Up next
 
-            This is the end of the tutorial. If you have any feedback or suggestions, we would greatly appreciate that. You can start a new discussion [here](https://github.com/lowdefy/lowdefy/discussions).
+            Up next we will be deploying our app using Netlify. Then it will be live, on the internet, for anyone to see 🚀.
 
-            Our next steps will show you some of the things you could do next.
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Interactive pages
             previous_page_id: tutorial-actions-operators
-            next_page_title: Next steps
-            next_page_id: next-steps
+            next_page_title: Deploy to Netlify
+            next_page_id: tutorial-deploy

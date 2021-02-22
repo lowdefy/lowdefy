@@ -46,11 +46,13 @@ _ref:
                     pageId: new-ticket
 
             pages:
-              - _ref: pages/welcome.yaml
-              - _ref: pages/new-ticket.yaml
+              - _ref: new-ticket.yaml
+              - id: welcome
+                type: PageHeaderMenu
+                #...
             ```
 
-            ##### `pages/new-ticket.yaml`
+            ##### `new-ticket.yaml`
             ```yaml
             id: new-ticket
             type: PageHeaderMenu

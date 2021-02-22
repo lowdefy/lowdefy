@@ -43,17 +43,7 @@ menus:
             type: MenuLink
             pageId: tutorial-start
             properties:
-              title: Deploy your app
-          - id: tutorial-editing-page
-            type: MenuLink
-            pageId: tutorial-editing-page
-            properties:
-              title: Editing a page
-          - id: tutorial-development-server
-            type: MenuLink
-            pageId: tutorial-development-server
-            properties:
-              title: Development server
+              title: Getting started
           - id: tutorial-create-page
             type: MenuLink
             pageId: tutorial-create-page
@@ -74,6 +64,11 @@ menus:
             pageId: tutorial-requests
             properties:
               title: Requests
+          - id: tutorial-deploy
+            type: MenuLink
+            pageId: tutorial-deploy
+            properties:
+              title: Deploy to Netlify
           - id: next-steps
             type: MenuLink
             pageId: next-steps
@@ -629,8 +624,6 @@ menus:
 pages:
   - _ref: introduction.yaml
   - _ref: tutorial/tutorial-start.yaml
-  - _ref: tutorial/tutorial-editing-page.yaml
-  - _ref: tutorial/tutorial-development-server.yaml
   - _ref: tutorial/tutorial-create-page.yaml
   - _ref: tutorial/tutorial-create-page-config.yaml
   - _ref: tutorial/tutorial-add-blocks.yaml
@@ -638,6 +631,7 @@ pages:
   - _ref: tutorial/tutorial-actions-operators.yaml
   - _ref: tutorial/tutorial-actions-operators-config.yaml
   - _ref: tutorial/tutorial-requests.yaml
+  - _ref: tutorial/tutorial-deploy.yaml
   - _ref: tutorial/next-steps.yaml
 
   - _ref: concepts/overview.yaml
