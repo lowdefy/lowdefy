@@ -65,7 +65,11 @@ _ref:
 
             ##### AmCharts:
 
-            [AmCharts](https://www.amcharts.com/) enable you to render powerful javascript charts. We have created the [AmCharts Lowdefy blocks](https://github.com/lowdefy/blocks-amcharts) making it easy to use highly customizable charts in your apps.
+            [AmCharts](https://www.amcharts.com/) enables you to render powerful javascript charts. We have created the [AmCharts Lowdefy blocks](https://github.com/lowdefy/blocks-amcharts) making it easy to use highly customizable charts in your apps.
+            
+            ##### Ag-Grid:
+
+            [Ag-Grid](https://www.ag-grid.com/) enables you to render feature rich tables. We have created the [AgGrid Lowdefy blocks](https://github.com/lowdefy/blocks-aggrid) making it easy to use advanced tables in your apps.
 
             ## Steps to develop a custom block
 
