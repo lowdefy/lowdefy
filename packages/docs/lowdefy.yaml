@@ -24,6 +24,18 @@ global:
     sm:
       span: 23
 
+connections:
+  - id: discord_channel
+    type: AxiosHttp
+    properties:
+      method: post
+      url: https://discord.com/api/webhooks/813758665059598336/QLJdwWBL1LKRyxosv9SfhTO0JvuO1qMh_9s8XRnbeUo_zs5hzQhjDMv5Xo4thrwBRYAH
+  - id: lowdefy_api
+    type: AxiosHttp
+    properties:
+      method: post
+      url: https://api.lowdefy.net/marketing
+
 menus:
   - id: default
     links:

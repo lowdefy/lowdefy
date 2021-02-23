@@ -159,12 +159,39 @@
           blocks:
             - id: feedback.send
               type: Button
+              requests:
+                - id: lowdefy_api_feedback
+                  type: AxiosHttp
+                  connectionId: lowdefy_api
+                  properties:
+                    data:
+                      text:
+                        _state: feedback.text
+                      score:
+                        _state: feedback.score
+                      email:
+                        _state: feedback.email
+                      source: docs
+                      type: Docs feedback
+                - id: discord_channel_feedback
+                  type: AxiosHttp
+                  connectionId: discord_channel
+                  properties:
+                    data:
+                      content: 'New feedback on docs'
               layout:
                 size: auto
               properties:
                 title: Send
                 icon: SendOutlined
                 color: '#1890ff'
+              events:
+                onClick:
+                  - id: post_data
+                    type: Request
+                    params:
+                      - lowdefy_api_feedback
+                      - discord_channel_feedback
 {% if filePath %}
 - id: edit_on_gh_box
   type: Box
@@ -214,7 +241,7 @@
               <p><a href="https://lowdefy.com"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
               <p style="font-size: 0.85rem;" >Build internal tools with YAML.</p>
               <p><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
-        - id: social_links
+        - id: community_links
           type: Box
           layout:
             contentJustify: space-around
@@ -292,13 +319,13 @@
             textAlign: center
           properties:
             content: Receive the latest Lowdefy updates in your inbox.
-        - id: subscribe_box
+        - id: footer_cta_box
           type: Box
           layout:
             contentGutter: [12, 0]
             contentJustify: center
           blocks:
-            - id: subscribe_email
+            - id: footer_cta_input
               type: TextInput
               layout:
                 flex: 0 1 250px
@@ -307,14 +334,37 @@
                 placeholder: Enter your email
                 label:
                   disabled: true
-            - id: subscribe_button
+            - id: footer_cta_button
               type: Button
+              requests:
+                - id: lowdefy_api_subscribe
+                  type: AxiosHttp
+                  connectionId: lowdefy_api
+                  properties:
+                    data:
+                      type: Newsletter subscription
+                      email:
+                        _state: footer_cta_input
+                      source: docs
+                - id: discord_channel_subscribe
+                  type: AxiosHttp
+                  connectionId: discord_channel
+                  properties:
+                    data:
+                      content: 'New newsletter subscription from docs'
               layout:
                 flex: 0 1 auto
               properties:
                 title: Subscribe
                 color: '#1890ff'
                 size: large
+              events:
+                onClick:
+                  - id: post_data
+                    type: Request
+                    params:
+                      - lowdefy_api_subscribe
+                      - discord_channel_subscribe
     - id: footer_links
       type: Box
       layout:
@@ -360,7 +410,7 @@
         - id: license_anchor
           type: Anchor
           properties:
-            title: Appache-2.0 License
+            title: Apache-2.0 License
             href: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
             newTab: true
     - id: footer_logo_box_sm
@@ -383,7 +433,7 @@
               <p style="text-align: center;"><a href="https://lowdefy.com" ref="noopener"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
               <p style="text-align: center; font-size: 0.85rem;" >Build internal tools with YAML.</p>
               <p style="text-align: center;"><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
-        - id: social_links
+        - id: community_links
           type: Box
           layout:
             contentJustify: space-around
