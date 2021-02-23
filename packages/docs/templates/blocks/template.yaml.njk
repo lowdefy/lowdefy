@@ -14,30 +14,34 @@
 
 id: {{ block_type }}
 type: PageSiderMenu
-properties:
-  title: {{ block_type }}
-  header:
-    theme: light
-  sider:
-    width: 256px
-    initialCollapsed: 
-      _or: 
-        - _eq:
-            - _media: size
-            - md
-        - _eq:
-            - _media: size
-            - lg
-  layout:
-    style:
-      background: '#FFFFFF'
-  footer:
-    style:
-      background: '#FFFFFF'
-layout:
-  contentGutter: 16
+requests:
+  - id: post_telemetry
+    type: AxiosHttp
+    connectionId: lowdefy_api_telemetry
+    properties:
+      data:
+        session_id:
+          _global: session_id
+        page_id: {{ block_type }}
+        url_query:
+          _url_query: true
+        input:
+          _input: true
+
 events:
   onInit:
+    - id: set_session_id
+      type: SetGlobal
+      skip:
+        _not:
+          _eq:
+            - _global: session_id
+            - null
+      params:
+        session_id:
+          _random:
+            type: string
+            length: 16
     - id: init_default_properties
       type: SetState
       params:
@@ -70,6 +74,35 @@ events:
       params:
         _var: init_state_values
 
+  onEnterAsync:
+    - id: post_telemetry
+      type: Request
+      messages:
+        error: false
+      params: post_telemetry
+
+properties:
+  title: {{ block_type }}
+  header:
+    theme: light
+  sider:
+    width: 256px
+    initialCollapsed:
+      _or:
+        - _eq:
+            - _media: size
+            - md
+        - _eq:
+            - _media: size
+            - lg
+  layout:
+    style:
+      background: '#FFFFFF'
+  footer:
+    style:
+      background: '#FFFFFF'
+layout:
+  contentGutter: 16
 areas:
   header:
     blocks:
@@ -438,7 +471,7 @@ areas:
           title: Examples
       - _ref:
           path: README.md
-          transformer: templates/blocks/exampleTransformer.js          
+          transformer: templates/blocks/exampleTransformer.js
           vars:
             block_type: {{ block_type }}
             examples:

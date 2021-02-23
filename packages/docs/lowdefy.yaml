@@ -29,12 +29,22 @@ connections:
     type: AxiosHttp
     properties:
       method: post
-      url: https://discord.com/api/webhooks/813758665059598336/QLJdwWBL1LKRyxosv9SfhTO0JvuO1qMh_9s8XRnbeUo_zs5hzQhjDMv5Xo4thrwBRYAH
-  - id: lowdefy_api
+      url:
+        _secret: DISCORD_WEBHOOK
+  - id: lowdefy_api_marketing
     type: AxiosHttp
     properties:
       method: post
-      url: https://api.lowdefy.net/marketing
+      baseURL:
+        _secret: LOWDEFY_API
+      url: /marketing
+  - id: lowdefy_api_telemetry
+    type: AxiosHttp
+    properties:
+      method: post
+      baseURL:
+        _secret: LOWDEFY_API
+      url: /telemetry/docs
 
 menus:
   - id: default
