@@ -20,7 +20,7 @@ _ref:
     filePath: actions/Request.yaml
     types: |
       ```
-      (void): void
+      (options: {all: boolean}): void
       (requestId: string): void
       (requestIds: string[]): void
       ```
@@ -34,8 +34,8 @@ _ref:
       `Request` can be called without any parameters to call all requests in the `context`. It can also be called with a list of requestIds or a single requestId to call.
 
     params: |
-      ###### void
-      The `Request` action calls all requests in the `context ` if called without params.
+      ###### object
+      - `all: boolean`: All requests in the context are called if `all` is set to true.
 
       ###### string
       A requestId of the request to call.
@@ -44,13 +44,6 @@ _ref:
       An array of requestIds of the requests to call.
 
     examples: |
-      ###### Call all requests by specifying no params:
-
-      ```yaml
-      - id: call_all
-        type: Request
-      ```
-
       ###### Call a single request:
       ```yaml
       - id: call_one_request
@@ -66,4 +59,12 @@ _ref:
           - my_request_id_1
           - my_request_id_2
           - my_request_id_3
+      ```
+      ###### Call all requests:
+
+      ```yaml
+      - id: call_all
+        type: Request
+        params:
+          all: true
       ```
