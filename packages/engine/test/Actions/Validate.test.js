@@ -590,3 +590,75 @@ test('Invalid Validate params', async () => {
     ]
   `);
 });
+
+test('Validate does not fail on warnings', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'text1',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: 'text1', key: 'text1' } },
+                status: 'warning',
+                message: 'text1 does not match pattern "text1"',
+              },
+            ],
+          },
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'validate',
+                  type: 'Validate',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+  });
+  const { button, text1 } = context.RootBlocks.map;
+  expect(text1.validationEval.output).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ['text1 does not match pattern "text1"'],
+  });
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
+    },
+  });
+});
