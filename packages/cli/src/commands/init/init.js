@@ -30,12 +30,13 @@ async function init({ context, options }) {
   }
   context.print.log(`Initializing Lowdefy project`);
   await writeFile({ filePath: lowdefyFilePath, content: lowdefyFile });
+  context.print.log(`Created 'lowdefy.yaml'.`);
   await writeFile({
     filePath: path.resolve('./.gitignore'),
     content: `.lowdefy/**
 .env`,
   });
-
+  context.print.log(`Created '.gitignore'.`);
   await context.sendTelemetry();
   context.print.succeed(`Project initialized.`);
 }
