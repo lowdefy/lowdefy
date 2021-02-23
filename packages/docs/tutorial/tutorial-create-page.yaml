@@ -72,7 +72,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          message: Warning
+          icon: WarningFilled
           description: Make sure that the lowdefy field is the current latest Lowdefy version. This should be what is was when you created the project.
       - id: md2
         type: Markdown

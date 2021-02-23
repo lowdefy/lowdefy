@@ -125,7 +125,7 @@ _ref:
           content: |
             #### Step 4
 
-            Open the `lowdefy.yaml` using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
+            Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
 
             ```yaml
             lowdefy: 3.10.1
@@ -185,6 +185,26 @@ _ref:
             #### Step 5
 
             Change some of the text in the app. Change the text `Welcome to your Lowdefy app` to `Hello __YOUR_NAME_HERE__` (filling in your own name). The browser should automatically refresh, and you should see your changes.
+
+            ### YAML Files
+
+            Lowdefy apps are written using YAML files. YAML files are useful for storing structured data, like the configuration of all of the elements of your app. YAML files focus on being easily readable by humans, this means they don't lots of syntactic elements like brackets that make it difficult for humans to read, but instead use indentation to indicate structure. While this does make the file easier to read, this means care has to be taken that the data structure is as you intended. If you don't have any experience using YAML, this video is a good introduction.
+      - id: md3
+        type: DangerousMarkdown
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+          content: |
+            <iframe
+              id="ytplayer-yaml-video"
+              type="text/html"
+              width="800"
+              height="470"
+              src="https://www.youtube.com/embed/cdLNKUoMc6c?origin=https://docs.lowdefy.com"
+              allowfullscreen="true"
+              frameborder="0">
+            </iframe>
 
             ### What happened
 

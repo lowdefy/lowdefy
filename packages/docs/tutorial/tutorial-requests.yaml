@@ -94,7 +94,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          message: Warning
+          icon: WarningFilled
           description: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
 
       - id: md2
@@ -116,7 +116,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          message: Warning
+          icon: WarningFilled
           description: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you used the CLI init command.
       - id: md3
         type: MarkdownWithCode
