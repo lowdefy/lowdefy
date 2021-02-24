@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-actions-operators
-    pageTitle: Interactive pages
+    pageTitle: 4. Interactive pages
     section: Tutorial
     filePath: tutorial/tutorial-actions-operators.yaml
     prefetchPages:
@@ -32,7 +32,7 @@ _ref:
 
             The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
 
-            #### Step 1
+            #### Step 4.1 - Configure the reset button
 
             Copy the following into the definition of the reset button:
 
@@ -72,13 +72,13 @@ _ref:
 
             ### How it works
 
-            Each block defines a set of actions that it fire when a event happens. The button fires an event called `onClick` when it gets clicked. We can add a array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
+            Each block defines a set of actions that it fires when a event happens. The button fires an event called `onClick` when it gets clicked. We can add an array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
 
             ## Required fields
 
             We should validate the data users are submitting to make sure our app has clean data and works as expected. The `ticket_title` and `ticket_type` fields should be compulsory, and the user should not be able to submit the ticket if they are not completed.
 
-            #### Step 1
+            #### Step 4.2 - Mark fields as required
 
             To make the fields required, add a required property to the input blocks like this:
 
@@ -102,7 +102,8 @@ _ref:
           content: |
             We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
 
-            #### Step 2
+            #### Step 4.3 - Add a Validate action
+
             Add the validate action like this:
 
             ##### `new-ticket.yaml`
@@ -212,7 +213,7 @@ _ref:
 
             We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Bug report`
 
-            #### Step 1
+            #### Step 4.4 - Add a block with a visible condition
             Add the following [`ButtonSelector`](ButtonSelector) to your app.
 
             ##### `pages/new-ticket.yaml`
@@ -261,7 +262,7 @@ _ref:
 
             We would like to add a validation rule on the `confirm_restart` block to warn users that they should restart their device before creating a bug report.
 
-             #### Step 1
+             #### Step 4.5 - Add a validation rule
 
              Add the following to your app
             ##### `pages/new-ticket.yaml`
@@ -303,7 +304,7 @@ _ref:
 
             ### How it works
 
-            The `validation` field contains an array of validation rules that can be evaluated using operators.
+            The `validate` field contains an array of validation rules that can be evaluated using operators.
 
             If the pass field receives `true`, the rule passes and nothing happens. If the rule fails and the status is error, the `Validate` action will fail, like it did for required fields. If the status is warning, a warning will be shown to the user, but the `Validate` action will still pass.
 

@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-start
-    pageTitle: Getting started
+    pageTitle: 1. Getting started
     section: Tutorial
     filePath: tutorial/tutorial-start.yaml
     prefetchPages:
@@ -26,17 +26,21 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            In this tutorial we will be creating a simple ticketing app, that allow users to file new tickets, and see a list of outstanding tickets. Lowdefy has a development server that allows you to develop your app locally, which we will be using.
+            In this tutorial we will be creating a simple ticketing app, that allow users to file new tickets, and see a list of outstanding tickets. The app will write the ticket data to Google Sheets, and we will deploy the app using [Netlify](https://www.netlify.com).
 
             ### Requirements
 
             The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 12 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
-            #### Step 1
+            #### Step 1.1 - Create a project directory
 
-            Using your computer's command line interface (Windows CMD, Terminal on MacOS), change directory (`cd`) to a directory where you would like to create the configuration files for your project.
+            Create a directory (folder) on your computer where you would like to create the configuration files for your project. We will be referring to this directory as the project directory
 
-            #### Step 2
+            #### Step 1.2 - Open a command line interface
+
+            Open your computer's command line interface (Windows CMD, Terminal on MacOS), and change directory (`cd`) to the project directory.
+
+            #### Step 1.3 - Initialize an app
 
             Use the Lowdefy CLI to initialize your project.
 
@@ -52,7 +56,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            This will create two files in your current working directory. The first file, called `lowdefy.yaml` is the starting point of your app's configuration. The second, called `.gitignore`, is a hidden file that tells `git`, a version control tool not to version or upload some specific files.
+            This will create two files in your current working directory. The first file, called `lowdefy.yaml` is the starting point of your app's configuration. The second, called `.gitignore`, is a hidden file that tells `git`, a version control tool, not to version or upload some specific files.
 
             > We recommend using [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to run the Lowdefy CLI, since this ensures your are always running the latest version. You can also install the CLI globally or locally using `npm install lowdefy`
 
@@ -62,15 +66,13 @@ _ref:
           type: error
           icon: FireOutlined
           message: A "lowdefy.yaml" file already exists
-          description: If you get a 'A "lowdefy.yaml" file already exists' error, delete the "lowdefy.yaml" file in your current working directory.
+          description: If you get a 'A "lowdefy.yaml" file already exists' error, delete the "lowdefy.yaml" file in your current working directory or run the command in a new directory.
 
       - id: body_start_dev
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 3
-
-            Start the development server.
+            #### Step 1.4 - Start the development server.
 
             Run:
 
@@ -143,13 +145,13 @@ _ref:
           type: error
           icon: FireOutlined
           message: Could not find "lowdefy.yaml"
-          description: If you get a 'Could not find "lowdefy.yaml"' error, make sure your current working directory contains the "lowdefy.yaml" file. You can verify this by running the "ls" command.
+          description: If you get a 'Could not find "lowdefy.yaml"' error, make sure your current working directory contains the "lowdefy.yaml" file. You can verify this by running the "dir" (Windows) or "ls" (MacOS) command.
 
-      - id: body_step_4
+      - id: body_edit
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 4
+            #### Step 1.5 - Open the configuration file
 
             Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
 
@@ -208,13 +210,13 @@ _ref:
             This configuration completely describes the app you are running.
 
 
-            #### Step 5
+            #### Step 1.6 - Make some changes
 
-            Change some of the text in the app. Change the text `Welcome to your Lowdefy app` to `Hello __YOUR_NAME_HERE__` (filling in your own name). The browser should automatically refresh, and you should see your changes.
+            Change some of the text in the app. Change the text `Welcome to your Lowdefy app` to `Hello __YOUR_NAME_HERE__` (filling in your own name). Save the file and browser should automatically refresh, and you should see your changes.
 
             ### YAML Files
 
-            Lowdefy apps are written using YAML files. YAML files are useful for storing structured data, like the configuration of all of the elements of your app. YAML files focus on being easily readable by humans, this means they don't lots of syntactic elements like brackets that make it difficult for humans to read, but instead use indentation to indicate structure. While this does make the file easier to read, this means care has to be taken that the data structure is as you intended. If you don't have any experience using YAML, this video is a good introduction.
+            Lowdefy apps are written using YAML files. YAML files are useful for storing structured data, like the configuration of all of the elements of your app. YAML files focus on being easily readable by humans, this means they don't use lots of syntactic elements like brackets that make it difficult for humans to read, but instead use __indentation to indicate structure__. While this does make the file easier to read, this means care has to be taken that the data structure is as you intended. If you don't have any experience using YAML, this video is a good introduction.
       - id: body_yaml_vid
         type: DangerousMarkdown
         properties:
@@ -231,14 +233,17 @@ _ref:
               allowfullscreen="true"
               frameborder="0">
             </iframe>
-
+      - id: body_what_happened
+        type: Markdown
+        properties:
+          content: |
             ### What happened
 
             The Lowdefy CLI helps you develop a Lowdefy app.
 
-            We used the `init` command to initialize a new project.
+            We used the `npx lowdefy@latest init` command to initialize a new project. This created all the essential files.
 
-            We also used the `dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
+            We also used the `npx lowdefy@latest dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
 
       - _ref:
           path: templates/navigation_buttons.yaml

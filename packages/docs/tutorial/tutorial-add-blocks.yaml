@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-add-blocks
-    pageTitle: Adding blocks
+    pageTitle: 3. Adding blocks
     section: Tutorial
     filePath: tutorial/tutorial-add-blocks.yaml
     prefetchPages:
@@ -34,7 +34,7 @@ _ref:
 
             There should also be submit and reset buttons at the bottom of the page.
 
-            #### Step 1
+            #### Step 3.1 - Add some input blocks
 
             Copy the following blocks and add them in the card's blocks array.
 
@@ -90,8 +90,6 @@ _ref:
             ```
 
             >  If you would like to see how your config should look at this point, you can find it [here](/tutorial-add-blocks-config).
-
-            #### Step 2
 
             Your booking page should something like this:
       - id: example1
@@ -155,7 +153,7 @@ _ref:
           content: |
             ### What happened
 
-            We added 3 form input blocks to the page. For each of those blocks, we set the `title` property, and for the ticket type selector we set a list of ticket types to the options property.
+            We added 3 form input blocks to the page. For each of those blocks, we set the `title` property, and for the ticket type selector we set a list of ticket types to the `options` property.
 
             We also added reset button and submit button. We set a few more properties on the buttons to set their layout and appearance.
 

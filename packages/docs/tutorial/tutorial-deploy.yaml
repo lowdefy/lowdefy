@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-deploy
-    pageTitle: Deploy to Netlify
+    pageTitle: 6. Deploy to Netlify
     section: Tutorial
     filePath: tutorial/tutorial-deploy.yaml
     prefetchPages:
@@ -34,13 +34,13 @@ _ref:
 
             - A Github account. You can create one [here](https://github.com/join).
             - A Netlify account. You can create one [here](https://app.netlify.com/signup). It is easiest if you sign up with your Github account.
-            - `git` version control installed on your computer.
+            - [`git`](https://git-scm.com/downloads) version control installed on your computer.
 
-            #### Step 1
+            #### Step 6.1 - Create a Github repository
 
             Create a new Github repository. You can do that [here](https://github.com/new). Do not initialize the repository with a .gitignore file.
 
-            #### Step 2
+            #### Step 6.2 - Add your files to the repository
 
             Run the `git` commands to create a new repository on the command line:
 
@@ -55,11 +55,10 @@ _ref:
 
             If you refresh your browser, you should see the `lowdefy.yaml` and `.gitignore` files in the repository.
 
-            #### Step 3
+            #### Step 6.3 - Link your Github project to Netlify.
 
-            Link your Github project to Netlify.
             - Once logged in to Netlify, click the "New site from git" button.
-            - Choose Github, and authorise Netlify to access your repositories.
+            - Choose Github, and authorize Netlify to access your repositories.
             - Select your repository.
 
       - id: info_configure_repo
@@ -73,9 +72,8 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 4
+            #### Step 6.4 - Configure your Netlify deployment.
 
-            Configure your Netlify deployment.
             - Set your build command to `npx lowdefy@latest build-netlify`.
             - Set your publish directory to `.lowdefy/publish`.
             - Review the other settings, and deploy your site
@@ -85,33 +83,35 @@ _ref:
         properties:
           type: warning
           icon: WarningFilled
-          description: Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
+          description: Your site won't work yet. You first need to configure the Lowdefy server in the next step.
 
       - id: body_configure_functions
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 4
+            #### Step 6.5 - Configure the Lowdefy server.
 
-            Configure the Lowdefy backend server.
             - Click the "Site settings" button.
             - Choose the "Functions" section in the left menu.
             - Edit the settings and set your functions directory to `.lowdefy/functions`.
 
-            #### Step 5
+            #### Step 6.6 - Add your Google Sheets credentials
 
-            Redeploy your site.
+            Go to "Site settings", then "Build and deploy" in the left menu. Scroll down and select "Edit variables" in the "Environment" section.
+
+            Set the variables `LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL` and `LOWDEFY_SECRET_SHEETS_PRIVATE_KEY` to the same values as in your `.env` file.
+
+            #### Step 6.7 - Redeploy your site
+
             - Go to the "Deploys" tab.
             - Click the "Trigger deploy" button and deploy your site.
             - Wait for you site to finish deploying.
 
-            #### Step 6
+            #### Step 6.8 - Enjoy your app
 
             Go to your shiny new app. On the "Site overview" tab you will find your site url. Go to this url and you should see your app.
 
-            #### Step 7
-
-            Try out Netlify's deploy preview.
+            #### Step 6.9 - Try out Netlify's deploy preview.
 
             Edit the `lowdefy.yaml` file on Github. Commit the changes on a new branch, and create a pull request. Netlify will run checks on your pull request, and generate a deploy preview. Once the deploy preview has finished building, you can click on the "details" link and this will take you to preview of your changes.
 
