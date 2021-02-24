@@ -41,7 +41,7 @@
     "@lowdefy/nunjucks": "3.10.1",
     "deep-diff": "1.0.2",
     "js-yaml": "4.0.0",
-    "mingo": "4.1.1",
+    "mingo": "4.1.2",
     "uuid": "8.3.2"
   },
   "devDependencies": {
