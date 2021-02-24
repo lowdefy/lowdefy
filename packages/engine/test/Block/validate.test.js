@@ -779,3 +779,74 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     },
   ]);
 });
+
+test('validation warnings', () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'text',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            validate: [
+              {
+                pass: { _regex: { pattern: 'a', key: 'text' } },
+                status: 'warning',
+                message: "Not 'a'",
+              },
+              {
+                pass: { _regex: { pattern: 'c', key: 'text' } },
+                status: 'warning',
+                message: "Not 'c'",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+  const context = testContext({
+    rootContext,
+    rootBlock,
+    pageId,
+    initState: { text: 'a' },
+  });
+  const { text } = context.RootBlocks.map;
+
+  expect(context.state).toEqual({ text: 'a' });
+  expect(text.validationEval.output).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ["Not 'c'"],
+  });
+
+  context.showValidationErrors = true;
+  context.update();
+  expect(text.validationEval.output).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ["Not 'c'"],
+  });
+
+  text.setValue('c');
+  expect(text.validationEval.output).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ["Not 'a'"],
+  });
+
+  text.setValue('b');
+  expect(text.validationEval.output).toEqual({
+    errors: [],
+    status: 'warning',
+    warnings: ["Not 'a'", "Not 'c'"],
+  });
+});

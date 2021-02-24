@@ -38,6 +38,6 @@ _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Tutorial
-            previous_page_id: tutorial-setup
+            previous_page_id: tutorial-start
             next_page_title: The CLI
             next_page_id: cli

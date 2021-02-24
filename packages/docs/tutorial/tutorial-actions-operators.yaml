@@ -16,27 +16,27 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-actions-operators
-    pageTitle: Interactive pages
+    pageTitle: 4. Interactive pages
     section: Tutorial
     filePath: tutorial/tutorial-actions-operators.yaml
-    # prefetchPages:
-    #   - tutorial-requests
+    prefetchPages:
+      - tutorial-requests
     content:
-      - id: md1
+      - id: body_reset
         type: MarkdownWithCode
         properties:
           content: |
-            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](tutorial-add-blocks-config).
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](/tutorial-add-blocks-config).
 
-            ## Adding a reset button
+            ## Configuring the reset button
 
             The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
 
-            #### Step 1
+            #### Step 4.1 - Configure the reset button
 
             Copy the following into the definition of the reset button:
 
-            ##### `pages/new-ticket.yaml`
+            ##### `new-ticket.yaml`
             ```yaml
             id: new-ticket
             # ...
@@ -72,13 +72,13 @@ _ref:
 
             ### How it works
 
-            Each block defines a set of actions that it fire when a event happens. The button fires an event called `onClick` when it gets clicked. We can add a array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
+            Each block defines a set of actions that it fires when a event happens. The button fires an event called `onClick` when it gets clicked. We can add an array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
 
             ## Required fields
 
             We should validate the data users are submitting to make sure our app has clean data and works as expected. The `ticket_title` and `ticket_type` fields should be compulsory, and the user should not be able to submit the ticket if they are not completed.
 
-            #### Step 1
+            #### Step 4.2 - Mark fields as required
 
             To make the fields required, add a required property to the input blocks like this:
 
@@ -96,16 +96,17 @@ _ref:
         required: true
         properties:
           title: Title
-      - id: md2
+      - id: body_validate
         type: MarkdownWithCode
         properties:
           content: |
             We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
 
-            #### Step 2
+            #### Step 4.3 - Add a Validate action
+
             Add the validate action like this:
 
-            ##### `pages/new-ticket.yaml`
+            ##### `new-ticket.yaml`
             ```yaml
             id: new-ticket
             # ...
@@ -199,7 +200,7 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
-      - id: md3
+      - id: body_visible
         type: MarkdownWithCode
         properties:
           renderHtml: true
@@ -210,9 +211,9 @@ _ref:
 
             ## Hiding blocks
 
-            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](\_eq) [`operator`](\operators) to test if the ticket type is equal to `Bug report`
+            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Bug report`
 
-            #### Step 1
+            #### Step 4.4 - Add a block with a visible condition
             Add the following [`ButtonSelector`](ButtonSelector) to your app.
 
             ##### `pages/new-ticket.yaml`
@@ -253,15 +254,15 @@ _ref:
 
             If the visible field value is `false`, the block won't be rendered. To change this value while our app is running, we use an operator. Operators evaluate every time something in the app changes, like when a user provides an input.
 
-            We used the [`_eq`](\_eq) operator to check the ticket type is 'Bug report'.
+            We used the [`_eq`](/_eq) operator to check the ticket type is 'Bug report'.
 
-            To get the value of the `ticket_type` input, we use the [`_state`](\_state) operator. This get a value from the page's [`state`](\context). _The `state` is an object where data the app needs is stored_. All inputs automatically write their values to state, and you can also set values in `state` by using the [`SetState`](\SetState) action.
+            To get the value of the `ticket_type` input, we use the [`_state`](/_state) operator. This get a value from the page's [`state`](/context-and-state). _The `state` is an object where data the app needs is stored_. All inputs automatically write their values to state, and you can also set values in `state` by using the [`SetState`](/SetState) action.
 
             ## Validation rules
 
             We would like to add a validation rule on the `confirm_restart` block to warn users that they should restart their device before creating a bug report.
 
-             #### Step 1
+             #### Step 4.5 - Add a validation rule
 
              Add the following to your app
             ##### `pages/new-ticket.yaml`
@@ -281,7 +282,9 @@ _ref:
                         - Bug report
             ################ ------- Copy from here -------- ################
                     validate:
-                      - status: warning # Show a warning that shows before validate is called and does not block Validate action.
+                      # Show a warning that shows before validate is called
+                      # and does not block Validate action.
+                      - status: warning
                         message: If you did not restart your device, we will ask you to restart it.
                         pass:
                           _eq:
@@ -301,7 +304,7 @@ _ref:
 
             ### How it works
 
-            The `validation` field contains an array of validation rules that can be evaluated using operators.
+            The `validate` field contains an array of validation rules that can be evaluated using operators.
 
             If the pass field receives `true`, the rule passes and nothing happens. If the rule fails and the status is error, the `Validate` action will fail, like it did for required fields. If the status is warning, a warning will be shown to the user, but the `Validate` action will still pass.
 
@@ -397,7 +400,7 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
-      - id: md4
+      - id: body_up_next
         type: MarkdownWithCode
         properties:
           content: |

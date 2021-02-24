@@ -26,11 +26,11 @@ Configure your Netlify deployment.
 - Set your publish directory to `.lowdefy/publish`.
 - Review the other settings, and deploy your site.
 
-> Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
+> Your site won't work yet. You first need to configure the Lowdefy server in the next step.
 
 #### Step 4
 
-Configure the Lowdefy backend server.
+Configure the Lowdefy server.
 
 - Click the "Site settings" button.
 - Choose the "Functions" section in the left menu.
@@ -48,7 +48,7 @@ On the "Site overview" tab you will find your site url.
 
 ## More Lowdefy resources
 
-- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-setup
+- Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy docs - https://docs.lowdefy.com
 - Lowdefy website - https://lowdefy.com
 - Community forum - https://github.com/lowdefy/lowdefy/discussions

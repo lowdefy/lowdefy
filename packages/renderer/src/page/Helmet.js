@@ -22,14 +22,6 @@ const BindHelmet = ({ pageProperties }) => {
     <Helmet>
       <meta charSet="utf-8" />
       <title>{pageProperties.title}</title>
-      <link
-        rel="shortcut icon"
-        href={
-          pageProperties.faviconPath
-            ? `%PUBLIC_URL%/${pageProperties.faviconPath}`
-            : '%PUBLIC_URL%/favicon.ico'
-        }
-      />
     </Helmet>
   );
 };

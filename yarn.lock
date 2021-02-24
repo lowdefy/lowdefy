@@ -3034,7 +3034,7 @@ __metadata:
     graphql: 15.5.0
     graphql-type-json: 0.3.2
     jest: 26.6.3
-    mingo: 4.1.1
+    mingo: 4.1.2
     moment: 2.29.1
     mongodb: 3.6.4
     saslprep: 1.0.3
@@ -3159,7 +3159,7 @@ __metadata:
     deep-diff: 1.0.2
     jest: 26.6.3
     js-yaml: 4.0.0
-    mingo: 4.1.1
+    mingo: 4.1.2
     uuid: 8.3.2
   languageName: unknown
   linkType: soft
@@ -13890,10 +13890,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mingo@npm:4.1.1":
-  version: 4.1.1
-  resolution: "mingo@npm:4.1.1"
-  checksum: 656e88e04e496d8ebced3d515098964f39c91b9cd8841198cc82a7e45012de36731d3779a07a507a7e4a28fc99e941baa295d2a6e4fee25ac5f4d49928c9faa4
+"mingo@npm:4.1.2":
+  version: 4.1.2
+  resolution: "mingo@npm:4.1.2"
+  checksum: 05b024c20abfdbbad8e384a6616eebb412c5b5a6fa172a6551dd51a7aab922cb8a3a4b42e7688132aa737c9095768691143e731f9b61abf592474c751125370c
   languageName: node
   linkType: hard
 

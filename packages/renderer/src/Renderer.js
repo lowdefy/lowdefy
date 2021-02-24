@@ -118,7 +118,7 @@ const Root = ({ gqlUri }) => {
         />
         <RootContext client={client}>
           {(rootContext) => {
-            if (process.env.NODE_ENV === 'development') {
+            if (windowContext.location.origin.includes('http://localhost')) {
               windowContext.Lowdefy = { rootContext };
             }
             return (

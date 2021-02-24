@@ -363,7 +363,7 @@ class Blocks {
               validationError = true;
             }
             if (test.status === 'warning') {
-              block.validationEval.output.errors.push(parsed.output.message);
+              block.validationEval.output.warnings.push(parsed.output.message);
               validationWarning = true;
             }
           }

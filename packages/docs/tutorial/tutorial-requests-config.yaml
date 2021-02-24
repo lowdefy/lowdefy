@@ -15,19 +15,38 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: tutorial-actions-operators-config
-    pageTitle: Interactive pages config
+    pageId: tutorial-requests-config
+    pageTitle: Requests config
     section: Tutorial
-    filePath: tutorial/tutorial-actions-operators-config.yaml
+    filePath: tutorial/tutorial-requests-config.yaml
     content:
       - id: body_config
         type: MarkdownWithCode
         properties:
           content: |
+            ##### `.env`
+            ```
+            LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL=__YOUR_CLIENT_EMAIL__
+            LOWDEFY_SECRET_SHEETS_PRIVATE_KEY=__YOUR_ENCODED_PRIVATE_KEY__
+            ```
+
             ##### `lowdefy.yaml`
             ```yaml
             name: lowdefy-project-template
             version: CURRENT_LOWDEFY_VERSION
+
+            connections:
+              - id: google_sheet
+                type: GoogleSheet
+                properties:
+                  client_email:
+                    _secret: SHEETS_CLIENT_EMAIL
+                  private_key:
+                    _base64.decode:
+                      _secret: SHEETS_PRIVATE_KEY
+                  sheetIndex: 0
+                  spreadsheetId: __YOUR_SPREADSHEET_ID__
+                  write: true
 
             menus:
               - id: default
@@ -56,6 +75,26 @@ _ref:
             ```yaml
             id: new-ticket
             type: PageHeaderMenu
+
+            requests:
+              - id: save_data
+                type: GoogleSheetAppendOne
+                connectionId: google_sheet
+                properties:
+                  row:
+                    # Get all the values to save from state
+                    ticket_title:
+                      _state: ticket_title
+                    ticket_type:
+                      _state: ticket_type
+                    ticket_description:
+                      _state: ticket_description
+                    confirm_restart:
+                      _state: confirm_restart
+                    # Add the date the row was created using the `_date.now` operator.
+                    created_date:
+                      _date: now
+
             properties:
               title: Log a ticket # The title in the browser tab.
             layout:
@@ -139,4 +178,9 @@ _ref:
                       onClick:
                         - id: validate
                           type: Validate
+                        - id: save_data # Make a request to Google Sheets
+                          type: Request
+                          params: save_data
+                        - id: reset # Reset the form once data has been submitted
+                          type: Reset
             ```

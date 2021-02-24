@@ -16,7 +16,7 @@
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - md
@@ -42,7 +42,7 @@
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - sm
@@ -52,20 +52,20 @@
   layout:
     flex: 1 0 auto
   properties:
-    title: Quick Start
+    title: Getting Started
     type: text
     size: large
   events:
     onClick:
-      - id: website_link
+      - id: tutorial_link
         type: Link
         params:
-          pageId: tutorial-setup
+          pageId: tutorial-start
 - id: community_button
   type: Button
   visible:
     _not:
-      _or: 
+      _or:
         - _eq:
             - _media: size
             - sm

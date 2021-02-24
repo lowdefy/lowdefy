@@ -34,17 +34,20 @@ const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
 const closeLoader = jest.fn();
+const displayMessage = jest.fn();
 const rootContext = {
-  displayMessage: jest.fn(),
+  window: {
+    displayMessage,
+  },
 };
 const arrayIndices = [];
 const eventName = 'eventName';
 
 beforeEach(() => {
   global.Date = mockDate;
-  rootContext.displayMessage.mockReset();
+  displayMessage.mockReset();
   closeLoader.mockReset();
-  rootContext.displayMessage.mockImplementation(() => closeLoader);
+  displayMessage.mockImplementation(() => closeLoader);
 });
 
 afterAll(() => {
@@ -219,7 +222,7 @@ test('operators are evaluated in params, skip and messages', async () => {
     eventName,
   });
   expect(actions.ActionSync.mock.calls[0][0].params).toBe(2);
-  expect(rootContext.displayMessage.mock.calls).toEqual([
+  expect(displayMessage.mock.calls).toEqual([
     [
       {
         content: 'load',
@@ -476,7 +479,7 @@ test('Display default loading and success messages when value == true ', async (
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([
+  expect(displayMessage.mock.calls).toEqual([
     [
       {
         content: 'Loading',
@@ -521,7 +524,7 @@ test('Display custom loading and success messages when value is a string ', asyn
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([
+  expect(displayMessage.mock.calls).toEqual([
     [
       {
         content: 'My loading',
@@ -565,7 +568,7 @@ test('Do not display loading and success messages by default', async () => {
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([]);
+  expect(displayMessage.mock.calls).toEqual([]);
   expect(closeLoader.mock.calls).toEqual([]);
 });
 
@@ -594,7 +597,7 @@ test('Display error message by default', async () => {
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([
+  expect(displayMessage.mock.calls).toEqual([
     [
       {
         content: 'Action unsuccessful',
@@ -633,7 +636,7 @@ test('Display custom error message', async () => {
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([
+  expect(displayMessage.mock.calls).toEqual([
     [
       {
         content: 'My error',
@@ -672,5 +675,5 @@ test('Do not display an error message if message === false', async () => {
     event: {},
     eventName,
   });
-  expect(rootContext.displayMessage.mock.calls).toEqual([]);
+  expect(displayMessage.mock.calls).toEqual([]);
 });

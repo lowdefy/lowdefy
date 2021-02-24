@@ -18,10 +18,11 @@ _ref:
     pageId: next-steps
     pageTitle: Next steps
     section: Tutorial
-    # prefetchPages: []
+    prefetchPages:
+      - overview
     filePath: tutorial/next-steps.yaml
     content:
-      - id: md1
+      - id: body_next_steps
         type: MarkdownWithCode
         properties:
           content: |
@@ -35,7 +36,7 @@ _ref:
 
             ### Understand the concepts
 
-            To get a more in-depth understanding of how everything works, you can start [here](/context).
+            To get a more in-depth understanding of how everything works, you can start [here](/overview).
 
             ### Play with blocks
 
@@ -47,19 +48,31 @@ _ref:
 
             ###### CRUD example
 
-            This example is a simple app that has everything needed to get started managing data in a database.
+            This example shows patterns to implement a data admin app which allows users to view, create new, edit and delete data records.
+
+            - [Example demo.](https://example-crud.lowdefy.com)
+            - [App source code.](https://github.com/lowdefy/lowdefy-example-crud)
 
             ###### Survey example
 
-            A simple survey example.
+            This is a simple customer survey example built with Lowdefy. With this example we demonstrate how simple it is to define a public webform and thank you page in Lowdefy.
 
-            ###### Ticketing system example
+            - [Example demo.](https://example-survey.lowdefy.com)
+            - [App source code.](https://github.com/lowdefy/lowdefy-example-survey)
 
-            An ticketing system with action history.
+            ###### Case management (ticketing) system example
 
-            ###### Movies example
+            This example focuses on building a rich UI for a hypothetical case management app, in a customer relations setting.
 
-            An example reporting dashboard app based on a movies database.
+            - [Example demo.](https://example-case-management.lowdefy.com)
+            - [App source code.](https://github.com/lowdefy/lowdefy-example-case-management)
+
+            ###### Movies reporting example
+
+            This example demonstrates useful patterns for building a BI report/dashboard pages in Lowdefy. It connects to a MongoDB database with the Atlas Movies sample dataset pre-loaded.
+
+            - [Example demo.](https://example-reporting.lowdefy.com)
+            - [App source code.](https://github.com/lowdefy/lowdefy-example-reporting)
 
       - _ref:
           path: templates/navigation_buttons.yaml

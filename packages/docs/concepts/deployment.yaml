@@ -52,11 +52,11 @@ _ref:
             - Set your publish directory to `.lowdefy/publish`.
             - Review the other settings, and deploy your site.
 
-            > Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
+            > Your site won't work yet. You first need to configure the Lowdefy server in the next step.
 
             #### Step 4
 
-            Configure the Lowdefy backend server.
+            Configure the Lowdefy server.
 
             - Click the "Site settings" button.
             - Choose the "Functions" section in the left menu.

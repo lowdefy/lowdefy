@@ -16,48 +16,49 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-requests
-    pageTitle: Requests
+    pageTitle: 5. Requests
     section: Tutorial
     filePath: tutorial/tutorial-requests.yaml
-    # prefetchPages: []
+    prefetchPages:
+      - tutorial-deploy
     content:
-      - id: md1
+      - id: body_google_cloud
         type: MarkdownWithCode
         properties:
           content: |
-            We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](\GoogleSheet). To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
+            We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](/GoogleSheet) connection. To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
 
             ### Creating a Google Sheet and getting credentials
 
-            #### Step 1
+            #### Step 5.1
 
             Go to [Google Sheets](https://docs.google.com/spreadsheets) and create a new Google Sheet.
 
-            #### Step 2
+            #### Step 5.2
 
             Go to [console.cloud.google.com](https://console.cloud.google.com) and sign in with the same Google account.
 
-            #### Step 3
+            #### Step 5.3
 
             Click on the "Select a project" dropdown at the top left, and then choose "NEW PROJECT". Give your project a name and click "Create".
 
-            #### Step 4
+            #### Step 5.4
 
-            Click on the "Go to APIs overview" button, and the click "ENABLE APIS AND SERVICES".
+            Go to the "APIs and Services" section, and the click "ENABLE APIS AND SERVICES" button.
 
-            #### Step 5
+            #### Step 5.5
 
             Search for "Sheets" and select the Google Sheets API.
 
-            #### Step 6
+            #### Step 5.6
 
             Click "Enable".
 
-            #### Step 7
+            #### Step 5.7
 
             Click "CREATE CREDENTIALS".
 
-            #### Step 8
+            #### Step 5.8
 
             Choose the following:
             - **Which API are you using?**: Google Sheets API
@@ -67,7 +68,7 @@ _ref:
 
             Then click "What credentials do I need?"
 
-            #### Step 9
+            #### Step 5.9
 
             Choose the following:
             - Give the account a name.
@@ -76,31 +77,80 @@ _ref:
 
             Click continue.
 
-            #### Step 10
+            #### Step 5.10
 
             You will be asked to save a file. This file contains the credentials to access your sheet, so make sure to handle it securely. Download the file. Do not commit it to source control.
 
-            #### Step 11
+            #### Step 5.11
 
-            To use the private on Netlify, we need to base64 encode it, so it can be used in an environment variable. The easiest way to do this is to use the `btoa` function in a web browser console. On any webpage, right-click and choose "Inspect/Inspect Element". Then select the console tab. Enter the the following, using the `private_key` from your credentials file:
+            In the next section we will be deploying our app using Netlify. To use the private key on Netlify, we need to base64 encode it, since the new-line characters cause problems when used in an environment variable.
 
-            ```js
-            btoa("-----BEGIN PRIVATE KEY-----\cmHM04djsk...kpO7EXuQ=\n-----END PRIVATE KEY-----\n")
-            ```
+            You can use the converter below to convert your key. This will output a long stream of characters that are your encoded key.
 
-            This will output a long stream of characters that are your key.
-      - id: alert1
+            > The base64 conversion happens on the web client. We won't store your key. You can look at how the key is encoded [here](https://github.com/lowdefy/lowdefy/blob/main/packages/docs/tutorial/tutorial-requests.yaml) or convert your key in the browser console using [btoa()](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa).
+
+      # Because of weird layout with flex
+      - id: base_64_box
+        type: Box
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: base64_input
+            type: TextInput
+            layout:
+              flex: 1 1 auto
+            properties:
+              label:
+                disabled: true
+              placeholder: Paste your key here (without quotes)
+
+          - id: base64_encode_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              title: Encode
+            events:
+              onClick:
+                - id: convert_key
+                  type: SetState
+                  params:
+                    base64_ouput:
+                      _base64.encode:
+                        _string.replace:
+                          on:
+                            _state: base64_input
+                          regex: "\\\\n"
+                          newSubstr: "\n"
+                          regexFlags: g
+
+      - id: base64_output
+        type: Paragraph
+        style:
+          maxWidth: 600px
+        visible:
+          _not:
+            _eq:
+              - _state: base64_ouput
+              - null
+        properties:
+          code: true
+          copyable: true
+          content:
+            _state: base64_ouput
+
+      - id: warning_base64
         type: Alert
         properties:
           type: warning
-          showIcon: false
-          message: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
+          icon: WarningFilled
+          description: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
 
-      - id: md2
+      - id: body_env
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 12
+            #### Step 5.12
 
             Create a file called `.env` in your project directory with the following:
 
@@ -110,30 +160,24 @@ _ref:
             LOWDEFY_SECRET_SHEETS_PRIVATE_KEY=__YOUR_ENCODED_PRIVATE_KEY__
             ```
 
-            Fill in the client email and your encoded private key values (without the quotes). This will give the development server access to these secrets.
-      - id: alert2
+            Fill in the client email from the credentials file and your encoded private key values (without quotes). This will give the development server access to these secrets.
+
+      - id: warning_dont_commit
         type: Alert
         properties:
           type: warning
-          showIcon: false
-          message: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you started from the project template.
-      - id: md3
+          icon: WarningFilled
+          description: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you used the CLI init command.
+
+      - id: body_use_connection
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 12
+            #### Step 5.13
 
             Because we changed the environment variables, we need to restart the dev server. Press "Ctrl + c" in the terminal, and run `npx lowdefy@latest dev` again to restart the server.
 
-            #### Step 13
-
-            To be able to use these secrets in our live app, we also need to add them in Netlify. Go to your project on Netlify. Go to "Site settings", then "Build and deploy" in the left menu. Scroll down and select "Edit variables" in the "Environment" section.
-
-            #### Step 14
-
-            Add the same variables (`LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL` and `LOWDEFY_SECRET_SHEETS_PRIVATE_KEY`) with their values and save.
-
-            #### Step 15
+            #### Step 5.14
 
             We need to give our service account access to our Google Sheet. Go to your Google Sheet and click the "Share" button. Share the sheet with the client email of the service account we just created, with the "Editor" role.
 
@@ -141,11 +185,13 @@ _ref:
 
             We created a Google Cloud Platform (GCP) project, and created a service account in that project that we can use to access Google sheets. This gave us the credentials we need for the [`GoogleSheet`](/GoogleSheet) connection.
 
-            We set up these credentials for our local dev environment using a `.env` file, and for our Netlify app using the Netlify console.
+            We set up these credentials for our local dev environment using a `.env` file. The `.env` file sets [environment variables](https://en.wikipedia.org/wiki/Environment_variable) in the process the server is running in.
+
+            Because we set environment variables that start with `LOWDEFY_SECRET_`, these values become part of the [`secrets`](/Secrets) object, and can be accessed using the [`_secret`](/_secret) operator.
 
             ### Using the Google Sheets connection
 
-            ### Step 1
+            #### Step 5.15
 
             To use a Google Sheet with the Lowdefy connection, we first need to define the columns in the sheet. This will be the same fields as the data we will be saving later.
 
@@ -157,7 +203,7 @@ _ref:
             - confirm_restart
             - created_date
 
-            #### Step 2
+            #### Step 5.16
 
             In your `lowdefy.yaml` file, add the following:
 
@@ -186,7 +232,7 @@ _ref:
               # ...
             ```
 
-            #### Step 3
+            #### Step 5.17
 
             Note down your spreadsheetId. You can find this by looking at the url in your browser when you are looking at your sheet. It should look something like:
 
@@ -194,7 +240,7 @@ _ref:
 
             where the spreadsheetId is a 44 character random string. Fill in your spreadsheetId in the spreadsheet connection.
 
-            #### Step 4
+            #### Step 5.18
 
             In your `new-ticket.yaml` file, add the following request:
 
@@ -203,10 +249,7 @@ _ref:
             ```yaml
             id: new-ticket
             type: PageHeaderMenu
-            properties:
-              title: Loa a ticket
-            layout:
-              contentJustify: center # Center the contents of the page
+
             ################ -------- Copy from here -------- ################
             requests:
               - id: save_data
@@ -227,11 +270,16 @@ _ref:
                     created_date:
                       _date: now
             ################ ------- Copy to here ----------- ################
+
+            properties:
+              title: Log a ticket
+            layout:
+              contentJustify: center # Center the contents of the page
             blocks:
               # ...
             ```
 
-            #### Step 5
+            #### Step 5.19
 
             In your `new-ticket.yaml` file, add the following action to the submit button:
 
@@ -264,7 +312,7 @@ _ref:
                         ################ ------- Copy to here ----------- ################
             ```
 
-            #### Step 6
+            #### Step 5.20
 
             If you click the submit button, you should see your data submitted to your Google Sheet.
 
@@ -276,15 +324,16 @@ _ref:
 
             We also defined a `GoogleSheetAppendOne` request, to save the data to our sheet, and called that request when clicking the submit button.
 
+            > You can find the final configuration files for this section [here](tutorial-requests-config).
+
             ### Up next
 
-            This is the end of the tutorial. If you have any feedback or suggestions, we would greatly appreciate that. You can start a new discussion [here](https://github.com/lowdefy/lowdefy/discussions).
+            Up next we will be deploying our app using Netlify. Then it will be live, on the internet, for anyone to see 🚀.
 
-            Our next steps will show you some of the things you could do next.
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Interactive pages
             previous_page_id: tutorial-actions-operators
-            next_page_title: Next steps
-            next_page_id: next-steps
+            next_page_title: Deploy to Netlify
+            next_page_id: tutorial-deploy

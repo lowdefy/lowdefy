@@ -19,10 +19,8 @@ _ref:
     pageTitle: Creating a page config
     section: Tutorial
     filePath: tutorial/tutorial-create-page-config.yaml
-    # prefetchPages:
-    #   - tutorial-editing-page
     content:
-      - id: md1
+      - id: body_config
         type: MarkdownWithCode
         properties:
           content: |
@@ -49,11 +47,13 @@ _ref:
                     pageId: new-ticket
 
             pages:
-              - _ref: pages/welcome.yaml
-              - _ref: pages/booking.yaml
+              - _ref: new-ticket.yaml
+              - id: welcome
+                type: PageHeaderMenu
+                #...
             ```
 
-            ##### `pages/booking.yaml`
+            ##### `new-ticket.yaml`
 
             ```yaml
             id: new-ticket
