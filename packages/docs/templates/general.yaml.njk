@@ -22,7 +22,8 @@ requests:
       data:
         session_id:
           _global: session_id
-        page_id: "{{ pageId }}"
+        page_id:
+          _var: pageId
         url_query:
           _url_query: true
         input:
@@ -45,6 +46,8 @@ events:
   onEnterAsync:
     - id: post_telemetry
       type: Request
+      messages:
+        error: false
       params: post_telemetry
 
 properties:
@@ -88,6 +91,8 @@ areas:
             _var: hideFeedback
           filePath:
             _var: filePath
+          pageId:
+            _var: pageId
 
   content:
     justify: center

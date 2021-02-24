@@ -653,6 +653,7 @@ pages:
   - _ref: tutorial/tutorial-actions-operators.yaml
   - _ref: tutorial/tutorial-actions-operators-config.yaml
   - _ref: tutorial/tutorial-requests.yaml
+  - _ref: tutorial/tutorial-requests-config.yaml
   - _ref: tutorial/tutorial-deploy.yaml
   - _ref: tutorial/next-steps.yaml
 

@@ -198,10 +198,7 @@ _ref:
             ```yaml
             id: new-ticket
             type: PageHeaderMenu
-            properties:
-              title: Loa a ticket
-            layout:
-              contentJustify: center # Center the contents of the page
+
             ################ -------- Copy from here -------- ################
             requests:
               - id: save_data
@@ -222,6 +219,11 @@ _ref:
                     created_date:
                       _date: now
             ################ ------- Copy to here ----------- ################
+
+            properties:
+              title: Log a ticket
+            layout:
+              contentJustify: center # Center the contents of the page
             blocks:
               # ...
             ```
@@ -270,6 +272,8 @@ _ref:
             We defined the `GoogleSheet` connection we will be using in our app, using the credentials we obtained earlier.
 
             We also defined a `GoogleSheetAppendOne` request, to save the data to our sheet, and called that request when clicking the submit button.
+
+            > You can find the final configuration files for this section [here](tutorial-requests-config).
 
             ### Up next
 

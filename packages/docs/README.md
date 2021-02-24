@@ -25,7 +25,3 @@ Since Lowdefy apps are easy to manage in a Git repository, we hope to see many c
 Host your Lowdefy app in your own environment as a docker image or even on Netlify using serverless functions. Serving a Lowdefy app, requires a the Lowdefy graphQl server and hosting the Lowdefy React app and blocks.
 
 The Lowdefy front-end makes use of Webpack module federation to serve blocks and assemble your Lowdefy app as a micro-front-end solution. Developing your own custom front-end React blocks makes Lowdefy apps truly expandable.
-
-# Tutorial
-
-The easiest way to get started with Lowdefy is to follow the tutorial. In this tutorial we will be building a simple support ticketing app to get you started.

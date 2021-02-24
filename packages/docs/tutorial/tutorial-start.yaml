@@ -41,10 +41,16 @@ _ref:
             Use the Lowdefy CLI to initialize your project.
 
             Run the following in your terminal:
-            ```bash
-            npx lowdefy@latest init
-            ```
+      - _ref:
+          path: templates/cli_command.yaml.njk
+          vars:
+            id: init
+            command: 'npx lowdefy@latest init'
 
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
             This will create two files in your current working directory. The first file, called `lowdefy.yaml` is the starting point of your app's configuration. The second, called `.gitignore`, is a hidden file that tells `git`, a version control tool not to version or upload some specific files.
 
             > We recommend using [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to run the Lowdefy CLI, since this ensures your are always running the latest version. You can also install the CLI globally or locally using `npm install lowdefy`
@@ -54,10 +60,15 @@ _ref:
             Start the development server.
 
             Run:
-            ```bash
-            npx lowdefy@latest dev
-            ```
-
+      - _ref:
+          path: templates/cli_command.yaml.njk
+          vars:
+            id: dev
+            command: 'npx lowdefy@latest dev'
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
             Your browser should open on http://localhost:3000, and you should see the following:
 
       - id: example1
@@ -119,7 +130,7 @@ _ref:
           message: Could not find "lowdefy.yaml"
           description: If you get a 'Could not find "lowdefy.yaml"' error, make sure your current working directory contains the "lowdefy.yaml" file. You can verify this by running the "ls" command.
 
-      - id: md2
+      - id: md4
         type: MarkdownWithCode
         properties:
           content: |
@@ -189,7 +200,7 @@ _ref:
             ### YAML Files
 
             Lowdefy apps are written using YAML files. YAML files are useful for storing structured data, like the configuration of all of the elements of your app. YAML files focus on being easily readable by humans, this means they don't lots of syntactic elements like brackets that make it difficult for humans to read, but instead use indentation to indicate structure. While this does make the file easier to read, this means care has to be taken that the data structure is as you intended. If you don't have any experience using YAML, this video is a good introduction.
-      - id: md3
+      - id: md5
         type: DangerousMarkdown
         properties:
           DOMPurifyOptions:

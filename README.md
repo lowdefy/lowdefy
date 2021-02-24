@@ -11,10 +11,10 @@
 Run:
 
 ```bash
-npx lowdefy init && npx lowdefy dev
+npx lowdefy@latest init && npx lowdefy@latest dev
 ```
 
-This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` to see them reflect in the app.
+This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
 
 ## More Lowdefy resources
 

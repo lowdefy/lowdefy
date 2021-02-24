@@ -281,7 +281,9 @@ _ref:
                         - Bug report
             ################ ------- Copy from here -------- ################
                     validate:
-                      - status: warning # Show a warning that shows before validate is called and does not block Validate action.
+                      # Show a warning that shows before validate is called
+                      # and does not block Validate action.
+                      - status: warning
                         message: If you did not restart your device, we will ask you to restart it.
                         pass:
                           _eq:

@@ -52,7 +52,7 @@
   layout:
     flex: 1 0 auto
   properties:
-    title: Quick Start
+    title: Getting Started
     type: text
     size: large
   events:
