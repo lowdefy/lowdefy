@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - next-steps
     content:
-      - id: md1
+      - id: body_requirements
         type: MarkdownWithCode
         properties:
           content: |
@@ -62,14 +62,14 @@ _ref:
             - Choose Github, and authorise Netlify to access your repositories.
             - Select your repository.
 
-      - id: alert1
+      - id: info_configure_repo
         type: Alert
         properties:
           type: info
           icon: InfoCircleFilled
           description: If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
 
-      - id: md2
+      - id: body_configure_netlify
         type: MarkdownWithCode
         properties:
           content: |
@@ -80,14 +80,14 @@ _ref:
             - Set your publish directory to `.lowdefy/publish`.
             - Review the other settings, and deploy your site
 
-      - id: alert2
+      - id: warning_configure_functions
         type: Alert
         properties:
           type: warning
           icon: WarningFilled
           description: Your site won't work yet. You first need to configure the Lowdefy backend server in the next step.
 
-      - id: md3
+      - id: body_configure_functions
         type: MarkdownWithCode
         properties:
           content: |

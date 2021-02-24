@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - tutorial-deploy
     content:
-      - id: md1
+      - id: body_google_cloud
         type: MarkdownWithCode
         properties:
           content: |
@@ -90,14 +90,15 @@ _ref:
             ```
 
             This will output a long stream of characters that are your key.
-      - id: alert1
+
+      - id: warning_base64
         type: Alert
         properties:
           type: warning
           icon: WarningFilled
           description: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
 
-      - id: md2
+      - id: body_env
         type: MarkdownWithCode
         properties:
           content: |
@@ -112,13 +113,15 @@ _ref:
             ```
 
             Fill in the client email and your encoded private key values (without the quotes). This will give the development server access to these secrets.
-      - id: alert2
+
+      - id: warning_dont_commit
         type: Alert
         properties:
           type: warning
           icon: WarningFilled
           description: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you used the CLI init command.
-      - id: md3
+
+      - id: body_use_connection
         type: MarkdownWithCode
         properties:
           content: |

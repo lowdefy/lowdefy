@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - tutorial-requests
     content:
-      - id: md1
+      - id: body_reset
         type: MarkdownWithCode
         properties:
           content: |
@@ -96,7 +96,7 @@ _ref:
         required: true
         properties:
           title: Title
-      - id: md2
+      - id: body_validate
         type: MarkdownWithCode
         properties:
           content: |
@@ -199,7 +199,7 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
-      - id: md3
+      - id: body_visible
         type: MarkdownWithCode
         properties:
           renderHtml: true
@@ -399,7 +399,7 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
-      - id: md4
+      - id: body_up_next
         type: MarkdownWithCode
         properties:
           content: |

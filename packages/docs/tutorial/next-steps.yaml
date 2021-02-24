@@ -22,7 +22,7 @@ _ref:
       - overview
     filePath: tutorial/next-steps.yaml
     content:
-      - id: md1
+      - id: body_next_steps
         type: MarkdownWithCode
         properties:
           content: |

@@ -20,7 +20,7 @@ _ref:
     section: Tutorial
     filePath: tutorial/tutorial-actions-operators-config.yaml
     content:
-      - id: md1
+      - id: body_config
         type: MarkdownWithCode
         properties:
           content: |

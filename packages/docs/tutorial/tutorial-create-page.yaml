@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - tutorial-add-blocks
     content:
-      - id: md1
+      - id: body_create_page
         type: MarkdownWithCode
         properties:
           content: |
@@ -68,19 +68,21 @@ _ref:
                 properties:
                   # ...
             ```
-      - id: alert1
+      - id: warning_lowdefy_version
         type: Alert
         properties:
           type: warning
           icon: WarningFilled
           description: Make sure that the lowdefy field is the current latest Lowdefy version. This should be what is was when you created the project.
-      - id: md2
+
+      - id: body_view_in_browser
         type: Markdown
         properties:
           content: |
             #### Step 3
 
             Your browser should reload, and you should see a link in the header menu to the booking page. If you click on that link it should take you to a page that looks like this:
+
       - id: example1
         type: PageHeaderMenu
         layout:
@@ -110,7 +112,8 @@ _ref:
                 properties:
                   content: Log a ticket
                   level: 3
-      - id: md3
+
+      - id: body_menus
         type: MarkdownWithCode
         properties:
           content: |

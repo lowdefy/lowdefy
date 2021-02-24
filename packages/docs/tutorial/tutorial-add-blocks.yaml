@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - tutorial-actions-operators
     content:
-      - id: md1
+      - id: body_add_blocks
         type: MarkdownWithCode
         properties:
           content: |
@@ -149,7 +149,7 @@ _ref:
                   block: true
                   type: primary
                   icon: SaveOutlined
-      - id: md2
+      - id: body_what_happened
         type: MarkdownWithCode
         properties:
           content: |

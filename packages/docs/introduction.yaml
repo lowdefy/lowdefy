@@ -21,7 +21,7 @@ _ref:
     prefetchPages:
       - tutorial-start
     content:
-      - id: md1
+      - id: body_intro
         type: Markdown
         properties:
           content: |
@@ -36,7 +36,7 @@ _ref:
             id: quickstart
             command: 'npx lowdefy@latest init && npx lowdefy@latest dev'
 
-      - id: md2
+      - id: body_features
         type: Markdown
         properties:
           content: |

@@ -22,7 +22,7 @@ _ref:
     prefetchPages:
       - tutorial-create-page
     content:
-      - id: md1
+      - id: body_start
         type: MarkdownWithCode
         properties:
           content: |
@@ -41,13 +41,14 @@ _ref:
             Use the Lowdefy CLI to initialize your project.
 
             Run the following in your terminal:
+
       - _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: init
             command: 'npx lowdefy@latest init'
 
-      - id: md3
+      - id: body_init
         type: MarkdownWithCode
         properties:
           content: |
@@ -55,17 +56,31 @@ _ref:
 
             > We recommend using [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to run the Lowdefy CLI, since this ensures your are always running the latest version. You can also install the CLI globally or locally using `npm install lowdefy`
 
+      - id: error_already_exists
+        type: Alert
+        properties:
+          type: error
+          icon: FireOutlined
+          message: A "lowdefy.yaml" file already exists
+          description: If you get a 'A "lowdefy.yaml" file already exists' error, delete the "lowdefy.yaml" file in your current working directory.
+
+      - id: body_start_dev
+        type: MarkdownWithCode
+        properties:
+          content: |
             #### Step 3
 
             Start the development server.
 
             Run:
+
       - _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: dev
             command: 'npx lowdefy@latest dev'
-      - id: md3
+
+      - id: body_open_browser
         type: MarkdownWithCode
         properties:
           content: |
@@ -122,7 +137,7 @@ _ref:
                       content: |
                         Made by a Lowdefy 🤖
 
-      - id: alert1
+      - id: error_could_not_find
         type: Alert
         properties:
           type: error
@@ -130,7 +145,7 @@ _ref:
           message: Could not find "lowdefy.yaml"
           description: If you get a 'Could not find "lowdefy.yaml"' error, make sure your current working directory contains the "lowdefy.yaml" file. You can verify this by running the "ls" command.
 
-      - id: md4
+      - id: body_step_4
         type: MarkdownWithCode
         properties:
           content: |
@@ -200,7 +215,7 @@ _ref:
             ### YAML Files
 
             Lowdefy apps are written using YAML files. YAML files are useful for storing structured data, like the configuration of all of the elements of your app. YAML files focus on being easily readable by humans, this means they don't lots of syntactic elements like brackets that make it difficult for humans to read, but instead use indentation to indicate structure. While this does make the file easier to read, this means care has to be taken that the data structure is as you intended. If you don't have any experience using YAML, this video is a good introduction.
-      - id: md5
+      - id: body_yaml_vid
         type: DangerousMarkdown
         properties:
           DOMPurifyOptions:
