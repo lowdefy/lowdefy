@@ -1,4 +1,4 @@
-# Lowdefy
+![Lowdefy](https://lowdefy.com/banner.png)
 
 ![Tests Main](https://github.com/lowdefy/lowdefy/workflows/Test%20Branches/badge.svg?branch=main)
 ![Tests Develop](https://github.com/lowdefy/lowdefy/workflows/Test%20Branches/badge.svg?branch=develop)
