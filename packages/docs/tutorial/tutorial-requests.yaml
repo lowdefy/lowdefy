@@ -175,7 +175,7 @@ _ref:
           content: |
             #### Step 5.13
 
-            Because we changed the environment variables, we need to restart the dev server. Press "Ctrl + c" in the terminal, and run `npx lowdefy@latest dev` again to restart the server.
+            Because we changed the environment variables, we need to restart the dev server. Run `npx lowdefy@latest dev` again to restart the server.
 
             #### Step 5.14
 

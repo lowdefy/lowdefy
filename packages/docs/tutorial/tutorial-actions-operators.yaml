@@ -72,7 +72,7 @@ _ref:
 
             ### How it works
 
-            Each block defines a set of actions that it fires when a event happens. The button fires an event called `onClick` when it gets clicked. We can add an array of action definitions that will be executed sequentially when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
+            Blocks can define events, which they can trigger when certain events happen on the page. You cab then define a array of actions, that are executed sequentially when a block triggers an event. The button triggers an event called `onClick` when it gets clicked. We can add an array of action definitions that will be executed when this action is fired. We only added one action, the `Reset` action, that resets the page context to the state it was in when it first loaded.
 
             ## Required fields
 
