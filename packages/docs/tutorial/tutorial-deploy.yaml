@@ -38,7 +38,7 @@ _ref:
 
             #### Step 6.1 - Create a Github repository
 
-            Create a new Github repository. You can do that [here](https://github.com/new). Do not initialize the repository with a .gitignore file.
+            Create a new Github repository. You can do that [here](https://github.com/new). Do not initialize the repository with a `.gitignore`, `README`, or licence file.
 
             #### Step 6.2 - Add your files to the repository
 

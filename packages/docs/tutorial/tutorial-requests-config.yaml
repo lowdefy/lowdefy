@@ -51,18 +51,18 @@ _ref:
             menus:
               - id: default
                 links:
-                  - id: welcome
-                    type: MenuLink
-                    properties:
-                      icon: HomeOutlined
-                      title: Home
-                    pageId: welcome
                   - id: new-ticket
                     type: MenuLink
                     properties:
                       icon: AlertOutlined
                       title: New ticket
                     pageId: new-ticket
+                  - id: welcome
+                    type: MenuLink
+                    properties:
+                      icon: HomeOutlined
+                      title: Home
+                    pageId: welcome
 
             pages:
               - _ref: new-ticket.yaml
@@ -96,7 +96,7 @@ _ref:
                       _date: now
 
             properties:
-              title: Log a ticket # The title in the browser tab.
+              title: New ticket # The title in the browser tab.
             layout:
               contentJustify: center # Center the contents of the page.
             blocks:

@@ -249,7 +249,6 @@ _ref:
             ```yaml
             id: new-ticket
             type: PageHeaderMenu
-
             ################ -------- Copy from here -------- ################
             requests:
               - id: save_data
@@ -272,7 +271,7 @@ _ref:
             ################ ------- Copy to here ----------- ################
 
             properties:
-              title: Log a ticket
+              title: New ticket # The title in the browser tab.
             layout:
               contentJustify: center # Center the contents of the page
             blocks:
