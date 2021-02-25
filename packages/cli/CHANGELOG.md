@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
+
+
+### Bug Fixes
+
+* **cli:** Log info about created files in init ([bcb8933](https://github.com/lowdefy/lowdefy/commit/bcb89332aac6ac5a28b6ec2b08d6190ebd24b409))
+* **docs:** Improve body markdown block ids in tutorial ([7e04786](https://github.com/lowdefy/lowdefy/commit/7e04786cff0b1a5fc9ed73a69fab8f54018c76a0))
+
+
+
+
+
 ## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
 
 

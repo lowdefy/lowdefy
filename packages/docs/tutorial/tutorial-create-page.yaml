@@ -22,13 +22,30 @@ _ref:
     prefetchPages:
       - tutorial-add-blocks
     content:
+      - id: tutorial_video
+        type: DangerousMarkdown
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+            ADD_ATTR:
+              - allowfullscreen
+              - allow
+              - frameborder
+          content: |
+            <iframe
+              width="800"
+              height="470"
+              src="https://www.youtube.com/embed/U5TDhz3x7Tk" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
       - id: body_create_page
         type: MarkdownWithCode
         properties:
           content: |
             Let's create a page for a web form where users can log a new ticket.
 
-            #### Step 2.1 - Create `new-tickets.yaml`
+            #### Step 2.1 - Create `new-ticket.yaml`
 
             Create a new YAML file in the project directory (the same directory as the `lowdefy.yaml` file) called `new-ticket.yaml`, with the following content:
 
@@ -59,11 +76,12 @@ _ref:
 
             ```yaml
             name: lowdefy-project-template
-            lowdefy: CURRENT_LOWDEFY_VERSION # e.g. 3.10.1
-            # Make sure that the lowdefy field is the current latest Lowdefy version.
+            lowdefy: 3.10.2
 
             pages:
+            ################ -------- Copy from here -------- ################
               - _ref: new-ticket.yaml
+            ################ -------- Copy to here ---------- ################
               - id: welcome
                 type: PageHeaderMenu
                 properties:

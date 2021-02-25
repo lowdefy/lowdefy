@@ -22,11 +22,28 @@ _ref:
     prefetchPages:
       - tutorial-create-page
     content:
+      - id: tutorial_video
+        type: DangerousMarkdown
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+            ADD_ATTR:
+              - allowfullscreen
+              - allow
+              - frameborder
+          content: |
+            <iframe
+              width="800"
+              height="470"
+              src="https://www.youtube.com/embed/Cd4Xxxisykg" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
       - id: body_start
         type: MarkdownWithCode
         properties:
           content: |
-            In this tutorial we will be creating a simple ticketing app, that allow users to file new tickets, and see a list of outstanding tickets. The app will write the ticket data to Google Sheets, and we will deploy the app using [Netlify](https://www.netlify.com).
+            In this tutorial, we will be creating a simple ticketing app, that allows users to file new tickets and see a list of outstanding tickets. The app will write the ticket data to Google Sheets, and we will deploy the app using [Netlify](https://www.netlify.com).
 
             ### Requirements
 
@@ -59,6 +76,13 @@ _ref:
             This will create two files in your current working directory. The first file, called `lowdefy.yaml` is the starting point of your app's configuration. The second, called `.gitignore`, is a hidden file that tells `git`, a version control tool, not to version or upload some specific files.
 
             > We recommend using [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to run the Lowdefy CLI, since this ensures your are always running the latest version. You can also install the CLI globally or locally using `npm install lowdefy`
+
+      - id: info_windows_paste
+        type: Alert
+        properties:
+          type: info
+          icon: InfoCircleFilled
+          description: To paste into the Windows Command Prompt, you can right-click and select paste.
 
       - id: error_already_exists
         type: Alert
@@ -156,7 +180,7 @@ _ref:
             Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
 
             ```yaml
-            lowdefy: 3.10.1
+            lowdefy: 3.10.2
             name: Lowdefy starter
 
             pages:
@@ -223,6 +247,10 @@ _ref:
           DOMPurifyOptions:
             ADD_TAGS:
               - iframe
+            ADD_ATTR:
+              - allowfullscreen
+              - allow
+              - frameborder
           content: |
             <iframe
               id="ytplayer-yaml-video"

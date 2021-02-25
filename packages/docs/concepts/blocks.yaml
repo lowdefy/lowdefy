@@ -32,7 +32,7 @@ _ref:
               - Lowdefy has built in default block types, however this can be overwritten or extended with custom blocks by defining `types` on the Lowdefy config root.
               - `input` blocks maintain a value in `state` matching the block `id` key. _Dot notation_ applies to specify nested fields.
               ##### Block validation
-              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validation` tests.
+              - Field level input validation can be achieved marking a `input` block as `required` or by specifying a list of `validate` tests.
               - Validation is invoked using the [`Validate`](/Validate) action, and applies to all `input` fields in the [`context`](/context-and-state).
               ##### Block loading
               - By default all blocks render a loading skeleton when the block's source code is fetched or while the block is waiting on data from a request.
@@ -64,7 +64,7 @@ _ref:
             - `loading: object`: Used to overwrite a block's default loading behavior.
             - `required: boolean | string`: For `input` blocks, whether or not a value value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
             - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
-            - `validation: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
+            - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
             - `visible: boolean`: Controls whether or not to render a block. Operators  are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`. __Operators are evaluated__.
 
             # Block types
@@ -109,7 +109,7 @@ _ref:
 
             All `input` block types maintain a value in [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path.
 
-            Client side field validation can be applied setting the `required` and / or `validation` block fields. The following schema applies to `required` and `validation`.
+            Client side field validation can be applied setting the `required` and / or `validate` block fields. The following schema applies to `required` and `validate`.
 
             Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page [`context`](/context-and-state).
 
@@ -124,19 +124,19 @@ _ref:
                 title: Name
             ```
 
-            ##### `validation` schema:
-            The `validation` field takes a `array` of test `objects` to evaluate before passing the field validation. This list of tests are evaluated sequentially, so the test that fails first will be used as the feedback message to the user.
+            ##### `validate` schema:
+            The `validate` field takes a `array` of test `objects` to evaluate before passing the field validation. This list of tests are evaluated sequentially, so the test that fails first will be used as the feedback message to the user.
 
             The schema for the validation test `objects`:
             - `pass: boolean`: __Required__ - The test that validates if this item passes or not. This is usually written as operators which evaluates to a `true` or `false`. __Operators are evaluated__.
             - `message: string`: __Required__ - The feedback message to the user if this validation tests fails. __Operators are evaluated__.
             - `status: enum`: The feedback type to present to the user. Option are `error` and `warning`. Default is `error`. __Operators are evaluated__.
 
-            The following `validation` example first verifies that something was entered into the `email` field, then checks that the field passes a email regex validation using the [`_regex`](/_regex) operator:
+            The following `validate` example first verifies that something was entered into the `email` field, then checks that the field passes a email regex validation using the [`_regex`](/_regex) operator:
             ```yaml
               - id: email
                 type: TextInput
-                validation:
+                validate:
                   - message: Please enter a email address.
                     status: error
                     pass:
