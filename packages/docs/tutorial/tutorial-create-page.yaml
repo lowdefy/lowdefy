@@ -49,7 +49,7 @@ _ref:
                   - id: page_heading
                     type: Title
                     properties:
-                      content: Log a ticket # The content text of the title block.
+                      content: Log a ticket # Change the title on the page.
                       level: 3 # Make the title a little smaller (an html `<h3>`).
             ```
 
@@ -143,18 +143,18 @@ _ref:
             menus:
               - id: default
                 links:
-                  - id: welcome
-                    type: MenuLink
-                    properties:
-                      icon: HomeOutlined
-                      title: Home
-                    pageId: welcome
                   - id: new-ticket
                     type: MenuLink
                     properties:
                       icon: AlertOutlined
                       title: New ticket
                     pageId: new-ticket
+                  - id: welcome
+                    type: MenuLink
+                    properties:
+                      icon: HomeOutlined
+                      title: Home
+                    pageId: welcome
             ################ -------- Copy to here ---------- ################
             pages:
               - _ref: new-ticket.yaml
