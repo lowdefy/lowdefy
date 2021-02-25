@@ -17,6 +17,9 @@
   type: Divider
 - id: feedback_title
   type: Title
+  visible:
+    _not:
+      _state: feedback_sent
   style:
     textAlign: center
   properties:
@@ -36,6 +39,9 @@
       blocks:
         - id: cry_anchor
           type: Anchor
+          visible:
+            _not:
+              _state: feedback_sent
           layout:
             size: auto
           style:
@@ -57,6 +63,9 @@
                   feedback.score: cry
         - id: sad_anchor
           type: Anchor
+          visible:
+            _not:
+              _state: feedback_sent
           layout:
             size: auto
           style:
@@ -78,6 +87,9 @@
                   feedback.score: sad
         - id: smile_anchor
           type: Anchor
+          visible:
+            _not:
+              _state: feedback_sent
           layout:
             size: auto
           style:
@@ -99,6 +111,9 @@
                   feedback.score: smile
         - id: happy_anchor
           type: Anchor
+          visible:
+            _not:
+              _state: feedback_sent
           layout:
             size: auto
           style:
@@ -121,18 +136,24 @@
         - id: feedback.email
           type: TextInput
           visible:
-            _if_none:
-              - _state: feedback.score
-              - false
+            _and:
+              - _if_none:
+                  - _state: feedback.score
+                  - false
+              - _not:
+                  _state: feedback_sent
           properties:
             title: Email
             placeholder: Your email address
         - id: feedback.text
           type: TextArea
           visible:
-            _if_none:
-              - _state: feedback.score
-              - false
+            _and:
+              - _if_none:
+                  - _state: feedback.score
+                  - false
+              - _not:
+                  _state: feedback_sent
           properties:
             title: Feedback
             rows: 5
@@ -151,9 +172,12 @@
         - id: fb_box
           type: Box
           visible:
-            _if_none:
-              - _state: feedback.score
-              - false
+            _and:
+              - _if_none:
+                  - _state: feedback.score
+                  - false
+              - _not:
+                  _state: feedback_sent
           layout:
             contentJustify: end
           blocks:
@@ -192,6 +216,19 @@
                     params:
                       - lowdefy_api_feedback
                       - discord_channel_feedback
+                  - id: set_feedback
+                    type: SetState
+                    params:
+                      feedback_sent: true
+        - id: feedback_sent_thank_you
+          type: Alert
+          visible:
+            _not:
+              _not:
+                _state: feedback_sent
+          properties:
+            message: Thank you! You feedback help us make things better ✨
+            type: success
 {% if filePath %}
 - id: edit_on_gh_box
   type: Box
@@ -307,6 +344,9 @@
       blocks:
         - id: footer_cta
           type: Title
+          visible:
+            _not:
+              _global: newsletter_subscribed
           style:
             textAlign: center
           properties:
@@ -315,6 +355,9 @@
             color: '#1890ff'
         - id: footer_cta_paragraph
           type: Paragraph
+          visible:
+            _not:
+              _global: newsletter_subscribed
           style:
             textAlign: center
           properties:
@@ -327,6 +370,9 @@
           blocks:
             - id: footer_cta_input
               type: TextInput
+              visible:
+                _not:
+                  _global: newsletter_subscribed
               layout:
                 flex: 0 1 250px
               properties:
@@ -336,6 +382,9 @@
                   disabled: true
             - id: footer_cta_button
               type: Button
+              visible:
+                _not:
+                  _global: newsletter_subscribed
               requests:
                 - id: lowdefy_api_subscribe
                   type: AxiosHttp
@@ -367,6 +416,21 @@
                     params:
                       - lowdefy_api_subscribe
                       - discord_channel_subscribe
+                  - id: set_subscribed
+                    type: SetGlobal
+                    params:
+                      newsletter_subscribed: true
+            - id: subscribed_thank_you
+              type: Alert
+              layout:
+                flex: 0 1 350px
+              visible:
+                _not:
+                  _not:
+                    _global: newsletter_subscribed
+              properties:
+                message: Thanks! 👏  We'll keep you updated with the latest Lowdefy news.
+                type: success
     - id: footer_links
       type: Box
       layout:

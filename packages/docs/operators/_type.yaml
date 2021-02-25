@@ -73,7 +73,7 @@ _ref:
       ```yaml
       id: input
       type: TextInput
-      validation:
+      validate:
         - message: This field id required.
           status: error
           pass:

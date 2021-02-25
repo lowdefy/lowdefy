@@ -64,7 +64,7 @@ _ref:
       ```yaml
       id: username_input
       type: TextInput
-      validation:
+      validate:
         - message: Invalid username.
           status: error
           pass:
