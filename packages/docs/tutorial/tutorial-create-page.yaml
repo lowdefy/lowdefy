@@ -22,6 +22,23 @@ _ref:
     prefetchPages:
       - tutorial-add-blocks
     content:
+      - id: tutorial_video
+        type: DangerousMarkdown
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+            ADD_ATTR:
+              - allowfullscreen
+              - allow
+              - frameborder
+          content: |
+            <iframe
+              width="800"
+              height="470"
+              src="https://www.youtube.com/embed/U5TDhz3x7Tk" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
       - id: body_create_page
         type: MarkdownWithCode
         properties:
