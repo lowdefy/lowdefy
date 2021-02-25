@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
+
+
+### Bug Fixes
+
+* **docs:** Fix links and improve docs content ([3019495](https://github.com/lowdefy/lowdefy/commit/30194956a5057b631865ebe4c977b4e5be492367))
+* **renderer:** Add Lowdefy object to window if running on localhost. ([726022d](https://github.com/lowdefy/lowdefy/commit/726022d7db76ad74959c4e19e79faa0fa9f54d63))
+* **renderer:** Remove unneed favicon from Helmet component. ([e9e4795](https://github.com/lowdefy/lowdefy/commit/e9e4795eed578de31cbd2fd549a14a1d6a6a85b1))
+
+
+
+
+
 ## [3.10.1](https://github.com/lowdefy/lowdefy/compare/v3.10.0...v3.10.1) (2021-02-19)
 
 **Note:** Version bump only for package @lowdefy/renderer
