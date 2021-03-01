@@ -13,7 +13,7 @@
       "properties": {
         "bordered": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Render items in a table."
         },
         "colon": {
@@ -22,6 +22,7 @@
           "description": "Include a colon in item labels."
         },
         "column": {
+          "default": 3,
           "oneOf": [
             {
               "type": "number",
