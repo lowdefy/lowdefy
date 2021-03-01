@@ -197,6 +197,10 @@ _ref:
 
             Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
 
+            ## JSON instead of YAML
+
+            Since you can reference JSON files, you can build your app using JSON instead of YAML files. The `lowdefy.yaml` file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code.
+
             # Lowdefy versions and version updates
 
             Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is in the early stages of development and under active development, with new versions published on a regular basis.
