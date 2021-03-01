@@ -47,9 +47,9 @@ test('send telemetry', async () => {
     [
       {
         data: {
-          appId: 'appId',
-          cliVersion: 'cliVersion',
-          lowdefyVersion: 'lowdefyVersion',
+          app_id: 'appId',
+          cli_version: 'cliVersion',
+          lowdefy_version: 'lowdefyVersion',
           x: 1,
         },
         headers: {
