@@ -16,6 +16,25 @@
 
 import mql from '../../src/common/mql';
 
+test('_mql.aggregate on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        pipeline: [
+          {
+            $sort: {
+              id: 1,
+            },
+          },
+        ],
+      },
+      location: 'locationId',
+      methodName: 'aggregate',
+    })
+  ).toEqual(null);
+});
+
 test('_mql.aggregate sort as array params', () => {
   expect(
     mql({
@@ -267,6 +286,19 @@ test('_mql.aggregate params not object or array', () => {
   `);
 });
 
+test('_mql.expr on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $add: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(null);
+});
+
 test('_mql.expr add number', () => {
   expect(
     mql({
@@ -354,6 +386,19 @@ test('_mql.expr logic', () => {
       methodName: 'expr',
     })
   ).toEqual(false);
+});
+
+test('_mql.test on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $eq: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(null);
 });
 
 test('_mql.test string equal', () => {
