@@ -19,16 +19,14 @@ import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
-const input = {
-  arrayIndices: [0],
-  env: 'env',
-  location: 'location',
-  params: 'params',
-  secrets: { secrets: true },
-};
-
 test('secret calls getFromObject', () => {
-  secret(input);
+  secret({
+    arrayIndices: [0],
+    env: 'env',
+    location: 'location',
+    params: 'params',
+    secrets: { secrets: true },
+  });
   expect(getFromObject.mock.calls).toEqual([
     [
       {
@@ -36,6 +34,67 @@ test('secret calls getFromObject', () => {
         location: 'location',
         object: {
           secrets: true,
+        },
+        operator: '_secret',
+        params: 'params',
+      },
+    ],
+  ]);
+});
+
+test('secret default value', () => {
+  secret({
+    arrayIndices: [0],
+    env: 'env',
+    location: 'location',
+    params: 'params',
+  });
+  expect(getFromObject.mock.calls).toEqual([
+    [
+      {
+        env: 'env',
+        location: 'location',
+        object: {},
+        operator: '_secret',
+        params: 'params',
+      },
+    ],
+  ]);
+});
+
+test('secret get all is not allowed', () => {
+  expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: Getting all secrets is not allowed. Received: true at undefined."`
+  );
+  expect(() => secret({ params: { all: true } })).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":true} at undefined."`
+  );
+  expect(() => secret({ params: { all: 'yes' } })).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":\\"yes\\"} at undefined."`
+  );
+});
+
+test('secret OpenID Connect and JSON web token secrets are filtered out', () => {
+  secret({
+    arrayIndices: [0],
+    env: 'env',
+    location: 'location',
+    params: 'params',
+    secrets: {
+      OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
+      OPENID_CLIENT_SECRET: 'OPENID_CLIENT_SECRET',
+      OPENID_DOMAIN: 'OPENID_DOMAIN',
+      JWT_SECRET: 'JWT_SECRET',
+      OTHER: 'OTHER',
+    },
+  });
+  expect(getFromObject.mock.calls).toEqual([
+    [
+      {
+        env: 'env',
+        location: 'location',
+        object: {
+          OTHER: 'OTHER',
         },
         operator: '_secret',
         params: 'params',
