@@ -70,7 +70,9 @@ const typeDefs = gql`
   }
 
   input OpenIdAuthorizationUrlInput {
-    location: String
+    input: JSON
+    pageId: String
+    urlQuery: JSON
   }
 
   input OpenIdCallbackInput {
@@ -81,7 +83,9 @@ const typeDefs = gql`
   type OpenIdCallbackResponse {
     accessToken: String
     idToken: String
-    location: String
+    input: JSON
+    pageId: String
+    urlQuery: JSON
   }
 
   input OpenIdLogoutUrlInput {

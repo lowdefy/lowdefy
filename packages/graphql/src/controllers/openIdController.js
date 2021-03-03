@@ -50,13 +50,15 @@ class OpenIdController {
     };
   }
 
-  async authorizationUrl({ location }) {
+  async authorizationUrl({ input, pageId, urlQuery }) {
     try {
       const config = await this.getOpenIdConfig();
       if (!config) return null;
 
       const state = await this.tokenController.issueOpenIdStateToken({
-        location,
+        input,
+        pageId,
+        urlQuery,
       });
       return this.getAuthorizationUrl({ config, state });
     } catch (error) {
@@ -87,12 +89,14 @@ class OpenIdController {
 
       const { claims, idToken } = await this.openIdCallback({ code, config });
 
-      const { location } = await this.tokenController.verifyOpenIdStateToken(state);
+      const { input, pageId, urlQuery } = await this.tokenController.verifyOpenIdStateToken(state);
       const accessToken = await this.tokenController.issueAccessToken(claims);
       return {
         accessToken,
         idToken,
-        location,
+        input,
+        pageId,
+        urlQuery,
       };
     } catch (error) {
       throw new AuthenticationError(error);

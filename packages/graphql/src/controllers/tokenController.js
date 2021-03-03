@@ -66,12 +66,14 @@ class TokenController {
     }
   }
 
-  async issueOpenIdStateToken({ location }) {
+  async issueOpenIdStateToken({ input, pageId, urlQuery }) {
     const { JWT_SECRET } = await this.getSecrets();
     return jwt.sign(
       {
         type: 'openid_state',
-        location,
+        input,
+        pageId,
+        urlQuery,
       },
       JWT_SECRET,
       {
