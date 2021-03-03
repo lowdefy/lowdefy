@@ -389,6 +389,78 @@
       "type": "object",
       "errorMessage": {
         "type": "App \"config\" should be an object."
+      },
+      "additionalProperties": false,
+      "properties": {
+        "homePageId": {
+          "type": "string",
+          "description": "Page id to use as homepage. When visiting home route \"/\", the router will redirect to this page. If not provided, the first page in default or first menu will be used as the homePageId.",
+          "errorMessage": {
+            "type": "App \"config.homePageId\" should be a string."
+          }
+        },
+        "auth": {
+          "type": "object",
+          "additionalProperties": false,
+          "errorMessage": {
+            "type": "App \"config.auth\" should be an object."
+          },
+          "properties": {
+            "openId": {
+              "type": "object",
+              "additionalProperties": false,
+              "errorMessage": {
+                "type": "App \"config.auth.openId\" should be an object."
+              },
+              "properties": {
+                "logoutFromProvider": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "If true, the user will be directed to OpenId provider's logout URL. This will log the user out of the OpenId provider."
+                },
+                "logoutRedirectUri": {
+                  "type": "string",
+                  "description": "The URI to redirect the user to after logout."
+                }
+              }
+            },
+            "pages": {
+              "type": "object",
+              "additionalProperties": false,
+              "errorMessage": {
+                "type": "App \"config.auth.openId.pages\" should be an object."
+              },
+              "properties": {
+                "protected": {
+                  "type": "array",
+                  "errorMessage": {
+                    "type": "App \"config.auth.openId.pages.protected.$\" should be an array of strings."
+                  },
+                  "items": {
+                    "type": "string",
+                    "description": "Page ids for which authentication is required. When specified, all unspecified pages will be public.",
+                    "errorMessage": {
+                      "type": "App \"config.auth.openId.pages.protected.$\" should be an array of strings."
+                    }
+                  }
+                },
+                "public": {
+                  "type": "array",
+                  "errorMessage": {
+                    "type": "App \"config.auth.openId.pages.public.$\" should be an array of strings."
+                  },
+                  "items": {
+                    "type": "string",
+                    "description": "Page ids for which authentication is not required. When specified, all unspecified pages will be protected.",
+                    "errorMessage": {
+                      "type": "App \"config.auth.openId.pages.public.$\" should be an array of strings."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "types": {
