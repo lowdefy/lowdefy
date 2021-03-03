@@ -127,11 +127,7 @@ class OpenIdController {
       if (!config) return null;
 
       if (config.logoutFromProvider !== true) {
-        return null;
-      }
-
-      if (config.logoutUri) {
-        return config.logoutUri;
+        return config.logoutRedirectUri || null;
       }
 
       const issuer = await Issuer.discover(config.domain);
@@ -143,7 +139,7 @@ class OpenIdController {
 
       return client.endSessionUrl({
         id_token_hint: idToken,
-        post_logout_redirect_uri: config.postLogoutRedirectUri,
+        post_logout_redirect_uri: config.logoutRedirectUri,
       });
     } catch (error) {
       throw new AuthenticationError(error);
