@@ -75,17 +75,16 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     id: contextId,
     pageId,
     eventLog: [],
+    auth: rootContext.auth,
     blockId: block.blockId,
     client: rootContext.client,
     config: rootContext.config,
     document: rootContext.document,
     input: rootContext.input[contextId] || {},
-    allInputs: rootContext.input,
     lowdefyGlobal: rootContext.lowdefyGlobal,
     menus: rootContext.menus,
     requests: {},
     rootBlock: blockData(block), // filter block to prevent circular structure
-    routeHistory: rootContext.routeHistory,
     showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation

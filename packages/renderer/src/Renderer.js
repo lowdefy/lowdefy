@@ -22,6 +22,10 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
+import createLink from './utils/createLink';
+import createLogin from './utils/auth/createLogin';
+import createLogout from './utils/auth/createLogout';
+import OpenIdCallback from './utils/auth/OpenIdCallback';
 import DisplayMessage from './page/DisplayMessage';
 import Page from './page/Page';
 import createUpdateBlock from './page/block/updateBlock';
@@ -82,6 +86,11 @@ const RootContext = ({ children, client }) => {
   return (
     <>
       {children({
+        auth: {
+          login: createLogin(client, windowContext),
+          logout: createLogout(client, windowContext),
+        },
+        getLink: (routeHistory) => createLink({ routeHistory, windowContext, allInputs: input }),
         client,
         contexts,
         document: documentContext,
@@ -126,6 +135,9 @@ const Root = ({ gqlUri }) => {
                 <Switch>
                   <Route exact path="/">
                     <Home rootContext={rootContext} />
+                  </Route>
+                  <Route exact path="/auth/openid-callback">
+                    <OpenIdCallback rootContext={rootContext} />
                   </Route>
                   <Route exact path="/:pageId">
                     <ErrorBoundary>

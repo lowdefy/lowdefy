@@ -14,28 +14,8 @@
   limitations under the License.
 */
 
-import CallMethod from './CallMethod';
-import Link from './Link';
-import Login from './Login';
-import Logout from './Logout';
-import Message from './Message';
-import Request from './Request';
-import Reset from './Reset';
-import ScrollTo from './ScrollTo';
-import SetGlobal from './SetGlobal';
-import SetState from './SetState';
-import Validate from './Validate';
+async function Logout({ context, params }) {
+  return context.auth.logout(params);
+}
 
-export default {
-  CallMethod,
-  Link,
-  Login,
-  Logout,
-  Message,
-  Reset,
-  Request,
-  ScrollTo,
-  SetGlobal,
-  SetState,
-  Validate,
-};
+export default Logout;
