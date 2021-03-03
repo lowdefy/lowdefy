@@ -16,15 +16,19 @@
 
 import { type } from '@lowdefy/helpers';
 
-import createPageController from '../controllers/pageController';
-import createComponentController from '../controllers/componentController';
-import createRequestController from '../controllers/requestController';
+import createPageController from './pageController';
+import createComponentController from './componentController';
+import createOpenIdController from './openIdController';
+import createRequestController from './requestController';
+import createTokenController from './tokenController';
 
 function creatGetController(context) {
   const constructors = {
     page: createPageController,
     component: createComponentController,
+    openId: createOpenIdController,
     request: createRequestController,
+    token: createTokenController,
   };
   const memoized = {};
 

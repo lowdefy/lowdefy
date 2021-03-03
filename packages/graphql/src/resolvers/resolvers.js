@@ -15,8 +15,12 @@
 */
 
 import GraphQLJSON from 'graphql-type-json';
+
 import lowdefyGlobal from './queries/lowdefyGlobal/lowdefyGlobal';
 import menu from './queries/menu/menu';
+import openIdAuthorizationUrl from './queries/auth/openIdAuthorizationUrl';
+import openIdCallback from './queries/auth/openIdCallback';
+import openIdLogoutUrl from './queries/auth/openIdLogoutUrl';
 import page from './queries/page/page';
 import request from './queries/request/request';
 
@@ -32,6 +36,9 @@ const resolvers = {
   Query: {
     lowdefyGlobal,
     menu,
+    openIdAuthorizationUrl,
+    openIdCallback,
+    openIdLogoutUrl,
     page,
     request,
   },

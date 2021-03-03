@@ -28,6 +28,7 @@ async function getGraphQl({ context }) {
   });
   const config = {
     CONFIGURATION_BASE_PATH: context.outputDirectory,
+    development: true,
     logger: console,
     getSecrets: createGetSecretsFromEnv(),
   };

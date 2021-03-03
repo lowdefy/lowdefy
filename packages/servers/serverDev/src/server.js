@@ -24,6 +24,7 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 dotenv.config({ silent: true });
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
+  development: true,
   logger: console,
   getSecrets: createGetSecretsFromEnv(),
 };

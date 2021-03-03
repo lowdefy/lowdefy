@@ -16,9 +16,11 @@
 
 import createGetController from './getController';
 import { testBootstrapContext } from '../test/testContext';
-import { PageController } from '../controllers/pageController';
-import { ComponentController } from '../controllers/componentController';
-import { RequestController } from '../controllers/requestController';
+import { PageController } from './pageController';
+import { ComponentController } from './componentController';
+import { OpenIdController } from './openIdController';
+import { RequestController } from './requestController';
+import { TokenController } from './tokenController';
 
 test('get page controller', () => {
   const getController = createGetController(testBootstrapContext());
@@ -32,10 +34,22 @@ test('get component controller', () => {
   expect(controller).toBeInstanceOf(ComponentController);
 });
 
+test('get openId controller', () => {
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('openId');
+  expect(controller).toBeInstanceOf(OpenIdController);
+});
+
 test('get request controller', () => {
   const getController = createGetController(testBootstrapContext());
   const controller = getController('request');
   expect(controller).toBeInstanceOf(RequestController);
+});
+
+test('get token controller', () => {
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('token');
+  expect(controller).toBeInstanceOf(TokenController);
 });
 
 test('memoise controller', () => {

@@ -22,6 +22,9 @@ const typeDefs = gql`
     page(pageId: ID!): JSON
     lowdefyGlobal: JSON
     menu: MenuResponse
+    openIdAuthorizationUrl(openIdAuthorizationUrlInput: OpenIdAuthorizationUrlInput!): String
+    openIdCallback(openIdCallbackInput: OpenIdCallbackInput!): OpenIdCallbackResponse
+    openIdLogoutUrl(openIdLogoutUrlInput: OpenIdLogoutUrlInput!): String
     request(input: RequestInput!): RequestResponse
   }
 
@@ -64,6 +67,25 @@ const typeDefs = gql`
     properties: JSON
     pageId: String
     url: String
+  }
+
+  input OpenIdAuthorizationUrlInput {
+    location: String
+  }
+
+  input OpenIdCallbackInput {
+    code: String!
+    state: String!
+  }
+
+  type OpenIdCallbackResponse {
+    accessToken: String
+    idToken: String
+    location: String
+  }
+
+  input OpenIdLogoutUrlInput {
+    idToken: String
   }
 
   type RequestResponse {
