@@ -32,7 +32,7 @@ test('_mql.aggregate on: null', () => {
       location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toEqual(null);
+  ).toEqual([]);
 });
 
 test('_mql.aggregate sort as array params', () => {
@@ -286,7 +286,7 @@ test('_mql.aggregate params not object or array', () => {
   `);
 });
 
-test('_mql.expr on: null', () => {
+test('_mql.expr $add on: null', () => {
   expect(
     mql({
       params: {
@@ -296,7 +296,33 @@ test('_mql.expr on: null', () => {
       location: 'locationId',
       methodName: 'expr',
     })
-  ).toEqual(null);
+  ).toEqual(NaN);
+});
+
+test('_mql.expr $sum on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $sum: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(2);
+});
+
+test('_mql.expr $gt on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $gt: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(false);
 });
 
 test('_mql.expr add number', () => {
@@ -398,7 +424,33 @@ test('_mql.test on: null', () => {
       location: 'locationId',
       methodName: 'test',
     })
-  ).toEqual(null);
+  ).toEqual(false);
+});
+
+test('_mql.test $eq on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $eq: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(false);
+});
+
+test('_mql.test $ne on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $ne: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(true);
 });
 
 test('_mql.test string equal', () => {

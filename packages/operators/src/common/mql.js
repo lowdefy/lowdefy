@@ -22,7 +22,7 @@ import 'mingo/init/system';
 
 function aggregate(data, pipeline) {
   if (data === null) {
-    return null;
+    data = [];
   }
   if (!type.isArray(data)) {
     throw new Error('Data must be of type array.');
@@ -36,7 +36,7 @@ function aggregate(data, pipeline) {
 
 function expr(data, expr) {
   if (data === null) {
-    return null;
+    data = {};
   }
   if (!type.isObject(data)) {
     throw new Error('Data must be of type object.');
@@ -54,7 +54,7 @@ function expr(data, expr) {
 
 function test(data, test) {
   if (data === null) {
-    return null;
+    data = {};
   }
   if (!type.isObject(data)) {
     throw new Error('Data must be of type object.');
