@@ -46,6 +46,8 @@ const OnEnter = ({ block, context, render }) => {
     };
   }, [context]);
 
+  if (error) throw error;
+
   if (loading)
     return (
       <Loading
@@ -53,8 +55,6 @@ const OnEnter = ({ block, context, render }) => {
         type={get(block, 'meta.loading.type')}
       />
     );
-
-  if (error) throw error;
 
   return render(context);
 };

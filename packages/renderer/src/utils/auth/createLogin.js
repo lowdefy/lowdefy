@@ -23,26 +23,29 @@ export const GET_LOGIN = gql`
   }
 `;
 
-const createLogin = (client, windowContext) => async ({ input, pageId, urlQuery } = {}) => {
-  try {
-    const result = await client.query({
-      query: GET_LOGIN,
-      fetchPolicy: 'network-only',
-      variables: {
-        openIdAuthorizationUrlInput: {
-          input,
-          pageId,
-          urlQuery,
+function createLogin(client, windowContext) {
+  async function login({ input, pageId, urlQuery } = {}) {
+    try {
+      const { data } = await client.query({
+        query: GET_LOGIN,
+        fetchPolicy: 'network-only',
+        variables: {
+          openIdAuthorizationUrlInput: {
+            input,
+            pageId,
+            urlQuery,
+          },
         },
-      },
-    });
-    console.log(result);
-    if (get(result, 'data.openIdAuthorizationUrl')) {
-      windowContext.location.href = get(result, 'data.openIdAuthorizationUrl');
+      });
+      if (get(data, 'openIdAuthorizationUrl')) {
+        windowContext.location.href = data.openIdAuthorizationUrl;
+      }
+    } catch (error) {
+      throw new Error(error);
     }
-  } catch (error) {
-    throw new Error(error);
   }
-};
+
+  return login;
+}
 
 export default createLogin;

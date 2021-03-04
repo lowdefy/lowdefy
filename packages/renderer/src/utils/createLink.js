@@ -17,8 +17,8 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
-const createLink = ({ routeHistory, windowContext, allInputs }) => {
-  return ({ urlQuery, pageId, url, newTab, home, input }) => {
+function createLink({ routeHistory, windowContext, allInputs }) {
+  function link({ urlQuery, pageId, url, newTab, home, input }) {
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
 
     if (pageId) {
@@ -53,7 +53,8 @@ const createLink = ({ routeHistory, windowContext, allInputs }) => {
     } else {
       throw new Error(`Invalid Link.`);
     }
-  };
-};
+  }
+  return link;
+}
 
 export default createLink;

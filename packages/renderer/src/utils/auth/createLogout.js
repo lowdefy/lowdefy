@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
 import { gql } from '@apollo/client';
 
 const GET_LOGOUT = gql`
@@ -23,25 +22,27 @@ const GET_LOGOUT = gql`
   }
 `;
 
-const createLogout = (client, windowContext) => async () => {
-  try {
-    // handle token
-    const result = await client.query({
-      query: GET_LOGOUT,
-      fetchPolicy: 'network-only',
-      variables: {
-        openIdLogoutUrlInput: {
-          idToken: '',
+function createLogout(client, windowContext) {
+  async function logout() {
+    try {
+      // handle token
+      const { data } = await client.query({
+        query: GET_LOGOUT,
+        fetchPolicy: 'network-only',
+        variables: {
+          openIdLogoutUrlInput: {
+            idToken: '',
+          },
         },
-      },
-    });
-    console.log(result);
-    // TODO: should we call link??
-    windowContext.location.href =
-      get(result, 'data.openIdLogoutUrl') || windowContext.location.origin;
-  } catch (error) {
-    throw new Error(error);
+      });
+      // TODO: should we call link??
+      windowContext.location.href = data.openIdLogoutUrl || windowContext.location.origin;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
-};
+
+  return logout;
+}
 
 export default createLogout;

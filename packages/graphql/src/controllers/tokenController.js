@@ -25,9 +25,11 @@ class TokenController {
 
   async issueAccessToken(claims) {
     const { JWT_SECRET } = await this.getSecrets();
+    // eslint-disable-next-line no-unused-vars
+    const { aud, exp, iat, iss, ...otherClaims } = claims;
     return jwt.sign(
       {
-        ...claims,
+        ...otherClaims,
         lowdefy_access_token: true,
       },
       JWT_SECRET,
