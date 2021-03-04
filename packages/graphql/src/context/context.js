@@ -25,8 +25,8 @@ function createContext(config) {
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH,
     development,
-    logger,
     getSecrets,
+    logger,
   };
   // lambda context function signature is ({ event }),
   // but express is ({ req })

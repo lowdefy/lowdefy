@@ -18,19 +18,17 @@ import jwt from 'jsonwebtoken';
 import { AuthenticationError, TokenExpiredError } from '../context/errors';
 
 class TokenController {
-  constructor({ getLoader, getSecrets, host }) {
-    this.componentLoader = getLoader('component');
+  constructor({ getSecrets, host }) {
     this.host = host;
     this.getSecrets = getSecrets;
   }
 
-  async issueAccessToken({ sub, groups = [] }) {
+  async issueAccessToken(claims) {
     const { JWT_SECRET } = await this.getSecrets();
     return jwt.sign(
       {
-        sub,
-        type: 'lowdefy_access',
-        groups,
+        ...claims,
+        lowdefy_access_token: true,
       },
       JWT_SECRET,
       {
@@ -50,7 +48,7 @@ class TokenController {
         issuer: this.host,
       });
 
-      if (claims.type !== 'lowdefy_access') {
+      if (claims.lowdefy_access_token !== true) {
         throw new AuthenticationError('Invalid token');
       }
       if (!claims.sub) {
@@ -70,8 +68,8 @@ class TokenController {
     const { JWT_SECRET } = await this.getSecrets();
     return jwt.sign(
       {
-        type: 'openid_state',
         input,
+        lowdefy_openid_state_token: true,
         pageId,
         urlQuery,
       },
@@ -93,7 +91,7 @@ class TokenController {
         issuer: this.host,
       });
 
-      if (claims.type !== 'openid_state') {
+      if (claims.lowdefy_openid_state_token !== true) {
         throw new AuthenticationError('Invalid token');
       }
       return claims;

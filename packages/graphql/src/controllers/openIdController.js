@@ -85,7 +85,9 @@ class OpenIdController {
   async callback({ code, state }) {
     try {
       const config = await this.getOpenIdConfig();
-      if (!config) return null;
+      if (!config) {
+        throw new Error('OpenID Connect is not configured.');
+      }
 
       const { claims, idToken } = await this.openIdCallback({ code, config });
 
