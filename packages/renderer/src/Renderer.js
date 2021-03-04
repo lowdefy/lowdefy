@@ -32,6 +32,7 @@ import createUpdateBlock from './page/block/updateBlock';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
+windowContext.displayMessage = () => () => undefined;
 // eslint-disable-next-line no-undef
 const documentContext = document;
 
