@@ -416,11 +416,25 @@
                 "logoutFromProvider": {
                   "type": "boolean",
                   "default": false,
-                  "description": "If true, the user will be directed to OpenId provider's logout URL. This will log the user out of the OpenId provider."
+                  "description": "If true, the user will be directed to OpenID Connect provider's logout URL. This will log the user out of the provider.",
+                  "errorMessage": {
+                    "type": "App \"config.auth.openId.logoutFromProvider\" should be a boolean."
+                  }
                 },
                 "logoutRedirectUri": {
                   "type": "string",
-                  "description": "The URI to redirect the user to after logout."
+                  "description": "The URI to redirect the user to after logout.",
+                  "errorMessage": {
+                    "type": "App \"config.auth.openId.logoutRedirectUri\" should be a string."
+                  }
+                },
+                "scope": {
+                  "type": "string",
+                  "description": "The OpenID Connect scope to request.",
+                  "default": "openid profile email",
+                  "errorMessage": {
+                    "type": "App \"config.auth.openId.scope\" should be a string."
+                  }
                 }
               }
             },
@@ -428,32 +442,32 @@
               "type": "object",
               "additionalProperties": false,
               "errorMessage": {
-                "type": "App \"config.auth.openId.pages\" should be an object."
+                "type": "App \"config.auth.pages\" should be an object."
               },
               "properties": {
                 "protected": {
                   "type": "array",
                   "errorMessage": {
-                    "type": "App \"config.auth.openId.pages.protected.$\" should be an array of strings."
+                    "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
                   },
                   "items": {
                     "type": "string",
                     "description": "Page ids for which authentication is required. When specified, all unspecified pages will be public.",
                     "errorMessage": {
-                      "type": "App \"config.auth.openId.pages.protected.$\" should be an array of strings."
+                      "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
                     }
                   }
                 },
                 "public": {
                   "type": "array",
                   "errorMessage": {
-                    "type": "App \"config.auth.openId.pages.public.$\" should be an array of strings."
+                    "type": "App \"config.auth.pages.public.$\" should be an array of strings."
                   },
                   "items": {
                     "type": "string",
                     "description": "Page ids for which authentication is not required. When specified, all unspecified pages will be protected.",
                     "errorMessage": {
-                      "type": "App \"config.auth.openId.pages.public.$\" should be an array of strings."
+                      "type": "App \"config.auth.pages.public.$\" should be an array of strings."
                     }
                   }
                 }
