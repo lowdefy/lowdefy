@@ -30,6 +30,7 @@ async function getGraphQl({ context }) {
     CONFIGURATION_BASE_PATH: context.outputDirectory,
     development: true,
     logger: console,
+    getHeaders: ({ req }) => req.headers,
     getSecrets: createGetSecretsFromEnv(),
   };
   const gqlContext = createGqlContext(config);

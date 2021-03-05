@@ -21,8 +21,9 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
-  logger: console,
+  getHeaders: ({ event }) => event.headers,
   getSecrets: createGetSecretsFromEnv(),
+  logger: console,
 };
 
 const server = new ApolloServer({

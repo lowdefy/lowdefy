@@ -25,8 +25,10 @@ dotenv.config({ silent: true });
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   development: true,
-  logger: console,
+  getHeaders: ({ req }) => req.headers,
+  setCookie: ({ res }) => {},
   getSecrets: createGetSecretsFromEnv(),
+  logger: console,
 };
 
 const context = createContext(config);

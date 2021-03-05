@@ -22,8 +22,9 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './build'),
-  logger: console,
+  getHeaders: ({ req }) => req.headers,
   getSecrets: createGetSecretsFromEnv(),
+  logger: console,
 };
 
 const context = createContext(config);

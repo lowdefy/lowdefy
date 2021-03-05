@@ -21,23 +21,15 @@ import createGetController from '../controllers/getController';
 import createGetLoader from './getLoader';
 
 function createContext(config) {
-  const { CONFIGURATION_BASE_PATH, logger, getSecrets, development } = config;
+  const { CONFIGURATION_BASE_PATH, development, getHeaders, getSecrets, logger } = config;
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH,
     development,
     getSecrets,
     logger,
   };
-  // lambda context function signature is ({ event }),
-  // but express is ({ req })
-  async function context({ event, req }) {
-    let headers;
-    if (event) {
-      headers = event.headers;
-    }
-    if (req) {
-      headers = req.headers;
-    }
+  async function context(input) {
+    const headers = getHeaders(input);
     bootstrapContext.host = get(headers, 'Host') || get(headers, 'host');
     bootstrapContext.getLoader = createGetLoader(bootstrapContext);
     bootstrapContext.getController = createGetController(bootstrapContext);
