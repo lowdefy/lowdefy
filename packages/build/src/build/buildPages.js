@@ -73,21 +73,21 @@ async function checkPageIsContext(page, metaLoader) {
   }
 }
 
-async function setBlockMeta(block, context) {
+async function setBlockMeta(block, metaLoader, pageId) {
   if (type.isNone(block.type)) {
-    throw new Error(`Block type is not defined at ${block.blockId} on page ${context.pageId}.`);
+    throw new Error(`Block type is not defined at ${block.blockId} on page ${pageId}.`);
   }
   if (!type.isString(block.type)) {
     throw new Error(
-      `Block type is not a string at ${block.blockId} on page ${
-        context.pageId
-      }. Received ${JSON.stringify(block.type)}`
+      `Block type is not a string at ${block.blockId} on page ${pageId}. Received ${JSON.stringify(
+        block.type
+      )}`
     );
   }
-  const meta = await context.metaLoader.load(block.type);
+  const meta = await metaLoader.load(block.type);
   if (!meta) {
     throw new Error(
-      `Invalid Block type at ${block.blockId} on page ${context.pageId}. Received ${JSON.stringify(
+      `Invalid Block type at ${block.blockId} on page ${pageId}. Received ${JSON.stringify(
         block.type
       )}`
     );
@@ -119,20 +119,25 @@ async function buildBlock(block, context) {
   }
   block.blockId = block.id;
   block.id = `block:${context.pageId}:${block.id}`;
-  await setBlockMeta(block, context);
+  await setBlockMeta(block, context.metaLoader, context.pageId);
+  let ctx = context;
   if (block.meta.category === 'context') {
-    context.requests = [];
-    context.contextId = block.blockId;
+    ctx = {
+      pageId: context.pageId,
+      contextId: block.blockId,
+      requests: [],
+      metaLoader: context.metaLoader,
+    };
   }
-  buildRequests(block, context);
+  buildRequests(block, ctx);
   if (block.meta.category === 'context') {
-    block.requests = context.requests;
+    block.requests = ctx.requests;
   }
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new Error(
         `Blocks at ${block.blockId} on page ${
-          context.pageId
+          ctx.pageId
         } is not an array. Received ${JSON.stringify(block.blocks)}`
       );
     }
@@ -148,12 +153,12 @@ async function buildBlock(block, context) {
       if (!type.isArray(block.areas[key].blocks)) {
         throw new Error(
           `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
-            context.pageId
+            ctx.pageId
           }. Received ${JSON.stringify(block.areas[key].blocks)}`
         );
       }
       const blockPromises = block.areas[key].blocks.map(async (blk) => {
-        await buildBlock(blk, context);
+        await buildBlock(blk, ctx);
       });
       promises = promises.concat(blockPromises);
     });
