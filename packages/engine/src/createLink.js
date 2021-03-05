@@ -17,39 +17,22 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
-function createLink({ routeHistory, windowContext, allInputs }) {
+function createLink({ sameOriginLink, newOriginLink, rootContext }) {
   function link({ urlQuery, pageId, url, newTab, home, input }) {
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
-
+    if (home) pageId = rootContext.homePageId;
     if (pageId) {
-      // set input for page before changing
       if (!type.isNone(input)) {
         const nextContextId = makeContextId({
           pageId,
           urlQuery: urlQuery,
           blockId: pageId,
         });
-        allInputs[nextContextId] = input;
+        rootContext.input[nextContextId] = input;
       }
-      if (newTab) {
-        windowContext
-          .open(`${windowContext.location.origin}/${pageId}${lowdefyUrlQuery}`, '_blank')
-          .focus();
-      } else {
-        routeHistory.push(`/${pageId}${lowdefyUrlQuery}`);
-      }
+      sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
     } else if (url) {
-      if (newTab) {
-        windowContext.open(`${url}${lowdefyUrlQuery}`, '_blank').focus();
-      } else {
-        windowContext.location.href = `${url}${lowdefyUrlQuery}`;
-      }
-    } else if (home) {
-      if (newTab) {
-        windowContext.open(`${windowContext.location.origin}/${lowdefyUrlQuery}`, '_blank').focus();
-      } else {
-        routeHistory.push(`/${lowdefyUrlQuery}`);
-      }
+      newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
     } else {
       throw new Error(`Invalid Link.`);
     }
