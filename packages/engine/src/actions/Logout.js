@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-async function Logout({ context, params }) {
-  return context.auth.logout(params);
+async function Logout({ context }) {
+  return context.root.auth.logout();
 }
 
 export default Logout;

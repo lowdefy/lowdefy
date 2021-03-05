@@ -116,13 +116,12 @@ class Actions {
     let close = () => undefined;
 
     if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context.window.displayMessage({
+      close = this.context.root.displayMessage({
         content: type.isString(message) ? message : defaultMessage,
         duration,
         status,
       });
     }
-
     return close;
   }
 }

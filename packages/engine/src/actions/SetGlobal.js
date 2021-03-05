@@ -18,7 +18,7 @@ import { applyArrayIndices, set } from '@lowdefy/helpers';
 
 async function SetGlobal({ arrayIndices, context, params }) {
   Object.keys(params).forEach((key) => {
-    set(context.lowdefyGlobal, applyArrayIndices(arrayIndices, key), params[key]);
+    set(context.root.lowdefyGlobal, applyArrayIndices(arrayIndices, key), params[key]);
   });
   context.RootBlocks.reset();
   context.update();

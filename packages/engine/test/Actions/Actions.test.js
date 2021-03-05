@@ -36,9 +36,7 @@ mockDate.now = jest.fn(() => 0);
 const closeLoader = jest.fn();
 const displayMessage = jest.fn();
 const rootContext = {
-  window: {
-    displayMessage,
-  },
+  displayMessage,
 };
 const arrayIndices = [];
 const eventName = 'eventName';

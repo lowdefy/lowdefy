@@ -18,10 +18,26 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-test('SetGlobal data to global', async () => {
-  const rootContext = {
-    lowdefyGlobal: { x: 'old', init: 'init' },
-  };
+const rootContext = {
+  auth: {
+    login: jest.fn(),
+  },
+};
+
+const RealDate = Date;
+const mockDate = jest.fn(() => ({ date: 0 }));
+mockDate.now = jest.fn(() => 0);
+
+beforeEach(() => {
+  global.Date = mockDate;
+  rootContext.auth.login.mockReset();
+});
+
+afterAll(() => {
+  global.Date = RealDate;
+});
+
+test('Login', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -41,8 +57,8 @@ test('SetGlobal data to global', async () => {
               onClick: [
                 {
                   id: 'a',
-                  type: 'SetGlobal',
-                  params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
+                  type: 'Login',
+                  params: { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } },
                 },
               ],
             },
@@ -56,16 +72,16 @@ test('SetGlobal data to global', async () => {
     rootBlock,
     pageId,
   });
-
-  expect(context.root.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
   const { button } = context.RootBlocks.map;
-
-  await button.triggerEvent({ name: 'onClick' });
-  expect(context.root.lowdefyGlobal).toEqual({
-    init: 'init',
-    str: 'hello',
-    number: 13,
-    arr: [1, 2, 3],
-    x: 'new',
-  });
+  const res = await button.triggerEvent({ name: 'onClick' });
+  expect(rootContext.auth.login.mock.calls).toEqual([
+    [
+      {
+        input: { i: true },
+        pageId: 'pageId',
+        urlQuery: { u: true },
+      },
+    ],
+  ]);
+  expect(res.success).toBe(true);
 });

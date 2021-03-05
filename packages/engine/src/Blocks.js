@@ -566,7 +566,7 @@ class Blocks {
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };
-        this.context.updateBlock(block.id);
+        this.context.root.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -585,7 +585,7 @@ class Blocks {
         false
       );
       if (block.loading_prev !== block.loading) {
-        this.context.updateBlock(block.id);
+        this.context.root.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {

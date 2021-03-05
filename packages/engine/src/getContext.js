@@ -59,11 +59,6 @@ const blockData = ({
 
 const getContext = async ({ block, contextId, pageId, rootContext }) => {
   if (rootContext.contexts[contextId]) {
-    rootContext.contexts[contextId].input = rootContext.input[contextId] || {};
-    rootContext.contexts[contextId].urlQuery = rootContext.urlQuery;
-    rootContext.contexts[contextId].lowdefyGlobal = rootContext.lowdefyGlobal;
-    rootContext.contexts[contextId].menus = rootContext.menus;
-    rootContext.contexts[contextId].config = rootContext.config;
     rootContext.contexts[contextId].update();
     return rootContext.contexts[contextId];
   }
@@ -71,26 +66,20 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     throw new Error('A block must be provided to get context.');
   }
   // eslint-disable-next-line no-param-reassign
+  if (!rootContext.input[contextId]) {
+    rootContext.input[contextId] = {};
+  }
   rootContext.contexts[contextId] = {
     id: contextId,
-    pageId,
-    eventLog: [],
-    auth: rootContext.auth,
     blockId: block.blockId,
-    client: rootContext.client,
-    config: rootContext.config,
-    document: rootContext.document,
-    input: rootContext.input[contextId] || {},
-    lowdefyGlobal: rootContext.lowdefyGlobal,
-    menus: rootContext.menus,
+    eventLog: [],
+    pageId,
     requests: {},
+    root: rootContext,
     rootBlock: blockData(block), // filter block to prevent circular structure
     showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation
-    updateBlock: rootContext.updateBlock,
-    urlQuery: rootContext.urlQuery,
-    window: rootContext.window,
     updateListeners: new Set(),
   };
   const ctx = rootContext.contexts[contextId];

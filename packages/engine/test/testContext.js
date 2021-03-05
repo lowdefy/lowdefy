@@ -21,28 +21,26 @@ import Blocks from '../src/Blocks';
 import Requests from '../src/Requests';
 import State from '../src/State';
 
-const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowdefyGlobal }) => {
+const testContext = ({ rootContext, rootBlock, pageId, initState = {} }) => {
+  const root = {
+    displayMessage: () => () => undefined,
+    input: { test: {} },
+    updateBlock: () => {},
+    urlQuery: {},
+    ...rootContext,
+  };
   const ctx = {
-    pageId,
-    eventLog: [],
+    id: 'test',
     blockId: rootBlock.blockId,
-    client: rootContext.client || {},
-    document: rootContext.document,
-    input: rootContext.input || {},
-    allInputs: {},
-    lowdefyGlobal: initLowdefyGlobal || rootContext.lowdefyGlobal || {},
-    menus: rootContext.menus,
+    eventLog: [],
+    pageId,
     requests: {},
+    root,
     rootBlock,
-    routeHistory: [], // init new routeHistory for each test
+    // routeHistory: [], // init new routeHistory for each test
     showValidationErrors: false,
     state: {},
-    urlQuery: rootContext.urlQuery || {},
-    updateBlock: rootContext.updateBlock || (() => {}),
-    window: {
-      displayMessage: () => () => undefined,
-      ...rootContext.window,
-    },
+    updateListeners: new Set(),
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });
   ctx.State = new State(ctx);
@@ -61,7 +59,6 @@ const testContext = ({ rootContext, rootBlock, pageId, initState = {}, initLowde
       ctx.State.set(key, initState[key]);
     });
     ctx.RootBlocks.reset();
-    ctx.update();
   }
   ctx.update();
   ctx.State.freezeState();

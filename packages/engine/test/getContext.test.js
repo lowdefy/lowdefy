@@ -53,7 +53,6 @@ test('memoize context', async () => {
 test('create context', async () => {
   const rootContext = {
     client: { client: true },
-    config: { config: true },
     contexts: {},
     document: { document: true },
     input: { contextId: { input: true } },
@@ -75,32 +74,41 @@ test('create context', async () => {
   expect(context.Requests).toBeDefined();
   expect(context.RootBlocks).toBeDefined();
   expect(context.State).toBeDefined();
-  expect(context.allInputs).toEqual({ contextId: { input: true } });
   expect(context.blockId).toEqual('blockId');
-  expect(context.client).toEqual({ client: true });
-  expect(context.config).toEqual({ config: true });
-  expect(context.document).toEqual({ document: true });
+  expect(context.root).toEqual(rootContext);
   expect(context.eventLog).toEqual([]);
   expect(context.id).toEqual('contextId');
-  expect(context.input).toEqual({ input: true });
-  expect(context.lowdefyGlobal).toEqual({ lowdefyGlobal: true });
-  expect(context.menus).toEqual([
-    {
-      id: 'default',
-    },
-  ]);
   expect(context.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
   expect(context.rootBlock).toBeDefined();
-  expect(context.routeHistory).toEqual(['routeHistory']);
   expect(context.showValidationErrors).toEqual(false);
   expect(context.state).toEqual({});
   expect(context.update).toBeDefined();
-  expect(context.updateBlock).toBeDefined();
   expect(context.updateListeners).toEqual(new Set());
-  expect(context.urlQuery).toEqual({ urlQuery: true });
-  expect(context.window).toEqual({ window: true });
+});
+
+test('create context, initialize input', async () => {
+  const rootContext = {
+    client: { client: true },
+    contexts: {},
+    document: { document: true },
+    input: {},
+    lowdefyGlobal: { lowdefyGlobal: true },
+    menus: [{ id: 'default' }],
+    routeHistory: ['routeHistory'],
+    updateBlock,
+    urlQuery: { urlQuery: true },
+    window: { window: true },
+  };
+  const block = {
+    blockId: 'blockId',
+    meta: {
+      type: 'context',
+    },
+  };
+  const context = await getContext({ block, contextId: 'contextId', pageId, rootContext });
+  expect(context.root.input.contextId).toEqual({});
 });
 
 test('call update for listening contexts', async () => {

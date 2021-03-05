@@ -16,12 +16,12 @@
 
 async function ScrollTo({ context, params = {} }) {
   if (params.blockId) {
-    const element = context.document.getElementById(params.blockId);
+    const element = context.root.document.getElementById(params.blockId);
     if (element) {
       element.scrollIntoView(params.options);
     }
   } else {
-    context.window.scrollTo(params);
+    context.root.window.scrollTo(params);
   }
 }
 

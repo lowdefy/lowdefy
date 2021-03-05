@@ -32,7 +32,6 @@ import createUpdateBlock from './page/block/updateBlock';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
-windowContext.displayMessage = () => () => undefined;
 // eslint-disable-next-line no-undef
 const documentContext = document;
 
@@ -91,12 +90,14 @@ const RootContext = ({ children, client }) => {
           login: createLogin(client, windowContext),
           logout: createLogout(client, windowContext),
         },
-        getLink: (routeHistory) => createLink({ routeHistory, windowContext, allInputs: input }),
         client,
         contexts,
+        displayMessage: () => () => undefined,
         document: documentContext,
+        getLink: (routeHistory) => createLink({ routeHistory, windowContext, allInputs: input }),
         homePageId: get(data, 'menu.homePageId'),
         input,
+        link: () => {},
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
         updateBlock: createUpdateBlock(client),
@@ -119,13 +120,6 @@ const Root = ({ gqlUri }) => {
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
-        <DisplayMessage
-          methods={{
-            registerMethod: (_, method) => {
-              windowContext.displayMessage = method;
-            },
-          }}
-        />
         <RootContext client={client}>
           {(rootContext) => {
             if (windowContext.location.origin.includes('http://localhost')) {
@@ -133,6 +127,13 @@ const Root = ({ gqlUri }) => {
             }
             return (
               <>
+                <DisplayMessage
+                  methods={{
+                    registerMethod: (_, method) => {
+                      rootContext.displayMessage = method;
+                    },
+                  }}
+                />
                 <Switch>
                   <Route exact path="/">
                     <Home rootContext={rootContext} />

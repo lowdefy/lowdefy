@@ -35,9 +35,13 @@ const GET_PAGE = gql`
 
 const PageContext = ({ rootContext }) => {
   const { pageId } = useParams();
-  rootContext.routeHistory = useHistory();
+
+  const routeHistory = useHistory();
+  rootContext.link = rootContext.getLink(routeHistory);
+
   const { search } = useLocation();
   rootContext.urlQuery = urlQuery.parse(search || '');
+
   const { loading, error, data } = useQuery(GET_PAGE, {
     variables: { id: pageId },
   });

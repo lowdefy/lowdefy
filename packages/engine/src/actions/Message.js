@@ -15,7 +15,7 @@
 */
 
 function Message({ context, params = {} }) {
-  context.window.displayMessage({
+  context.root.displayMessage({
     content: params.content || 'Success',
     duration: params.duration,
     icon: params.icon,

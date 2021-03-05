@@ -15,7 +15,7 @@
 */
 
 async function Login({ context, params }) {
-  return context.auth.login(params);
+  return context.root.auth.login(params);
 }
 
 export default Login;
