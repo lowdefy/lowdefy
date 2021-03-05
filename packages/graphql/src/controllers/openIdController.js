@@ -50,6 +50,15 @@ class OpenIdController {
     };
   }
 
+  async getClient({ config }) {
+    const issuer = await Issuer.discover(config.domain);
+    return new issuer.Client({
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      redirect_uris: [this.redirectUri],
+    });
+  }
+
   async authorizationUrl({ input, pageId, urlQuery }) {
     try {
       const config = await this.getOpenIdConfig();
@@ -67,12 +76,7 @@ class OpenIdController {
   }
 
   async getAuthorizationUrl({ config, state }) {
-    const issuer = await Issuer.discover(config.domain);
-    const client = new issuer.Client({
-      client_id: config.clientId,
-      client_secret: config.clientSecret,
-      redirect_uris: [this.redirectUri],
-    });
+    const client = await this.getClient({ config });
     const url = client.authorizationUrl({
       redirect_uri: this.redirectUri,
       response_type: 'code',
@@ -106,12 +110,7 @@ class OpenIdController {
   }
 
   async openIdCallback({ code, config }) {
-    const issuer = await Issuer.discover(config.domain);
-    const client = new issuer.Client({
-      client_id: config.clientId,
-      client_secret: config.clientSecret,
-      redirect_uris: [this.redirectUri],
-    });
+    const client = await this.getClient({ config });
     const tokenSet = await client.callback(
       this.redirectUri,
       {
@@ -136,12 +135,7 @@ class OpenIdController {
         return config.logoutRedirectUri || null;
       }
 
-      const issuer = await Issuer.discover(config.domain);
-      const client = new issuer.Client({
-        client_id: config.clientId,
-        client_secret: config.clientSecret,
-        redirect_uris: [this.redirectUri],
-      });
+      const client = await this.getClient({ config });
 
       return client.endSessionUrl({
         id_token_hint: idToken,
