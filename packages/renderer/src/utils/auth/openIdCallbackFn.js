@@ -22,7 +22,6 @@ import setupLink from '../setupLink';
 const OPENID_CALLBACK = gql`
   query openIdCallback($openIdCallbackInput: OpenIdCallbackInput!) {
     openIdCallback(openIdCallbackInput: $openIdCallbackInput) {
-      accessToken
       idToken
       input
       pageId
@@ -93,7 +92,10 @@ async function openIdCallbackFn({ rootContext, routeHistory, search }) {
   const idToken = get(data, 'openIdCallback.idToken');
   if (!idToken) throw new Error('Authentication error.');
   rootContext.window.localStorage.setItem('idToken', idToken);
-  rootContext.user = parseJwt(idToken);
+
+  // eslint-disable-next-line no-unused-vars
+  const { iat, exp, aud, iss, ...user } = parseJwt(idToken);
+  rootContext.user = user;
 
   const { data: menuData } = await rootContext.client.query({
     query: GET_MENU,

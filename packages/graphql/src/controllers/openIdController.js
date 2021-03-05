@@ -16,17 +16,20 @@
 
 import { get } from '@lowdefy/helpers';
 import { Issuer } from 'openid-client';
+import cookie from 'cookie';
 
 import { AuthenticationError, ConfigurationError } from '../context/errors';
 
 class OpenIdController {
-  constructor({ development, getController, getLoader, getSecrets, host }) {
+  constructor({ development, getController, getLoader, getSecrets, host, setHeader }) {
     const httpPrefix = development ? 'http' : 'https';
 
+    this.development = development;
     this.componentLoader = getLoader('component');
     this.getSecrets = getSecrets;
     this.host = host;
     this.redirectUri = `${httpPrefix}://${host}/auth/openid-callback`;
+    this.setHeader = setHeader;
     this.tokenController = getController('token');
   }
 
@@ -97,8 +100,14 @@ class OpenIdController {
       const { claims, idToken } = await this.openIdCallback({ code, config });
 
       const accessToken = await this.tokenController.issueAccessToken(claims);
+      const setCookieHeader = cookie.serialize('authorization', accessToken, {
+        httpOnly: true,
+        path: '/api/graphql',
+        sameSite: 'lax',
+        secure: !this.development,
+      });
+      await this.setHeader('Set-Cookie', setCookieHeader);
       return {
-        accessToken,
         idToken,
         input,
         pageId,
@@ -128,6 +137,14 @@ class OpenIdController {
 
   async logoutUrl({ idToken }) {
     try {
+      const setCookieHeader = cookie.serialize('authorization', '', {
+        httpOnly: true,
+        path: '/api/graphql',
+        sameSite: 'lax',
+        secure: !this.development,
+        maxAge: 0,
+      });
+      await this.setHeader('Set-Cookie', setCookieHeader);
       const config = await this.getOpenIdConfig();
       if (!config) return null;
 

@@ -19,9 +19,17 @@
 import { get } from '@lowdefy/helpers';
 import createGetController from '../controllers/getController';
 import createGetLoader from './getLoader';
+import verifyAccessToken from './verifyAccessToken';
 
 function createContext(config) {
-  const { CONFIGURATION_BASE_PATH, development, getHeaders, getSecrets, logger } = config;
+  const {
+    CONFIGURATION_BASE_PATH,
+    development,
+    getHeaders,
+    getSecrets,
+    getSetHeader,
+    logger,
+  } = config;
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH,
     development,
@@ -29,10 +37,14 @@ function createContext(config) {
     logger,
   };
   async function context(input) {
-    const headers = getHeaders(input);
-    bootstrapContext.host = get(headers, 'Host') || get(headers, 'host');
+    bootstrapContext.headers = getHeaders(input);
+    bootstrapContext.setHeader = getSetHeader(input);
+    bootstrapContext.host =
+      get(bootstrapContext.headers, 'Host') || get(bootstrapContext.headers, 'host');
     bootstrapContext.getLoader = createGetLoader(bootstrapContext);
     bootstrapContext.getController = createGetController(bootstrapContext);
+    bootstrapContext.user = await verifyAccessToken(bootstrapContext);
+    console.log(bootstrapContext.user);
     return {
       getController: bootstrapContext.getController,
       logger,

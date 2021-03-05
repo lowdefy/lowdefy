@@ -81,7 +81,6 @@ const typeDefs = gql`
   }
 
   type OpenIdCallbackResponse {
-    accessToken: String
     idToken: String
     input: JSON
     pageId: String

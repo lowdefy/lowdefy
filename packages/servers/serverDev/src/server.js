@@ -26,7 +26,9 @@ const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   development: true,
   getHeaders: ({ req }) => req.headers,
-  setCookie: ({ res }) => {},
+  getSetHeader: ({ res }) => (name, value) => {
+    res.set(name, value);
+  },
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
 };

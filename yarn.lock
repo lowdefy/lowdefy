@@ -3029,6 +3029,7 @@ __metadata:
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
+    cookie: 0.4.1
     dataloader: 2.0.0
     google-spreadsheet: 3.1.15
     graphql: 15.5.0
@@ -7356,6 +7357,13 @@ __metadata:
   version: 0.4.0
   resolution: "cookie@npm:0.4.0"
   checksum: 7aaef4b642c533600fdd001d963a507dfcd814267503374e51d9743475d024feeff8b0b4ddd0777a25791a2efbdfd8bc4a0fe0696104efa195e8f8584807d410
+  languageName: node
+  linkType: hard
+
+"cookie@npm:0.4.1":
+  version: 0.4.1
+  resolution: "cookie@npm:0.4.1"
+  checksum: b8e0928e3e7aba013087974b33a6eec730b0a68b7ec00fc3c089a56ba2883bcf671252fc2ed64775aa1ca64796b6e1f6fdddba25a66808aef77614d235fd3e06
   languageName: node
   linkType: hard
 
