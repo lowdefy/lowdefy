@@ -26,6 +26,7 @@ import { get, urlQuery } from '@lowdefy/helpers';
 import Helmet from './Helmet';
 import Block from './block/Block';
 import Context from './block/Context';
+import setupLink from '../utils/setupLink';
 
 const GET_PAGE = gql`
   query getPage($id: ID!) {
@@ -37,7 +38,7 @@ const PageContext = ({ rootContext }) => {
   const { pageId } = useParams();
 
   const routeHistory = useHistory();
-  rootContext.link = rootContext.getLink(routeHistory);
+  rootContext.link = setupLink({ routeHistory, rootContext });
 
   const { search } = useLocation();
   rootContext.urlQuery = urlQuery.parse(search || '');

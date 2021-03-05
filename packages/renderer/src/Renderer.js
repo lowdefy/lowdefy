@@ -22,7 +22,6 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
-import createLink from './utils/createLink';
 import createLogin from './utils/auth/createLogin';
 import createLogout from './utils/auth/createLogout';
 import OpenIdCallback from './utils/auth/OpenIdCallback';
@@ -94,7 +93,6 @@ const RootContext = ({ children, client }) => {
         contexts,
         displayMessage: () => () => undefined,
         document: documentContext,
-        getLink: (routeHistory) => createLink({ routeHistory, windowContext, allInputs: input }),
         homePageId: get(data, 'menu.homePageId'),
         input,
         link: () => {},
