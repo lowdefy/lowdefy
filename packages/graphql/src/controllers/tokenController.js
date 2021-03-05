@@ -51,17 +51,17 @@ class TokenController {
       });
 
       if (claims.lowdefy_access_token !== true) {
-        throw new AuthenticationError('Invalid token');
+        throw new AuthenticationError('Invalid token.');
       }
       if (!claims.sub) {
-        throw new AuthenticationError('Invalid token');
+        throw new AuthenticationError('Invalid token.');
       }
       return claims;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        throw new TokenExpiredError('Token expired');
+        throw new TokenExpiredError('Token expired.');
       } else {
-        throw new AuthenticationError('Invalid token');
+        throw new AuthenticationError('Invalid token.');
       }
     }
   }
@@ -94,14 +94,14 @@ class TokenController {
       });
 
       if (claims.lowdefy_openid_state_token !== true) {
-        throw new AuthenticationError('Invalid token');
+        throw new AuthenticationError('Invalid token.');
       }
       return claims;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        throw new AuthenticationError('Token expired');
+        throw new AuthenticationError('Token expired.');
       } else {
-        throw new AuthenticationError('Invalid token');
+        throw new AuthenticationError('Invalid token.');
       }
     }
   }

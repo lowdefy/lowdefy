@@ -17,7 +17,7 @@
 import { get } from '@lowdefy/helpers';
 import { gql } from '@apollo/client';
 
-export const GET_LOGIN = gql`
+const GET_LOGIN = gql`
   query openIdAuthorizationUrl($openIdAuthorizationUrlInput: OpenIdAuthorizationUrlInput!) {
     openIdAuthorizationUrl(openIdAuthorizationUrlInput: $openIdAuthorizationUrlInput)
   }

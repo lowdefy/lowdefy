@@ -123,8 +123,8 @@ describe('access tokens', () => {
 describe('openId state tokens', () => {
   test('issueOpenIdStateToken', async () => {
     const tokenController = createTokenController(context);
-    const accessToken = await tokenController.issueOpenIdStateToken(openIdStateLocation);
-    const claims = jwt.verify(accessToken, 'JWT_SECRET', {
+    const stateToken = await tokenController.issueOpenIdStateToken(openIdStateLocation);
+    const claims = jwt.verify(stateToken, 'JWT_SECRET', {
       algorithms: ['HS256'],
       audience: 'host',
       issuer: 'host',
@@ -143,8 +143,8 @@ describe('openId state tokens', () => {
 
   test('issueOpenIdStateToken, no location data', async () => {
     const tokenController = createTokenController(context);
-    const accessToken = await tokenController.issueOpenIdStateToken({});
-    const claims = jwt.verify(accessToken, 'JWT_SECRET', {
+    const stateToken = await tokenController.issueOpenIdStateToken({});
+    const claims = jwt.verify(stateToken, 'JWT_SECRET', {
       algorithms: ['HS256'],
       audience: 'host',
       issuer: 'host',
@@ -160,8 +160,8 @@ describe('openId state tokens', () => {
 
   test('verifyOpenIdStateToken', async () => {
     const tokenController = createTokenController(context);
-    const accessToken = await tokenController.issueOpenIdStateToken(openIdStateLocation);
-    const claims = await tokenController.verifyOpenIdStateToken(accessToken);
+    const stateToken = await tokenController.issueOpenIdStateToken(openIdStateLocation);
+    const claims = await tokenController.verifyOpenIdStateToken(stateToken);
     expect(claims).toEqual({
       aud: 'host',
       exp: 301, // 5min
@@ -176,8 +176,8 @@ describe('openId state tokens', () => {
 
   test('verifyOpenIdStateToken access token invalid', async () => {
     const tokenController = createTokenController(context);
-    const token = await tokenController.issueAccessToken(openIdClaims);
-    await expect(tokenController.verifyOpenIdStateToken(token)).rejects.toThrow(
+    const accessToken = await tokenController.issueAccessToken(openIdClaims);
+    await expect(tokenController.verifyOpenIdStateToken(accessToken)).rejects.toThrow(
       AuthenticationError
     );
   });

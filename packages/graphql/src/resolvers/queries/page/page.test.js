@@ -43,7 +43,6 @@ const loaders = {
     load: mockLoadPage,
   },
 };
-const setters = {};
 
 const GET_PAGE = gql`
   query getPage($id: ID!) {
@@ -66,7 +65,6 @@ test('page graphql', async () => {
     gqlQuery: GET_PAGE,
     variables: { id: 'pageId' },
     loaders,
-    setters,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({

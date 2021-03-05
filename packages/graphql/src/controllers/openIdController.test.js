@@ -17,18 +17,30 @@
 import { Issuer } from 'openid-client';
 import { testBootstrapContext } from '../test/testContext';
 import createOpenIdController from './openIdController';
+import createTokenController from './tokenController';
 import { AuthenticationError, ConfigurationError } from '../context/errors';
 
 jest.mock('openid-client');
 
-const mockopenIdAuthorizationUrl = jest.fn(
+const mockOpenIdAuthorizationUrl = jest.fn(
   // eslint-disable-next-line camelcase
   ({ redirect_uri, response_type, scope, state }) =>
     `${redirect_uri}:${response_type}:${scope}:${state}`
 );
 
+const mockOpenIdCallback = jest.fn(() => ({
+  claims: () => ({ sub: 'sub' }),
+  id_token: 'id_token',
+}));
+
+const mockEndSessionUrl = jest.fn(
+  ({ id_token_hint, post_logout_redirect_uri }) => `${id_token_hint}:${post_logout_redirect_uri}`
+);
+
 const mockClient = jest.fn(() => ({
-  authorizationUrl: mockopenIdAuthorizationUrl,
+  authorizationUrl: mockOpenIdAuthorizationUrl,
+  callback: mockOpenIdCallback,
+  endSessionUrl: mockEndSessionUrl,
 }));
 
 // eslint-disable-next-line no-undef
@@ -55,8 +67,7 @@ const getSecrets = jest.fn();
 const context = testBootstrapContext({ getSecrets, host: 'host', loaders });
 
 const authorizationUrlInput = { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } };
-const callbackInput = { code: 'code', state: 'state' };
-
+const logoutUrlInput = { idToken: 'idToken' };
 const RealDate = Date.now;
 
 const mockNow = jest.fn();
@@ -223,9 +234,197 @@ describe('callback', () => {
   test('callback, no openId config', async () => {
     getSecrets.mockImplementation(() => ({}));
     const openIdController = createOpenIdController(context);
-    await expect(openIdController.callback(callbackInput)).rejects.toThrow(AuthenticationError);
-    await expect(openIdController.callback(callbackInput)).rejects.toThrow(
+    await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
+      AuthenticationError
+    );
+    await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
       'OpenID Connect is not configured.'
+    );
+  });
+
+  test('callback', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    const tokenController = createTokenController(context);
+    const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
+    const res = await openIdController.callback({ code: 'code', state });
+    expect(mockClient.mock.calls).toEqual([
+      [
+        {
+          client_id: 'OPENID_CLIENT_ID',
+          client_secret: 'OPENID_CLIENT_SECRET',
+          redirect_uris: ['https://host/auth/openid-callback'],
+        },
+      ],
+    ]);
+    expect(mockOpenIdCallback.mock.calls).toEqual([
+      [
+        'https://host/auth/openid-callback',
+        {
+          code: 'code',
+        },
+        {
+          response_type: 'code',
+        },
+      ],
+    ]);
+    expect(res).toEqual({
+      accessToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q',
+      idToken: 'id_token',
+      input: {
+        i: true,
+      },
+      pageId: 'pageId',
+      urlQuery: {
+        u: true,
+      },
+    });
+  });
+
+  test('callback, invalid state', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
+      AuthenticationError
+    );
+    await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
+      'AuthenticationError: Invalid token.'
+    );
+  });
+
+  test('callback, openId callback error', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    const tokenController = createTokenController(context);
+    const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
+    mockOpenIdCallback.mockImplementationOnce(() => {
+      throw new Error('OpenId Callback Error');
+    });
+    await expect(openIdController.callback({ code: 'code', state })).rejects.toThrow(
+      AuthenticationError
+    );
+    mockOpenIdCallback.mockImplementationOnce(() => {
+      throw new Error('OpenId Callback Error');
+    });
+    await expect(openIdController.callback({ code: 'code', state })).rejects.toThrow(
+      'Error: OpenId Callback Error'
+    );
+  });
+});
+
+describe('logout', () => {
+  test('callback, no openId config', async () => {
+    getSecrets.mockImplementation(() => ({}));
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.logoutUrl(logoutUrlInput);
+    expect(url).toEqual(null);
+  });
+
+  test('callback, logoutFromProvider !== true, no logoutRedirectUri', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.logoutUrl(logoutUrlInput);
+    expect(url).toEqual(null);
+    expect(mockEndSessionUrl.mock.calls).toEqual([]);
+  });
+
+  test('callback, logoutFromProvider !== true, with logoutRedirectUri', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutRedirectUri: 'logoutRedirectUri',
+        },
+      },
+    }));
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.logoutUrl(logoutUrlInput);
+    expect(url).toEqual('logoutRedirectUri');
+    expect(mockEndSessionUrl.mock.calls).toEqual([]);
+  });
+
+  test('callback, logoutFromProvider, no logoutRedirectUri', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutFromProvider: true,
+        },
+      },
+    }));
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.logoutUrl(logoutUrlInput);
+    expect(mockClient.mock.calls).toEqual([
+      [
+        {
+          client_id: 'OPENID_CLIENT_ID',
+          client_secret: 'OPENID_CLIENT_SECRET',
+          redirect_uris: ['https://host/auth/openid-callback'],
+        },
+      ],
+    ]);
+    expect(url).toEqual('idToken:undefined');
+    expect(mockEndSessionUrl.mock.calls).toEqual([
+      [
+        {
+          id_token_hint: 'idToken',
+        },
+      ],
+    ]);
+  });
+
+  test('callback, logoutFromProvider, with logoutRedirectUri', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutFromProvider: true,
+          logoutRedirectUri: 'logoutRedirectUri',
+        },
+      },
+    }));
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.logoutUrl(logoutUrlInput);
+    expect(mockClient.mock.calls).toEqual([
+      [
+        {
+          client_id: 'OPENID_CLIENT_ID',
+          client_secret: 'OPENID_CLIENT_SECRET',
+          redirect_uris: ['https://host/auth/openid-callback'],
+        },
+      ],
+    ]);
+    expect(url).toEqual('idToken:logoutRedirectUri');
+    expect(mockEndSessionUrl.mock.calls).toEqual([
+      [
+        {
+          id_token_hint: 'idToken',
+          post_logout_redirect_uri: 'logoutRedirectUri',
+        },
+      ],
+    ]);
+  });
+
+  test('callback, logoutFromProvider, error', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutFromProvider: true,
+        },
+      },
+    }));
+    const openIdController = createOpenIdController(context);
+    mockEndSessionUrl.mockImplementationOnce(() => {
+      throw new Error('OpenId End Session Error');
+    });
+    await expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(AuthenticationError);
+    mockEndSessionUrl.mockImplementationOnce(() => {
+      throw new Error('OpenId End Session Error');
+    });
+    await expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(
+      'Error: OpenId End Session Error'
     );
   });
 });

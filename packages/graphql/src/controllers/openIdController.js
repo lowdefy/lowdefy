@@ -88,10 +88,10 @@ class OpenIdController {
       if (!config) {
         throw new Error('OpenID Connect is not configured.');
       }
+      const { input, pageId, urlQuery } = await this.tokenController.verifyOpenIdStateToken(state);
 
       const { claims, idToken } = await this.openIdCallback({ code, config });
 
-      const { input, pageId, urlQuery } = await this.tokenController.verifyOpenIdStateToken(state);
       const accessToken = await this.tokenController.issueAccessToken(claims);
       return {
         accessToken,
