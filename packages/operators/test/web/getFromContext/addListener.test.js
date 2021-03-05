@@ -19,9 +19,14 @@ import WebParser from '../../../src/webParser';
 
 const arrayIndices = [1];
 
+const root = {
+  input: {},
+};
+
 test('add listener if contextId is not equal to own contextId', () => {
   const context = {
     id: 'own',
+    root,
     state: {
       string: 'state',
     },
@@ -30,6 +35,7 @@ test('add listener if contextId is not equal to own contextId', () => {
 
   const otherContext = {
     id: 'other',
+    root,
     state: {
       string: 'state-other',
     },
@@ -56,6 +62,7 @@ test('add listener if contextId is not equal to own contextId', () => {
 test('do not add listener if contextId is equal to own contextId', () => {
   const context = {
     id: 'own',
+    root,
     state: {
       string: 'state',
       arr: [{ a: 'state1' }, { a: 'state2' }],
@@ -65,6 +72,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
 
   const otherContext = {
     id: 'other',
+    root,
     state: {
       string: 'state-other',
       arr: [{ a: 'state1-other' }, { a: 'state2-other' }],
@@ -92,6 +100,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
 test('add listener for _state', () => {
   const context = {
     id: 'own',
+    root,
     state: {
       string: 'state',
     },
@@ -100,6 +109,7 @@ test('add listener for _state', () => {
 
   const otherContext = {
     id: 'other',
+    root,
     state: {
       string: 'state-other',
     },
@@ -126,6 +136,7 @@ test('add listener for _state', () => {
 test('add listener for _event_log', () => {
   const context = {
     id: 'own',
+    root,
     eventLog: [
       {
         string: 'state',
@@ -136,6 +147,7 @@ test('add listener for _event_log', () => {
 
   const otherContext = {
     id: 'other',
+    root,
     eventLog: [
       {
         string: 'state-other',
@@ -162,19 +174,25 @@ test('add listener for _event_log', () => {
 });
 
 test('add listener for _input', () => {
+  const root = {
+    input: {
+      own: {
+        string: 'input',
+      },
+      other: {
+        string: 'input-other',
+      },
+    },
+  };
   const context = {
     id: 'own',
-    input: {
-      string: 'input',
-    },
+    root,
     updateListeners: new Set(),
   };
 
   const otherContext = {
     id: 'other',
-    input: {
-      string: 'input-other',
-    },
+    root,
     updateListeners: new Set(),
   };
 
@@ -196,19 +214,21 @@ test('add listener for _input', () => {
 });
 
 test('add listener for _url_query', () => {
-  const context = {
-    id: 'own',
+  const root = {
     urlQuery: {
       string: 'url',
     },
+    input: {},
+  };
+  const context = {
+    id: 'own',
+    root,
     updateListeners: new Set(),
   };
 
   const otherContext = {
     id: 'other',
-    urlQuery: {
-      string: 'url-other',
-    },
+    root,
     updateListeners: new Set(),
   };
 
@@ -225,13 +245,14 @@ test('add listener for _url_query', () => {
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('url-other');
+  expect(res.output).toEqual('url');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
 test('add listener for _request_details', () => {
   const context = {
     id: 'own',
+    root,
     requests: {
       string: 'requests',
     },
@@ -240,6 +261,7 @@ test('add listener for _request_details', () => {
 
   const otherContext = {
     id: 'other',
+    root,
     requests: {
       string: 'requests-other',
     },

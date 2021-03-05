@@ -25,10 +25,11 @@ const state = {
 const location = 'location';
 
 const context = {
+  root: { input: {} },
   state,
 };
 
-const contexts = {};
+const contexts = { context };
 
 test('NodeParser, _function that gets from state', () => {
   const parser = new NodeParser({ state });

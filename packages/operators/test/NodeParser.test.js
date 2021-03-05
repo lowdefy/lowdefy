@@ -406,6 +406,14 @@ describe('parse operators', () => {
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 
+  test('parse _user operator', () => {
+    const input = { _user: 'name' };
+    const parser = new NodeParser({ user: { name: 'user' } });
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('user');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
   test('parse _get operator', () => {
     const input = { _get: { key: 'key', from: { key: 'value' } } };
     const parser = new NodeParser({});

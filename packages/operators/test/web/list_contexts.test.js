@@ -17,15 +17,12 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
 
-const context = {
-  contextId: 'own',
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
+const root = {
   input: {
-    string: 'input',
-    arr: [{ a: 'input1' }, { a: 'input2' }],
+    own: {
+      string: 'input',
+      arr: [{ a: 'input1' }, { a: 'input2' }],
+    },
   },
   lowdefyGlobal: {
     string: 'global',
@@ -42,11 +39,17 @@ const context = {
       menuId: 'm_2',
     },
   ],
-  mutations: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'mutation String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'mutation a1' }, { a: 'mutation a2' }] },
+  urlQuery: {
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
+  },
+};
+
+const context = {
+  contextId: 'own',
+  config: {
+    string: 'config',
+    arr: [{ a: 'config1' }, { a: 'config2' }],
   },
   requests: {
     not_loaded: { loading: true, response: 'fail' },
@@ -54,13 +57,10 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
+  root,
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
 };
 
