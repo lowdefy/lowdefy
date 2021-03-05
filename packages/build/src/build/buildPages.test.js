@@ -1212,6 +1212,122 @@ describe('build requests', () => {
     });
   });
 
+  test('request on a non-context block below a context block and at root', async () => {
+    const components = {
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          blocks: [
+            {
+              id: 'context',
+              type: 'Context',
+              blocks: [
+                {
+                  id: 'box-inner',
+                  type: 'Container',
+                },
+              ],
+            },
+            {
+              id: 'box',
+              type: 'Container',
+              requests: [
+                {
+                  id: 'request_1',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      pages: [
+        {
+          id: 'page:page_1',
+          blockId: 'page_1',
+          type: 'Context',
+          meta: {
+            category: 'context',
+            loading: { type: 'Spinner' },
+            moduleFederation: {
+              module: 'Context',
+              scope: 'blocks',
+              url: 'https://example.com/remoteEntry.js',
+            },
+          },
+          pageId: 'page_1',
+          requests: [
+            {
+              id: 'request:page_1:page_1:request_1',
+              contextId: 'page_1',
+              requestId: 'request_1',
+            },
+          ],
+          areas: {
+            content: {
+              blocks: [
+                {
+                  id: 'block:page_1:context',
+                  blockId: 'context',
+                  type: 'Context',
+                  requests: [],
+                  areas: {
+                    content: {
+                      blocks: [
+                        {
+                          blockId: 'box-inner',
+                          id: 'block:page_1:box-inner',
+                          meta: {
+                            category: 'container',
+                            loading: {
+                              type: 'Spinner',
+                            },
+                            moduleFederation: {
+                              module: 'Container',
+                              scope: 'blocks',
+                              url: 'https://example.com/remoteEntry.js',
+                            },
+                          },
+                          type: 'Container',
+                        },
+                      ],
+                    },
+                  },
+                  meta: {
+                    category: 'context',
+                    loading: { type: 'Spinner' },
+                    moduleFederation: {
+                      module: 'Context',
+                      scope: 'blocks',
+                      url: 'https://example.com/remoteEntry.js',
+                    },
+                  },
+                },
+                {
+                  id: 'block:page_1:box',
+                  blockId: 'box',
+                  type: 'Container',
+                  meta: {
+                    category: 'container',
+                    loading: { type: 'Spinner' },
+                    moduleFederation: {
+                      module: 'Container',
+                      scope: 'blocks',
+                      url: 'https://example.com/remoteEntry.js',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    });
+  });
+
   test('multiple requests', async () => {
     const components = {
       pages: [
