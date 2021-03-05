@@ -21,7 +21,7 @@ function setupLink({ routeHistory, rootContext }) {
     if (newTab) {
       rootContext.window.open(`${rootContext.window.location.origin}${path}`, '_blank').focus();
     } else {
-      routeHistory.push(`${rootContext.window.location.origin}${path}`);
+      routeHistory.push(path);
     }
   };
   const newOriginLink = (path, newTab) => {

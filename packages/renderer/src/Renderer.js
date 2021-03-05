@@ -28,6 +28,7 @@ import OpenIdCallback from './utils/auth/OpenIdCallback';
 import DisplayMessage from './page/DisplayMessage';
 import Page from './page/Page';
 import createUpdateBlock from './page/block/updateBlock';
+import parseJwt from './utils/auth/parseJwt';
 
 // eslint-disable-next-line no-undef
 const windowContext = window;
@@ -82,6 +83,12 @@ const RootContext = ({ children, client }) => {
   if (loading) return <Loading type="Spinner" properties={{ height: '100vh' }} />;
   if (error) return <h1>Error</h1>;
 
+  let user = {};
+  const idToken = windowContext.localStorage.getItem('idToken');
+  if (idToken) {
+    user = parseJwt(idToken);
+  }
+
   return (
     <>
       {children({
@@ -99,6 +106,7 @@ const RootContext = ({ children, client }) => {
         lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
         menus: get(data, 'menu.menus'),
         updateBlock: createUpdateBlock(client),
+        user,
         window: windowContext,
       })}
     </>

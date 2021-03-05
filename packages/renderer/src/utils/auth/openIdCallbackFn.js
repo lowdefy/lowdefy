@@ -14,7 +14,10 @@
   limitations under the License.
 */
 import { gql } from '@apollo/client';
-import { urlQuery } from '@lowdefy/helpers';
+import { get, urlQuery as urlQueryFn } from '@lowdefy/helpers';
+
+import parseJwt from './parseJwt';
+import setupLink from '../setupLink';
 
 const OPENID_CALLBACK = gql`
   query openIdCallback($openIdCallbackInput: OpenIdCallbackInput!) {
@@ -28,12 +31,53 @@ const OPENID_CALLBACK = gql`
   }
 `;
 
-async function openIdCallbackFn({ rootContext, search }) {
-  const { code, state, error, error_description } = urlQuery.parse(search.slice(0) || '');
+const GET_MENU = gql`
+  fragment MenuLinkFragment on MenuLink {
+    id
+    type
+    properties
+    pageId
+    url
+  }
+  query getRoot {
+    menu {
+      menus {
+        id
+        menuId
+        properties
+        links {
+          ...MenuLinkFragment
+          ... on MenuGroup {
+            id
+            type
+            properties
+            links {
+              ... on MenuGroup {
+                id
+                type
+                properties
+                links {
+                  ...MenuLinkFragment
+                }
+              }
+              ...MenuLinkFragment
+            }
+          }
+        }
+      }
+      homePageId
+    }
+  }
+`;
+
+async function openIdCallbackFn({ rootContext, routeHistory, search }) {
+  const { code, state, error, error_description } = urlQueryFn.parse(search.slice(0) || '');
+
   if (error) {
     if (error_description) throw new Error(error_description);
     throw new Error(error);
   }
+
   if (!code || !state) throw new Error('Authentication error.');
   const { data } = await rootContext.client.query({
     query: OPENID_CALLBACK,
@@ -45,7 +89,26 @@ async function openIdCallbackFn({ rootContext, search }) {
       },
     },
   });
-  console.log(data);
+
+  const idToken = get(data, 'openIdCallback.idToken');
+  if (!idToken) throw new Error('Authentication error.');
+  rootContext.window.localStorage.setItem('idToken', idToken);
+  rootContext.user = parseJwt(idToken);
+
+  const { data: menuData } = await rootContext.client.query({
+    query: GET_MENU,
+    fetchPolicy: 'network-only',
+  });
+  rootContext.homePageId = get(menuData, 'menu.homePageId');
+  rootContext.menus = get(menuData, 'menu.menus');
+
+  rootContext.link = setupLink({ rootContext, routeHistory });
+  const { pageId, input, urlQuery } = data.openIdCallback;
+  if (pageId) {
+    rootContext.link({ pageId, input, urlQuery });
+  } else {
+    rootContext.link({ input, home: true, urlQuery });
+  }
 }
 
 export default openIdCallbackFn;

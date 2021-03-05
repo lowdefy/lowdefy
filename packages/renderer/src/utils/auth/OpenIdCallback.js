@@ -16,17 +16,18 @@
 
 import React, { useEffect, useState } from 'react';
 import { Loading } from '@lowdefy/block-tools';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import openIdCallbackFn from './openIdCallbackFn';
 
 const OpenIdCallback = ({ rootContext }) => {
   const { search } = useLocation();
+  const routeHistory = useHistory();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
     const mount = async () => {
       try {
-        await openIdCallbackFn({ rootContext, search });
+        await openIdCallbackFn({ rootContext, routeHistory, search });
         setLoading(false);
       } catch (err) {
         setError(err);
@@ -34,7 +35,7 @@ const OpenIdCallback = ({ rootContext }) => {
     };
     mount();
     return () => {};
-  }, [rootContext, search]);
+  }, [rootContext, routeHistory, search]);
 
   if (error) throw error;
 
