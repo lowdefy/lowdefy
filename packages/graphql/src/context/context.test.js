@@ -25,21 +25,17 @@ const logger = {
   log: mockLog,
 };
 
+const mockGetHeaders = jest.fn(() => ({ host: 'host' }));
 const mockGetSecrets = jest.fn(() => ({}));
 
 const config = {
   CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
   logger,
+  getHeaders: mockGetHeaders,
   getSecrets: mockGetSecrets,
 };
 
-const input = {
-  req: {
-    headers: {
-      host: 'host',
-    },
-  },
-};
+const input = {};
 
 /* TODO:
 - secrets can only be accessed where they should be
@@ -51,21 +47,14 @@ test('create context function', () => {
   expect(contextFn).toBeInstanceOf(Function);
 });
 
-test('context function returns context object with getController and logger', async () => {
+test('context function returns context object with getController, logger, and setHeaders', async () => {
   const contextFn = createContext(config);
   const context = await contextFn(input);
   expect(context).toBeInstanceOf(Object);
   expect(context.logger).toBe(logger);
   expect(context.getController).toBeInstanceOf(Function);
-  expect(Object.keys(context)).toEqual(['getController', 'logger']);
-});
-
-test('context function returns context object with getController and logger', async () => {
-  const contextFn = createContext(config);
-  const context = await contextFn(input);
-  expect(context).toBeInstanceOf(Object);
-  expect(context.logger).toBe(logger);
-  expect(context.getController).toBeInstanceOf(Function);
+  expect(context.setHeaders).toBeInstanceOf(Array);
+  expect(Object.keys(context)).toEqual(['getController', 'logger', 'setHeaders']);
 });
 
 test('getController returns the correct controllers', async () => {
@@ -93,40 +82,17 @@ test('request controller has getSecrets', async () => {
 
 test('request controller get host from req', async () => {
   const contextFn = createContext(config);
-  let context = await contextFn({
-    req: {
-      headers: {
-        host: 'host',
-      },
-    },
-  });
+  let context = await contextFn(input);
   let openIDController = context.getController('openId');
   expect(openIDController.host).toBe('host');
-  context = await contextFn({
-    req: {
-      headers: {
-        Host: 'host',
-      },
-    },
-  });
+  mockGetHeaders.mockImplementationOnce(() => ({ Host: 'host' }));
   openIDController = context.getController('openId');
   expect(openIDController.host).toBe('host');
-  context = await contextFn({
-    event: {
-      headers: {
-        host: 'host',
-      },
-    },
-  });
-  openIDController = context.getController('openId');
-  expect(openIDController.host).toBe('host');
-  context = await contextFn({
-    event: {
-      headers: {
-        Host: 'host',
-      },
-    },
-  });
-  openIDController = context.getController('openId');
-  expect(openIDController.host).toBe('host');
+});
+
+test('setHeaders', async () => {
+  const contextFn = createContext(config);
+  const context = await contextFn(input);
+  const openIDController = context.getController('openId');
+  expect(openIDController.setHeaders).toBe(context.setHeaders);
 });

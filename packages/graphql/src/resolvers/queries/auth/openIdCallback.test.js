@@ -99,7 +99,6 @@ test('openIdCallback graphql', async () => {
   const OPENID_CALLBACK = gql`
     query openIdCallback($openIdCallbackInput: OpenIdCallbackInput!) {
       openIdCallback(openIdCallbackInput: $openIdCallbackInput) {
-        accessToken
         idToken
         input
         pageId
@@ -107,17 +106,17 @@ test('openIdCallback graphql', async () => {
       }
     }
   `;
+  const setHeaders = [];
   const res = await runTestQuery({
     gqlQuery: OPENID_CALLBACK,
     variables: { openIdCallbackInput: { code: 'code', state } },
     loaders,
     getSecrets,
+    setHeaders,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({
     openIdCallback: {
-      accessToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q',
       idToken: 'id_token',
       input: {
         i: true,
@@ -128,4 +127,11 @@ test('openIdCallback graphql', async () => {
       },
     },
   });
+  expect(setHeaders).toEqual([
+    {
+      key: 'Set-Cookie',
+      value:
+        'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+    },
+  ]);
 });

@@ -17,7 +17,7 @@
 import path from 'path';
 import { ApolloServer } from 'apollo-server-lambda';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, setHeaderPlugin } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
@@ -30,6 +30,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: createContext(config),
+  plugins: [setHeaderPlugin],
 });
 
 const handler = server.createHandler();

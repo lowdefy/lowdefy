@@ -233,19 +233,24 @@ describe('authorizationUrl', () => {
 describe('callback', () => {
   test('callback, no openId config', async () => {
     getSecrets.mockImplementation(() => ({}));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
       AuthenticationError
     );
     await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
       'OpenID Connect is not configured.'
     );
+    expect(setHeaders).toEqual([]);
   });
 
   test('callback', async () => {
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
     getSecrets.mockImplementation(() => secrets);
-    const openIdController = createOpenIdController(context);
-    const tokenController = createTokenController(context);
+    const openIdController = createOpenIdController(ctx);
+    const tokenController = createTokenController(ctx);
     const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
     const res = await openIdController.callback({ code: 'code', state });
     expect(mockClient.mock.calls).toEqual([
@@ -269,8 +274,6 @@ describe('callback', () => {
       ],
     ]);
     expect(res).toEqual({
-      accessToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q',
       idToken: 'id_token',
       input: {
         i: true,
@@ -280,23 +283,35 @@ describe('callback', () => {
         u: true,
       },
     });
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value:
+          'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, invalid state', async () => {
     getSecrets.mockImplementation(() => secrets);
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
       AuthenticationError
     );
     await expect(openIdController.callback({ code: 'code', state: 'state' })).rejects.toThrow(
       'AuthenticationError: Invalid token.'
     );
+    expect(setHeaders).toEqual([]);
   });
 
   test('callback, openId callback error', async () => {
     getSecrets.mockImplementation(() => secrets);
-    const openIdController = createOpenIdController(context);
-    const tokenController = createTokenController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
+    const tokenController = createTokenController(ctx);
     const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
     mockOpenIdCallback.mockImplementationOnce(() => {
       throw new Error('OpenId Callback Error');
@@ -310,23 +325,40 @@ describe('callback', () => {
     await expect(openIdController.callback({ code: 'code', state })).rejects.toThrow(
       'Error: OpenId Callback Error'
     );
+    expect(setHeaders).toEqual([]);
   });
 });
 
 describe('logout', () => {
   test('callback, no openId config', async () => {
     getSecrets.mockImplementation(() => ({}));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     const url = await openIdController.logoutUrl(logoutUrlInput);
     expect(url).toEqual(null);
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, logoutFromProvider !== true, no logoutRedirectUri', async () => {
     getSecrets.mockImplementation(() => secrets);
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     const url = await openIdController.logoutUrl(logoutUrlInput);
     expect(url).toEqual(null);
     expect(mockEndSessionUrl.mock.calls).toEqual([]);
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, logoutFromProvider !== true, with logoutRedirectUri', async () => {
@@ -338,10 +370,18 @@ describe('logout', () => {
         },
       },
     }));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     const url = await openIdController.logoutUrl(logoutUrlInput);
     expect(url).toEqual('logoutRedirectUri');
     expect(mockEndSessionUrl.mock.calls).toEqual([]);
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, logoutFromProvider, no logoutRedirectUri', async () => {
@@ -353,7 +393,9 @@ describe('logout', () => {
         },
       },
     }));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     const url = await openIdController.logoutUrl(logoutUrlInput);
     expect(mockClient.mock.calls).toEqual([
       [
@@ -372,6 +414,12 @@ describe('logout', () => {
         },
       ],
     ]);
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, logoutFromProvider, with logoutRedirectUri', async () => {
@@ -384,7 +432,9 @@ describe('logout', () => {
         },
       },
     }));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     const url = await openIdController.logoutUrl(logoutUrlInput);
     expect(mockClient.mock.calls).toEqual([
       [
@@ -404,6 +454,12 @@ describe('logout', () => {
         },
       ],
     ]);
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 
   test('callback, logoutFromProvider, error', async () => {
@@ -415,7 +471,9 @@ describe('logout', () => {
         },
       },
     }));
-    const openIdController = createOpenIdController(context);
+    const setHeaders = [];
+    const ctx = testBootstrapContext({ getSecrets, host: 'host', loaders, setHeaders });
+    const openIdController = createOpenIdController(ctx);
     mockEndSessionUrl.mockImplementationOnce(() => {
       throw new Error('OpenId End Session Error');
     });
@@ -426,5 +484,15 @@ describe('logout', () => {
     await expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(
       'Error: OpenId End Session Error'
     );
+    expect(setHeaders).toEqual([
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+      {
+        key: 'Set-Cookie',
+        value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      },
+    ]);
   });
 });
