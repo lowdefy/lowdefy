@@ -83,14 +83,22 @@ test('openIdLogoutUrl graphql', async () => {
       openIdLogoutUrl(openIdLogoutUrlInput: $openIdLogoutUrlInput)
     }
   `;
+  const setHeaders = [];
   const res = await runTestQuery({
     gqlQuery: GET_LOGOUT,
     variables: { openIdLogoutUrlInput: { idToken: 'idToken' } },
     loaders,
     getSecrets,
+    setHeaders,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({
     openIdLogoutUrl: 'idToken:logoutRedirectUri',
   });
+  expect(setHeaders).toEqual([
+    {
+      key: 'Set-Cookie',
+      value: 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+    },
+  ]);
 });

@@ -472,6 +472,23 @@
                   }
                 }
               }
+            },
+            "jwt": {
+              "type": "object",
+              "additionalProperties": false,
+              "errorMessage": {
+                "type": "App \"config.auth.jwt\" should be an object."
+              },
+              "properties": {
+                "expiresIn": {
+                  "type": ["string", "number"],
+                  "default": "4h",
+                  "description": "The length of time a user token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)",
+                  "errorMessage": {
+                    "type": "App \"config.auth.jwt.expiresIn\" should be a string or number."
+                  }
+                }
+              }
             }
           }
         }

@@ -19,22 +19,24 @@ import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, setHeaderPlugin } from '@lowdefy/node-utils';
 
 dotenv.config({ silent: true });
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
   development: true,
   getHeaders: ({ req }) => req.headers,
-  getSetHeader: ({ res }) => (name, value) => {
-    res.set(name, value);
-  },
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
 };
 
 const context = createContext(config);
-const server = new ApolloServer({ typeDefs, resolvers, context });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+  plugins: [setHeaderPlugin],
+});
 const app = express();
 
 server.applyMiddleware({ app, path: '/api/graphql' });

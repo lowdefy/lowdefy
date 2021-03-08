@@ -18,7 +18,7 @@ import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, setHeaderPlugin } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './build'),
@@ -28,7 +28,12 @@ const config = {
 };
 
 const context = createContext(config);
-const server = new ApolloServer({ typeDefs, resolvers, context });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+  plugins: [setHeaderPlugin],
+});
 const app = express();
 
 server.applyMiddleware({ app, path: '/api/graphql' });

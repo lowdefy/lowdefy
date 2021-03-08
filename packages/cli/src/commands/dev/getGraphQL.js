@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, setHeaderPlugin } from '@lowdefy/node-utils';
 import { ApolloServer } from 'apollo-server-express';
 
 import getFederatedModule from '../../utils/getFederatedModule';
@@ -34,7 +34,12 @@ async function getGraphQl({ context }) {
     getSecrets: createGetSecretsFromEnv(),
   };
   const gqlContext = createGqlContext(config);
-  const server = new ApolloServer({ typeDefs, resolvers, context: gqlContext });
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: gqlContext,
+    plugins: [setHeaderPlugin],
+  });
   return server;
 }
 

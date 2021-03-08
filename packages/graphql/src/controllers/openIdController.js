@@ -21,7 +21,7 @@ import cookie from 'cookie';
 import { AuthenticationError, ConfigurationError } from '../context/errors';
 
 class OpenIdController {
-  constructor({ development, getController, getLoader, getSecrets, host, setHeader }) {
+  constructor({ development, getController, getLoader, getSecrets, host, setHeaders }) {
     const httpPrefix = development ? 'http' : 'https';
 
     this.development = development;
@@ -29,7 +29,7 @@ class OpenIdController {
     this.getSecrets = getSecrets;
     this.host = host;
     this.redirectUri = `${httpPrefix}://${host}/auth/openid-callback`;
-    this.setHeader = setHeader;
+    this.setHeaders = setHeaders;
     this.tokenController = getController('token');
   }
 
@@ -106,7 +106,8 @@ class OpenIdController {
         sameSite: 'lax',
         secure: !this.development,
       });
-      await this.setHeader('Set-Cookie', setCookieHeader);
+
+      this.setHeaders.push({ key: 'Set-Cookie', value: setCookieHeader });
       return {
         idToken,
         input,
@@ -144,7 +145,7 @@ class OpenIdController {
         secure: !this.development,
         maxAge: 0,
       });
-      await this.setHeader('Set-Cookie', setCookieHeader);
+      this.setHeaders.push({ key: 'Set-Cookie', value: setCookieHeader });
       const config = await this.getOpenIdConfig();
       if (!config) return null;
 

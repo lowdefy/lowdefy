@@ -23,9 +23,16 @@ const secrets = {
   JWT_SECRET: 'JWT_SECRET',
 };
 
+const mockLoadComponent = jest.fn();
+const loaders = {
+  component: {
+    load: mockLoadComponent,
+  },
+};
+
 const getSecrets = () => secrets;
 
-const context = testBootstrapContext({ getSecrets, host: 'host' });
+const context = testBootstrapContext({ getSecrets, host: 'host', loaders });
 
 const RealDate = Date.now;
 
@@ -46,6 +53,32 @@ afterAll(() => {
 
 describe('access tokens', () => {
   test('issueAccessToken', async () => {
+    const tokenController = createTokenController(context);
+    const accessToken = await tokenController.issueAccessToken(openIdClaims);
+    const claims = jwt.verify(accessToken, 'JWT_SECRET', {
+      algorithms: ['HS256'],
+      audience: 'host',
+      issuer: 'host',
+    });
+    expect(claims).toEqual({
+      aud: 'host',
+      email: 'email',
+      exp: 14401, // 4 hours
+      iat: 1,
+      iss: 'host',
+      sub: 'sub',
+      lowdefy_access_token: true,
+    });
+  });
+
+  test('issueAccessToken, configure token expiry', async () => {
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        jwt: {
+          expiresIn: '12h',
+        },
+      },
+    }));
     const tokenController = createTokenController(context);
     const accessToken = await tokenController.issueAccessToken(openIdClaims);
     const claims = jwt.verify(accessToken, 'JWT_SECRET', {
