@@ -24,15 +24,20 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then use the build artifacts to serve the app.
+            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then serve the build artifacts.
 
-            You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently you can host Lowdefy apps on Netlify, and as a Docker container.
+            You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently, you can host Lowdefy apps on Netlify, and as a Docker container.
+
+            The diagram below provides an overview of the Lowdefy app schematic:
+            ![Lowdefy App Diagram](https://deploy-preview-481--lowdefy-docs.netlify.app/public/lowdefy_app_schema.png "Lowdefy App Diagram")
 
             The Lowdefy server manages connections and executes requests, serves a web client, and serves the configuration for app pages to the client. The server does not have a data-store, but can connect to external data sources like APIs and databases.
 
-            The Lowdefy web client manages the layout and loading of Lowdefy blocks. Blocks are loaded to the client using _webpack Module Federation_. This means they do not need to be served by your app, can be cached for different Lowdefy apps, and that you can write a custom block that can then be accessed by any Lowdefy app.
+            The Lowdefy web client manages the layout and loading of Lowdefy blocks. Blocks are loaded to the client using _webpack Module Federation_. This means that Lowdefy blocks are external to your apps and can be hosted separately on any static file server, which allows you to extend Lowdefy's capabilities with custom Lowdefy blocks.
 
             The client also manages each context in the app, executes actions that are triggered by events, and evaluates operators that allow for "live updates" to the UI.
+
+            Authentication for private pages in Lowdefy apps is implemented by connecting to your preferred, external OpenID Connect provider.
 
       - _ref:
           path: templates/navigation_buttons.yaml
