@@ -14,16 +14,19 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-tools';
 
 import LoadBlock from './LoadBlock';
 import LoadingBlock from './LoadingBlock';
 import CategorySwitch from './CategorySwitch';
-import WatchCache from './WatchCache';
 
 const Block = ({ block, Blocks, context, lowdefy }) => {
+  const [updates, setUpdate] = useState(0);
+  useEffect(() => {
+    lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
+  });
   const Loading = (
     <LoadingBlock
       blockId={block.blockId}
@@ -38,19 +41,13 @@ const Block = ({ block, Blocks, context, lowdefy }) => {
           meta={block.meta}
           Loading={Loading}
           render={(Comp) => (
-            <WatchCache
+            <CategorySwitch
               block={block}
+              Blocks={Blocks}
+              Component={Comp}
+              context={context}
               lowdefy={lowdefy}
-              Loading={Loading}
-              render={() => (
-                <CategorySwitch
-                  Component={Comp}
-                  block={block}
-                  Blocks={Blocks}
-                  context={context}
-                  lowdefy={lowdefy}
-                />
-              )}
+              updates={updates}
             />
           )}
         />

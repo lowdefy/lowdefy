@@ -27,7 +27,6 @@ import createLogout from './utils/auth/createLogout';
 import OpenIdCallback from './utils/auth/OpenIdCallback';
 import DisplayMessage from './page/DisplayMessage';
 import Page from './page/Page';
-import createUpdateBlock from './page/block/updateBlock';
 import parseJwt from './utils/auth/parseJwt';
 
 const lowdefy = {
@@ -37,6 +36,7 @@ const lowdefy = {
   inputs: {},
   link: () => {},
   localStorage,
+  updaters: {},
   window,
 };
 
@@ -106,12 +106,12 @@ const Home = ({ lowdefy }) => {
 };
 
 const Root = ({ gqlUri }) => {
+  lowdefy.updateBlock = (blockId) => lowdefy.updaters[blockId] && lowdefy.updaters[blockId]();
   lowdefy.client = useGqlClient({ gqlUri, lowdefy });
   lowdefy.auth = {
     login: createLogin(lowdefy),
     logout: createLogout(lowdefy),
   };
-  lowdefy.updateBlock = createUpdateBlock(lowdefy.client);
   lowdefy.user = {};
   const idToken = lowdefy.localStorage.getItem('idToken');
   if (idToken) {
