@@ -20,7 +20,7 @@ import { makeCssClass } from '@lowdefy/block-tools';
 
 import Block from './Block';
 
-const List = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
+const List = ({ block, Blocks, Component, context, lowdefy }) => {
   const content = {};
   const contentList = [];
   Blocks.subBlocks[block.id].forEach((SBlock) => {
@@ -44,7 +44,6 @@ const List = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
               Blocks={SBlock}
               block={bl}
               context={context}
-              pageId={pageId}
               lowdefy={lowdefy}
             />
           ))}
@@ -80,7 +79,7 @@ const List = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
         list={contentList}
         loading={block.loading}
         menus={lowdefy.menus}
-        pageId={pageId}
+        pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
         user={lowdefy.user}

@@ -36,13 +36,10 @@ const GET_PAGE = gql`
 
 const PageContext = ({ lowdefy }) => {
   const { pageId } = useParams();
-  lowdefy.pageId = pageId;
-
-  lowdefy.routeHistory = useHistory();
-
-  lowdefy.link = setupLink(lowdefy);
-
   const { search } = useLocation();
+  lowdefy.pageId = pageId;
+  lowdefy.routeHistory = useHistory();
+  lowdefy.link = setupLink(lowdefy);
   lowdefy.urlQuery = urlQuery.parse(search || '');
 
   const { loading, error, data } = useQuery(GET_PAGE, {
@@ -83,14 +80,12 @@ const PageContext = ({ lowdefy }) => {
           }}
           context={null}
           contextId={`root:${pageId}`}
-          pageId={pageId}
           lowdefy={lowdefy}
           render={(context) => (
             <Block
               block={context.RootBlocks.map[data.page.blockId]}
               Blocks={context.RootBlocks}
               context={context}
-              pageId={pageId}
               lowdefy={lowdefy}
             />
           )}

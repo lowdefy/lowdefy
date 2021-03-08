@@ -23,7 +23,7 @@ import Container from './Container';
 import Context from './Context';
 import List from './List';
 
-const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
+const CategorySwitch = ({ block, Blocks, Component, context, lowdefy }) => {
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
 
@@ -37,10 +37,9 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
             // TODO: remove branch
             branch: 'main',
             urlQuery: lowdefy.urlQuery,
-            pageId,
+            pageId: lowdefy.pageId,
             blockId: block.blockId,
           })}
-          pageId={pageId}
           lowdefy={lowdefy}
           render={(context) => (
             <Container
@@ -48,7 +47,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
               Blocks={context.RootBlocks}
               Component={Component}
               context={context}
-              pageId={pageId}
               lowdefy={lowdefy}
             />
           )}
@@ -61,7 +59,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
           Blocks={Blocks}
           Component={Component}
           context={context}
-          pageId={pageId}
           lowdefy={lowdefy}
         />
       );
@@ -72,7 +69,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
           Blocks={Blocks}
           Component={Component}
           context={context}
-          pageId={pageId}
           lowdefy={lowdefy}
         />
       );
@@ -99,7 +95,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
             key={block.blockId}
             loading={block.loading}
             menus={lowdefy.menus}
-            pageId={pageId}
+            pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
             user={lowdefy.user}
@@ -130,7 +126,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, lowdefy }) 
             key={block.blockId}
             loading={block.loading}
             menus={lowdefy.menus}
-            pageId={pageId}
+            pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
             user={lowdefy.user}

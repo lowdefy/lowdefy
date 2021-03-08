@@ -23,7 +23,7 @@ import LoadingBlock from './LoadingBlock';
 import CategorySwitch from './CategorySwitch';
 import WatchCache from './WatchCache';
 
-const Block = ({ block, Blocks, context, pageId, lowdefy }) => {
+const Block = ({ block, Blocks, context, lowdefy }) => {
   const Loading = (
     <LoadingBlock
       blockId={block.blockId}
@@ -48,7 +48,6 @@ const Block = ({ block, Blocks, context, pageId, lowdefy }) => {
                   block={block}
                   Blocks={Blocks}
                   context={context}
-                  pageId={pageId}
                   lowdefy={lowdefy}
                 />
               )}

@@ -22,11 +22,12 @@ const GET_LOGOUT = gql`
   }
 `;
 
-function createLogout({ client, window }) {
+function createLogout(lowdefy) {
   async function logout() {
     try {
-      // handle token
-      const { data } = await client.query({
+      lowdefy.user = {};
+      lowdefy.localStorage.setItem(`tokenId`, '');
+      const { data } = await lowdefy.client.query({
         query: GET_LOGOUT,
         fetchPolicy: 'network-only',
         variables: {
@@ -36,7 +37,7 @@ function createLogout({ client, window }) {
         },
       });
       // TODO: should we call link??
-      window.location.href = data.openIdLogoutUrl || window.location.origin;
+      lowdefy.window.location.href = data.openIdLogoutUrl || lowdefy.window.location.origin;
     } catch (error) {
       throw new Error(error);
     }

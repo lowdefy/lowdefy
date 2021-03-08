@@ -90,6 +90,7 @@ const RootQuery = ({ children, lowdefy }) => {
   if (error) return <h1>Error</h1>;
 
   lowdefy.homePageId = get(data, 'menu.homePageId');
+  // Make a copy to avoid immutable error when calling setGlobal.
   lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
   lowdefy.menus = get(data, 'menu.menus');
 

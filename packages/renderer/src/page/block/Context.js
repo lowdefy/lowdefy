@@ -21,7 +21,7 @@ import getContext from '@lowdefy/engine';
 
 import OnEnter from './OnEnter';
 
-const Context = ({ block, contextId, pageId, render, lowdefy }) => {
+const Context = ({ block, contextId, render, lowdefy }) => {
   const [context, setContext] = useState({});
   const [error, setError] = useState(null);
 
@@ -32,7 +32,6 @@ const Context = ({ block, contextId, pageId, render, lowdefy }) => {
         const ctx = await getContext({
           block,
           contextId,
-          pageId,
           lowdefy,
         });
         if (mounted) {
@@ -46,7 +45,7 @@ const Context = ({ block, contextId, pageId, render, lowdefy }) => {
     return () => {
       mounted = false;
     };
-  }, [block, pageId, lowdefy, contextId]);
+  }, [block, lowdefy, contextId]);
 
   if (context.id !== contextId)
     return (
