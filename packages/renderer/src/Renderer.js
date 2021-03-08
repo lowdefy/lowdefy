@@ -122,7 +122,8 @@ const Home = ({ rootContext }) => {
 };
 
 const Root = ({ gqlUri }) => {
-  const client = useGqlClient({ gqlUri });
+  let rootHandle = { root: {} };
+  const client = useGqlClient({ gqlUri, localStorage: windowContext.localStorage, rootHandle });
   return (
     <ErrorBoundary>
       <ApolloProvider client={client}>
@@ -131,6 +132,7 @@ const Root = ({ gqlUri }) => {
             if (windowContext.location.origin.includes('http://localhost')) {
               windowContext.Lowdefy = { rootContext };
             }
+            rootHandle.root = rootContext;
             return (
               <>
                 <DisplayMessage

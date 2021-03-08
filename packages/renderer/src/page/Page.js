@@ -36,6 +36,7 @@ const GET_PAGE = gql`
 
 const PageContext = ({ rootContext }) => {
   const { pageId } = useParams();
+  rootContext.pageId = pageId;
 
   const routeHistory = useHistory();
   rootContext.link = setupLink({ routeHistory, rootContext });
