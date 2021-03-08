@@ -20,7 +20,7 @@ import WebParser from '../../../src/webParser';
 const arrayIndices = [1];
 
 const root = {
-  input: {},
+  inputs: {},
 };
 
 test('add listener if contextId is not equal to own contextId', () => {
@@ -175,7 +175,7 @@ test('add listener for _event_log', () => {
 
 test('add listener for _input', () => {
   const root = {
-    input: {
+    inputs: {
       own: {
         string: 'input',
       },
@@ -218,7 +218,7 @@ test('add listener for _url_query', () => {
     urlQuery: {
       string: 'url',
     },
-    input: {},
+    inputs: {},
   };
   const context = {
     id: 'own',

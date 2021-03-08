@@ -28,7 +28,7 @@ afterAll(() => {
 });
 
 const root = {
-  input: {
+  inputs: {
     own: {
       id: {
         string: 'input',

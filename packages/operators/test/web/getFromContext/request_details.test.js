@@ -18,7 +18,7 @@
 import WebParser from '../../../src/webParser';
 
 const root = {
-  input: {
+  inputs: {
     own: {
       string: 'input',
       arr: [{ a: 'input1' }, { a: 'input2' }],

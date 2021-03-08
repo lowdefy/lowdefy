@@ -35,7 +35,7 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
   const contextKeys = {
     _event_log: 'eventLog',
     _state: 'state',
-    _input: `root.input.${contextId}`,
+    _input: `root.inputs.${contextId}`,
     _global: 'root.lowdefyGlobal',
     _request_details: 'requests',
     _mutation_details: 'mutations',
