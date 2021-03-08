@@ -25,17 +25,15 @@ const logger = {
   log: mockLog,
 };
 
-const mockGetHeaders = jest.fn(() => ({ host: 'host' }));
 const mockGetSecrets = jest.fn(() => ({}));
 
 const config = {
   CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
   logger,
-  getHeaders: mockGetHeaders,
   getSecrets: mockGetSecrets,
 };
 
-const input = {};
+const input = { req: { headers: { host: 'host' } } };
 
 /* TODO:
 - secrets can only be accessed where they should be
@@ -53,8 +51,7 @@ test('context function returns context object with getController, logger, and se
   expect(context).toBeInstanceOf(Object);
   expect(context.logger).toBe(logger);
   expect(context.getController).toBeInstanceOf(Function);
-  expect(context.setHeaders).toBeInstanceOf(Array);
-  expect(Object.keys(context)).toEqual(['getController', 'logger', 'setHeaders']);
+  expect(Object.keys(context)).toEqual(['getController', 'logger']);
 });
 
 test('getController returns the correct controllers', async () => {
@@ -85,7 +82,7 @@ test('request controller get host from req', async () => {
   let context = await contextFn(input);
   let openIDController = context.getController('openId');
   expect(openIDController.host).toBe('host');
-  mockGetHeaders.mockImplementationOnce(() => ({ Host: 'host' }));
+  context = await contextFn({ req: { headers: { Host: 'host' } } });
   openIDController = context.getController('openId');
   expect(openIDController.host).toBe('host');
 });

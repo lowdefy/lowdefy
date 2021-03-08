@@ -3272,17 +3272,19 @@ __metadata:
     "@lowdefy/block-tools": 3.10.2
     "@lowdefy/graphql": 3.10.2
     "@lowdefy/node-utils": 3.10.2
-    apollo-server-lambda: 2.21.0
+    apollo-server-express: 2.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     copy-webpack-plugin: 7.0.0
     css-loader: 5.0.2
+    express: 4.17.1
     graphql: 15.5.0
     html-webpack-plugin: 5.1.0
     jest: 26.6.3
     react: 17.0.1
     react-dom: 17.0.1
+    serverless-http: 2.7.0
     style-loader: 2.0.0
     webpack: 5.22.0
     webpack-cli: 4.5.0
@@ -3682,7 +3684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:^8.10.31":
+"@types/aws-lambda@npm:^8.10.56":
   version: 8.10.72
   resolution: "@types/aws-lambda@npm:8.10.72"
   checksum: c3ebdd2f106d074216ed80c515c47e1fde683f8418fc7903a4453f9da085df34f350ffa06abaa6b2f7bb2979d79cf3ce6d04bbe796190657514dadf115766cb1
@@ -5296,22 +5298,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 0aa592c9a50e2df5b0800253a2eb08f8306a2f688ca6563a1dcd0630e4e8ecc5e48be1026059f0a1246024872163a6c081f46193ad173cc63eb1984f860d7397
-  languageName: node
-  linkType: hard
-
-"apollo-server-lambda@npm:2.21.0":
-  version: 2.21.0
-  resolution: "apollo-server-lambda@npm:2.21.0"
-  dependencies:
-    "@apollographql/graphql-playground-html": 1.6.26
-    "@types/aws-lambda": ^8.10.31
-    apollo-server-core: ^2.21.0
-    apollo-server-env: ^3.0.0
-    apollo-server-types: ^0.6.3
-    graphql-tools: ^4.0.8
-  peerDependencies:
-    graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 4ee1ea8b2d7875fe63ccf071166afe9e6bc5edaec96d149742bb3bc39d851a419ff54c0266692130fe461c79b517abfee47da6eeab88f2269287f09c106ccebb
   languageName: node
   linkType: hard
 
@@ -18296,6 +18282,18 @@ fsevents@^1.2.7:
   bin:
     serve: bin/serve.js
   checksum: b455b7e3e895f9b9cb4f1dd7430face76278770cf5dc0fffa89e7eac38ed955e5bc1e3f3f435bc4dd05fa0548a09cc6cdf7af5938da2b1b377af3a3080f9eca7
+  languageName: node
+  linkType: hard
+
+"serverless-http@npm:2.7.0":
+  version: 2.7.0
+  resolution: "serverless-http@npm:2.7.0"
+  dependencies:
+    "@types/aws-lambda": ^8.10.56
+  dependenciesMeta:
+    "@types/aws-lambda":
+      optional: true
+  checksum: 96b9b0d33af37c4c22c4009e0e15e7d2ab0bad5b5ccdd7c53f0439a405544862dd47e7ec9a87fcf4233539a8815bc0a8b48800974b5471e8034a0f79084f6f31
   languageName: node
   linkType: hard
 

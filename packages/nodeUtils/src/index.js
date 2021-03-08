@@ -18,7 +18,6 @@ import cleanDirectory from './cleanDirectory';
 import createGetSecretsFromEnv from './createGetSecretsFromEnv';
 import getFileExtension, { getFileSubExtension } from './getFileExtension';
 import readFile from './readFile';
-import setHeaderPlugin from './setHeaderPlugin';
 import writeFile from './writeFile';
 
 export {
@@ -27,6 +26,5 @@ export {
   getFileExtension,
   getFileSubExtension,
   readFile,
-  setHeaderPlugin,
   writeFile,
 };

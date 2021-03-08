@@ -64,6 +64,7 @@ const loaders = {
   },
 };
 const getSecrets = jest.fn(() => secrets);
+const setHeader = jest.fn();
 
 const bootstrapContext = testBootstrapContext({ getSecrets, host: 'host', loaders });
 const tokenController = createTokenController(bootstrapContext);
@@ -75,6 +76,10 @@ mockNow.mockImplementation(() => 1000);
 
 beforeAll(() => {
   global.Date.now = mockNow;
+});
+
+beforeEach(() => {
+  setHeader.mockReset();
 });
 
 afterAll(() => {
@@ -106,13 +111,12 @@ test('openIdCallback graphql', async () => {
       }
     }
   `;
-  const setHeaders = [];
   const res = await runTestQuery({
     gqlQuery: OPENID_CALLBACK,
     variables: { openIdCallbackInput: { code: 'code', state } },
     loaders,
     getSecrets,
-    setHeaders,
+    setHeader,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({
@@ -127,11 +131,10 @@ test('openIdCallback graphql', async () => {
       },
     },
   });
-  expect(setHeaders).toEqual([
-    {
-      key: 'Set-Cookie',
-      value:
-        'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-    },
+  expect(setHeader.mock.calls).toEqual([
+    [
+      'Set-Cookie',
+      'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjE0NDAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.oADZ37ERfvONPBGiFsStQUOEHO6BaX_zkGXCHY8PbRA; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+    ],
   ]);
 });

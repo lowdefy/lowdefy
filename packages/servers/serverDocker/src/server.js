@@ -18,11 +18,10 @@ import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv, setHeaderPlugin } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './build'),
-  getHeaders: ({ req }) => req.headers,
   getSecrets: createGetSecretsFromEnv(),
   logger: console,
 };
@@ -32,7 +31,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
-  plugins: [setHeaderPlugin],
 });
 const app = express();
 
