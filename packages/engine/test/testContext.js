@@ -21,19 +21,18 @@ import Blocks from '../src/Blocks';
 import Requests from '../src/Requests';
 import State from '../src/State';
 
-const testContext = ({ rootContext, rootBlock, pageId, initState = {} }) => {
+const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
   const root = {
     displayMessage: () => () => undefined,
-    input: { test: {} },
+    inputs: { test: {} },
     updateBlock: () => {},
     urlQuery: {},
-    ...rootContext,
+    ...lowdefy,
   };
   const ctx = {
     id: 'test',
     blockId: rootBlock.blockId,
     eventLog: [],
-    pageId,
     requests: {},
     root,
     rootBlock,

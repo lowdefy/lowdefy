@@ -72,10 +72,11 @@ const rootBlock = {
 const pageId = 'page1';
 const initState = { state: true };
 
-const rootContext = {
+const lowdefy = {
   client,
   lowdefyGlobal: { lowdefyGlobal: true },
-  input: { test: { input: true } },
+  inputs: { test: { input: true } },
+  pageId,
   urlQuery: { urlQuery: true },
 };
 
@@ -86,9 +87,8 @@ beforeEach(() => {
 
 test('callRequest', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   await context.Requests.callRequest({ requestId: 'req_one' });
   expect(context.requests).toEqual({
@@ -102,9 +102,8 @@ test('callRequest', async () => {
 
 test('callRequest, pass variables to qraphql', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState,
   });
   await context.Requests.callRequest({
@@ -129,9 +128,8 @@ test('callRequest, pass variables to qraphql', async () => {
 
 test('callRequests all requests', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const promise = context.Requests.callRequests();
   expect(context.requests).toEqual({
@@ -178,9 +176,8 @@ test('callRequests all requests', async () => {
 
 test('callRequests', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const promise = context.Requests.callRequests({ requestIds: ['req_one'] });
   expect(context.requests).toEqual({
@@ -203,9 +200,8 @@ test('callRequests', async () => {
 
 test('callRequest error', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   await expect(context.Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
   expect(context.requests).toEqual({
@@ -227,9 +223,8 @@ test('callRequest error', async () => {
 
 test('callRequest that is not on root block', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
     'Configuration Error: Request req_does_not_exist not defined on context.'
@@ -238,9 +233,8 @@ test('callRequest that is not on root block', async () => {
 
 test('callRequest on root block with no requests', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
     'Configuration Error: Request req_does_not_exist not defined on context.'
@@ -249,9 +243,8 @@ test('callRequest on root block with no requests', async () => {
 
 test('callRequest request does not exist', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   await expect(context.Requests.callRequest({ requestId: 'req_two' })).rejects.toThrow(
     'Configuration Error: Request req_two not defined on context.'
@@ -268,9 +261,8 @@ test('callRequest request does not exist', async () => {
 test('update function should be called', async () => {
   const updateFunction = jest.fn();
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   context.update = updateFunction;
   await context.Requests.callRequest({ requestId: 'req_one' });
@@ -279,9 +271,8 @@ test('update function should be called', async () => {
 
 test('fetch should set blocks loading and call query every time it is called', async () => {
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const setBlocksLoadingCacheFunction = jest.fn();
   context.RootBlocks = {

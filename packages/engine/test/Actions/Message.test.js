@@ -20,8 +20,9 @@ import testContext from '../testContext';
 const mockMessage = jest.fn(() => () => undefined);
 const pageId = 'one';
 
-const rootContext = {
+const lowdefy = {
   displayMessage: mockMessage,
+  pageId,
 };
 
 test('Message with content', async () => {
@@ -55,9 +56,8 @@ test('Message with content', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -106,9 +106,8 @@ test('Message with all params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -154,9 +153,8 @@ test('Message with no params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });

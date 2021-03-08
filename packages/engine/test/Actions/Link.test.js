@@ -18,8 +18,9 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-const rootContext = {
+const lowdefy = {
   link: jest.fn(),
+  pageId,
 };
 
 const RealDate = Date;
@@ -28,7 +29,7 @@ mockDate.now = jest.fn(() => 0);
 
 beforeEach(() => {
   global.Date = mockDate;
-  rootContext.link.mockReset();
+  lowdefy.link.mockReset();
 });
 
 afterAll(() => {
@@ -60,13 +61,12 @@ test('Link with string pageId params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(rootContext.link.mock.calls).toEqual([
+  expect(lowdefy.link.mock.calls).toEqual([
     [
       {
         pageId: 'pageId',
@@ -101,13 +101,12 @@ test('Link with object params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(rootContext.link.mock.calls).toEqual([
+  expect(lowdefy.link.mock.calls).toEqual([
     [
       {
         pageId: 'pageId',
@@ -143,16 +142,15 @@ test('Link error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
-  rootContext.link.mockImplementationOnce(() => {
+  lowdefy.link.mockImplementationOnce(() => {
     throw new Error('Link test error');
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(rootContext.link.mock.calls).toEqual([
+  expect(lowdefy.link.mock.calls).toEqual([
     [
       {
         invalid: true,

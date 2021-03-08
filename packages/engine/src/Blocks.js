@@ -596,7 +596,7 @@ class Blocks {
   }
 
   generateBlockId(blockIdPattern) {
-    return `${this.context.pageId}:${blockIdPattern}:${Math.random()
+    return `${this.context.root.pageId}:${blockIdPattern}:${Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5)}`;

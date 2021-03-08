@@ -9,11 +9,11 @@ beforeEach(() => {
 });
 
 test('createLink, link with pageId', () => {
-  const rootContext = { input: {} };
+  const lowdefy = { inputs: {} };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ pageId: 'page_1' });
   link({ pageId: 'page_1', urlQuery: { p: 3 } });
@@ -25,11 +25,11 @@ test('createLink, link with pageId', () => {
 });
 
 test('createLink, link with pageId new tab', () => {
-  const rootContext = { input: {} };
+  const lowdefy = { inputs: {} };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ pageId: 'page_1', newTab: true });
   link({ pageId: 'page_1', newTab: true, urlQuery: { p: 3 } });
@@ -41,11 +41,11 @@ test('createLink, link with pageId new tab', () => {
 });
 
 test('createLink, link with pageId with inputs', () => {
-  const rootContext = { input: {} };
+  const lowdefy = { inputs: {} };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ pageId: 'page_1', input: { a: 1 } });
   link({ pageId: 'page_1', input: { a: 1 }, urlQuery: { p: 3 } });
@@ -54,18 +54,18 @@ test('createLink, link with pageId with inputs', () => {
     ['/page_1', undefined],
     ['/page_1?p=3', undefined],
   ]);
-  expect(rootContext.input).toEqual({
+  expect(lowdefy.inputs).toEqual({
     'page_1:page_1:{}': { a: 1 },
     'page_1:page_1:{"p":3}': { a: 1 },
   });
 });
 
 test('createLink, link with url', () => {
-  const rootContext = { input: {} };
+  const lowdefy = { inputs: {} };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ url: 'http://localhost:8080/test' });
   link({ url: 'http://localhost:8080/test', urlQuery: { p: 3 } });
@@ -77,11 +77,11 @@ test('createLink, link with url', () => {
 });
 
 test('createLink, link with url new tab', () => {
-  const rootContext = { input: {} };
+  const lowdefy = { inputs: {} };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ url: 'http://localhost:8080/test', newTab: true });
   link({ url: 'http://localhost:8080/test', newTab: true, urlQuery: { p: 3 } });
@@ -93,11 +93,11 @@ test('createLink, link with url new tab', () => {
 });
 
 test('createLink, link with home', () => {
-  const rootContext = { input: {}, homePageId: 'home' };
+  const lowdefy = { inputs: {}, homePageId: 'home' };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ home: true });
   link({ home: true, urlQuery: { p: 3 } });
@@ -109,11 +109,11 @@ test('createLink, link with home', () => {
 });
 
 test('createLink, link with home new tab', () => {
-  const rootContext = { input: {}, homePageId: 'home' };
+  const lowdefy = { inputs: {}, homePageId: 'home' };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ home: true, newTab: true });
   link({ home: true, newTab: true, urlQuery: { p: 3 } });
@@ -125,11 +125,11 @@ test('createLink, link with home new tab', () => {
 });
 
 test('createLink, link with home with inputs', () => {
-  const rootContext = { input: {}, homePageId: 'home' };
+  const lowdefy = { inputs: {}, homePageId: 'home' };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   link({ home: true, input: { a: 1 } });
   link({ home: true, input: { a: 1 }, urlQuery: { p: 3 } });
@@ -138,18 +138,18 @@ test('createLink, link with home with inputs', () => {
     ['/home', undefined],
     ['/home?p=3', undefined],
   ]);
-  expect(rootContext.input).toEqual({
+  expect(lowdefy.inputs).toEqual({
     'home:home:{}': { a: 1 },
     'home:home:{"p":3}': { a: 1 },
   });
 });
 
 test('createLink, link to throw if no params', () => {
-  const rootContext = { input: {}, homePageId: 'home' };
+  const lowdefy = { inputs: {}, homePageId: 'home' };
   const link = createLink({
     sameOriginLink: mockSameOriginLink,
     newOriginLink: mockNewOriginLink,
-    rootContext,
+    lowdefy,
   });
   expect(() => link({})).toThrowErrorMatchingInlineSnapshot(`"Invalid Link."`);
 });

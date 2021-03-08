@@ -18,10 +18,11 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-const rootContext = {
+const lowdefy = {
   auth: {
     logout: jest.fn(),
   },
+  pageId,
 };
 
 const RealDate = Date;
@@ -30,7 +31,7 @@ mockDate.now = jest.fn(() => 0);
 
 beforeEach(() => {
   global.Date = mockDate;
-  rootContext.auth.logout.mockReset();
+  lowdefy.auth.logout.mockReset();
 });
 
 afterAll(() => {
@@ -67,12 +68,11 @@ test('Login', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(rootContext.auth.logout.mock.calls).toEqual([[]]);
+  expect(lowdefy.auth.logout.mock.calls).toEqual([[]]);
   expect(res.success).toBe(true);
 });

@@ -52,8 +52,9 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-const rootContext = {
+const lowdefy = {
   client,
+  pageId,
 };
 
 beforeEach(() => {
@@ -94,9 +95,8 @@ test('init Events', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   expect(button.Events.events).toEqual({
@@ -130,9 +130,8 @@ test('triggerEvent no event defined', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -166,9 +165,8 @@ test('triggerEvent x1', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -231,9 +229,8 @@ test('triggerEvent, 2 actions', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -273,9 +270,8 @@ test('triggerEvent error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -321,9 +317,8 @@ test('registerEvent then triggerEvent x1', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.Events.registerEvent({
@@ -383,9 +378,8 @@ test('triggerEvent skip', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
@@ -476,9 +470,8 @@ test('triggerEvent skip tests === true', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button } = context.RootBlocks.map;
@@ -569,9 +562,8 @@ test('Actions array defaults', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.Events.registerEvent({

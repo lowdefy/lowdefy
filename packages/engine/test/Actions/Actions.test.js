@@ -35,8 +35,9 @@ mockDate.now = jest.fn(() => 0);
 
 const closeLoader = jest.fn();
 const displayMessage = jest.fn();
-const rootContext = {
+const lowdefy = {
   displayMessage,
+  pageId,
 };
 const arrayIndices = [];
 const eventName = 'eventName';
@@ -60,9 +61,8 @@ test('call a synchronous action', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -99,9 +99,8 @@ test('call a asynchronous action', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -138,9 +137,8 @@ test('call 2 actions', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -184,9 +182,8 @@ test('operators are evaluated in params, skip and messages', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -260,9 +257,8 @@ test('skip a action', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -299,9 +295,8 @@ test('action throws a error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -338,9 +333,8 @@ test('actions after a error are not called throws a error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -381,9 +375,8 @@ test('Invalid action type', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -419,9 +412,8 @@ test('Parser error in action', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -459,9 +451,8 @@ test('Display default loading and success messages when value == true ', async (
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -504,9 +495,8 @@ test('Display custom loading and success messages when value is a string ', asyn
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -549,9 +539,8 @@ test('Do not display loading and success messages by default', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -578,9 +567,8 @@ test('Display error message by default', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -614,9 +602,8 @@ test('Display custom error message', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -653,9 +640,8 @@ test('Do not display an error message if message === false', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const Actions = context.Actions;
   await Actions.callActions({

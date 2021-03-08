@@ -20,8 +20,9 @@ const pageId = 'one';
 
 const closeLoader = jest.fn();
 const displayMessage = jest.fn();
-const rootContext = {
+const lowdefy = {
   displayMessage,
+  pageId,
 };
 
 const RealDate = Date;
@@ -99,9 +100,8 @@ test('Validate all fields', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button, text1, text2 } = context.RootBlocks.map;
   expect(text1.validationEval.output).toEqual({
@@ -279,9 +279,8 @@ test('Validate only one field', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button, text1, text2 } = context.RootBlocks.map;
   expect(text1.validationEval.output).toEqual({
@@ -432,9 +431,8 @@ test('Validate list of fields', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button, text1, text2, text3 } = context.RootBlocks.map;
   text1.setValue('text1');
@@ -554,9 +552,8 @@ test('Invalid Validate params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick' });
@@ -633,9 +630,8 @@ test('Validate does not fail on warnings', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button, text1 } = context.RootBlocks.map;
   expect(text1.validationEval.output).toEqual({

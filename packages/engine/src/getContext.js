@@ -57,33 +57,32 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ block, contextId, pageId, rootContext }) => {
-  if (rootContext.contexts[contextId]) {
-    rootContext.contexts[contextId].update();
-    return rootContext.contexts[contextId];
+const getContext = async ({ block, contextId, lowdefy }) => {
+  if (lowdefy.contexts[contextId]) {
+    lowdefy.contexts[contextId].update();
+    return lowdefy.contexts[contextId];
   }
   if (!block) {
     throw new Error('A block must be provided to get context.');
   }
   // eslint-disable-next-line no-param-reassign
-  if (!rootContext.input[contextId]) {
-    rootContext.input[contextId] = {};
+  if (!lowdefy.inputs[contextId]) {
+    lowdefy.inputs[contextId] = {};
   }
-  rootContext.contexts[contextId] = {
+  lowdefy.contexts[contextId] = {
     id: contextId,
     blockId: block.blockId,
     eventLog: [],
-    pageId,
     requests: {},
-    root: rootContext,
+    root: lowdefy,
     rootBlock: blockData(block), // filter block to prevent circular structure
     showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation
     updateListeners: new Set(),
   };
-  const ctx = rootContext.contexts[contextId];
-  ctx.parser = new WebParser({ context: ctx, contexts: rootContext.contexts });
+  const ctx = lowdefy.contexts[contextId];
+  ctx.parser = new WebParser({ context: ctx, contexts: lowdefy.contexts });
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);
@@ -96,10 +95,10 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     ctx.RootBlocks.update();
     [...ctx.updateListeners].forEach((listenId) => {
       // Will loop infinitely if update is called on self
-      if (!rootContext.contexts[listenId] || listenId === contextId) {
+      if (!lowdefy.contexts[listenId] || listenId === contextId) {
         ctx.updateListeners.delete(listenId);
       } else {
-        rootContext.contexts[listenId].update();
+        lowdefy.contexts[listenId].update();
       }
     });
   };

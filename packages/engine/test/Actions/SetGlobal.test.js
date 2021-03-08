@@ -19,8 +19,9 @@ import testContext from '../testContext';
 const pageId = 'one';
 
 test('SetGlobal data to global', async () => {
-  const rootContext = {
+  const lowdefy = {
     lowdefyGlobal: { x: 'old', init: 'init' },
+    pageId,
   };
   const rootBlock = {
     blockId: 'root',
@@ -52,9 +53,8 @@ test('SetGlobal data to global', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
 
   expect(context.root.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });

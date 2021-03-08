@@ -18,7 +18,7 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('SetState data to state', () => {
   const rootBlock = {
@@ -53,9 +53,8 @@ test('SetState data to state', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
@@ -98,9 +97,8 @@ test('SetState field to state and update block value', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
@@ -145,9 +143,8 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
@@ -213,9 +210,8 @@ test('SetState value on array and create new Blocks for array items', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ textInput: 'init' }] },
   });
   const { button } = context.RootBlocks.map;

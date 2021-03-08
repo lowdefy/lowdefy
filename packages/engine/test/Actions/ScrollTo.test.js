@@ -37,8 +37,9 @@ const window = {
 };
 const pageId = 'one';
 
-const rootContext = {
+const lowdefy = {
   document,
+  pageId,
   window,
 };
 
@@ -76,9 +77,8 @@ test('ScrollTo with no params', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -110,9 +110,8 @@ test('ScrollTo with no blockId', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -151,9 +150,8 @@ test('ScrollTo with blockId', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -192,9 +190,8 @@ test('ScrollTo with blockId and options', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
@@ -234,9 +231,8 @@ test('ScrollTo with blockId, block not found', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   button.triggerEvent({ name: 'onClick' });
