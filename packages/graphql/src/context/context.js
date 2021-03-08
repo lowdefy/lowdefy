@@ -39,7 +39,6 @@ function createContext(config) {
     bootstrapContext.getLoader = createGetLoader(bootstrapContext);
     bootstrapContext.getController = createGetController(bootstrapContext);
     bootstrapContext.user = await verifyAccessToken(bootstrapContext);
-    console.log(bootstrapContext.user);
     return {
       getController: bootstrapContext.getController,
       logger,

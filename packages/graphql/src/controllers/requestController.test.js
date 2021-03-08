@@ -76,7 +76,7 @@ const loaders = {
   },
 };
 
-const context = testBootstrapContext({ loaders, getSecrets });
+const context = testBootstrapContext({ loaders, getSecrets, user: { name: 'name' } });
 
 const defaultInput = {
   arrayIndices: [],
@@ -330,6 +330,7 @@ test('parse request properties for operators', async () => {
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
           arrayIndices: { _state: 'array.$' },
+          user: { _user: 'name' },
         },
       };
     }
@@ -372,6 +373,7 @@ test('parse request properties for operators', async () => {
         state: 'stateValue',
         urlQuery: 'urlValue',
         arrayIndices: 'one',
+        user: 'name',
       },
     },
     success: true,
@@ -393,6 +395,7 @@ test('parse connection properties for operators', async () => {
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
           arrayIndices: { _state: 'array.$' },
+          user: { _user: 'name' },
         },
       };
     }
@@ -433,6 +436,7 @@ test('parse connection properties for operators', async () => {
         state: 'stateValue',
         urlQuery: 'urlValue',
         arrayIndices: 'one',
+        user: 'name',
       },
       request: {
         requestProperty: 'requestProperty',

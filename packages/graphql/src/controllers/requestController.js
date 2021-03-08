@@ -21,10 +21,11 @@ import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
 
 class RequestController {
-  constructor({ getLoader, getSecrets }) {
+  constructor({ getLoader, getSecrets, user }) {
     this.getSecrets = getSecrets;
     this.requestLoader = getLoader('request');
     this.connectionLoader = getLoader('connection');
+    this.user = user;
   }
 
   async callRequest(requestInput) {
@@ -150,6 +151,7 @@ class RequestController {
       secrets,
       state,
       urlQuery,
+      user: this.user,
     });
 
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
