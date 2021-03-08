@@ -246,6 +246,7 @@ describe('callback', () => {
   });
 
   test('callback', async () => {
+    getSecrets.mockImplementation(() => secrets);
     const openIdController = createOpenIdController(context);
     const tokenController = createTokenController(context);
     const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
@@ -283,7 +284,7 @@ describe('callback', () => {
     expect(setHeader.mock.calls).toEqual([
       [
         'Set-Cookie',
-        'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjQzMjAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.GAK4KVAytEAsNLO9wAC6mKteqQqucLzFl8DJuNDCz5Q; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+        'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjE0NDAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.oADZ37ERfvONPBGiFsStQUOEHO6BaX_zkGXCHY8PbRA; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
       ],
     ]);
   });
