@@ -17,10 +17,10 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import { makeContextId } from '@lowdefy/engine';
 
-function createLink({ sameOriginLink, newOriginLink, rootContext }) {
+function createLink({ sameOriginLink, newOriginLink, lowdefy }) {
   function link({ urlQuery, pageId, url, newTab, home, input }) {
     const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
-    if (home) pageId = rootContext.homePageId;
+    if (home) pageId = lowdefy.homePageId;
     if (pageId) {
       if (!type.isNone(input)) {
         const nextContextId = makeContextId({
@@ -28,7 +28,7 @@ function createLink({ sameOriginLink, newOriginLink, rootContext }) {
           urlQuery: urlQuery,
           blockId: pageId,
         });
-        rootContext.input[nextContextId] = input;
+        lowdefy.inputs[nextContextId] = input;
       }
       sameOriginLink(`/${pageId}${lowdefyUrlQuery}`, newTab);
     } else if (url) {

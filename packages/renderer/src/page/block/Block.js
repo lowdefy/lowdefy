@@ -23,12 +23,12 @@ import LoadingBlock from './LoadingBlock';
 import CategorySwitch from './CategorySwitch';
 import WatchCache from './WatchCache';
 
-const Block = ({ block, Blocks, context, pageId, rootContext }) => {
+const Block = ({ block, Blocks, context, pageId, lowdefy }) => {
   const Loading = (
     <LoadingBlock
       blockId={block.blockId}
       meta={block.meta}
-      highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
     />
   );
   return (
@@ -40,7 +40,7 @@ const Block = ({ block, Blocks, context, pageId, rootContext }) => {
           render={(Comp) => (
             <WatchCache
               block={block}
-              rootContext={rootContext}
+              lowdefy={lowdefy}
               Loading={Loading}
               render={() => (
                 <CategorySwitch
@@ -49,7 +49,7 @@ const Block = ({ block, Blocks, context, pageId, rootContext }) => {
                   Blocks={Blocks}
                   context={context}
                   pageId={pageId}
-                  rootContext={rootContext}
+                  lowdefy={lowdefy}
                 />
               )}
             />

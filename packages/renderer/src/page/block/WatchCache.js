@@ -25,12 +25,12 @@ const getBlock = gql`
   }
 `;
 
-const WatchCache = ({ block, render, rootContext, Loading }) => {
+const WatchCache = ({ block, render, lowdefy, Loading }) => {
   const { loading, error } = useQuery(getBlock, {
     variables: {
       id: `BlockClass:${block.id}`,
     },
-    client: rootContext.client,
+    client: lowdefy.client,
   });
 
   if (loading) return Loading;

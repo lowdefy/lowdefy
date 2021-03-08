@@ -23,8 +23,9 @@ const GET_LOGIN = gql`
   }
 `;
 
-function createLogin(client, windowContext) {
+function createLogin({ client, window }) {
   async function login({ input, pageId, urlQuery } = {}) {
+    console.log('login');
     try {
       const { data } = await client.query({
         query: GET_LOGIN,
@@ -37,8 +38,10 @@ function createLogin(client, windowContext) {
           },
         },
       });
+      console.log('login url', data);
+
       if (get(data, 'openIdAuthorizationUrl')) {
-        windowContext.location.href = data.openIdAuthorizationUrl;
+        window.location.href = data.openIdAuthorizationUrl;
       }
     } catch (error) {
       throw new Error(error);

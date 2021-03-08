@@ -22,7 +22,7 @@ const GET_LOGOUT = gql`
   }
 `;
 
-function createLogout(client, windowContext) {
+function createLogout({ client, window }) {
   async function logout() {
     try {
       // handle token
@@ -36,7 +36,7 @@ function createLogout(client, windowContext) {
         },
       });
       // TODO: should we call link??
-      windowContext.location.href = data.openIdLogoutUrl || windowContext.location.origin;
+      window.location.href = data.openIdLogoutUrl || window.location.origin;
     } catch (error) {
       throw new Error(error);
     }

@@ -33,32 +33,36 @@ const retryLink = new RetryLink();
 const httpLink = ({ uri = 'api/graphql' }) => new HttpLink({ uri, credentials: 'same-origin' });
 
 // TODO: Handle errors
-const errorHandler = ({ localStore, rootHandle }) => ({ graphQLErrors, networkError }) => {
+const errorHandler = ({ lowdefy }) => ({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach((err) => {
       switch (err.extensions.code) {
         case 'TOKEN_EXPIRED':
-          rootHandle.root.user = {};
-          localStore.setItem(`tokenId`, '');
-          if (rootHandle.root.auth) {
-            // async ?
-            rootHandle.root.auth.login({
-              pageId: rootHandle.root.pageId,
-              urlQuery: rootHandle.root.urlQuery,
+          lowdefy.user = {};
+          lowdefy.localStorage.setItem(`tokenId`, '');
+
+          // eslint-disable-next-line no-case-declarations
+          let loginInput = {};
+          if (lowdefy.pageId) {
+            const { pageId, urlQuery } = lowdefy;
+            loginInput = {
+              pageId,
+              urlQuery,
               input:
-                rootHandle.root.input[
+                lowdefy.inputs[
                   makeContextId({
-                    blockId: rootHandle.root.pageId,
-                    pageId: rootHandle.root.pageId,
-                    urlQuery: rootHandle.root.urlQuery,
+                    blockId: pageId,
+                    pageId,
+                    urlQuery,
                   })
                 ],
-            });
+            };
           }
+          lowdefy.auth.login(loginInput);
           return;
         case 'UNAUTHENTICATED':
-          rootHandle.user = {};
-          localStore.setItem(`tokenId`, '');
+          lowdefy.user = {};
+          localStorage.setItem(`tokenId`, '');
           return;
         default:
           console.log('graphQLErrors', graphQLErrors);
@@ -69,13 +73,13 @@ const errorHandler = ({ localStore, rootHandle }) => ({ graphQLErrors, networkEr
   return;
 };
 
-const useGqlClient = ({ gqlUri, localStore, rootHandle }) => {
+const useGqlClient = ({ gqlUri, lowdefy }) => {
   const [client, setClient] = useState(null);
   if (!client) {
     const clt = new ApolloClient({
       link: ApolloLink.from([
         retryLink,
-        onError(errorHandler({ localStore, rootHandle })),
+        onError(errorHandler({ lowdefy })),
         httpLink({ uri: gqlUri }),
       ]),
       cache,

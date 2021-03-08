@@ -20,7 +20,7 @@ import { makeCssClass } from '@lowdefy/block-tools';
 
 import Block from './Block';
 
-const Container = ({ block, Blocks, Component, context, pageId, rootContext }) => {
+const Container = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   const areas = Blocks.subBlocks[block.id][0].areas;
@@ -35,7 +35,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
           layout: block.eval.layout || {},
         })}
         areaStyle={[areaStyle, block.eval.areas[areaKey] && block.eval.areas[areaKey].style]}
-        highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+        highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         makeCssClass={makeCssClass}
       >
         {areas[areaKey].blocks.map((bl) => (
@@ -45,7 +45,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
             block={bl}
             context={context}
             pageId={pageId}
-            rootContext={rootContext}
+            lowdefy={lowdefy}
           />
         ))}
       </Area>
@@ -55,7 +55,7 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
     <BlockLayout
       id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
-      highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       layout={block.eval.layout || {}}
       makeCssClass={makeCssClass}
     >
@@ -69,14 +69,14 @@ const Container = ({ block, Blocks, Component, context, pageId, rootContext }) =
         blockId={block.blockId}
         content={content}
         events={block.eval.events}
-        homePageId={rootContext.homePageId}
+        homePageId={lowdefy.homePageId}
         key={block.blockId}
         loading={block.loading}
-        menus={rootContext.menus}
+        menus={lowdefy.menus}
         pageId={pageId}
         properties={block.eval.properties}
         required={block.eval.required}
-        user={rootContext.user}
+        user={lowdefy.user}
         validation={block.eval.validation}
       />
     </BlockLayout>

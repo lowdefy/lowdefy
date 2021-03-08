@@ -20,7 +20,7 @@ import { makeCssClass } from '@lowdefy/block-tools';
 
 import Block from './Block';
 
-const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
+const List = ({ block, Blocks, Component, context, pageId, lowdefy }) => {
   const content = {};
   const contentList = [];
   Blocks.subBlocks[block.id].forEach((SBlock) => {
@@ -35,7 +35,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
             layout: block.eval.layout || {},
           })}
           areaStyle={[areaStyle, block.eval.areas[areaKey] && block.eval.areas[areaKey].style]}
-          highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           makeCssClass={makeCssClass}
         >
           {SBlock.areas[areaKey].blocks.map((bl) => (
@@ -45,7 +45,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
               block={bl}
               context={context}
               pageId={pageId}
-              rootContext={rootContext}
+              lowdefy={lowdefy}
             />
           ))}
         </Area>
@@ -57,7 +57,7 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
     <BlockLayout
       id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
-      highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       layout={block.eval.layout || {}}
       makeCssClass={makeCssClass}
     >
@@ -75,15 +75,15 @@ const List = ({ block, Blocks, Component, context, pageId, rootContext }) => {
         })}
         blockId={block.blockId}
         events={block.eval.events}
-        homePageId={rootContext.homePageId}
+        homePageId={lowdefy.homePageId}
         key={block.blockId}
         list={contentList}
         loading={block.loading}
-        menus={rootContext.menus}
+        menus={lowdefy.menus}
         pageId={pageId}
         properties={block.eval.properties}
         required={block.eval.required}
-        user={rootContext.user}
+        user={lowdefy.user}
         validation={block.eval.validation}
       />
     </BlockLayout>

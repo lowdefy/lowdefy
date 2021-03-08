@@ -69,7 +69,7 @@ const GET_MENU = gql`
   }
 `;
 
-async function openIdCallbackFn({ rootContext, routeHistory, search }) {
+async function openIdCallbackFn({ lowdefy, search }) {
   const { code, state, error, error_description } = urlQueryFn.parse(search.slice(0) || '');
 
   if (error) {
@@ -78,7 +78,7 @@ async function openIdCallbackFn({ rootContext, routeHistory, search }) {
   }
 
   if (!code || !state) throw new Error('Authentication error.');
-  const { data } = await rootContext.client.query({
+  const { data } = await lowdefy.client.query({
     query: OPENID_CALLBACK,
     fetchPolicy: 'network-only',
     variables: {
@@ -91,25 +91,25 @@ async function openIdCallbackFn({ rootContext, routeHistory, search }) {
 
   const idToken = get(data, 'openIdCallback.idToken');
   if (!idToken) throw new Error('Authentication error.');
-  rootContext.window.localStorage.setItem('idToken', idToken);
+  lowdefy.localStorage.setItem('idToken', idToken);
 
   // eslint-disable-next-line no-unused-vars
   const { iat, exp, aud, iss, ...user } = parseJwt(idToken);
-  rootContext.user = user;
+  lowdefy.user = user;
 
-  const { data: menuData } = await rootContext.client.query({
+  const { data: menuData } = await lowdefy.client.query({
     query: GET_MENU,
     fetchPolicy: 'network-only',
   });
-  rootContext.homePageId = get(menuData, 'menu.homePageId');
-  rootContext.menus = get(menuData, 'menu.menus');
+  lowdefy.homePageId = get(menuData, 'menu.homePageId');
+  lowdefy.menus = get(menuData, 'menu.menus');
 
-  rootContext.link = setupLink({ rootContext, routeHistory });
+  lowdefy.link = setupLink(lowdefy);
   const { pageId, input, urlQuery } = data.openIdCallback;
   if (pageId) {
-    rootContext.link({ pageId, input, urlQuery });
+    lowdefy.link({ pageId, input, urlQuery });
   } else {
-    rootContext.link({ input, home: true, urlQuery });
+    lowdefy.link({ input, home: true, urlQuery });
   }
 }
 

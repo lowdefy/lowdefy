@@ -16,22 +16,23 @@
 
 import { createLink } from '@lowdefy/engine';
 
-function setupLink({ routeHistory, rootContext }) {
+function setupLink(lowdefy) {
+  const { routeHistory, window } = lowdefy;
   const sameOriginLink = (path, newTab) => {
     if (newTab) {
-      rootContext.window.open(`${rootContext.window.location.origin}${path}`, '_blank').focus();
+      window.open(`${window.location.origin}${path}`, '_blank').focus();
     } else {
       routeHistory.push(path);
     }
   };
   const newOriginLink = (path, newTab) => {
     if (newTab) {
-      rootContext.window.open(path, '_blank').focus();
+      window.open(path, '_blank').focus();
     } else {
-      rootContext.window.location.href = path;
+      window.location.href = path;
     }
   };
-  return createLink({ sameOriginLink, newOriginLink, rootContext });
+  return createLink({ sameOriginLink, newOriginLink, lowdefy });
 }
 
 export default setupLink;
