@@ -14,17 +14,21 @@
   limitations under the License.
 */
 
+import { get } from '@lowdefy/helpers';
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, TokenExpiredError } from '../context/errors';
 
 class TokenController {
-  constructor({ getSecrets, host }) {
+  constructor({ getLoader, getSecrets, host }) {
     this.host = host;
     this.getSecrets = getSecrets;
+    this.componentLoader = getLoader('component');
   }
 
   async issueAccessToken(claims) {
     const { JWT_SECRET } = await this.getSecrets();
+    const appConfig = await this.componentLoader.load('config');
+    const { expiresIn } = get(appConfig, 'auth.jwt', { default: {} });
     // eslint-disable-next-line no-unused-vars
     const { aud, exp, iat, iss, ...otherClaims } = claims;
     return jwt.sign(
@@ -34,7 +38,7 @@ class TokenController {
       },
       JWT_SECRET,
       {
-        expiresIn: '12h',
+        expiresIn: expiresIn || '4h',
         audience: this.host,
         issuer: this.host,
       }
