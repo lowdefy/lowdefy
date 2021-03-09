@@ -39,8 +39,7 @@ const errorHandler = ({ lowdefy }) => ({ graphQLErrors, networkError }) => {
       switch (err.extensions.code) {
         case 'TOKEN_EXPIRED':
           lowdefy.user = {};
-          lowdefy.localStorage.setItem(`tokenId`, '');
-
+          lowdefy.localStorage.setItem(`idToken`, '');
           // eslint-disable-next-line no-case-declarations
           let loginInput = {};
           if (lowdefy.pageId) {
@@ -62,7 +61,7 @@ const errorHandler = ({ lowdefy }) => ({ graphQLErrors, networkError }) => {
           return;
         case 'UNAUTHENTICATED':
           lowdefy.user = {};
-          localStorage.setItem(`tokenId`, '');
+          localStorage.setItem(`idToken`, '');
           return;
         default:
           console.log('graphQLErrors', graphQLErrors);

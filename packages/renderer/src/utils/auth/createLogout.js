@@ -26,7 +26,7 @@ function createLogout(lowdefy) {
   async function logout() {
     try {
       lowdefy.user = {};
-      lowdefy.localStorage.setItem(`tokenId`, '');
+      lowdefy.localStorage.setItem(`idToken`, '');
       const { data } = await lowdefy.client.query({
         query: GET_LOGOUT,
         fetchPolicy: 'network-only',
