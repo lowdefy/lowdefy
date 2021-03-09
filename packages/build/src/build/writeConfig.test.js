@@ -75,26 +75,3 @@ test('writeConfig config undefined', async () => {
     ],
   ]);
 });
-
-test('writeConfig config not an object', async () => {
-  const components = {
-    config: 'config',
-  };
-  await expect(writeConfig({ components, context })).rejects.toThrow('Config is not an object.');
-});
-
-test('writeConfig config error when both protected and public pages are listed.', async () => {
-  const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: [],
-          public: [],
-        },
-      },
-    },
-  };
-  await expect(writeConfig({ components, context })).rejects.toThrow(
-    'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa. Use only the one or the other.'
-  );
-});

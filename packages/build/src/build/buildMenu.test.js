@@ -58,6 +58,7 @@ test('buildMenu menus exist', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
     ],
   };
@@ -76,6 +77,7 @@ test('buildMenu menus exist', async () => {
             },
             type: 'MenuLink',
             pageId: 'page_1',
+            auth: 'public',
           },
           {
             id: 'menuitem:my_menu:menu_external',
@@ -93,6 +95,7 @@ test('buildMenu menus exist', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
     ],
   });
@@ -125,6 +128,7 @@ test('buildMenu nested menus', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
     ],
   };
@@ -148,6 +152,7 @@ test('buildMenu nested menus', async () => {
                 },
                 type: 'MenuLink',
                 pageId: 'page_1',
+                auth: 'public',
               },
             ],
           },
@@ -158,6 +163,7 @@ test('buildMenu nested menus', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
     ],
   });
@@ -169,14 +175,17 @@ test('buildMenu default menu', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
+        auth: 'public',
       },
       {
         id: 'page:page_3',
         pageId: 'page_3',
+        auth: 'public',
       },
     ],
   };
@@ -192,18 +201,21 @@ test('buildMenu default menu', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'page_1',
+            auth: 'public',
           },
           {
             id: 'menuitem:default:1',
             menuItemId: '1',
             type: 'MenuLink',
             pageId: 'page_2',
+            auth: 'public',
           },
           {
             id: 'menuitem:default:2',
             menuItemId: '2',
             type: 'MenuLink',
             pageId: 'page_3',
+            auth: 'public',
           },
         ],
       },
@@ -212,14 +224,17 @@ test('buildMenu default menu', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
+        auth: 'public',
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
+        auth: 'public',
       },
       {
         id: 'page:page_3',
         pageId: 'page_3',
+        auth: 'public',
       },
     ],
   });

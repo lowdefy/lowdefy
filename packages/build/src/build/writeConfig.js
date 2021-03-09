@@ -14,26 +14,10 @@
   limitations under the License.
 */
 
-import { type, get } from '@lowdefy/helpers';
-
 async function writeConfig({ components, context }) {
-  if (type.isNone(components.config)) {
-    components.config = {};
-  }
-  if (!type.isObject(components.config)) {
-    throw new Error('Config is not an object.');
-  }
-  if (
-    get(components.config, 'auth.pages.protected') &&
-    get(components.config, 'auth.pages.public')
-  ) {
-    throw new Error(
-      'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa. Use only the one or the other.'
-    );
-  }
   await context.artifactSetter.set({
     filePath: 'config.json',
-    content: JSON.stringify(components.config, null, 2),
+    content: JSON.stringify(components.config || {}, null, 2),
   });
 }
 
