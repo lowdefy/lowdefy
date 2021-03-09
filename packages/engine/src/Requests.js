@@ -80,7 +80,7 @@ class Requests {
       this.context.RootBlocks.setBlocksLoadingCache();
     }
 
-    return this.context.root.client
+    return this.context.lowdefy.client
       .query({
         query: CALL_REQUEST,
         fetchPolicy: 'network-only',
@@ -90,11 +90,11 @@ class Requests {
             requestId,
             blockId: this.context.blockId,
             event: serializer.serialize(event) || {},
-            input: serializer.serialize(this.context.root.inputs[this.context.id]),
-            lowdefyGlobal: serializer.serialize(this.context.root.lowdefyGlobal),
-            pageId: this.context.root.pageId,
+            input: serializer.serialize(this.context.lowdefy.inputs[this.context.id]),
+            lowdefyGlobal: serializer.serialize(this.context.lowdefy.lowdefyGlobal),
+            pageId: this.context.lowdefy.pageId,
             state: serializer.serialize(this.context.state),
-            urlQuery: serializer.serialize(this.context.root.urlQuery),
+            urlQuery: serializer.serialize(this.context.lowdefy.urlQuery),
           },
         },
       })

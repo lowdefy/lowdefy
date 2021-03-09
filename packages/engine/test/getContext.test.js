@@ -78,10 +78,10 @@ test('create context', async () => {
   expect(context.RootBlocks).toBeDefined();
   expect(context.State).toBeDefined();
   expect(context.blockId).toEqual('blockId');
-  expect(context.root).toEqual(lowdefy);
+  expect(context.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);
   expect(context.id).toEqual('contextId');
-  expect(context.root.pageId).toEqual('pageId');
+  expect(context.lowdefy.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
   expect(context.rootBlock).toBeDefined();
@@ -112,7 +112,7 @@ test('create context, initialize input', async () => {
     },
   };
   const context = await getContext({ block, contextId: 'contextId', lowdefy });
-  expect(context.root.inputs.contextId).toEqual({});
+  expect(context.lowdefy.inputs.contextId).toEqual({});
 });
 
 test('call update for listening contexts', async () => {

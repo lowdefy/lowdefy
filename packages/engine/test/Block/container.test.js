@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('container and set value from block', () => {
   const rootBlock = {
@@ -75,9 +75,8 @@ test('container and set value from block', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textB: 'b' },
   });
   const { textA, textB } = context.RootBlocks.map;
@@ -144,9 +143,8 @@ test('container blocks visibility toggle fields in state and propagate visibilit
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { text: 'a', swtch1: true, swtch2: true },
   });
   const { container, text, swtch1, swtch2 } = context.RootBlocks.map;
@@ -236,9 +234,8 @@ test('container blocks visibility toggle fields in state with nested containers 
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { text: 'a', swtch1: true, swtch2: true },
   });
   const { container1, text, swtch1, swtch2 } = context.RootBlocks.map;
@@ -303,9 +300,8 @@ test('visibleParent. If container visible is null, child blocks should still be 
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   expect(context.RootBlocks.map.container.eval.visible).toBe(null);
   expect(context.RootBlocks.map.text.eval.visible).toBe(true);

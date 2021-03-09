@@ -15,7 +15,7 @@
 */
 
 async function Login({ context, params }) {
-  return context.root.auth.login(params);
+  return context.lowdefy.auth.login(params);
 }
 
 export default Login;

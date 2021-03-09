@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 async function Link({ context, params }) {
   const linkParams = type.isString(params) ? { pageId: params } : params;
   try {
-    context.root.link(linkParams);
+    context.lowdefy.link(linkParams);
   } catch (error) {
     throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
   }

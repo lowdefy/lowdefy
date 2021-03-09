@@ -15,7 +15,7 @@
 */
 
 async function Logout({ context }) {
-  return context.root.auth.logout();
+  return context.lowdefy.auth.logout();
 }
 
 export default Logout;

@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('do not make subblocks for child contexts', () => {
   const rootBlock = {
@@ -55,9 +55,8 @@ test('do not make subblocks for child contexts', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { root, childContext, text } = context.RootBlocks.map;
   expect(context.RootBlocks.subBlocks[root.id][0].subBlocks).toEqual({});

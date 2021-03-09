@@ -25,7 +25,7 @@ import State from '../../src/State';
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('set block to init', () => {
   const rootBlock = {
@@ -49,9 +49,8 @@ test('set block to init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -63,7 +62,7 @@ test('set block to init', () => {
 // can't use testContext
 test('Blocks to init with no blocks passed', () => {
   const context = {
-    pageId,
+    lowdefy: { pageId },
     state: { a: 'a' },
     update: jest.fn(),
     updateBlock: jest.fn(),
@@ -82,8 +81,8 @@ test('Blocks to init with no blocks passed', () => {
 // can't use testContext
 test('Blocks to init with arrayIndices not an array', () => {
   const context = {
-    pageId,
-    root: {
+    lowdefy: {
+      pageId,
       updateBlock: jest.fn(),
     },
     update: jest.fn(),
@@ -123,8 +122,8 @@ test('Blocks to init with arrayIndices not an array', () => {
 // can't use testContext
 test('Blocks to init with undefined arrayIndices', () => {
   const context = {
-    pageId,
-    root: {
+    lowdefy: {
+      pageId,
       updateBlock: jest.fn(),
     },
     update: jest.fn(),
@@ -182,9 +181,8 @@ test('set block enforceType value no init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { selector } = context.RootBlocks.map;
   expect(selector.value).toEqual([]);
@@ -216,9 +214,8 @@ test('set block value to initValue in meta', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { object_one } = context.RootBlocks.map;
   expect(object_one.value).toEqual({ a: 1 });
@@ -247,9 +244,8 @@ test('Reset to change blocks back to initState', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { b: 'b' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -290,9 +286,8 @@ test('state should not have value if block is not visible', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { textInput } = context.RootBlocks.map;
   expect(textInput.value).toBe(null);
@@ -438,9 +433,8 @@ test('block should only not be visible when visible === false', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       a: 'a',
       b: 'b',
@@ -684,9 +678,8 @@ test('block should only not be evaluated when visible === false', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       title: 'test',
       a: 'a',
@@ -743,9 +736,8 @@ test('set value from block', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { swtch } = context.RootBlocks.map;
 
@@ -779,9 +771,8 @@ test('set value from block in nested object', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const block = context.RootBlocks.map['a.b.c'];
 
@@ -815,9 +806,8 @@ test('set value from block with type enforceType', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'a' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -867,9 +857,8 @@ test('parse visible operator with setValue', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textA: 'show b', textB: 'b' },
   });
   const { textA } = context.RootBlocks.map;
@@ -922,9 +911,8 @@ test('rec parse visible operator with setValue', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textB: 'b', textA: 'a', textC: 'c' },
   });
   const { textA } = context.RootBlocks.map;
@@ -965,9 +953,8 @@ test('non-input blocks visibility toggle', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { swtch: true },
   });
   expect(context.state).toEqual({ swtch: true });
@@ -1025,9 +1012,8 @@ test('non-input blocks visibility toggle in array', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ swtch: true }, { swtch: false }] },
   });
   expect(context.state).toEqual({ list: [{ swtch: true }, { swtch: false }] });
@@ -1079,9 +1065,8 @@ test('no need to evaluate invisible blocks', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { swtch: true },
   });
   expect(context.state).toEqual({ swtch: true });
@@ -1149,9 +1134,8 @@ test('max recuse limit', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { a: 'a', d: 'd', e: 'e' },
   });
   const { a, c } = context.RootBlocks.map;

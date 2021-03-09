@@ -57,11 +57,11 @@ test('SetGlobal data to global', async () => {
     rootBlock,
   });
 
-  expect(context.root.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
+  expect(context.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
   const { button } = context.RootBlocks.map;
 
   await button.triggerEvent({ name: 'onClick' });
-  expect(context.root.lowdefyGlobal).toEqual({
+  expect(context.lowdefy.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',
     number: 13,

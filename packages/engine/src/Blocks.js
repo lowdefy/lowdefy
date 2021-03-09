@@ -566,7 +566,7 @@ class Blocks {
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
         };
-        this.context.root.updateBlock(block.id);
+        this.context.lowdefy.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -585,7 +585,7 @@ class Blocks {
         false
       );
       if (block.loading_prev !== block.loading) {
-        this.context.root.updateBlock(block.id);
+        this.context.lowdefy.updateBlock(block.id);
       }
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
@@ -596,7 +596,7 @@ class Blocks {
   }
 
   generateBlockId(blockIdPattern) {
-    return `${this.context.root.pageId}:${blockIdPattern}:${Math.random()
+    return `${this.context.lowdefy.pageId}:${blockIdPattern}:${Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5)}`;

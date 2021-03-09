@@ -116,7 +116,7 @@ class Actions {
     let close = () => undefined;
 
     if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context.root.displayMessage({
+      close = this.context.lowdefy.displayMessage({
         content: type.isString(message) ? message : defaultMessage,
         duration,
         status,

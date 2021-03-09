@@ -22,7 +22,7 @@ import Requests from '../src/Requests';
 import State from '../src/State';
 
 const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
-  const root = {
+  const testLowdefy = {
     displayMessage: () => () => undefined,
     inputs: { test: {} },
     updateBlock: () => {},
@@ -34,7 +34,7 @@ const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
     blockId: rootBlock.blockId,
     eventLog: [],
     requests: {},
-    root,
+    lowdefy: testLowdefy,
     rootBlock,
     // routeHistory: [], // init new routeHistory for each test
     showValidationErrors: false,

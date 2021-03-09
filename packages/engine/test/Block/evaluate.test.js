@@ -19,7 +19,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('parse block visible', () => {
   const rootBlock = {
@@ -44,9 +44,8 @@ test('parse block visible', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -76,9 +75,8 @@ test('default value for visible', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -109,9 +107,8 @@ test('parse block required', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -141,9 +138,8 @@ test('default value for required', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -174,9 +170,8 @@ test('parse block properties', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -206,9 +201,8 @@ test('default value for properties', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -239,9 +233,8 @@ test('parse block style', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -271,9 +264,8 @@ test('default value for style', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -304,9 +296,8 @@ test('parse block layout', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -336,9 +327,8 @@ test('default value for layout', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -373,9 +363,8 @@ test('parse block areas', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -423,9 +412,8 @@ test('parse block areas, remove blocks array', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
@@ -458,9 +446,8 @@ test('default value for areas', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { key: 'value' },
   });
   const { textInput } = context.RootBlocks.map;
