@@ -35,11 +35,11 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
   const contextKeys = {
     _event_log: 'eventLog',
     _state: 'state',
-    _input: `root.inputs.${contextId}`,
-    _global: 'root.lowdefyGlobal',
+    _input: `lowdefy.inputs.${contextId}`,
+    _global: 'lowdefy.lowdefyGlobal',
     _request_details: 'requests',
     _mutation_details: 'mutations',
-    _url_query: 'root.urlQuery',
+    _url_query: 'lowdefy.urlQuery',
   };
   if (type.isUndefined(contextKeys[operator])) {
     throw new Error(

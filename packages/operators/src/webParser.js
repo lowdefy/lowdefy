@@ -34,8 +34,8 @@ class WebParser {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
-    if (!type.isObject(this.context.root)) {
-      throw new Error('Context root must be an object.');
+    if (!type.isObject(this.context.lowdefy)) {
+      throw new Error('Lowdefy context must be an object.');
     }
     if (event && !type.isObject(event)) {
       throw new Error('Operator parser event must be a object.');
@@ -47,7 +47,7 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { inputs, lowdefyGlobal, menus, urlQuery, user } = this.context.root;
+    const { inputs, lowdefyGlobal, menus, urlQuery, user } = this.context.lowdefy;
     const reviver = (_, value) => {
       if (type.isObject(value) && Object.keys(value).length === 1) {
         const key = Object.keys(value)[0];

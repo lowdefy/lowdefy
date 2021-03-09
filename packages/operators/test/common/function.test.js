@@ -25,7 +25,7 @@ const state = {
 const location = 'location';
 
 const context = {
-  root: { input: {} },
+  lowdefy: { inputs: {} },
   state,
 };
 

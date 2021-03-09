@@ -17,7 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../src/webParser';
 
-const root = {
+const lowdefy = {
   inputs: {
     own: {
       string: 'input',
@@ -58,7 +58,7 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
-  root,
+  lowdefy,
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
@@ -147,10 +147,12 @@ test('operator input with more than one key is ignored.', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('context.root not an object', () => {
+test('context.lowdefy not an object', () => {
   const input = { _state: 'string' };
   const parser = new WebParser({ context: {}, contexts });
-  expect(() => parser.parse({ input, args: 'String' })).toThrow('Context root must be an object.');
+  expect(() => parser.parse({ input, args: 'String' })).toThrow(
+    'Lowdefy context must be an object.'
+  );
 });
 
 test('parse event not an object', () => {

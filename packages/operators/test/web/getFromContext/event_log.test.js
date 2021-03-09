@@ -17,7 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
 
-const root = {
+const lowdefy = {
   inputs: {
     own: {
       string: 'input',
@@ -61,7 +61,7 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
-  root,
+  lowdefy,
   eventLog: [
     {
       blockId: 'block_a',
@@ -96,7 +96,7 @@ const otherContext = {
     number: { loading: false, response: 600 },
     arr: { loading: false, response: [{ a: 'request a1-other' }, { a: 'request a2-other' }] },
   },
-  root,
+  lowdefy,
   eventLog: [
     {
       blockId: 'block_a-other',

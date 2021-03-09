@@ -27,7 +27,7 @@ afterAll(() => {
   console.log = logger;
 });
 
-const root = {
+const lowdefy = {
   inputs: {
     own: {
       id: {
@@ -68,7 +68,7 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
-  root,
+  lowdefy,
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],

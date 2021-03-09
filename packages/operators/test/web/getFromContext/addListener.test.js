@@ -19,14 +19,14 @@ import WebParser from '../../../src/webParser';
 
 const arrayIndices = [1];
 
-const root = {
+const lowdefy = {
   inputs: {},
 };
 
 test('add listener if contextId is not equal to own contextId', () => {
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     state: {
       string: 'state',
     },
@@ -35,7 +35,7 @@ test('add listener if contextId is not equal to own contextId', () => {
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     state: {
       string: 'state-other',
     },
@@ -62,7 +62,7 @@ test('add listener if contextId is not equal to own contextId', () => {
 test('do not add listener if contextId is equal to own contextId', () => {
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     state: {
       string: 'state',
       arr: [{ a: 'state1' }, { a: 'state2' }],
@@ -72,7 +72,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     state: {
       string: 'state-other',
       arr: [{ a: 'state1-other' }, { a: 'state2-other' }],
@@ -100,7 +100,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
 test('add listener for _state', () => {
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     state: {
       string: 'state',
     },
@@ -109,7 +109,7 @@ test('add listener for _state', () => {
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     state: {
       string: 'state-other',
     },
@@ -136,7 +136,7 @@ test('add listener for _state', () => {
 test('add listener for _event_log', () => {
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     eventLog: [
       {
         string: 'state',
@@ -147,7 +147,7 @@ test('add listener for _event_log', () => {
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     eventLog: [
       {
         string: 'state-other',
@@ -174,7 +174,7 @@ test('add listener for _event_log', () => {
 });
 
 test('add listener for _input', () => {
-  const root = {
+  const lowdefy = {
     inputs: {
       own: {
         string: 'input',
@@ -186,13 +186,13 @@ test('add listener for _input', () => {
   };
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     updateListeners: new Set(),
   };
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     updateListeners: new Set(),
   };
 
@@ -214,7 +214,7 @@ test('add listener for _input', () => {
 });
 
 test('add listener for _url_query', () => {
-  const root = {
+  const lowdefy = {
     urlQuery: {
       string: 'url',
     },
@@ -222,13 +222,13 @@ test('add listener for _url_query', () => {
   };
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     updateListeners: new Set(),
   };
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     updateListeners: new Set(),
   };
 
@@ -252,7 +252,7 @@ test('add listener for _url_query', () => {
 test('add listener for _request_details', () => {
   const context = {
     id: 'own',
-    root,
+    lowdefy,
     requests: {
       string: 'requests',
     },
@@ -261,7 +261,7 @@ test('add listener for _request_details', () => {
 
   const otherContext = {
     id: 'other',
-    root,
+    lowdefy,
     requests: {
       string: 'requests-other',
     },
