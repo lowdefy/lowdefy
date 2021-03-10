@@ -16,13 +16,22 @@
 
 import createGetController from '../controllers/getController';
 
-function testBootstrapContext({ development, getSecrets, host, loaders, setHeader, user } = {}) {
+function testBootstrapContext({
+  development,
+  getSecrets,
+  headers,
+  host,
+  loaders,
+  setHeader,
+  user,
+} = {}) {
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
     development,
     getController: () => {},
     getLoader: loaders ? (name) => loaders[name] : () => {},
     getSecrets: getSecrets || (() => {}),
+    headers: headers || {},
     host: host || 'host',
     logger: { log: () => {} },
     setHeader: setHeader || (() => {}),
@@ -32,12 +41,13 @@ function testBootstrapContext({ development, getSecrets, host, loaders, setHeade
   return bootstrapContext;
 }
 
-function testContext({ development, getSecrets, host, loaders, setHeader, user } = {}) {
+function testContext({ development, getSecrets, host, loaders, setHeader, user, headers } = {}) {
   const bootstrapContext = {
     development,
     getLoader: (name) => loaders[name],
     getSecrets: getSecrets || (() => {}),
     host: host || 'host',
+    headers: headers || {},
     logger: { log: () => {} },
     setHeader: setHeader || (() => {}),
     user: user || {},

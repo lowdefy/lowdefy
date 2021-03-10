@@ -14,24 +14,26 @@
   limitations under the License.
 */
 
-class PageController {
-  constructor({ getLoader, getController }) {
-    this.pageLoader = getLoader('page');
-    this.authorizationController = getController('authorization');
+import { ServerError } from '../context/errors';
+
+class AuthorizationController {
+  constructor({ user }) {
+    this.user = user;
   }
 
-  async getPage({ pageId }) {
-    const page = await this.pageLoader.load(pageId);
-    if (!page) return null;
-    if (this.authorizationController.authorize(page)) return page;
-    return null;
+  authorize({ auth }) {
+    if (auth === 'public') return true;
+    if (auth === 'protected') {
+      return !!this.user.sub;
+    }
+    throw new ServerError('Invalid auth configuration');
   }
 }
 
-function createPageController(context) {
-  return new PageController(context);
+function createAuthorizationController(context) {
+  return new AuthorizationController(context);
 }
 
-export { PageController };
+export { AuthorizationController };
 
-export default createPageController;
+export default createAuthorizationController;

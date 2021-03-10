@@ -76,7 +76,7 @@ const loaders = {
   },
 };
 
-const context = testBootstrapContext({ loaders, getSecrets, user: { name: 'name' } });
+const context = testBootstrapContext({ loaders, getSecrets });
 
 const defaultInput = {
   arrayIndices: [],
@@ -111,6 +111,7 @@ const defaultLoadRequestImp = ({ pageId, contextId, requestId }) => {
       type: 'TestRequest',
       requestId: 'requestId',
       connectionId: 'testConnection',
+      auth: 'public',
       properties: {
         requestProperty: 'requestProperty',
       },
@@ -130,7 +131,7 @@ beforeEach(() => {
   resolvers.TestConnection.requests.TestRequest.resolver.mockReset();
 });
 
-test('call request', async () => {
+test('call request, public auth', async () => {
   mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
@@ -149,6 +150,68 @@ test('call request', async () => {
     success: true,
     type: 'TestRequest',
   });
+});
+
+test('call request, protected auth with user', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        auth: 'protected',
+        properties: {
+          requestProperty: 'requestProperty',
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(
+    testBootstrapContext({ loaders, getSecrets, user: { sub: 'sub' } })
+  );
+  const res = await controller.callRequest(defaultInput);
+  expect(res).toEqual({
+    id: 'request:pageId:contextId:requestId',
+    response: {
+      connection: {
+        connectionProperty: 'connectionProperty',
+      },
+      request: {
+        requestProperty: 'requestProperty',
+      },
+    },
+    success: true,
+    type: 'TestRequest',
+  });
+});
+
+test('call request, protected auth without user', async () => {
+  mockLoadConnection.mockImplementation(defaultLoadConnectionImp);
+  mockLoadRequest.mockImplementation(({ pageId, contextId, requestId }) => {
+    if (`${pageId}:${contextId}:${requestId}` === 'pageId:contextId:requestId') {
+      return {
+        id: 'request:pageId:contextId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        auth: 'protected',
+        properties: {
+          requestProperty: 'requestProperty',
+        },
+      };
+    }
+    return null;
+  });
+  resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
+  const controller = createRequestController(context);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(ConfigurationError);
+  await expect(controller.callRequest(defaultInput)).rejects.toThrow(
+    'Request "requestId" does not exist.'
+  );
 });
 
 test('request does not exist', async () => {
@@ -170,6 +233,7 @@ test('request does not have a connectionId', async () => {
         id: 'request:pageId:contextId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
+        auth: 'public',
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -194,6 +258,7 @@ test('request is not a valid request type', async () => {
         type: 'InvalidType',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -252,6 +317,7 @@ test('deserialize inputs', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           event: { _event: true },
           input: { _input: true },
@@ -323,6 +389,7 @@ test('parse request properties for operators', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           input: { _input: 'value' },
           event: { _event: 'value' },
@@ -330,14 +397,16 @@ test('parse request properties for operators', async () => {
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
           arrayIndices: { _state: 'array.$' },
-          user: { _user: 'name' },
+          user: { _user: 'sub' },
         },
       };
     }
     return null;
   });
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
-  const controller = createRequestController(context);
+  const controller = createRequestController(
+    testBootstrapContext({ loaders, getSecrets, user: { sub: 'sub' } })
+  );
   const res = await controller.callRequest({
     arrayIndices: [1],
     blockId: 'contextId',
@@ -373,7 +442,7 @@ test('parse request properties for operators', async () => {
         state: 'stateValue',
         urlQuery: 'urlValue',
         arrayIndices: 'one',
-        user: 'name',
+        user: 'sub',
       },
     },
     success: true,
@@ -395,7 +464,7 @@ test('parse connection properties for operators', async () => {
           state: { _state: 'value' },
           urlQuery: { _url_query: 'value' },
           arrayIndices: { _state: 'array.$' },
-          user: { _user: 'name' },
+          user: { _user: 'sub' },
         },
       };
     }
@@ -403,7 +472,9 @@ test('parse connection properties for operators', async () => {
   });
   mockLoadRequest.mockImplementation(defaultLoadRequestImp);
   resolvers.TestConnection.requests.TestRequest.resolver.mockImplementation(defaultResolverImp);
-  const controller = createRequestController(context);
+  const controller = createRequestController(
+    testBootstrapContext({ loaders, getSecrets, user: { sub: 'sub' } })
+  );
   const res = await controller.callRequest({
     arrayIndices: [1],
     blockId: 'contextId',
@@ -436,7 +507,7 @@ test('parse connection properties for operators', async () => {
         state: 'stateValue',
         urlQuery: 'urlValue',
         arrayIndices: 'one',
-        user: 'name',
+        user: 'sub',
       },
       request: {
         requestProperty: 'requestProperty',
@@ -468,6 +539,7 @@ test('parse secrets', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           secret: { _secret: 'REQUEST' },
         },
@@ -502,6 +574,7 @@ test('request properties default value', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
       };
     }
     return null;
@@ -559,6 +632,7 @@ test('request properties operator error', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           willError: { _state: [] },
         },
@@ -581,6 +655,7 @@ test('connection properties operator error', async () => {
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           willError: { _state: [] },
         },
@@ -660,6 +735,7 @@ test('request properties schema error', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {
           schemaPropString: true,
         },
@@ -694,6 +770,7 @@ test('checkRead, read explicitly true', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -736,6 +813,7 @@ test('checkRead, read explicitly false', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -756,6 +834,7 @@ test('checkRead, read not set', async () => {
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -768,6 +847,7 @@ test('checkRead, read not set', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -808,6 +888,7 @@ test('checkWrite, write explicitly true', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -850,6 +931,7 @@ test('checkWrite, write explicitly false', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }
@@ -882,6 +964,7 @@ test('checkWrite, write not set', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
+        auth: 'public',
         properties: {},
       };
     }

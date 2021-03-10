@@ -16,14 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-import createPageController from './pageController';
+import createAuthorizationController from './authorizationController';
 import createComponentController from './componentController';
 import createOpenIdController from './openIdController';
+import createPageController from './pageController';
 import createRequestController from './requestController';
 import createTokenController from './tokenController';
 
 function creatGetController(context) {
   const constructors = {
+    authorization: createAuthorizationController,
     page: createPageController,
     component: createComponentController,
     openId: createOpenIdController,

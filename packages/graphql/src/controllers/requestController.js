@@ -21,10 +21,11 @@ import { ConfigurationError, RequestError } from '../context/errors';
 import resolvers from '../connections/resolvers';
 
 class RequestController {
-  constructor({ getLoader, getSecrets, user }) {
+  constructor({ getController, getLoader, getSecrets, user }) {
+    this.authorizationController = getController('authorization');
+    this.connectionLoader = getLoader('connection');
     this.getSecrets = getSecrets;
     this.requestLoader = getLoader('request');
-    this.connectionLoader = getLoader('connection');
     this.user = user;
   }
 
@@ -37,6 +38,9 @@ class RequestController {
       contextId: blockId,
       requestId,
     });
+
+    // authorizeRequest will throw if not authorized
+    this.authorizeRequest({ request });
     const connection = await this.loadConnection({ connectionId: request.connectionId });
 
     // Get definitions early to throw and avoid parsing if request/connection type is invalid
@@ -99,6 +103,12 @@ class RequestController {
     }
 
     return request;
+  }
+
+  authorizeRequest({ request }) {
+    if (!this.authorizationController.authorize(request)) {
+      throw new ConfigurationError(`Request "${request.requestId}" does not exist.`);
+    }
   }
 
   async loadConnection({ connectionId }) {

@@ -16,16 +16,17 @@
 
 import createGetController from './getController';
 import { testBootstrapContext } from '../test/testContext';
-import { PageController } from './pageController';
+import { AuthorizationController } from './authorizationController';
 import { ComponentController } from './componentController';
 import { OpenIdController } from './openIdController';
+import { PageController } from './pageController';
 import { RequestController } from './requestController';
 import { TokenController } from './tokenController';
 
-test('get page controller', () => {
+test('get auth controller', () => {
   const getController = createGetController(testBootstrapContext());
-  const controller = getController('page');
-  expect(controller).toBeInstanceOf(PageController);
+  const controller = getController('authorization');
+  expect(controller).toBeInstanceOf(AuthorizationController);
 });
 
 test('get component controller', () => {
@@ -38,6 +39,12 @@ test('get openId controller', () => {
   const getController = createGetController(testBootstrapContext());
   const controller = getController('openId');
   expect(controller).toBeInstanceOf(OpenIdController);
+});
+
+test('get page controller', () => {
+  const getController = createGetController(testBootstrapContext());
+  const controller = getController('page');
+  expect(controller).toBeInstanceOf(PageController);
 });
 
 test('get request controller', () => {

@@ -21,7 +21,6 @@ import cookie from 'cookie';
 
 async function verifyAccessToken({ development, headers, getController, setHeader }) {
   const cookieHeader = get(headers, 'Cookie') || get(headers, 'cookie') || '';
-
   const { authorization } = cookie.parse(cookieHeader);
   if (!authorization) return {};
   const tokenController = getController('token');
