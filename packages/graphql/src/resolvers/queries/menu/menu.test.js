@@ -28,11 +28,13 @@ const mockLoadMenus = jest.fn((id) => {
           {
             id: 'menuitem:default:0',
             type: 'MenuGroup',
+            auth: 'public',
             links: [
               {
                 id: 'menuitem:default:1',
                 type: 'MenuLink',
                 pageId: 'page',
+                auth: 'public',
               },
             ],
           },
