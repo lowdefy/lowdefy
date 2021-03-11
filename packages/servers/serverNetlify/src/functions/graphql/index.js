@@ -31,7 +31,7 @@ const context = createContext(config);
 const server = new ApolloServer({ typeDefs, resolvers, context });
 const app = express();
 
-server.applyMiddleware({ app, path: '/api/graphql' });
+server.applyMiddleware({ app, path: '/graphql' });
 
 const handler = serverless(app);
 
