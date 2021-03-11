@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.1](https://github.com/lowdefy/lowdefy/compare/v3.11.0...v3.11.1) (2021-03-11)
+
+
+### Bug Fixes
+
+* **server-netlify:** Fix Netlify server graphql path ([0898642](https://github.com/lowdefy/lowdefy/commit/08986421a6f887bef3b306fea9db5a4eaac3664b))
+
+
+
+
+
 # [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
 
 
