@@ -75,6 +75,7 @@ const getContext = async ({ block, contextId, lowdefy }) => {
     eventLog: [],
     requests: {},
     lowdefy,
+    pageId: lowdefy.pageId,
     rootBlock: blockData(block), // filter block to prevent circular structure
     showValidationErrors: false,
     state: {},

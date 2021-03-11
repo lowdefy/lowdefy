@@ -92,7 +92,7 @@ class Requests {
             event: serializer.serialize(event) || {},
             input: serializer.serialize(this.context.lowdefy.inputs[this.context.id]),
             lowdefyGlobal: serializer.serialize(this.context.lowdefy.lowdefyGlobal),
-            pageId: this.context.lowdefy.pageId,
+            pageId: this.context.pageId,
             state: serializer.serialize(this.context.state),
             urlQuery: serializer.serialize(this.context.lowdefy.urlQuery),
           },
