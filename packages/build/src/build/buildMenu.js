@@ -53,7 +53,12 @@ function loopItems(parent, menuId, pages, missingPageWarnings) {
           } else {
             menuItem.auth = page.auth;
           }
+        } else {
+          menuItem.auth = 'public';
         }
+      }
+      if (menuItem.type === 'MenuGroup') {
+        menuItem.auth = 'public';
       }
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;
