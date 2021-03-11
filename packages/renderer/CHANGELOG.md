@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
+
+
+### Bug Fixes
+
+* **engine:** Assign rootContext to context, instead of assigning individual fields. ([9461990](https://github.com/lowdefy/lowdefy/commit/9461990863b76d790a55d77fef5278adc4619858))
+* **renderer:** Fix login logout. ([2c51020](https://github.com/lowdefy/lowdefy/commit/2c5102059979a7bba9e696a51d23e7b8f240312a))
+* **renderer:** Init displayMessage before it is loaded, closes [#470](https://github.com/lowdefy/lowdefy/issues/470). ([fac7e39](https://github.com/lowdefy/lowdefy/commit/fac7e39776b41cc5a175a957c52a135f5e8e73c9))
+* **renderer:** Move pageId into lowdefy object. ([5a19389](https://github.com/lowdefy/lowdefy/commit/5a19389929465b64b65ebd4906c50bf66eeb76a4))
+* **renderer:** Setup link function using setupLink. ([b078b22](https://github.com/lowdefy/lowdefy/commit/b078b22505e2a3978d791ce1da581869ad507f6b))
+* **renderer:** Update blocks using use state. ([de4f899](https://github.com/lowdefy/lowdefy/commit/de4f8996a896c92a358b87cc3bf09d6334bfe978))
+
+
+### Features
+
+* **graphql:** Set and unset authorization cookie. ([8abe43c](https://github.com/lowdefy/lowdefy/commit/8abe43cf99f57d884d0e770ace0393faeebf9606))
+* **renderer:** Finish OpenId callback. ([9997136](https://github.com/lowdefy/lowdefy/commit/9997136f395c1f7fb7d16ef8fdb6f0cd6043a951))
+* **renderer:** Handle expired tokens in GQL client and unset tokenId. ([2cc0492](https://github.com/lowdefy/lowdefy/commit/2cc049235e008c4887b5ed57ce92eff12d10ae60))
+* **renderer:** Improve OpenID Connect flows ([e7cca6f](https://github.com/lowdefy/lowdefy/commit/e7cca6f01fe5e08df8c9244144b4e1583fb753ce))
+* **renderer:** Switch rootcontext to root lowdefy object ([30919a2](https://github.com/lowdefy/lowdefy/commit/30919a2dd2e2ee9adffbe35f382ba70e78fac25e))
+* Init OpenID Connect flow. ([e2e29d0](https://github.com/lowdefy/lowdefy/commit/e2e29d0f165c148bbc27b5073612a6b4d50e1b87))
+
+
+
+
+
 ## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
 
 

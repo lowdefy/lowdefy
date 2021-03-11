@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "3.10.2",
+  "version": "3.11.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,7 +36,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.10.2",
+    "@lowdefy/helpers": "3.11.0",
     "rimraf": "3.0.2"
   },
   "devDependencies": {

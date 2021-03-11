@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Fix Descriptions bordered property default value ([c2503e1](https://github.com/lowdefy/lowdefy/commit/c2503e167a4185cf23f38955f66e0664fc0c5b1a))
+* **docs:** Add a section on using JSON instead of YAML ([a709086](https://github.com/lowdefy/lowdefy/commit/a709086a8bd239f020cb9cf9228baeaf9d15fb93))
+* **docs:** Add app schema image to docs public folder. ([df1c6c7](https://github.com/lowdefy/lowdefy/commit/df1c6c772e0465a20ab76f9494d45c29424e2b7b))
+* **docs:** Add deployment tutorial video ([1e63ddd](https://github.com/lowdefy/lowdefy/commit/1e63ddd7d6e2307f53605e6ea7c4cd0a1844b232))
+* **docs:** Typos. ([760abe6](https://github.com/lowdefy/lowdefy/commit/760abe6c0e1fa71c02ce1aa71dca7a97451294e9))
+* **docs:** Update overview with diagram. ([e8087b7](https://github.com/lowdefy/lowdefy/commit/e8087b728a42444dcd491fd47a7abac82c405560))
+* Update telemetry data field names. ([085e5cc](https://github.com/lowdefy/lowdefy/commit/085e5cc635f3eab2433f376de96af67a762f828f))
+
+
+
+
+
 ## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
 
 

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
+
+
+### Bug Fixes
+
+* **operators:** _mql on null should pass null and not throw. ([3378cb4](https://github.com/lowdefy/lowdefy/commit/3378cb4870db34c173e4c978c5ee5e00cd622889))
+* **operators:** Rename input to inputs. ([1815daa](https://github.com/lowdefy/lowdefy/commit/1815daaa1cc73b22d384e40db759192515e2ce2e))
+* **operators:** Rename more root to lowdefy. ([b2e40bb](https://github.com/lowdefy/lowdefy/commit/b2e40bbf1f22f9e61ef2350af3495d012eebbaf9))
+* _mql empty input when data is null. ([a1c913a](https://github.com/lowdefy/lowdefy/commit/a1c913a080758fed82426d9295d53fde8ae3e813))
+
+
+### Features
+
+* **operators:** Configure operators to work aith root and add _user. ([c9395b9](https://github.com/lowdefy/lowdefy/commit/c9395b98a9cfd1f1779c57720ee3316287e8592e))
+* **operators:** Filter openid secrets and block get all in _secret. ([bd7a772](https://github.com/lowdefy/lowdefy/commit/bd7a7720f565d77ed2e644ef6c2857084fdf0d5c))
+
+
+
+
+
 ## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
 
 
