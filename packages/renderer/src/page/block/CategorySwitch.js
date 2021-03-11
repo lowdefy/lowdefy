@@ -23,7 +23,7 @@ import Container from './Container';
 import Context from './Context';
 import List from './List';
 
-const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext }) => {
+const CategorySwitch = ({ block, Blocks, Component, context, lowdefy }) => {
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
 
@@ -36,20 +36,18 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
           contextId={makeContextId({
             // TODO: remove branch
             branch: 'main',
-            urlQuery: rootContext.urlQuery,
-            pageId,
+            urlQuery: lowdefy.urlQuery,
+            pageId: lowdefy.pageId,
             blockId: block.blockId,
           })}
-          pageId={pageId}
-          rootContext={rootContext}
+          lowdefy={lowdefy}
           render={(context) => (
             <Container
               block={context.RootBlocks.areas.root.blocks[0]}
               Blocks={context.RootBlocks}
               Component={Component}
               context={context}
-              pageId={pageId}
-              rootContext={rootContext}
+              lowdefy={lowdefy}
             />
           )}
         />
@@ -61,8 +59,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
           Blocks={Blocks}
           Component={Component}
           context={context}
-          pageId={pageId}
-          rootContext={rootContext}
+          lowdefy={lowdefy}
         />
       );
     case 'container':
@@ -72,8 +69,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
           Blocks={Blocks}
           Component={Component}
           context={context}
-          pageId={pageId}
-          rootContext={rootContext}
+          lowdefy={lowdefy}
         />
       );
     case 'input':
@@ -81,7 +77,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.style}
-          highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           layout={block.eval.layout || {}}
           makeCssClass={makeCssClass}
         >
@@ -95,14 +91,14 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             })}
             blockId={block.blockId}
             events={block.eval.events}
-            homePageId={rootContext.homePageId}
+            homePageId={lowdefy.homePageId}
             key={block.blockId}
             loading={block.loading}
-            menus={rootContext.menus}
-            pageId={pageId}
+            menus={lowdefy.menus}
+            pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            user={rootContext.user}
+            user={lowdefy.user}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -113,7 +109,7 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.style}
-          highlightBorders={rootContext.lowdefyGlobal.highlightBorders}
+          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           layout={block.eval.layout || {}}
           makeCssClass={makeCssClass}
         >
@@ -126,14 +122,14 @@ const CategorySwitch = ({ block, Blocks, Component, context, pageId, rootContext
             })}
             events={block.eval.events}
             blockId={block.blockId}
-            homePageId={rootContext.homePageId}
+            homePageId={lowdefy.homePageId}
             key={block.blockId}
             loading={block.loading}
-            menus={rootContext.menus}
-            pageId={pageId}
+            menus={lowdefy.menus}
+            pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            user={rootContext.user}
+            user={lowdefy.user}
             validation={block.eval.validation}
           />
         </BlockLayout>

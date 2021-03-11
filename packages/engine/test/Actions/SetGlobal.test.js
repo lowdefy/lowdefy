@@ -18,9 +18,11 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-const rootContext = {};
-
 test('SetGlobal data to global', async () => {
+  const lowdefy = {
+    lowdefyGlobal: { x: 'old', init: 'init' },
+    pageId,
+  };
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -51,17 +53,15 @@ test('SetGlobal data to global', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
-    initLowdefyGlobal: { x: 'old', init: 'init' },
   });
 
-  expect(context.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
+  expect(context.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
   const { button } = context.RootBlocks.map;
 
   await button.triggerEvent({ name: 'onClick' });
-  expect(context.lowdefyGlobal).toEqual({
+  expect(context.lowdefy.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',
     number: 13,

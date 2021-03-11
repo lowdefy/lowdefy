@@ -42,6 +42,7 @@ function buildRequests(block, context) {
       );
     }
     block.requests.forEach((request) => {
+      request.auth = context.auth;
       request.requestId = request.id;
       request.contextId = context.contextId;
       request.id = `request:${context.pageId}:${context.contextId}:${request.id}`;
@@ -123,6 +124,7 @@ async function buildBlock(block, context) {
   let ctx = context;
   if (block.meta.category === 'context') {
     ctx = {
+      auth: context.auth,
       pageId: context.pageId,
       contextId: block.blockId,
       requests: [],
@@ -173,9 +175,14 @@ async function buildPages({ components, context }) {
       throw new Error(`Page id missing at page ${i}`);
     }
     page.pageId = page.id;
-
     await checkPageIsContext(page, context.metaLoader);
+    if (components.auth.include.includes(page.pageId)) {
+      page.auth = components.auth.set;
+    } else {
+      page.auth = components.auth.default;
+    }
     await buildBlock(page, {
+      auth: page.auth,
       pageId: page.pageId,
       requests: [],
       metaLoader: context.metaLoader,

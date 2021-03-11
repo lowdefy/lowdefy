@@ -67,13 +67,17 @@ const client = {
   query: mockQuery,
 };
 const pageId = 'one';
-const rootContext = {
+const lowdefy = {
   client,
+  pageId,
 };
 
 const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
+
+// Comment out to use console.log
+console.log = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -118,9 +122,8 @@ test('Request call one request', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -170,9 +173,8 @@ test('Request call all requests', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -236,9 +238,8 @@ test('Request call array of requests', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -302,9 +303,8 @@ test('Request pass if params are none', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick' });
@@ -341,9 +341,8 @@ test('Request call request error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -399,9 +398,8 @@ test('Request call request graphql error', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });

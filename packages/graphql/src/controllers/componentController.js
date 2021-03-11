@@ -17,7 +17,8 @@
 import { get } from '@lowdefy/helpers';
 
 class ComponentController {
-  constructor({ getLoader }) {
+  constructor({ getController, getLoader }) {
+    this.authorizationController = getController('authorization');
     this.componentLoader = getLoader('component');
   }
 
@@ -29,12 +30,46 @@ class ComponentController {
 
   async getMenus() {
     const loadedMenus = await this.componentLoader.load('menus');
-    const menus = loadedMenus || [];
+    const menus = this.filterMenus({ menus: loadedMenus || [] });
     const homePageId = await this.getHomePageId({ menus });
     return {
       menus,
       homePageId,
     };
+  }
+
+  filterMenus({ menus }) {
+    return menus.map((menu) => {
+      return {
+        ...menu,
+        links: this.filterMenuList({ menuList: get(menu, 'links', { default: [] }) }),
+      };
+    });
+  }
+
+  filterMenuList({ menuList }) {
+    return menuList
+      .map((item) => {
+        if (item.type === 'MenuLink') {
+          if (this.authorizationController.authorize(item)) {
+            return item;
+          }
+          return null;
+        }
+        if (item.type === 'MenuGroup') {
+          const filteredSubItems = this.filterMenuList({
+            menuList: get(item, 'links', { default: [] }),
+          });
+          if (filteredSubItems.length > 0) {
+            return {
+              ...item,
+              links: filteredSubItems,
+            };
+          }
+        }
+        return null;
+      })
+      .filter((item) => item !== null);
   }
 
   async getHomePageId({ menus }) {

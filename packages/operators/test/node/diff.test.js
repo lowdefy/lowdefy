@@ -18,6 +18,8 @@ import diff from '../../src/node/diff';
 
 const location = 'locationId';
 
+console.error = () => {};
+
 test('_diff.deep on objects', () => {
   expect(diff({ params: [{ a: 1 }, { a: 2 }], location, methodName: 'deep' })).toEqual([
     { kind: 'E', lhs: 1, path: ['a'], rhs: 2 },

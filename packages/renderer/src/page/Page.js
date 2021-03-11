@@ -26,6 +26,7 @@ import { get, urlQuery } from '@lowdefy/helpers';
 import Helmet from './Helmet';
 import Block from './block/Block';
 import Context from './block/Context';
+import setupLink from '../utils/setupLink';
 
 const GET_PAGE = gql`
   query getPage($id: ID!) {
@@ -33,11 +34,14 @@ const GET_PAGE = gql`
   }
 `;
 
-const PageContext = ({ rootContext }) => {
+const PageContext = ({ lowdefy }) => {
   const { pageId } = useParams();
-  rootContext.routeHistory = useHistory();
   const { search } = useLocation();
-  rootContext.urlQuery = urlQuery.parse(search || '');
+  lowdefy.pageId = pageId;
+  lowdefy.routeHistory = useHistory();
+  lowdefy.link = setupLink(lowdefy);
+  lowdefy.urlQuery = urlQuery.parse(search || '');
+
   const { loading, error, data } = useQuery(GET_PAGE, {
     variables: { id: pageId },
   });
@@ -54,7 +58,7 @@ const PageContext = ({ rootContext }) => {
 
   // Prefetch all prefetchPages to Apollo cache
   get(data.page, 'properties.prefetchPages', { default: [] }).map((fetchPageId) =>
-    rootContext.client.query({
+    lowdefy.client.query({
       query: GET_PAGE,
       variables: { id: fetchPageId },
     })
@@ -76,15 +80,13 @@ const PageContext = ({ rootContext }) => {
           }}
           context={null}
           contextId={`root:${pageId}`}
-          pageId={pageId}
-          rootContext={rootContext}
+          lowdefy={lowdefy}
           render={(context) => (
             <Block
               block={context.RootBlocks.map[data.page.blockId]}
               Blocks={context.RootBlocks}
               context={context}
-              pageId={pageId}
-              rootContext={rootContext}
+              lowdefy={lowdefy}
             />
           )}
         />

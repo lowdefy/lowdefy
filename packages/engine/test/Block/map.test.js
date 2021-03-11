@@ -19,7 +19,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('all nested blocks present in map', () => {
   const rootBlock = {
@@ -121,9 +121,8 @@ test('all nested blocks present in map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       y: 'y',
       a: [{ b: 'b0' }, { b: 'b1', c: [{ d: [1, 2, 3] }] }],
@@ -187,9 +186,8 @@ test('unshiftItem item in list updates map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [0, 1],
     },
@@ -252,9 +250,8 @@ test('pushItem item in list updates map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [0],
     },
@@ -307,9 +304,8 @@ test('removeItem in list updates map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [0, 1, 2, 3],
     },
@@ -392,9 +388,8 @@ test('moveItemUp in list updates map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [0, 1, 2, 3],
     },
@@ -481,9 +476,8 @@ test('moveItemDown in list updates map', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [0, 1, 2, 3],
     },

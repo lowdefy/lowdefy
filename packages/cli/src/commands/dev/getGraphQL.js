@@ -28,11 +28,16 @@ async function getGraphQl({ context }) {
   });
   const config = {
     CONFIGURATION_BASE_PATH: context.outputDirectory,
+    development: true,
     logger: console,
     getSecrets: createGetSecretsFromEnv(),
   };
   const gqlContext = createGqlContext(config);
-  const server = new ApolloServer({ typeDefs, resolvers, context: gqlContext });
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: gqlContext,
+  });
   return server;
 }
 

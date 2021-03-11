@@ -22,6 +22,8 @@ const state = {
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
 
+console.error = () => {};
+
 test('_nunjucks string template', () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
   const parser = new NodeParser({ state });

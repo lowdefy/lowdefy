@@ -164,6 +164,12 @@ const outputMetas = {
   },
 };
 
+const auth = {
+  default: 'public',
+  include: [],
+  set: 'public',
+};
+
 const mockMetaLoader = (type) => {
   const meta = blockMetas[type];
   if (!meta) {
@@ -191,16 +197,19 @@ test('buildPages no pages', async () => {
 
 test('buildPages pages not an array', async () => {
   const components = {
+    auth,
     pages: 'pages',
   };
   const res = await buildPages({ components, context });
   expect(res).toEqual({
+    auth,
     pages: 'pages',
   });
 });
 
 test('page does not have an id', async () => {
   const components = {
+    auth,
     pages: [
       {
         type: 'Context',
@@ -212,6 +221,7 @@ test('page does not have an id', async () => {
 
 test('block does not have an id', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -231,6 +241,7 @@ test('block does not have an id', async () => {
 
 test('page type missing', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -244,6 +255,7 @@ test('page type missing', async () => {
 
 test('block type missing', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -263,6 +275,7 @@ test('block type missing', async () => {
 
 test('invalid page type', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -277,6 +290,7 @@ test('invalid page type', async () => {
 
 test('invalid block type', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -297,6 +311,7 @@ test('invalid block type', async () => {
 
 test('page type not a string', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -311,6 +326,7 @@ test('page type not a string', async () => {
 
 test('block type not a string', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -331,6 +347,7 @@ test('block type not a string', async () => {
 
 test('page type is not of category context', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -345,6 +362,7 @@ test('page type is not of category context', async () => {
 
 test('no blocks on page', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: '1',
@@ -354,9 +372,11 @@ test('no blocks on page', async () => {
   };
   const res = await buildPages({ components, context });
   expect(res).toEqual({
+    auth,
     pages: [
       {
         id: 'page:1',
+        auth: 'public',
         pageId: '1',
         blockId: '1',
         type: 'Context',
@@ -369,6 +389,7 @@ test('no blocks on page', async () => {
 
 test('blocks not an array', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -384,6 +405,7 @@ test('blocks not an array', async () => {
 
 test('block not an object', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page1',
@@ -399,6 +421,7 @@ test('block not an object', async () => {
 
 test('block meta should include all meta fields', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page_1',
@@ -422,9 +445,11 @@ test('block meta should include all meta fields', async () => {
   };
   const res = await buildPages({ components, context });
   expect(res).toEqual({
+    auth,
     pages: [
       {
         id: 'page:page_1',
+        auth: 'public',
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -461,6 +486,7 @@ test('block meta should include all meta fields', async () => {
 
 test('nested blocks', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page_1',
@@ -482,9 +508,11 @@ test('nested blocks', async () => {
   };
   const res = await buildPages({ components, context });
   expect(res).toEqual({
+    auth,
     pages: [
       {
         id: 'page:page_1',
+        auth: 'public',
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -522,6 +550,7 @@ test('nested blocks', async () => {
 describe('block areas', () => {
   test('content area blocks is not an array', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page1',
@@ -541,6 +570,7 @@ describe('block areas', () => {
 
   test('Add array if area blocks is undefined', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page1',
@@ -553,9 +583,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page1',
+          auth: 'public',
           blockId: 'page1',
           pageId: 'page1',
           type: 'Context',
@@ -573,6 +605,7 @@ describe('block areas', () => {
 
   test('content area on page ', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
@@ -592,9 +625,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           blockId: '1',
           pageId: '1',
           type: 'Context',
@@ -619,9 +654,11 @@ describe('block areas', () => {
 
   test('does not overwrite area layout', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
+          auth: 'public',
           type: 'Context',
           areas: {
             content: {
@@ -639,9 +676,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -667,6 +706,7 @@ describe('block areas', () => {
 
   test('multiple content areas on page ', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
@@ -694,9 +734,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -731,6 +773,7 @@ describe('block areas', () => {
 
   test('blocks array does not affect other content areas', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
@@ -756,9 +799,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -793,6 +838,7 @@ describe('block areas', () => {
 
   test('blocks array overwrites areas.content', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
@@ -826,9 +872,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -863,6 +911,7 @@ describe('block areas', () => {
 
   test('nested content areas ', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: '1',
@@ -912,9 +961,11 @@ describe('block areas', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:1',
+          auth: 'public',
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -985,6 +1036,7 @@ describe('block areas', () => {
 describe('build requests', () => {
   test('requests not an array', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1000,6 +1052,7 @@ describe('build requests', () => {
 
   test('give request an id', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1014,9 +1067,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1024,6 +1079,7 @@ describe('build requests', () => {
           requests: [
             {
               id: 'request:page_1:page_1:request_1',
+              auth: 'public',
               requestId: 'request_1',
               contextId: 'page_1',
             },
@@ -1035,6 +1091,7 @@ describe('build requests', () => {
 
   test('request on a context block not at root', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1055,9 +1112,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1074,6 +1133,7 @@ describe('build requests', () => {
                   requests: [
                     {
                       id: 'request:page_1:context:request_1',
+                      auth: 'public',
                       requestId: 'request_1',
                       contextId: 'context',
                     },
@@ -1089,6 +1149,7 @@ describe('build requests', () => {
 
   test('request on a non-context block', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1109,9 +1170,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           blockId: 'page_1',
           pageId: 'page_1',
           type: 'Context',
@@ -1119,6 +1182,7 @@ describe('build requests', () => {
           requests: [
             {
               id: 'request:page_1:page_1:request_1',
+              auth: 'public',
               requestId: 'request_1',
               contextId: 'page_1',
             },
@@ -1142,6 +1206,7 @@ describe('build requests', () => {
 
   test('request on a non-context block below a context block not at root', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1168,9 +1233,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1187,6 +1254,7 @@ describe('build requests', () => {
                   requests: [
                     {
                       id: 'request:page_1:context:request_1',
+                      auth: 'public',
                       requestId: 'request_1',
                       contextId: 'context',
                     },
@@ -1214,6 +1282,7 @@ describe('build requests', () => {
 
   test('request on a non-context block below a context block and at root', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1244,9 +1313,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           blockId: 'page_1',
           type: 'Context',
           meta: {
@@ -1262,6 +1333,7 @@ describe('build requests', () => {
           requests: [
             {
               id: 'request:page_1:page_1:request_1',
+              auth: 'public',
               contextId: 'page_1',
               requestId: 'request_1',
             },
@@ -1330,6 +1402,7 @@ describe('build requests', () => {
 
   test('multiple requests', async () => {
     const components = {
+      auth,
       pages: [
         {
           id: 'page_1',
@@ -1347,9 +1420,11 @@ describe('build requests', () => {
     };
     const res = await buildPages({ components, context });
     expect(res).toEqual({
+      auth,
       pages: [
         {
           id: 'page:page_1',
+          auth: 'public',
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1357,11 +1432,13 @@ describe('build requests', () => {
           requests: [
             {
               id: 'request:page_1:page_1:request_1',
+              auth: 'public',
               requestId: 'request_1',
               contextId: 'page_1',
             },
             {
               id: 'request:page_1:page_1:request_2',
+              auth: 'public',
               requestId: 'request_2',
               contextId: 'page_1',
             },
@@ -1374,6 +1451,7 @@ describe('build requests', () => {
 
 test('add user defined loading to meta', async () => {
   const components = {
+    auth,
     pages: [
       {
         id: 'page_1',
@@ -1395,9 +1473,11 @@ test('add user defined loading to meta', async () => {
   };
   const res = await buildPages({ components, context });
   expect(res).toEqual({
+    auth,
     pages: [
       {
         id: 'page:page_1',
+        auth: 'public',
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -1444,5 +1524,247 @@ test('add user defined loading to meta', async () => {
         },
       },
     ],
+  });
+});
+
+describe('auth field', () => {
+  test('default auth to page on components.auth.default', async () => {
+    const components = {
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: [],
+      },
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+        },
+        {
+          id: 'page_2',
+          type: 'Context',
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: [],
+      },
+      pages: [
+        {
+          id: 'page:page_1',
+          auth: 'defaulted',
+          pageId: 'page_1',
+          blockId: 'page_1',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [],
+        },
+        {
+          id: 'page:page_2',
+          auth: 'defaulted',
+          pageId: 'page_2',
+          blockId: 'page_2',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [],
+        },
+      ],
+    });
+  });
+
+  test('set auth to page in components.auth.include', async () => {
+    const components = {
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: ['page_2'],
+      },
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+        },
+        {
+          id: 'page_2',
+          type: 'Context',
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: ['page_2'],
+      },
+      pages: [
+        {
+          id: 'page:page_1',
+          auth: 'defaulted',
+          pageId: 'page_1',
+          blockId: 'page_1',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [],
+        },
+        {
+          id: 'page:page_2',
+          auth: 'setting',
+          pageId: 'page_2',
+          blockId: 'page_2',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [],
+        },
+      ],
+    });
+  });
+
+  test('default auth to requests on components.auth.default', async () => {
+    const components = {
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: [],
+      },
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          requests: [
+            {
+              id: 'request_1',
+            },
+          ],
+        },
+        {
+          id: 'page_2',
+          type: 'Context',
+          requests: [
+            {
+              id: 'request_2',
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: [],
+      },
+      pages: [
+        {
+          id: 'page:page_1',
+          auth: 'defaulted',
+          pageId: 'page_1',
+          blockId: 'page_1',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [
+            {
+              id: 'request:page_1:page_1:request_1',
+              auth: 'defaulted',
+              requestId: 'request_1',
+              contextId: 'page_1',
+            },
+          ],
+        },
+        {
+          id: 'page:page_2',
+          auth: 'defaulted',
+          pageId: 'page_2',
+          blockId: 'page_2',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [
+            {
+              id: 'request:page_2:page_2:request_2',
+              auth: 'defaulted',
+              requestId: 'request_2',
+              contextId: 'page_2',
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  test('set auth to requests in components.auth.include', async () => {
+    const components = {
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: ['page_1'],
+      },
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          requests: [
+            {
+              id: 'request_1',
+            },
+          ],
+        },
+        {
+          id: 'page_2',
+          type: 'Context',
+          requests: [
+            {
+              id: 'request_2',
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(res).toEqual({
+      auth: {
+        set: 'setting',
+        default: 'defaulted',
+        include: ['page_1'],
+      },
+      pages: [
+        {
+          id: 'page:page_1',
+          auth: 'setting',
+          pageId: 'page_1',
+          blockId: 'page_1',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [
+            {
+              id: 'request:page_1:page_1:request_1',
+              auth: 'setting',
+              requestId: 'request_1',
+              contextId: 'page_1',
+            },
+          ],
+        },
+        {
+          id: 'page:page_2',
+          auth: 'defaulted',
+          pageId: 'page_2',
+          blockId: 'page_2',
+          type: 'Context',
+          meta: outputMetas.Context,
+          requests: [
+            {
+              id: 'request:page_2:page_2:request_2',
+              auth: 'defaulted',
+              requestId: 'request_2',
+              contextId: 'page_2',
+            },
+          ],
+        },
+      ],
+    });
   });
 });

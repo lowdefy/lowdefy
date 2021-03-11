@@ -39,8 +39,10 @@
   "dependencies": {
     "@lowdefy/graphql": "3.10.2",
     "@lowdefy/node-utils": "3.10.2",
-    "apollo-server-lambda": "2.21.0",
-    "graphql": "15.5.0"
+    "apollo-server-express": "2.21.0",
+    "express": "4.17.1",
+    "graphql": "15.5.0",
+    "serverless-http": "2.7.0"
   },
   "devDependencies": {
     "@babel/cli": "7.12.16",

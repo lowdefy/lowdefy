@@ -28,6 +28,7 @@ async function buildDefaultMenu({ components, context }) {
         id: `${i}`,
         type: 'MenuLink',
         pageId: page.pageId,
+        auth: page.auth,
       })),
     },
   ];
@@ -49,14 +50,20 @@ function loopItems(parent, menuId, pages, missingPageWarnings) {
             // remove menuItem from menu
             menuItem.remove = true;
             return;
+          } else {
+            menuItem.auth = page.auth;
           }
+        } else {
+          menuItem.auth = 'public';
         }
+      }
+      if (menuItem.type === 'MenuGroup') {
+        menuItem.auth = 'public';
       }
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;
       loopItems(menuItem, menuId, pages, missingPageWarnings);
     });
-
     parent.links = parent.links.filter((item) => item.remove !== true);
   }
 }

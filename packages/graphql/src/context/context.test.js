@@ -25,7 +25,6 @@ const logger = {
   log: mockLog,
 };
 
-const mockGetHeadersFromInput = jest.fn((input) => input.headers);
 const mockGetSecrets = jest.fn(() => ({}));
 
 const config = {
@@ -33,6 +32,8 @@ const config = {
   logger,
   getSecrets: mockGetSecrets,
 };
+
+const input = { req: { headers: { host: 'host' } } };
 
 /* TODO:
 - secrets can only be accessed where they should be
@@ -44,26 +45,18 @@ test('create context function', () => {
   expect(contextFn).toBeInstanceOf(Function);
 });
 
-test('context function returns context object with getController and logger', async () => {
+test('context function returns context object with getController, logger, and setHeaders', async () => {
   const contextFn = createContext(config);
-  const context = await contextFn();
+  const context = await contextFn(input);
   expect(context).toBeInstanceOf(Object);
   expect(context.logger).toBe(logger);
   expect(context.getController).toBeInstanceOf(Function);
   expect(Object.keys(context)).toEqual(['getController', 'logger']);
 });
 
-test('context function returns context object with getController and logger', async () => {
-  const contextFn = createContext(config);
-  const context = await contextFn();
-  expect(context).toBeInstanceOf(Object);
-  expect(context.logger).toBe(logger);
-  expect(context.getController).toBeInstanceOf(Function);
-});
-
 test('getController returns the correct controllers', async () => {
   const contextFn = createContext(config);
-  const context = await contextFn();
+  const context = await contextFn(input);
   const pageController = context.getController('page');
   expect(pageController).toBeInstanceOf(PageController);
   const componentController = context.getController('component');
@@ -72,14 +65,31 @@ test('getController returns the correct controllers', async () => {
 
 test('logger is mapped through', async () => {
   const contextFn = createContext(config);
-  const context = await contextFn();
+  const context = await contextFn(input);
   context.logger.log('test');
   expect(mockLog.mock.calls).toEqual([['test']]);
 });
 
 test('request controller has getSecrets', async () => {
   const contextFn = createContext(config);
-  const context = await contextFn();
+  const context = await contextFn(input);
   const requestController = context.getController('request');
   expect(requestController.getSecrets).toBe(mockGetSecrets);
+});
+
+test('request controller get host from req', async () => {
+  const contextFn = createContext(config);
+  let context = await contextFn(input);
+  let openIDController = context.getController('openId');
+  expect(openIDController.host).toBe('host');
+  context = await contextFn({ req: { headers: { Host: 'host' } } });
+  openIDController = context.getController('openId');
+  expect(openIDController.host).toBe('host');
+});
+
+test('setHeaders', async () => {
+  const contextFn = createContext(config);
+  const context = await contextFn(input);
+  const openIDController = context.getController('openId');
+  expect(openIDController.setHeaders).toBe(context.setHeaders);
 });

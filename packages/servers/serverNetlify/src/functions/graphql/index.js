@@ -15,22 +15,24 @@
 */
 
 import path from 'path';
-import { ApolloServer } from 'apollo-server-lambda';
+import express from 'express';
+import serverless from 'serverless-http';
+import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
 import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
-  logger: console,
   getSecrets: createGetSecretsFromEnv(),
+  logger: console,
 };
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: createContext(config),
-});
+const context = createContext(config);
+const server = new ApolloServer({ typeDefs, resolvers, context });
+const app = express();
 
-const handler = server.createHandler();
+server.applyMiddleware({ app, path: '/api/graphql' });
+
+const handler = serverless(app);
 
 export { handler };

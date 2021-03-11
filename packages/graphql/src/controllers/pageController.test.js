@@ -30,11 +30,12 @@ beforeEach(() => {
   mockLoadPage.mockReset();
 });
 
-test('getPage', async () => {
+test('getPage, public', async () => {
   mockLoadPage.mockImplementation((id) => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
+        auth: 'public',
       };
     }
     return null;
@@ -43,6 +44,40 @@ test('getPage', async () => {
   const res = await controller.getPage({ pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
+    auth: 'public',
+  });
+});
+
+test('getPage, protected, no user', async () => {
+  mockLoadPage.mockImplementation((id) => {
+    if (id === 'pageId') {
+      return {
+        id: 'page:pageId',
+        auth: 'protected',
+      };
+    }
+    return null;
+  });
+  const controller = createPageController(context);
+  const res = await controller.getPage({ pageId: 'pageId' });
+  expect(res).toEqual(null);
+});
+
+test('getPage, protected, with user', async () => {
+  mockLoadPage.mockImplementation((id) => {
+    if (id === 'pageId') {
+      return {
+        id: 'page:pageId',
+        auth: 'protected',
+      };
+    }
+    return null;
+  });
+  const controller = createPageController(testBootstrapContext({ loaders, user: { sub: 'sub' } }));
+  const res = await controller.getPage({ pageId: 'pageId' });
+  expect(res).toEqual({
+    id: 'page:pageId',
+    auth: 'protected',
   });
 });
 
@@ -51,6 +86,7 @@ test('getPage, page does not exist', async () => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
+        auth: 'public',
       };
     }
     return null;

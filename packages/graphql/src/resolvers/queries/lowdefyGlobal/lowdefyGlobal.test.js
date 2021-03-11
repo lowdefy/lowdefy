@@ -42,7 +42,6 @@ const loaders = {
     load: mockLoadGlobal,
   },
 };
-const setters = {};
 
 const GET_GLOBAL = gql`
   query getGlobal {
@@ -61,7 +60,6 @@ test('lowdefyGlobal graphql', async () => {
   const res = await runTestQuery({
     gqlQuery: GET_GLOBAL,
     loaders,
-    setters,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({

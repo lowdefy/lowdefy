@@ -52,6 +52,7 @@ import _sum from './sum';
 import _type from './type';
 import _uri from './uri';
 import _url_query from './url_query';
+import _user from './user';
 import _yaml from './yaml';
 
 export default {
@@ -93,5 +94,6 @@ export default {
   _type,
   _uri,
   _url_query,
+  _user,
   _yaml,
 };

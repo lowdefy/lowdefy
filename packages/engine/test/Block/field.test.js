@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('set value to block field', () => {
   const rootBlock = {
@@ -42,9 +42,8 @@ test('set value to block field', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { swtch } = context.RootBlocks.map;
 
@@ -94,9 +93,8 @@ test('array block with init, save to field', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { field: [{ text: 'b' }] },
   });
   expect(context.state).toEqual({ field: [{ text: 'b' }] });
@@ -134,9 +132,8 @@ test('two blocks with same field should have the same value', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { swtch1, swtch2 } = context.RootBlocks.map;
   expect(swtch1.value).toBe(false);
@@ -204,9 +201,8 @@ test('two blocks with same field visibility and state', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { field: 'field', swtch2: true, swtch1: true },
   });
   const { swtch1, swtch2, text1, text2 } = context.RootBlocks.map;

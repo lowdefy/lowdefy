@@ -16,35 +16,30 @@
 
 import testContext from '../testContext';
 
-// Mock window
-const mockWindowFocus = jest.fn();
-const mockWindowOpen = jest.fn(() => ({ focus: mockWindowFocus }));
-const mockWindowScrollTo = jest.fn();
-const window = {
-  location: { href: '', origin: 'http://lowdefy.com' },
-  open: mockWindowOpen,
-  scrollTo: mockWindowScrollTo,
-};
-
 const pageId = 'one';
 
-const rootContext = {
-  window,
+const lowdefy = {
+  link: jest.fn(),
+  pageId,
 };
 
 const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
-beforeAll(() => {
+// Comment out to use console.log
+console.log = () => {};
+
+beforeEach(() => {
   global.Date = mockDate;
+  lowdefy.link.mockReset();
 });
 
 afterAll(() => {
   global.Date = RealDate;
 });
 
-test('Link with home and urlQuery', async () => {
+test('Link with string pageId params', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -61,7 +56,7 @@ test('Link with home and urlQuery', async () => {
               valueType: 'string',
             },
             events: {
-              onClick: [{ id: 'a', type: 'Link', params: { home: true, urlQuery: { a: 1 } } }],
+              onClick: [{ id: 'a', type: 'Link', params: 'pageId' }],
             },
           },
         ],
@@ -69,17 +64,22 @@ test('Link with home and urlQuery', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/?a=1']);
+  expect(lowdefy.link.mock.calls).toEqual([
+    [
+      {
+        pageId: 'pageId',
+      },
+    ],
+  ]);
   expect(res.success).toBe(true);
 });
 
-test('Link with pageId', async () => {
+test('Link with object params', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -96,7 +96,7 @@ test('Link with pageId', async () => {
               valueType: 'string',
             },
             events: {
-              onClick: [{ id: 'a', type: 'Link', params: { pageId: 'page1' } }],
+              onClick: [{ id: 'a', type: 'Link', params: { pageId: 'pageId', newTab: true } }],
             },
           },
         ],
@@ -104,17 +104,23 @@ test('Link with pageId', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/page1']);
+  expect(lowdefy.link.mock.calls).toEqual([
+    [
+      {
+        pageId: 'pageId',
+        newTab: true,
+      },
+    ],
+  ]);
   expect(res.success).toBe(true);
 });
 
-test('Link with pageId, newTab and urlQuery', async () => {
+test('Link error', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -131,13 +137,7 @@ test('Link with pageId, newTab and urlQuery', async () => {
               valueType: 'string',
             },
             events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { pageId: 'page1', newTab: true, urlQuery: { a: 1 } },
-                },
-              ],
+              onClick: [{ id: 'a', type: 'Link', params: { invalid: true } }],
             },
           },
         ],
@@ -145,326 +145,21 @@ test('Link with pageId, newTab and urlQuery', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
+  });
+  lowdefy.link.mockImplementationOnce(() => {
+    throw new Error('Link test error');
   });
   const { button } = context.RootBlocks.map;
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1?a=1', '_blank']]);
-  expect(res.success).toBe(true);
-});
-
-test('Link with url', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { url: 'https://test.lowdefy.com' },
-                },
-              ],
-            },
-          },
-        ],
+  expect(lowdefy.link.mock.calls).toEqual([
+    [
+      {
+        invalid: true,
       },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.window.location.href).toEqual('https://test.lowdefy.com');
-  expect(res.success).toBe(true);
-});
-
-test('Link with url and newTab', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { url: 'https://test.lowdefy.com', newTab: true },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.window.open.mock.calls).toEqual([['https://test.lowdefy.com', '_blank']]);
-  expect(res.success).toBe(true);
-});
-
-test('Link with pageId and urlQuery', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { pageId: 'page1', urlQuery: { data: 1 } },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/page1?data=1']);
-  expect(res.success).toBe(true);
-});
-
-test('Link with pageId and input', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { pageId: 'page1', input: { data: 1 } },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/page1']);
-  expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
-  expect(res.success).toBe(true);
-});
-
-test('Link with pageId and input and newTab', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { pageId: 'page1', input: { data: 1 }, newTab: true },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/page1', '_blank']]);
-  expect(context.allInputs['page1:page1:{}']).toEqual({ data: 1 });
-  expect(res.success).toBe(true);
-});
-
-test('Link with home and newTab, urlQuery', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                { id: 'a', type: 'Link', params: { home: true, newTab: true, urlQuery: { a: 1 } } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.window.open.mock.calls).toEqual([['http://lowdefy.com/?a=1', '_blank']]);
-  expect(res.success).toBe(true);
-});
-
-test('Link with pageId as string param', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Link', params: 'page1' }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/page1']);
-  expect(res.success).toBe(true);
-});
-
-test('Link with invalid params', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Link', params: {} }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
+    ],
+  ]);
   expect(res).toEqual({
     blockId: 'button',
     event: undefined,
@@ -473,52 +168,10 @@ test('Link with invalid params', async () => {
       {
         actionId: 'a',
         actionType: 'Link',
-        error: new Error('Invalid Link action params. Received "{}".'),
+        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
       },
     ],
     success: false,
     timestamp: { date: 0 },
   });
-});
-
-test('Link with pageId, input and urlQuery', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'context',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Link',
-                  params: { pageId: 'page1', input: { input: 1 }, urlQuery: { urlQuery: 1 } },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    rootContext,
-    rootBlock,
-    pageId,
-  });
-  const { button } = context.RootBlocks.map;
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.routeHistory).toEqual(['/page1?urlQuery=1']);
-  expect(context.allInputs['page1:page1:{"urlQuery":1}']).toEqual({ input: 1 });
-  expect(res.success).toBe(true);
 });

@@ -15,12 +15,16 @@
 */
 
 class PageController {
-  constructor({ getLoader }) {
+  constructor({ getLoader, getController }) {
     this.pageLoader = getLoader('page');
+    this.authorizationController = getController('authorization');
   }
 
   async getPage({ pageId }) {
-    return this.pageLoader.load(pageId);
+    const page = await this.pageLoader.load(pageId);
+    if (!page) return null;
+    if (this.authorizationController.authorize(page)) return page;
+    return null;
   }
 }
 

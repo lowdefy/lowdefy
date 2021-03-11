@@ -14,25 +14,43 @@
   limitations under the License.
 */
 
-import createGetController from '../context/getController';
+import createGetController from '../controllers/getController';
 
-function testBootstrapContext({ loaders, getSecrets } = {}) {
+function testBootstrapContext({
+  development,
+  getSecrets,
+  headers,
+  host,
+  loaders,
+  setHeader,
+  user,
+} = {}) {
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH: 'CONFIGURATION_BASE_PATH',
-    getLoader: loaders ? (name) => loaders[name] : () => {},
+    development,
     getController: () => {},
+    getLoader: loaders ? (name) => loaders[name] : () => {},
     getSecrets: getSecrets || (() => {}),
+    headers: headers || {},
+    host: host || 'host',
     logger: { log: () => {} },
+    setHeader: setHeader || (() => {}),
+    user: user || {},
   };
   bootstrapContext.getController = createGetController(bootstrapContext);
   return bootstrapContext;
 }
 
-function testContext({ loaders, getSecrets } = {}) {
+function testContext({ development, getSecrets, host, loaders, setHeader, user, headers } = {}) {
   const bootstrapContext = {
+    development,
     getLoader: (name) => loaders[name],
     getSecrets: getSecrets || (() => {}),
+    host: host || 'host',
+    headers: headers || {},
     logger: { log: () => {} },
+    setHeader: setHeader || (() => {}),
+    user: user || {},
   };
   bootstrapContext.getController = createGetController(bootstrapContext);
   return {

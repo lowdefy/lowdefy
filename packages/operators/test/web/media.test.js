@@ -17,6 +17,8 @@
 /* eslint-disable no-global-assign */
 import media from '../../src/web/media';
 
+console.error = () => {};
+
 beforeEach(() => {
   Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 300 });
   Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });

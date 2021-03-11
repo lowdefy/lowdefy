@@ -22,18 +22,27 @@ import { ErrorBoundary, Loading } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
 
 import useGqlClient from './utils/graphql/useGqlClient';
+import createLogin from './utils/auth/createLogin';
+import createLogout from './utils/auth/createLogout';
+import OpenIdCallback from './utils/auth/OpenIdCallback';
 import DisplayMessage from './page/DisplayMessage';
 import Page from './page/Page';
-import createUpdateBlock from './page/block/updateBlock';
+import parseJwt from './utils/auth/parseJwt';
 
-// eslint-disable-next-line no-undef
-const windowContext = window;
-windowContext.displayMessage = () => () => undefined;
-// eslint-disable-next-line no-undef
-const documentContext = document;
+const lowdefy = {
+  contexts: {},
+  displayMessage: () => () => undefined,
+  document,
+  inputs: {},
+  link: () => {},
+  localStorage,
+  updaters: {},
+  window,
+};
 
-const contexts = {};
-const input = {};
+if (window.location.origin.includes('http://localhost')) {
+  window.lowdefy = lowdefy;
+}
 
 const GET_ROOT = gql`
   fragment MenuLinkFragment on MenuLink {
@@ -75,69 +84,64 @@ const GET_ROOT = gql`
   }
 `;
 
-const RootContext = ({ children, client }) => {
+const RootQuery = ({ children, lowdefy }) => {
   const { data, loading, error } = useQuery(GET_ROOT);
   if (loading) return <Loading type="Spinner" properties={{ height: '100vh' }} />;
   if (error) return <h1>Error</h1>;
 
-  return (
-    <>
-      {children({
-        client,
-        contexts,
-        document: documentContext,
-        homePageId: get(data, 'menu.homePageId'),
-        input,
-        lowdefyGlobal: JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} }))),
-        menus: get(data, 'menu.menus'),
-        updateBlock: createUpdateBlock(client),
-        window: windowContext,
-      })}
-    </>
-  );
+  lowdefy.homePageId = get(data, 'menu.homePageId');
+  // Make a copy to avoid immutable error when calling setGlobal.
+  lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
+  lowdefy.menus = get(data, 'menu.menus');
+
+  return <>{children}</>;
 };
 
-const Home = ({ rootContext }) => {
+const Home = ({ lowdefy }) => {
   const { search } = useLocation();
-  if (rootContext.homePageId) {
-    return <Redirect to={{ pathname: `/${rootContext.homePageId}`, search }} />;
+  if (lowdefy.homePageId) {
+    return <Redirect to={{ pathname: `/${lowdefy.homePageId}`, search }} />;
   }
   return <Redirect to="/404" />;
 };
 
 const Root = ({ gqlUri }) => {
-  const client = useGqlClient({ gqlUri });
+  lowdefy.updateBlock = (blockId) => lowdefy.updaters[blockId] && lowdefy.updaters[blockId]();
+  lowdefy.client = useGqlClient({ gqlUri, lowdefy });
+  lowdefy.auth = {
+    login: createLogin(lowdefy),
+    logout: createLogout(lowdefy),
+  };
+  lowdefy.user = {};
+  const idToken = lowdefy.localStorage.getItem('idToken');
+  if (idToken) {
+    lowdefy.user = parseJwt(idToken);
+  }
   return (
     <ErrorBoundary>
-      <ApolloProvider client={client}>
-        <DisplayMessage
-          methods={{
-            registerMethod: (_, method) => {
-              windowContext.displayMessage = method;
-            },
-          }}
-        />
-        <RootContext client={client}>
-          {(rootContext) => {
-            if (windowContext.location.origin.includes('http://localhost')) {
-              windowContext.Lowdefy = { rootContext };
-            }
-            return (
-              <>
-                <Switch>
-                  <Route exact path="/">
-                    <Home rootContext={rootContext} />
-                  </Route>
-                  <Route exact path="/:pageId">
-                    <ErrorBoundary>
-                      <Page rootContext={rootContext} />
-                    </ErrorBoundary>
-                  </Route>
-                </Switch>
-              </>
-            );
-          }}
-        </RootContext>
+      <ApolloProvider client={lowdefy.client}>
+        <RootQuery lowdefy={lowdefy}>
+          <DisplayMessage
+            methods={{
+              registerMethod: (_, method) => {
+                lowdefy.displayMessage = method;
+              },
+            }}
+          />
+          <Switch>
+            <Route exact path="/">
+              <Home lowdefy={lowdefy} />
+            </Route>
+            <Route exact path="/auth/openid-callback">
+              <OpenIdCallback lowdefy={lowdefy} />
+            </Route>
+            <Route exact path="/:pageId">
+              <ErrorBoundary>
+                <Page lowdefy={lowdefy} />
+              </ErrorBoundary>
+            </Route>
+          </Switch>
+        </RootQuery>
       </ApolloProvider>
     </ErrorBoundary>
   );

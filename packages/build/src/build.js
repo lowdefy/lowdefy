@@ -20,6 +20,7 @@ import createFileLoader from './loaders/fileLoader';
 import createFileSetter from './loaders/fileSetter';
 import createMetaLoader from './loaders/metaLoader';
 
+import buildConfig from './build/buildConfig';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages';
@@ -51,6 +52,7 @@ async function build(options) {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
     context.metaLoader = createMetaLoader({ components, context });
+    await buildConfig({ components, context });
     await buildConnections({ components, context });
     await buildPages({ components, context });
     await buildMenu({ components, context });

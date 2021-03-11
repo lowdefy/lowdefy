@@ -16,6 +16,8 @@
 
 import base64 from '../../src/web/base64';
 
+console.error = () => {};
+
 test('_base64.decode a string', () => {
   expect(
     base64({ params: 'QSBzdHJpbmcgdmFsdWU=', location: 'locationId', methodName: 'decode' })

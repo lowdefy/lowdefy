@@ -14,29 +14,26 @@
   limitations under the License.
 */
 
-import { gql } from '@apollo/client';
+import { ServerError } from '../context/errors';
 
-const SET_BLOCK_UPDATE_CACHE = gql`
-  fragment BlockClassFragment on BlockClass @client {
-    id
-    t
+class AuthorizationController {
+  constructor({ user }) {
+    this.user = user;
   }
-`;
 
-const createUpdateBlock = (client) => {
-  const updateBlock = (blockId) => {
-    client.writeFragment({
-      id: `BlockClass:${blockId}`,
-      fragment: SET_BLOCK_UPDATE_CACHE,
-      data: {
-        id: blockId,
-        t: Date.now(),
-        __typename: 'BlockClass',
-      },
-    });
-  };
+  authorize({ auth }) {
+    if (auth === 'public') return true;
+    if (auth === 'protected') {
+      return !!this.user.sub;
+    }
+    throw new ServerError('Invalid auth configuration');
+  }
+}
 
-  return updateBlock;
-};
+function createAuthorizationController(context) {
+  return new AuthorizationController(context);
+}
 
-export default createUpdateBlock;
+export { AuthorizationController };
+
+export default createAuthorizationController;

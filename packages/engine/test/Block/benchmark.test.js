@@ -20,7 +20,7 @@ import testContext from '../testContext';
 
 const NUM_TIMES = 10;
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 // eslint-disable-next-line consistent-return
 const runTests = ({ times, results = [], fn }) => {
@@ -84,9 +84,8 @@ test(`parse nunjucks value 500 blocks`, () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { b0 } = context.RootBlocks.map;
 
@@ -144,9 +143,8 @@ test(`parse nunjucks value 100 blocks`, () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { b0 } = context.RootBlocks.map;
 
@@ -204,9 +202,8 @@ test(`parse state value 1000 blocks`, () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { b0 } = context.RootBlocks.map;
 

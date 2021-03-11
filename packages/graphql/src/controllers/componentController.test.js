@@ -25,6 +25,7 @@ const loaders = {
 };
 
 const context = testBootstrapContext({ loaders });
+const contextUser = testBootstrapContext({ loaders, user: { sub: 'sub' } });
 
 beforeEach(() => {
   mockLoadComponent.mockReset();
@@ -75,12 +76,14 @@ test('getMenus, menu with configured home page id', async () => {
               id: 'menuitem:default:0',
               menuItemId: '0',
               type: 'MenuGroup',
+              auth: 'public',
               links: [
                 {
                   id: 'menuitem:default:1',
                   menuItemId: '1',
                   type: 'MenuLink',
                   pageId: 'page',
+                  auth: 'public',
                 },
               ],
             },
@@ -106,12 +109,14 @@ test('getMenus, menu with configured home page id', async () => {
             id: 'menuitem:default:0',
             menuItemId: '0',
             type: 'MenuGroup',
+            auth: 'public',
             links: [
               {
                 id: 'menuitem:default:1',
                 menuItemId: '1',
                 type: 'MenuLink',
                 pageId: 'page',
+                auth: 'public',
               },
             ],
           },
@@ -134,6 +139,7 @@ test('getMenus, get homePageId at first level', async () => {
               menuItemId: '0',
               type: 'MenuLink',
               pageId: 'page',
+              auth: 'public',
             },
           ],
         },
@@ -156,6 +162,7 @@ test('getMenus, get homePageId at first level', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'page',
+            auth: 'public',
           },
         ],
       },
@@ -175,12 +182,14 @@ test('getMenus, get homePageId at second level', async () => {
               id: 'menuitem:default:0',
               menuItemId: '0',
               type: 'MenuGroup',
+              auth: 'public',
               links: [
                 {
                   id: 'menuitem:default:1',
                   menuItemId: '1',
                   type: 'MenuLink',
                   pageId: 'page',
+                  auth: 'public',
                 },
               ],
             },
@@ -204,12 +213,14 @@ test('getMenus, get homePageId at second level', async () => {
             id: 'menuitem:default:0',
             menuItemId: '0',
             type: 'MenuGroup',
+            auth: 'public',
             links: [
               {
                 id: 'menuitem:default:1',
                 menuItemId: '1',
                 type: 'MenuLink',
                 pageId: 'page',
+                auth: 'public',
               },
             ],
           },
@@ -231,17 +242,20 @@ test('getMenus, get homePageId at third level', async () => {
               id: 'menuitem:default:0',
               menuItemId: '0',
               type: 'MenuGroup',
+              auth: 'public',
               links: [
                 {
                   id: 'menuitem:default:1',
                   menuItemId: '1',
                   type: 'MenuGroup',
+                  auth: 'public',
                   links: [
                     {
                       id: 'menuitem:default:2',
                       menuItemId: '2',
                       type: 'MenuLink',
                       pageId: 'page',
+                      auth: 'public',
                     },
                   ],
                 },
@@ -267,17 +281,20 @@ test('getMenus, get homePageId at third level', async () => {
             id: 'menuitem:default:0',
             menuItemId: '0',
             type: 'MenuGroup',
+            auth: 'public',
             links: [
               {
                 id: 'menuitem:default:1',
                 menuItemId: '1',
                 type: 'MenuGroup',
+                auth: 'public',
                 links: [
                   {
                     id: 'menuitem:default:2',
                     menuItemId: '2',
                     type: 'MenuLink',
                     pageId: 'page',
+                    auth: 'public',
                   },
                 ],
               },
@@ -302,6 +319,7 @@ test('getMenus, no default menu, no configured homepage', async () => {
               menuItemId: '0',
               type: 'MenuLink',
               pageId: 'page',
+              auth: 'public',
             },
           ],
         },
@@ -324,6 +342,7 @@ test('getMenus, no default menu, no configured homepage', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'page',
+            auth: 'public',
           },
         ],
       },
@@ -344,6 +363,7 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
               menuItemId: '0',
               type: 'MenuLink',
               pageId: 'other-page',
+              auth: 'public',
             },
           ],
         },
@@ -355,6 +375,7 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
               menuItemId: '0',
               type: 'MenuLink',
               pageId: 'default-page',
+              auth: 'public',
             },
           ],
         },
@@ -377,6 +398,7 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'other-page',
+            auth: 'public',
           },
         ],
       },
@@ -388,6 +410,7 @@ test('getMenus, more than 1 menu, no configured homepage', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'default-page',
+            auth: 'public',
           },
         ],
       },
@@ -421,5 +444,336 @@ test('getMenus, default menu has no links', async () => {
       },
     ],
     homePageId: null,
+  });
+});
+
+describe('filter menus', () => {
+  test('Menu all protected, public request', async () => {
+    mockLoadComponent.mockImplementation((id) => {
+      if (id === 'menus') {
+        return [
+          {
+            menuId: 'default',
+            links: [
+              {
+                id: 'menuitem:default:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: 'protected',
+              },
+              {
+                id: 'menuitem:default:2',
+                menuItemId: '2',
+                type: 'MenuGroup',
+                auth: 'public',
+                links: [
+                  {
+                    id: 'menuitem:default:3',
+                    menuItemId: '3',
+                    type: 'MenuLink',
+                    pageId: 'page',
+                    auth: 'protected',
+                  },
+                  {
+                    id: 'menuitem:default:4',
+                    menuItemId: '4',
+                    type: 'MenuGroup',
+                    auth: 'public',
+                    links: [
+                      {
+                        id: 'menuitem:default:5',
+                        menuItemId: '5',
+                        type: 'MenuLink',
+                        pageId: 'page',
+                        auth: 'protected',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            menuId: 'other',
+            links: [
+              {
+                id: 'menuitem:other:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: 'protected',
+              },
+            ],
+          },
+        ];
+      }
+      if (id === 'config') {
+        return {};
+      }
+      return null;
+    });
+    const controller = createComponentController(context);
+    const res = await controller.getMenus();
+    expect(res).toEqual({
+      menus: [
+        {
+          menuId: 'default',
+          links: [],
+        },
+        {
+          menuId: 'other',
+          links: [],
+        },
+      ],
+      homePageId: null,
+    });
+  });
+
+  test('Menu all protected, public request', async () => {
+    mockLoadComponent.mockImplementation((id) => {
+      if (id === 'menus') {
+        return [
+          {
+            menuId: 'default',
+            links: [
+              {
+                id: 'menuitem:default:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: 'protected',
+              },
+              {
+                id: 'menuitem:default:2',
+                menuItemId: '2',
+                type: 'MenuGroup',
+                auth: 'public',
+                links: [
+                  {
+                    id: 'menuitem:default:3',
+                    menuItemId: '3',
+                    type: 'MenuLink',
+                    pageId: 'page',
+                    auth: 'protected',
+                  },
+                  {
+                    id: 'menuitem:default:4',
+                    menuItemId: '4',
+                    type: 'MenuGroup',
+                    auth: 'public',
+                    links: [
+                      {
+                        id: 'menuitem:default:5',
+                        menuItemId: '5',
+                        type: 'MenuLink',
+                        pageId: 'page',
+                        auth: 'protected',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            menuId: 'other',
+            links: [
+              {
+                id: 'menuitem:other:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: 'protected',
+              },
+            ],
+          },
+        ];
+      }
+      if (id === 'config') {
+        return {};
+      }
+      return null;
+    });
+    const controller = createComponentController(contextUser);
+    const res = await controller.getMenus();
+    expect(res).toEqual({
+      menus: [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:1',
+              menuItemId: '1',
+              type: 'MenuLink',
+              pageId: 'page',
+              auth: 'protected',
+            },
+            {
+              id: 'menuitem:default:2',
+              menuItemId: '2',
+              type: 'MenuGroup',
+              auth: 'public',
+              links: [
+                {
+                  id: 'menuitem:default:3',
+                  menuItemId: '3',
+                  type: 'MenuLink',
+                  pageId: 'page',
+                  auth: 'protected',
+                },
+                {
+                  id: 'menuitem:default:4',
+                  menuItemId: '4',
+                  type: 'MenuGroup',
+                  auth: 'public',
+                  links: [
+                    {
+                      id: 'menuitem:default:5',
+                      menuItemId: '5',
+                      type: 'MenuLink',
+                      pageId: 'page',
+                      auth: 'protected',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          menuId: 'other',
+          links: [
+            {
+              id: 'menuitem:other:1',
+              menuItemId: '1',
+              type: 'MenuLink',
+              pageId: 'page',
+              auth: 'protected',
+            },
+          ],
+        },
+      ],
+      homePageId: 'page',
+    });
+  });
+
+  test('Menu filter some items, public request', async () => {
+    mockLoadComponent.mockImplementation((id) => {
+      if (id === 'menus') {
+        return [
+          {
+            menuId: 'default',
+            links: [
+              {
+                id: 'menuitem:default:1',
+                menuItemId: '1',
+                type: 'MenuLink',
+                pageId: 'page',
+                auth: 'protected',
+              },
+              {
+                id: 'menuitem:default:2',
+                menuItemId: '2',
+                type: 'MenuGroup',
+                auth: 'public',
+                links: [
+                  {
+                    id: 'menuitem:default:3',
+                    menuItemId: '3',
+                    type: 'MenuLink',
+                    pageId: 'page',
+                    auth: 'protected',
+                  },
+                  {
+                    id: 'menuitem:default:4',
+                    menuItemId: '4',
+                    type: 'MenuLink',
+                    pageId: 'page',
+                    auth: 'public',
+                  },
+                  {
+                    id: 'menuitem:default:5',
+                    menuItemId: '5',
+                    type: 'MenuGroup',
+                    auth: 'public',
+                    links: [
+                      {
+                        id: 'menuitem:default:6',
+                        menuItemId: '6',
+                        type: 'MenuLink',
+                        pageId: 'page',
+                        auth: 'protected',
+                      },
+                    ],
+                  },
+                  {
+                    id: 'menuitem:default:7',
+                    menuItemId: '7',
+                    type: 'MenuGroup',
+                    auth: 'public',
+                    links: [
+                      {
+                        id: 'menuitem:default:8',
+                        menuItemId: '8',
+                        type: 'MenuLink',
+                        url: 'https://lowdefy.com',
+                        auth: 'public',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ];
+      }
+      if (id === 'config') {
+        return {};
+      }
+      return null;
+    });
+    const controller = createComponentController(context);
+    const res = await controller.getMenus();
+    expect(res).toEqual({
+      homePageId: 'page',
+      menus: [
+        {
+          links: [
+            {
+              id: 'menuitem:default:2',
+              menuItemId: '2',
+              type: 'MenuGroup',
+              auth: 'public',
+              links: [
+                {
+                  id: 'menuitem:default:4',
+                  menuItemId: '4',
+                  pageId: 'page',
+                  type: 'MenuLink',
+                  auth: 'public',
+                },
+                {
+                  id: 'menuitem:default:7',
+                  menuItemId: '7',
+                  type: 'MenuGroup',
+                  auth: 'public',
+                  links: [
+                    {
+                      id: 'menuitem:default:8',
+                      menuItemId: '8',
+                      type: 'MenuLink',
+                      url: 'https://lowdefy.com',
+                      auth: 'public',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          menuId: 'default',
+        },
+      ],
+    });
   });
 });

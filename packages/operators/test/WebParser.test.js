@@ -17,14 +17,12 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../src/webParser';
 
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  input: {
-    string: 'input',
-    arr: [{ a: 'input1' }, { a: 'input2' }],
+const lowdefy = {
+  inputs: {
+    own: {
+      string: 'input',
+      arr: [{ a: 'input1' }, { a: 'input2' }],
+    },
   },
   lowdefyGlobal: {
     string: 'global',
@@ -41,19 +39,29 @@ const context = {
       menuId: 'm_2',
     },
   ],
+  urlQuery: {
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
+  },
+  user: { name: 'user' },
+};
+
+const context = {
+  id: 'own',
+  config: {
+    string: 'config',
+    arr: [{ a: 'config1' }, { a: 'config2' }],
+  },
   requests: {
     not_loaded: { loading: true, response: 'fail' },
     string: { loading: false, response: 'request String' },
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
+  lowdefy,
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
 };
 
@@ -137,6 +145,14 @@ test('operator input with more than one key is ignored.', () => {
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: { _state: 'string', key: 'value' } });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
+});
+
+test('context.lowdefy not an object', () => {
+  const input = { _state: 'string' };
+  const parser = new WebParser({ context: {}, contexts });
+  expect(() => parser.parse({ input, args: 'String' })).toThrow(
+    'Lowdefy context must be an object.'
+  );
 });
 
 test('parse event not an object', () => {
@@ -444,6 +460,14 @@ describe('parse operators', () => {
     const parser = new WebParser({ context, contexts });
     const res = parser.parse({ input, location: 'locationId' });
     expect(res.output).toEqual('urlQuery');
+    expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  });
+
+  test('parse _user operator', () => {
+    const input = { _user: 'name' };
+    const parser = new WebParser({ context, contexts });
+    const res = parser.parse({ input, location: 'locationId' });
+    expect(res.output).toEqual('user');
     expect(res.errors).toMatchInlineSnapshot(`Array []`);
   });
 

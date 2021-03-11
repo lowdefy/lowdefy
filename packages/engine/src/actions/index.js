@@ -16,6 +16,8 @@
 
 import CallMethod from './CallMethod';
 import Link from './Link';
+import Login from './Login';
+import Logout from './Logout';
 import Message from './Message';
 import Request from './Request';
 import Reset from './Reset';
@@ -27,6 +29,8 @@ import Validate from './Validate';
 export default {
   CallMethod,
   Link,
+  Login,
+  Logout,
   Message,
   Reset,
   Request,
