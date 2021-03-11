@@ -37,6 +37,22 @@ test('empty components', async () => {
   expect().toBe();
 });
 
+test('page auth config', async () => {
+  const components = {
+    version: '1.0.0',
+    config: {
+      auth: {
+        pages: {
+          protected: true,
+          public: ['page1'],
+        },
+      },
+    },
+  };
+  await testSchema({ components, context });
+  expect().toBe();
+});
+
 test('app schema', async () => {
   const components = {
     version: '1.0.0',

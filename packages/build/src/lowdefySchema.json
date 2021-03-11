@@ -446,7 +446,7 @@
               },
               "properties": {
                 "protected": {
-                  "type": "array",
+                  "type": ["array", "boolean"],
                   "errorMessage": {
                     "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
                   },
@@ -459,7 +459,7 @@
                   }
                 },
                 "public": {
-                  "type": "array",
+                  "type": ["array", "boolean"],
                   "errorMessage": {
                     "type": "App \"config.auth.pages.public.$\" should be an array of strings."
                   },

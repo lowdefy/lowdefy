@@ -58,6 +58,33 @@ test('buildConfig config error when both protected and public pages are true', a
   );
 });
 
+test('buildConfig config error when both protected or public are false.', async () => {
+  let components = {
+    config: {
+      auth: {
+        pages: {
+          protected: false,
+        },
+      },
+    },
+  };
+  await expect(buildConfig({ components, context })).rejects.toThrow(
+    'Protected pages can not be set to false.'
+  );
+  components = {
+    config: {
+      auth: {
+        pages: {
+          public: false,
+        },
+      },
+    },
+  };
+  await expect(buildConfig({ components, context })).rejects.toThrow(
+    'Public pages can not be set to false.'
+  );
+});
+
 test('buildConfig default', async () => {
   const components = {};
   const res = await buildConfig({ components, context });

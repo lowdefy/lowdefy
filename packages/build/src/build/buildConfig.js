@@ -41,6 +41,12 @@ async function buildConfig({ components }) {
       'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
     );
   }
+  if (components.config.auth.pages.protected === false) {
+    throw new Error('Protected pages can not be set to false.');
+  }
+  if (components.config.auth.pages.public === false) {
+    throw new Error('Public pages can not be set to false.');
+  }
   components.auth = {};
   if (
     type.isArray(components.config.auth.pages.public) ||
