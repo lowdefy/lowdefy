@@ -25,6 +25,7 @@ const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
   const testLowdefy = {
     displayMessage: () => () => undefined,
     inputs: { test: {} },
+    pageId: rootBlock.blockId,
     updateBlock: () => {},
     urlQuery: {},
     ...lowdefy,
@@ -36,6 +37,7 @@ const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
     requests: {},
     lowdefy: testLowdefy,
     rootBlock,
+    pageId: rootBlock.blockId,
     // routeHistory: [], // init new routeHistory for each test
     showValidationErrors: false,
     state: {},

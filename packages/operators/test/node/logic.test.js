@@ -26,6 +26,8 @@ const Null = null;
 const True = true;
 const False = false;
 
+console.error = () => {};
+
 test('_not', () => {
   const parser = new NodeParser();
   let res = parser.parse({ input: { _not: arr0 }, location: 'locationId' });

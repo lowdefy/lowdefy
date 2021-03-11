@@ -68,6 +68,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_type with on, pass', () => {
   const input = { _type: { type: 'string', on: 'a' } };
   const parser = new WebParser({ context, contexts });

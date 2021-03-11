@@ -19,6 +19,8 @@ import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');
 
+console.error = () => {};
+
 test('secret calls getFromObject', () => {
   secret({
     arrayIndices: [0],

@@ -23,6 +23,8 @@ const state = {
   boolean: true,
 };
 
+console.error = () => {};
+
 test('_type with on, pass', () => {
   const input = { _type: { type: 'string', on: 'a' } };
   const parser = new NodeParser({ state });

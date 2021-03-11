@@ -20,6 +20,8 @@ import formatters from '@lowdefy/format';
 const location = 'location';
 const params = { params: { formatParams: true }, on: 'on' };
 
+console.error = () => {};
+
 jest.mock('@lowdefy/format', () => ({
   intlDateTimeFormat: jest.fn(() => () => 'intlDateTimeFormat'),
   intlListFormat: jest.fn(() => () => 'intlListFormat'),

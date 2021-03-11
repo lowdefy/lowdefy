@@ -57,6 +57,9 @@ const lowdefy = {
   pageId,
 };
 
+// Comment out to use console.log
+console.log = () => {};
+
 beforeEach(() => {
   global.Date = mockDate;
 });

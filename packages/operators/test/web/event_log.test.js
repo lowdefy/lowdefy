@@ -81,6 +81,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_event_log in array', () => {
   const input = { a: { _event_log: '1.blockId' } };
   const parser = new WebParser({ context, contexts });

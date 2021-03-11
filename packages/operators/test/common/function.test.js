@@ -31,6 +31,8 @@ const context = {
 
 const contexts = { context };
 
+console.error = () => {};
+
 test('NodeParser, _function that gets from state', () => {
   const parser = new NodeParser({ state });
   const params = { __state: 'string' };

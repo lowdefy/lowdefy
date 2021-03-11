@@ -66,6 +66,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_request by id', () => {
   const input = { a: { _request: 'string' } };
   const parser = new WebParser({ context, contexts });

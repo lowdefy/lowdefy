@@ -19,6 +19,11 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
+// Comment out to use console.log
+console.log = () => {};
+// Comment out to use console.log
+console.error = () => {};
+
 test('parse validate on fields', () => {
   const rootBlock = {
     blockId: 'root',

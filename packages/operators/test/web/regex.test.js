@@ -67,6 +67,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_regex with on, pass', () => {
   const input = { _regex: { pattern: '^a$', on: 'a' } };
   const parser = new WebParser({ context, contexts });

@@ -67,6 +67,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_menu using string menuId', () => {
   const input = { a: { _menu: 'default' } };
   const parser = new WebParser({ context, contexts });

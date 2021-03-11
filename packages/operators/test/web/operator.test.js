@@ -66,6 +66,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_operator, _state', () => {
   const input = { a: { _operator: { name: '_state', params: 'string' } } };
   const parser = new WebParser({ context, contexts });

@@ -66,6 +66,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_nunjucks string template', () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
   const parser = new WebParser({ context, contexts });

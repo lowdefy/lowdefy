@@ -96,6 +96,8 @@ const contexts = {
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_request_details, other context contextId not a string', () => {
   const input = { _request_details: { key: 'string', contextId: 1 } };
   const parser = new WebParser({ context, contexts });

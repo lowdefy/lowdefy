@@ -67,6 +67,8 @@ const contexts = {};
 
 const arrayIndices = [1];
 
+console.error = () => {};
+
 test('_request_details in object', () => {
   const input = { _request_details: 'string' };
   const parser = new WebParser({ context, contexts });

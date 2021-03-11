@@ -84,6 +84,7 @@ test('create context', async () => {
   expect(context.lowdefy.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
+  expect(context.pageId).toEqual('pageId');
   expect(context.rootBlock).toBeDefined();
   expect(context.showValidationErrors).toEqual(false);
   expect(context.state).toEqual({});

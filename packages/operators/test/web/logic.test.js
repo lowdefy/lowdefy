@@ -76,6 +76,8 @@ const Null = null;
 const True = true;
 const False = false;
 
+console.error = () => {};
+
 test('_not', () => {
   const parser = new WebParser({ context, contexts });
   let res = parser.parse({ input: { _not: arr0 }, location: 'locationId', arrayIndices });
