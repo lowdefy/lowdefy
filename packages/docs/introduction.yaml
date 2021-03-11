@@ -52,6 +52,8 @@ _ref:
               - App config is just data, thus you can even develop scripts to create and manage your apps.
               - YAML files work with your favorite developer and source control tools.
 
+            > If you aren't a fan of YAML, you can also build your app using JSON files.
+
             ### Work with your data where it is stored
 
             Lowdefy apps can connect to multiple data bases, APIs and apps. Day to day business requires people working with data which is stored in a variety of different data bases and applications.

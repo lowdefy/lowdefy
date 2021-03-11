@@ -17,11 +17,14 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
+
+// Comment out to use console.log
+console.log = () => {};
 
 beforeAll(() => {
   global.Date = mockDate;
@@ -71,9 +74,8 @@ test('CallMethod with no args, synchronous method', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button, textInput } = context.RootBlocks.map;
@@ -147,9 +149,8 @@ test('CallMethod method return a promise', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button, textInput } = context.RootBlocks.map;
@@ -217,9 +218,8 @@ test('CallMethod with args not an array', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button, textInput } = context.RootBlocks.map;
@@ -287,9 +287,8 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   const { button, textInput } = context.RootBlocks.map;
@@ -373,9 +372,8 @@ test('CallMethod of block in array by explicit id', async () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ textInput: '0' }, { textInput: '1' }] },
   });
 
@@ -450,9 +448,8 @@ test('CallMethod of block in array by block with same indices and id pattern', a
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ textInput: '0' }, { textInput: '1' }] },
   });
 

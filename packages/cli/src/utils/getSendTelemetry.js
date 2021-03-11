@@ -29,10 +29,10 @@ function getSendTelemetry({ appId, cliVersion, command, disableTelemetry, lowdef
         },
         data: {
           ...data,
-          appId,
-          cliVersion,
+          app_id: appId,
+          cli_version: cliVersion,
           command,
-          lowdefyVersion,
+          lowdefy_version: lowdefyVersion,
         },
       });
     } catch (error) {

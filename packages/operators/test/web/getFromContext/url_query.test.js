@@ -17,15 +17,16 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
 
-const context = {
-  id: 'own',
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  input: {
-    string: 'input',
-    arr: [{ a: 'input1' }, { a: 'input2' }],
+const lowdefy = {
+  inputs: {
+    own: {
+      string: 'input',
+      arr: [{ a: 'input1' }, { a: 'input2' }],
+    },
+    other: {
+      string: 'input-other',
+      arr: [{ a: 'input1-other' }, { a: 'input2-other' }],
+    },
   },
   lowdefyGlobal: {
     string: 'global',
@@ -42,11 +43,17 @@ const context = {
       menuId: 'm_2',
     },
   ],
-  mutations: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'mutation String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'mutation a1' }, { a: 'mutation a2' }] },
+  urlQuery: {
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
+  },
+};
+
+const context = {
+  id: 'own',
+  config: {
+    string: 'config',
+    arr: [{ a: 'config1' }, { a: 'config2' }],
   },
   requests: {
     not_loaded: { loading: true, response: 'fail' },
@@ -54,13 +61,10 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
+  lowdefy,
   state: {
     string: 'state',
     arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   },
   updateListeners: new Set(),
 };
@@ -71,44 +75,16 @@ const otherContext = {
     string: 'config',
     arr: [{ a: 'config1' }, { a: 'config2' }],
   },
-  input: {
-    string: 'input-other',
-    arr: [{ a: 'input1-other' }, { a: 'input2-other' }],
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  mutations: {
-    not_loaded: { loading: true, response: 'fail-other' },
-    string: { loading: false, response: 'mutation String-other' },
-    number: { loading: false, response: 600 },
-    arr: { loading: false, response: [{ a: 'mutation a1-other' }, { a: 'mutation a2-other' }] },
-  },
   requests: {
     not_loaded: { loading: true, response: 'fail-other' },
     string: { loading: false, response: 'request String-other' },
     number: { loading: false, response: 600 },
     arr: { loading: false, response: [{ a: 'request a1-other' }, { a: 'request a2-other' }] },
   },
+  lowdefy,
   state: {
     string: 'state-other',
     arr: [{ a: 'state1-other' }, { a: 'state2-other' }],
-  },
-  urlQuery: {
-    string: 'urlQuery-other',
-    arr: [{ a: 'urlQuery1-other' }, { a: 'urlQuery2-other' }],
   },
   updateListeners: new Set(),
 };
@@ -119,6 +95,8 @@ const contexts = {
 };
 
 const arrayIndices = [1];
+
+console.error = () => {};
 
 test('_url_query, other context contextId not a string', () => {
   const input = { _url_query: { key: 'string', contextId: 1 } };
@@ -153,7 +131,7 @@ test('_url_query param object key', () => {
   };
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('urlQuery-other');
+  expect(res.output).toEqual('urlQuery');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
@@ -162,8 +140,8 @@ test('_url_query full state', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    string: 'urlQuery-other',
-    arr: [{ a: 'urlQuery1-other' }, { a: 'urlQuery2-other' }],
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -173,7 +151,7 @@ test('_url_query replace key arrayIndices', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    a: 'urlQuery2-other',
+    a: 'urlQuery2',
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -188,8 +166,8 @@ test('_url_query param object all', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    string: 'urlQuery-other',
-    arr: [{ a: 'urlQuery1-other' }, { a: 'urlQuery2-other' }],
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
@@ -205,8 +183,8 @@ test('_url_query param object all and key', () => {
   const parser = new WebParser({ context, contexts });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
-    string: 'urlQuery-other',
-    arr: [{ a: 'urlQuery1-other' }, { a: 'urlQuery2-other' }],
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
   });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

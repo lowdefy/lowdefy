@@ -16,16 +16,6 @@
 
 import { applyArrayIndices, get, type } from '@lowdefy/helpers';
 
-const contextKeys = {
-  _event_log: 'eventLog',
-  _state: 'state',
-  _input: 'input',
-  _global: 'lowdefyGlobal',
-  _request_details: 'requests',
-  _mutation_details: 'mutations',
-  _url_query: 'urlQuery',
-};
-
 function addListener({ context, targetContext }) {
   if (context.id === targetContext.id) {
     return;
@@ -42,6 +32,15 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
       )} at ${location}.`
     );
   }
+  const contextKeys = {
+    _event_log: 'eventLog',
+    _state: 'state',
+    _input: `lowdefy.inputs.${contextId}`,
+    _global: 'lowdefy.lowdefyGlobal',
+    _request_details: 'requests',
+    _mutation_details: 'mutations',
+    _url_query: 'lowdefy.urlQuery',
+  };
   if (type.isUndefined(contextKeys[operator])) {
     throw new Error(
       `Operator Error: Cannot use ${operator} to get from another context. Received: ${JSON.stringify(
@@ -49,6 +48,7 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
       )} at ${location}.`
     );
   }
+
   const targetContext = contexts[contextId];
   if (!type.isObject(targetContext)) {
     throw new Error(
@@ -58,7 +58,7 @@ function getFromOtherContext({ params, context, contexts, arrayIndices, operator
     );
   }
   addListener({ context, targetContext });
-  const object = targetContext[contextKeys[operator]];
+  const object = get(targetContext, contextKeys[operator]);
   if (params.all === true) return object;
   if (type.isString(params.key)) {
     return get(object, applyArrayIndices(arrayIndices, params.key), {

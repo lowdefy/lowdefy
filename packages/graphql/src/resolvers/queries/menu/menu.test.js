@@ -28,11 +28,13 @@ const mockLoadMenus = jest.fn((id) => {
           {
             id: 'menuitem:default:0',
             type: 'MenuGroup',
+            auth: 'public',
             links: [
               {
                 id: 'menuitem:default:1',
                 type: 'MenuLink',
                 pageId: 'page',
+                auth: 'public',
               },
             ],
           },
@@ -77,7 +79,6 @@ const loaders = {
     load: mockLoadMenus,
   },
 };
-const setters = {};
 
 const GET_MENUS = gql`
   fragment MenuLinkFragment on MenuLink {
@@ -148,7 +149,6 @@ test('menu graphql', async () => {
   const res = await runTestQuery({
     gqlQuery: GET_MENUS,
     loaders,
-    setters,
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({

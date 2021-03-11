@@ -14,49 +14,14 @@
   limitations under the License.
 */
 
-import { type, urlQuery } from '@lowdefy/helpers';
-import makeContextId from '../makeContextId';
+import { type } from '@lowdefy/helpers';
 
 async function Link({ context, params }) {
-  const lowdefyUrlQuery = type.isNone(params.urlQuery)
-    ? ''
-    : `?${urlQuery.stringify(params.urlQuery)}`;
-
-  let pageId;
-  if (type.isString(params)) pageId = params;
-  if (params.pageId) pageId = params.pageId;
-
-  if (pageId) {
-    // set input for page before changing
-    if (!type.isNone(params.input)) {
-      const nextContextId = makeContextId({
-        pageId,
-        urlQuery: params.urlQuery,
-        blockId: pageId,
-      });
-      context.allInputs[nextContextId] = params.input;
-    }
-    if (params.newTab) {
-      context.window
-        .open(`${context.window.location.origin}/${pageId}${lowdefyUrlQuery}`, '_blank')
-        .focus();
-    } else {
-      context.routeHistory.push(`/${pageId}${lowdefyUrlQuery}`);
-    }
-  } else if (params.url) {
-    if (params.newTab) {
-      context.window.open(`${params.url}${lowdefyUrlQuery}`, '_blank').focus();
-    } else {
-      context.window.location.href = `${params.url}${lowdefyUrlQuery}`;
-    }
-  } else if (params.home) {
-    if (params.newTab) {
-      context.window.open(`${context.window.location.origin}/${lowdefyUrlQuery}`, '_blank').focus();
-    } else {
-      context.routeHistory.push(`/${lowdefyUrlQuery}`);
-    }
-  } else {
-    throw new Error(`Invalid Link action params. Received "${JSON.stringify(params)}".`);
+  const linkParams = type.isString(params) ? { pageId: params } : params;
+  try {
+    context.lowdefy.link(linkParams);
+  } catch (error) {
+    throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
   }
 }
 

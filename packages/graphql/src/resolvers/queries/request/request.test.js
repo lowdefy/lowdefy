@@ -164,7 +164,6 @@ test('request resolver', async () => {
 //       },
 //     },
 //     loaders,
-//     setters,
 //   });
 //   expect(res.errors).toBe(undefined);
 //   expect(res.data.request.id).toEqual('pageId:requestResponse:requestId');

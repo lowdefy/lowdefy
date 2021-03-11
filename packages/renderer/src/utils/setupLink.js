@@ -14,29 +14,25 @@
   limitations under the License.
 */
 
-import { useQuery, gql } from '@apollo/client';
+import { createLink } from '@lowdefy/engine';
 
-const getBlock = gql`
-  query getBlock($id: String!) {
-    block(id: $id) @client {
-      id
-      t
+function setupLink(lowdefy) {
+  const { routeHistory, window } = lowdefy;
+  const sameOriginLink = (path, newTab) => {
+    if (newTab) {
+      window.open(`${window.location.origin}${path}`, '_blank').focus();
+    } else {
+      routeHistory.push(path);
     }
-  }
-`;
+  };
+  const newOriginLink = (path, newTab) => {
+    if (newTab) {
+      window.open(path, '_blank').focus();
+    } else {
+      window.location.href = path;
+    }
+  };
+  return createLink({ sameOriginLink, newOriginLink, lowdefy });
+}
 
-const WatchCache = ({ block, render, rootContext, Loading }) => {
-  const { loading, error } = useQuery(getBlock, {
-    variables: {
-      id: `BlockClass:${block.id}`,
-    },
-    client: rootContext.client,
-  });
-
-  if (loading) return Loading;
-  if (error) throw error;
-
-  return render();
-};
-
-export default WatchCache;
+export default setupLink;

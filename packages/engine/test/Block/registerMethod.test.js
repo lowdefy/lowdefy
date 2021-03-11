@@ -18,7 +18,7 @@ import testContext from '../testContext';
 
 const pageId = 'one';
 
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('registerMethod adds a method to RootBlocks.methods', () => {
   const rootBlock = {
@@ -42,9 +42,8 @@ test('registerMethod adds a method to RootBlocks.methods', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text } = context.RootBlocks.map;
 
@@ -86,9 +85,8 @@ test('registerMethod add multiple methods to RootBlocks.methods', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { textA, textB } = context.RootBlocks.map;
 

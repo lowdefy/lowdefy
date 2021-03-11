@@ -22,7 +22,6 @@ _ref:
     init_state_values:
       __type_block.properties.column: number
       __type_block.properties.items: object[]
-      __number_block.properties.column: 2
       __object_arr_block.properties.items:
         - label: Item One
           value: 1
@@ -32,6 +31,7 @@ _ref:
           value: 3
         - label: Item Four
           value: 4
+          span: 3
 
     description_content: |
       Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
@@ -41,9 +41,9 @@ _ref:
         block:
           id: object_example
           type: Descriptions
-          properties: 
-            items: 
-              Location: South Africa 
+          properties:
+            bordered: true
+            items:
+              Location: South Africa
               Temperature: 22
               Date: 2021-02-02
-      

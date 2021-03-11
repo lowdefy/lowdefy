@@ -25,10 +25,13 @@ const state = {
 const location = 'location';
 
 const context = {
+  lowdefy: { inputs: {} },
   state,
 };
 
-const contexts = {};
+const contexts = { context };
+
+console.error = () => {};
 
 test('NodeParser, _function that gets from state', () => {
   const parser = new NodeParser({ state });

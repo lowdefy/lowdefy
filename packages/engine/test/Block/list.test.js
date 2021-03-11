@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('list block no init', () => {
   const rootBlock = {
@@ -55,9 +55,8 @@ test('list block no init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { list } = context.RootBlocks.map;
   expect(list.value).toBe(undefined);
@@ -100,9 +99,8 @@ test('list block with init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ text: 'hello' }] },
   });
   const text0 = context.RootBlocks.map['list.0.text'];
@@ -146,9 +144,8 @@ test('list block init with non array', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: 'hello' },
   });
   expect(context.state).toEqual({ list: [] });
@@ -190,9 +187,8 @@ test('list block no init push item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { list } = context.RootBlocks.map;
 
@@ -241,9 +237,8 @@ test('list block with init move item up', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [0, 1, 2, 3, 4, 5] },
   });
   const { list } = context.RootBlocks.map;
@@ -290,9 +285,8 @@ test('list block with init move item down', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [0, 1, 2, 3, 4, 5] },
   });
   const { list } = context.RootBlocks.map;
@@ -339,9 +333,8 @@ test('list block no init unshift item to start', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { list, root } = context.RootBlocks.map;
   const BlocksContainingList = context.RootBlocks.subBlocks[root.id][0];
@@ -412,9 +405,8 @@ test('list block no init unshift item to start, block id not in array', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { list, root } = context.RootBlocks.map;
   const BlocksContainingList = context.RootBlocks.subBlocks[root.id][0];
@@ -496,9 +488,8 @@ test('list block unshift item clear all previous values', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [
         {
@@ -580,9 +571,8 @@ test('list block with init push item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ text: 'a' }] },
   });
   const { list } = context.RootBlocks.map;
@@ -627,9 +617,8 @@ test('list block with init including extra data and push item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ b: 'b', c: 'c' }], d: 'd' },
   });
   const { list } = context.RootBlocks.map;
@@ -674,9 +663,8 @@ test('list block no init push item, with enforced input type', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   expect(context.state).toEqual({ list: [] });
   const { list } = context.RootBlocks.map;
@@ -743,9 +731,8 @@ test('list block with rec visible in parent blocks', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ b: 'b', a: 'a' }], c: 'c' },
   });
   const a0 = context.RootBlocks.map['list.0.a'];
@@ -799,9 +786,8 @@ test('list block with visible', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ a: 'a' }], swtch: true },
   });
   const { swtch } = context.RootBlocks.map;
@@ -858,9 +844,8 @@ test('toggle list object field visibility with index', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [
         { text: 'a1', swtch: true },
@@ -932,9 +917,8 @@ test('primitive list block no init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   expect(context.state).toEqual({ list: [] });
 });
@@ -975,9 +959,8 @@ test('primitive list block with init', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [1, 2, 3] },
   });
   const number0 = context.RootBlocks.map['list.0'];
@@ -1021,9 +1004,8 @@ test('primitive list block with init, push item and setValue', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [1, 2, 3] },
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
@@ -1071,9 +1053,8 @@ test('primitive list block with init, push item and setValue', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [1, 2, 3] },
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
@@ -1121,9 +1102,8 @@ test('primitive list block with init and push item with enforced input type', ()
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [true, true, true] },
   });
   expect(context.state).toEqual({ list: [true, true, true] });
@@ -1190,9 +1170,8 @@ test('list block with nested primitive array with init, push item enforced type 
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ innerList: [true, true, true], text: 'text' }] },
   });
   expect(context.state).toEqual({ list: [{ innerList: [true, true, true], text: 'text' }] });
@@ -1280,9 +1259,8 @@ test('list block with nested primitive array with init, push item and setValue',
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ innerList: [1, 2, 3], text: 'text' }] },
   });
   expect(context.state).toEqual({ list: [{ innerList: [1, 2, 3], text: 'text' }] });
@@ -1348,9 +1326,8 @@ test('list block with init remove item of first item and more than two values', 
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
   });
   const { list } = context.RootBlocks.map;
@@ -1400,9 +1377,8 @@ test('list block remove item, add item does not have previous item value ', () =
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ text: '0' }] },
   });
   const { list } = context.RootBlocks.map;
@@ -1454,9 +1430,8 @@ test('list block with init remove item and set existing item values', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
   });
   const { list } = context.RootBlocks.map;
@@ -1521,9 +1496,8 @@ test('primitive list block with init remove item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [0, 1, 2, 3, 4, 5, 6, 7] },
   });
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5, 6, 7] });
@@ -1664,9 +1638,8 @@ test('nested list', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [
         { text: 'b0' },

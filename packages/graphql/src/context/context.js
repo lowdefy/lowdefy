@@ -16,20 +16,30 @@
   limitations under the License.
 */
 
-import createGetController from './getController';
+import { get } from '@lowdefy/helpers';
+import createGetController from '../controllers/getController';
 import createGetLoader from './getLoader';
+import verifyAccessToken from './verifyAccessToken';
 
 function createContext(config) {
-  const { CONFIGURATION_BASE_PATH, logger, getSecrets } = config;
+  const { CONFIGURATION_BASE_PATH, development, getSecrets, logger } = config;
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH,
-    logger,
+    development,
     getSecrets,
+    logger,
   };
-  async function context() {
+
+  async function context({ req, res }) {
+    bootstrapContext.setHeader = (key, value) => res.set(key, value);
+    bootstrapContext.headers = req.headers;
+    bootstrapContext.host =
+      get(bootstrapContext.headers, 'Host') || get(bootstrapContext.headers, 'host');
     bootstrapContext.getLoader = createGetLoader(bootstrapContext);
+    bootstrapContext.getController = createGetController(bootstrapContext);
+    bootstrapContext.user = await verifyAccessToken(bootstrapContext);
     return {
-      getController: createGetController(bootstrapContext),
+      getController: bootstrapContext.getController,
       logger,
     };
   }

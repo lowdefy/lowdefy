@@ -47,7 +47,7 @@ _ref:
 
       ###### Transformer
 
-      A transformer is a Javascript function that receives the result of the `_ref` operator, and it's `vars`. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a Javascript file that exports a transformer function. For example:
+      A transformer is a Javascript function that receives the result of the `_ref` operator, and its `vars`. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a Javascript file that exports a transformer function. For example:
 
       ```js
       // transformer.js

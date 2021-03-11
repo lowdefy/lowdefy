@@ -197,12 +197,18 @@
                         _state: feedback.email
                       source: docs
                       type: Docs feedback
+                      page_id:
+                        _var: pageId
                 - id: discord_channel_feedback
                   type: AxiosHttp
                   connectionId: discord_channel
                   properties:
                     data:
-                      content: 'New feedback on docs'
+                      content:
+                        _nunjucks:
+                          template: 'Docs feedback: {{ text }}'
+                          on:
+                            _state: feedback
               layout:
                 size: auto
               properties:

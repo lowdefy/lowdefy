@@ -17,7 +17,12 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
+
+// Comment out to use console.log
+console.log = () => {};
+// Comment out to use console.log
+console.error = () => {};
 
 test('parse validate on fields', () => {
   const rootBlock = {
@@ -51,9 +56,8 @@ test('parse validate on fields', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { text: 'a' },
   });
   const { text } = context.RootBlocks.map;
@@ -112,9 +116,8 @@ test('validate should fail if parser has errors', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text } = context.RootBlocks.map;
 
@@ -160,9 +163,8 @@ test('validate, only test where parser failed should fail', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text } = context.RootBlocks.map;
 
@@ -203,9 +205,8 @@ test('parse validate, validate an object not an array', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { text: 'a' },
   });
   const { text } = context.RootBlocks.map;
@@ -283,9 +284,8 @@ test('RootBlock.validate() to ignore errors where field not visible', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text, list } = context.RootBlocks.map;
   expect(context.RootBlocks.validate()).toEqual([]);
@@ -379,9 +379,8 @@ test('required on input to return validation error on RootBlock.validate()', () 
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text } = context.RootBlocks.map;
   expect(context.state).toEqual({
@@ -436,9 +435,8 @@ test('required on input to return validation error with priority over validation
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { text } = context.RootBlocks.map;
   expect(context.state).toEqual({
@@ -575,9 +573,8 @@ test('nested arrays with validate, and RootBlock.validate() returns all validati
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: {
       list: [
         { swtch: true },
@@ -814,9 +811,8 @@ test('validation warnings', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { text: 'a' },
   });
   const { text } = context.RootBlocks.map;

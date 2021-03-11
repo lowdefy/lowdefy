@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('two areas in block', () => {
   const rootBlock = {
@@ -53,9 +53,8 @@ test('two areas in block', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { swtch1, swtch2 } = context.RootBlocks.map;
   expect(swtch1.value).toBe(false);
@@ -128,9 +127,8 @@ test('parse values across areas', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { swtch1, swtch2, hide1, hide2 } = context.RootBlocks.map;
 
@@ -203,9 +201,8 @@ test('areas inside list', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
   });
   const { list } = context.RootBlocks.map;
 

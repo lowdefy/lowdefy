@@ -21,22 +21,24 @@ const pageId = 'pageId';
 const client = {};
 
 test('block is required input', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
-  await expect(getContext({ contextId: 'c1', pageId, rootContext })).rejects.toThrow(
+  await expect(getContext({ contextId: 'c1', lowdefy })).rejects.toThrow(
     'A block must be provided to get context.'
   );
 });
 
 test('memoize context', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block = {
@@ -45,20 +47,20 @@ test('memoize context', async () => {
       type: 'context',
     },
   };
-  const c1 = await getContext({ block, contextId: 'c1', pageId, rootContext });
-  const c2 = await getContext({ block, contextId: 'c1', pageId, rootContext });
+  const c1 = await getContext({ block, contextId: 'c1', lowdefy });
+  const c2 = await getContext({ block, contextId: 'c1', lowdefy });
   expect(c1).toBe(c2);
 });
 
 test('create context', async () => {
-  const rootContext = {
+  const lowdefy = {
     client: { client: true },
-    config: { config: true },
     contexts: {},
     document: { document: true },
-    input: { contextId: { input: true } },
+    inputs: { contextId: { input: true } },
     lowdefyGlobal: { lowdefyGlobal: true },
     menus: [{ id: 'default' }],
+    pageId,
     routeHistory: ['routeHistory'],
     updateBlock,
     urlQuery: { urlQuery: true },
@@ -70,44 +72,56 @@ test('create context', async () => {
       type: 'context',
     },
   };
-  const context = await getContext({ block, contextId: 'contextId', pageId, rootContext });
+  const context = await getContext({ block, contextId: 'contextId', lowdefy });
   expect(context.Actions).toBeDefined();
   expect(context.Requests).toBeDefined();
   expect(context.RootBlocks).toBeDefined();
   expect(context.State).toBeDefined();
-  expect(context.allInputs).toEqual({ contextId: { input: true } });
   expect(context.blockId).toEqual('blockId');
-  expect(context.client).toEqual({ client: true });
-  expect(context.config).toEqual({ config: true });
-  expect(context.document).toEqual({ document: true });
+  expect(context.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);
   expect(context.id).toEqual('contextId');
-  expect(context.input).toEqual({ input: true });
-  expect(context.lowdefyGlobal).toEqual({ lowdefyGlobal: true });
-  expect(context.menus).toEqual([
-    {
-      id: 'default',
-    },
-  ]);
-  expect(context.pageId).toEqual('pageId');
+  expect(context.lowdefy.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
+  expect(context.pageId).toEqual('pageId');
   expect(context.rootBlock).toBeDefined();
-  expect(context.routeHistory).toEqual(['routeHistory']);
   expect(context.showValidationErrors).toEqual(false);
   expect(context.state).toEqual({});
   expect(context.update).toBeDefined();
-  expect(context.updateBlock).toBeDefined();
   expect(context.updateListeners).toEqual(new Set());
-  expect(context.urlQuery).toEqual({ urlQuery: true });
-  expect(context.window).toEqual({ window: true });
+});
+
+test('create context, initialize input', async () => {
+  const lowdefy = {
+    client: { client: true },
+    contexts: {},
+    document: { document: true },
+    inputs: {},
+    lowdefyGlobal: { lowdefyGlobal: true },
+    menus: [{ id: 'default' }],
+    pageId,
+    routeHistory: ['routeHistory'],
+    updateBlock,
+    urlQuery: { urlQuery: true },
+    window: { window: true },
+  };
+  const block = {
+    blockId: 'blockId',
+    meta: {
+      type: 'context',
+    },
+  };
+  const context = await getContext({ block, contextId: 'contextId', lowdefy });
+  expect(context.lowdefy.inputs.contextId).toEqual({});
 });
 
 test('call update for listening contexts', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block1 = {
@@ -123,8 +137,8 @@ test('call update for listening contexts', async () => {
     },
   };
   const mockUpdate = jest.fn();
-  const c1 = await getContext({ block: block1, contextId: 'c1', pageId, rootContext });
-  const c2 = await getContext({ block: block2, contextId: 'c2', pageId, rootContext });
+  const c1 = await getContext({ block: block1, contextId: 'c1', lowdefy });
+  const c2 = await getContext({ block: block2, contextId: 'c2', lowdefy });
   c2.update = mockUpdate;
   c1.updateListeners.add('c2');
   c1.update();
@@ -132,10 +146,11 @@ test('call update for listening contexts', async () => {
 });
 
 test('remove contextId from updateListeners if not found', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block = {
@@ -144,7 +159,7 @@ test('remove contextId from updateListeners if not found', async () => {
       type: 'context',
     },
   };
-  const c1 = await getContext({ block, contextId: 'c1', pageId, rootContext });
+  const c1 = await getContext({ block, contextId: 'c1', lowdefy });
 
   c1.updateListeners.add('c2');
   expect(c1.updateListeners).toEqual(new Set(['c2']));
@@ -153,10 +168,11 @@ test('remove contextId from updateListeners if not found', async () => {
 });
 
 test('remove contextId from updateListeners if equal to own contextId', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block = {
@@ -165,7 +181,7 @@ test('remove contextId from updateListeners if equal to own contextId', async ()
       type: 'context',
     },
   };
-  const c1 = await getContext({ block, contextId: 'c1', pageId, rootContext });
+  const c1 = await getContext({ block, contextId: 'c1', lowdefy });
 
   c1.updateListeners.add('c1');
   expect(c1.updateListeners).toEqual(new Set(['c1']));
@@ -174,10 +190,11 @@ test('remove contextId from updateListeners if equal to own contextId', async ()
 });
 
 test('update memoized context', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block = {
@@ -187,17 +204,18 @@ test('update memoized context', async () => {
     },
   };
   const mockUpdate = jest.fn();
-  const c1 = await getContext({ block, contextId: 'c1', pageId, rootContext });
+  const c1 = await getContext({ block, contextId: 'c1', lowdefy });
   c1.update = mockUpdate;
-  await getContext({ block, contextId: 'c1', pageId, rootContext });
+  await getContext({ block, contextId: 'c1', lowdefy });
   expect(mockUpdate.mock.calls.length).toBe(1);
 });
 
 test('call update for nested contexts and prevent circular loop structure', async () => {
-  const rootContext = {
+  const lowdefy = {
     client,
     contexts: {},
-    input: {},
+    inputs: {},
+    pageId,
     updateBlock,
   };
   const block2 = {
@@ -217,13 +235,12 @@ test('call update for nested contexts and prevent circular loop structure', asyn
       },
     },
   };
-  const c1 = await getContext({ block: block1, contextId: 'c1', pageId, rootContext });
+  const c1 = await getContext({ block: block1, contextId: 'c1', lowdefy });
   const getC2 = () =>
     getContext({
       block: c1.RootBlocks.areas.root.blocks[0],
       contextId: 'c2',
-      pageId,
-      rootContext,
+      lowdefy,
     });
   await expect(getC2()).resolves.not.toThrow();
 });

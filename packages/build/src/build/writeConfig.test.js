@@ -75,10 +75,3 @@ test('writeConfig config undefined', async () => {
     ],
   ]);
 });
-
-test('writeConfig config not an object', async () => {
-  const components = {
-    config: 'config',
-  };
-  await expect(writeConfig({ components, context })).rejects.toThrow('Config is not an object.');
-});

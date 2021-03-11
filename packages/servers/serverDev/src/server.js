@@ -24,12 +24,17 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 dotenv.config({ silent: true });
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(process.cwd(), './.lowdefy/build'),
-  logger: console,
+  development: true,
   getSecrets: createGetSecretsFromEnv(),
+  logger: console,
 };
 
 const context = createContext(config);
-const server = new ApolloServer({ typeDefs, resolvers, context });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context,
+});
 const app = express();
 
 server.applyMiddleware({ app, path: '/api/graphql' });

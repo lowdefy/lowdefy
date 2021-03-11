@@ -16,14 +16,12 @@
 
 import WebParser from '../../src/webParser';
 
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  input: {
-    string: 'input',
-    arr: [{ a: 'input1' }, { a: 'input2' }],
+const lowdefy = {
+  inputs: {
+    own: {
+      string: 'input',
+      arr: [{ a: 'input1' }, { a: 'input2' }],
+    },
   },
   lowdefyGlobal: {
     string: 'global',
@@ -40,11 +38,16 @@ const context = {
       menuId: 'm_2',
     },
   ],
-  mutations: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'mutation String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'mutation a1' }, { a: 'mutation a2' }] },
+  urlQuery: {
+    string: 'urlQuery',
+    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
+  },
+};
+
+const context = {
+  config: {
+    string: 'config',
+    arr: [{ a: 'config1' }, { a: 'config2' }],
   },
   requests: {
     not_loaded: { loading: true, response: 'fail' },
@@ -52,21 +55,20 @@ const context = {
     number: { loading: false, response: 500 },
     arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
   },
+  lowdefy,
   state: {
     string: 'state',
     number: 42,
     arr: [{ a: 'state1' }, { a: 'state2' }],
     boolean: true,
   },
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
 };
 
 const contexts = {};
 
 const arrayIndices = [1];
+
+console.error = () => {};
 
 test('_type with on, pass', () => {
   const input = { _type: { type: 'string', on: 'a' } };

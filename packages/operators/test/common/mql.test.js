@@ -16,6 +16,25 @@
 
 import mql from '../../src/common/mql';
 
+test('_mql.aggregate on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        pipeline: [
+          {
+            $sort: {
+              id: 1,
+            },
+          },
+        ],
+      },
+      location: 'locationId',
+      methodName: 'aggregate',
+    })
+  ).toEqual([]);
+});
+
 test('_mql.aggregate sort as array params', () => {
   expect(
     mql({
@@ -267,6 +286,45 @@ test('_mql.aggregate params not object or array', () => {
   `);
 });
 
+test('_mql.expr $add on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $add: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(NaN);
+});
+
+test('_mql.expr $sum on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $sum: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(2);
+});
+
+test('_mql.expr $gt on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        expr: { $gt: ['$number', 2] },
+      },
+      location: 'locationId',
+      methodName: 'expr',
+    })
+  ).toEqual(false);
+});
+
 test('_mql.expr add number', () => {
   expect(
     mql({
@@ -354,6 +412,45 @@ test('_mql.expr logic', () => {
       methodName: 'expr',
     })
   ).toEqual(false);
+});
+
+test('_mql.test on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $eq: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(false);
+});
+
+test('_mql.test $eq on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $eq: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(false);
+});
+
+test('_mql.test $ne on: null', () => {
+  expect(
+    mql({
+      params: {
+        on: null,
+        test: { string: { $ne: 'Some String' } },
+      },
+      location: 'locationId',
+      methodName: 'test',
+    })
+  ).toEqual(true);
 });
 
 test('_mql.test string equal', () => {

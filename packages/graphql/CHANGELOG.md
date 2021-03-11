@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
+
+
+### Bug Fixes
+
+* **graphql:** Improve logoutRedirectUri configuration. ([74e1183](https://github.com/lowdefy/lowdefy/commit/74e1183246361fe7d128e9c2ca8dff0a4fecd5c5))
+
+
+### Features
+
+* **graphql:** Do authorization checks on pages and requests. ([00bf504](https://github.com/lowdefy/lowdefy/commit/00bf504d60a12a6990d1b6fb2e00390703faf9de))
+* **graphql:** Filter menu items. ([cd14afd](https://github.com/lowdefy/lowdefy/commit/cd14afd3593d966a76ba96fbaee142ab4524eca2))
+* Move all servers to expressed based apps. ([ffc6043](https://github.com/lowdefy/lowdefy/commit/ffc6043e0faf2812c31d3e25d794a64a154849d2))
+* **graphql:** Add OpenID Connect flow queries. ([1ac0b3d](https://github.com/lowdefy/lowdefy/commit/1ac0b3d3180bd3bb5e9d47084125efba1e862715))
+* **graphql:** All user object to request operators parser. ([9e43b27](https://github.com/lowdefy/lowdefy/commit/9e43b27a477acfb0bdb944d610d386a0b8cd64e0))
+* **graphql:** Allow specifed input, pageId, urlQuery in state token. ([353dfab](https://github.com/lowdefy/lowdefy/commit/353dfabb8db14b5368f339281896a8ee104e4d1b))
+* **graphql:** Make JWT expiry time configurable. ([30bde0b](https://github.com/lowdefy/lowdefy/commit/30bde0be4eb68f59818fdb3738f82c9b0e2e86a2))
+* use setHeader plugin to set auth headers ([6238c6f](https://github.com/lowdefy/lowdefy/commit/6238c6f6ba6c1d24720f4867da7e5e577ff344d4))
+* **graphql:** Set and unset authorization cookie. ([8abe43c](https://github.com/lowdefy/lowdefy/commit/8abe43cf99f57d884d0e770ace0393faeebf9606))
+* **graphql:** Update jwt tokens, add tests. ([f5ea705](https://github.com/lowdefy/lowdefy/commit/f5ea70507414ae2a64e19f3e59cefafe7395eefc))
+* **renderer:** Improve OpenID Connect flows ([e7cca6f](https://github.com/lowdefy/lowdefy/commit/e7cca6f01fe5e08df8c9244144b4e1583fb753ce))
+
+
+
+
+
 ## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
 
 

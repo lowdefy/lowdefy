@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import RequestsClass from '../src/Requests';
+import testContext from './testContext';
 
 const mockReqResponses = {
   req_one: {
@@ -52,6 +52,10 @@ const mockQueryImp = ({ variables }) => {
 const client = { query: mockQuery };
 
 const rootBlock = {
+  blockId: 'page1',
+  meta: {
+    category: 'context',
+  },
   requests: [
     {
       requestId: 'req_one',
@@ -65,12 +69,16 @@ const rootBlock = {
   ],
 };
 
-const blockId = 'one';
-const input = { input: true };
-const lowdefyGlobal = { lowdefyGlobal: true };
-const pageId = 'one';
-const state = { state: true };
-const urlQuery = { urlQuery: true };
+const pageId = 'page1';
+const initState = { state: true };
+
+const lowdefy = {
+  client,
+  lowdefyGlobal: { lowdefyGlobal: true },
+  inputs: { test: { input: true } },
+  pageId,
+  urlQuery: { urlQuery: true },
+};
 
 beforeEach(() => {
   mockQuery.mockReset();
@@ -78,20 +86,11 @@ beforeEach(() => {
 });
 
 test('callRequest', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await Requests.callRequest({ requestId: 'req_one' });
+  });
+  await context.Requests.callRequest({ requestId: 'req_one' });
   expect(context.requests).toEqual({
     req_one: {
       error: [null],
@@ -102,28 +101,24 @@ test('callRequest', async () => {
 });
 
 test('callRequest, pass variables to qraphql', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await Requests.callRequest({ requestId: 'req_one', event: { event: true }, arrayIndices: [1] });
+    initState,
+  });
+  await context.Requests.callRequest({
+    requestId: 'req_one',
+    event: { event: true },
+    arrayIndices: [1],
+  });
   expect(mockQuery.mock.calls[0][0].variables).toEqual({
     input: {
       arrayIndices: [1],
-      blockId: 'one',
+      blockId: 'page1',
       event: { event: true },
       input: { input: true },
       lowdefyGlobal: { lowdefyGlobal: true },
-      pageId: 'one',
+      pageId: 'page1',
       requestId: 'req_one',
       state: { state: true },
       urlQuery: { urlQuery: true },
@@ -132,20 +127,11 @@ test('callRequest, pass variables to qraphql', async () => {
 });
 
 test('callRequests all requests', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  const promise = Requests.callRequests();
+  });
+  const promise = context.Requests.callRequests();
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -189,20 +175,11 @@ test('callRequests all requests', async () => {
 });
 
 test('callRequests', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  const promise = Requests.callRequests({ requestIds: ['req_one'] });
+  });
+  const promise = context.Requests.callRequests({ requestIds: ['req_one'] });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -222,20 +199,11 @@ test('callRequests', async () => {
 });
 
 test('callRequest error', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await expect(Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
+  });
+  await expect(context.Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
   expect(context.requests).toEqual({
     req_error: {
       error: [new Error('mock error')],
@@ -243,7 +211,7 @@ test('callRequest error', async () => {
       response: null,
     },
   });
-  await expect(Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
+  await expect(context.Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
   expect(context.requests).toEqual({
     req_error: {
       error: [new Error('mock error'), new Error('mock error')],
@@ -254,58 +222,31 @@ test('callRequest error', async () => {
 });
 
 test('callRequest that is not on root block', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await expect(Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
+  });
+  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
     'Configuration Error: Request req_does_not_exist not defined on context.'
   );
 });
 
 test('callRequest on root block with no requests', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
-    rootBlock: {},
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await expect(Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
+  const context = testContext({
+    lowdefy,
+    rootBlock,
+  });
+  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
     'Configuration Error: Request req_does_not_exist not defined on context.'
   );
 });
 
 test('callRequest request does not exist', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await expect(Requests.callRequest({ requestId: 'req_two' })).rejects.toThrow(
+  });
+  await expect(context.Requests.callRequest({ requestId: 'req_two' })).rejects.toThrow(
     'Configuration Error: Request req_two not defined on context.'
   );
   expect(context.requests).toEqual({
@@ -319,45 +260,29 @@ test('callRequest request does not exist', async () => {
 
 test('update function should be called', async () => {
   const updateFunction = jest.fn();
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: updateFunction,
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
-  await Requests.callRequest({ requestId: 'req_one' });
+  });
+  context.update = updateFunction;
+  await context.Requests.callRequest({ requestId: 'req_one' });
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
 test('fetch should set blocks loading and call query every time it is called', async () => {
-  const context = {
-    blockId,
-    client,
-    input,
-    lowdefyGlobal,
-    pageId,
-    requests: {},
-    state,
+  const context = testContext({
+    lowdefy,
     rootBlock,
-    update: jest.fn(),
-    urlQuery,
-  };
-  const Requests = new RequestsClass(context);
+  });
   const setBlocksLoadingCacheFunction = jest.fn();
   context.RootBlocks = {
     setBlocksLoadingCache: setBlocksLoadingCacheFunction,
+    update: jest.fn(),
   };
-  await Requests.callRequest({ requestId: 'req_one', onlyNew: true });
+  await context.Requests.callRequest({ requestId: 'req_one', onlyNew: true });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(1);
   expect(mockQuery).toHaveBeenCalledTimes(1);
-  Requests.fetch({ requestId: 'req_one' });
+  context.Requests.fetch({ requestId: 'req_one' });
   expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(2);
   expect(mockQuery).toHaveBeenCalledTimes(2);
 });

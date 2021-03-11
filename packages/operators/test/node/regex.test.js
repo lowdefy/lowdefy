@@ -22,6 +22,8 @@ const state = {
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
 
+console.error = () => {};
+
 test('_regex with on, pass', () => {
   const input = { _regex: { pattern: '^a$', on: 'a' } };
   const parser = new NodeParser({ state });

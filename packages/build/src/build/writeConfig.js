@@ -14,18 +14,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 async function writeConfig({ components, context }) {
-  if (type.isNone(components.config)) {
-    components.config = {};
-  }
-  if (!type.isObject(components.config)) {
-    throw new Error('Config is not an object.');
-  }
   await context.artifactSetter.set({
     filePath: 'config.json',
-    content: JSON.stringify(components.config, null, 2),
+    content: JSON.stringify(components.config || {}, null, 2),
   });
 }
 

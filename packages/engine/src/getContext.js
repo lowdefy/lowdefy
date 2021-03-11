@@ -57,45 +57,33 @@ const blockData = ({
   visible,
 });
 
-const getContext = async ({ block, contextId, pageId, rootContext }) => {
-  if (rootContext.contexts[contextId]) {
-    rootContext.contexts[contextId].input = rootContext.input[contextId] || {};
-    rootContext.contexts[contextId].urlQuery = rootContext.urlQuery;
-    rootContext.contexts[contextId].lowdefyGlobal = rootContext.lowdefyGlobal;
-    rootContext.contexts[contextId].menus = rootContext.menus;
-    rootContext.contexts[contextId].config = rootContext.config;
-    rootContext.contexts[contextId].update();
-    return rootContext.contexts[contextId];
+const getContext = async ({ block, contextId, lowdefy }) => {
+  if (lowdefy.contexts[contextId]) {
+    lowdefy.contexts[contextId].update();
+    return lowdefy.contexts[contextId];
   }
   if (!block) {
     throw new Error('A block must be provided to get context.');
   }
   // eslint-disable-next-line no-param-reassign
-  rootContext.contexts[contextId] = {
+  if (!lowdefy.inputs[contextId]) {
+    lowdefy.inputs[contextId] = {};
+  }
+  lowdefy.contexts[contextId] = {
     id: contextId,
-    pageId,
-    eventLog: [],
     blockId: block.blockId,
-    client: rootContext.client,
-    config: rootContext.config,
-    document: rootContext.document,
-    input: rootContext.input[contextId] || {},
-    allInputs: rootContext.input,
-    lowdefyGlobal: rootContext.lowdefyGlobal,
-    menus: rootContext.menus,
+    eventLog: [],
     requests: {},
+    lowdefy,
+    pageId: lowdefy.pageId,
     rootBlock: blockData(block), // filter block to prevent circular structure
-    routeHistory: rootContext.routeHistory,
     showValidationErrors: false,
     state: {},
     update: () => {}, // Initialize update since Requests might call it during context creation
-    updateBlock: rootContext.updateBlock,
-    urlQuery: rootContext.urlQuery,
-    window: rootContext.window,
     updateListeners: new Set(),
   };
-  const ctx = rootContext.contexts[contextId];
-  ctx.parser = new WebParser({ context: ctx, contexts: rootContext.contexts });
+  const ctx = lowdefy.contexts[contextId];
+  ctx.parser = new WebParser({ context: ctx, contexts: lowdefy.contexts });
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);
@@ -108,10 +96,10 @@ const getContext = async ({ block, contextId, pageId, rootContext }) => {
     ctx.RootBlocks.update();
     [...ctx.updateListeners].forEach((listenId) => {
       // Will loop infinitely if update is called on self
-      if (!rootContext.contexts[listenId] || listenId === contextId) {
+      if (!lowdefy.contexts[listenId] || listenId === contextId) {
         ctx.updateListeners.delete(listenId);
       } else {
-        rootContext.contexts[listenId].update();
+        lowdefy.contexts[listenId].update();
       }
     });
   };

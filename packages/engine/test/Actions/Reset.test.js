@@ -17,7 +17,7 @@
 import testContext from '../testContext';
 
 const pageId = 'one';
-const rootContext = {};
+const lowdefy = { pageId };
 
 test('Reset one field', () => {
   const rootBlock = {
@@ -52,9 +52,8 @@ test('Reset one field', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { textInput: 'init' },
   });
   expect(context.state).toEqual({ textInput: 'init' });
@@ -113,9 +112,8 @@ test('Reset on primitive array after adding item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: ['init'] },
   });
   expect(context.state).toEqual({ list: ['init'] });
@@ -175,9 +173,8 @@ test('Reset on object array after removing item', () => {
     },
   };
   const context = testContext({
-    rootContext,
+    lowdefy,
     rootBlock,
-    pageId,
     initState: { list: [{ textInput: 'init' }] },
   });
 

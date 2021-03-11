@@ -16,11 +16,21 @@
 
 import getFromObject from '../getFromObject';
 
-function _secret({ env, location, params, secrets }) {
+function _secret({ env, location, params, secrets = {} }) {
+  if (params === true || params.all) {
+    throw new Error(
+      `Operator Error: Getting all secrets is not allowed. Received: ${JSON.stringify(
+        params
+      )} at ${location}.`
+    );
+  }
+  // Filter out OpenID Connect and JSON web token secrets
+  // eslint-disable-next-line no-unused-vars
+  const { OPENID_CLIENT_ID, OPENID_CLIENT_SECRET, OPENID_DOMAIN, JWT_SECRET, ...rest } = secrets;
   return getFromObject({
     env,
     location,
-    object: secrets,
+    object: { ...rest },
     operator: '_secret',
     params,
   });

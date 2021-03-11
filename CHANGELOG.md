@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/lowdefy/lowdefy/compare/v3.10.2...v3.11.0) (2021-03-11)
+
+### Features
+
+This release includes initial support for OpenID Connect. There might be breaking changes to the configuration required as this is tested in the wild. Please see #483 for more information.
+
+### Fixes
+
+- Requests were added to the wrong context in build if more than one context was used on a page.
+- The \_mql operator no longer throws error when the `on` argument is `null`.
+- Fixed an issue where displayMessage was not initialized properly.
+
+### Documentation
+
+- Fix Descriptions bordered property default value.
+- Add a section on using JSON instead of YAML.
+- Added a diagram to the overview page.
+
+### Bug Fixes
+
+- **blocks-antd:** Fix Descriptions bordered property default value ([c2503e1](https://github.com/lowdefy/lowdefy/commit/c2503e167a4185cf23f38955f66e0664fc0c5b1a))
+- **build:** Add auth config to all menu items. ([cea8982](https://github.com/lowdefy/lowdefy/commit/cea898252dd3f94b89107c15d7aeb889650a9e04))
+- **build:** Nested context caused request to be created in wrong context. ([16e2b15](https://github.com/lowdefy/lowdefy/commit/16e2b154d44d3f532fe5be805dabcf0560129dd5))
+- **build:** Page auth config fixes. ([601c942](https://github.com/lowdefy/lowdefy/commit/601c942e4fe5f7ed14fc209a5107dd25c65c1afa))
+- **build:** Throw when poth protected and public pages are listed. ([5581ac4](https://github.com/lowdefy/lowdefy/commit/5581ac4bb003eb0e0d32320438388ad2af81f9a5))
+- **docs:** Add a section on using JSON instead of YAML ([a709086](https://github.com/lowdefy/lowdefy/commit/a709086a8bd239f020cb9cf9228baeaf9d15fb93))
+- **docs:** Add app schema image to docs public folder. ([df1c6c7](https://github.com/lowdefy/lowdefy/commit/df1c6c772e0465a20ab76f9494d45c29424e2b7b))
+- **docs:** Add deployment tutorial video ([1e63ddd](https://github.com/lowdefy/lowdefy/commit/1e63ddd7d6e2307f53605e6ea7c4cd0a1844b232))
+- **docs:** Typos. ([760abe6](https://github.com/lowdefy/lowdefy/commit/760abe6c0e1fa71c02ce1aa71dca7a97451294e9))
+- **docs:** Update overview with diagram. ([e8087b7](https://github.com/lowdefy/lowdefy/commit/e8087b728a42444dcd491fd47a7abac82c405560))
+- **engine:** Assign rootContext to context, instead of assigning individual fields. ([9461990](https://github.com/lowdefy/lowdefy/commit/9461990863b76d790a55d77fef5278adc4619858))
+- **engine:** Rename more root to lowdefy. ([df858c1](https://github.com/lowdefy/lowdefy/commit/df858c16aaeaa6116fd3701cac1bcbdce77e526d))
+- **engine:** Rename rootContext to lowdefy, and add pageId to root. ([3ee8807](https://github.com/lowdefy/lowdefy/commit/3ee880702f4edd060b011c1cf22a5015982965c9))
+- **engine:** Use context specific pageId in engine. ([e80e461](https://github.com/lowdefy/lowdefy/commit/e80e461ebaa5a6453866f780b0ad4d3e9f2f2237))
+- **graphql:** Improve logoutRedirectUri configuration. ([74e1183](https://github.com/lowdefy/lowdefy/commit/74e1183246361fe7d128e9c2ca8dff0a4fecd5c5))
+- **operators:** \_mql on null should pass null and not throw. ([3378cb4](https://github.com/lowdefy/lowdefy/commit/3378cb4870db34c173e4c978c5ee5e00cd622889))
+- **operators:** Rename input to inputs. ([1815daa](https://github.com/lowdefy/lowdefy/commit/1815daaa1cc73b22d384e40db759192515e2ce2e))
+- **operators:** Rename more root to lowdefy. ([b2e40bb](https://github.com/lowdefy/lowdefy/commit/b2e40bbf1f22f9e61ef2350af3495d012eebbaf9))
+- **renderer:** Fix login logout. ([2c51020](https://github.com/lowdefy/lowdefy/commit/2c5102059979a7bba9e696a51d23e7b8f240312a))
+- **renderer:** Init displayMessage before it is loaded, closes [#470](https://github.com/lowdefy/lowdefy/issues/470). ([fac7e39](https://github.com/lowdefy/lowdefy/commit/fac7e39776b41cc5a175a957c52a135f5e8e73c9))
+- **renderer:** Move pageId into lowdefy object. ([5a19389](https://github.com/lowdefy/lowdefy/commit/5a19389929465b64b65ebd4906c50bf66eeb76a4))
+- **renderer:** Setup link function using setupLink. ([b078b22](https://github.com/lowdefy/lowdefy/commit/b078b22505e2a3978d791ce1da581869ad507f6b))
+- **renderer:** Update blocks using use state. ([de4f899](https://github.com/lowdefy/lowdefy/commit/de4f8996a896c92a358b87cc3bf09d6334bfe978))
+- \_mql empty input when data is null. ([a1c913a](https://github.com/lowdefy/lowdefy/commit/a1c913a080758fed82426d9295d53fde8ae3e813))
+- Add twitter badges. ([432f4c4](https://github.com/lowdefy/lowdefy/commit/432f4c4dcc2551121a7a856e8690cff179223b52))
+- Update telemetry data field names. ([085e5cc](https://github.com/lowdefy/lowdefy/commit/085e5cc635f3eab2433f376de96af67a762f828f))
+
+### Features
+
+- **build:** Add auth field and homePageId to config in app schema. ([a878a31](https://github.com/lowdefy/lowdefy/commit/a878a31160daa9e08b9ace838c3d5eb54b1d805e))
+- **build:** Add auth to build arifacts. ([c6a2e53](https://github.com/lowdefy/lowdefy/commit/c6a2e53a2fa0611e2a0f0d4b79fba9f26da66d4e))
+- **build:** Update app OpenID configuration schema ([a6df3c0](https://github.com/lowdefy/lowdefy/commit/a6df3c0f65dc5a048ca303a14743ff46f7b6b35a))
+- **graphql:** Add OpenID Connect flow queries. ([1ac0b3d](https://github.com/lowdefy/lowdefy/commit/1ac0b3d3180bd3bb5e9d47084125efba1e862715))
+- **graphql:** All user object to request operators parser. ([9e43b27](https://github.com/lowdefy/lowdefy/commit/9e43b27a477acfb0bdb944d610d386a0b8cd64e0))
+- **graphql:** Allow specifed input, pageId, urlQuery in state token. ([353dfab](https://github.com/lowdefy/lowdefy/commit/353dfabb8db14b5368f339281896a8ee104e4d1b))
+- **graphql:** Do authorization checks on pages and requests. ([00bf504](https://github.com/lowdefy/lowdefy/commit/00bf504d60a12a6990d1b6fb2e00390703faf9de))
+- **graphql:** Filter menu items. ([cd14afd](https://github.com/lowdefy/lowdefy/commit/cd14afd3593d966a76ba96fbaee142ab4524eca2))
+- **graphql:** Make JWT expiry time configurable. ([30bde0b](https://github.com/lowdefy/lowdefy/commit/30bde0be4eb68f59818fdb3738f82c9b0e2e86a2))
+- **graphql:** Set and unset authorization cookie. ([8abe43c](https://github.com/lowdefy/lowdefy/commit/8abe43cf99f57d884d0e770ace0393faeebf9606))
+- **graphql:** Update jwt tokens, add tests. ([f5ea705](https://github.com/lowdefy/lowdefy/commit/f5ea70507414ae2a64e19f3e59cefafe7395eefc))
+- **renderer:** Improve OpenID Connect flows ([e7cca6f](https://github.com/lowdefy/lowdefy/commit/e7cca6f01fe5e08df8c9244144b4e1583fb753ce))
+- **renderer:** Switch rootcontext to root lowdefy object ([30919a2](https://github.com/lowdefy/lowdefy/commit/30919a2dd2e2ee9adffbe35f382ba70e78fac25e))
+- Move all servers to expressed based apps. ([ffc6043](https://github.com/lowdefy/lowdefy/commit/ffc6043e0faf2812c31d3e25d794a64a154849d2))
+- **operators:** Configure operators to work aith root and add \_user. ([c9395b9](https://github.com/lowdefy/lowdefy/commit/c9395b98a9cfd1f1779c57720ee3316287e8592e))
+- **renderer:** Handle expired tokens in GQL client and unset tokenId. ([2cc0492](https://github.com/lowdefy/lowdefy/commit/2cc049235e008c4887b5ed57ce92eff12d10ae60))
+- Init OpenID Connect flow. ([e2e29d0](https://github.com/lowdefy/lowdefy/commit/e2e29d0f165c148bbc27b5073612a6b4d50e1b87))
+- use setHeader plugin to set auth headers ([6238c6f](https://github.com/lowdefy/lowdefy/commit/6238c6f6ba6c1d24720f4867da7e5e577ff344d4))
+- **operators:** Filter openid secrets and block get all in \_secret. ([bd7a772](https://github.com/lowdefy/lowdefy/commit/bd7a7720f565d77ed2e644ef6c2857084fdf0d5c))
+- **renderer:** Finish OpenId callback. ([9997136](https://github.com/lowdefy/lowdefy/commit/9997136f395c1f7fb7d16ef8fdb6f0cd6043a951))
+
 ## [3.10.2](https://github.com/lowdefy/lowdefy/compare/v3.10.1...v3.10.2) (2021-02-25)
 
 ## Changes

@@ -22,6 +22,8 @@ const state = {
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
 
+console.error = () => {};
+
 test('_operator, _state', () => {
   const input = { a: { _operator: { name: '_state', params: 'string' } } };
   const parser = new NodeParser({ state });

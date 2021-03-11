@@ -20,13 +20,14 @@ import commonOperators from './common';
 import nodeOperators from './node';
 
 class NodeParser {
-  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery } = {}) {
+  constructor({ arrayIndices, input, lowdefyGlobal, secrets, state, urlQuery, user } = {}) {
     this.arrayIndices = arrayIndices;
     this.input = input;
     this.lowdefyGlobal = lowdefyGlobal;
     this.secrets = secrets;
     this.state = state;
     this.urlQuery = urlQuery;
+    this.user = user;
     this.parse = this.parse.bind(this);
     this.operations = {
       ...commonOperators,
@@ -68,6 +69,7 @@ class NodeParser {
               secrets: this.secrets,
               state: this.state,
               urlQuery: this.urlQuery,
+              user: this.user,
               parser: this,
             });
             return res;
