@@ -4458,7 +4458,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mingo", "npm:4.1.2"],
             ["moment", "npm:2.29.1"],
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
-            ["openid-client", "npm:4.4.1"],
+            ["openid-client", "npm:4.5.0"],
             ["saslprep", "npm:1.0.3"],
             ["webpack", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.22.0"],
             ["webpack-cli", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:4.5.0"]
@@ -20113,17 +20113,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["openid-client", [
-        ["npm:4.4.1", {
-          "packageLocation": "./.yarn/cache/openid-client-npm-4.4.1-4345281c2f-391c866de4.zip/node_modules/openid-client/",
+        ["npm:4.5.0", {
+          "packageLocation": "./.yarn/cache/openid-client-npm-4.5.0-508c8168d0-55ccd4582a.zip/node_modules/openid-client/",
           "packageDependencies": [
-            ["openid-client", "npm:4.4.1"],
+            ["openid-client", "npm:4.5.0"],
+            ["aggregate-error", "npm:3.1.0"],
             ["got", "npm:11.8.2"],
             ["jose", "npm:2.0.4"],
             ["lru-cache", "npm:6.0.0"],
             ["make-error", "npm:1.3.6"],
             ["object-hash", "npm:2.1.1"],
-            ["oidc-token-hash", "npm:5.0.1"],
-            ["p-any", "npm:3.0.0"]
+            ["oidc-token-hash", "npm:5.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -20240,17 +20240,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["osenv", "npm:0.1.5"],
             ["os-homedir", "npm:1.0.2"],
             ["os-tmpdir", "npm:1.0.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["p-any", [
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/p-any-npm-3.0.0-03cf59e600-684f65435b.zip/node_modules/p-any/",
-          "packageDependencies": [
-            ["p-any", "npm:3.0.0"],
-            ["p-cancelable", "npm:2.0.0"],
-            ["p-some", "npm:5.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -20394,17 +20383,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["p-retry", "npm:3.0.1"],
             ["retry", "npm:0.12.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["p-some", [
-        ["npm:5.0.0", {
-          "packageLocation": "./.yarn/cache/p-some-npm-5.0.0-80107b767a-cb778e32d6.zip/node_modules/p-some/",
-          "packageDependencies": [
-            ["p-some", "npm:5.0.0"],
-            ["aggregate-error", "npm:3.1.0"],
-            ["p-cancelable", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]

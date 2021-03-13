@@ -31,17 +31,17 @@ function Shell({ version }) {
     return <h2>Failed to load dynamic script</h2>;
   }
 
-  const Component = React.lazy(loadWebpackFederatedModule('lowdefy_renderer', 'Renderer'));
+  const Renderer = React.lazy(loadWebpackFederatedModule('lowdefy_renderer', 'Renderer'));
 
   return (
     <React.Suspense fallback={<Loading type="Spinner" properties={{ height: '100vh' }} />}>
-      <Component />
+      <Renderer gqlUri="/api/graphql" />
     </React.Suspense>
   );
 }
 
 const getVersion = async () => {
-  return (await fetch(`api/dev/version`)).json();
+  return (await fetch(`/api/dev/version`)).json();
 };
 
 getVersion().then((version) => {

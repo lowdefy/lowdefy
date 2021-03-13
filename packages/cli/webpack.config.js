@@ -105,6 +105,7 @@ module.exports = [
       }),
       new HtmlWebpackPlugin({
         template: './src/commands/dev/shell/index.html',
+        publicPath: '/',
       }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production'),
