@@ -3039,7 +3039,7 @@ __metadata:
     mingo: 4.1.2
     moment: 2.29.1
     mongodb: 3.6.4
-    openid-client: 4.5.0
+    openid-client: 4.5.1
     saslprep: 1.0.3
     webpack: 5.22.0
     webpack-cli: 4.5.0
@@ -15127,9 +15127,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"openid-client@npm:4.5.0":
-  version: 4.5.0
-  resolution: "openid-client@npm:4.5.0"
+"openid-client@npm:4.5.1":
+  version: 4.5.1
+  resolution: "openid-client@npm:4.5.1"
   dependencies:
     aggregate-error: ^3.1.0
     got: ^11.8.0
@@ -15138,7 +15138,7 @@ fsevents@^1.2.7:
     make-error: ^1.3.6
     object-hash: ^2.0.1
     oidc-token-hash: ^5.0.1
-  checksum: 55ccd4582ac4b0971f6882121aa94d1c6d42522298c61a9bd6b799bdb215a1bc184e26f0f9bdef26d4e700d760cd46f2fbf4baef1e93ebe185c64e6b42a6f360
+  checksum: 8ee0b23f358f35037d1ebe68980c56b7e4afd48f7f236374e244734afd7242121ecb4c0aeaf94256aa77fae710c914b01acb851fdb84d3a0da2c3e3a34b64148
   languageName: node
   linkType: hard
 
