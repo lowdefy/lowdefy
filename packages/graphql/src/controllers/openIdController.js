@@ -21,7 +21,7 @@ import cookie from 'cookie';
 import { AuthenticationError, ConfigurationError } from '../context/errors';
 
 class OpenIdController {
-  constructor({ development, getController, getLoader, getSecrets, host, setHeader }) {
+  constructor({ development, getController, getLoader, getSecrets, gqlUri, host, setHeader }) {
     const httpPrefix = development ? 'http' : 'https';
 
     this.development = development;
@@ -29,6 +29,7 @@ class OpenIdController {
     this.getSecrets = getSecrets;
     this.host = host;
     this.redirectUri = `${httpPrefix}://${host}/auth/openid-callback`;
+    this.gqlUri = gqlUri || '/api/graphql';
     this.setHeader = setHeader;
     this.tokenController = getController('token');
   }
@@ -102,7 +103,7 @@ class OpenIdController {
       const accessToken = await this.tokenController.issueAccessToken(claims);
       const setCookieHeader = cookie.serialize('authorization', accessToken, {
         httpOnly: true,
-        path: '/api/graphql',
+        path: this.gqlUri,
         sameSite: 'lax',
         secure: !this.development,
       });
@@ -140,7 +141,7 @@ class OpenIdController {
     try {
       const setCookieHeader = cookie.serialize('authorization', '', {
         httpOnly: true,
-        path: '/api/graphql',
+        path: this.gqlUri,
         sameSite: 'lax',
         secure: !this.development,
         maxAge: 0,

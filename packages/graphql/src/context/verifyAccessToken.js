@@ -19,7 +19,7 @@
 import { get } from '@lowdefy/helpers';
 import cookie from 'cookie';
 
-async function verifyAccessToken({ development, headers, getController, setHeader }) {
+async function verifyAccessToken({ development, headers, getController, gqlUri, setHeader }) {
   const cookieHeader = get(headers, 'Cookie') || get(headers, 'cookie') || '';
   const { authorization } = cookie.parse(cookieHeader);
   if (!authorization) return {};
@@ -37,7 +37,7 @@ async function verifyAccessToken({ development, headers, getController, setHeade
   } catch (error) {
     const setCookieHeader = cookie.serialize('authorization', '', {
       httpOnly: true,
-      path: '/api/graphql',
+      path: gqlUri || '/api/graphql',
       sameSite: 'lax',
       secure: !development,
       maxAge: 0,

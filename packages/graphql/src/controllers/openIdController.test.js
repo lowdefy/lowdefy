@@ -320,6 +320,27 @@ describe('callback', () => {
     );
     expect(setHeader.mock.calls).toEqual([]);
   });
+
+  test('configure gqlUri', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const testContext = testBootstrapContext({
+      getSecrets,
+      gqlUri: '/custom/graphql',
+      host: 'host',
+      loaders,
+      setHeader,
+    });
+    const openIdController = createOpenIdController(testContext);
+    const tokenController = createTokenController(testContext);
+    const state = await tokenController.issueOpenIdStateToken(authorizationUrlInput);
+    await openIdController.callback({ code: 'code', state });
+    expect(setHeader.mock.calls).toEqual([
+      [
+        'Set-Cookie',
+        'authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWIiLCJsb3dkZWZ5X2FjY2Vzc190b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjE0NDAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.oADZ37ERfvONPBGiFsStQUOEHO6BaX_zkGXCHY8PbRA; Path=/custom/graphql; HttpOnly; Secure; SameSite=Lax',
+      ],
+    ]);
+  });
 });
 
 describe('logout', () => {
@@ -473,6 +494,25 @@ describe('logout', () => {
       [
         'Set-Cookie',
         'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
+      ],
+    ]);
+  });
+
+  test('configure gqlUri', async () => {
+    const testContext = testBootstrapContext({
+      getSecrets,
+      gqlUri: '/custom/graphql',
+      host: 'host',
+      loaders,
+      setHeader,
+    });
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(testContext);
+    await openIdController.logoutUrl(logoutUrlInput);
+    expect(setHeader.mock.calls).toEqual([
+      [
+        'Set-Cookie',
+        'authorization=; Max-Age=0; Path=/custom/graphql; HttpOnly; Secure; SameSite=Lax',
       ],
     ]);
   });
