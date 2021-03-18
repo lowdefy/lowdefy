@@ -22,11 +22,12 @@ import createGetLoader from './getLoader';
 import verifyAccessToken from './verifyAccessToken';
 
 function createContext(config) {
-  const { CONFIGURATION_BASE_PATH, development, getSecrets, logger } = config;
+  const { CONFIGURATION_BASE_PATH, development, getSecrets, logger, gqlUri } = config;
   const bootstrapContext = {
     CONFIGURATION_BASE_PATH,
     development,
     getSecrets,
+    gqlUri,
     logger,
   };
 

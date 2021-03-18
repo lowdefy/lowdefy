@@ -19,6 +19,7 @@ import createGetController from '../controllers/getController';
 function testBootstrapContext({
   development,
   getSecrets,
+  gqlUri,
   headers,
   host,
   loaders,
@@ -31,6 +32,7 @@ function testBootstrapContext({
     getController: () => {},
     getLoader: loaders ? (name) => loaders[name] : () => {},
     getSecrets: getSecrets || (() => {}),
+    gqlUri,
     headers: headers || {},
     host: host || 'host',
     logger: { log: () => {} },
@@ -41,11 +43,21 @@ function testBootstrapContext({
   return bootstrapContext;
 }
 
-function testContext({ development, getSecrets, host, loaders, setHeader, user, headers } = {}) {
+function testContext({
+  development,
+  getSecrets,
+  gqlUri,
+  host,
+  loaders,
+  setHeader,
+  user,
+  headers,
+} = {}) {
   const bootstrapContext = {
     development,
     getLoader: (name) => loaders[name],
     getSecrets: getSecrets || (() => {}),
+    gqlUri,
     host: host || 'host',
     headers: headers || {},
     logger: { log: () => {} },

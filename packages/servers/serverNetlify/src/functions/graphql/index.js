@@ -24,6 +24,7 @@ import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
 const config = {
   CONFIGURATION_BASE_PATH: path.resolve(__dirname, './build'),
   getSecrets: createGetSecretsFromEnv(),
+  gqlUri: '/.netlify/functions/graphql',
   logger: console,
 };
 
