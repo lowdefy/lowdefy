@@ -70,6 +70,44 @@ _ref:
             - Phoebe Buffay
             - Joey Tribbiani
           ```
+      - name: defineProperty
+        types: |
+          ```
+          (arguments: {
+            on: object,
+            key: string,
+            descriptor: {
+              value: any,
+              configurable?: boolean,
+              enumerable?: boolean,
+              writable?: boolean
+            }
+          }): any
+          (arguments: [
+            on: any[],
+            callback: function,
+          ]): any
+          ```
+        description: |
+          The `_object.defineProperty` method defines a new property directly on an object, or modifies an existing property on an object, and returns the object. The first object in the arguments array, or the `on` parameter, is the target object to which the property will be applied. The second argument, or the `key` parameter, is the property name or key which will be applied to the target object. The third and last object argument, or the `descriptor` parameter, has serval options to consider, however, for the most common application set the `value` object key to the value that should be applied to the target object key. See [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) for a more detailed description.
+
+          > The `_object.defineProperty` method is handy when the `key` to set is variable.
+        examples: |
+          ###### Set a value to a object key:
+          ```yaml
+          _object.defineProperty:
+            - firstName: Rachel
+              series: Friends
+            - lastName
+            - descriptor:
+                value: Green
+          ```
+          Returns:
+          ```yaml
+          firstName: Rachel
+          lastName: Green
+          series: Friends
+          ```
       - name: keys
         types: |
           ```

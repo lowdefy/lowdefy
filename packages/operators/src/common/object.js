@@ -25,6 +25,7 @@ const metaClass = {
   keys: { singleArg: true, validTypes: ['object'] },
   values: { singleArg: true, validTypes: ['object'] },
   assign: { spreadArgs: true, validTypes: ['array'] },
+  defineProperty: { namedArgs: ['on', 'key', 'descriptor'], validTypes: ['array', 'object'] },
 };
 
 function _object({ params, location, methodName }) {
