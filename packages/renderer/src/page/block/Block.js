@@ -24,9 +24,7 @@ import CategorySwitch from './CategorySwitch';
 
 const Block = ({ block, Blocks, context, lowdefy }) => {
   const [updates, setUpdate] = useState(0);
-  useEffect(() => {
-    lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
-  });
+  lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
   const Loading = (
     <LoadingBlock
       blockId={block.blockId}
