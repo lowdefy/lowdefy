@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency openid-client to v4.5.1 ([b6a7cd8](https://github.com/lowdefy/lowdefy/commit/b6a7cd8cb7f0fbf05cf1ccdc91fea7fe7d808847))
+* **server-netlify:** Fix auth token cookie path. ([6784e27](https://github.com/lowdefy/lowdefy/commit/6784e2756a9fb0b0dff6f3df572d6916040b687a))
+
+
+
+
+
 ## [3.11.3](https://github.com/lowdefy/lowdefy/compare/v3.11.2...v3.11.3) (2021-03-12)
 
 
