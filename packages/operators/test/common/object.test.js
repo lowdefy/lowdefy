@@ -231,9 +231,64 @@ describe('_object.assign', () => {
   });
 });
 
+// NOTE: Explicitly test for assign values.
+// One of the properties of property descriptors is enumerable, which has the default value false.
+// If a property is non-enumerable, Node.js chooses not to display the property, thats it.
+// https://stackoverflow.com/a/50951216/2453657
+describe('_object.defineProperty', () => {
+  const methodName = 'defineProperty';
+  test('valid', () => {
+    let obj = { a: 1 };
+    object({
+      params: { on: obj, key: 'new', descriptor: { value: 6 } },
+      methodName,
+      location,
+    });
+    expect(obj.new).toEqual(6);
+    obj = { a: 2 };
+    object({
+      params: [obj, 'newer', { value: 6 }],
+      methodName,
+      location,
+    });
+    expect(obj.newer).toEqual(6);
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: [],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _object.defineProperty - Object.defineProperty called on non-object Received: {\\"_object.defineProperty\\":[]} at locationId."`
+    );
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.defineProperty accepts one of the following types: array, object.
+            Received: {\\"_object.defineProperty\\":\\"x\\"} at locationId."
+    `);
+    expect(() =>
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.defineProperty accepts one of the following types: array, object.
+            Received: {\\"_object.defineProperty\\":null} at locationId."
+    `);
+  });
+});
+
 test('_object called with no method or params', () => {
   expect(() => object({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object requires a valid method name, use one of the following: keys, values, assign.
+    "Operator Error: _object requires a valid method name, use one of the following: keys, values, assign, defineProperty.
             Received: {\\"_object.undefined\\":undefined} at locationId."
   `);
 });
@@ -241,7 +296,7 @@ test('_object called with no method or params', () => {
 test('_object invalid method', () => {
   expect(() => object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.X is not supported, use one of the following: keys, values, assign.
+    "Operator Error: _object.X is not supported, use one of the following: keys, values, assign, defineProperty.
           Received: {\\"_object.X\\":[{\\"a\\":1}]} at locationId."
   `);
 });
@@ -249,7 +304,7 @@ test('_object invalid method', () => {
 test('_object invalid method args', () => {
   expect(() => object({ params: 'X', methodName: 'flat', location: 'locationId' }))
     .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _object.flat is not supported, use one of the following: keys, values, assign.
+    "Operator Error: _object.flat is not supported, use one of the following: keys, values, assign, defineProperty.
           Received: {\\"_object.flat\\":\\"X\\"} at locationId."
   `);
 });
