@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
+
+
+### Bug Fixes
+
+* **renderer:** Set updaters on every render, closes [#499](https://github.com/lowdefy/lowdefy/issues/499) ([b68e5bd](https://github.com/lowdefy/lowdefy/commit/b68e5bd29b9f1b3762d7dba9558df769f1ab22ad))
+
+
+
+
+
 ## [3.11.3](https://github.com/lowdefy/lowdefy/compare/v3.11.2...v3.11.3) (2021-03-12)
 
 

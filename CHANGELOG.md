@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
+
+### Features
+
+- Add \_object.defineProperty operator.
+
+### Fixes
+
+- OpenID Connect for Netlify deployment fix.
+- Block update on loading complete.
+
+### Documentation
+
+- Add \_object.defineProperty operator.
+
+### Bug Fixes
+
+- **deps:** update dependency openid-client to v4.5.1 ([b6a7cd8](https://github.com/lowdefy/lowdefy/commit/b6a7cd8cb7f0fbf05cf1ccdc91fea7fe7d808847))
+- **docs:** typo \_object.defineProperty docs. ([c99ef38](https://github.com/lowdefy/lowdefy/commit/c99ef387a7d749874eb0df00b244b9766c587283))
+- **operators:** Add \_object.defineProperty operator. ([52f598f](https://github.com/lowdefy/lowdefy/commit/52f598fe8c8f93ebe93f0e1293057af0efa31e70))
+- **renderer:** Set updaters on every render, closes [#499](https://github.com/lowdefy/lowdefy/issues/499) ([b68e5bd](https://github.com/lowdefy/lowdefy/commit/b68e5bd29b9f1b3762d7dba9558df769f1ab22ad))
+- **server-netlify:** Fix auth token cookie path. ([6784e27](https://github.com/lowdefy/lowdefy/commit/6784e2756a9fb0b0dff6f3df572d6916040b687a))
+
 ## [3.11.3](https://github.com/lowdefy/lowdefy/compare/v3.11.2...v3.11.3) (2021-03-12)
 
 ### Fixes

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/build",
-  "version": "3.11.3",
+  "version": "3.11.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -36,10 +36,10 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "3.11.3",
-    "@lowdefy/helpers": "3.11.3",
-    "@lowdefy/node-utils": "3.11.3",
-    "@lowdefy/nunjucks": "3.11.3",
+    "@lowdefy/ajv": "3.11.4",
+    "@lowdefy/helpers": "3.11.4",
+    "@lowdefy/node-utils": "3.11.4",
+    "@lowdefy/nunjucks": "3.11.4",
     "ajv": "6.12.6",
     "axios": "0.21.1",
     "dataloader": "2.0.0",

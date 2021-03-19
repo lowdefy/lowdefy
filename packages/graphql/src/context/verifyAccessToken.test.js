@@ -122,3 +122,22 @@ test('development header', async () => {
     ['Set-Cookie', 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; SameSite=Lax'],
   ]);
 });
+
+test('configure gqlUri', async () => {
+  const cookie = await createCookieHeader({ expired: true });
+
+  let bootstrapContext = testBootstrapContext({
+    headers: { cookie },
+    getSecrets,
+    gqlUri: '/custom/graphql',
+    setHeader,
+  });
+  await expect(verifyAccessToken(bootstrapContext)).rejects.toThrow(TokenExpiredError);
+  expect(setHeader.mock.calls).toEqual([
+    [
+      'Set-Cookie',
+      'authorization=; Max-Age=0; Path=/custom/graphql; HttpOnly; Secure; SameSite=Lax',
+    ],
+  ]);
+  await expect(verifyAccessToken(bootstrapContext)).rejects.toThrow('Token expired.');
+});
