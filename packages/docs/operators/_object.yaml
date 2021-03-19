@@ -84,8 +84,14 @@ _ref:
             }
           }): any
           (arguments: [
-            on: any[],
-            callback: function,
+            on: object,
+            key: string,
+            descriptor: {
+              value: any,
+              configurable?: boolean,
+              enumerable?: boolean,
+              writable?: boolean
+            }
           ]): any
           ```
         description: |
