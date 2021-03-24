@@ -11,7 +11,7 @@ See the [ECharts docs](https://echarts.apache.org/en/api.html#echarts) for the c
 
 ```yaml
 name: my-app
-lowdefy: 3.12.1
+lowdefy: 3.12.2
 pages:
   - id: dashboard
     type: PageHeaderMenu

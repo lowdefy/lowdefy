@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-color-selectors",
-  "version": "3.12.1",
+  "version": "3.12.2",
   "license": "Apache-2.0",
   "description": "A Lowdefy color selector blocks based on react-color.",
   "homepage": "https://lowdefy.com",
@@ -40,8 +40,8 @@
     "test": "jest --coverage --config jest.config.js --no-cache"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.12.1",
-    "@lowdefy/blocks-antd": "3.12.1",
+    "@lowdefy/block-tools": "3.12.2",
+    "@lowdefy/blocks-antd": "3.12.2",
     "react": "17.0.1",
     "react-color": "2.19.3",
     "react-dom": "17.0.1"
@@ -51,7 +51,7 @@
     "@babel/core": "7.12.16",
     "@babel/preset-env": "7.12.16",
     "@babel/preset-react": "7.12.13",
-    "@lowdefy/helpers": "3.12.1",
+    "@lowdefy/helpers": "3.12.2",
     "@wojtekmaj/enzyme-adapter-react-17": "0.4.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
