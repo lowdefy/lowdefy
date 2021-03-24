@@ -70,7 +70,6 @@ class EChart extends React.Component {
     }
   }
   triggerEvent(name, event) {
-    console.log(name, event);
     this.props.methods.triggerEvent({
       name,
       event,
