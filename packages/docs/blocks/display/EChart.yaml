@@ -20,7 +20,7 @@ _ref:
     schema: ../blocks/blocksECharts/src/blocks/EChart/EChart.json
     filePath: blocks/display/EChart.yaml
     init_property_values:
-      option:
+      option: |
         xAxis:
           type: category
           data:
