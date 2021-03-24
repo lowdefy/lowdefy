@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.12.0](https://github.com/lowdefy/lowdefy/compare/v3.11.4...v3.12.0) (2021-03-24)
+
+## Changes
+
+### Fixes
+
+- Size loading block based on block layout and style settings.
+
+### Features
+
+- Add EChart block 🎁.
+
+## Commits
+
+### Bug Fixes
+
+- **renderer:** Loading to size loading block based on block size. ([16e2930](https://github.com/lowdefy/lowdefy/commit/16e29308403484ca61217dedd4c7f3312aa7c933))
+
+### Features
+
+- **blockECharts:** Add EChart block 🎁. ([deff965](https://github.com/lowdefy/lowdefy/commit/deff96504ff1b24152a82458511b0426cec5d8ee))
+- **docs:** Add docs for EChart block. ([9f7b31a](https://github.com/lowdefy/lowdefy/commit/9f7b31a809d8bcc04a67ada5ba941f1484a3c665))
+
 ## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
 
 ### Features

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.11.4'
+lowdefy: '3.12.0'
 licence: Apache-2.0
 
 global:
@@ -291,9 +291,9 @@ menus:
           - id: Divider
             type: MenuLink
             pageId: Divider
-          # - id: EChart
-          #   type: MenuLink
-          #   pageId: EChart
+          - id: EChart
+            type: MenuLink
+            pageId: EChart
           - id: Html
             type: MenuLink
             pageId: Html
@@ -713,7 +713,7 @@ pages:
   - _ref: blocks/display/DangerousMarkdown.yaml
   - _ref: blocks/display/Descriptions.yaml
   - _ref: blocks/display/Divider.yaml
-  # - _ref: blocks/display/EChart.yaml
+  - _ref: blocks/display/EChart.yaml
   - _ref: blocks/display/Html.yaml
   - _ref: blocks/display/Icon.yaml
   - _ref: blocks/display/Markdown.yaml
