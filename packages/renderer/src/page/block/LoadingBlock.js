@@ -1,19 +1,20 @@
 import React from 'react';
-import { Loading } from '@lowdefy/block-tools';
+import { Loading, makeCssClass } from '@lowdefy/block-tools';
 import { get } from '@lowdefy/helpers';
-
 import { BlockLayout } from '@lowdefy/layout';
-import { makeCssClass } from '@lowdefy/block-tools';
 
-const LoadingBlock = ({ blockId, meta, highlightBorders }) => (
+const LoadingBlock = ({ block, highlightBorders }) => (
   <BlockLayout
-    id={`bl-loading-${blockId}`}
-    blockStyle={get(meta, 'loading.style', { default: {} })}
+    id={`bl-loading-${block.blockId}`}
+    blockStyle={get(block, 'eval.style') || get(block, 'meta.loading.style', { default: {} })}
     highlightBorders={highlightBorders}
-    layout={get(meta, 'loading.layout', { default: {} })}
+    layout={get(block, 'eval.layout') || get(block, 'meta.loading.layout', { default: {} })}
     makeCssClass={makeCssClass}
   >
-    <Loading properties={get(meta, 'loading.properties')} type={get(meta, 'loading.type')} />
+    <Loading
+      properties={get(block, 'meta.loading.properties')}
+      type={get(block, 'meta.loading.type')}
+    />
   </BlockLayout>
 );
 

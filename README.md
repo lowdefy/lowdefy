@@ -66,6 +66,11 @@ This example demonstrates useful patterns for building a BI report/dashboard pag
 - [Example demo.](https://example-reporting.lowdefy.com)
 - [App source code.](https://github.com/lowdefy/lowdefy-example-reporting)
 
+## Other Lowdefy Blocks Packages
+
+- [@lowdefy/blocks-aggrid](https://github.com/lowdefy/blocks-aggrid): Lowdefy blocks to render [Ag-Grid](https://www.ag-grid.com/) tables.
+- [@lowdefy/blocks-amcharts](https://github.com/lowdefy/blocks-amcharts): Lowdefy blocks to render [AmCharts v4](https://www.amcharts.com/).
+
 ## More Lowdefy resources
 
 - Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
