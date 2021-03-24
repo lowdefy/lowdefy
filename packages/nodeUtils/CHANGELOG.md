@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.2](https://github.com/lowdefy/lowdefy/compare/v3.12.1...v3.12.2) (2021-03-24)
+
+**Note:** Version bump only for package @lowdefy/node-utils
+
+
+
+
+
+## [3.12.1](https://github.com/lowdefy/lowdefy/compare/v3.12.0...v3.12.1) (2021-03-24)
+
+**Note:** Version bump only for package @lowdefy/node-utils
+
+
+
+
+
+# [3.12.0](https://github.com/lowdefy/lowdefy/compare/v3.11.4...v3.12.0) (2021-03-24)
+
+**Note:** Version bump only for package @lowdefy/node-utils
+
+
+
+
+
 ## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
 
 **Note:** Version bump only for package @lowdefy/node-utils

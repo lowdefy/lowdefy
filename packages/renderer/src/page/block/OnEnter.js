@@ -15,8 +15,8 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { Loading } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
+
+import LoadingBlock from './LoadingBlock';
 
 const triggerEvent = ({ name, context }) => {
   return context.RootBlocks.areas.root.blocks[0].triggerEvent({
@@ -24,7 +24,7 @@ const triggerEvent = ({ name, context }) => {
   });
 };
 
-const OnEnter = ({ block, context, render }) => {
+const OnEnter = ({ block, context, render, lowdefy }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -49,12 +49,7 @@ const OnEnter = ({ block, context, render }) => {
   if (error) throw error;
 
   if (loading)
-    return (
-      <Loading
-        properties={get(block, 'meta.loading.properties')}
-        type={get(block, 'meta.loading.type')}
-      />
-    );
+    return <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />;
 
   return render(context);
 };

@@ -15,11 +15,10 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { Loading } from '@lowdefy/block-tools';
-import { get } from '@lowdefy/helpers';
 import getContext from '@lowdefy/engine';
 
 import OnEnter from './OnEnter';
+import LoadingBlock from './LoadingBlock';
 
 const Context = ({ block, contextId, render, lowdefy }) => {
   const [context, setContext] = useState({});
@@ -46,18 +45,12 @@ const Context = ({ block, contextId, render, lowdefy }) => {
       mounted = false;
     };
   }, [block, lowdefy, contextId]);
-
   if (context.id !== contextId)
-    return (
-      <Loading
-        properties={get(block, 'meta.loading.properties')}
-        type={get(block, 'meta.loading.type')}
-      />
-    );
+    return <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />;
 
   if (error) throw error;
 
-  return <OnEnter block={block} context={context} render={render} />;
+  return <OnEnter block={block} context={context} render={render} lowdefy={lowdefy} />;
 };
 
 export default Context;

@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.2](https://github.com/lowdefy/lowdefy/compare/v3.12.1...v3.12.2) (2021-03-24)
+
+## Changes
+
+### Fixes
+
+- Fix ECharts remoteEntry path for block meta data.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksECharts:** Correct the remoteEntry path for ECharts. ([f99cccc](https://github.com/lowdefy/lowdefy/commit/f99cccc28df53bc00bcced137820e6e89b206f3a))
+
+## [3.12.1](https://github.com/lowdefy/lowdefy/compare/v3.12.0...v3.12.1) (2021-03-24)
+
+## Changes
+
+### Fixes
+
+- Fix EChart schema definition for docs.
+- Add @lowdefy/blocks-echarts to Lowdefy CDN.
+
+## Commits
+
+### Bug Fixes
+
+- Fix docs issue and add echarts to github actions cdn. ([7509914](https://github.com/lowdefy/lowdefy/commit/7509914051cbad6f2f17b31542c9700ac65b6ef2))
+
+# [3.12.0](https://github.com/lowdefy/lowdefy/compare/v3.11.4...v3.12.0) (2021-03-24)
+
+## Changes
+
+### Fixes
+
+- Size loading block based on block layout and style settings.
+
+### Features
+
+- Add EChart block 🎁.
+
+## Commits
+
+### Bug Fixes
+
+- **renderer:** Loading to size loading block based on block size. ([16e2930](https://github.com/lowdefy/lowdefy/commit/16e29308403484ca61217dedd4c7f3312aa7c933))
+
+### Features
+
+- **blockECharts:** Add EChart block 🎁. ([deff965](https://github.com/lowdefy/lowdefy/commit/deff96504ff1b24152a82458511b0426cec5d8ee))
+- **docs:** Add docs for EChart block. ([9f7b31a](https://github.com/lowdefy/lowdefy/commit/9f7b31a809d8bcc04a67ada5ba941f1484a3c665))
+
 ## [3.11.4](https://github.com/lowdefy/lowdefy/compare/v3.11.3...v3.11.4) (2021-03-19)
 
 ### Features

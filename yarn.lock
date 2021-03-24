@@ -2687,14 +2687,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/ajv@3.11.4, @lowdefy/ajv@workspace:packages/ajv":
+"@lowdefy/ajv@3.12.2, @lowdefy/ajv@workspace:packages/ajv":
   version: 0.0.0-use.local
   resolution: "@lowdefy/ajv@workspace:packages/ajv"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/nunjucks": 3.11.4
+    "@lowdefy/nunjucks": 3.12.2
     ajv: 6.12.6
     ajv-errors: 1.0.1
     babel-jest: 26.6.3
@@ -2703,7 +2703,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-tools@3.11.4, @lowdefy/block-tools@workspace:packages/blockTools":
+"@lowdefy/block-tools@3.12.2, @lowdefy/block-tools@workspace:packages/blockTools":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-tools@workspace:packages/blockTools"
   dependencies:
@@ -2711,7 +2711,7 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/helpers": 3.12.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     ajv: 6.12.6
     ajv-errors: 1.0.1
@@ -2742,7 +2742,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-antd@3.11.4, @lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd":
+"@lowdefy/blocks-antd@3.12.2, @lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-antd@workspace:packages/blocks/blocksAntd"
   dependencies:
@@ -2751,9 +2751,9 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/color": 3.11.4
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/color": 3.12.2
+    "@lowdefy/helpers": 3.12.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     antd: 4.4.2
     babel-jest: 26.6.3
@@ -2798,8 +2798,8 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/helpers": 3.12.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2835,9 +2835,9 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/blocks-antd": 3.11.4
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/blocks-antd": 3.12.2
+    "@lowdefy/helpers": 3.12.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2870,6 +2870,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/blocks-echarts@workspace:packages/blocks/blocksECharts":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/blocks-echarts@workspace:packages/blocks/blocksECharts"
+  dependencies:
+    "@babel/cli": 7.12.16
+    "@babel/core": 7.12.16
+    "@babel/preset-env": 7.12.16
+    "@babel/preset-react": 7.12.13
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    babel-jest: 26.6.3
+    babel-loader: 8.2.2
+    buffer: 6.0.3
+    clean-webpack-plugin: 3.0.0
+    copy-webpack-plugin: 7.0.0
+    css-loader: 5.0.2
+    echarts: 5.0.2
+    echarts-for-react: 3.0.1
+    html-webpack-plugin: 5.1.0
+    identity-obj-proxy: 3.0.0
+    jest: 26.6.3
+    js-yaml: 4.0.0
+    react: 17.0.1
+    react-dom: 17.0.1
+    react-markdown: 5.0.3
+    react-syntax-highlighter: 15.4.3
+    style-loader: 2.0.0
+    tslib: 2.1.0
+    webpack: 5.22.0
+    webpack-cli: 4.5.0
+    webpack-dev-server: 3.11.2
+    webpack-merge: 5.7.3
+    yaml-jest: 1.0.5
+    yaml-loader: 0.6.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/blocks-markdown@workspace:packages/blocks/blocksMarkdown":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-markdown@workspace:packages/blocks/blocksMarkdown"
@@ -2878,8 +2915,8 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/helpers": 3.12.2
     "@wojtekmaj/enzyme-adapter-react-17": 0.4.1
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -2918,10 +2955,10 @@ __metadata:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/ajv": 3.11.4
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
-    "@lowdefy/nunjucks": 3.11.4
+    "@lowdefy/ajv": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
+    "@lowdefy/nunjucks": 3.12.2
     ajv: 6.12.6
     axios: 0.21.1
     babel-jest: 26.6.3
@@ -2937,7 +2974,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/color@3.11.4, @lowdefy/color@workspace:packages/color":
+"@lowdefy/color@3.12.2, @lowdefy/color@workspace:packages/color":
   version: 0.0.0-use.local
   resolution: "@lowdefy/color@workspace:packages/color"
   dependencies:
@@ -2962,15 +2999,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@3.11.4, @lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@3.12.2, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/operators": 3.11.4
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/operators": 3.12.2
     babel-jest: 26.6.3
     graphql: 15.5.0
     graphql-tag: 2.11.0
@@ -2978,7 +3015,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/format@3.11.4, @lowdefy/format@workspace:packages/format":
+"@lowdefy/format@3.12.2, @lowdefy/format@workspace:packages/format":
   version: 0.0.0-use.local
   resolution: "@lowdefy/format@workspace:packages/format"
   dependencies:
@@ -2998,7 +3035,7 @@ __metadata:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/graphql": 3.11.4
+    "@lowdefy/graphql": 3.12.2
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     webpack: 5.22.0
@@ -3006,18 +3043,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/graphql@3.11.4, @lowdefy/graphql@workspace:packages/graphql":
+"@lowdefy/graphql@3.12.2, @lowdefy/graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/graphql@workspace:packages/graphql"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/ajv": 3.11.4
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
-    "@lowdefy/nunjucks": 3.11.4
-    "@lowdefy/operators": 3.11.4
+    "@lowdefy/ajv": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
+    "@lowdefy/nunjucks": 3.12.2
+    "@lowdefy/operators": 3.12.2
     "@sendgrid/mail": 7.4.2
     "@shelf/jest-mongodb": 1.2.3
     ajv: 6.12.6
@@ -3046,7 +3083,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/helpers@3.11.4, @lowdefy/helpers@workspace:packages/helpers":
+"@lowdefy/helpers@3.12.2, @lowdefy/helpers@workspace:packages/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/helpers"
   dependencies:
@@ -3061,7 +3098,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/layout@3.11.4, @lowdefy/layout@workspace:packages/layout":
+"@lowdefy/layout@3.12.2, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
   dependencies:
@@ -3069,8 +3106,8 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/helpers": 3.12.2
     antd: 4.4.2
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3118,14 +3155,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@3.11.4, @lowdefy/node-utils@workspace:packages/nodeUtils":
+"@lowdefy/node-utils@3.12.2, @lowdefy/node-utils@workspace:packages/nodeUtils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/node-utils@workspace:packages/nodeUtils"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/helpers": 3.12.2
     babel-jest: 26.6.3
     jest: 26.6.3
     jest-diff: 26.6.2
@@ -3133,14 +3170,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/nunjucks@3.11.4, @lowdefy/nunjucks@workspace:packages/nunjucks":
+"@lowdefy/nunjucks@3.12.2, @lowdefy/nunjucks@workspace:packages/nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/nunjucks"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/helpers": 3.11.4
+    "@lowdefy/helpers": 3.12.2
     babel-jest: 26.6.3
     jest: 26.6.3
     nunjucks: 3.2.3
@@ -3148,16 +3185,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@3.11.4, @lowdefy/operators@workspace:packages/operators":
+"@lowdefy/operators@3.12.2, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
     "@babel/cli": 7.12.16
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
-    "@lowdefy/format": 3.11.4
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/nunjucks": 3.11.4
+    "@lowdefy/format": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/nunjucks": 3.12.2
     babel-jest: 26.6.3
     deep-diff: 1.0.2
     jest: 26.6.3
@@ -3177,10 +3214,10 @@ __metadata:
     "@apollo/link-retry": 2.0.0-beta.3
     "@babel/core": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/engine": 3.11.4
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/layout": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/engine": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/layout": 3.12.2
     babel-loader: 8.2.2
     clean-webpack-plugin: 3.0.0
     css-loader: 5.0.2
@@ -3208,9 +3245,9 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/graphql": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/graphql": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
     apollo-server-express: 2.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3239,9 +3276,9 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/graphql": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/graphql": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
     apollo-server-express: 2.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -3269,9 +3306,9 @@ __metadata:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/graphql": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/graphql": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
     apollo-server-express: 2.21.0
     babel-jest: 26.6.3
     babel-loader: 8.2.2
@@ -8385,6 +8422,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"echarts-for-react@npm:3.0.1":
+  version: 3.0.1
+  resolution: "echarts-for-react@npm:3.0.1"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+    size-sensor: ^1.0.1
+  peerDependencies:
+    echarts: ^3.0.0 || ^4.0.0 || ^5.0.0
+    react: ^15.0.0 || >=16.0.0
+  checksum: ca48af1b04d3295e65a9419986eb0cd66df08dd2b63f47e7f723afdc2627f08404d4ec8b54c35565098a39e556ffd4a82da65aec9b78e9c2efe0d9c56af51c69
+  languageName: node
+  linkType: hard
+
+"echarts@npm:5.0.2":
+  version: 5.0.2
+  resolution: "echarts@npm:5.0.2"
+  dependencies:
+    tslib: 2.0.3
+    zrender: 5.0.4
+  checksum: 1e0953adca47d3c8d954c5702d27bd39dd99047c5ccde8f08c709b63f39e11df015ab7b6253ee1336dd7797c6c2ba362c69e788d417aecf18fc8d0139764282a
+  languageName: node
+  linkType: hard
+
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -9365,7 +9425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-deep-equal@npm:^3.1.1":
+"fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
   checksum: 451526766b219503131d11e823eaadd1533080b0be4860e316670b039dcaf31cd1007c2fe036a9b922abba7c040dfad5e942ed79d21f2ff849e50049f36e0fb7
@@ -13376,9 +13436,9 @@ fsevents@^1.2.7:
     "@babel/core": 7.12.16
     "@babel/preset-env": 7.12.16
     "@babel/preset-react": 7.12.13
-    "@lowdefy/block-tools": 3.11.4
-    "@lowdefy/helpers": 3.11.4
-    "@lowdefy/node-utils": 3.11.4
+    "@lowdefy/block-tools": 3.12.2
+    "@lowdefy/helpers": 3.12.2
+    "@lowdefy/node-utils": 3.12.2
     apollo-server-express: 2.21.0
     axios: 0.21.1
     babel-jest: 26.6.3
@@ -18409,6 +18469,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"size-sensor@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "size-sensor@npm:1.0.1"
+  checksum: d99febc95401b542caaba246861cbb0cdffc4ac5a93608340c99336d653fa558d9dd6bb181c6e414c61f6913ff4cb936a4a9b4c69160e108507fdf742c72414e
+  languageName: node
+  linkType: hard
+
 "slash@npm:^2.0.0":
   version: 2.0.0
   resolution: "slash@npm:2.0.0"
@@ -19733,17 +19800,24 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.0.3":
+  version: 2.0.3
+  resolution: "tslib@npm:2.0.3"
+  checksum: 447bfca5deaa157806c3f77eaba74d05dd0b38b014e47ce79d98b5c77ce7d91b00a687ba13ca1b5a74d35ca1098ac7a072c0a97fad06f0266612f2a03a6c8e8f
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.1.0, tslib@npm:^2.0.3":
+  version: 2.1.0
+  resolution: "tslib@npm:2.1.0"
+  checksum: d8f5bdd067611651c6b846c2388f4dc8ba1f5af124e66105f5263d1ad56da17f4b8c6566887ca2f205c5a9758451871ceca87d5d06087af2dca1699c5e33db69
+  languageName: node
+  linkType: hard
+
 "tslib@npm:^1.10.0, tslib@npm:^1.13.0, tslib@npm:^1.14.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: f44fe7f216946b17d3e3074df3746372703cf24e9127b4c045511456e8e4bf25515fb0a1bb3937676cc305651c5d4fcb6377b0588a4c6a957e748c4c28905d17
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.0.3":
-  version: 2.1.0
-  resolution: "tslib@npm:2.1.0"
-  checksum: d8f5bdd067611651c6b846c2388f4dc8ba1f5af124e66105f5263d1ad56da17f4b8c6566887ca2f205c5a9758451871ceca87d5d06087af2dca1699c5e33db69
   languageName: node
   linkType: hard
 
@@ -21123,6 +21197,15 @@ fsevents@^1.2.7:
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: 7d155f8a75b9314f9f31e70a31edcd897b0e8a1313737502ab84a573e49d2c333b738e415c156334a6e910c363ce546b59fa7921eff61440285caa99c843df74
+  languageName: node
+  linkType: hard
+
+"zrender@npm:5.0.4":
+  version: 5.0.4
+  resolution: "zrender@npm:5.0.4"
+  dependencies:
+    tslib: 2.0.3
+  checksum: dc8cf5c1c9cbecf4a06b65b0adfb2501798791c88ca5f75b3f2022160fcebdbb2e26e323abd27b31acba757215f992dc497c80aa2ff0ffbb3687499d9781225e
   languageName: node
   linkType: hard
 

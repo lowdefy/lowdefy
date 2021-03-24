@@ -265,6 +265,10 @@ const defaultMetaLocations = {
   DangerousMarkdown: {
     url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-markdown/meta/DangerousMarkdown.json`,
   },
+  // @lowdefy/blocks-echarts
+  EChart: {
+    url: `https://blocks-cdn.lowdefy.com/v${version}/blocks-echarts/meta/EChart.json`,
+  },
 };
 
 export default defaultMetaLocations;
