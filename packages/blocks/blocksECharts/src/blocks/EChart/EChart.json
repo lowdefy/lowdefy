@@ -28,12 +28,18 @@
         "width": {
           "type": ["number", "string"],
           "default": "auto",
-          "description": "Specify chart width explicitly, in pixel."
+          "description": "Specify chart width explicitly, in pixel.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "height": {
           "type": ["number", "string"],
           "default": "auto",
-          "description": "Specify chart height explicitly, in pixel."
+          "description": "Specify chart height explicitly, in pixel.",
+          "docs": {
+            "displayType": "string"
+          }
         },
         "init": {
           "type": "object",
