@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "3.12.0",
+  "version": "3.12.1",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -40,8 +40,8 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "3.12.0",
-    "@lowdefy/node-utils": "3.12.0",
+    "@lowdefy/helpers": "3.12.1",
+    "@lowdefy/node-utils": "3.12.1",
     "apollo-server-express": "2.21.0",
     "axios": "0.21.1",
     "chalk": "4.1.0",
@@ -65,7 +65,7 @@
     "@babel/core": "7.12.16",
     "@babel/preset-env": "7.12.16",
     "@babel/preset-react": "7.12.13",
-    "@lowdefy/block-tools": "3.12.0",
+    "@lowdefy/block-tools": "3.12.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
