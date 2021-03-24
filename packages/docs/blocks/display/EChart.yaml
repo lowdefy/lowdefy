@@ -48,6 +48,6 @@ _ref:
 
       This implementation is a minimal wrapper for the [echarts-for-react](https://www.npmjs.com/package/echarts-for-react) package. This means you write normal EChart config to create charts.
 
-      See the [ECharts docs](https://echarts.apache.org/en/api.html#echarts) for the chart settings API. See the [ECharts theme builder](https://echarts.apache.org/en/theme-builder.html) to crete beutiful custom themes.
+      See the [ECharts docs](https://echarts.apache.org/en/api.html#echarts) for the chart settings API. See the [ECharts theme builder](https://echarts.apache.org/en/theme-builder.html) to create beautiful custom themes.
 
       > View more [EChart examples](https://echarts.apache.org/examples/en/index.html).
