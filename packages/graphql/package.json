@@ -58,7 +58,7 @@
     "mingo": "4.1.2",
     "moment": "2.29.1",
     "mongodb": "3.6.4",
-    "openid-client": "4.5.1",
+    "openid-client": "4.5.2",
     "saslprep": "1.0.3"
   },
   "devDependencies": {
