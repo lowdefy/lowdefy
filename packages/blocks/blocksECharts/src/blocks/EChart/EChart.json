@@ -37,7 +37,7 @@
         },
         "init": {
           "type": "object",
-          "description": "EChart inti object.",
+          "description": "EChart init object.",
           "properties": {
             "renderer": {
               "type": "string",
