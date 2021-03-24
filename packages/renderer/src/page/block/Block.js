@@ -26,11 +26,7 @@ const Block = ({ block, Blocks, context, lowdefy }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
   const Loading = (
-    <LoadingBlock
-      blockId={block.blockId}
-      meta={block.meta}
-      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
-    />
+    <LoadingBlock block={block} highlightBorders={lowdefy.lowdefyGlobal.highlightBorders} />
   );
   return (
     <ErrorBoundary>
