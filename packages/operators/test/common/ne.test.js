@@ -25,7 +25,7 @@ test('_ne param 0 equal 1', () => {
   expect(ne({ params: [true, true], location })).toBe(false);
   expect(ne({ params: [false, false], location })).toBe(false);
   expect(ne({ params: ['123', '123'], location })).toBe(false);
-  expect(ne({ params: [new Date(1), new Date(1)], location })).toBe(false);
+  expect(ne({ params: [new Date(1).toString(), new Date(1).toString()], location })).toBe(false);
 });
 
 test('_ne param 0 not eq 1', () => {
@@ -36,6 +36,7 @@ test('_ne param 0 not eq 1', () => {
   expect(ne({ params: [null, 1], location })).toBe(true);
   expect(ne({ params: [null, 0], location })).toBe(true);
   expect(ne({ params: [new Date(1), new Date(2)], location })).toBe(true);
+  expect(ne({ params: [new Date(1), new Date(1)], location })).toBe(true);
   expect(ne({ params: [false, true], location })).toBe(true);
   expect(ne({ params: ['a', 'b'], location })).toBe(true);
   expect(ne({ params: ['aa', 'b'], location })).toBe(true);
