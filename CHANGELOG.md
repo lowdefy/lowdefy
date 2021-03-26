@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.3](https://github.com/lowdefy/lowdefy/compare/v3.12.2...v3.12.3) (2021-03-26)
+
+## Changes
+
+### Fixes
+
+- Fix renderer list and request race condition.
+
+### Features
+
+- Add `_ne` operator.
+
+## Commits
+
+### Bug Fixes
+
+- **renderer:** List render race condition, closes [#520](https://github.com/lowdefy/lowdefy/issues/520) ([07907df](https://github.com/lowdefy/lowdefy/commit/07907df30f3ad784709a500bf53c86dec739a0e1))
+- Update \_ne tests. ([5611439](https://github.com/lowdefy/lowdefy/commit/5611439c4fa2eeae0968ed0f99be4e73465875a1))
+- **operators:** Add \_ne operator. ([d7b62e0](https://github.com/lowdefy/lowdefy/commit/d7b62e0b898d8948ab77d9800ec0b8afdd2d8503))
+
 ## [3.12.2](https://github.com/lowdefy/lowdefy/compare/v3.12.1...v3.12.2) (2021-03-24)
 
 ## Changes
