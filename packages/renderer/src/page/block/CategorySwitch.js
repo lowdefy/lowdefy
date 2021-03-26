@@ -24,6 +24,7 @@ import Context from './Context';
 import List from './List';
 
 const CategorySwitch = ({ block, Blocks, Component, context, lowdefy }) => {
+  if (!block.eval) return null; // Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
 
@@ -34,8 +35,6 @@ const CategorySwitch = ({ block, Blocks, Component, context, lowdefy }) => {
           block={block}
           context={context}
           contextId={makeContextId({
-            // TODO: remove branch
-            branch: 'main',
             urlQuery: lowdefy.urlQuery,
             pageId: lowdefy.pageId,
             blockId: block.blockId,
