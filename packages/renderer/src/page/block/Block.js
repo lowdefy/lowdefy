@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-tools';
 
