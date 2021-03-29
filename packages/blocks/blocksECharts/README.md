@@ -1,11 +1,11 @@
 # Lowdefy ECharts Blocks
 
-Lowdefy blocks for [ECharts](https://echarts.apache.org/), is a feature rich javascript charting library.
+Lowdefy blocks for [Apache ECharts](https://echarts.apache.org/), is a feature rich javascript charting library.
 
 The implementation of these blocks is a minimal wrapper for the [echarts-for-react
 ](https://www.npmjs.com/package/echarts-for-react) package. This means you write normal EChart config to create charts.
 
-See the [ECharts docs](https://echarts.apache.org/en/api.html#echarts) for the chart settings API.
+See the [Apache ECharts docs](https://echarts.apache.org/en/api.html#echarts) for the chart settings API.
 
 ### EChart Example
 

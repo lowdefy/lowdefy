@@ -37,6 +37,7 @@ import _lt from './lt';
 import _lte from './lte';
 import _math from './math';
 import _mql from './mql';
+import _ne from './ne';
 import _not from './not';
 import _nunjucks from './nunjucks';
 import _object from './object';
@@ -79,6 +80,7 @@ export default {
   _lte,
   _math,
   _mql,
+  _ne,
   _not,
   _nunjucks,
   _object,
