@@ -3200,6 +3200,7 @@ __metadata:
     jest: 26.6.3
     js-yaml: 4.0.0
     mingo: 4.1.2
+    quickjs-emscripten: 0.11.0
     uuid: 8.3.2
   languageName: unknown
   linkType: soft
@@ -16347,6 +16348,13 @@ fsevents@^1.2.7:
   version: 5.1.1
   resolution: "quick-lru@npm:5.1.1"
   checksum: fafb2b2fa1a948d6f2e88d4a60571be70b316d9b0be857d24fba0ac28fc31acebf535b643fe968473d689f8c655bcb2a0e4da67912f571059a4e4eb15740b021
+  languageName: node
+  linkType: hard
+
+"quickjs-emscripten@npm:0.11.0":
+  version: 0.11.0
+  resolution: "quickjs-emscripten@npm:0.11.0"
+  checksum: a5cf45a1fdf570decbfd7f224f8cd5b36d838a669232d27cdc9f6ec5c617af1301a36c2c1e3fc4228bed1b65a347256ea0cb62774a00f1ff4d1edd172f101952
   languageName: node
   linkType: hard
 

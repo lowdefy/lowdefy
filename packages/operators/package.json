@@ -42,6 +42,7 @@
     "deep-diff": "1.0.2",
     "js-yaml": "4.0.0",
     "mingo": "4.1.2",
+    "quickjs-emscripten": "0.11.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
