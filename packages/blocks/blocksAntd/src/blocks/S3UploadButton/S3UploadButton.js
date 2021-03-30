@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { get } from '@lowdefy/helpers';
 import { Upload } from 'antd';
 
 import Button from '../Button/Button';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;
-  const { bucket, key } = s3Parameters[uid] || {};
+  const { bucket, key } = get(s3Parameters, 'uid', { default: {} });
   return { bucket, key, lastModified, name, percent, size, status, type, uid };
 };
 
