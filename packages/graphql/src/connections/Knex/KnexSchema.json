@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lowdefy Connection Schema - Knex",
+  "type": "object",
+  "required": ["client"],
+  "properties": {
+    "client": {
+      "type": "string",
+      "description": "SQL query string.",
+      "errorMessage": {
+        "type": "Knex connection property \"client\" should be a string."
+      }
+    },
+    "connection": {
+      "type": ["string", "object"],
+      "description": "SQL query string.",
+      "errorMessage": {
+        "type": "Knex connection property \"connection\" should be a string or object."
+      }
+    }
+  }
+}

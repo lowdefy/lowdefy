@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-import AwsS3Bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import Knex from './Knex/Knex';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import knex from 'knex';
+import schema from './KnexRawSchema.json';
 
-const resolvers = {
-  AwsS3Bucket,
-  AxiosHttp,
-  GoogleSheet,
-  Knex,
-  MongoDBCollection,
-  SendGridMail,
-};
+async function knexRaw({ request, connection }) {
+  const client = knex(connection);
+  const res = await client.raw(request.query, request.parameters);
+  Object.keys(res).forEach((key) => {
+    if (key.startsWith('_')) {
+      delete res[key];
+    }
+  });
+  return res;
+}
 
-export default resolvers;
+export default { resolver: knexRaw, schema, checkRead: false, checkWrite: false };

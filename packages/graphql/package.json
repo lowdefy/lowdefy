@@ -55,11 +55,16 @@
     "graphql": "15.5.0",
     "graphql-type-json": "0.3.2",
     "jsonwebtoken": "8.5.1",
+    "knex": "0.95.4",
     "mingo": "4.1.2",
     "moment": "2.29.1",
     "mongodb": "3.6.4",
+    "mssql": "6.3.1",
+    "mysql": "2.18.1",
     "openid-client": "4.5.2",
-    "saslprep": "1.0.3"
+    "pg": "8.5.1",
+    "saslprep": "1.0.3",
+    "sqlite3": "5.0.2"
   },
   "devDependencies": {
     "@babel/cli": "7.12.16",

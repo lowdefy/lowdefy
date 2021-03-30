@@ -14,20 +14,12 @@
   limitations under the License.
 */
 
-import AwsS3Bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import Knex from './Knex/Knex';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import { validate } from '@lowdefy/ajv';
+import Knex from './Knex';
 
-const resolvers = {
-  AwsS3Bucket,
-  AxiosHttp,
-  GoogleSheet,
-  Knex,
-  MongoDBCollection,
-  SendGridMail,
-};
+const { schema } = AxiosHttp;
 
-export default resolvers;
+test('All requests are present', () => {
+  expect(Knex.requests.KnexRaw).toBeDefined();
+});
+

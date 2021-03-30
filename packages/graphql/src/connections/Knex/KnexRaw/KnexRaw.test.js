@@ -14,20 +14,10 @@
   limitations under the License.
 */
 
-import AwsS3Bucket from './AwsS3Bucket/AwsS3Bucket';
-import AxiosHttp from './AxiosHttp/AxiosHttp';
-import GoogleSheet from './GoogleSheet/GoogleSheet';
-import Knex from './Knex/Knex';
-import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
-import SendGridMail from './SendGridMail/SendGridMail';
+import KnexRaw from './KnexRaw';
 
-const resolvers = {
-  AwsS3Bucket,
-  AxiosHttp,
-  GoogleSheet,
-  Knex,
-  MongoDBCollection,
-  SendGridMail,
-};
+const { resolver } = KnexRaw;
 
-export default resolvers;
+test('x', () => {
+  expect().toBe();
+})

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lowdefy Request Schema - KnexBuilder",
+  "type": "object",
+  "required": ["query"],
+  "properties": {
+    "query": {
+      "type": "array",
+      "description": "SQL query string.",
+      "errorMessage": {
+        "type": "KnexBuilder request property \"query\" should be an array."
+      }
+    }
+  }
+}
