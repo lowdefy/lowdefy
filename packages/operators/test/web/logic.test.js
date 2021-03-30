@@ -15,54 +15,7 @@
 */
 
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-};
-
-const contexts = {};
+import { context, contexts } from '../testContext';
 
 const arrayIndices = [1];
 
@@ -78,8 +31,9 @@ const False = false;
 
 console.error = () => {};
 
-test('_not', () => {
+test('_not', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   let res = parser.parse({ input: { _not: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -109,8 +63,9 @@ test('_not', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_and', () => {
+test('_and', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   let res = parser.parse({ input: { _and: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -156,8 +111,9 @@ test('_and', () => {
   `);
 });
 
-test('_or', () => {
+test('_or', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   let res = parser.parse({ input: { _or: arr0 }, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -203,8 +159,9 @@ test('_or', () => {
   `);
 });
 
-test('_eq', () => {
+test('_eq', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   let res = parser.parse({ input: { _eq: [1, 1] }, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -240,8 +197,9 @@ test('_eq', () => {
   `);
 });
 
-test('_if', () => {
+test('_if', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   let res = parser.parse({
     input: {
       _if: {

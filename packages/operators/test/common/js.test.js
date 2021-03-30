@@ -15,14 +15,10 @@
 */
 
 import _js from '../../src/common/js';
-import { getQuickJS } from 'quickjs-emscripten';
 
 const location = 'location';
-let instances;
 beforeAll(async () => {
-  const QuickJs = await getQuickJS();
-  const QuickJsVm = QuickJs.createVm();
-  instances = { QuickJsVm };
+  await _js.init();
 });
 
 test('_js.function with body and args specified', () => {
@@ -31,7 +27,7 @@ test('_js.function with body and args specified', () => {
   return args[0] + args[1]
 }`,
   };
-  const fn = _js({ location, instances, params, methodName: 'function' });
+  const fn = _js({ location, params, methodName: 'function' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn(1, 2)).toEqual(3);
 });
@@ -43,10 +39,8 @@ test('_js.function with body and no args specified', () => {
   return 'a new ' + 'vm for Hello ' +  value;
 }`,
   };
-  const fn = _js({ location, instances, params, methodName: 'evaluate' });
-  expect(_js({ location, instances, params, methodName: 'evaluate' })).toEqual(
-    'a new vm for Hello world'
-  );
+  const fn = _js({ location, params, methodName: 'evaluate' });
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual('a new vm for Hello world');
 });
 
 test('_js.function with file specified', () => {
@@ -62,7 +56,7 @@ function add(...args) {
 
 export default add`,
   };
-  const fn = _js({ location, instances, params, methodName: 'function' });
+  const fn = _js({ location, params, methodName: 'function' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn(1, 2)).toEqual(3);
 });
@@ -74,7 +68,7 @@ test('_js.evaluate with body specified', () => {
   return args[0] + args[1]
 }`,
   };
-  const res = _js({ location, instances, params, methodName: 'evaluate' });
+  const res = _js({ location, params, methodName: 'evaluate' });
   expect(res).toEqual(3);
 });
 
@@ -92,14 +86,14 @@ function add(...args) {
 
 export default add`,
   };
-  const res = _js({ location, instances, params, methodName: 'evaluate' });
+  const res = _js({ location, params, methodName: 'evaluate' });
   expect(res).toEqual(3);
 });
 
 test('_js.function params not a object', () => {
   const params = [];
   expect(() =>
-    _js({ location, instances, params, methodName: 'function' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.function takes an object as input at location."`
   );
@@ -111,9 +105,7 @@ test('_js.invalid methodName', () => {
   return args[0] + args[1]
 }`,
   };
-  expect(() =>
-    _js({ location, instances, params, methodName: 'invalid' })
-  ).toThrowErrorMatchingInlineSnapshot(
+  expect(() => _js({ location, params, methodName: 'invalid' })).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.invalid is not supported  at location. Use one of the following: evaluate, function."`
   );
 });
@@ -123,7 +115,7 @@ test('_js.function invalid js file', () => {
     file: 1,
   };
   expect(() =>
-    _js({ location, instances, params, methodName: 'function' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js received invalid javascript file at location."`
   );
@@ -134,7 +126,7 @@ test('_js.function invalid js file', () => {
     file: 'Hello',
   };
   expect(() =>
-    _js({ location, instances, params, methodName: 'function' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js received invalid javascript file at location."`
   );
@@ -143,7 +135,7 @@ test('_js.function invalid js file', () => {
 test('_js.function no body or file', () => {
   const params = {};
   expect(() =>
-    _js({ location, instances, params, methodName: 'function' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.function did not receive a \\"file\\" or \\"body\\" argument at location."`
   );
@@ -154,7 +146,7 @@ test('_js.function body not a string', () => {
     body: 1,
   };
   expect(() =>
-    _js({ location, instances, params, methodName: 'function' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.function \\"body\\" argument should be a string at location."`
   );
@@ -168,7 +160,7 @@ test('_js.evaluate, args not an array', () => {
     }`,
   };
   expect(() =>
-    _js({ location, instances, params, methodName: 'evaluate' })
+    _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.evaluate \\"args\\" argument should be an array, null or undefined at location."`
   );
@@ -180,15 +172,16 @@ test('_js with undefined vm', () => {
       return args[0] + args[1]
     }`,
   };
+  _js.clear();
   expect(() =>
     _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js requires an instance of QuickJsVm. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
+    `"Operator Error: _js is not initialized. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
   );
   expect(() =>
-    _js({ location, instances: {}, params, methodName: 'evaluate' })
+    _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js requires an instance of QuickJsVm. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
+    `"Operator Error: _js is not initialized. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
   );
 });
 

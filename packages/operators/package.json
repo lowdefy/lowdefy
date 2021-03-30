@@ -31,7 +31,7 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "clean": "rm -rf dist",
-    "test": "jest --coverage",
+    "test": "jest --coverage --testTimeout=10000",
     "test:watch": "jest --coverage --watch",
     "prepare": "yarn build"
   },

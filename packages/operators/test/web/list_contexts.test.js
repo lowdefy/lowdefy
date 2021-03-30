@@ -16,53 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  contextId: 'own',
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-};
+import { context } from '../testContext';
 
 const contexts = {
   own: context,
@@ -74,17 +28,19 @@ const contexts = {
 
 const arrayIndices = [1];
 
-test('_list_contexts empty contexts', () => {
+test('_list_contexts empty contexts', async () => {
   const obj = { _list_contexts: true };
   const parser = new WebParser({ context, contexts: {} });
+  await parser.init();
   const res = parser.parse({ input: obj, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([]);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_list_contexts contexts exist, sorts list', () => {
+test('_list_contexts contexts exist, sorts list', async () => {
   const obj = { _list_contexts: true };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input: obj, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(['a', 'b', 'c', 'own']);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);

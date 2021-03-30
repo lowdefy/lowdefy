@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import { shouldInterruptAfterDeadline } from 'quickjs-emscripten';
+import { getQuickJS, shouldInterruptAfterDeadline } from 'quickjs-emscripten';
 import { type } from '@lowdefy/helpers';
+
+let QuickJsVm;
 
 function regexCaptureFunctionBody({ file, location }) {
   const regex = /^.*function\s*\S+\(\.\.\.args\)\s*(\{.*\})\s*export default .*$/s;
@@ -26,7 +28,7 @@ function regexCaptureFunctionBody({ file, location }) {
   return match[1];
 }
 
-function createFunction({ params, location, methodName, QuickJsVm }) {
+function createFunction({ params, location, methodName }) {
   let body;
   if (params.file) {
     body = regexCaptureFunctionBody({ file: params.file, location });
@@ -66,27 +68,24 @@ function createFunction({ params, location, methodName, QuickJsVm }) {
   return fn;
 }
 
-function evaluate({ params, location, methodName, QuickJsVm }) {
+function evaluate({ params, location, methodName }) {
   if (!type.isArray(params.args) && !type.isNone(params.args)) {
     throw new Error(
       `Operator Error: _js.evaluate "args" argument should be an array, null or undefined at ${location}.`
     );
   }
-  const fn = createFunction({ params, location, methodName, QuickJsVm });
+  const fn = createFunction({ params, location, methodName });
   return fn(...(params.args || []));
 }
 
 const methods = { evaluate, function: createFunction };
 
-function _js({ params, location, methodName, instances }) {
-  if (!instances || !instances.QuickJsVm) {
+function _js({ params, location, methodName }) {
+  if (!QuickJsVm) {
     throw new Error(
-      `Operator Error: _js requires an instance of QuickJsVm. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
+      `Operator Error: _js is not initialized. Received: ${JSON.stringify(params)} at ${location}.`
     );
   }
-  const { QuickJsVm } = instances;
   if (!type.isObject(params)) {
     throw new Error(`Operator Error: _js.${methodName} takes an object as input at ${location}.`);
   }
@@ -96,7 +95,18 @@ function _js({ params, location, methodName, instances }) {
     );
   }
 
-  return methods[methodName]({ params, location, methodName, QuickJsVm });
+  return methods[methodName]({ params, location, methodName });
 }
+
+async function init() {
+  const QuickJs = await getQuickJS();
+  QuickJsVm = QuickJs.createVm();
+}
+async function clear() {
+  QuickJsVm = null;
+}
+
+_js.init = init;
+_js.clear = clear;
 
 export default _js;
