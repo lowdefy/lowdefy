@@ -11,7 +11,7 @@ See the [Apache ECharts docs](https://echarts.apache.org/en/api.html#echarts) fo
 
 ```yaml
 name: my-app
-lowdefy: 3.12.2
+lowdefy: 3.12.3
 pages:
   - id: dashboard
     type: PageHeaderMenu
