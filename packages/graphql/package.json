@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql",
-  "version": "3.12.3",
+  "version": "3.12.4",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -38,11 +38,11 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "3.12.3",
-    "@lowdefy/helpers": "3.12.3",
-    "@lowdefy/node-utils": "3.12.3",
-    "@lowdefy/nunjucks": "3.12.3",
-    "@lowdefy/operators": "3.12.3",
+    "@lowdefy/ajv": "3.12.4",
+    "@lowdefy/helpers": "3.12.4",
+    "@lowdefy/node-utils": "3.12.4",
+    "@lowdefy/nunjucks": "3.12.4",
+    "@lowdefy/operators": "3.12.4",
     "@sendgrid/mail": "7.4.2",
     "ajv": "6.12.6",
     "ajv-errors": "1.0.1",
