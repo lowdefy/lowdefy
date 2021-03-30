@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import { get } from '@lowdefy/helpers';
 import buildPages from './buildPages';
 import testContext from '../test/testContext';
 
@@ -377,6 +377,7 @@ test('no blocks on page', async () => {
       {
         id: 'page:1',
         auth: 'public',
+        operators: [],
         pageId: '1',
         blockId: '1',
         type: 'Context',
@@ -450,6 +451,7 @@ test('block meta should include all meta fields', async () => {
       {
         id: 'page:page_1',
         auth: 'public',
+        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -513,6 +515,7 @@ test('nested blocks', async () => {
       {
         id: 'page:page_1',
         auth: 'public',
+        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -589,6 +592,7 @@ describe('block areas', () => {
           id: 'page:page1',
           auth: 'public',
           blockId: 'page1',
+          operators: [],
           pageId: 'page1',
           type: 'Context',
           meta: outputMetas.Context,
@@ -631,6 +635,7 @@ describe('block areas', () => {
           id: 'page:1',
           auth: 'public',
           blockId: '1',
+          operators: [],
           pageId: '1',
           type: 'Context',
           meta: outputMetas.Context,
@@ -682,6 +687,7 @@ describe('block areas', () => {
           id: 'page:1',
           auth: 'public',
           pageId: '1',
+          operators: [],
           blockId: '1',
           type: 'Context',
           meta: outputMetas.Context,
@@ -739,6 +745,7 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: 'public',
+          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -804,6 +811,7 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: 'public',
+          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -877,6 +885,7 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: 'public',
+          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -966,6 +975,7 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: 'public',
+          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Context',
@@ -1072,6 +1082,7 @@ describe('build requests', () => {
         {
           id: 'page:page_1',
           auth: 'public',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1117,6 +1128,7 @@ describe('build requests', () => {
         {
           id: 'page:page_1',
           auth: 'public',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1129,6 +1141,7 @@ describe('build requests', () => {
                   id: 'block:page_1:context',
                   blockId: 'context',
                   type: 'Context',
+                  operators: [],
                   meta: outputMetas.Context,
                   requests: [
                     {
@@ -1176,6 +1189,7 @@ describe('build requests', () => {
           id: 'page:page_1',
           auth: 'public',
           blockId: 'page_1',
+          operators: [],
           pageId: 'page_1',
           type: 'Context',
           meta: outputMetas.Context,
@@ -1238,6 +1252,7 @@ describe('build requests', () => {
         {
           id: 'page:page_1',
           auth: 'public',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1250,6 +1265,7 @@ describe('build requests', () => {
                   id: 'block:page_1:context',
                   blockId: 'context',
                   type: 'Context',
+                  operators: [],
                   meta: outputMetas.Context,
                   requests: [
                     {
@@ -1329,6 +1345,7 @@ describe('build requests', () => {
               url: 'https://example.com/remoteEntry.js',
             },
           },
+          operators: [],
           pageId: 'page_1',
           requests: [
             {
@@ -1344,6 +1361,7 @@ describe('build requests', () => {
                 {
                   id: 'block:page_1:context',
                   blockId: 'context',
+                  operators: [],
                   type: 'Context',
                   requests: [],
                   areas: {
@@ -1425,6 +1443,7 @@ describe('build requests', () => {
         {
           id: 'page:page_1',
           auth: 'public',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1478,6 +1497,7 @@ test('add user defined loading to meta', async () => {
       {
         id: 'page:page_1',
         auth: 'public',
+        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Context',
@@ -1557,6 +1577,7 @@ describe('auth field', () => {
         {
           id: 'page:page_1',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1566,6 +1587,7 @@ describe('auth field', () => {
         {
           id: 'page:page_2',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_2',
           blockId: 'page_2',
           type: 'Context',
@@ -1605,6 +1627,7 @@ describe('auth field', () => {
         {
           id: 'page:page_1',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1614,6 +1637,7 @@ describe('auth field', () => {
         {
           id: 'page:page_2',
           auth: 'setting',
+          operators: [],
           pageId: 'page_2',
           blockId: 'page_2',
           type: 'Context',
@@ -1663,6 +1687,7 @@ describe('auth field', () => {
         {
           id: 'page:page_1',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1679,6 +1704,7 @@ describe('auth field', () => {
         {
           id: 'page:page_2',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_2',
           blockId: 'page_2',
           type: 'Context',
@@ -1735,6 +1761,7 @@ describe('auth field', () => {
         {
           id: 'page:page_1',
           auth: 'setting',
+          operators: [],
           pageId: 'page_1',
           blockId: 'page_1',
           type: 'Context',
@@ -1751,6 +1778,7 @@ describe('auth field', () => {
         {
           id: 'page:page_2',
           auth: 'defaulted',
+          operators: [],
           pageId: 'page_2',
           blockId: 'page_2',
           type: 'Context',
@@ -1766,5 +1794,174 @@ describe('auth field', () => {
         },
       ],
     });
+  });
+});
+
+describe('web operators', () => {
+  test('set empty operators array for every context', async () => {
+    const components = {
+      auth,
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          blocks: [
+            {
+              id: 'context_1',
+              type: 'Context',
+            },
+            {
+              id: 'context_2',
+              type: 'Context',
+              blocks: [
+                {
+                  id: 'context_2_1',
+                  type: 'Context',
+                },
+                {
+                  id: 'block_2_2',
+                  type: 'Display',
+                },
+              ],
+            },
+            {
+              id: 'block_3',
+              type: 'Display',
+            },
+          ],
+        },
+        {
+          id: 'page_2',
+          type: 'Context',
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(get(res, 'pages.0.operators')).toEqual([]);
+    expect(get(res, 'pages.0.areas.content.blocks.0.operators')).toEqual([]);
+    expect(get(res, 'pages.0.areas.content.blocks.1.areas.content.blocks.0.operators')).toEqual([]);
+    expect(get(res, 'pages.1.operators')).toEqual([]);
+  });
+
+  test('set all operators for context', async () => {
+    const components = {
+      auth,
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          properties: {
+            a: { _c_op_1: {} },
+          },
+          blocks: [
+            {
+              id: 'block_1',
+              type: 'Display',
+              visible: {
+                _v_1: {},
+              },
+              properties: {
+                a: { _op_1: {} },
+                b: { _op_1: {} },
+                c: { _op_2: { __op_3: { ___op_4: {} } } },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(get(res, 'pages.0.operators')).toEqual([
+      '_c_op_1',
+      '_v_1',
+      '_op_1',
+      '_op_4',
+      '_op_3',
+      '_op_2',
+    ]);
+  });
+
+  test('exclude requests operators', async () => {
+    const components = {
+      auth,
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          requests: [
+            {
+              id: 'request_1',
+              properties: {
+                a: { _r_op_1: {} },
+              },
+            },
+          ],
+          properties: {
+            a: { _c_op_1: {} },
+          },
+          blocks: [
+            {
+              id: 'block_1',
+              type: 'Display',
+              visible: {
+                _v_1: {},
+              },
+              properties: {
+                a: { _op_1: {} },
+                b: { _op_1: {} },
+                c: { _op_2: { __op_3: { ___op_4: {} } } },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(get(res, 'pages.0.operators')).toEqual([
+      '_c_op_1',
+      '_v_1',
+      '_op_1',
+      '_op_4',
+      '_op_3',
+      '_op_2',
+    ]);
+  });
+
+  test('set operators specific to multiple contexts', async () => {
+    const components = {
+      auth,
+      pages: [
+        {
+          id: 'page_1',
+          type: 'Context',
+          properties: {
+            a: { _c_op_1: {} },
+          },
+          blocks: [
+            {
+              id: 'block_1',
+              type: 'Context',
+              visible: {
+                _v_1: {},
+              },
+              properties: {
+                a: { _op_1: {} },
+                b: { _op_1: {} },
+                c: { _op_2: { __op_3: { ___op_4: {} } } },
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const res = await buildPages({ components, context });
+    expect(get(res, 'pages.0.operators')).toEqual(['_c_op_1']);
+    expect(get(res, 'pages.0.areas.content.blocks.0.operators')).toEqual([
+      '_v_1',
+      '_op_1',
+      '_op_4',
+      '_op_3',
+      '_op_2',
+    ]);
   });
 });
