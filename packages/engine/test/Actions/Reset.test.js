@@ -19,7 +19,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('Reset one field', () => {
+test('Reset one field', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -51,7 +51,7 @@ test('Reset one field', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -65,7 +65,7 @@ test('Reset one field', () => {
   expect(context.state).toEqual({ textInput: 'init' });
 });
 
-test('Reset on primitive array after adding item', () => {
+test('Reset on primitive array after adding item', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -111,7 +111,7 @@ test('Reset on primitive array after adding item', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: ['init'] },
@@ -125,7 +125,7 @@ test('Reset on primitive array after adding item', () => {
   expect(context.state).toEqual({ list: ['init'] });
 });
 
-test('Reset on object array after removing item', () => {
+test('Reset on object array after removing item', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -172,7 +172,7 @@ test('Reset on object array after removing item', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ textInput: 'init' }] },

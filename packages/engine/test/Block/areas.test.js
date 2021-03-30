@@ -19,7 +19,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('two areas in block', () => {
+test('two areas in block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -52,7 +52,7 @@ test('two areas in block', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -69,7 +69,7 @@ test('two areas in block', () => {
   expect(context.state).toEqual({ swtch1: true, swtch2: true });
 });
 
-test('parse values across areas', () => {
+test('parse values across areas', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -126,7 +126,7 @@ test('parse values across areas', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -153,7 +153,7 @@ test('parse values across areas', () => {
   expect(context.state).toEqual({ field: true, hide1: true, hide2: false });
 });
 
-test('areas inside list', () => {
+test('areas inside list', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -200,7 +200,7 @@ test('areas inside list', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

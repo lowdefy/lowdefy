@@ -19,7 +19,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('container and set value from block', () => {
+test('container and set value from block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -74,7 +74,7 @@ test('container and set value from block', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textB: 'b' },
@@ -90,7 +90,7 @@ test('container and set value from block', () => {
   expect(context.state).toEqual({ textA: 'Hello', textB: 'b' });
 });
 
-test('container blocks visibility toggle fields in state and propagate visibility to children', () => {
+test('container blocks visibility toggle fields in state and propagate visibility to children', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -142,7 +142,7 @@ test('container blocks visibility toggle fields in state and propagate visibilit
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { text: 'a', swtch1: true, swtch2: true },
@@ -168,7 +168,7 @@ test('container blocks visibility toggle fields in state and propagate visibilit
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
-test('container blocks visibility toggle fields in state with nested containers and propagate visibility to children', () => {
+test('container blocks visibility toggle fields in state with nested containers and propagate visibility to children', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -233,7 +233,7 @@ test('container blocks visibility toggle fields in state with nested containers 
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { text: 'a', swtch1: true, swtch2: true },
@@ -261,7 +261,7 @@ test('container blocks visibility toggle fields in state with nested containers 
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
-test('visibleParent. If container visible is null, child blocks should still be evaluated', () => {
+test('visibleParent. If container visible is null, child blocks should still be evaluated', async () => {
   const rootBlock = {
     blockId: 'root',
     type: 'Context',
@@ -299,7 +299,7 @@ test('visibleParent. If container visible is null, child blocks should still be 
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

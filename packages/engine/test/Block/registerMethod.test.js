@@ -20,7 +20,7 @@ const pageId = 'one';
 
 const lowdefy = { pageId };
 
-test('registerMethod adds a method to RootBlocks.methods', () => {
+test('registerMethod adds a method to RootBlocks.methods', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -41,7 +41,7 @@ test('registerMethod adds a method to RootBlocks.methods', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -55,7 +55,7 @@ test('registerMethod adds a method to RootBlocks.methods', () => {
   expect(text.methods.fn()).toEqual('fn response');
 });
 
-test('registerMethod add multiple methods to RootBlocks.methods', () => {
+test('registerMethod add multiple methods to RootBlocks.methods', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -84,7 +84,7 @@ test('registerMethod add multiple methods to RootBlocks.methods', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

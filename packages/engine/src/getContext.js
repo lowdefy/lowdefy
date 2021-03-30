@@ -74,6 +74,7 @@ const getContext = async ({ block, contextId, lowdefy }) => {
     blockId: block.blockId,
     eventLog: [],
     requests: {},
+    operators: [],
     lowdefy,
     pageId: lowdefy.pageId,
     rootBlock: blockData(block), // filter block to prevent circular structure
@@ -84,6 +85,7 @@ const getContext = async ({ block, contextId, lowdefy }) => {
   };
   const ctx = lowdefy.contexts[contextId];
   ctx.parser = new WebParser({ context: ctx, contexts: lowdefy.contexts });
+  await ctx.parser.init();
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);

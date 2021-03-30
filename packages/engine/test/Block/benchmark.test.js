@@ -46,7 +46,7 @@ const runTests = ({ times, results = [], fn }) => {
   }
 };
 
-test(`parse nunjucks value 500 blocks`, () => {
+test(`parse nunjucks value 500 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -83,7 +83,7 @@ test(`parse nunjucks value 500 blocks`, () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -105,7 +105,7 @@ test(`parse nunjucks value 500 blocks`, () => {
   expect(Object.keys(context.state).length).toEqual(501);
 });
 
-test(`parse nunjucks value 100 blocks`, () => {
+test(`parse nunjucks value 100 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -142,7 +142,7 @@ test(`parse nunjucks value 100 blocks`, () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -164,7 +164,7 @@ test(`parse nunjucks value 100 blocks`, () => {
   expect(Object.keys(context.state).length).toEqual(101);
 });
 
-test(`parse state value 1000 blocks`, () => {
+test(`parse state value 1000 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -201,7 +201,7 @@ test(`parse state value 1000 blocks`, () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -222,7 +222,7 @@ test(`parse state value 1000 blocks`, () => {
   expect(Object.keys(context.state).length).toEqual(1001);
 });
 
-// test.only(`parse state value 10 blocks`, () => {
+// test.only(`parse state value 10 blocks`, async () => {
 //   const rootBlock = {
 //     blockId: 'root',
 //     meta: {
@@ -255,7 +255,7 @@ test(`parse state value 1000 blocks`, () => {
 //       })),
 //     ],}}
 //   };
-//   const context = testContext({
+//   const context = await testContext({
 //     rootContext,
 //     rootBlock,
 //     pageId,

@@ -27,7 +27,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('set block to init', () => {
+test('set block to init', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -48,7 +48,7 @@ test('set block to init', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -60,15 +60,17 @@ test('set block to init', () => {
 });
 
 // can't use testContext
-test('Blocks to init with no blocks passed', () => {
+test('Blocks to init with no blocks passed', async () => {
   const context = {
     lowdefy: { pageId },
+    operators: [],
     state: { a: 'a' },
     update: jest.fn(),
     updateBlock: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });
+  await context.parser.init();
   context.RootBlocks = new Blocks({
     context,
     arrayIndices: [],
@@ -79,16 +81,18 @@ test('Blocks to init with no blocks passed', () => {
 });
 
 // can't use testContext
-test('Blocks to init with arrayIndices not an array', () => {
+test('Blocks to init with arrayIndices not an array', async () => {
   const context = {
     lowdefy: {
       pageId,
       updateBlock: jest.fn(),
     },
+    operators: [],
     update: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });
+  await context.parser.init();
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -120,16 +124,18 @@ test('Blocks to init with arrayIndices not an array', () => {
 });
 
 // can't use testContext
-test('Blocks to init with undefined arrayIndices', () => {
+test('Blocks to init with undefined arrayIndices', async () => {
   const context = {
     lowdefy: {
       pageId,
       updateBlock: jest.fn(),
     },
+    operators: [],
     update: jest.fn(),
   };
   context.State = new State(context);
   context.parser = new WebParser({ context, contexts: {} });
+  await context.parser.init();
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -159,7 +165,7 @@ test('Blocks to init with undefined arrayIndices', () => {
   expect(context.RootBlocks).toBeDefined();
 });
 
-test('set block enforceType value no init', () => {
+test('set block enforceType value no init', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -180,7 +186,7 @@ test('set block enforceType value no init', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -189,7 +195,7 @@ test('set block enforceType value no init', () => {
   expect(context.state).toEqual({ selector: [] });
 });
 
-test('set block value to initValue in meta', () => {
+test('set block value to initValue in meta', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -213,7 +219,7 @@ test('set block value to initValue in meta', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -222,7 +228,7 @@ test('set block value to initValue in meta', () => {
   expect(context.state).toEqual({ object_one: { a: 1 } });
 });
 
-test('Reset to change blocks back to initState', () => {
+test('Reset to change blocks back to initState', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -243,7 +249,7 @@ test('Reset to change blocks back to initState', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { b: 'b' },
@@ -263,7 +269,7 @@ test('Reset to change blocks back to initState', () => {
   expect(context.state).toEqual({ textInput: null, b: 'b' });
 });
 
-test('state should not have value if block is not visible', () => {
+test('state should not have value if block is not visible', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -285,7 +291,7 @@ test('state should not have value if block is not visible', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -294,7 +300,7 @@ test('state should not have value if block is not visible', () => {
   expect(context.state).toEqual({});
 });
 
-test('block should only not be visible when visible === false', () => {
+test('block should only not be visible when visible === false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -432,7 +438,7 @@ test('block should only not be visible when visible === false', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -469,7 +475,7 @@ test('block should only not be visible when visible === false', () => {
   });
 });
 
-test('block should only not be evaluated when visible === false', () => {
+test('block should only not be evaluated when visible === false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -677,7 +683,7 @@ test('block should only not be evaluated when visible === false', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -714,7 +720,7 @@ test('block should only not be evaluated when visible === false', () => {
   expect(context.RootBlocks.map.n.eval.properties).toEqual({ title: 'test' });
 });
 
-test('set value from block', () => {
+test('set value from block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -735,7 +741,7 @@ test('set value from block', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -749,7 +755,7 @@ test('set value from block', () => {
   expect(context.state).toEqual({ swtch: true });
 });
 
-test('set value from block in nested object', () => {
+test('set value from block in nested object', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -770,7 +776,7 @@ test('set value from block in nested object', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -784,7 +790,7 @@ test('set value from block in nested object', () => {
   expect(context.state).toEqual({ a: { b: { c: 'Hello' } } });
 });
 
-test('set value from block with type enforceType', () => {
+test('set value from block with type enforceType', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -805,7 +811,7 @@ test('set value from block with type enforceType', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'a' },
@@ -825,7 +831,7 @@ test('set value from block with type enforceType', () => {
   expect(context.state).toEqual({ textInput: null });
 });
 
-test('parse visible operator with setValue', () => {
+test('parse visible operator with setValue', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -856,7 +862,7 @@ test('parse visible operator with setValue', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textA: 'show b', textB: 'b' },
@@ -870,7 +876,7 @@ test('parse visible operator with setValue', () => {
   expect(context.state).toEqual({ textA: 'hide b' });
 });
 
-test('rec parse visible operator with setValue', () => {
+test('rec parse visible operator with setValue', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -910,7 +916,7 @@ test('rec parse visible operator with setValue', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textB: 'b', textA: 'a', textC: 'c' },
@@ -923,7 +929,7 @@ test('rec parse visible operator with setValue', () => {
   expect(context.state).toEqual({ textA: 'show b', textB: 'b', textC: 'c' });
 });
 
-test('non-input blocks visibility toggle', () => {
+test('non-input blocks visibility toggle', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -952,7 +958,7 @@ test('non-input blocks visibility toggle', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { swtch: true },
@@ -968,7 +974,7 @@ test('non-input blocks visibility toggle', () => {
   expect(button.visibleEval.output).toEqual(true);
 });
 
-test('non-input blocks visibility toggle in array', () => {
+test('non-input blocks visibility toggle in array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1011,7 +1017,7 @@ test('non-input blocks visibility toggle in array', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ swtch: true }, { swtch: false }] },
@@ -1032,7 +1038,7 @@ test('non-input blocks visibility toggle in array', () => {
   expect(button1.visibleEval.output).toEqual(false);
 });
 
-test('no need to evaluate invisible blocks', () => {
+test('no need to evaluate invisible blocks', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1064,7 +1070,7 @@ test('no need to evaluate invisible blocks', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { swtch: true },
@@ -1084,7 +1090,7 @@ test('no need to evaluate invisible blocks', () => {
 });
 
 // TODO: Check again
-test('max recuse limit', () => {
+test('max recuse limit', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1133,7 +1139,7 @@ test('max recuse limit', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { a: 'a', d: 'd', e: 'e' },

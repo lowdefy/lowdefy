@@ -76,7 +76,7 @@ test('ScrollTo with no params', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -109,7 +109,7 @@ test('ScrollTo with no blockId', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -149,7 +149,7 @@ test('ScrollTo with blockId', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -189,7 +189,7 @@ test('ScrollTo with blockId and options', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -230,7 +230,7 @@ test('ScrollTo with blockId, block not found', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
