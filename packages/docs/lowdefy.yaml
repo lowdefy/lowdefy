@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.12.2'
+lowdefy: '3.12.3'
 licence: Apache-2.0
 
 global:
@@ -582,6 +582,9 @@ menus:
           - id: _mql
             type: MenuLink
             pageId: _mql
+          - id: _ne
+            type: MenuLink
+            pageId: _ne
           - id: _not
             type: MenuLink
             pageId: _not
@@ -800,6 +803,7 @@ pages:
   - _ref: operators/_media.yaml
   - _ref: operators/_menu.yaml
   - _ref: operators/_mql.yaml
+  - _ref: operators/_ne.yaml
   - _ref: operators/_not.yaml
   - _ref: operators/_nunjucks.yaml
   - _ref: operators/_object.yaml
