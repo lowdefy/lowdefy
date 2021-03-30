@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-markdown",
-  "version": "3.12.3",
+  "version": "3.12.4",
   "license": "Apache-2.0",
   "description": "Lowdefy markdown blocks.",
   "homepage": "https://lowdefy.com",
@@ -40,7 +40,7 @@
     "test": "jest --coverage --config jest.config.js --no-cache"
   },
   "dependencies": {
-    "@lowdefy/block-tools": "3.12.3",
+    "@lowdefy/block-tools": "3.12.4",
     "dompurify": "2.2.6",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -53,7 +53,7 @@
     "@babel/core": "7.12.16",
     "@babel/preset-env": "7.12.16",
     "@babel/preset-react": "7.12.13",
-    "@lowdefy/helpers": "3.12.3",
+    "@lowdefy/helpers": "3.12.4",
     "@wojtekmaj/enzyme-adapter-react-17": "0.4.1",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",

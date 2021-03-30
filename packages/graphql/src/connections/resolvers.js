@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import AwsS3bucket from './AwsS3Bucket/AwsS3Bucket';
+import AwsS3Bucket from './AwsS3Bucket/AwsS3Bucket';
 import AxiosHttp from './AxiosHttp/AxiosHttp';
 import GoogleSheet from './GoogleSheet/GoogleSheet';
 import MongoDBCollection from './MongoDBCollection/MongoDBCollection';
 import SendGridMail from './SendGridMail/SendGridMail';
 
 const resolvers = {
-  AwsS3bucket,
+  AwsS3Bucket,
   AxiosHttp,
   GoogleSheet,
   MongoDBCollection,

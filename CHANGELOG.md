@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.4](https://github.com/lowdefy/lowdefy/compare/v3.12.3...v3.12.4) (2021-03-30)
+
+## Changes
+
+### Fixes
+
+- Fix S3UploadButton file uploads.
+- Fix AwsS3Bucket type name.
+
+### Bug Fixes
+
+- **blocks-antd:** Fix S3UploadButton file uploads. ([2fa854b](https://github.com/lowdefy/lowdefy/commit/2fa854b1b0563f480dede2986e9f4b64868449e1))
+- **deps:** update dependency openid-client to v4.5.2 ([0963d68](https://github.com/lowdefy/lowdefy/commit/0963d68f43928dd80504ad3c05363e7e678be55b))
+- **graphql:** Fix AwsS3Bucket type name. ([7aa6581](https://github.com/lowdefy/lowdefy/commit/7aa658172e891d96369fab66119cb5183e0759a7))
+
 ## [3.12.3](https://github.com/lowdefy/lowdefy/compare/v3.12.2...v3.12.3) (2021-03-26)
 
 ## Changes
