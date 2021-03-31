@@ -93,7 +93,7 @@ test('callRequest', async () => {
   await context.Requests.callRequest({ requestId: 'req_one' });
   expect(context.requests).toEqual({
     req_one: {
-      error: [null],
+      error: [],
       loading: false,
       response: 1,
     },
@@ -156,7 +156,7 @@ test('callRequests all requests', async () => {
   }
   expect(context.requests).toEqual({
     req_one: {
-      error: [null],
+      error: [],
       loading: false,
       response: 1,
     },
@@ -166,7 +166,7 @@ test('callRequests all requests', async () => {
       response: null,
     },
     req_watch: {
-      error: [null],
+      error: [],
       loading: false,
       response: 2,
     },
@@ -190,7 +190,7 @@ test('callRequests', async () => {
   await promise;
   expect(context.requests).toEqual({
     req_one: {
-      error: [null],
+      error: [],
       loading: false,
       response: 1,
     },
@@ -266,6 +266,21 @@ test('update function should be called', async () => {
   });
   context.update = updateFunction;
   await context.Requests.callRequest({ requestId: 'req_one' });
+  expect(updateFunction).toHaveBeenCalledTimes(1);
+});
+
+test('update function should be called if error', async () => {
+  const updateFunction = jest.fn();
+  const context = testContext({
+    lowdefy,
+    rootBlock,
+  });
+  context.update = updateFunction;
+  try {
+    await context.Requests.callRequest({ requestId: 'req_error' });
+  } catch (e) {
+    // catch thrown errors
+  }
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
