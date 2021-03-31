@@ -74,14 +74,14 @@ class Requests {
     return this.fetch({ requestId, event, arrayIndices });
   }
 
-  fetch({ requestId, event, arrayIndices }) {
+  async fetch({ requestId, event, arrayIndices }) {
     this.context.requests[requestId].loading = true;
     if (this.context.RootBlocks) {
       this.context.RootBlocks.setBlocksLoadingCache();
     }
 
-    return this.context.lowdefy.client
-      .query({
+    try {
+      const gqlResponse = await this.context.lowdefy.client.query({
         query: CALL_REQUEST,
         fetchPolicy: 'network-only',
         variables: {
@@ -97,24 +97,22 @@ class Requests {
             urlQuery: serializer.serialize(this.context.lowdefy.urlQuery),
           },
         },
-      })
-      .then((result) => {
-        this.context.requests[requestId].response = serializer.deserialize(
-          get(result, 'data.request.response', {
-            default: null,
-          })
-        );
-        this.context.requests[requestId].error.unshift(null);
-        return result;
-      })
-      .catch((error) => {
-        this.context.requests[requestId].error.unshift(error);
-        throw error;
-      })
-      .finally(() => {
-        this.context.requests[requestId].loading = false;
-        this.context.update();
       });
+      const response = serializer.deserialize(
+        get(gqlResponse, 'data.request.response', {
+          default: null,
+        })
+      );
+      this.context.requests[requestId].response = response;
+      this.context.requests[requestId].loading = false;
+      this.context.update();
+      return response;
+    } catch (error) {
+      this.context.requests[requestId].error.unshift(error);
+      this.context.requests[requestId].loading = false;
+      this.context.update();
+      throw error;
+    }
   }
 }
 
