@@ -15,12 +15,12 @@
 */
 
 export default {
-  _event_log: './web/event_log.js',
-  _base64: './web/base64.js',
-  _format: './web/format.js',
-  _list_contexts: './web/list_contexts.js',
-  _media: './web/media.js',
-  _menu: './web/menu.js',
-  _request_details: './web/request_details.js',
-  _request: './web/request.js',
+  _event_log: 'web/event_log',
+  _base64: 'web/base64',
+  _format: 'web/format',
+  _list_contexts: 'web/list_contexts',
+  _media: 'web/media',
+  _menu: 'web/menu',
+  _request_details: 'web/request_details',
+  _request: 'web/request',
 };

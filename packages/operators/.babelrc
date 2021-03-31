@@ -6,7 +6,8 @@
         "targets": {
           "node": "12",
           "esmodules": true
-        }
+        },
+        "exclude": ["proposal-dynamic-import"]
       }
     ]
   ]

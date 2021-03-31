@@ -15,8 +15,8 @@
 */
 
 export default {
-  _diff: './node/diff.js',
-  _base64: './node/base64.js',
-  _secret: './node/secret.js',
-  _uuid: './node/uuid.js',
+  _diff: 'node/diff',
+  _base64: 'node/base64',
+  _secret: 'node/secret',
+  _uuid: 'node/uuid',
 };

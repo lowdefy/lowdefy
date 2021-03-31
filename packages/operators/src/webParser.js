@@ -33,6 +33,7 @@ class WebParser {
   }
 
   async init() {
+    console.log('INIT', this.operations, this.context, this.operators);
     if (!type.isObject(this.context.lowdefy)) {
       throw new Error('context.lowdefy must be an object.');
     }
@@ -42,7 +43,7 @@ class WebParser {
     await Promise.all(
       this.context.operators.map(async (operator) => {
         if (this.operators[operator]) {
-          const fn = await import(this.operators[operator]);
+          const fn = await import(`./${this.operators[operator]}.js`);
           this.operations[operator] = fn.default;
           if (this.operations[operator].init) {
             await this.operations[operator].init();
