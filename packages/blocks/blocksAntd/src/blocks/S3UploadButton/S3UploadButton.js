@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
+import { get } from '@lowdefy/helpers';
 import { Upload } from 'antd';
 
 import Button from '../Button/Button';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;
-  const { bucket, key } = s3Parameters[uid] || {};
+  const { bucket, key } = get(s3Parameters, 'uid', { default: {} });
   return { bucket, key, lastModified, name, percent, size, status, type, uid };
 };
 
@@ -32,48 +33,51 @@ const getCustomRequest = ({ methods, setS3Parameters }) => async ({
   onProgress,
   onSuccess,
 }) => {
-  const { name, size, type, uid } = file;
+  try {
+    const { name, size, type, uid } = file;
 
-  const s3PostPolicyResponse = await methods.triggerEvent({
-    name: '__getS3PostPolicy',
-    event: { filename: name, size, type, uid },
-  });
+    const s3PostPolicyResponse = await methods.triggerEvent({
+      name: '__getS3PostPolicy',
+      event: { filename: name, size, type, uid },
+    });
 
-  if (s3PostPolicyResponse[0].error) {
-    onError(s3PostPolicyResponse[0].error);
-    return;
-  }
-
-  const { url, fields } = s3PostPolicyResponse[0].response;
-  const { bucket, key } = fields;
-
-  setS3Parameters((prevState) => {
-    const ret = { ...prevState };
-    ret[uid] = { bucket, key };
-    return ret;
-  });
-
-  // Set 20 % progress on policy is acquired else user waits to long before progress is reported
-  onProgress({ percent: 20 });
-
-  // Create FormData with all required fields in S3 policy
-  const formData = new FormData();
-  Object.keys(fields).forEach((field) => {
-    formData.append(field, fields[field]);
-  });
-  // file needs to be the last field in the form
-  formData.append('file', file);
-
-  const xhr = new XMLHttpRequest();
-  xhr.upload.onprogress = (event) => {
-    if (event.lengthComputable) {
-      onProgress({ percent: (event.loaded / event.total) * 80 + 20 });
+    if (s3PostPolicyResponse.success !== true) {
+      throw new Error('S3 post policy request error.');
     }
-  };
-  xhr.addEventListener('error', onError);
-  xhr.addEventListener('load', onSuccess);
-  xhr.open('post', url);
-  xhr.send(formData);
+
+    const { url, fields } = s3PostPolicyResponse.responses[0].response[0];
+    const { bucket, key } = fields;
+
+    setS3Parameters((prevState) => {
+      const ret = { ...prevState };
+      ret[uid] = { bucket, key };
+      return ret;
+    });
+
+    // Set 20 % progress on policy is acquired else user waits to long before progress is reported
+    onProgress({ percent: 20 });
+
+    // Create FormData with all required fields in S3 policy
+    const formData = new FormData();
+    Object.keys(fields).forEach((field) => {
+      formData.append(field, fields[field]);
+    });
+    // file needs to be the last field in the form
+    formData.append('file', file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress({ percent: (event.loaded / event.total) * 80 + 20 });
+      }
+    };
+    xhr.addEventListener('error', onError);
+    xhr.addEventListener('load', onSuccess);
+    xhr.open('post', url);
+    xhr.send(formData);
+  } catch (error) {
+    onError(error);
+  }
 };
 
 const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) => {
@@ -82,7 +86,7 @@ const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) =>
   // so it cannot set the value directly. customRequest sets the parameters to s3Parameters state,
   // and then onChange updates the block value.
   const [s3Parameters, setS3Parameters] = useState(value);
-  let customRequest;
+  const customRequest = getCustomRequest({ methods, setS3Parameters });
   useEffect(() => {
     methods.setValue({ file: null, fileList: [] });
     methods.registerEvent({
@@ -91,11 +95,10 @@ const S3UploadButtonBlock = ({ blockId, events, methods, properties, value }) =>
         {
           id: `${blockId}__getS3PostPolicy`,
           type: 'Request',
-          params: properties.s3PostPolicyRequestId,
+          params: [properties.s3PostPolicyRequestId],
         },
       ],
     });
-    customRequest = getCustomRequest({ methods, setS3Parameters });
   }, []);
 
   const disabled = getDisabled({ properties, value });

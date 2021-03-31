@@ -132,11 +132,27 @@ test('Request call one request', async () => {
     loading: true,
     response: null,
   });
-  await promise;
+  const res = await promise;
   expect(context.requests.req_one).toEqual({
-    error: [null],
+    error: [],
     loading: false,
     response: 1,
+  });
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'Request',
+        response: [1],
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
+    },
   });
 });
 
@@ -190,17 +206,33 @@ test('Request call all requests', async () => {
       response: null,
     },
   });
-  await promise;
+  const res = await promise;
   expect(context.requests).toEqual({
     req_one: {
-      error: [null],
+      error: [],
       loading: false,
       response: 1,
     },
     req_two: {
-      error: [null],
+      error: [],
       loading: false,
       response: 2,
+    },
+  });
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'Request',
+        response: [1, 2],
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
     },
   });
 });
@@ -255,17 +287,33 @@ test('Request call array of requests', async () => {
       response: null,
     },
   });
-  await promise;
+  const res = await promise;
   expect(context.requests).toEqual({
     req_one: {
-      error: [null],
+      error: [],
       loading: false,
       response: 1,
     },
     req_two: {
-      error: [null],
+      error: [],
       loading: false,
       response: 2,
+    },
+  });
+  expect(res).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'a',
+        actionType: 'Request',
+        response: [1, 2],
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
     },
   });
 });
