@@ -13,7 +13,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "default__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -48,7 +50,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "default",
       "multiple": true,
@@ -68,7 +70,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "default__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -103,7 +107,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "default",
       "multiple": true,
@@ -128,7 +132,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.accept__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -163,7 +169,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.accept",
       "multiple": true,
@@ -183,7 +189,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.accept__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -218,7 +226,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.accept",
       "multiple": true,
@@ -243,7 +251,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.button__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -278,7 +288,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.button",
       "multiple": true,
@@ -298,7 +308,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.button__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -333,7 +345,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.button",
       "multiple": true,
@@ -358,7 +370,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.disabled__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -393,7 +407,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": true,
       "id": "properties.disabled",
       "multiple": true,
@@ -413,7 +427,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.disabled__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -448,7 +464,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": true,
       "id": "properties.disabled",
       "multiple": true,
@@ -473,7 +489,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.showUploadList__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -508,7 +526,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.showUploadList",
       "multiple": true,
@@ -528,7 +546,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.showUploadList__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -563,7 +583,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.showUploadList",
       "multiple": true,
@@ -588,7 +608,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.singleFile__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -623,7 +645,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.singleFile",
       "multiple": false,
@@ -643,7 +665,9 @@ Array [
             "__getS3PostPolicy": Array [
               Object {
                 "id": "properties.singleFile__getS3PostPolicy",
-                "params": "s3PostPolicyRequestId",
+                "params": Array [
+                  "s3PostPolicyRequestId",
+                ],
                 "type": "Request",
               },
             ],
@@ -678,7 +702,7 @@ Array [
           }
         }
       />,
-      "customRequest": undefined,
+      "customRequest": [Function],
       "disabled": false,
       "id": "properties.singleFile",
       "multiple": false,
