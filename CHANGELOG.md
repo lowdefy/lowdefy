@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.5](https://github.com/lowdefy/lowdefy/compare/v3.12.4...v3.12.5) (2021-03-31)
+
+## Changes
+
+### Fixes
+
+- Fix S3UploadButton file uploads.
+
+## Commits
+
+### Bug Fixes
+
+- **blocks-antd:** Fix S3UploadButton not uploading files. ([7005a8f](https://github.com/lowdefy/lowdefy/commit/7005a8f547f2d5390d7fe58e903c48d6704e7622))
+- **engine:** Fix Request action response. ([45aaa18](https://github.com/lowdefy/lowdefy/commit/45aaa1854595da1eb5225198a101895dc959fe54))
+
 ## [3.12.4](https://github.com/lowdefy/lowdefy/compare/v3.12.3...v3.12.4) (2021-03-30)
 
 ## Changes
@@ -11,6 +26,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - Fix S3UploadButton file uploads.
 - Fix AwsS3Bucket type name.
+
+## Commits
 
 ### Bug Fixes
 
