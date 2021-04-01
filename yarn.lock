@@ -2825,11 +2825,11 @@ __metadata:
     js-yaml: 4.0.0
     path-browserify: 1.0.1
     process: 0.11.10
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-router-dom: 5.2.0
     react-syntax-highlight: 15.3.1
-    react-test-renderer: 17.0.1
+    react-test-renderer: 17.0.2
     style-loader: 2.0.0
     webpack: 5.28.0
     webpack-cli: 4.5.0
@@ -2872,8 +2872,8 @@ __metadata:
     less-loader: 8.0.0
     moment: 2.29.1
     rc-animate: 3.1.1
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-router-dom: 5.2.0
     react-syntax-highlighter: 15.4.3
@@ -2910,8 +2910,8 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
@@ -2952,9 +2952,9 @@ __metadata:
     js-yaml: 4.0.0
     less: 3.13.0
     less-loader: 8.0.0
-    react: 17.0.1
+    react: 17.0.2
     react-color: 2.19.3
-    react-dom: 17.0.1
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
@@ -2989,8 +2989,8 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.6.3
     js-yaml: 4.0.0
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     style-loader: 2.0.0
@@ -3030,8 +3030,8 @@ __metadata:
     js-yaml: 4.0.0
     path-browserify: 1.0.1
     process: 0.11.10
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-syntax-highlighter: 15.4.3
     remark-gfm: 1.0.0
@@ -3220,11 +3220,11 @@ __metadata:
     less-loader: 8.0.0
     path-browserify: 1.0.1
     process: 0.11.10
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-markdown: 5.0.3
     react-syntax-highlight: 15.3.1
-    react-test-renderer: 17.0.1
+    react-test-renderer: 17.0.2
     style-loader: 2.0.0
     webpack: 5.28.0
     webpack-cli: 4.5.0
@@ -3322,8 +3322,8 @@ __metadata:
     graphql: 15.5.0
     graphql-type-json: 0.3.2
     html-webpack-plugin: 5.1.0
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     react-helmet: 6.1.0
     react-router-dom: 5.2.0
     serve: 11.3.2
@@ -3358,8 +3358,8 @@ __metadata:
     html-webpack-plugin: 5.1.0
     jest: 26.6.3
     nodemon: 2.0.7
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     style-loader: 2.0.0
     webpack: 5.28.0
     webpack-cli: 4.5.0
@@ -3388,8 +3388,8 @@ __metadata:
     html-webpack-plugin: 5.1.0
     jest: 26.6.3
     nodemon: 2.0.7
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     style-loader: 2.0.0
     webpack: 5.28.0
     webpack-cli: 4.5.0
@@ -3417,8 +3417,8 @@ __metadata:
     graphql: 15.5.0
     html-webpack-plugin: 5.1.0
     jest: 26.6.3
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     serverless-http: 2.7.0
     style-loader: 2.0.0
     webpack: 5.28.0
@@ -5122,14 +5122,14 @@ __metadata:
   linkType: hard
 
 "ajv@npm:^8.0.1":
-  version: 8.0.2
-  resolution: "ajv@npm:8.0.2"
+  version: 8.0.3
+  resolution: "ajv@npm:8.0.3"
   dependencies:
     fast-deep-equal: ^3.1.1
     json-schema-traverse: ^1.0.0
     require-from-string: ^2.0.2
     uri-js: ^4.2.2
-  checksum: e91e21e2512fdad58d4891057ed9a221e704f98003cefd846543c82859c50dc09a94be8bf727c39def45f3fcc8b983e51d82ef9646f6af805bf3ede2817175d7
+  checksum: 91f838a8316330f6af641e04f1bbb8b2fa8383554c01bd48d6d7cec8580d032f22957580290e4e1c15c3ffb9d9b5197db6b95898fec12bd4ccfc2e114138e384
   languageName: node
   linkType: hard
 
@@ -6980,10 +6980,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:2.2.6, classnames@npm:2.x, classnames@npm:^2.2.0, classnames@npm:^2.2.1, classnames@npm:^2.2.3, classnames@npm:^2.2.5, classnames@npm:^2.2.6":
+"classnames@npm:2.2.6":
   version: 2.2.6
   resolution: "classnames@npm:2.2.6"
   checksum: 490eaeca5931846737ffd33e472a701d268d5b8bc5717dd4cf108a127b06e86e05350e06799abbbe763a0e4c945b4217f6700b7ae00ddc703505682c370e5cf2
+  languageName: node
+  linkType: hard
+
+"classnames@npm:2.x, classnames@npm:^2.2.0, classnames@npm:^2.2.1, classnames@npm:^2.2.3, classnames@npm:^2.2.5, classnames@npm:^2.2.6":
+  version: 2.3.0
+  resolution: "classnames@npm:2.3.0"
+  checksum: 8ca9dad97dd63db49ecd4d4b7bb5f05bef6628794b0ca3154bd7ec7ed7f16bdb9947515eca86dad0e7223b0391aa96f6b15dc2a7d31c795a19669b70799ec7f3
   languageName: node
   linkType: hard
 
@@ -8492,10 +8499,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"domelementtype@npm:^2.0.1, domelementtype@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "domelementtype@npm:2.1.0"
-  checksum: c3e63b6c94bf74d6375e12370f612d1cd61c0d3bc21b46684d93c797b3924de2e84278b0b5cdf3dce21f64ee94c34a005994f373c0e420759ae1856f075f0f57
+"domelementtype@npm:^2.0.1, domelementtype@npm:^2.1.0, domelementtype@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "domelementtype@npm:2.2.0"
+  checksum: 70af22cd69a8e0c0cd4fbbba0459991aacb015f60765050b4a6d1750fd201b4bd4fd1e6922e945200f9cc725cd61be1cd393a3b9b576187759e3b046f33a4a30
   languageName: node
   linkType: hard
 
@@ -8526,12 +8533,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"domhandler@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "domhandler@npm:4.0.0"
+"domhandler@npm:^4.0.0, domhandler@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "domhandler@npm:4.1.0"
   dependencies:
-    domelementtype: ^2.1.0
-  checksum: 22cc8e1335728a7c49434d1d12ff1563aea758c26c8ebf50fcf9e28ceb2bd0e5a15518d69abdb5db37aa7c0c347c8f68d323d12fc744a68853fb7641cbdcec89
+    domelementtype: ^2.2.0
+  checksum: 84a55274b09c20955f939bc2584d5fbf88f06d12b8ab558a2dd9a92539baba208cc140d84b9afb701679c49c53740196f23349ff5913075115dbf46fec455f7a
   languageName: node
   linkType: hard
 
@@ -8553,13 +8560,13 @@ __metadata:
   linkType: hard
 
 "domutils@npm:^2.4.2, domutils@npm:^2.4.3, domutils@npm:^2.4.4":
-  version: 2.5.0
-  resolution: "domutils@npm:2.5.0"
+  version: 2.5.1
+  resolution: "domutils@npm:2.5.1"
   dependencies:
     dom-serializer: ^1.0.1
-    domelementtype: ^2.0.1
-    domhandler: ^4.0.0
-  checksum: 92a68066d3abfc821438e0610d656f1a51fe695c993c6b10faf9a4ffa565c23d71907e976c674b83e64d41e2a6c108cfd489a34068a7d9f3d240c44509216670
+    domelementtype: ^2.2.0
+    domhandler: ^4.1.0
+  checksum: 94d059474fc3a2bc5513fe243686e1e4b61ea10e7d643c3c281d7fe593b972760f2959dd38eaa92e70670b3c9eaf1718ebc942585c37c3c0319cc729f41df9bd
   languageName: node
   linkType: hard
 
@@ -8674,9 +8681,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.649":
-  version: 1.3.704
-  resolution: "electron-to-chromium@npm:1.3.704"
-  checksum: 725d3c36109bebd3d92b7dab15f453e80953a4df061ca9609f000a60cd3b242e7c544a1a88fd89bd1c5dc439ff3f893bc510c45e66a7e519a388e95cbb5cd7bd
+  version: 1.3.705
+  resolution: "electron-to-chromium@npm:1.3.705"
+  checksum: 2ddd0bfaffd3584df7f16a9ca50997594eb820e039c76d217c3c3ff758424ce73cbaca593320e957c9bc08b9fa270b3e0bde09f1e439c7b1102ca16697ce2e36
   languageName: node
   linkType: hard
 
@@ -13672,8 +13679,8 @@ fsevents@^1.2.7:
     js-yaml: 4.0.0
     opener: 1.5.2
     ora: 5.3.0
-    react: 17.0.1
-    react-dom: 17.0.1
+    react: 17.0.2
+    react-dom: 17.0.2
     reload: 3.1.1
     style-loader: 2.0.0
     uuid: 8.3.2
@@ -14212,10 +14219,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mime-db@npm:1.46.0, mime-db@npm:>= 1.43.0 < 2":
+"mime-db@npm:1.46.0":
   version: 1.46.0
   resolution: "mime-db@npm:1.46.0"
   checksum: 4e137ac502ca5ba6c583e552c5fa6abd0c2157592f647824ba7246b771eb42c65c2a1816fc52b27afdbb88a026127f1d5fba354f9dcde591b3b464be07c3d27e
+  languageName: node
+  linkType: hard
+
+"mime-db@npm:>= 1.43.0 < 2":
+  version: 1.47.0
+  resolution: "mime-db@npm:1.47.0"
+  checksum: f5f9220dd53c240c9234323571f632486c663e36676ebfdca9963fb9a92d1dd28b16124bceff60868fb70743764ade8466dd5e6a1a833decde89ae6d15211503
   languageName: node
   linkType: hard
 
@@ -16334,12 +16348,12 @@ fsevents@^1.2.7:
   linkType: hard
 
 "prompts@npm:^2.0.1":
-  version: 2.4.0
-  resolution: "prompts@npm:2.4.0"
+  version: 2.4.1
+  resolution: "prompts@npm:2.4.1"
   dependencies:
     kleur: ^3.0.3
     sisteransi: ^1.0.5
-  checksum: fd375679ad53bb6a85ac1edf6d3f48b4a120a9aac87d3f0e50756c02013f1e9ee835f10ba18edc2f21048cf8423a986aff8f75ee42f03ce1ebf1d1c65f5ef3cf
+  checksum: 705eae8c359edd7c5ba47404ef349d239334ebde0f55420588dd98449c52b38e35b52800ef55ad5804bb8c3b98b3b834beb749813f89e896d058ee18aa0d6c2c
   languageName: node
   linkType: hard
 
@@ -17289,7 +17303,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-dom@npm:*":
+"react-dom@npm:*, react-dom@npm:17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -17299,19 +17313,6 @@ fsevents@^1.2.7:
   peerDependencies:
     react: 17.0.2
   checksum: 960a74ff6670766846a73097a599115963df1574833c59ca0c2fd909758ebe7a6214cd14f5e6aa63ce846d8f39fde7f3b80474ccfcfadc45dd7f3246364718c6
-  languageName: node
-  linkType: hard
-
-"react-dom@npm:17.0.1":
-  version: 17.0.1
-  resolution: "react-dom@npm:17.0.1"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: ^0.20.1
-  peerDependencies:
-    react: 17.0.1
-  checksum: 6a70028fbe3c95e0056c5e8ce065b4a9b8d4ff3bffde9b016454072bde5e4b012af7668ca45b7235ace428267d5be5237b68ea87ce8c296e54e81a8d678a4355
   languageName: node
   linkType: hard
 
@@ -17464,21 +17465,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:17.0.1":
-  version: 17.0.1
-  resolution: "react-test-renderer@npm:17.0.1"
-  dependencies:
-    object-assign: ^4.1.1
-    react-is: ^17.0.1
-    react-shallow-renderer: ^16.13.1
-    scheduler: ^0.20.1
-  peerDependencies:
-    react: 17.0.1
-  checksum: 6ec269430beea4356180d90868a9959399781a03ae8de6a29f2edc29d6ca41432653d4103991467ebcc47be5bd2d9197789411e913da66369c2aa2f13311105f
-  languageName: node
-  linkType: hard
-
-"react-test-renderer@npm:^17.0.0":
+"react-test-renderer@npm:17.0.2, react-test-renderer@npm:^17.0.0":
   version: 17.0.2
   resolution: "react-test-renderer@npm:17.0.2"
   dependencies:
@@ -17492,23 +17479,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react@npm:*":
+"react@npm:*, react@npm:17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 7d0dfebafe1d297503157abb2e9acdb49852185deb8700c16f4a6faad87642f84903ab18cfc16f40b9a0dfe97540f99834982ee953e6d48b39c41608dc3e4b29
-  languageName: node
-  linkType: hard
-
-"react@npm:17.0.1":
-  version: 17.0.1
-  resolution: "react@npm:17.0.1"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: a76d86ec973eb4b25a46071ac7f974adfd66ed89ad1db63043be1d976ec25417520a210e6d724b0ad937422b706afcf9962cedda9e92125992a8c0e8a95f2051
   languageName: node
   linkType: hard
 
@@ -18376,7 +18353,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.20.1, scheduler@npm:^0.20.2":
+"scheduler@npm:^0.20.2":
   version: 0.20.2
   resolution: "scheduler@npm:0.20.2"
   dependencies:
@@ -20959,7 +20936,43 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"webpack@npm:*, webpack@npm:5.28.0":
+"webpack@npm:*":
+  version: 5.30.0
+  resolution: "webpack@npm:5.30.0"
+  dependencies:
+    "@types/eslint-scope": ^3.7.0
+    "@types/estree": ^0.0.46
+    "@webassemblyjs/ast": 1.11.0
+    "@webassemblyjs/wasm-edit": 1.11.0
+    "@webassemblyjs/wasm-parser": 1.11.0
+    acorn: ^8.0.4
+    browserslist: ^4.14.5
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.7.0
+    es-module-lexer: ^0.4.0
+    eslint-scope: ^5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.4
+    json-parse-better-errors: ^1.0.2
+    loader-runner: ^4.2.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    schema-utils: ^3.0.0
+    tapable: ^2.1.1
+    terser-webpack-plugin: ^5.1.1
+    watchpack: ^2.0.0
+    webpack-sources: ^2.1.1
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 133845a1a94b1c24339ee0aef5b961fd513868ad93b875c7c9a670dac2388aeae238519ace48c283453f52ccbb0159a211043db1cd17a38b12279546aa05ce44
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5.28.0":
   version: 5.28.0
   resolution: "webpack@npm:5.28.0"
   dependencies:

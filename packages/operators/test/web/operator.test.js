@@ -46,14 +46,14 @@ test('_operator.name invalid', async () => {
 });
 
 test('_operator.name not allowed to include "experimental"', async () => {
-  const input = { a: { _operator: { name: '_experimental_unsafe_js' } } };
+  const input = { a: { _operator: { name: '_experimental_op' } } };
   const parser = new WebParser({ context, contexts });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_unsafe_js"} at locationId.],
+      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_op"} at locationId.],
     ]
   `);
 });

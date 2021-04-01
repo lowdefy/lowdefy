@@ -271,7 +271,7 @@ test('update function should be called', async () => {
 
 test('update function should be called if error', async () => {
   const updateFunction = jest.fn();
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -280,6 +280,7 @@ test('update function should be called if error', async () => {
     await context.Requests.callRequest({ requestId: 'req_error' });
   } catch (e) {
     // catch thrown errors
+    console.log(e);
   }
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });

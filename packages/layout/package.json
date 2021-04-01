@@ -40,8 +40,8 @@
     "@lowdefy/block-tools": "3.12.4",
     "@lowdefy/helpers": "3.12.4",
     "antd": "4.4.2",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@babel/cli": "7.13.14",
@@ -64,7 +64,7 @@
     "process": "0.11.10",
     "react-markdown": "5.0.3",
     "react-syntax-highlight": "15.3.1",
-    "react-test-renderer": "17.0.1",
+    "react-test-renderer": "17.0.2",
     "style-loader": "2.0.0",
     "webpack": "5.28.0",
     "webpack-cli": "4.5.0",
