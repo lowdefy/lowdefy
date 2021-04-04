@@ -32,15 +32,30 @@ test('_js.function with body and args specified', () => {
   expect(fn(1, 2)).toEqual(3);
 });
 
-test('_js.function with body and no args specified', () => {
+test('_js.evaluate with body and no args specified', () => {
   const params = {
     body: `{
       const value = "world";
   return 'a new ' + 'vm for Hello ' +  value;
 }`,
   };
-  const fn = _js({ location, params, methodName: 'evaluate' });
   expect(_js({ location, params, methodName: 'evaluate' })).toEqual('a new vm for Hello world');
+});
+
+test('_js.evaluate with body with args that needs escaped characters', () => {
+  const params = {
+    body: `{
+      return "<div>" + args[0].html + "</html>";
+    }`,
+    args: [
+      {
+        html: '<a href="https://lowdefy.com">Lowdefy Website</a>',
+      },
+    ],
+  };
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual(
+    '<div><a href="https://lowdefy.com">Lowdefy Website</a></html>'
+  );
 });
 
 test('_js.function with file specified', () => {

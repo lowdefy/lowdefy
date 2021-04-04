@@ -46,20 +46,18 @@ function createFunction({ params, location, methodName }) {
     body = params.body;
   }
   const fn = (...args) => {
+    // TODO: User serializer instead so serialize dates in. To do this we need to dependency free serializer,
+    // might be a good idea just adding it inline instead of porting in the serializer function.
+    const jsFnString = `
+    var args = JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(args))}'));
+    function fn() ${body}
+    var result = JSON.stringify(fn());
+  `;
     const codeHandle = QuickJsVm.unwrapResult(
-      QuickJsVm.evalCode(
-        `
-      var args = JSON.parse('${JSON.stringify(args)}');
-      function fn() {
-        ${body}
-      }
-      var result = JSON.stringify(fn());
-    `,
-        {
-          shouldInterrupt: shouldInterruptAfterDeadline(Date.now() + 1000),
-          memoryLimitBytes: 1024 * 1024,
-        }
-      )
+      QuickJsVm.evalCode(jsFnString, {
+        shouldInterrupt: shouldInterruptAfterDeadline(Date.now() + 1000),
+        memoryLimitBytes: 1024 * 1024,
+      })
     );
     const resultHandle = QuickJsVm.getProp(QuickJsVm.global, 'result');
     codeHandle.dispose();
