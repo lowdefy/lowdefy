@@ -1,0 +1,601 @@
+- id: default
+  links:
+    - id: introduction
+      type: MenuLink
+      pageId: introduction
+      properties:
+        title: Introduction
+        icon: CoffeeOutlined
+    - id: tutorial
+      type: MenuGroup
+      properties:
+        title: Tutorial
+        icon: RocketOutlined
+      links:
+        - id: tutorial-start
+          type: MenuLink
+          pageId: tutorial-start
+          properties:
+            title: Getting started
+        - id: tutorial-create-page
+          type: MenuLink
+          pageId: tutorial-create-page
+          properties:
+            title: Creating a page
+        - id: tutorial-add-blocks
+          type: MenuLink
+          pageId: tutorial-add-blocks
+          properties:
+            title: Adding blocks
+        - id: tutorial-actions-operators
+          type: MenuLink
+          pageId: tutorial-actions-operators
+          properties:
+            title: Interactive pages
+        - id: tutorial-requests
+          type: MenuLink
+          pageId: tutorial-requests
+          properties:
+            title: Requests
+        - id: tutorial-deploy
+          type: MenuLink
+          pageId: tutorial-deploy
+          properties:
+            title: Deploy to Netlify
+        - id: next-steps
+          type: MenuLink
+          pageId: next-steps
+          properties:
+            title: Next steps
+    - id: concepts
+      type: MenuGroup
+      properties:
+        title: Concepts
+        icon: BulbOutlined
+      links:
+        - id: overview
+          type: MenuLink
+          pageId: overview
+          properties:
+            title: Overview
+        - id: cli
+          type: MenuLink
+          pageId: cli
+          properties:
+            title: The CLI
+        - id: lowdefy-schema
+          type: MenuLink
+          pageId: lowdefy-schema
+          properties:
+            title: Lowdefy App Schema
+        - id: context-and-state
+          type: MenuLink
+          pageId: context-and-state
+          properties:
+            title: Context and State
+        - id: blocks
+          type: MenuLink
+          pageId: blocks
+          properties:
+            title: Blocks
+        - id: layout
+          type: MenuLink
+          pageId: layout
+          properties:
+            title: Layout
+        - id: connections-and-requests
+          type: MenuLink
+          pageId: connections-and-requests
+          properties:
+            title: Connections and Requests
+        - id: events-and-actions
+          type: MenuLink
+          pageId: events-and-actions
+          properties:
+            title: Events and Actions
+        - id: operators
+          type: MenuLink
+          pageId: operators
+          properties:
+            title: Operators
+        - id: secrets
+          type: MenuLink
+          pageId: secrets
+          properties:
+            title: Secrets
+        - id: deployment
+          type: MenuLink
+          pageId: deployment
+          properties:
+            title: Deployment
+        - id: lists
+          type: MenuLink
+          pageId: lists
+          properties:
+            title: Lists
+        - id: custom-blocks
+          type: MenuLink
+          pageId: custom-blocks
+          properties:
+            title: Custom Blocks
+
+    - id: blocks_input
+      type: MenuGroup
+      properties:
+        title: Input Blocks
+        icon: FormOutlined
+      links:
+        - id: AutoComplete
+          type: MenuLink
+          pageId: AutoComplete
+        - id: ButtonSelector
+          type: MenuLink
+          pageId: ButtonSelector
+        - id: CheckboxSelector
+          type: MenuLink
+          pageId: CheckboxSelector
+        - id: ChromeColorSelector
+          type: MenuLink
+          pageId: ChromeColorSelector
+        - id: CircleColorSelector
+          type: MenuLink
+          pageId: CircleColorSelector
+        - id: ColorSelector
+          type: MenuLink
+          pageId: ColorSelector
+        - id: CompactColorSelector
+          type: MenuLink
+          pageId: CompactColorSelector
+        - id: DateRangeSelector
+          type: MenuLink
+          pageId: DateRangeSelector
+        - id: DateSelector
+          type: MenuLink
+          pageId: DateSelector
+        - id: DateTimeSelector
+          type: MenuLink
+          pageId: DateTimeSelector
+        - id: GithubColorSelector
+          type: MenuLink
+          pageId: GithubColorSelector
+        - id: MonthSelector
+          type: MenuLink
+          pageId: MonthSelector
+        - id: MultipleSelector
+          type: MenuLink
+          pageId: MultipleSelector
+        - id: NumberInput
+          type: MenuLink
+          pageId: NumberInput
+        - id: Pagination
+          type: MenuLink
+          pageId: Pagination
+        - id: ParagraphInput
+          type: MenuLink
+          pageId: ParagraphInput
+        - id: RadioSelector
+          type: MenuLink
+          pageId: RadioSelector
+        - id: RatingSlider
+          type: MenuLink
+          pageId: RatingSlider
+        - id: S3UploadButton
+          type: MenuLink
+          pageId: S3UploadButton
+        - id: Selector
+          type: MenuLink
+          pageId: Selector
+        - id: SliderColorSelector
+          type: MenuLink
+          pageId: SliderColorSelector
+        - id: SwatchesColorSelector
+          type: MenuLink
+          pageId: SwatchesColorSelector
+        - id: Switch
+          type: MenuLink
+          pageId: Switch
+        - id: TextArea
+          type: MenuLink
+          pageId: TextArea
+        - id: TextInput
+          type: MenuLink
+          pageId: TextInput
+        - id: TitleInput
+          type: MenuLink
+          pageId: TitleInput
+        - id: TwitterColorSelector
+          type: MenuLink
+          pageId: TwitterColorSelector
+        - id: WeekSelector
+          type: MenuLink
+          pageId: WeekSelector
+    - id: blocks_display
+      type: MenuGroup
+      properties:
+        title: Display Blocks
+        icon: PictureOutlined
+      links:
+        - id: Alert
+          type: MenuLink
+          pageId: Alert
+        - id: Anchor
+          type: MenuLink
+          pageId: Anchor
+        - id: Avatar
+          type: MenuLink
+          pageId: Avatar
+        - id: Breadcrumb
+          type: MenuLink
+          pageId: Breadcrumb
+        - id: Button
+          type: MenuLink
+          pageId: Button
+        - id: DangerousHtml
+          type: MenuLink
+          pageId: DangerousHtml
+        - id: DangerousMarkdown
+          type: MenuLink
+          pageId: DangerousMarkdown
+        - id: Descriptions
+          type: MenuLink
+          pageId: Descriptions
+        - id: Divider
+          type: MenuLink
+          pageId: Divider
+        - id: EChart
+          type: MenuLink
+          pageId: EChart
+        - id: Html
+          type: MenuLink
+          pageId: Html
+        - id: Icon
+          type: MenuLink
+          pageId: Icon
+        - id: Markdown
+          type: MenuLink
+          pageId: Markdown
+        - id: MarkdownWithCode
+          type: MenuLink
+          pageId: MarkdownWithCode
+        - id: Menu
+          type: MenuLink
+          pageId: Menu
+        - id: Message
+          type: MenuLink
+          pageId: Message
+        - id: MobileMenu
+          type: MenuLink
+          pageId: MobileMenu
+        - id: Notification
+          type: MenuLink
+          pageId: Notification
+        - id: Paragraph
+          type: MenuLink
+          pageId: Paragraph
+        - id: Progress
+          type: MenuLink
+          pageId: Progress
+        # - id: Skeleton
+        #   type: MenuLink
+        #   pageId: Skeleton
+        - id: Statistic
+          type: MenuLink
+          pageId: Statistic
+        - id: Title
+          type: MenuLink
+          pageId: Title
+
+    - id: blocks_container
+      type: MenuGroup
+      properties:
+        title: Container Blocks
+        icon: ContainerOutlined
+      links:
+        - id: Affix
+          type: MenuLink
+          pageId: Affix
+        - id: Badge
+          type: MenuLink
+          pageId: Badge
+        - id: Box
+          type: MenuLink
+          pageId: Box
+        - id: Card
+          type: MenuLink
+          pageId: Card
+        - id: Collapse
+          type: MenuLink
+          pageId: Collapse
+        - id: Comment
+          type: MenuLink
+          pageId: Comment
+        - id: ConfirmModal
+          type: MenuLink
+          pageId: ConfirmModal
+        - id: Drawer
+          type: MenuLink
+          pageId: Drawer
+        - id: Label
+          type: MenuLink
+          pageId: Label
+        - id: Modal
+          type: MenuLink
+          pageId: Modal
+        - id: Result
+          type: MenuLink
+          pageId: Result
+        - id: Span
+          type: MenuLink
+          pageId: Span
+        - id: Spin
+          type: MenuLink
+          pageId: Spin
+        - id: Tabs
+          type: MenuLink
+          pageId: Tabs
+
+    - id: blocks_context
+      type: MenuGroup
+      properties:
+        title: Context Blocks
+        icon: GroupOutlined
+      links:
+        - id: Context
+          type: MenuLink
+          pageId: Context
+        - id: PageHCF
+          type: MenuLink
+          pageId: PageHCF
+        - id: PageHCF
+          type: MenuLink
+          pageId: PageHCF
+        - id: PageHCSF
+          type: MenuLink
+          pageId: PageHCSF
+        - id: PageHeaderMenu
+          type: MenuLink
+          pageId: PageHeaderMenu
+        - id: PageHSCF
+          type: MenuLink
+          pageId: PageHSCF
+        - id: PageSHCF
+          type: MenuLink
+          pageId: PageSHCF
+        - id: PageSiderMenu
+          type: MenuLink
+          pageId: PageSiderMenu
+    - id: blocks_list
+      type: MenuGroup
+      properties:
+        title: List Blocks
+        icon: OrderedListOutlined
+      links:
+        - id: ControlledList
+          type: MenuLink
+          pageId: ControlledList
+        - id: List
+          type: MenuLink
+          pageId: List
+    - id: connections
+      type: MenuGroup
+      properties:
+        title: Connections
+        icon: ApiOutlined
+      links:
+        - id: AWSS3
+          type: MenuLink
+          pageId: AWSS3
+          properties:
+            title: AWS S3
+        - id: AxiosHttp
+          type: MenuLink
+          pageId: AxiosHttp
+          properties:
+            title: Axios HTTP
+        - id: GoogleSheet
+          type: MenuLink
+          pageId: GoogleSheet
+          properties:
+            title: Google Sheets
+        - id: MongoDB
+          type: MenuLink
+          pageId: MongoDB
+        - id: SendGridMail
+          type: MenuLink
+          pageId: SendGridMail
+    - id: actions
+      type: MenuGroup
+      properties:
+        title: Actions
+        icon: ThunderboltOutlined
+      links:
+        - id: CallMethod
+          type: MenuLink
+          pageId: CallMethod
+        - id: Link
+          type: MenuLink
+          pageId: Link
+        - id: MessageAction
+          type: MenuLink
+          pageId: MessageAction # Clash with Message block
+          properties:
+            title: Message
+        - id: NotificationAction
+          type: MenuLink
+          pageId: NotificationAction # Clash with Notification block
+          properties:
+            title: Notification
+        - id: Request
+          type: MenuLink
+          pageId: Request
+        - id: Reset
+          type: MenuLink
+          pageId: Reset
+        - id: ScrollTo
+          type: MenuLink
+          pageId: ScrollTo
+        - id: SetGlobal
+          type: MenuLink
+          pageId: SetGlobal
+        - id: SetState
+          type: MenuLink
+          pageId: SetState
+        - id: Validate
+          type: MenuLink
+          pageId: Validate
+    - id: operators
+      type: MenuGroup
+      properties:
+        title: Operators
+        icon: ToolOutlined
+      links:
+        - id: _and
+          type: MenuLink
+          pageId: _and
+        - id: _args
+          type: MenuLink
+          pageId: _args
+        - id: _array
+          type: MenuLink
+          pageId: _array
+        - id: _base64
+          type: MenuLink
+          pageId: _base64
+        - id: _date
+          type: MenuLink
+          pageId: _date
+        - id: _diff
+          type: MenuLink
+          pageId: _diff
+        - id: _divide
+          type: MenuLink
+          pageId: _divide
+        - id: _eq
+          type: MenuLink
+          pageId: _eq
+        - id: _event
+          type: MenuLink
+          pageId: _event
+        - id: _format
+          type: MenuLink
+          pageId: _format
+        - id: _function
+          type: MenuLink
+          pageId: _function
+        - id: _get
+          type: MenuLink
+          pageId: _get
+        - id: _global
+          type: MenuLink
+          pageId: _global
+        - id: _gt
+          type: MenuLink
+          pageId: _gt
+        - id: _gte
+          type: MenuLink
+          pageId: _gte
+        - id: _if
+          type: MenuLink
+          pageId: _if
+        - id: _if_none
+          type: MenuLink
+          pageId: _if_none
+        - id: _index
+          type: MenuLink
+          pageId: _index
+        - id: _input
+          type: MenuLink
+          pageId: _input
+        - id: _json
+          type: MenuLink
+          pageId: _json
+        - id: _list_contexts
+          type: MenuLink
+          pageId: _list_contexts
+        - id: _log
+          type: MenuLink
+          pageId: _log
+        - id: _lt
+          type: MenuLink
+          pageId: _lt
+        - id: _lte
+          type: MenuLink
+          pageId: _lte
+        - id: _math
+          type: MenuLink
+          pageId: _math
+        - id: _media
+          type: MenuLink
+          pageId: _media
+        - id: _menu
+          type: MenuLink
+          pageId: _menu
+        - id: _mql
+          type: MenuLink
+          pageId: _mql
+        - id: _ne
+          type: MenuLink
+          pageId: _ne
+        - id: _not
+          type: MenuLink
+          pageId: _not
+        - id: _nunjucks
+          type: MenuLink
+          pageId: _nunjucks
+        - id: _object
+          type: MenuLink
+          pageId: _object
+        - id: _operator
+          type: MenuLink
+          pageId: _operator
+        - id: _or
+          type: MenuLink
+          pageId: _or
+        - id: _product
+          type: MenuLink
+          pageId: _product
+        - id: _random
+          type: MenuLink
+          pageId: _random
+        - id: _ref
+          type: MenuLink
+          pageId: _ref
+        - id: _regex
+          type: MenuLink
+          pageId: _regex
+        - id: _request
+          type: MenuLink
+          pageId: _request
+        - id: _secret
+          type: MenuLink
+          pageId: _secret
+        - id: _state
+          type: MenuLink
+          pageId: _state
+        - id: _string
+          type: MenuLink
+          pageId: _string
+        - id: _subtract
+          type: MenuLink
+          pageId: _subtract
+        - id: _sum
+          type: MenuLink
+          pageId: _sum
+        - id: _type
+          type: MenuLink
+          pageId: _type
+        - id: _uri
+          type: MenuLink
+          pageId: _uri
+        - id: _url_query
+          type: MenuLink
+          pageId: _url_query
+        - id: _uuid
+          type: MenuLink
+          pageId: _uuid
+        - id: _var
+          type: MenuLink
+          pageId: _var
+        - id: _yaml
+          type: MenuLink
+          pageId: _yaml
