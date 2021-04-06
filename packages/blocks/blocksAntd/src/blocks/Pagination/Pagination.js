@@ -29,10 +29,10 @@ const getPageSize = ({ properties, value }) => {
   return 10;
 };
 
-const changeValue = ({ current, pageSize, methods }) => {
+const createChangeHandler = ({ eventName, methods }) => (current, pageSize) => {
   methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
   methods.triggerEvent({
-    name: 'onSizeChange',
+    name: eventName,
     event: { current, pageSize, skip: current * pageSize },
   });
 };
@@ -41,8 +41,8 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
   return (
     <Pagination
       id={blockId}
-      onShowSizeChange={(current, pageSize) => changeValue({ current, pageSize, methods })}
-      onChange={(current, pageSize) => changeValue({ current, pageSize, methods })}
+      onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods })}
+      onChange={createChangeHandler({ eventName: 'onChange', methods })}
       total={properties.total !== undefined ? properties.total : 100}
       size={properties.size}
       simple={!!properties.simple}
