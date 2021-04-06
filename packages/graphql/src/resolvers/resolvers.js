@@ -16,6 +16,7 @@
 
 import GraphQLJSON from 'graphql-type-json';
 
+import authenticated from './queries/auth/authenticated';
 import lowdefyGlobal from './queries/lowdefyGlobal/lowdefyGlobal';
 import menu from './queries/menu/menu';
 import openIdAuthorizationUrl from './queries/auth/openIdAuthorizationUrl';
@@ -34,6 +35,7 @@ function resolveMenuItem(menuItem) {
 const resolvers = {
   JSON: GraphQLJSON,
   Query: {
+    authenticated,
     lowdefyGlobal,
     menu,
     openIdAuthorizationUrl,
