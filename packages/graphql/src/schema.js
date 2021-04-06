@@ -19,12 +19,13 @@ import { gql } from 'apollo-server';
 const typeDefs = gql`
   scalar JSON
   type Query {
-    page(pageId: ID!): JSON
+    authenticated: Boolean
     lowdefyGlobal: JSON
     menu: MenuResponse
     openIdAuthorizationUrl(openIdAuthorizationUrlInput: OpenIdAuthorizationUrlInput!): String
     openIdCallback(openIdCallbackInput: OpenIdCallbackInput!): OpenIdCallbackResponse
     openIdLogoutUrl(openIdLogoutUrlInput: OpenIdLogoutUrlInput!): String
+    page(pageId: ID!): JSON
     request(input: RequestInput!): RequestResponse
   }
 
