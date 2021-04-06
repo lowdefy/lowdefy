@@ -76,7 +76,7 @@ _ref:
 
             ```yaml
             name: lowdefy-project-template
-            lowdefy: 3.12.5
+            lowdefy: 3.12.6
 
             pages:
             ################ -------- Copy from here -------- ################
