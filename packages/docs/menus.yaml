@@ -397,6 +397,11 @@
           pageId: GoogleSheet
           properties:
             title: Google Sheets
+        - id: Knex
+          type: MenuLink
+          pageId: Knex
+          properties:
+            title: Knex
         - id: MongoDB
           type: MenuLink
           pageId: MongoDB

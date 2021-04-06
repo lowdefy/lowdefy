@@ -1,0 +1,159 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: Knex
+    pageTitle: Knex
+    section: Connections
+    filePath: connections/Knex.yaml
+    content:
+      - id: markdown
+        type: MarkdownWithCode
+        properties:
+          content: |
+            [`Knex.js`](http://knexjs.org) is a SQL query builder that can be used to connect to [PostgreSQL](/PostgreSQL), [MSSQL](/MSSQL), [MySQL](/MySQL), [MariaDB](/MariaDB), [SQLite](/SQLite), [Oracle](/Oracle), and [Amazon Redshift](/AmazonRedshift) databases.
+
+            The Knex connection can be used to execute raw SQL queries using the `KnexRaw` requests, or the Knex query builder can be used with the `KnexBuilder` request.
+
+            ## Connections
+
+            Connection types:
+              - Knex
+
+            ### Knex
+
+            #### Properties
+            - `client: enum`: __Required__ - The database client to use. One of:
+              - `mssql`
+              - `mysql`
+              - `mysql2`
+              - `oracledb`
+              - `postgres`
+              - `pg` (alias of `postgres`)
+              - `postgresql` (alias of `postgres`)
+              - `redshift`
+              - `sqlite3`
+              - `sqlite` (alias of `sqlite3`)
+            - `connection: object | string`: __Required__ - Connection string or object to pass to the database client. See the specific client documentation for more details.
+            - `searchPath: string`:  Set PostgreSQL search path.
+            - `version: string`:  Set database version.
+
+            #### Examples
+
+            MySQL:
+            ```yaml
+            connections:
+              - id: mysql
+                type: Knex
+                properties:
+                  client: postgres
+                  connection:
+                    host: '127.0.0.1'
+                    user : my_database_user
+                    password : my_database_password
+                    database : my_database
+            ```
+
+            PostgreSQL with connection string:
+            ```yaml
+            connections:
+              - id: postgres
+                type: Knex
+                properties:
+                  client: postgres
+                  connection:
+                    _secret: PG_CONNECTION_STRING
+            ```
+
+            ## Requests
+
+            Request types:
+              - KnexBuilder
+              - KnexRaw
+
+            ### KnexBuilder
+
+            #### Properties
+            - `query: object[]`: __Required__ - SQL query builder array. An array of objects, with a single key which is the name of the knex builder function. The value should be an array of arguments to pass to the builder function.
+            - `tableName: string | object`: The name of the table to query from.
+
+            #### Examples
+
+            Build a query:
+            ```yaml
+            id: knexBuilder
+            type: KnexBuilder
+            connectionId: knex
+            properties:
+              query:
+                - select:
+                    - '*'
+                - from:
+                    - users
+                - where:
+                    - name
+                    - _state: name
+            ```
+
+            ### KnexRaw
+
+            #### Properties
+            - `query: string`: __Required__ - SQL query string.
+            - `parameters: string | number | array | object`: SQL query parameters.
+
+            #### Examples
+
+            Simple raw query:
+            ```yaml
+            id: knexRaw
+            type: KnexRaw
+            connectionId: knex
+            properties:
+              query: SELECT * FROM "my_table";
+            ```
+
+            Query with named parameters:
+            ```yaml
+            id: knexRaw
+            type: KnexRaw
+            connectionId: knex
+            properties:
+              query: select * from users where name = :name
+              parameters:
+                name:
+                  _state: selected_name
+            ```
+
+            Query with positional parameters:
+            ```yaml
+            id: knexRaw
+            type: KnexRaw
+            connectionId: knex
+            properties:
+              query: select * from users where name = ?
+              parameters:
+                - _state: selected_name
+            ```
+
+            Reference a `.sql` file:
+            ```yaml
+            id: knexRaw
+            type: KnexRaw
+            connectionId: knex
+            properties:
+              query:
+                _ref: my_query.sql
+            ```

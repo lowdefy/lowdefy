@@ -27,7 +27,7 @@
     },
     "version": {
       "type": "string",
-      "description": "Database version.",
+      "description": "Set database version.",
       "errorMessage": {
         "type": "Knex connection property \"version\" should be a string."
       }

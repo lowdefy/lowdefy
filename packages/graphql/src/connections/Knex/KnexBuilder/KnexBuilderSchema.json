@@ -6,7 +6,7 @@
   "properties": {
     "query": {
       "type": "array",
-      "description": "SQL query string.",
+      "description": "SQL query builder array. An array of objects, with a single key which is the name of the knex builder function. The value should be an array of arguments to pass to the builder function.",
       "errorMessage": {
         "type": "KnexBuilder request property \"query\" should be an array."
       }
