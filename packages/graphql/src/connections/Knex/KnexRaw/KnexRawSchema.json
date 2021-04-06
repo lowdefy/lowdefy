@@ -18,5 +18,11 @@
         "type": "KnexRaw request property \"parameters\" should be a string, number, array, or object."
       }
     }
+  },
+  "errorMessage": {
+    "type": "KnexRaw request properties should be an object.",
+    "required": {
+      "query": "KnexRaw request should have required property \"query\"."
+    }
   }
 }
