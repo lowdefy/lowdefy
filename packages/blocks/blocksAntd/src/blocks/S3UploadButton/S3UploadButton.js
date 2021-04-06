@@ -7,7 +7,7 @@ import Button from '../Button/Button';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;
-  const { bucket, key } = get(s3Parameters, 'uid', { default: {} });
+  const { bucket, key } = get(s3Parameters, uid, { default: {} });
   return { bucket, key, lastModified, name, percent, size, status, type, uid };
 };
 
