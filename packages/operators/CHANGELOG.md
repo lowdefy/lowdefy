@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.5](https://github.com/lowdefy/lowdefy/compare/v3.12.4...v3.12.5) (2021-03-31)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.12.4](https://github.com/lowdefy/lowdefy/compare/v3.12.3...v3.12.4) (2021-03-30)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+## [3.12.3](https://github.com/lowdefy/lowdefy/compare/v3.12.2...v3.12.3) (2021-03-26)
+
+
+### Bug Fixes
+
+* Update _ne tests. ([5611439](https://github.com/lowdefy/lowdefy/commit/5611439c4fa2eeae0968ed0f99be4e73465875a1))
+* **operators:** Add _ne operator. ([d7b62e0](https://github.com/lowdefy/lowdefy/commit/d7b62e0b898d8948ab77d9800ec0b8afdd2d8503))
+
+
+
+
+
 ## [3.12.2](https://github.com/lowdefy/lowdefy/compare/v3.12.1...v3.12.2) (2021-03-24)
 
 **Note:** Version bump only for package @lowdefy/operators

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.5](https://github.com/lowdefy/lowdefy/compare/v3.12.4...v3.12.5) (2021-03-31)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.12.4](https://github.com/lowdefy/lowdefy/compare/v3.12.3...v3.12.4) (2021-03-30)
+
+**Note:** Version bump only for package @lowdefy/renderer
+
+
+
+
+
+## [3.12.3](https://github.com/lowdefy/lowdefy/compare/v3.12.2...v3.12.3) (2021-03-26)
+
+
+### Bug Fixes
+
+* **renderer:** List render race condition, closes [#520](https://github.com/lowdefy/lowdefy/issues/520) ([07907df](https://github.com/lowdefy/lowdefy/commit/07907df30f3ad784709a500bf53c86dec739a0e1))
+
+
+
+
+
 ## [3.12.2](https://github.com/lowdefy/lowdefy/compare/v3.12.1...v3.12.2) (2021-03-24)
 
 **Note:** Version bump only for package @lowdefy/renderer
