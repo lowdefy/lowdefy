@@ -14,10 +14,78 @@
   limitations under the License.
 */
 
+import { validate } from '@lowdefy/ajv';
+import knex from 'knex';
 import KnexRaw from './KnexRaw';
 
-const { resolver } = KnexRaw;
+const mockRaw = jest.fn(() => {
+  return Promise.resolve({ rows: [{ name: 'name' }], _types: 'types' });
+});
 
-test('x', () => {
-  expect().toBe();
-})
+jest.mock('knex', () =>
+  jest.fn(() => ({
+    raw: mockRaw,
+  }))
+);
+
+const { resolver, schema } = KnexRaw;
+
+const request = {
+  query: 'SELECT * FROM "table" WHERE "name" = :name',
+  parameters: { name: 'name' },
+};
+const connection = {
+  client: 'pg',
+  connection: 'connection',
+};
+
+test('knexRaw', async () => {
+  const res = await resolver({ request, connection });
+  expect(knex.mock.calls).toEqual([
+    [
+      {
+        client: 'pg',
+        connection: 'connection',
+      },
+    ],
+  ]);
+  expect(mockRaw.mock.calls).toEqual([
+    [
+      'SELECT * FROM "table" WHERE "name" = :name',
+      {
+        name: 'name',
+      },
+    ],
+  ]);
+  expect(res).toEqual({
+    rows: [
+      {
+        name: 'name',
+      },
+    ],
+  });
+});
+
+test('valid request', () => {
+  let request = {
+    query: 'SELECT * FROM "table"',
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+  request = {
+    query: 'SELECT * FROM "table" WHERE "name" = :name',
+    parameters: { name: 'name' },
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+  request = {
+    query: 'SELECT * FROM "table" WHERE "name" = ?',
+    parameters: ['name'],
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
+test('query missing', () => {
+  const request = {};
+  expect(() => validate({ schema, data: request })).toThrow(
+    'KnexRaw request should have required property "query".'
+  );
+});

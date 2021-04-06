@@ -17,9 +17,44 @@
 import { validate } from '@lowdefy/ajv';
 import Knex from './Knex';
 
-const { schema } = AxiosHttp;
+const { schema } = Knex;
 
 test('All requests are present', () => {
   expect(Knex.requests.KnexRaw).toBeDefined();
+  expect(Knex.requests.KnexBuilder).toBeDefined();
 });
 
+test('valid connection schema', () => {
+  const connection = {
+    client: 'pg',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('valid connection schema, string connection', () => {
+  const connection = {
+    client: 'pg',
+    connection: 'connection',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('valid connection schema, object connection', () => {
+  const connection = {
+    client: 'pg',
+    connection: {
+      host: '127.0.0.1',
+      user: 'your_database_user',
+      password: 'your_database_password',
+      database: 'myapp_test',
+    },
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('client missing', () => {
+  const connection = {};
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'Knex connection should have required property "client".'
+  );
+});

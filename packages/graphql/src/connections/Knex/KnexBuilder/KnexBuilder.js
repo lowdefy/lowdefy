@@ -20,6 +20,9 @@ import schema from './KnexBuilderSchema.json';
 
 async function knexBuilder({ request, connection }) {
   let client = knex(connection);
+  if (request.tableName) {
+    client = client(request.tableName);
+  }
   for (const method of request.query) {
     if (Object.keys(method).length !== 1) {
       throw new Error('Invalid query');
