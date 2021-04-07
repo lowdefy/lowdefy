@@ -19,6 +19,18 @@ import createAuthorizationController from './authorizationController';
 import { testBootstrapContext } from '../test/testContext';
 import { ServerError } from '../context/errors';
 
+test('authenticated true', async () => {
+  const context = testBootstrapContext({ user: { sub: 'sub' } });
+  const authController = createAuthorizationController(context);
+  expect(authController.authenticated).toBe(true);
+});
+
+test('authenticated true', async () => {
+  const context = testBootstrapContext({});
+  const authController = createAuthorizationController(context);
+  expect(authController.authenticated).toBe(false);
+});
+
 test('authorize with user', async () => {
   const context = testBootstrapContext({ user: { sub: 'sub' } });
   const authController = createAuthorizationController(context);

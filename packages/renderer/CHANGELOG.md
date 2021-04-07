@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.6](https://github.com/lowdefy/lowdefy/compare/v3.12.5...v3.12.6) (2021-04-06)
+
+
+### Bug Fixes
+
+* Fix bug where user object is still defined after login has expired. ([e3e8803](https://github.com/lowdefy/lowdefy/commit/e3e8803070c3fb59985eadb6c20674c820e3c56a))
+
+
+
+
+
 ## [3.12.5](https://github.com/lowdefy/lowdefy/compare/v3.12.4...v3.12.5) (2021-03-31)
 
 **Note:** Version bump only for package @lowdefy/renderer
