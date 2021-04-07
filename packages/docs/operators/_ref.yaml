@@ -60,7 +60,7 @@ _ref:
 
       ###### Evaluating JavaScript
 
-      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file and exports the returned result. 
+      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file that exports the a JSON serializable result or function when evaluated. 
 
       For example:
       ```js
