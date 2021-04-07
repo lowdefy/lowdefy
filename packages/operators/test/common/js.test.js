@@ -49,6 +49,47 @@ test('_js with code and args specified named function', () => {
   expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
 });
 
+test('_js with code and args specified to return json object', () => {
+  const params = {
+    code: `function (one, two) {
+  return { a: one, b: two, c: [1,2,3, one, two, "three"]};
+}`,
+    args: [12, 14],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn(1, 2)).toEqual({ a: 1, b: 2, c: [1, 2, 3, 1, 2, 'three'] });
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual({
+    a: 12,
+    b: 14,
+    c: [1, 2, 3, 12, 14, 'three'],
+  });
+  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual({
+    c: [1, 2, 3, null, null, 'three'],
+  });
+});
+
+test('_js with code and args specified to return json array', () => {
+  const params = {
+    code: `function (one, two) {
+  return [1,2,3, one, two, "three"];
+}`,
+    args: [12, 14],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn(1, 2)).toEqual([1, 2, 3, 1, 2, 'three']);
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual([1, 2, 3, 12, 14, 'three']);
+  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual([
+    1,
+    2,
+    3,
+    null,
+    null,
+    'three',
+  ]);
+});
+
 test('_js with undefined result returns null', () => {
   const params = {
     code: `function add(one, two) {
