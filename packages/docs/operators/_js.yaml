@@ -1,0 +1,264 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _js
+    pageTitle: _js
+    filePath: operators/_js.yaml
+    description: |
+      The `_js` can evaluate or create a JavaScript function. The JavaScript function can return any primitives or JSON data.
+
+      To make this as secure as possible, the JavaScript is evaluated inside a JavaScript WebAssembly VM. The JavaScript engine is [QuickJS](https://bellard.org/quickjs/), a small and fast JavaScript implementation. 
+
+      As a result, the following applies to the JavaScript function definitions:
+        - The `code` operator argument requires a function definition.
+        - Function arguments can be used inside the function, and is passed via the `args` operator argument as a array.
+        - A primitive or JSON result will be returned, so the function result must be JSON serializable.
+        - Only a limited subset of the browser JavaScript APIs is available, in particular the JavaScript inside the VM will not have network access.
+        - Dependencies and file imports are not supported.
+
+      > The JavaScript function can be passed to the `code` argument during build using the `_ref.eval` method. See the examples below and the [`_ref`](/_ref) operator for more details.
+
+    methods:
+      - name: evaluate
+        types: |
+          ```
+          ({
+            code: string, 
+            args?: any[]
+          }): any
+          ```
+        description: |
+          The `_js.evaluate` method evaluates JavaScript, takes an array of `args` as input for parameters, and returns the evaluated result.
+          A JavaScript function string must be provided to the `code` argument.
+
+        arguments: |
+          ###### code
+          The JavaScript function as a string to evaluate.
+
+          ###### args
+          An array of input arguments to pass to the JavaScript function in the order in which the function arguments are defined.
+
+        examples: |
+          ###### JavaScript evaluate a inline function:
+          ```yaml
+          _js.evaluate: 
+            code: |
+              function makePrimes(to) {
+                return [...Array(to-1).keys()].map(i=>i+2).filter(n =>
+                [...Array(n-2).keys()].map(i=>i+2).reduce((acc,x)=> acc && n % x !== 0, true)
+              }
+            args:
+              - 50
+          ```
+          Returns: 
+          ```
+          [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+          ```
+
+          ###### JavaScript evaluate loaded from a JavaScript file:
+          Operator definition:
+          ```yaml
+          _js.evaluate: 
+            code:
+              _ref:
+                eval: myMath/makePrimes.js
+            args:
+              - 50
+          ```
+          JavaScript loaded from a file using the `_ref.eval` operator method:
+          ```js
+          // myMath/makePrimes.js
+          function makePrimes(to) {
+            return [...Array(to-1).keys()].map(i=>i+2).filter(n =>
+            [...Array(n-2).keys()].map(i=>i+2).reduce((acc,x)=> acc && n % x !== 0, true)
+          }
+          module.exports = makePrimes;
+          ```
+          Returns: 
+          ```
+          [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+          ```
+      - name: function
+        types: |
+          ```
+          ({
+            code: string, 
+          }): any
+          ```
+        description: |
+          The `_js.function` method returns a JavaScript function. The JavaScript function definition is be provided as a string to the `code` operator argument.
+
+        arguments: |
+          ###### code
+          The JavaScript function as a string to evaluate.
+
+        examples: |
+          ###### _js.function to create a label.formatter function for an EChart block:
+          ```yaml
+          id: chart
+          type: EChart
+          properties:
+            height: 600
+            option:
+              series:
+                - radius:
+                    - '15%'
+                    - '80%'
+                  type: 'sunburst'
+                  sort: null
+                  emphasis:
+                    focus: 'ancestor'
+                  data:
+                    - value: 8,
+                      children:
+                        - value: 4,
+                          children:
+                            - value: 2
+                            - value: 1
+                            - value: 1
+                            - value: 0.5
+                        - value: 2
+                    - value: 4
+                      children:
+                        - children:
+                            - value: 2
+                    - value: 4
+                      children:
+                        - children:
+                            - value: 2
+                    - value: 3
+                      children:
+                        - children:
+                            - value: 1
+                  label:
+                    color: '#000'
+                    textBorderColor: '#fff'
+                    textBorderWidth: 2
+                    formatter:
+                      _js.function:
+                        code: |
+                          function (param) {
+                            var depth = param.treePathInfo.length;
+                            if (depth === 2) {
+                                return 'radial';
+                            }
+                            else if (depth === 3) {
+                                return 'tangential';
+                            }
+                            else if (depth === 4) {
+                                return '0';
+                            }
+                          }
+                  levels:
+                    - {}
+                    - itemStyle:
+                        color: '#CD4949'
+                      label:
+                        rotate: 'radial'
+                    - itemStyle:
+                        color: '#F47251'
+                      label:
+                        rotate: 'tangential'
+                    - itemStyle:
+                        color: '#FFC75F'
+                      label:
+                        rotate: 0
+          ```
+
+          ###### _js.function to create a label.formatter function for an EChart block loaded using the `_ref.eval` operator:
+
+          The chart config:
+          ```yaml
+          id: chart
+          type: EChart
+          properties:
+            height: 600
+            option:
+              series:
+                - radius:
+                    - '15%'
+                    - '80%'
+                  type: 'sunburst'
+                  sort: null
+                  emphasis:
+                    focus: 'ancestor'
+                  data:
+                    - value: 8,
+                      children:
+                        - value: 4,
+                          children:
+                            - value: 2
+                            - value: 1
+                            - value: 1
+                            - value: 0.5
+                        - value: 2
+                    - value: 4
+                      children:
+                        - children:
+                            - value: 2
+                    - value: 4
+                      children:
+                        - children:
+                            - value: 2
+                    - value: 3
+                      children:
+                        - children:
+                            - value: 1
+                  label:
+                    color: '#000'
+                    textBorderColor: '#fff'
+                    textBorderWidth: 2
+                    formatter:
+                      _js.function:
+                        code: 
+                          _ref:
+                            eval: 'foo/fooFormatter.js'
+                  levels:
+                    - {}
+                    - itemStyle:
+                        color: '#CD4949'
+                      label:
+                        rotate: 'radial'
+                    - itemStyle:
+                        color: '#F47251'
+                      label:
+                        rotate: 'tangential'
+                    - itemStyle:
+                        color: '#FFC75F'
+                      label:
+                        rotate: 0
+          ```
+
+          JavaScript loaded from a file using the `_ref.eval` operator method:
+          ```js
+          // foo/fooFormatter.js
+          function fooFormatter(param) {
+            var depth = param.treePathInfo.length;
+            if (depth === 2) {
+              return 'radial';
+            }
+            else if (depth === 3) {
+              return 'tangential';
+            }
+            else if (depth === 4) {
+              return '0';
+            }
+          }
+
+          module.exports = fooFormatter;
+          ```

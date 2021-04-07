@@ -395,9 +395,6 @@ menus:
           - id: PageHCF
             type: MenuLink
             pageId: PageHCF
-          - id: PageHCF
-            type: MenuLink
-            pageId: PageHCF
           - id: PageHCSF
             type: MenuLink
             pageId: PageHCSF
@@ -555,6 +552,9 @@ menus:
           - id: _input
             type: MenuLink
             pageId: _input
+          - id: _js
+            type: MenuLink
+            pageId: _js
           - id: _json
             type: MenuLink
             pageId: _json
@@ -794,6 +794,7 @@ pages:
   - _ref: operators/_if_none.yaml
   - _ref: operators/_index.yaml
   - _ref: operators/_input.yaml
+  - _ref: operators/_js.yaml
   - _ref: operators/_json.yaml
   - _ref: operators/_list_contexts.yaml
   - _ref: operators/_log.yaml
