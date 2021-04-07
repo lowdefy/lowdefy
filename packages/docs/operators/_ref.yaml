@@ -47,7 +47,7 @@ _ref:
 
       ###### Transformer
 
-      A transformer is a Javascript function that receives the result of the `_ref` operator, and its `vars`. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a Javascript file that exports a transformer function. For example:
+      A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars`. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function. For example:
 
       ```js
       // transformer.js
@@ -58,6 +58,37 @@ _ref:
       module.exports = transformer;
       ```
 
+      ###### Evaluating JavaScript
+
+      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file and exports the returned result. 
+
+      For example:
+      ```js
+      // fooHelpers/fooFn.js
+      function fooFn(value) {
+        return { foo: value };
+      }
+      module.exports = fooFn(10);
+      ```
+      This will evaluate to an object: `{ foo: 10 }`. 
+
+      And when returning a function will provide the exported function, for example:
+      ```js
+      // fooHelpers/makePrimes.js
+      function a() {
+        // some other js function
+      };
+      function fooFn(value) {
+        return { foo: value };
+      }
+      module.exports = fooFn;
+      ```
+      This will evaluate to the exported function as a string:
+      ```yaml
+      "function fooFn(value) {
+        return { foo: value };
+      }"
+      ```
     arguments: |
       ###### string
       The file path to the referenced file, from the root of the project directory.
@@ -65,12 +96,13 @@ _ref:
       ###### object
         - `path: string`: __Required__ - The file path to the referenced file, from the root of the project directory.
         - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
-        - `transformer: string`: The file path to a javascript file, from the root of the project directory, that exports a transformer function.
+        - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
+        _ `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
     examples: |
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: v4.0.0
+      lowdefy: '3.12.5'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -91,7 +123,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: v4.0.0
+      lowdefy: '3.12.5'
       pages:
         - id: page1
           type: PageHeaderMenu
