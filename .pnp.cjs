@@ -4564,7 +4564,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
             ["mssql", "npm:6.3.1"],
             ["mysql", "npm:2.18.1"],
-            ["openid-client", "npm:4.5.2"],
+            ["openid-client", "npm:4.6.0"],
             ["pg", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:8.5.1"],
             ["saslprep", "npm:1.0.3"],
             ["sqlite3", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:5.0.2"],
@@ -20758,10 +20758,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["openid-client", [
-        ["npm:4.5.2", {
-          "packageLocation": "./.yarn/cache/openid-client-npm-4.5.2-4a7cf5d0ef-6eb2cf74c1.zip/node_modules/openid-client/",
+        ["npm:4.6.0", {
+          "packageLocation": "./.yarn/cache/openid-client-npm-4.6.0-4b73a9cf04-165c72de49.zip/node_modules/openid-client/",
           "packageDependencies": [
-            ["openid-client", "npm:4.5.2"],
+            ["openid-client", "npm:4.6.0"],
             ["aggregate-error", "npm:3.1.0"],
             ["got", "npm:11.8.2"],
             ["jose", "npm:2.0.4"],

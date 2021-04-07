@@ -14,26 +14,8 @@
   limitations under the License.
 */
 
-import { ServerError } from '../context/errors';
-
-class AuthorizationController {
-  constructor({ user }) {
-    this.authenticated = !!user.sub;
-  }
-
-  authorize({ auth }) {
-    if (auth === 'public') return true;
-    if (auth === 'protected') {
-      return this.authenticated;
-    }
-    throw new ServerError('Invalid auth configuration');
-  }
+async function authenticated(_, __, { getController }) {
+  return getController('authorization').authenticated;
 }
 
-function createAuthorizationController(context) {
-  return new AuthorizationController(context);
-}
-
-export { AuthorizationController };
-
-export default createAuthorizationController;
+export default authenticated;

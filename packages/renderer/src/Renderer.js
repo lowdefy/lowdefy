@@ -53,6 +53,7 @@ const GET_ROOT = gql`
     url
   }
   query getRoot {
+    authenticated
     lowdefyGlobal
     menu {
       menus {
@@ -94,6 +95,14 @@ const RootQuery = ({ children, lowdefy }) => {
   lowdefy.lowdefyGlobal = JSON.parse(JSON.stringify(get(data, 'lowdefyGlobal', { default: {} })));
   lowdefy.menus = get(data, 'menu.menus');
 
+  if (data.authenticated) {
+    const idToken = lowdefy.localStorage.getItem('idToken');
+    if (!idToken) {
+      // User is authenticated but has removed idToken from localStorage.
+      lowdefy.auth.logout();
+    }
+    lowdefy.user = parseJwt(idToken);
+  }
   return <>{children}</>;
 };
 
@@ -113,10 +122,6 @@ const Root = ({ gqlUri }) => {
     logout: createLogout(lowdefy),
   };
   lowdefy.user = {};
-  const idToken = lowdefy.localStorage.getItem('idToken');
-  if (idToken) {
-    lowdefy.user = parseJwt(idToken);
-  }
   return (
     <ErrorBoundary>
       <ApolloProvider client={lowdefy.client}>
@@ -147,10 +152,10 @@ const Root = ({ gqlUri }) => {
   );
 };
 
-const Engine = ({ gqlUri }) => (
+const Renderer = ({ gqlUri }) => (
   <BrowserRouter>
     <Root gqlUri={gqlUri} />
   </BrowserRouter>
 );
 
-export default Engine;
+export default Renderer;

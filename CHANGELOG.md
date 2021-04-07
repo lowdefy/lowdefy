@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.6](https://github.com/lowdefy/lowdefy/compare/v3.12.5...v3.12.6) (2021-04-06)
+
+## Changes
+
+### Fixes
+
+- Fix bug where user object is still defined on the client after login has expired.
+- Fix Pagination block. The `onSizeChange` event was triggered when the `onChange` event was supposed to be triggered.
+- Fix S3UploadButton state value, add the missing `bucket` and `key` values.
+
+## Commits
+
+### Bug Fixes
+
+- Fix bug where user object is still defined after login has expired. ([e3e8803](https://github.com/lowdefy/lowdefy/commit/e3e8803070c3fb59985eadb6c20674c820e3c56a))
+- **blocks-antd:** Fix Pagination block onChange. ([5813ff1](https://github.com/lowdefy/lowdefy/commit/5813ff198ccd730efaefab9ea6a1f0b9865c5f12))
+- **blocks-antd:** Fix S3UploadButton state value. ([c11184e](https://github.com/lowdefy/lowdefy/commit/c11184e27b1a31908fbe3aac0055cfc4f1cd07aa))
+- **deps:** update dependency openid-client to v4.6.0 ([55be522](https://github.com/lowdefy/lowdefy/commit/55be5222670feab106945c05732982d9484a9816))
+
 ## [3.12.5](https://github.com/lowdefy/lowdefy/compare/v3.12.4...v3.12.5) (2021-03-31)
 
 ## Changes
