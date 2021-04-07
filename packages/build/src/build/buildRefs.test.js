@@ -719,6 +719,46 @@ test('buildRefs with transformer function', async () => {
   });
 });
 
+test('buildRefs with eval json content', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: {
+        _ref: {
+          eval: 'src/test/testBuildRefsEvalJson.js',
+        },
+      },
+    },
+  ];
+  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  const res = await buildRefs({ context });
+  expect(res).toEqual({ a: 123 });
+});
+
+test('buildRefs with eval function', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: {
+        _ref: {
+          eval: 'src/test/testBuildRefsEval.js',
+        },
+      },
+    },
+  ];
+  mockConfigLoader.mockImplementation(configLoaderMockImplementation(files));
+  const res = await buildRefs({ context });
+  expect(res).toMatchInlineSnapshot(`
+    "function js(obj, vars) {
+      return {
+        json: JSON.stringify(obj),
+        add: add(obj.a, 42),
+        var: vars.var1,
+      };
+    }"
+  `);
+});
+
 test('buildRefs _var receives invalid type', async () => {
   const files = [
     {
