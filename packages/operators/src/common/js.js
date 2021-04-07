@@ -19,39 +19,18 @@ import { type } from '@lowdefy/helpers';
 
 let QuickJsVm;
 
-function regexCaptureFunctionBody({ file, location }) {
-  const regex = /^.*function\s*\S+\(\.\.\.args\)\s*(\{.*\})\s*export default .*$/s;
-  const match = regex.exec(file);
-  if (!match) {
-    throw new Error(`Operator Error: _js received invalid javascript file at ${location}.`);
-  }
-  return match[1];
-}
-
 function createFunction({ params, location, methodName }) {
-  let body;
-  if (params.file) {
-    body = regexCaptureFunctionBody({ file: params.file, location });
-  } else {
-    if (!params.body) {
-      throw new Error(
-        `Operator Error: _js.${methodName} did not receive a "file" or "body" argument at ${location}.`
-      );
-    }
-    if (!type.isString(params.body)) {
-      throw new Error(
-        `Operator Error: _js.${methodName} "body" argument should be a string at ${location}.`
-      );
-    }
-    body = params.body;
+  if (!params.code || !type.isString(params.code)) {
+    throw new Error(
+      `Operator Error: _js.${methodName} "code" argument should be a string at ${location}.`
+    );
   }
   const fn = (...args) => {
     // TODO: User serializer instead so serialize dates in. To do this we need to dependency free serializer,
     // might be a good idea just adding it inline instead of porting in the serializer function.
     const jsFnString = `
     var args = JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(args))}'));
-    function fn() ${body}
-    var result = JSON.stringify(fn());
+    var result = JSON.stringify((${params.code})(...args));
   `;
     const codeHandle = QuickJsVm.unwrapResult(
       QuickJsVm.evalCode(jsFnString, {
@@ -61,7 +40,11 @@ function createFunction({ params, location, methodName }) {
     );
     const resultHandle = QuickJsVm.getProp(QuickJsVm.global, 'result');
     codeHandle.dispose();
-    return JSON.parse(QuickJsVm.getString(resultHandle));
+    const result = QuickJsVm.getString(resultHandle);
+    if (result === 'undefined') {
+      return null;
+    }
+    return JSON.parse(result);
   };
   return fn;
 }
@@ -89,7 +72,7 @@ function _js({ params, location, methodName }) {
   }
   if (!methods[methodName]) {
     throw new Error(
-      `Operator Error: _js.${methodName} is not supported  at ${location}. Use one of the following: evaluate, function.`
+      `Operator Error: _js.${methodName} is not supported at ${location}. Use one of the following: evaluate, function.`
     );
   }
 

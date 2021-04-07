@@ -21,31 +21,52 @@ beforeAll(async () => {
   await _js.init();
 });
 
-test('_js.function with body and args specified', () => {
+test('_js with code and args specified', () => {
   const params = {
-    body: `{
-  return args[0] + args[1]
+    code: `function (one, two) {
+  return one + two;
 }`,
+    args: [12, 14],
   };
   const fn = _js({ location, params, methodName: 'function' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn(1, 2)).toEqual(3);
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual(26);
+  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
 });
 
-test('_js.evaluate with body and no args specified', () => {
+test('_js with code and args specified named function', () => {
   const params = {
-    body: `{
-      const value = "world";
-  return 'a new ' + 'vm for Hello ' +  value;
+    code: `function add(one, two) {
+  return one + two;
 }`,
+    args: [12, 14],
   };
-  expect(_js({ location, params, methodName: 'evaluate' })).toEqual('a new vm for Hello world');
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn(1, 2)).toEqual(3);
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual(26);
+  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
 });
 
-test('_js.evaluate with body with args that needs escaped characters', () => {
+test('_js with undefined result returns null', () => {
   const params = {
-    body: `{
-      return "<div>" + args[0].html + "</html>";
+    code: `function add(one, two) {
+      return;
+    }`,
+    args: [12, 14],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn()).toEqual(null);
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual(null);
+  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
+});
+
+test('_js with code with args that needs escaped characters', () => {
+  const params = {
+    code: `function (obj) {
+      return "<div>" + obj.html + "</html>";
     }`,
     args: [
       {
@@ -56,121 +77,113 @@ test('_js.evaluate with body with args that needs escaped characters', () => {
   expect(_js({ location, params, methodName: 'evaluate' })).toEqual(
     '<div><a href="https://lowdefy.com">Lowdefy Website</a></html>'
   );
-});
-
-test('_js.function with file specified', () => {
-  const params = {
-    file: `
-// Header comment
-
-const a = 3;
-
-function add(...args) {
-  return args[0] + args[1]
-}
-
-export default add`,
-  };
   const fn = _js({ location, params, methodName: 'function' });
   expect(fn).toBeInstanceOf(Function);
-  expect(fn(1, 2)).toEqual(3);
+  expect(
+    fn({
+      html: '<a href="https://lowdefy.com">Lowdefy Website</a>',
+    })
+  ).toEqual('<div><a href="https://lowdefy.com">Lowdefy Website</a></html>');
 });
 
-test('_js.evaluate with body specified', () => {
+test('_js with code and no "function" specified to throw', () => {
   const params = {
-    args: [1, 2],
-    body: `{
-  return args[0] + args[1]
-}`,
+    code: `
+      var value = "world";
+      var result = 'a new ' + 'vm for Hello ' +  value;
+`,
   };
-  const res = _js({ location, params, methodName: 'evaluate' });
-  expect(res).toEqual(3);
+
+  expect(() =>
+    _js({ location, params, methodName: 'evaluate' })
+  ).toThrowErrorMatchingInlineSnapshot(`"unexpected token in expression: 'var'"`);
+  expect(() => {
+    const fn = _js({ location, params, methodName: 'function' });
+    fn();
+  }).toThrowErrorMatchingInlineSnapshot(`"unexpected token in expression: 'var'"`);
 });
 
-test('_js.evaluate with file specified', () => {
+test('_js invalid js code', () => {
   const params = {
-    args: [1, 2],
-    file: `
-// Header comment
-
-const a = 3;
-
-function add(...args) {
-  return args[0] + args[1]
-}
-
-export default add`,
+    code: 'Hello',
   };
-  const res = _js({ location, params, methodName: 'evaluate' });
-  expect(res).toEqual(3);
+  expect(() =>
+    _js({ location, params, methodName: 'evaluate' })
+  ).toThrowErrorMatchingInlineSnapshot(`"'Hello' is not defined"`);
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(() => fn()).toThrowErrorMatchingInlineSnapshot(`"'Hello' is not defined"`);
 });
 
-test('_js.function params not a object', () => {
+test('_js not a function', () => {
+  const params = {
+    code: '"Hello"',
+  };
+  expect(() =>
+    _js({ location, params, methodName: 'evaluate' })
+  ).toThrowErrorMatchingInlineSnapshot(`"not a function"`);
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(() => fn()).toThrowErrorMatchingInlineSnapshot(`"not a function"`);
+});
+
+test('_js params not a object', () => {
   const params = [];
   expect(() =>
     _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: _js.function takes an object as input at location."`
   );
+  expect(() =>
+    _js({ location, params, methodName: 'evaluate' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: _js.evaluate takes an object as input at location."`
+  );
 });
 
 test('_js.invalid methodName', () => {
   const params = {
-    body: `{
+    code: `function () {
   return args[0] + args[1]
 }`,
   };
   expect(() => _js({ location, params, methodName: 'invalid' })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js.invalid is not supported  at location. Use one of the following: evaluate, function."`
+    `"Operator Error: _js.invalid is not supported at location. Use one of the following: evaluate, function."`
   );
 });
 
-test('_js.function invalid js file', () => {
+test('_js invalid js code', () => {
   const params = {
-    file: 1,
+    code: 1,
   };
   expect(() =>
     _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js received invalid javascript file at location."`
+    `"Operator Error: _js.function \\"code\\" argument should be a string at location."`
   );
-});
-
-test('_js.function invalid js file', () => {
-  const params = {
-    file: 'Hello',
-  };
   expect(() =>
-    _js({ location, params, methodName: 'function' })
+    _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js received invalid javascript file at location."`
+    `"Operator Error: _js.evaluate \\"code\\" argument should be a string at location."`
   );
 });
 
-test('_js.function no body or file', () => {
+test('_js no body or file', () => {
   const params = {};
   expect(() =>
     _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js.function did not receive a \\"file\\" or \\"body\\" argument at location."`
+    `"Operator Error: _js.function \\"code\\" argument should be a string at location."`
   );
-});
-
-test('_js.function body not a string', () => {
-  const params = {
-    body: 1,
-  };
   expect(() =>
-    _js({ location, params, methodName: 'function' })
+    _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js.function \\"body\\" argument should be a string at location."`
+    `"Operator Error: _js.evaluate \\"code\\" argument should be a string at location."`
   );
 });
 
 test('_js.evaluate, args not an array', () => {
   const params = {
     args: 1,
-    body: `{
+    body: `function () {
       return args[0] + args[1]
     }`,
   };
@@ -183,20 +196,20 @@ test('_js.evaluate, args not an array', () => {
 
 test('_js with undefined vm', () => {
   const params = {
-    body: `{
+    code: `{
       return args[0] + args[1]
     }`,
   };
   _js.clear();
   expect(() =>
-    _js({ location, params, methodName: 'evaluate' })
+    _js({ location, params, methodName: 'function' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js is not initialized. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
+    `"Operator Error: _js is not initialized. Received: {\\"code\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
   );
   expect(() =>
     _js({ location, params, methodName: 'evaluate' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _js is not initialized. Received: {\\"body\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
+    `"Operator Error: _js is not initialized. Received: {\\"code\\":\\"{\\\\n      return args[0] + args[1]\\\\n    }\\"} at location."`
   );
 });
 

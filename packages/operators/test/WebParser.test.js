@@ -502,8 +502,8 @@ describe('parse operators', () => {
   test('parse _js operator', async () => {
     const input = {
       '_js.function': {
-        body: `{
-    return args[0] + args[1]
+        code: `function (a, b){
+    return a + b;
   }`,
       },
     };
