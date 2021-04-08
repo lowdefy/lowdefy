@@ -20,16 +20,17 @@ _ref:
     pageTitle: _js
     filePath: operators/_js.yaml
     description: |
-      The `_js` can evaluate or create a JavaScript function. The JavaScript function can return any primitives or JSON data.
+      The `_js` operator can evaluate or create a JavaScript function. The JavaScript function can return any primitives or JSON data. Since operators are synchronous functions, the JavaScript function should be synchronous.
 
-      To make this as secure as possible, the JavaScript is evaluated inside a JavaScript WebAssembly VM. The JavaScript engine is [QuickJS](https://bellard.org/quickjs/), a small and fast JavaScript implementation. 
+      To make this as secure as possible, the JavaScript is evaluated inside a JavaScript WebAssembly VM. The JavaScript engine is [QuickJS](https://bellard.org/quickjs/), a small and fast JavaScript implementation.
 
       As a result, the following applies to the JavaScript function definitions:
         - The `code` operator argument requires a function definition.
-        - Function arguments can be used inside the function, and is passed via the `args` operator argument as a array.
+        - Function arguments can be used inside the function, and are passed via the `args` operator argument as a array.
         - A primitive or JSON result will be returned, so the function result must be JSON serializable.
-        - Only a limited subset of the browser JavaScript APIs is available, in particular the JavaScript inside the VM will not have network access.
+        - Only a limited subset of the browser JavaScript APIs are available, in particular the JavaScript inside the VM will not have network access.
         - Dependencies and file imports are not supported.
+        - The function should be a pure function with no side effects. The function should be stateless, and should always return the same result if given the same input.
 
       > The JavaScript function can be passed to the `code` argument during build using the `_ref.eval` method. See the examples below and the [`_ref`](/_ref) operator for more details.
 
@@ -38,7 +39,7 @@ _ref:
         types: |
           ```
           ({
-            code: string, 
+            code: string,
             args?: any[]
           }): any
           ```
@@ -56,7 +57,7 @@ _ref:
         examples: |
           ###### JavaScript evaluate a inline function:
           ```yaml
-          _js.evaluate: 
+          _js.evaluate:
             code: |
               function makePrimes(to) {
                 return [...Array(to-1).keys()].map(i=>i+2).filter(n =>
@@ -65,7 +66,7 @@ _ref:
             args:
               - 50
           ```
-          Returns: 
+          Returns:
           ```
           [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
           ```
@@ -73,7 +74,7 @@ _ref:
           ###### JavaScript evaluate loaded from a JavaScript file:
           Operator definition:
           ```yaml
-          _js.evaluate: 
+          _js.evaluate:
             code:
               _ref:
                 eval: myMath/makePrimes.js
@@ -89,7 +90,7 @@ _ref:
           }
           module.exports = makePrimes;
           ```
-          Returns: 
+          Returns:
           ```
           [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
           ```
@@ -97,7 +98,7 @@ _ref:
         types: |
           ```
           ({
-            code: string, 
+            code: string,
           }): any
           ```
         description: |
@@ -225,7 +226,7 @@ _ref:
                     textBorderWidth: 2
                     formatter:
                       _js.function:
-                        code: 
+                        code:
                           _ref:
                             eval: 'foo/fooFormatter.js'
                   levels:
