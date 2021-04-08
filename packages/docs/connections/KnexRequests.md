@@ -14,7 +14,7 @@ Request types:
 
 #### Examples
 
-Build a query:
+###### Build a query:
 
 ```yaml
 id: knexBuilder
@@ -31,7 +31,7 @@ properties:
         - _state: name
 ```
 
-Using `tableName`:
+###### Using `tableName`:
 
 ```yaml
 id: knexBuilder
@@ -47,7 +47,7 @@ properties:
         - _state: name
 ```
 
-Aliases:
+###### Aliases:
 
 ```yaml
 id: knexBuilder
@@ -74,7 +74,7 @@ properties:
 
 #### Examples
 
-Simple raw query:
+###### Simple raw query:
 
 ```yaml
 id: knexRaw
@@ -84,7 +84,7 @@ properties:
   query: SELECT * FROM "my_table";
 ```
 
-Query with named parameters:
+###### Query with named parameters:
 
 ```yaml
 id: knexRaw
@@ -97,7 +97,7 @@ properties:
       _state: selected_name
 ```
 
-Query with positional parameters:
+###### Query with positional parameters:
 
 ```yaml
 id: knexRaw
@@ -109,7 +109,7 @@ properties:
     - _state: selected_name
 ```
 
-Reference a `.sql` file:
+###### Reference a `.sql` file:
 
 ```yaml
 id: knexRaw

@@ -86,14 +86,14 @@ _ref:
 
             ### Examples
 
-            The following example is used to send a reminder notification to a email address when the `SendGridMailSend` request is triggered.
+            ###### Send a reminder email
             ```yaml
             connections:
               - id: my_sendgrid
                 type: SendGridMail
                 properties:
                   apiKey:
-                    _secret: example_sendgrid_api_key
+                    _secret: SENDGRID_API_KEY
                   from: reminders@example.org
             # ...
             requests:

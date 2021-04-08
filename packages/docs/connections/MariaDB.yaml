@@ -45,7 +45,7 @@ _ref:
 
             #### Examples
 
-            Object:
+            ###### Connection object:
             ```yaml
             connections:
               - id: mariadb
@@ -53,49 +53,22 @@ _ref:
                 properties:
                   client: mysql
                   connection:
-                    user: dbuser
-                    host: database.server.com
-                    database: mydb
-                    password: secretpassword
-            ```
-
-            Secret object:
-            ```yaml
-            connections:
-              - id: mariadb
-                type: Knex
-                properties:
-                  client: mysql
-                  connection:
-                    user:
-                      _secret: MYSQL_USER
                     host:
-                      _secret: MYSQL_HOST
+                      _secret: MARIADB_HOST
                     database:
-                      _secret: MYSQL_DB
+                      _secret: MARIADB_DB
+                    user:
+                      _secret: MARIADB_USER
                     password:
-                      _secret: MYSQL_PASSWORD
+                      _secret: MARIADB_PASSWORD
             ```
-
-            Connection string:
-            ```yaml
-            connections:
-              - id: mariadb
-                type: Knex
-                properties:
-                  client: mysql
-                  connection: mysql://user:pass@host/db?debug=true
+            Environment variables:
             ```
-
-            Secret connection string:
-            ```yaml
-            connections:
-              - id: mariadb
-                type: Knex
-                properties:
-                  client: mysql
-                  connection:
-                    _secret: MYSQL_CONNECTION_STRING
+            LOWDEFY_SECRET_MARIADB_HOST = database.server.com
+            LOWDEFY_SECRET_MARIADB_DB = db
+            LOWDEFY_SECRET_MARIADB_USER = user
+            LOWDEFY_SECRET_MARIADB_PASSWORD = password
+            ```
 
       - id: markdown_requests
         type: MarkdownWithCode

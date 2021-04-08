@@ -44,7 +44,7 @@ _ref:
 
             #### Examples
 
-            Object:
+            ###### Connection object:
             ```yaml
             connections:
               - id: mssql
@@ -52,41 +52,24 @@ _ref:
                 properties:
                   client: mssql
                   connection:
-                    user: dbuser
-                    host: database.server.com
-                    database: mydb
-                    password: secretpassword
-            ```
-
-            Secret object:
-            ```yaml
-            connections:
-              - id: mssql
-                type: Knex
-                properties:
-                  client: mssql
-                  connection:
-                    user:
-                      _secret: MSSQL_USER
                     host:
                       _secret: MSSQL_HOST
                     database:
                       _secret: MSSQL_DB
+                    user:
+                      _secret: MSSQL_USER
                     password:
                       _secret: MSSQL_PASSWORD
             ```
-
-            Connection string:
-            ```yaml
-            connections:
-              - id: mssql
-                type: Knex
-                properties:
-                  client: mssql
-                  connection: mssql://username:password@localhost:1433/database
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_MSSQL_HOST = database.server.com
+            LOWDEFY_SECRET_MSSQL_DB = db
+            LOWDEFY_SECRET_MSSQL_USER = user
+            LOWDEFY_SECRET_MSSQL_PASSWORD = password
             ```
 
-            Secret connection string:
+            ###### Secret connection string:
             ```yaml
             connections:
               - id: mssql
@@ -95,7 +78,11 @@ _ref:
                   client: mssql
                   connection:
                     _secret: MSSQL_CONNECTION_STRING
-
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_MSSQL_CONNECTION_STRING = mssql://user:password@database.server.com:1433/db
+            ```
       - id: markdown_requests
         type: MarkdownWithCode
         properties:

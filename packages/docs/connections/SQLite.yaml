@@ -64,7 +64,7 @@ _ref:
                     filename: ./mydb.sqlite
             ```
 
-            #####  Different connections in deployment and production environments:
+            ###### Different connections in deployment and production environments:
             ```yaml
             connections:
               - id: knex
@@ -76,7 +76,7 @@ _ref:
                     _json.parse:
                       _secret: KNEX_CONNECTION
             ```
-            `.env` in development:
+            Environment variables in development:
             ```
             LOWDEFY_SECRET_KNEX_CLIENT = sqlite
             LOWDEFY_SECRET_KNEX_CONNECTION = {"filename": "./mydb.sqlite"}

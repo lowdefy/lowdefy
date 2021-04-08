@@ -44,20 +44,7 @@ _ref:
 
             #### Examples
 
-            Object:
-            ```yaml
-            connections:
-              - id: oracledb
-                type: Knex
-                properties:
-                  client: oracledb
-                  connection:
-                    user: dbuser
-                    password: secretpassword
-                    connectString: mydbmachine.example.com/orclpdb1
-            ```
-
-            Secret object:
+            ###### Connection Object:
             ```yaml
             connections:
               - id: oracledb
@@ -68,9 +55,15 @@ _ref:
                     user:
                       _secret: ORACLEDB_USER
                     password:
-                      _secret: ORACLEDB_PASSWORD
+                      _secret:
                     connectString:
                       _secret: ORACLEDB_CONNECT_STRING
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_ORACLEDB_USER = user
+            LOWDEFY_SECRET_ORACLEDB_PASSWORD = password
+            LOWDEFY_SECRET_ORACLEDB_CONNECT_STRING = database.server.com/db
             ```
 
       - id: markdown_requests

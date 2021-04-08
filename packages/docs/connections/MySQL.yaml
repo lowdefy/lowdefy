@@ -45,7 +45,7 @@ _ref:
 
             #### Examples
 
-            Object:
+            ###### Connection Object:
             ```yaml
             connections:
               - id: mysql
@@ -53,41 +53,24 @@ _ref:
                 properties:
                   client: mysql
                   connection:
-                    user: dbuser
-                    host: database.server.com
-                    database: mydb
-                    password: secretpassword
-            ```
-
-            Secret object:
-            ```yaml
-            connections:
-              - id: mysql
-                type: Knex
-                properties:
-                  client: mysql
-                  connection:
-                    user:
-                      _secret: MYSQL_USER
                     host:
                       _secret: MYSQL_HOST
+                    user:
+                      _secret: MYSQL_USER
                     database:
                       _secret: MYSQL_DB
                     password:
                       _secret: MYSQL_PASSWORD
             ```
-
-            Connection string:
-            ```yaml
-            connections:
-              - id: mysql
-                type: Knex
-                properties:
-                  client: mysql
-                  connection: mysql://user:pass@host/db?debug=true
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_MYSQL_HOST = database.server.com
+            LOWDEFY_SECRET_MYSQL_DB = db
+            LOWDEFY_SECRET_MYSQL_USER = user
+            LOWDEFY_SECRET_MYSQL_PASSWORD = password
             ```
 
-            Secret connection string:
+            ###### Connection string:
             ```yaml
             connections:
               - id: mysql
@@ -96,6 +79,11 @@ _ref:
                   client: mysql
                   connection:
                     _secret: MYSQL_CONNECTION_STRING
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_MYSQL_CONNECTION_STRING = mysql://user:password@database.server.com/db
+            ```
 
       - id: markdown_requests
         type: MarkdownWithCode

@@ -49,22 +49,7 @@ _ref:
 
             #### Examples
 
-            Object:
-            ```yaml
-            connections:
-              - id: postgres
-                type: Knex
-                properties:
-                  client: postgres
-                  connection:
-                    user: dbuser
-                    host: database.server.com
-                    database: mydb
-                    password: secretpassword
-                    port: 5432
-            ```
-
-            Secret object:
+            ###### Connection Object:
             ```yaml
             connections:
               - id: postgres
@@ -80,21 +65,16 @@ _ref:
                       _secret: PG_DB
                     password:
                       _secret: PG_PASSWORD
-                    port:
-                      _secret: PG_PORT
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_PG_HOST = database.server.com
+            LOWDEFY_SECRET_PG_DB = db
+            LOWDEFY_SECRET_PG_USER = user
+            LOWDEFY_SECRET_PG_PASSWORD = password
             ```
 
-            Connection string:
-            ```yaml
-            connections:
-              - id: postgres
-                type: Knex
-                properties:
-                  client: postgres
-                  connection: postgresql://dbuser:secretpassword@database.server.com:5432/mydb
-            ```
-
-            Secret connection string, with version and searchPath:
+            ###### Secret connection string, with version and searchPath:
             ```yaml
             connections:
               - id: postgres
@@ -108,7 +88,10 @@ _ref:
                     - knex
                     - public
             ```
-
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_PG_CONNECTION_STRING = postgresql://user:password@database.server.com:5432/db
+            ```
       - id: markdown_requests
         type: MarkdownWithCode
         properties:

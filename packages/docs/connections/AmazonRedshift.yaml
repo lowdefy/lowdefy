@@ -44,7 +44,7 @@ _ref:
 
             #### Examples
 
-            Object:
+            ###### Connection object:
             ```yaml
             connections:
               - id: redshift
@@ -52,30 +52,22 @@ _ref:
                 properties:
                   client: redshift
                   connection:
-                    user: dbuser
-                    host: database.server.com
-                    database: mydb
-                    password: secretpassword
-            ```
-
-            Secret object:
-            ```yaml
-            connections:
-              - id: redshift
-                type: Knex
-                properties:
-                  client: redshift
-                  connection:
-                    user:
-                      _secret: REDSHIFT_USER
                     host:
                       _secret: REDSHIFT_HOST
                     database:
                       _secret: REDSHIFT_DB
+                    user:
+                      _secret: REDSHIFT_USER
                     password:
                       _secret: REDSHIFT_PASSWORD
             ```
-
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_REDSHIFT_HOST = examplecluster.XXXXXXXXXXXX.us-west-2.redshift.amazonaws.com
+            LOWDEFY_SECRET_REDSHIFT_REDSHIFT_DB = db
+            LOWDEFY_SECRET_REDSHIFT_USER = user
+            LOWDEFY_SECRET_REDSHIFT_PASSWORD = password
+            ```
       - id: markdown_requests
         type: MarkdownWithCode
         properties:

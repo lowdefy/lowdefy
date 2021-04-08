@@ -77,31 +77,31 @@ _ref:
               - `auth: object`: Object with username and password.
 
 
-            ### Examples
+            #### Examples
 
             Properties for a AxiosHttp can be set on either the connection, the request, or both. However, both a connection and request need to be defined.
 
-            Using the connection to set baseUrl and authorization, and handle specific requests as requests.
+            ###### Using the connection to set baseUrl and authorization, and handle specific requests as requests.
             ```yaml
             connections:
-              - id: myapp_api
+              - id: app_api
                 type: AxiosHttp
                 properties:
-                  baseUrl: myapp.com/api
+                  baseUrl: app.com/api
                   auth:
-                    username: lowdefy_api_user
+                    username: api_user
                     password:
-                      _secret: lowdefy_api_password
+                      _secret: API_PASSWORD
             # ...
             requests:
               - id: get_orders
                 type: AxiosHttp
-                connectionId: myapp_api
+                connectionId: app_api
                 properties:
                   url: /orders
               - id: update_order
                 type: AxiosHttp
-                connectionId: myapp_api
+                connectionId: app_api
                 properties:
                   url:
                     _nunjucks: /orders/{{ order_id }}
@@ -111,7 +111,7 @@ _ref:
             ```
 
 
-            Setting properties on only the connection:
+            ###### Setting properties on only the connection:
             ```yaml
             connections:
               - id: get_count
@@ -120,7 +120,7 @@ _ref:
                   url: myapp.com/api/count
                 headers:
                   X-Api-Key:
-                    _secret: my_api_key
+                    _secret: API_KEY
             # ...
             requests:
               - id: get_count
@@ -128,7 +128,7 @@ _ref:
                 connectionId: get_count
             ```
 
-            Setting properties on only the request, and using a generic connection:
+            ###### Setting properties on only the request, and using a generic connection:
             ```yaml
             connections:
               - id: axios
