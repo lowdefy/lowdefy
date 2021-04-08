@@ -62,6 +62,7 @@
     "mssql": "6.3.1",
     "mysql": "2.18.1",
     "openid-client": "4.6.0",
+    "oracledb": "5.1.0",
     "pg": "8.5.1",
     "saslprep": "1.0.3",
     "sqlite3": "5.0.2"
