@@ -24,17 +24,10 @@ test('All requests are present', () => {
   expect(Knex.requests.KnexBuilder).toBeDefined();
 });
 
-test('valid connection schema', () => {
-  const connection = {
-    client: 'pg',
-  };
-  expect(validate({ schema, data: connection })).toEqual({ valid: true });
-});
-
 test('valid connection schema, string connection', () => {
   const connection = {
     client: 'pg',
-    connection: 'connection',
+    connection: 'postgresql://user:password@database.server.com:5432/db',
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
@@ -43,18 +36,25 @@ test('valid connection schema, object connection', () => {
   const connection = {
     client: 'pg',
     connection: {
-      host: '127.0.0.1',
-      user: 'your_database_user',
-      password: 'your_database_password',
-      database: 'myapp_test',
+      host: 'database.server.com',
+      user: 'user',
+      password: 'password',
+      database: 'db',
     },
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
 test('client missing', () => {
-  const connection = {};
+  const connection = { connection: 'postgresql://user:password@database.server.com:5432/db' };
   expect(() => validate({ schema, data: connection })).toThrow(
     'Knex connection should have required property "client".'
+  );
+});
+
+test('client missing', () => {
+  const connection = { client: 'pg' };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'Knex connection should have required property "connection".'
   );
 });
