@@ -382,11 +382,16 @@
         title: Connections
         icon: ApiOutlined
       links:
+        - id: AmazonRedshift
+          type: MenuLink
+          pageId: AmazonRedshift
+          properties:
+            title: Amazon Redshift
         - id: AWSS3
           type: MenuLink
           pageId: AWSS3
           properties:
-            title: AWS S3
+            title: Amazon S3
         - id: AxiosHttp
           type: MenuLink
           pageId: AxiosHttp
@@ -400,14 +405,36 @@
         - id: Knex
           type: MenuLink
           pageId: Knex
-          properties:
-            title: Knex
+        - id: MariaDB
+          type: MenuLink
+          pageId: MariaDB
         - id: MongoDB
           type: MenuLink
           pageId: MongoDB
+        - id: MSSQL
+          type: MenuLink
+          pageId: MSSQL
+          properties:
+            title: Microsoft SQL Server
+        - id: MySQL
+          type: MenuLink
+          pageId: MySQL
+        - id: OracleDB
+          type: MenuLink
+          pageId: OracleDB
+          properties:
+            title: Oracle Database
+        - id: PostgreSQL
+          type: MenuLink
+          pageId: PostgreSQL
         - id: SendGridMail
           type: MenuLink
           pageId: SendGridMail
+          properties:
+            title: SendGrid Email
+        - id: SQLite
+          type: MenuLink
+          pageId: SQLite
     - id: actions
       type: MenuGroup
       properties:

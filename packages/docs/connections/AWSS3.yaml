@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: AWSS3
-    pageTitle: AWSS3
+    pageTitle: Amazon S3
     section: Connections
     filePath: connections/AWSS3.yaml
     content:

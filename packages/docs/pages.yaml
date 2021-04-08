@@ -106,12 +106,19 @@
 - _ref: blocks/list/List.yaml
 # - _ref: blocks/list/TimelineList.yaml
 
+- _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
 - _ref: connections/AxiosHttp.yaml
 - _ref: connections/GoogleSheet.yaml
 - _ref: connections/Knex.yaml
+- _ref: connections/MariaDB.yaml
 - _ref: connections/MongoDB.yaml
+- _ref: connections/MSSQL.yaml
+- _ref: connections/MySQL.yaml
+- _ref: connections/OracleDB.yaml
+- _ref: connections/PostgreSQL.yaml
 - _ref: connections/SendGridMail.yaml
+- _ref: connections/SQLite.yaml
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/Link.yaml
