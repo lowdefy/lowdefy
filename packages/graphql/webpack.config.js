@@ -2,9 +2,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { dependencies, devDependencies } = require('./package.json');
 
-const externals = [...Object.keys(dependencies), ...Object.keys(devDependencies)].filter(
-  (name) => name !== 'saslprep'
-);
+const externals = [...Object.keys(dependencies), ...Object.keys(devDependencies)];
 
 module.exports = {
   entry: './src/index.js',

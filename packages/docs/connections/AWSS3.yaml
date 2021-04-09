@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: AWSS3
-    pageTitle: AWSS3
+    pageTitle: Amazon S3
     section: Connections
     filePath: connections/AWSS3.yaml
     content:
@@ -48,21 +48,26 @@ _ref:
             - `read: boolean`: Default: `true` - Allow reads from the bucket.
             - `write: boolean`: Default: `false` - Allow writes to the bucket.
 
-            ### Examples
+            #### Examples
 
-            Read and writes on a bucket:
+            ###### Read and writes on a bucket:
             ```yaml
             connections:
               - id: my_bucket
                 type: AwsS3Bucket
                 properties:
                   accessKeyId:
-                    _secret: my_bucket_access_key_id
+                    _secret: S3_ACCESS_KEY_ID
                   secretAccessKey:
-                    _secret: my_bucket_secret_access_key
+                    _secret: S3_SECRET_ACCESS_KEY
                   region: eu-west-1
                   bucket: my-bucket-name
                   write: true
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_S3_ACCESS_KEY_ID = AKIAIOSFODNN7EXAMPLE
+            LOWDEFY_SECRET_S3_SECRET_ACCESS_KEY = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
             ```
 
             ## Requests
@@ -82,9 +87,9 @@ _ref:
             - `responseContentType: string`: Sets the Content-Type header of the response.
             - `responseContentDisposition: string`: Sets the Content-Disposition header of the response.
 
-            ### Examples
+            #### Examples
 
-            Download a pdf and open in a new tab:
+            ###### Download a pdf and open in a new tab:
             ```yaml
             requests:
               - id: my_file_link
@@ -126,9 +131,9 @@ _ref:
             - `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
 
 
-            ### Examples
+            #### Examples
 
-            Upload a file with user filename and random id:
+            ###### Upload a file with user filename and random id:
             ```yaml
             - id: my_post_policy
               type: AwsS3PresignedPostPolicy

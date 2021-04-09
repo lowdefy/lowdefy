@@ -101,7 +101,9 @@ const RootQuery = ({ children, lowdefy }) => {
       // User is authenticated but has removed idToken from localStorage.
       lowdefy.auth.logout();
     }
-    lowdefy.user = parseJwt(idToken);
+    // eslint-disable-next-line no-unused-vars
+    const { iat, exp, aud, iss, ...user } = parseJwt(idToken);
+    lowdefy.user = user;
   }
   return <>{children}</>;
 };

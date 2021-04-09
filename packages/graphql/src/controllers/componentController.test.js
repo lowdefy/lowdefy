@@ -777,3 +777,39 @@ describe('filter menus', () => {
     });
   });
 });
+
+test('Filter invalid menu item types', async () => {
+  mockLoadComponent.mockImplementation((id) => {
+    if (id === 'menus') {
+      return [
+        {
+          menuId: 'default',
+          links: [
+            {
+              id: 'menuitem:default:1',
+              menuItemId: '1',
+              type: 'MenuItem',
+              pageId: 'page',
+              auth: 'protected',
+            },
+          ],
+        },
+      ];
+    }
+    if (id === 'config') {
+      return {};
+    }
+    return null;
+  });
+  const controller = createComponentController(context);
+  const res = await controller.getMenus();
+  expect(res).toEqual({
+    homePageId: null,
+    menus: [
+      {
+        menuId: 'default',
+        links: [],
+      },
+    ],
+  });
+});

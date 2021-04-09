@@ -13,7 +13,19 @@ module.exports = {
   mode: 'production',
   target: 'node',
   node: false,
-  externals: ['fs', 'path', 'chokidar'],
+  externals: [
+    'fs',
+    'path',
+    'chokidar',
+    'oracledb',
+    'mssql',
+    'mysql',
+    'mysql2',
+    'pg',
+    'pg-query-stream',
+    'sqlite3',
+    'tedious',
+  ],
   module: {
     rules: [
       {
