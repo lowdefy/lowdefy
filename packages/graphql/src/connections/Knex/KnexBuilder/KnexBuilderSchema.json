@@ -18,5 +18,11 @@
         "type": "KnexBuilder request property \"tableName\" should be a string or object"
       }
     }
+  },
+  "errorMessage": {
+    "type": "KnexBuilder request properties should be an object.",
+    "required": {
+      "query": "KnexBuilder request should have required property \"query\"."
+    }
   }
 }
