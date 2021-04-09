@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: SendGridMail
-    pageTitle: SendGridMail
+    pageTitle: SendGrid Email
     section: Connections
     filePath: connections/SendGridMail.yaml
     content:
@@ -24,14 +24,14 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            [SendGrid](https://sendgrid.com/) is a popular email API provider which allows you to easily setup a email service. The `SendGridMail` connection can be used to connect to an existing SendGrid API account. 
+            [SendGrid](https://sendgrid.com/) is a popular email API provider which allows you to easily setup a email service. The `SendGridMail` connection can be used to connect to an existing SendGrid API account.
 
             The `SendGridMail` connector uses the [@sendgrid/mail](https://github.com/@sendgrid/mail) library.
 
-            In order to use the `SendGridMail` connector, you first need to create a [SendGrid](https://sendgrid.com/) account and setup an API key. 
+            In order to use the `SendGridMail` connector, you first need to create a [SendGrid](https://sendgrid.com/) account and setup an API key.
 
             > Secrets like API keys should be stored using the [`_secret`](operators/secret.md) operator.
-            
+
             In order to send from your custom domain your will need to [authenticate your domain](https://app.sendgrid.com/settings/sender_auth) through SendGrid. See the [SendGrid Docs](https://sendgrid.com/docs) for help on getting started with SendGrid.
 
             ## Connections
@@ -80,20 +80,20 @@ _ref:
               - `content: string`: __Required__ - Base 64 encoded attachment content.
               - `filename: string`: __Required__ - Name of the attachment file.
               - `type: string`: The mime type of the content you are attaching. For example, `text/plain` or `text/html`.
-            
+
             ##### array
-            An array of `mail description` objects can also be provided. 
+            An array of `mail description` objects can also be provided.
 
             ### Examples
 
-            The following example is used to send a reminder notification to a email address when the `SendGridMailSend` request is triggered.
+            ###### Send a reminder email
             ```yaml
             connections:
               - id: my_sendgrid
                 type: SendGridMail
                 properties:
-                  apiKey: 
-                    _secret: example_sendgrid_api_key
+                  apiKey:
+                    _secret: SENDGRID_API_KEY
                   from: reminders@example.org
             # ...
             requests:
@@ -106,7 +106,7 @@ _ref:
                   text: |
                     Hi Harry
 
-                    Please remember to water the magic plants today :) 
+                    Please remember to water the magic plants today :)
 
                     Thank you
             # ...

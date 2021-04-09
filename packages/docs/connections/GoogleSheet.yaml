@@ -33,7 +33,7 @@ _ref:
 
             The `GoogleSheet` connection can be used to connect to a Google using an API key or a service account. An API key can only be used for read-only access to public sheets, so most applications should use a service account. A guide to creating a service account can be found in the [tutorial](/tutorial-requests).
 
-            This connection refers to the entire document as the 'spreadsheet', and the individual sheets in the document as 'sheets'. The spreadsheet is identified by it's spreadsheetId, and sheets can either be identified by their sheetId or their index (position in the document starting from 0).
+            This connection refers to the entire document as the `spreadsheet`, and the individual sheets in the document as `sheets`. The spreadsheet is identified by it's `spreadsheetId`, and sheets can either be identified by their `sheetId` or their `index` (position in the document starting from 0).
 
             When a sheet is accessed in a browser the url either looks like:
             `https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit#gid={sheetId}`
@@ -53,7 +53,7 @@ _ref:
 
             #### Examples
 
-            Read only access to first sheet in a public spreadsheet:
+            ###### Read only access to first sheet in a public spreadsheet:
             ```yaml
             connections:
               - id: public_sheet
@@ -65,7 +65,7 @@ _ref:
                   spreadsheetId: ubQsWYNGRUq0gFB1sAp2r9oYE19lZ8yGA1T6y0yBoLPW
             ```
 
-            Access with a service account, with defined types:
+            ###### Access with a service account, with defined types:
             ```yaml
             connections:
               - id: my_sheet
@@ -108,7 +108,7 @@ _ref:
 
             #### Examples
 
-            Insert a list of rows.
+            ###### Insert a list of rows.
             ```yaml
             requests:
               - id: append_rows
@@ -139,7 +139,7 @@ _ref:
 
             #### Examples
 
-            Insert a single row:
+            ###### Insert a single row:
             ```yaml
             requests:
               - id: insert_dva
@@ -165,7 +165,7 @@ _ref:
 
             #### Examples
 
-            Delete the row where name is "Hanzo".
+            ###### Delete the row where name is "Hanzo".
             ```yaml
             requests:
               - id: delete_hanzo
@@ -190,7 +190,7 @@ _ref:
 
             #### Examples
 
-            Get the first 10 rows.
+            ###### Get the first 10 rows.
             ```yaml
             requests:
               - id: get_10_rows
@@ -201,7 +201,7 @@ _ref:
                     limit: 10
             ```
 
-            Pagination using limit and skip.
+            ###### Pagination using limit and skip.
             ```yaml
             requests:
               - id: get_10_rows
@@ -219,7 +219,7 @@ _ref:
                       _state: page_size
             ```
 
-            Get all records where age is greater than 25.
+            ###### Get all records where age is greater than 25.
             ```yaml
             requests:
               - id: get_10_rows
@@ -231,7 +231,7 @@ _ref:
                       $gt: 25
             ```
 
-            Use an aggregation pipeline to aggregate data.
+            ###### Use an aggregation pipeline to aggregate data.
             ```yaml
             requests:
               - id: get_10_rows
@@ -263,7 +263,7 @@ _ref:
 
             #### Examples
 
-            Get row where name is "Zarya".
+            ###### Get row where name is "Zarya".
             ```yaml
             requests:
               - id: get_10_rows
@@ -289,7 +289,7 @@ _ref:
 
             #### Examples
 
-            Update all rows where age is less than 18.
+            ###### Update all rows where age is less than 18.
             ```yaml
             requests:
               - id: get_10_rows
@@ -317,7 +317,7 @@ _ref:
 
             #### Examples
 
-            Update the row for "Doomfist"
+            ###### Update the row for "Doomfist"
             ```yaml
             requests:
               - id: get_10_rows
