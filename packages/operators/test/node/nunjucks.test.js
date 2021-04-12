@@ -24,73 +24,81 @@ const state = {
 
 console.error = () => {};
 
-test('_nunjucks string template', () => {
+test('_nunjucks string template', async () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with Some String embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks null', () => {
+test('_nunjucks null', async () => {
   const input = { _nunjucks: null };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks { template: , on: }', () => {
+test('_nunjucks { template: , on: }', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks template not a string', () => {
+test('_nunjucks template not a string', async () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks params on template not a string', () => {
+test('_nunjucks params on template not a string', async () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks on not a object', () => {
+test('_nunjucks on not a object', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks on null', () => {
+test('_nunjucks on null', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks invalid template', () => {
+test('_nunjucks invalid template', async () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

@@ -40,6 +40,7 @@ function createContext(options) {
     logger,
     configLoader: createFileLoader({ baseDirectory: configDirectory }),
     artifactSetter: createFileSetter({ baseDirectory: outputDirectory }),
+    configDirectory,
     outputDirectory,
     cacheDirectory,
   };

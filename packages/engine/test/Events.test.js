@@ -73,7 +73,7 @@ beforeEach(() => {
   mockQuery.mockImplementation(mockQueryImp);
 });
 
-test('init Events', () => {
+test('init Events', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -97,7 +97,7 @@ test('init Events', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -132,7 +132,7 @@ test('triggerEvent no event defined', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -167,7 +167,7 @@ test('triggerEvent x1', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -231,7 +231,7 @@ test('triggerEvent, 2 actions', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -272,7 +272,7 @@ test('triggerEvent error', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -319,7 +319,7 @@ test('registerEvent then triggerEvent x1', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -380,7 +380,7 @@ test('triggerEvent skip', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -472,7 +472,7 @@ test('triggerEvent skip tests === true', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -540,7 +540,7 @@ test('triggerEvent skip tests === true', async () => {
   `);
 });
 
-test('Actions array defaults', () => {
+test('Actions array defaults', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -564,7 +564,7 @@ test('Actions array defaults', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

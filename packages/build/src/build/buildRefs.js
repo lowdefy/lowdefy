@@ -44,6 +44,7 @@ function makeRefDefinition(refDefinition) {
     path: getRefPath(refDefinition),
     vars: get(refDefinition, 'vars', { default: {} }),
     transformer: get(refDefinition, 'transformer'),
+    eval: get(refDefinition, 'eval'),
     original: refDefinition,
   };
 }
@@ -107,6 +108,7 @@ class RefBuilder {
   constructor({ context }) {
     this.rootPath = 'lowdefy.yaml';
     this.configLoader = context.configLoader;
+    this.configDirectory = context.configDirectory;
     this.refContent = {};
     this.MAX_RECURSION_DEPTH = context.MAX_RECURSION_DEPTH || 20;
   }
@@ -147,28 +149,36 @@ class RefBuilder {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const refDef of foundRefs.values()) {
-      if (refDef.path === null) {
-        throw new Error(
-          `Invalid _ref definition ${JSON.stringify({ _ref: refDef.original })} in file ${path}`
+      if (refDef.eval) {
+        const code = await readFile(nodePath.resolve(this.configDirectory, refDef.eval));
+        const result = eval(code);
+        parsedFiles[refDef.id] = type.isFunction(result) ? result.toString() : result;
+      } else {
+        if (refDef.path === null) {
+          throw new Error(
+            `Invalid _ref definition ${JSON.stringify({ _ref: refDef.original })} in file ${path}`
+          );
+        }
+        const { path: parsedPath, vars: parsedVars } = JSON.parse(
+          JSON.stringify(refDef),
+          refReviver.bind({ parsedFiles, vars })
         );
+        // eslint-disable-next-line no-await-in-loop
+        let parsedFile = await this.recursiveParseFile({
+          path: parsedPath,
+          // Parse vars before passing down to parse new file
+          vars: parsedVars,
+          count: count + 1,
+        });
+        if (refDef.transformer) {
+          const transformerFile = await readFile(
+            nodePath.resolve(this.configDirectory, refDef.transformer)
+          );
+          const transformerFn = eval(transformerFile);
+          parsedFile = transformerFn(parsedFile, parsedVars);
+        }
+        parsedFiles[refDef.id] = parsedFile;
       }
-      const { path: parsedPath, vars: parsedVars } = JSON.parse(
-        JSON.stringify(refDef),
-        refReviver.bind({ parsedFiles, vars })
-      );
-      // eslint-disable-next-line no-await-in-loop
-      let parsedFile = await this.recursiveParseFile({
-        path: parsedPath,
-        // Parse vars before passing down to parse new file
-        vars: parsedVars,
-        count: count + 1,
-      });
-      if (refDef.transformer) {
-        const transformerFile = await readFile(nodePath.resolve(process.cwd(), refDef.transformer));
-        const transformerFn = eval(transformerFile);
-        parsedFile = transformerFn(parsedFile, parsedVars);
-      }
-      parsedFiles[refDef.id] = parsedFile;
     }
     return JSON.parse(JSON.stringify(fileContentBuiltRefs), refReviver.bind({ parsedFiles, vars }));
   }

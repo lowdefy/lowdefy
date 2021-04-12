@@ -20,7 +20,7 @@ const pageId = 'one';
 
 const lowdefy = { pageId };
 
-test('SetState data to state', () => {
+test('SetState data to state', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -52,7 +52,7 @@ test('SetState data to state', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -64,7 +64,7 @@ test('SetState data to state', () => {
   expect(context.state).toEqual({ textInput: 'init', x: [1, 2, 3] });
 });
 
-test('SetState field to state and update block value', () => {
+test('SetState field to state and update block value', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -96,7 +96,7 @@ test('SetState field to state and update block value', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -110,7 +110,7 @@ test('SetState field to state and update block value', () => {
   expect(textInput.value).toEqual('new');
 });
 
-test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SAFE', () => {
+test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SAFE', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -142,7 +142,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -156,7 +156,7 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
   expect(textInput.value).toEqual(1);
 });
 
-test('SetState value on array and create new Blocks for array items', () => {
+test('SetState value on array and create new Blocks for array items', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -209,7 +209,7 @@ test('SetState value on array and create new Blocks for array items', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ textInput: 'init' }] },

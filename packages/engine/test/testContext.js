@@ -21,7 +21,7 @@ import Blocks from '../src/Blocks';
 import Requests from '../src/Requests';
 import State from '../src/State';
 
-const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
+const testContext = async ({ lowdefy, rootBlock, initState = {} }) => {
   const testLowdefy = {
     displayMessage: () => () => undefined,
     inputs: { test: {} },
@@ -44,6 +44,8 @@ const testContext = ({ lowdefy, rootBlock, initState = {} }) => {
     updateListeners: new Set(),
   };
   ctx.parser = new WebParser({ context: ctx, contexts: {} });
+  ctx.operators = Object.keys(ctx.parser.operators);
+  await ctx.parser.init();
   ctx.State = new State(ctx);
   ctx.Actions = new Actions(ctx);
   ctx.Requests = new Requests(ctx);

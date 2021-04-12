@@ -55,7 +55,7 @@ test('Message with content', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -105,7 +105,7 @@ test('Message with all params', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -152,7 +152,7 @@ test('Message with no params', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

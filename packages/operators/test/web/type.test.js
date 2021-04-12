@@ -15,127 +15,87 @@
 */
 
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    number: 42,
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-    boolean: true,
-  },
-};
-
-const contexts = {};
+import { context, contexts } from '../testContext';
 
 const arrayIndices = [1];
 
 console.error = () => {};
 
-test('_type with on, pass', () => {
+test('_type with on, pass', async () => {
   const input = { _type: { type: 'string', on: 'a' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with on, fail', () => {
+test('_type with on, fail', async () => {
   const input = { _type: { type: 'number', on: 'b' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with key, pass', () => {
+test('_type with key, pass', async () => {
   const input = { _type: { type: 'string', key: 'string' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with key, fail', () => {
+test('_type with key, fail', async () => {
   const input = { _type: { type: 'number', key: 'string' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with null on pass', () => {
+test('_type with null on pass', async () => {
   const input = { _type: { type: 'null', on: null } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
-test('_type with null on fail', () => {
+test('_type with null on fail', async () => {
   const input = { _type: { type: 'boolean', on: null } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with nonexistent key', () => {
+test('_type with nonexistent key', async () => {
   const input = { _type: { type: 'string', key: 'notThere' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with nonexistent key', () => {
+test('_type with nonexistent key', async () => {
   const input = { _type: { type: 'string', key: null } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type null', () => {
+test('_type null', async () => {
   const input = { _type: null };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -145,41 +105,46 @@ test('_type null', () => {
   `);
 });
 
-test('_type with non-string on', () => {
+test('_type with non-string on', async () => {
   const input = { _type: { type: 'number', on: 5 } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with location given to parse in state pass', () => {
+test('_type with location given to parse in state pass', async () => {
   const input = { _type: 'string' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with location given to parse in state fail', () => {
+test('_type with location given to parse in state fail', async () => {
   const input = { _type: 'boolean' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with location given to parse not in state', () => {
+test('_type with location given to parse not in state', async () => {
   const input = { _type: 'string' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string2', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type with unknown type', () => {
+test('_type with unknown type', async () => {
   const input = { _type: 'strings' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -189,97 +154,109 @@ test('_type with unknown type', () => {
   `);
 });
 
-test('_type boolean with location given to parse in state pass', () => {
+test('_type boolean with location given to parse in state pass', async () => {
   const input = { _type: 'boolean' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'boolean', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type number with location given to parse in state pass', () => {
+test('_type number with location given to parse in state pass', async () => {
   const input = { _type: 'number' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'number', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type primitive with location given to parse in state pass', () => {
+test('_type primitive with location given to parse in state pass', async () => {
   const input = { _type: 'primitive' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'number', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type integer with location given to parse in state pass', () => {
+test('_type integer with location given to parse in state pass', async () => {
   const input = { _type: 'integer' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'number', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type none with location given to parse in state pass', () => {
+test('_type none with location given to parse in state pass', async () => {
   const input = { _type: 'none' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: '1', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type undefined with location given to parse in state pass', () => {
+test('_type undefined with location given to parse in state pass', async () => {
   const input = { _type: 'undefined' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: '1', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type object with location given to parse in state pass', () => {
+test('_type object with location given to parse in state pass', async () => {
   const input = { _type: 'object' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'arr.$', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type string with location given to parse nested array in state pass', () => {
+test('_type string with location given to parse nested array in state pass', async () => {
   const input = { _type: 'string' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'arr.$.a', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type array with location given to parse in state pass', () => {
+test('_type array with location given to parse in state pass', async () => {
   const input = { _type: 'array' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'arr', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type date with on packed date pass', () => {
+test('_type date with on packed date pass', async () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: '1', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type date on string date fail', () => {
+test('_type date on string date fail', async () => {
   const input = { _type: { type: 'date', on: '2019-11-28T08:10:09.844Z' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: '1', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_type date on date object pass', () => {
+test('_type date on date object pass', async () => {
   const input = { _type: { type: 'date', on: new Date() } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: '1', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);

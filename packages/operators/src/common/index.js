@@ -14,88 +14,46 @@
   limitations under the License.
 */
 
-import _and from './and';
-import _args from './args';
-import _array from './array';
-import _date from './date';
-import _divide from './divide';
-import _eq from './eq';
-import _event from './event';
-import _experimental_unsafe_js from './experimental_unsafe_js';
-import _function from './function';
-import _get from './get';
-import _global from './global';
-import _gt from './gt';
-import _gte from './gte';
-import _if from './if';
-import _if_none from './if_none';
-import _index from './_index';
-import _input from './input';
-import _json from './json';
-import _log from './log';
-import _lt from './lt';
-import _lte from './lte';
-import _math from './math';
-import _mql from './mql';
-import _ne from './ne';
-import _not from './not';
-import _nunjucks from './nunjucks';
-import _object from './object';
-import _operator from './operator';
-import _or from './or';
-import _product from './product';
-import _random from './random';
-import _regex from './regex';
-import _state from './state';
-import _string from './string';
-import _subtract from './subtract';
-import _sum from './sum';
-import _type from './type';
-import _uri from './uri';
-import _url_query from './url_query';
-import _user from './user';
-import _yaml from './yaml';
-
 export default {
-  _and,
-  _args,
-  _array,
-  _date,
-  _divide,
-  _eq,
-  _event,
-  _experimental_unsafe_js,
-  _function,
-  _get,
-  _global,
-  _gt,
-  _gte,
-  _if_none,
-  _if,
-  _index,
-  _input,
-  _json,
-  _log,
-  _lt,
-  _lte,
-  _math,
-  _mql,
-  _ne,
-  _not,
-  _nunjucks,
-  _object,
-  _operator,
-  _or,
-  _product,
-  _random,
-  _regex,
-  _state,
-  _string,
-  _subtract,
-  _sum,
-  _type,
-  _uri,
-  _url_query,
-  _user,
-  _yaml,
+  _and: 'common/and',
+  _args: 'common/args',
+  _array: 'common/array',
+  _date: 'common/date',
+  _divide: 'common/divide',
+  _eq: 'common/eq',
+  _event: 'common/event',
+  _function: 'common/function',
+  _get: 'common/get',
+  _global: 'common/global',
+  _gt: 'common/gt',
+  _gte: 'common/gte',
+  _if_none: 'common/if_none',
+  _if: 'common/if',
+  _index: 'common/_index',
+  _input: 'common/input',
+  _js: 'common/js',
+  _json: 'common/json',
+  _log: 'common/log',
+  _lt: 'common/lt',
+  _lte: 'common/lte',
+  _math: 'common/math',
+  _mql: 'common/mql',
+  _ne: 'common/ne',
+  _not: 'common/not',
+  _nunjucks: 'common/nunjucks',
+  _object: 'common/object',
+  _operator: 'common/operator',
+  _or: 'common/or',
+  _product: 'common/product',
+  _random: 'common/random',
+  _regex: 'common/regex',
+  _state: 'common/state',
+  _string: 'common/string',
+  _subtract: 'common/subtract',
+  _sum: 'common/sum',
+  _type: 'common/type',
+  _uri: 'common/uri',
+  _url_query: 'common/url_query',
+  _user: 'common/user',
+  _yaml: 'common/yaml',
 };

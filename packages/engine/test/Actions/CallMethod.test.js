@@ -73,7 +73,7 @@ test('CallMethod with no args, synchronous method', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -148,7 +148,7 @@ test('CallMethod method return a promise', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -217,7 +217,7 @@ test('CallMethod with args not an array', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -286,7 +286,7 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -371,7 +371,7 @@ test('CallMethod of block in array by explicit id', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ textInput: '0' }, { textInput: '1' }] },
@@ -447,7 +447,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ textInput: '0' }, { textInput: '1' }] },

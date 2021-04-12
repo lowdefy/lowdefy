@@ -16,6 +16,7 @@
 import NodeParser from '../../src/nodeParser';
 import WebParser from '../../src/webParser';
 import _function from '../../src/common/function';
+import { operators } from '../testContext';
 
 const state = {
   string: 'Some String',
@@ -27,14 +28,16 @@ const location = 'location';
 const context = {
   lowdefy: { inputs: {} },
   state,
+  operators,
 };
 
 const contexts = { context };
 
 console.error = () => {};
 
-test('NodeParser, _function that gets from state', () => {
+test('NodeParser, _function that gets from state', async () => {
   const parser = new NodeParser({ state });
+  await parser.init();
   const params = { __state: 'string' };
   const fn = _function({ location, params, parser });
   expect(fn).toBeInstanceOf(Function);
@@ -42,16 +45,18 @@ test('NodeParser, _function that gets from state', () => {
   expect(fn()).toEqual('Some String');
 });
 
-test('NodeParser, _function gives args as an array', () => {
+test('NodeParser, _function gives args as an array', async () => {
   const parser = new NodeParser({ state });
+  await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
-test('NodeParser, _function throws on parser errors', () => {
+test('NodeParser, _function throws on parser errors', async () => {
   const parser = new NodeParser({ state });
+  await parser.init();
   const params = { __state: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
@@ -59,8 +64,9 @@ test('NodeParser, _function throws on parser errors', () => {
   );
 });
 
-test('WebParser, _function that gets from state', () => {
+test('WebParser, _function that gets from state', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const params = { __state: 'string' };
   const fn = _function({ location, params, parser });
   expect(fn).toBeInstanceOf(Function);
@@ -68,16 +74,18 @@ test('WebParser, _function that gets from state', () => {
   expect(fn()).toEqual('Some String');
 });
 
-test('WebParser, _function gives args as an array', () => {
+test('WebParser, _function gives args as an array', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
-test('WebParser, _function throws on parser errors', () => {
+test('WebParser, _function throws on parser errors', async () => {
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const params = { __state: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(

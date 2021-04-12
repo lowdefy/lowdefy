@@ -68,7 +68,7 @@ test('Login', async () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

@@ -538,6 +538,9 @@
         - id: _input
           type: MenuLink
           pageId: _input
+        - id: _js
+          type: MenuLink
+          pageId: _js
         - id: _json
           type: MenuLink
           pageId: _json

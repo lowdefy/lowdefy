@@ -14,9 +14,7 @@
   limitations under the License.
 */
 
-function filterDefaultValue(...args) {
-  const [value, defaultValue] = args;
-
+function filterDefaultValue(value, defaultValue) {
   const isObject = (obj) => typeof obj === 'object' && obj !== null && !Array.isArray(obj);
   const isEmptyObject = (obj) => isObject(obj) && Object.keys(obj).length === 0;
 
@@ -47,4 +45,4 @@ function filterDefaultValue(...args) {
   return filterObject({ obj: value, path: [] });
 }
 
-export default filterDefaultValue;
+module.exports = filterDefaultValue;

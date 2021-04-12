@@ -14,14 +14,9 @@
   limitations under the License.
 */
 
-import _diff from './diff';
-import _base64 from './base64';
-import _secret from './secret';
-import _uuid from './uuid';
-
 export default {
-  _diff,
-  _base64,
-  _secret,
-  _uuid,
+  _diff: 'node/diff',
+  _base64: 'node/base64',
+  _secret: 'node/secret',
+  _uuid: 'node/uuid',
 };

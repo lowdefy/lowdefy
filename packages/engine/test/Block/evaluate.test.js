@@ -21,7 +21,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('parse block visible', () => {
+test('parse block visible', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -43,7 +43,7 @@ test('parse block visible', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -53,7 +53,7 @@ test('parse block visible', () => {
   expect(textInput.eval.visible).toEqual('value');
 });
 
-test('default value for visible', () => {
+test('default value for visible', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -74,7 +74,7 @@ test('default value for visible', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -84,7 +84,7 @@ test('default value for visible', () => {
   expect(textInput.eval.visible).toEqual(true);
 });
 
-test('parse block required', () => {
+test('parse block required', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -106,7 +106,7 @@ test('parse block required', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -116,7 +116,7 @@ test('parse block required', () => {
   expect(textInput.eval.required).toEqual('value');
 });
 
-test('default value for required', () => {
+test('default value for required', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -137,7 +137,7 @@ test('default value for required', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -147,7 +147,7 @@ test('default value for required', () => {
   expect(textInput.eval.required).toEqual(false);
 });
 
-test('parse block properties', () => {
+test('parse block properties', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -169,7 +169,7 @@ test('parse block properties', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -179,7 +179,7 @@ test('parse block properties', () => {
   expect(textInput.eval.properties).toEqual('value');
 });
 
-test('default value for properties', () => {
+test('default value for properties', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -200,7 +200,7 @@ test('default value for properties', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -210,7 +210,7 @@ test('default value for properties', () => {
   expect(textInput.eval.properties).toEqual({});
 });
 
-test('parse block style', () => {
+test('parse block style', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -232,7 +232,7 @@ test('parse block style', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -242,7 +242,7 @@ test('parse block style', () => {
   expect(textInput.eval.style).toEqual('value');
 });
 
-test('default value for style', () => {
+test('default value for style', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -263,7 +263,7 @@ test('default value for style', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -273,7 +273,7 @@ test('default value for style', () => {
   expect(textInput.eval.style).toEqual({});
 });
 
-test('parse block layout', () => {
+test('parse block layout', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -295,7 +295,7 @@ test('parse block layout', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -305,7 +305,7 @@ test('parse block layout', () => {
   expect(textInput.eval.layout).toEqual('value');
 });
 
-test('default value for layout', () => {
+test('default value for layout', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -326,7 +326,7 @@ test('default value for layout', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -336,7 +336,7 @@ test('default value for layout', () => {
   expect(textInput.eval.layout).toEqual({});
 });
 
-test('parse block areas', () => {
+test('parse block areas', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -362,7 +362,7 @@ test('parse block areas', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -375,7 +375,7 @@ test('parse block areas', () => {
   });
 });
 
-test('parse block areas, remove blocks array', () => {
+test('parse block areas, remove blocks array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -411,7 +411,7 @@ test('parse block areas, remove blocks array', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },
@@ -424,7 +424,7 @@ test('parse block areas, remove blocks array', () => {
   });
 });
 
-test('default value for areas', () => {
+test('default value for areas', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -445,7 +445,7 @@ test('default value for areas', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { key: 'value' },

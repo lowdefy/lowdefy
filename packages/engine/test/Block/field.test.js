@@ -19,7 +19,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('set value to block field', () => {
+test('set value to block field', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -41,7 +41,7 @@ test('set value to block field', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -55,7 +55,7 @@ test('set value to block field', () => {
   expect(context.state).toEqual({ field: true });
 });
 
-test('array block with init, save to field', () => {
+test('array block with init, save to field', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -92,7 +92,7 @@ test('array block with init, save to field', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { field: [{ text: 'b' }] },
@@ -100,7 +100,7 @@ test('array block with init, save to field', () => {
   expect(context.state).toEqual({ field: [{ text: 'b' }] });
 });
 
-test('two blocks with same field should have the same value', () => {
+test('two blocks with same field should have the same value', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -131,7 +131,7 @@ test('two blocks with same field should have the same value', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -151,7 +151,7 @@ test('two blocks with same field should have the same value', () => {
   expect(context.state).toEqual({ field: false });
 });
 
-test('two blocks with same field visibility and state', () => {
+test('two blocks with same field visibility and state', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -200,7 +200,7 @@ test('two blocks with same field visibility and state', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: { field: 'field', swtch2: true, swtch1: true },

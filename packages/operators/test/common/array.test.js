@@ -19,6 +19,9 @@ import array from '../../src/common/array';
 import _function from '../../src/common/function';
 
 const parser = new NodeParser();
+beforeAll(async () => {
+  await parser.init();
+});
 
 const location = 'locationId';
 

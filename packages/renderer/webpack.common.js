@@ -16,7 +16,7 @@ module.exports = {
     alias: {
       buffer: require.resolve('buffer'),
     },
-    fallback: { buffer: false },
+    fallback: { buffer: false, path: false, fs: false },
   },
   module: {
     rules: [

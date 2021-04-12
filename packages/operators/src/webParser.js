@@ -23,19 +23,38 @@ class WebParser {
   constructor({ context, contexts }) {
     this.context = context;
     this.contexts = contexts;
+    this.init = this.init.bind(this);
     this.parse = this.parse.bind(this);
-    this.operations = {
+    this.operators = {
       ...commonOperators,
       ...webOperators,
     };
+    this.operations = {};
+  }
+
+  async init() {
+    if (!type.isObject(this.context.lowdefy)) {
+      throw new Error('context.lowdefy must be an object.');
+    }
+    if (!type.isArray(this.context.operators)) {
+      throw new Error('context.operators must be an array.');
+    }
+    await Promise.all(
+      this.context.operators.map(async (operator) => {
+        if (this.operators[operator]) {
+          const fn = await import(`./${this.operators[operator]}.js`);
+          this.operations[operator] = fn.default;
+          if (this.operations[operator].init) {
+            await this.operations[operator].init();
+          }
+        }
+      })
+    );
   }
 
   parse({ args, arrayIndices, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
-    }
-    if (!type.isObject(this.context.lowdefy)) {
-      throw new Error('Lowdefy context must be an object.');
     }
     if (event && !type.isObject(event)) {
       throw new Error('Operator parser event must be a object.');
