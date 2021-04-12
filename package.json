@@ -49,8 +49,5 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "lerna": "3.22.1",
     "prettier": "2.2.1"
-  },
-  "resolutions": {
-    "mongodb": "3.6.5"
   }
 }
