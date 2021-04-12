@@ -6191,7 +6191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["knex", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:0.95.4"],
             ["mingo", "npm:4.1.2"],
             ["moment", "npm:2.29.1"],
-            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["mssql", "npm:6.3.1"],
             ["mysql", "npm:2.18.1"],
             ["openid-client", "npm:4.6.0"],
@@ -6880,7 +6880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:1.2.3"],
             ["@types/mongodb", null],
             ["debug", "virtual:1395e3253bdebab17e67802f1d9d443afbc9a171f1af353097bb34ea7f2a4648d264c4bdb0ee3507285b01dcf7ed4d6fa7dac6547b79bc15e9c2551d5355f6f0#npm:4.1.1"],
-            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["mongodb-memory-server", "npm:6.6.7"],
             ["uuid", "npm:8.3.0"]
           ],
@@ -21724,24 +21724,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mongodb", [
-        ["npm:3.6.4", {
-          "packageLocation": "./.yarn/cache/mongodb-npm-3.6.4-1ff94acb62-f2331e7cdc.zip/node_modules/mongodb/",
+        ["npm:3.6.5", {
+          "packageLocation": "./.yarn/cache/mongodb-npm-3.6.5-df947000e5-6a838b79e1.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "npm:3.6.4"]
+            ["mongodb", "npm:3.6.5"]
           ],
           "linkType": "SOFT",
         }],
-        ["npm:3.6.6", {
-          "packageLocation": "./.yarn/cache/mongodb-npm-3.6.6-c047384516-7c711f8226.zip/node_modules/mongodb/",
+        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5", {
+          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-2ff9ea3b9d/0/cache/mongodb-npm-3.6.5-df947000e5-6a838b79e1.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "npm:3.6.6"]
-          ],
-          "linkType": "SOFT",
-        }],
-        ["virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4", {
-          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-c5cd084c8e/0/cache/mongodb-npm-3.6.4-1ff94acb62-f2331e7cdc.zip/node_modules/mongodb/",
-          "packageDependencies": [
-            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.4"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["aws4", null],
             ["bl", "npm:2.2.1"],
             ["bson", "npm:1.1.6"],
@@ -21751,33 +21744,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mongodb-client-encryption", null],
             ["mongodb-extjson", null],
             ["require_optional", "npm:1.0.1"],
-            ["safe-buffer", "npm:5.2.1"],
-            ["saslprep", "npm:1.0.3"],
-            ["snappy", null]
-          ],
-          "packagePeers": [
-            "aws4",
-            "bson-ext",
-            "kerberos",
-            "mongodb-client-encryption",
-            "mongodb-extjson",
-            "snappy"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:adde40e1fc17ddcc0fdd792d21482084d9c2688eb95c7b88316fc59d06044f125038cd887271a28e08012e8b4449e0c0d191daae2d6305aff9cd75452457b23a#npm:3.6.6", {
-          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-5fb82be51e/0/cache/mongodb-npm-3.6.6-c047384516-7c711f8226.zip/node_modules/mongodb/",
-          "packageDependencies": [
-            ["mongodb", "virtual:adde40e1fc17ddcc0fdd792d21482084d9c2688eb95c7b88316fc59d06044f125038cd887271a28e08012e8b4449e0c0d191daae2d6305aff9cd75452457b23a#npm:3.6.6"],
-            ["aws4", null],
-            ["bl", "npm:2.2.1"],
-            ["bson", "npm:1.1.6"],
-            ["bson-ext", null],
-            ["denque", "npm:1.5.0"],
-            ["kerberos", null],
-            ["mongodb-client-encryption", null],
-            ["mongodb-extjson", null],
-            ["optional-require", "npm:1.0.2"],
             ["safe-buffer", "npm:5.2.1"],
             ["saslprep", "npm:1.0.3"],
             ["snappy", null]
@@ -21829,7 +21795,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lockfile", "npm:1.0.4"],
             ["md5-file", "npm:5.0.0"],
             ["mkdirp", "npm:1.0.4"],
-            ["mongodb", "virtual:adde40e1fc17ddcc0fdd792d21482084d9c2688eb95c7b88316fc59d06044f125038cd887271a28e08012e8b4449e0c0d191daae2d6305aff9cd75452457b23a#npm:3.6.6"],
+            ["mongodb", "virtual:7fa6405098723f150ab741c1e73c906de11a676b4cc641bac8b3397ea2dd6efbb913e72a780932220533241b442cc586b41b26c7b5ac786de486992cd2db054c#npm:3.6.5"],
             ["semver", "npm:7.3.5"],
             ["tar-stream", "npm:2.2.0"],
             ["tmp", "npm:0.2.1"],
@@ -22893,15 +22859,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["optimism", "npm:0.15.0"],
             ["@wry/context", "npm:0.6.0"],
             ["@wry/trie", "npm:0.3.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["optional-require", [
-        ["npm:1.0.2", {
-          "packageLocation": "./.yarn/cache/optional-require-npm-1.0.2-81f21a5fb8-cf256e1364.zip/node_modules/optional-require/",
-          "packageDependencies": [
-            ["optional-require", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]

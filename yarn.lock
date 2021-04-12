@@ -3391,7 +3391,7 @@ __metadata:
     knex: 0.95.4
     mingo: 4.1.2
     moment: 2.29.1
-    mongodb: 3.6.4
+    mongodb: 3.6.5
     mssql: 6.3.1
     mysql: 2.18.1
     openid-client: 4.6.0
@@ -15124,9 +15124,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.6.4":
-  version: 3.6.4
-  resolution: "mongodb@npm:3.6.4"
+"mongodb@npm:3.6.5":
+  version: 3.6.5
+  resolution: "mongodb@npm:3.6.5"
   dependencies:
     bl: ^2.2.1
     bson: ^1.1.4
@@ -15150,37 +15150,7 @@ fsevents@^1.2.7:
       optional: true
     snappy:
       optional: true
-  checksum: f2331e7cdce7694b033346f898af9429bab53505ffc1175cb66e370eecc26eb3ae08d950f57ee6ca0be1a4d24f735c40ac758f3e8f0f68826b43e7a36ed5f5bf
-  languageName: node
-  linkType: hard
-
-"mongodb@npm:^3.5.9":
-  version: 3.6.6
-  resolution: "mongodb@npm:3.6.6"
-  dependencies:
-    bl: ^2.2.1
-    bson: ^1.1.4
-    denque: ^1.4.1
-    optional-require: ^1.0.2
-    safe-buffer: ^5.1.2
-    saslprep: ^1.0.0
-  dependenciesMeta:
-    saslprep:
-      optional: true
-  peerDependenciesMeta:
-    aws4:
-      optional: true
-    bson-ext:
-      optional: true
-    kerberos:
-      optional: true
-    mongodb-client-encryption:
-      optional: true
-    mongodb-extjson:
-      optional: true
-    snappy:
-      optional: true
-  checksum: 7c711f82269a98fc331e5d52d3ba02167446d7a44c54f0ab26072d708a804c5082e201abae85dcf01154ac73572e4e7f80f32c0b632b72e92e8e65857f553062
+  checksum: 6a838b79e104cee243e2ed10a5ded90490bb4db687ca1f1cabeab6c578441b1db64136fd33bad7112ca4a09e60a99a3b039d1c11e515521ffffa66ed91fb3148
   languageName: node
   linkType: hard
 
@@ -16163,13 +16133,6 @@ fsevents@^1.2.7:
     "@wry/context": ^0.6.0
     "@wry/trie": ^0.3.0
   checksum: a9152e33a27be9b2b4a441387061a7e8aff9877872169eba49c11c07fee19b7369efd48f7530f5a65e142f46b63ba3c8a56c9b893eaa696e143f1fdff33760a2
-  languageName: node
-  linkType: hard
-
-"optional-require@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "optional-require@npm:1.0.2"
-  checksum: cf256e1364c5566946441da58261cad620c7fcdfd8abc67bb5a5cf629af11813909d30c99953055ed79fe4064be56a892b76e996156d8dfa1106210de15860c9
   languageName: node
   linkType: hard
 
