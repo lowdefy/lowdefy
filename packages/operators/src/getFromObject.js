@@ -38,7 +38,7 @@ function getFromObject({
     );
   }
 
-  if (params.key === null) return null;
+  if (params.key === null) return get(params, 'default', { default: null, copy: true });
 
   if (params.contextId) {
     if (env === 'node') {
