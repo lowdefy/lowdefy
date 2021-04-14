@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 import getFromObject from '../getFromObject';
 
 function _get({ arrayIndices, env, location, params }) {
@@ -26,7 +26,7 @@ function _get({ arrayIndices, env, location, params }) {
     );
   }
 
-  if (params.from === null) return null;
+  if (params.from === null) return get(params, 'default', { default: null, copy: true });
 
   if (!type.isObject(params.from) && !type.isArray(params.from)) {
     throw new Error(
