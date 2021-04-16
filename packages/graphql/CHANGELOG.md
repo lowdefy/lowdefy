@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
+
+
+### Bug Fixes
+
+* **graphql:** Improve KnexBuilder errors, add KnexBuilder tests. ([daced49](https://github.com/lowdefy/lowdefy/commit/daced49ee28fa7c0863859875a3eb3fae4ef3b22))
+* **graphql:** Init operators. ([951e3a7](https://github.com/lowdefy/lowdefy/commit/951e3a7a15f652941d548c784d7967a5c748edc4))
+* **graphql:** Knex tests, add tablename prop to builder. ([ba696f8](https://github.com/lowdefy/lowdefy/commit/ba696f80dd45bc056d5b3205c00aaabc0ffa11db))
+* **graphql:** Pin mongodb to v3.6.5 due to yarn pnp bug in v3.6.6 ([4b74cb6](https://github.com/lowdefy/lowdefy/commit/4b74cb697adad67030d2a4cd17388182d1c774e2))
+* Fix graphql-federated build, move knex dependencies to cli. ([ff32126](https://github.com/lowdefy/lowdefy/commit/ff321269bf46dd5f334a1f4e2c91c52b59b9dc67))
+
+
+### Features
+
+* **docs:** Add Knex docs. ([7caefdc](https://github.com/lowdefy/lowdefy/commit/7caefdcd0240a71a884a9c006996b523d3ad589d))
+* **graphql:** init Knex connection. ([dac5a4c](https://github.com/lowdefy/lowdefy/commit/dac5a4cb5c8d5fc3452473267547e607e634e7ac))
+* **graphql:** Update Knex schemas. ([d2d8a73](https://github.com/lowdefy/lowdefy/commit/d2d8a732d8c129da02ba5b8ba1ffe5e9f7f3300b))
+
+
+
+
+
 ## [3.12.6](https://github.com/lowdefy/lowdefy/compare/v3.12.5...v3.12.6) (2021-04-06)
 
 

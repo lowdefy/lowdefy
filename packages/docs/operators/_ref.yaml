@@ -60,7 +60,7 @@ _ref:
 
       ###### Evaluating JavaScript
 
-      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file that exports the a JSON serializable result or function when evaluated. 
+      JavaScript can be evaluated during build time by referencing a JavaScript file to the `eval` argument. The result of `_ref` operator will be the exported result of the evaluated JavaScript using [`eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval). If the exported result is a function, `function.toString()` will be returned, useful for loading `code` for the [`_js`](/_js) operator. The `eval` argument should be the file path (relative to the root of the project) to a JavaScript file that exports the a JSON serializable result or function when evaluated.
 
       For example:
       ```js
@@ -70,7 +70,7 @@ _ref:
       }
       module.exports = fooFn(10);
       ```
-      This will evaluate to an object: `{ foo: 10 }`. 
+      This will evaluate to an object: `{ foo: 10 }`.
 
       And when returning a function will provide the exported function, for example:
       ```js
@@ -102,7 +102,7 @@ _ref:
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: '3.12.5'
+      lowdefy: '3.13.0'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -123,7 +123,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: '3.12.5'
+      lowdefy: '3.13.0'
       pages:
         - id: page1
           type: PageHeaderMenu

@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
+
+## Changes
+
+### Features
+
+- Add Knex SQL support. This adds support forthe following databases:
+  - Amazon Redshift
+  - MariaDB
+  - Microsoft SQL Server
+  - MySQL
+  - Oracle Database
+  - PostgreSQL
+  - SQLite
+- Add \_js operator that evaluates JavaScript functions. This replaces the \_experimental_unsafe_js operator.
+- Add eval option to \_ref operator during build, to evaluate js files and reference JavaScript function definitions.
+- Operators on the client are now imported lazily.
+
+### Fixes
+
+- Getter operators now return the specified default value if the key or from arguments are null.
+- OpenID Connect fields were present on the user object if a page was reloaded.
+
+## Commits
+
+### Bug Fixes
+
+- **build:** Add configDirectory to context for full local builds. ([5a6a36d](https://github.com/lowdefy/lowdefy/commit/5a6a36dc3373b9864896171b2f5d3185d72d6c3b))
+- **build:** Add eval option to \_ref operator during build. ([eb62e8a](https://github.com/lowdefy/lowdefy/commit/eb62e8a22b326c16148ae8324d64d89022cf16c6))
+- **build:** Add list of operators in context to build. ([88a6f24](https://github.com/lowdefy/lowdefy/commit/88a6f24c8f486ee5370e78c8829cad0fb2d18492))
+- **docs:** Add \_js operator to docs. ([b7b2135](https://github.com/lowdefy/lowdefy/commit/b7b21354fb9822914357f5924349640a7e712578))
+- **docs:** Add \_ref.eval to docs. ([d90e02f](https://github.com/lowdefy/lowdefy/commit/d90e02f719f506cd03a99a099524b0f98df10345))
+- **docs:** Make connection examples and secrets more consistant ([4c473a3](https://github.com/lowdefy/lowdefy/commit/4c473a3e6308d768cf7658758aa696fa2141aeb8))
+- **docs:** Update \_js operator docs. ([1c00b36](https://github.com/lowdefy/lowdefy/commit/1c00b369e2cbf6c1c180159eabf979ade0b1f6d2))
+- **docs:** Update docs to use \_js operator. ([91dda91](https://github.com/lowdefy/lowdefy/commit/91dda91eea03654c55c16c089c3583f62aea3c10))
+- **engine:** Init async operators. ([63f8d14](https://github.com/lowdefy/lowdefy/commit/63f8d143796e928b5a87a8c6e4a90b4e975a83bc))
+- **graphql:** Improve KnexBuilder errors, add KnexBuilder tests. ([daced49](https://github.com/lowdefy/lowdefy/commit/daced49ee28fa7c0863859875a3eb3fae4ef3b22))
+- **graphql:** Init operators. ([951e3a7](https://github.com/lowdefy/lowdefy/commit/951e3a7a15f652941d548c784d7967a5c748edc4))
+- **graphql:** Knex tests, add tablename prop to builder. ([ba696f8](https://github.com/lowdefy/lowdefy/commit/ba696f80dd45bc056d5b3205c00aaabc0ffa11db))
+- **graphql:** Pin mongodb to v3.6.5 due to yarn pnp bug in v3.6.6 ([4b74cb6](https://github.com/lowdefy/lowdefy/commit/4b74cb697adad67030d2a4cd17388182d1c774e2))
+- **operators:** Getters should return default if from or key are null. ([be8aae6](https://github.com/lowdefy/lowdefy/commit/be8aae62499065a66e8e1ed9e8ce4c481017203f))
+- Fix graphql-federated build, move knex dependencies to cli. ([ff32126](https://github.com/lowdefy/lowdefy/commit/ff321269bf46dd5f334a1f4e2c91c52b59b9dc67))
+- **operators:** \_js encode and decode into QuickJS to escape chars in json. ([45644db](https://github.com/lowdefy/lowdefy/commit/45644db11193c571cb886da50d74f397eb337104))
+- **operators:** Add tests for json response for \_js. ([6cf5ac7](https://github.com/lowdefy/lowdefy/commit/6cf5ac78c140d627b3648d889eac263ace4d9be1))
+- **operators:** Change nodeParser import to require. ([d044d13](https://github.com/lowdefy/lowdefy/commit/d044d1375d8f285ef7ef42185278b401ae2b4f0e))
+- **operators:** Update \_js to take code with function as param. ([8fa7fa0](https://github.com/lowdefy/lowdefy/commit/8fa7fa056c4b786aa707d3275445dade1f8fcb26))
+- **renderer:** Filter OpenId Connect fields from user object. ([8cdf96f](https://github.com/lowdefy/lowdefy/commit/8cdf96f5eef07358507bb52298679362b8ddba4d))
+- Create \_js using quickjs-emscripten. ([4ec8a30](https://github.com/lowdefy/lowdefy/commit/4ec8a300d1f6ff05f87f2cb9a49a686d4c804099))
+- Update babel setup for tests. ([1d89de9](https://github.com/lowdefy/lowdefy/commit/1d89de9edb3e64f005bc044ebdc80ef6a8a0eecd))
+- Update react, react-dom and react-test-renderer to v17.0.2 ([78969ab](https://github.com/lowdefy/lowdefy/commit/78969abd39e8b04a7cddb39472985da6da50c7b9))
+- **operators:** Update dynamic imports. ([5699118](https://github.com/lowdefy/lowdefy/commit/5699118eda068f0f729223eb9ee3cdf8ed4f9840))
+
+### Features
+
+- Update Knex docs for all suported databases. ([1b45b01](https://github.com/lowdefy/lowdefy/commit/1b45b01a647e8710bfa3a60e1a0142226a2f60e2))
+- **docs:** Add Knex docs. ([7caefdc](https://github.com/lowdefy/lowdefy/commit/7caefdcd0240a71a884a9c006996b523d3ad589d))
+- **graphql:** init Knex connection. ([dac5a4c](https://github.com/lowdefy/lowdefy/commit/dac5a4cb5c8d5fc3452473267547e607e634e7ac))
+- **graphql:** Update Knex schemas. ([d2d8a73](https://github.com/lowdefy/lowdefy/commit/d2d8a732d8c129da02ba5b8ba1ffe5e9f7f3300b))
+- **operators:** Add \_js operator and remove \_experimental_unsafe_js operator. ([2d1e2b3](https://github.com/lowdefy/lowdefy/commit/2d1e2b3b18f7f379bbe2821055122b0aee31ce62))
+
 ## [3.12.6](https://github.com/lowdefy/lowdefy/compare/v3.12.5...v3.12.6) (2021-04-06)
 
 ## Changes
