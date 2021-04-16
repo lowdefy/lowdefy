@@ -61,7 +61,7 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(__dirname, 'dist/shell'),
     },
-    mode: 'development',
+    mode: 'production',
     module: {
       rules: [
         {
