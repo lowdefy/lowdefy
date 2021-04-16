@@ -22,9 +22,9 @@ async function run() {
   const build = await require('./dist/index.js').default.then((module) => module.default);
   await build({
     logger: console,
-    cacheDirectory: path.resolve(process.cwd(), '.lowdefy/.cache'),
-    configDirectory: process.cwd(),
-    outputDirectory: path.resolve(process.cwd(), '.lowdefy/build'),
+    cacheDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/.cache'),
+    configDirectory: path.resolve(process.cwd(), '../docs'),
+    outputDirectory: path.resolve(process.cwd(), '../servers/serverDev/.lowdefy/build'),
   });
 }
 

@@ -24,9 +24,10 @@ const state = {
 
 console.error = () => {};
 
-test('_operator, _state', () => {
+test('_operator, _state', async () => {
   const input = { a: { _operator: { name: '_state', params: 'string' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'Some String',
@@ -34,9 +35,10 @@ test('_operator, _state', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_operator.name invalid', () => {
+test('_operator.name invalid', async () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -46,21 +48,23 @@ test('_operator.name invalid', () => {
   `);
 });
 
-test('_operator.name not allowed to include "experimental"', () => {
-  const input = { a: { _operator: { name: '_experimental_unsafe_js' } } };
+test('_operator.name not allowed to include "experimental"', async () => {
+  const input = { a: { _operator: { name: '_experimental_op' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
-      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_unsafe_js"} at locationId.],
+      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_op"} at locationId.],
     ]
   `);
 });
 
-test('_operator.name not a string', () => {
+test('_operator.name not a string', async () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -70,9 +74,10 @@ test('_operator.name not a string', () => {
   `);
 });
 
-test('_operator with value not a object', () => {
+test('_operator with value not a object', async () => {
   const input = { a: { _operator: 'a' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -82,9 +87,10 @@ test('_operator with value not a object', () => {
   `);
 });
 
-test('_operator cannot be set to _operator', () => {
+test('_operator cannot be set to _operator', async () => {
   const input = { a: { _operator: { name: '_operator' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -94,17 +100,19 @@ test('_operator cannot be set to _operator', () => {
   `);
 });
 
-test('_operator, _not with no params', () => {
+test('_operator, _not with no params', async () => {
   const input = { a: { _operator: { name: '_not' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_operator, _json.parse with params', () => {
+test('_operator, _json.parse with params', async () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: [{ a: 'a1' }],

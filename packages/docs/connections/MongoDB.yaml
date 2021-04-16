@@ -67,16 +67,20 @@ _ref:
 
             #### Examples
 
-            MongoDB collection with reads and writes:
+            ###### MongoDB collection with reads and writes:
             ```yaml
             connections:
               - id: my_collection
                 type: MongoDBCollection
                 properties:
                   databaseUri:
-                    _secret: my_database_uri
+                    _secret: MONGODB_URI
                   collection: my_collection_name
                   write: true
+            ```
+            Environment variables:
+            ```
+            LOWDEFY_SECRET_MONGODB_URI = mongodb+srv://username:password@server.example.com/database
             ```
 
             ## Requests
@@ -112,7 +116,7 @@ _ref:
 
             #### Examples
 
-            Calculate average score by region:
+            ###### Calculate average score by region:
             ```yaml
             requests:
               - id: avg_spend_by_region
@@ -149,7 +153,7 @@ _ref:
 
             #### Examples
 
-            Delete all documents older than a specific date:
+            ###### Delete all documents older than a specific date:
             ```yaml
             requests:
               - id: delete_old_documents
@@ -178,7 +182,7 @@ _ref:
 
             #### Examples
 
-            Delete a document by _id:
+            ###### Delete a document by _id:
             ```yaml
             requests:
               - id: delete_selected_document
@@ -210,7 +214,7 @@ _ref:
 
             #### Examples
 
-            Find top ten scores above 90:
+            ###### Find top ten scores above 90:
             ```yaml
             requests:
               - id: scores_top_ten_scores_above_90
@@ -250,7 +254,7 @@ _ref:
 
             #### Examples
 
-            Find a document by id:
+            ###### Find a document by id:
             ```yaml
             requests:
               - id: find_by_id
@@ -279,7 +283,7 @@ _ref:
 
             #### Examples
 
-            Insert a set of documents:
+            ###### Insert a set of documents:
             ```yaml
             requests:
               - id: insert_new_comment
@@ -312,7 +316,7 @@ _ref:
 
             #### Examples
 
-            Insert a document:
+            ###### Insert a document:
             ```yaml
             requests:
               - id: insert_new_comment
@@ -349,7 +353,7 @@ _ref:
 
             #### Examples
 
-            Set a list of documents as resolved:
+            ###### Set a list of documents as resolved:
             ```yaml
             requests:
               - id: set_resolved
@@ -365,7 +369,7 @@ _ref:
                       resolved: true
             ```
 
-            Mark all documents with score less than 6 as urgent:
+            ###### Mark all documents with score less than 6 as urgent:
             ```yaml
             requests:
               - id: set_resolved
@@ -402,7 +406,7 @@ _ref:
 
             #### Examples
 
-            Update a document:
+            ###### Update a document:
             ```yaml
             requests:
               - id: update

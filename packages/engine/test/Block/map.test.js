@@ -21,7 +21,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('all nested blocks present in map', () => {
+test('all nested blocks present in map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -120,7 +120,7 @@ test('all nested blocks present in map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -150,7 +150,7 @@ test('all nested blocks present in map', () => {
   });
 });
 
-test('unshiftItem item in list updates map', () => {
+test('unshiftItem item in list updates map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -185,7 +185,7 @@ test('unshiftItem item in list updates map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -214,7 +214,7 @@ test('unshiftItem item in list updates map', () => {
   expect(originalL1).toBe(newL2);
 });
 
-test('pushItem item in list updates map', () => {
+test('pushItem item in list updates map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -249,7 +249,7 @@ test('pushItem item in list updates map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -268,7 +268,7 @@ test('pushItem item in list updates map', () => {
   expect(context.RootBlocks.map['list.1'].blockId).toEqual('list.1');
 });
 
-test('removeItem in list updates map', () => {
+test('removeItem in list updates map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -303,7 +303,7 @@ test('removeItem in list updates map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -352,7 +352,7 @@ test('removeItem in list updates map', () => {
   expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list']);
 });
 
-test('moveItemUp in list updates map', () => {
+test('moveItemUp in list updates map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -387,7 +387,7 @@ test('moveItemUp in list updates map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -440,7 +440,7 @@ test('moveItemUp in list updates map', () => {
   expect(context.RootBlocks.map['list.3']).toBe(L3);
 });
 
-test('moveItemDown in list updates map', () => {
+test('moveItemDown in list updates map', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -475,7 +475,7 @@ test('moveItemDown in list updates map', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState: {

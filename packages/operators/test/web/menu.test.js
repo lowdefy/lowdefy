@@ -16,62 +16,16 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-};
-
-const contexts = {};
+import { context, contexts } from '../testContext';
 
 const arrayIndices = [1];
 
 console.error = () => {};
 
-test('_menu using string menuId', () => {
+test('_menu using string menuId', async () => {
   const input = { a: { _menu: 'default' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: {
@@ -81,9 +35,10 @@ test('_menu using string menuId', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu using index', () => {
+test('_menu using index', async () => {
   const input = { a: { _menu: 1 } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: {
@@ -93,9 +48,10 @@ test('_menu using index', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu in object', () => {
+test('_menu in object', async () => {
   const input = { a: { _menu: 'default' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     a: {
@@ -105,9 +61,10 @@ test('_menu in object', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu full menus', () => {
+test('_menu full menus', async () => {
   const input = { _menu: true };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -123,9 +80,10 @@ test('_menu full menus', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu null', () => {
+test('_menu null', async () => {
   const input = { _menu: null };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -135,37 +93,40 @@ test('_menu null', () => {
   `);
 });
 
-test('_menu param object value', () => {
+test('_menu param object value', async () => {
   const input = {
     _menu: {
       value: 'm_2',
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu param object index', () => {
+test('_menu param object index', async () => {
   const input = {
     _menu: {
       index: 2,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu params object value not string', () => {
+test('_menu params object value not string', async () => {
   const input = {
     _menu: {
       value: 1,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -175,13 +136,14 @@ test('_menu params object value not string', () => {
   `);
 });
 
-test('_menu params object index not number', () => {
+test('_menu params object index not number', async () => {
   const input = {
     _menu: {
       index: 'a',
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -191,13 +153,14 @@ test('_menu params object index not number', () => {
   `);
 });
 
-test('_menu param object all', () => {
+test('_menu param object all', async () => {
   const input = {
     _menu: {
       all: true,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -213,7 +176,7 @@ test('_menu param object all', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu param object all and value', () => {
+test('_menu param object all and value', async () => {
   const input = {
     _menu: {
       all: true,
@@ -221,6 +184,7 @@ test('_menu param object all and value', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -236,13 +200,14 @@ test('_menu param object all and value', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu param object invalid', () => {
+test('_menu param object invalid', async () => {
   const input = {
     _menu: {
       other: true,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`

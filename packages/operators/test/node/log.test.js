@@ -27,9 +27,10 @@ afterAll(() => {
   console.log = logger;
 });
 
-test('_log a string', () => {
+test('_log a string', async () => {
   const input = { a: { _log: 'value' } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: 'value',
@@ -37,9 +38,10 @@ test('_log a string', () => {
   expect(mockLogger).toHaveBeenCalledWith('value');
 });
 
-test('_log a number', () => {
+test('_log a number', async () => {
   const input = { a: { _log: 1 } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: 1,
@@ -47,9 +49,10 @@ test('_log a number', () => {
   expect(mockLogger).toHaveBeenCalledWith(1);
 });
 
-test('_log a null', () => {
+test('_log a null', async () => {
   const input = { a: { _log: null } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: null,
@@ -58,9 +61,10 @@ test('_log a null', () => {
 });
 
 // TODO: Confirm if this is expected behaviour??
-test('_log a undefined', () => {
+test('_log a undefined', async () => {
   const input = { a: { _log: undefined } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: {},
@@ -68,9 +72,10 @@ test('_log a undefined', () => {
   expect(mockLogger).not.toHaveBeenCalled();
 });
 
-test('_log a 0', () => {
+test('_log a 0', async () => {
   const input = { a: { _log: 0 } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: 0,
@@ -78,9 +83,10 @@ test('_log a 0', () => {
   expect(mockLogger).toHaveBeenCalledWith(0);
 });
 
-test('_log a false', () => {
+test('_log a false', async () => {
   const input = { a: { _log: false } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: false,
@@ -88,9 +94,10 @@ test('_log a false', () => {
   expect(mockLogger).toHaveBeenCalledWith(false);
 });
 
-test('_log a object', () => {
+test('_log a object', async () => {
   const input = { a: { _log: { b: 1 } } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: { b: 1 },
@@ -98,9 +105,10 @@ test('_log a object', () => {
   expect(mockLogger).toHaveBeenCalledWith({ b: 1 });
 });
 
-test('_log a array', () => {
+test('_log a array', async () => {
   const input = { a: { _log: [{ b: 1 }] } };
   const parser = new NodeParser();
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({
     a: [{ b: 1 }],

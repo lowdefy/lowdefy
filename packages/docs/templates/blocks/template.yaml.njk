@@ -181,9 +181,10 @@ areas:
             required:
               _state: block.required
             properties:
-              _experimental_unsafe_js.evaluate:
-                file:
-                    _ref: templates/blocks/filterDefaultValue.js
+              _js.evaluate:
+                code:
+                  _ref: 
+                    eval: templates/blocks/filterDefaultValue.js
                 args:
                   - _ref:
                           path:
@@ -221,7 +222,7 @@ areas:
             properties:
               title: Methods
           {% for method in methods %}
-          - id: method_button
+          - id: method_button_{{ method.name }}
             type: Button
             layout:
               span: 12
@@ -232,7 +233,7 @@ areas:
             events:
               onClick:
                 _var: methods.{{ loop.index0 }}.onClick
-          - id: method_args
+          - id: method_args_{{ method.name }}
             type: MarkdownWithCode
             layout:
               span: 12
@@ -301,9 +302,10 @@ areas:
                         options:
                           sortKeys: false
                         on:
-                          _experimental_unsafe_js.evaluate:
-                            file:
-                              _ref: templates/blocks/filterDefaultValue.js
+                          _js.evaluate:
+                            code:
+                              _ref: 
+                                eval: templates/blocks/filterDefaultValue.js
                             args:
                               - id: block_id
                                 type: {{ block_type }}

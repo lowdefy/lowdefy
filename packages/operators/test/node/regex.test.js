@@ -24,57 +24,64 @@ const state = {
 
 console.error = () => {};
 
-test('_regex with on, pass', () => {
+test('_regex with on, pass', async () => {
   const input = { _regex: { pattern: '^a$', on: 'a' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with on, fail', () => {
+test('_regex with on, fail', async () => {
   const input = { _regex: { pattern: '^a$', on: 'b' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with key, pass', () => {
+test('_regex with key, pass', async () => {
   const input = { _regex: { pattern: '^Some String$', key: 'string' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with key, fail', () => {
+test('_regex with key, fail', async () => {
   const input = { _regex: { pattern: '^a$', key: 'string' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with null on', () => {
+test('_regex with null on', async () => {
   const input = { _regex: { pattern: '^a$', on: null } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with nonexistent key', () => {
+test('_regex with nonexistent key', async () => {
   const input = { _regex: { pattern: '^a$', key: 'notThere' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with nonexistent key', () => {
+test('_regex with nonexistent key', async () => {
   const input = { _regex: { pattern: '^a$', key: null } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -84,9 +91,10 @@ test('_regex with nonexistent key', () => {
   `);
 });
 
-test('_regex null', () => {
+test('_regex null', async () => {
   const input = { _regex: null };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -96,9 +104,10 @@ test('_regex null', () => {
   `);
 });
 
-test('_regex with non-string on', () => {
+test('_regex with non-string on', async () => {
   const input = { _regex: { pattern: '^a$', on: 5 } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -108,17 +117,19 @@ test('_regex with non-string on', () => {
   `);
 });
 
-test('_regex flags', () => {
+test('_regex flags', async () => {
   const input = { _regex: { pattern: 'a', on: 'A', flags: 'i' } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex invalid flags', () => {
+test('_regex invalid flags', async () => {
   const input = { _regex: { pattern: 'a', on: 'a', flags: 1 } };
   const parser = new NodeParser({ state });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

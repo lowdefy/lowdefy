@@ -21,6 +21,8 @@ import { ComponentController } from '../controllers/componentController';
 
 const mockLog = jest.fn();
 
+const mockSet = jest.fn();
+
 const logger = {
   log: mockLog,
 };
@@ -33,7 +35,7 @@ const config = {
   getSecrets: mockGetSecrets,
 };
 
-const input = { req: { headers: { host: 'host' } } };
+const input = { req: { headers: { host: 'host' } }, res: { set: mockSet } };
 
 /* TODO:
 - secrets can only be accessed where they should be
@@ -91,5 +93,6 @@ test('setHeaders', async () => {
   const contextFn = createContext(config);
   const context = await contextFn(input);
   const openIDController = context.getController('openId');
-  expect(openIDController.setHeaders).toBe(context.setHeaders);
+  openIDController.setHeader('key', 'value');
+  expect(mockSet.mock.calls).toEqual([['key', 'value']]);
 });

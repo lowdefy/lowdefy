@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-function testContext({ artifactSetter, configLoader, logger = {}, metaLoader } = {}) {
+function testContext({
+  artifactSetter,
+  configDirectory,
+  configLoader,
+  logger = {},
+  metaLoader,
+} = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -24,6 +30,7 @@ function testContext({ artifactSetter, configLoader, logger = {}, metaLoader } =
   };
 
   const context = {
+    configDirectory: configDirectory || '',
     artifactSetter: {
       set: () => [],
     },

@@ -132,6 +132,21 @@ test('If key is null, null is returned', () => {
   expect(res).toEqual(null);
 });
 
+test('If key is null with default, default is returned', () => {
+  const params = { key: null, default: 'default' };
+  const res = getFromObject({
+    params,
+    object: defaultObject,
+    context,
+    contexts,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+    env: 'node',
+  });
+  expect(res).toEqual('default');
+});
+
 test('get an entire object, shorthand', () => {
   const params = true;
   const res = getFromObject({

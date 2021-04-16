@@ -86,7 +86,7 @@ beforeEach(() => {
 });
 
 test('callRequest', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -101,7 +101,7 @@ test('callRequest', async () => {
 });
 
 test('callRequest, pass variables to qraphql', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
     initState,
@@ -127,7 +127,7 @@ test('callRequest, pass variables to qraphql', async () => {
 });
 
 test('callRequests all requests', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -175,7 +175,7 @@ test('callRequests all requests', async () => {
 });
 
 test('callRequests', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -199,7 +199,7 @@ test('callRequests', async () => {
 });
 
 test('callRequest error', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -222,7 +222,7 @@ test('callRequest error', async () => {
 });
 
 test('callRequest that is not on root block', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -232,7 +232,7 @@ test('callRequest that is not on root block', async () => {
 });
 
 test('callRequest on root block with no requests', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -242,7 +242,7 @@ test('callRequest on root block with no requests', async () => {
 });
 
 test('callRequest request does not exist', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -260,7 +260,7 @@ test('callRequest request does not exist', async () => {
 
 test('update function should be called', async () => {
   const updateFunction = jest.fn();
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -271,7 +271,7 @@ test('update function should be called', async () => {
 
 test('update function should be called if error', async () => {
   const updateFunction = jest.fn();
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });
@@ -280,12 +280,13 @@ test('update function should be called if error', async () => {
     await context.Requests.callRequest({ requestId: 'req_error' });
   } catch (e) {
     // catch thrown errors
+    console.log(e);
   }
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
 test('fetch should set blocks loading and call query every time it is called', async () => {
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

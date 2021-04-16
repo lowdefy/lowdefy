@@ -15,111 +15,70 @@
 */
 
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-    nullValue: null,
-  },
-};
-
-const contexts = {};
+import { context, contexts } from '../testContext';
 
 const arrayIndices = [1];
 
 console.error = () => {};
 
-test('_regex with on, pass', () => {
+test('_regex with on, pass', async () => {
   const input = { _regex: { pattern: '^a$', on: 'a' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with on, fail', () => {
+test('_regex with on, fail', async () => {
   const input = { _regex: { pattern: '^a$', on: 'b' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with key, pass', () => {
+test('_regex with key, pass', async () => {
   const input = { _regex: { pattern: '^state$', key: 'string' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with key, fail', () => {
+test('_regex with key, fail', async () => {
   const input = { _regex: { pattern: '^a$', key: 'string' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with null on', () => {
+test('_regex with null on', async () => {
   const input = { _regex: { pattern: '^a$', on: null } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with nonexistent key', () => {
+test('_regex with nonexistent key', async () => {
   const input = { _regex: { pattern: '^a$', key: 'notThere' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with nonexistent key', () => {
+test('_regex with nonexistent key', async () => {
   const input = { _regex: { pattern: '^a$', key: null } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -129,9 +88,10 @@ test('_regex with nonexistent key', () => {
   `);
 });
 
-test('_regex null', () => {
+test('_regex null', async () => {
   const input = { _regex: null };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -141,9 +101,10 @@ test('_regex null', () => {
   `);
 });
 
-test('_regex with non-string on', () => {
+test('_regex with non-string on', async () => {
   const input = { _regex: { pattern: '^a$', on: 5 } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -153,17 +114,19 @@ test('_regex with non-string on', () => {
   `);
 });
 
-test('_regex flags', () => {
+test('_regex flags', async () => {
   const input = { _regex: { pattern: 'a', on: 'A', flags: 'i' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex invalid flags', () => {
+test('_regex invalid flags', async () => {
   const input = { _regex: { pattern: 'a', on: 'a', flags: 1 } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -173,33 +136,37 @@ test('_regex invalid flags', () => {
   `);
 });
 
-test('_regex with location given to parse in state no match ', () => {
+test('_regex with location given to parse in state no match ', async () => {
   const input = { _regex: 'nope' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with location given to parse in state match', () => {
+test('_regex with location given to parse in state match', async () => {
   const input = { _regex: 'str' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with location given to parse not in state', () => {
+test('_regex with location given to parse not in state', async () => {
   const input = { _regex: 'nope' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'string2', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_regex with location given, state value is null', () => {
+test('_regex with location given, state value is null', async () => {
   const input = { _regex: 'nope' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'nullValue', arrayIndices });
   expect(res.output).toBe(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);

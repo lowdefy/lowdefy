@@ -29,10 +29,23 @@ class NodeParser {
     this.urlQuery = urlQuery;
     this.user = user;
     this.parse = this.parse.bind(this);
-    this.operations = {
+    this.operators = {
       ...commonOperators,
       ...nodeOperators,
     };
+    this.operations = {};
+  }
+
+  async init() {
+    await Promise.all(
+      Object.keys(this.operators).map(async (operator) => {
+        const fn = require(`./${this.operators[operator]}.js`);
+        this.operations[operator] = fn.default;
+        if (this.operations[operator].init) {
+          await this.operations[operator].init();
+        }
+      })
+    );
   }
 
   parse({ args, event, input, location }) {

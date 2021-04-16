@@ -61,6 +61,21 @@ test('_get returns null if from is null', () => {
   expect(get(input)).toBe(null);
 });
 
+test('_get returns default value if from is null', () => {
+  const input = {
+    arrayIndices: [0],
+    env: 'env',
+    location: 'location',
+    params: {
+      from: null,
+      key: 'a',
+      default: 'default',
+    },
+  };
+  get(input);
+  expect(get(input)).toBe('default');
+});
+
 test('_get throws if params is not a object', () => {
   const input = {
     arrayIndices: [0],

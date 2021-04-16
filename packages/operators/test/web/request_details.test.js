@@ -16,70 +16,25 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../src/webParser';
-
-const lowdefy = {
-  inputs: {
-    own: {
-      string: 'input',
-      arr: [{ a: 'input1' }, { a: 'input2' }],
-    },
-  },
-  lowdefyGlobal: {
-    string: 'global',
-    arr: [{ a: 'global1' }, { a: 'global2' }],
-  },
-  menus: [
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ],
-  urlQuery: {
-    string: 'urlQuery',
-    arr: [{ a: 'urlQuery1' }, { a: 'urlQuery2' }],
-  },
-};
-
-const context = {
-  config: {
-    string: 'config',
-    arr: [{ a: 'config1' }, { a: 'config2' }],
-  },
-  requests: {
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-  },
-  lowdefy,
-  state: {
-    string: 'state',
-    arr: [{ a: 'state1' }, { a: 'state2' }],
-  },
-};
-
-const contexts = {};
+import { context, contexts } from '../testContext';
 
 const arrayIndices = [1];
 
 console.error = () => {};
 
-test('_request_details in object', () => {
+test('_request_details in object', async () => {
   const input = { _request_details: 'string' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ loading: false, response: 'request String' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details all requests', () => {
+test('_request_details all requests', async () => {
   const input = { _request_details: true };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail' },
@@ -90,9 +45,10 @@ test('_request_details all requests', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details null', () => {
+test('_request_details null', async () => {
   const input = { _request_details: null };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -102,33 +58,36 @@ test('_request_details null', () => {
   `);
 });
 
-test('_request_details nested', () => {
+test('_request_details nested', async () => {
   const input = { _request_details: 'string.response' };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request String');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details param object key', () => {
+test('_request_details param object key', async () => {
   const input = {
     _request_details: {
       key: 'string',
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ loading: false, response: 'request String' });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details param object all', () => {
+test('_request_details param object all', async () => {
   const input = {
     _request_details: {
       all: true,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail' },
@@ -139,7 +98,7 @@ test('_request_details param object all', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details param object all and key', () => {
+test('_request_details param object all and key', async () => {
   const input = {
     _request_details: {
       all: true,
@@ -147,6 +106,7 @@ test('_request_details param object all and key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
     not_loaded: { loading: true, response: 'fail' },
@@ -157,13 +117,14 @@ test('_request_details param object all and key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details param object invalid', () => {
+test('_request_details param object invalid', async () => {
   const input = {
     _request_details: {
       other: true,
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -173,11 +134,12 @@ test('_request_details param object invalid', () => {
   `);
 });
 
-test('_request_details param array', () => {
+test('_request_details param array', async () => {
   const input = {
     _request_details: ['string'],
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -187,7 +149,7 @@ test('_request_details param array', () => {
   `);
 });
 
-test('_request_details param object with string default', () => {
+test('_request_details param object with string default', async () => {
   const input = {
     _request_details: {
       key: 'notFound',
@@ -195,18 +157,20 @@ test('_request_details param object with string default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_request_details param object with no default', () => {
+test('_request_details param object with no default', async () => {
   const input = {
     _request_details: {
       key: 'notFound',
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);

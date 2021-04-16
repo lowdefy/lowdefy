@@ -163,7 +163,7 @@ class RequestController {
       urlQuery,
       user: this.user,
     });
-
+    await operatorsParser.init();
     const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
       event,
       input: connection.properties || {},

@@ -14,22 +14,13 @@
   limitations under the License.
 */
 
-import _event_log from './event_log';
-import _base64 from './base64';
-import _format from './format';
-import _list_contexts from './list_contexts';
-import _media from './media';
-import _menu from './menu';
-import _request from './request';
-import _request_details from './request_details';
-
 export default {
-  _event_log,
-  _base64,
-  _format,
-  _list_contexts,
-  _media,
-  _menu,
-  _request_details,
-  _request,
+  _event_log: 'web/event_log',
+  _base64: 'web/base64',
+  _format: 'web/format',
+  _list_contexts: 'web/list_contexts',
+  _media: 'web/media',
+  _menu: 'web/menu',
+  _request_details: 'web/request_details',
+  _request: 'web/request',
 };

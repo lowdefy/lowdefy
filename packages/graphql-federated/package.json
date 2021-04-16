@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/graphql-federated",
-  "version": "3.12.6",
+  "version": "3.13.0",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,15 +37,15 @@
     "webpack": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@lowdefy/graphql": "3.12.6"
+    "@lowdefy/graphql": "3.13.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.16",
-    "@babel/core": "7.12.16",
-    "@babel/preset-env": "7.12.16",
+    "@babel/cli": "7.13.14",
+    "@babel/core": "7.13.14",
+    "@babel/preset-env": "7.13.12",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "3.0.0",
-    "webpack": "5.22.0",
+    "webpack": "5.28.0",
     "webpack-cli": "4.5.0"
   },
   "publishConfig": {

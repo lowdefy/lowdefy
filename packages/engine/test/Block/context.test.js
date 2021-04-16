@@ -19,7 +19,7 @@ import testContext from '../testContext';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('do not make subblocks for child contexts', () => {
+test('do not make subblocks for child contexts', async () => {
   const rootBlock = {
     blockId: 'root',
     type: 'Context',
@@ -54,7 +54,7 @@ test('do not make subblocks for child contexts', () => {
       },
     },
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
     rootBlock,
   });

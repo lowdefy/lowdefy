@@ -16,6 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
+import { operators } from '../../testContext';
 
 const lowdefy = {
   inputs: {
@@ -82,6 +83,7 @@ const context = {
     arr: [{ a: 'state1' }, { a: 'state2' }],
   },
   updateListeners: new Set(),
+  operators,
 };
 
 const otherContext = {
@@ -117,6 +119,7 @@ const otherContext = {
     arr: [{ a: 'state1-other' }, { a: 'state2-other' }],
   },
   updateListeners: new Set(),
+  operators,
 };
 
 const contexts = {
@@ -128,9 +131,10 @@ const arrayIndices = [1];
 
 console.error = () => {};
 
-test('_event_log, other context contextId not a string', () => {
+test('_event_log, other context contextId not a string', async () => {
   const input = { _event_log: { key: 'string', contextId: 1 } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -140,9 +144,10 @@ test('_event_log, other context contextId not a string', () => {
   `);
 });
 
-test('_event_log, other context contextId not found', () => {
+test('_event_log, other context contextId not found', async () => {
   const input = { _event_log: { key: 'string', contextId: 'not_there' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
@@ -152,7 +157,7 @@ test('_event_log, other context contextId not found', () => {
   `);
 });
 
-test('_event_log param object key', () => {
+test('_event_log param object key', async () => {
   const input = {
     _event_log: {
       key: '0.blockId',
@@ -160,14 +165,16 @@ test('_event_log param object key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('block_a-other');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_event_log full state', () => {
+test('_event_log full state', async () => {
   const input = { _event_log: { contextId: 'other' } };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -187,7 +194,7 @@ test('_event_log full state', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_event_log param object all', () => {
+test('_event_log param object all', async () => {
   const input = {
     _event_log: {
       all: true,
@@ -195,6 +202,7 @@ test('_event_log param object all', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -214,7 +222,7 @@ test('_event_log param object all', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_event_log param object all and key', () => {
+test('_event_log param object all and key', async () => {
   const input = {
     _event_log: {
       all: true,
@@ -223,6 +231,7 @@ test('_event_log param object all and key', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
     {
@@ -242,7 +251,7 @@ test('_event_log param object all and key', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_event_log param object with string default', () => {
+test('_event_log param object with string default', async () => {
   const input = {
     _event_log: {
       key: 'notFound',
@@ -251,6 +260,7 @@ test('_event_log param object with string default', () => {
     },
   };
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('defaultValue');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);

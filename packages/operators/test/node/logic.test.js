@@ -28,8 +28,9 @@ const False = false;
 
 console.error = () => {};
 
-test('_not', () => {
+test('_not', async () => {
   const parser = new NodeParser();
+  await parser.init();
   let res = parser.parse({ input: { _not: arr0 }, location: 'locationId' });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -59,8 +60,9 @@ test('_not', () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_and', () => {
+test('_and', async () => {
   const parser = new NodeParser();
+  await parser.init();
   let res = parser.parse({ input: { _and: arr0 }, location: 'locationId' });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -106,8 +108,9 @@ test('_and', () => {
   `);
 });
 
-test('_or', () => {
+test('_or', async () => {
   const parser = new NodeParser();
+  await parser.init();
   let res = parser.parse({ input: { _or: arr0 }, location: 'locationId' });
   expect(res.output).toEqual(false);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -153,8 +156,9 @@ test('_or', () => {
   `);
 });
 
-test('_eq', () => {
+test('_eq', async () => {
   const parser = new NodeParser();
+  await parser.init();
   let res = parser.parse({ input: { _eq: [1, 1] }, location: 'locationId' });
   expect(res.output).toBe(true);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -190,8 +194,9 @@ test('_eq', () => {
   `);
 });
 
-test('_if', () => {
+test('_if', async () => {
   const parser = new NodeParser();
+  await parser.init();
   let res = parser.parse({
     input: {
       _if: {

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
+
+
+### Bug Fixes
+
+* **operators:** _js encode and decode into QuickJS to escape chars in json. ([45644db](https://github.com/lowdefy/lowdefy/commit/45644db11193c571cb886da50d74f397eb337104))
+* **operators:** Add tests for json response for _js. ([6cf5ac7](https://github.com/lowdefy/lowdefy/commit/6cf5ac78c140d627b3648d889eac263ace4d9be1))
+* **operators:** Change nodeParser import to require. ([d044d13](https://github.com/lowdefy/lowdefy/commit/d044d1375d8f285ef7ef42185278b401ae2b4f0e))
+* **operators:** Getters should return default if from or key are null. ([be8aae6](https://github.com/lowdefy/lowdefy/commit/be8aae62499065a66e8e1ed9e8ce4c481017203f))
+* **operators:** Update _js to take code with function as param. ([8fa7fa0](https://github.com/lowdefy/lowdefy/commit/8fa7fa056c4b786aa707d3275445dade1f8fcb26))
+* Create _js using quickjs-emscripten. ([4ec8a30](https://github.com/lowdefy/lowdefy/commit/4ec8a300d1f6ff05f87f2cb9a49a686d4c804099))
+* Update babel setup for tests. ([1d89de9](https://github.com/lowdefy/lowdefy/commit/1d89de9edb3e64f005bc044ebdc80ef6a8a0eecd))
+* Update react, react-dom and react-test-renderer to v17.0.2 ([78969ab](https://github.com/lowdefy/lowdefy/commit/78969abd39e8b04a7cddb39472985da6da50c7b9))
+* **operators:** Update dynamic imports. ([5699118](https://github.com/lowdefy/lowdefy/commit/5699118eda068f0f729223eb9ee3cdf8ed4f9840))
+
+
+### Features
+
+* **operators:** Add _js operator and remove _experimental_unsafe_js operator. ([2d1e2b3](https://github.com/lowdefy/lowdefy/commit/2d1e2b3b18f7f379bbe2821055122b0aee31ce62))
+
+
+
+
+
 ## [3.12.6](https://github.com/lowdefy/lowdefy/compare/v3.12.5...v3.12.6) (2021-04-06)
 
 **Note:** Version bump only for package @lowdefy/operators

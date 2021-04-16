@@ -16,6 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import WebParser from '../../../src/webParser';
+import { operators } from '../../testContext';
 
 const arrayIndices = [1];
 
@@ -23,7 +24,7 @@ const lowdefy = {
   inputs: {},
 };
 
-test('add listener if contextId is not equal to own contextId', () => {
+test('add listener if contextId is not equal to own contextId', async () => {
   const context = {
     id: 'own',
     lowdefy,
@@ -31,6 +32,7 @@ test('add listener if contextId is not equal to own contextId', () => {
       string: 'state',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
@@ -40,6 +42,7 @@ test('add listener if contextId is not equal to own contextId', () => {
       string: 'state-other',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -54,12 +57,13 @@ test('add listener if contextId is not equal to own contextId', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('state-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('do not add listener if contextId is equal to own contextId', () => {
+test('do not add listener if contextId is equal to own contextId', async () => {
   const context = {
     id: 'own',
     lowdefy,
@@ -68,6 +72,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
       arr: [{ a: 'state1' }, { a: 'state2' }],
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
@@ -78,6 +83,7 @@ test('do not add listener if contextId is equal to own contextId', () => {
       arr: [{ a: 'state1-other' }, { a: 'state2-other' }],
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -92,12 +98,13 @@ test('do not add listener if contextId is equal to own contextId', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('state');
   expect(context.updateListeners).toEqual(new Set());
 });
 
-test('add listener for _state', () => {
+test('add listener for _state', async () => {
   const context = {
     id: 'own',
     lowdefy,
@@ -105,6 +112,7 @@ test('add listener for _state', () => {
       string: 'state',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
@@ -114,6 +122,7 @@ test('add listener for _state', () => {
       string: 'state-other',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -128,12 +137,13 @@ test('add listener for _state', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('state-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _event_log', () => {
+test('add listener for _event_log', async () => {
   const context = {
     id: 'own',
     lowdefy,
@@ -143,6 +153,7 @@ test('add listener for _event_log', () => {
       },
     ],
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
@@ -154,6 +165,7 @@ test('add listener for _event_log', () => {
       },
     ],
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -168,12 +180,13 @@ test('add listener for _event_log', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('state-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _input', () => {
+test('add listener for _input', async () => {
   const lowdefy = {
     inputs: {
       own: {
@@ -188,12 +201,14 @@ test('add listener for _input', () => {
     id: 'own',
     lowdefy,
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
     id: 'other',
     lowdefy,
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -208,12 +223,13 @@ test('add listener for _input', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('input-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _url_query', () => {
+test('add listener for _url_query', async () => {
   const lowdefy = {
     urlQuery: {
       string: 'url',
@@ -224,12 +240,14 @@ test('add listener for _url_query', () => {
     id: 'own',
     lowdefy,
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
     id: 'other',
     lowdefy,
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -244,12 +262,13 @@ test('add listener for _url_query', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('url');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));
 });
 
-test('add listener for _request_details', () => {
+test('add listener for _request_details', async () => {
   const context = {
     id: 'own',
     lowdefy,
@@ -257,6 +276,7 @@ test('add listener for _request_details', () => {
       string: 'requests',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const otherContext = {
@@ -266,6 +286,7 @@ test('add listener for _request_details', () => {
       string: 'requests-other',
     },
     updateListeners: new Set(),
+    operators,
   };
 
   const contexts = {
@@ -280,6 +301,7 @@ test('add listener for _request_details', () => {
   };
   expect(context.updateListeners).toEqual(new Set());
   const parser = new WebParser({ context, contexts });
+  await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('requests-other');
   expect(otherContext.updateListeners).toEqual(new Set(['own']));

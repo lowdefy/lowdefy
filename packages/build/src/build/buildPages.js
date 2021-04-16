@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { set, type } from '@lowdefy/helpers';
+import { get, set, type } from '@lowdefy/helpers';
 
 /* Page and block build steps
 
@@ -30,7 +30,44 @@ Blocks:
   - set request ids
   - set block meta
   - set blocks to areas.content
+  - set operators list on context blocks
 */
+
+function getContextOperators(block) {
+  const stripContext = (_, value) => {
+    if (get(value, 'meta.category') === 'context') {
+      return null;
+    }
+    return value;
+  };
+  const { requests, ...webBlock } = block;
+  webBlock.areas = JSON.parse(JSON.stringify(webBlock.areas || {}), stripContext);
+  const operators = new Set();
+  const pushOperators = (_, value) => {
+    if (type.isObject(value) && Object.keys(value).length === 1) {
+      const key = Object.keys(value)[0];
+      const [op, _] = key.split('.');
+      const operator = op.replace(/^(\_+)/gm, '_');
+      if (operator.length > 1 && operator[0] === '_') {
+        operators.add(operator);
+      }
+    }
+    return value;
+  };
+  JSON.parse(JSON.stringify(webBlock), pushOperators);
+  return [...operators];
+}
+
+function fillContextOperators(block) {
+  if (get(block, 'meta.category') === 'context') {
+    block.operators = getContextOperators(block);
+  }
+  Object.keys(block.areas || {}).forEach((key) => {
+    block.areas[key].blocks.map((blk) => {
+      fillContextOperators(blk);
+    });
+  });
+}
 
 function buildRequests(block, context) {
   if (!type.isNone(block.requests)) {
@@ -125,10 +162,10 @@ async function buildBlock(block, context) {
   if (block.meta.category === 'context') {
     ctx = {
       auth: context.auth,
-      pageId: context.pageId,
       contextId: block.blockId,
-      requests: [],
       metaLoader: context.metaLoader,
+      pageId: context.pageId,
+      requests: [],
     };
   }
   buildRequests(block, ctx);
@@ -189,6 +226,7 @@ async function buildPages({ components, context }) {
     });
     // set page.id since buildBlock sets id as well.
     page.id = `page:${page.pageId}`;
+    fillContextOperators(page);
   });
   await Promise.all(pageBuildPromises);
   return components;
