@@ -15,7 +15,7 @@
 */
 
 import { getQuickJS, shouldInterruptAfterDeadline } from 'quickjs-emscripten';
-import { type } from '@lowdefy/helpers';
+import { type, serializer } from '@lowdefy/helpers';
 
 let QuickJsVm;
 
@@ -26,11 +26,38 @@ function createFunction({ params, location, methodName }) {
     );
   }
   const fn = (...args) => {
-    // TODO: User serializer instead so serialize dates in. To do this we need to dependency free serializer,
-    // might be a good idea just adding it inline instead of porting in the serializer function.
     const jsFnString = `
-    var args = JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(args))}'));
-    var result = JSON.stringify((${params.code})(...args));
+    var logs = [];
+    function log(...item) {
+      logs.push(item);
+    }
+    var console = {
+      log,
+    };
+    function dateReviver(key, value) {
+      if (typeof value === 'object' && value !== null && value.hasOwnProperty('_date')) {
+        var date = new Date(value._date);
+        if (date instanceof Date && !Number.isNaN(date.getTime())) {
+          return date;
+        }
+      }
+      return value;
+    }
+    function dateSerialize(key, value) {
+      if (typeof value === 'object' && value !== null) {
+        Object.keys(value).forEach((k) => {
+          if (value[k] instanceof Date && !Number.isNaN(value[k].getTime())) {
+            value[k] = { "_date": value[k].valueOf() };
+          }
+        })
+      }
+      return value;
+    }
+    var args = JSON.parse(decodeURIComponent("${encodeURIComponent(
+      serializer.serializeToString(args)
+    )}"), dateReviver);
+    var fnResult = (${params.code})(...(args || []));
+    var result = encodeURIComponent(JSON.stringify([fnResult, logs], dateSerialize));
   `;
     const codeHandle = QuickJsVm.unwrapResult(
       QuickJsVm.evalCode(jsFnString, {
@@ -40,11 +67,13 @@ function createFunction({ params, location, methodName }) {
     );
     const resultHandle = QuickJsVm.getProp(QuickJsVm.global, 'result');
     codeHandle.dispose();
-    const result = QuickJsVm.getString(resultHandle);
-    if (result === 'undefined') {
-      return null;
-    }
-    return JSON.parse(result);
+    const result = serializer.deserializeFromString(
+      decodeURIComponent(QuickJsVm.getString(resultHandle))
+    );
+    result[1].forEach((item) => {
+      console.log(...item);
+    });
+    return result[0];
   };
   return fn;
 }

@@ -35,20 +35,6 @@ test('_js with code and args specified', () => {
   expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
 });
 
-test('_js with code and args specified named function', () => {
-  const params = {
-    code: `function add(one, two) {
-  return one + two;
-}`,
-    args: [12, 14],
-  };
-  const fn = _js({ location, params, methodName: 'function' });
-  expect(fn).toBeInstanceOf(Function);
-  expect(fn(1, 2)).toEqual(3);
-  expect(_js({ location, params, methodName: 'evaluate' })).toEqual(26);
-  expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
-});
-
 test('_js with code and args specified to return json object', () => {
   const params = {
     code: `function (one, two) {
@@ -90,6 +76,52 @@ test('_js with code and args specified to return json array', () => {
   ]);
 });
 
+test('_js with open "\'" in result', () => {
+  const str = `<div style=\"test: one;\">one's result</div>`;
+  const params = {
+    code: `function chars(input) {
+      return [{x: input, b: 1}];
+    }`,
+    args: [str],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn(str)).toEqual([{ x: str, b: 1 }]);
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual([{ x: str, b: 1 }]);
+});
+
+test('_js with date in input and result', () => {
+  const params = {
+    code: `function duration(from, to) {
+      return {
+        from, 
+        to, 
+        fromIsDate: from instanceof Date,
+        toIsDate: from instanceof Date,
+        duration: to - from,
+      };
+    }`,
+    args: [new Date(0), new Date(10)],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+
+  expect(_js({ location, params, methodName: 'evaluate' })).toEqual({
+    from: new Date(0),
+    to: new Date(10),
+    duration: 10,
+    fromIsDate: true,
+    toIsDate: true,
+  });
+  expect(fn(new Date(0), new Date(10))).toEqual({
+    from: new Date(0),
+    to: new Date(10),
+    duration: 10,
+    fromIsDate: true,
+    toIsDate: true,
+  });
+});
+
 test('_js with undefined result returns null', () => {
   const params = {
     code: `function add(one, two) {
@@ -102,6 +134,29 @@ test('_js with undefined result returns null', () => {
   expect(fn()).toEqual(null);
   expect(_js({ location, params, methodName: 'evaluate' })).toEqual(null);
   expect(_js({ location, params: { code: params.code }, methodName: 'evaluate' })).toEqual(null);
+});
+
+test('_js with console.log', () => {
+  const logger = console.log;
+  console.log = jest.fn();
+  const params = {
+    code: `function logTest(one, two) {
+      console.log(one)
+      console.log(two)
+      console.log(one, two, null, 123, 'abc', true, false);
+      return;
+    }`,
+    args: [12, new Date(1)],
+  };
+  const fn = _js({ location, params, methodName: 'function' });
+  expect(fn).toBeInstanceOf(Function);
+  _js({ location, params, methodName: 'evaluate' });
+  expect(console.log.mock.calls).toEqual([
+    [12],
+    [new Date(1)],
+    [12, new Date(1), null, 123, 'abc', true, false],
+  ]);
+  console.log = logger;
 });
 
 test('_js with code with args that needs escaped characters', () => {
