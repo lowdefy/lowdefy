@@ -97,7 +97,7 @@ _ref:
         - `path: string`: __Required__ - The file path to the referenced file, from the root of the project directory.
         - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
         - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
-        _ `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
+        - `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
     examples: |
       ###### Reference pages:
       ```yaml
