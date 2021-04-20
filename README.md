@@ -1,4 +1,5 @@
 ![Lowdefy](https://lowdefy.com/banner.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flowdefy%2Flowdefy.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flowdefy%2Flowdefy?ref=badge_shield)
 
 [![Tweet](https://img.shields.io/twitter/url?logo=twitter&style=flat-square&url=https%3A%2F%2Flowdefy.com)](https://twitter.com/intent/tweet?text=Build%20web%20apps%2C%20admin%20panels%2C%20BI%20dashboards%2C%20and%20CRUD%20apps%20with%20ease%21%20Try%20&url=https://lowdefy.com&via=lowdefy&hashtags=lowcode,lowdefy,internaltools,developers,opensource)
 [![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=twitter&style=flat-square)](https://twitter.com/intent/follow?screen_name=lowdefy)
@@ -97,3 +98,6 @@ In the interest of fostering an open and welcoming environment, we as contributo
 ## Licence
 
 [Apache-2.0](https://github.com/lowdefy/lowdefy/blob/main/LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flowdefy%2Flowdefy.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flowdefy%2Flowdefy?ref=badge_large)
