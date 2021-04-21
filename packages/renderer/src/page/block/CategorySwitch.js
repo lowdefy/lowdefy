@@ -23,17 +23,26 @@ import Container from './Container';
 import Context from './Context';
 import List from './List';
 
-const CategorySwitch = ({ block, Blocks, Component, context, lowdefy }) => {
+const CategorySwitch = ({ block, Blocks, Component, context, isRoot, lowdefy }) => {
+  if (isRoot) {
+    return (
+      <Container
+        block={context.RootBlocks.areas.root.blocks[0]}
+        Blocks={context.RootBlocks}
+        Component={Component}
+        context={context}
+        lowdefy={lowdefy}
+      />
+    );
+  }
   if (!block.eval) return null; // Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
-
   switch (block.meta.category) {
     case 'context':
       return (
         <Context
           block={block}
-          context={context}
           contextId={makeContextId({
             urlQuery: lowdefy.urlQuery,
             pageId: lowdefy.pageId,

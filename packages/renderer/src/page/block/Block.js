@@ -22,7 +22,7 @@ import LoadBlock from './LoadBlock';
 import LoadingBlock from './LoadingBlock';
 import CategorySwitch from './CategorySwitch';
 
-const Block = ({ block, Blocks, context, lowdefy }) => {
+const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy.updaters[block.id] = () => setUpdate(updates + 1);
   const Loading = (
@@ -40,6 +40,7 @@ const Block = ({ block, Blocks, context, lowdefy }) => {
               Blocks={Blocks}
               Component={Comp}
               context={context}
+              isRoot={isRoot}
               lowdefy={lowdefy}
               updates={updates}
             />
