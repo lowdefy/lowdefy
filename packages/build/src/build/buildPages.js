@@ -82,7 +82,7 @@ function buildRequests(block, blockContext) {
     block.requests.forEach((request) => {
       request.auth = blockContext.auth;
       request.requestId = request.id;
-      request.blockContextId = blockContext.contextId;
+      request.contextId = blockContext.contextId;
       request.id = `request:${blockContext.pageId}:${blockContext.contextId}:${request.id}`;
       blockContext.requests.push(request);
     });
@@ -193,12 +193,12 @@ async function buildBlock(block, blockContext) {
       if (!type.isArray(block.areas[key].blocks)) {
         throw new Error(
           `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
-            ctx.pageId
+            newBlockContext.pageId
           }. Received ${JSON.stringify(block.areas[key].blocks)}`
         );
       }
       const blockPromises = block.areas[key].blocks.map(async (blk) => {
-        await buildBlock(blk, ctx);
+        await buildBlock(blk, newBlockContext);
       });
       promises = promises.concat(blockPromises);
     });
