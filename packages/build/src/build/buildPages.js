@@ -40,6 +40,7 @@ function getContextOperators(block) {
     }
     return value;
   };
+  // eslint-disable-next-line no-unused-vars
   const { requests, ...webBlock } = block;
   webBlock.areas = JSON.parse(JSON.stringify(webBlock.areas || {}), stripContext);
   const operators = new Set();
@@ -69,21 +70,21 @@ function fillContextOperators(block) {
   });
 }
 
-function buildRequests(block, context) {
+function buildRequests(block, blockContext) {
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
       throw new Error(
         `Requests is not an array at ${block.blockId} on page ${
-          context.pageId
+          blockContext.pageId
         }. Received ${JSON.stringify(block.requests)}`
       );
     }
     block.requests.forEach((request) => {
-      request.auth = context.auth;
+      request.auth = blockContext.auth;
       request.requestId = request.id;
-      request.contextId = context.contextId;
-      request.id = `request:${context.pageId}:${context.contextId}:${request.id}`;
-      context.requests.push(request);
+      request.blockContextId = blockContext.contextId;
+      request.id = `request:${blockContext.pageId}:${blockContext.contextId}:${request.id}`;
+      blockContext.requests.push(request);
     });
     delete block.requests;
   }
@@ -146,37 +147,37 @@ async function setBlockMeta(block, metaLoader, pageId) {
   }
 }
 
-async function buildBlock(block, context) {
+async function buildBlock(block, blockContext) {
   if (!type.isObject(block)) {
     throw new Error(
-      `Expected block to be an object on ${context.pageId}. Received ${JSON.stringify(block)}`
+      `Expected block to be an object on ${blockContext.pageId}. Received ${JSON.stringify(block)}`
     );
   }
   if (type.isUndefined(block.id)) {
-    throw new Error(`Block id missing at page ${context.pageId}`);
+    throw new Error(`Block id missing at page ${blockContext.pageId}`);
   }
   block.blockId = block.id;
-  block.id = `block:${context.pageId}:${block.id}`;
-  await setBlockMeta(block, context.metaLoader, context.pageId);
-  let ctx = context;
+  block.id = `block:${blockContext.pageId}:${block.id}`;
+  await setBlockMeta(block, blockContext.metaLoader, blockContext.pageId);
+  let newBlockContext = blockContext;
   if (block.meta.category === 'context') {
-    ctx = {
-      auth: context.auth,
+    newBlockContext = {
+      auth: blockContext.auth,
       contextId: block.blockId,
-      metaLoader: context.metaLoader,
-      pageId: context.pageId,
+      metaLoader: blockContext.metaLoader,
+      pageId: blockContext.pageId,
       requests: [],
     };
   }
-  buildRequests(block, ctx);
+  buildRequests(block, newBlockContext);
   if (block.meta.category === 'context') {
-    block.requests = ctx.requests;
+    block.requests = newBlockContext.requests;
   }
   if (!type.isNone(block.blocks)) {
     if (!type.isArray(block.blocks)) {
       throw new Error(
         `Blocks at ${block.blockId} on page ${
-          ctx.pageId
+          newBlockContext.pageId
         } is not an array. Received ${JSON.stringify(block.blocks)}`
       );
     }
