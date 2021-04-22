@@ -44,11 +44,6 @@ async function buildPages({ components, context }) {
     }
     page.pageId = page.id;
     await checkPageIsContext(page, context.metaLoader);
-    if (components.auth.include.includes(page.pageId)) {
-      page.auth = components.auth.set;
-    } else {
-      page.auth = components.auth.default;
-    }
     await buildBlock(page, {
       auth: page.auth,
       pageId: page.pageId,
