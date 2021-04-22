@@ -18,35 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function buildConfig({ components }) {
-  if (type.isNone(components.config)) {
-    components.config = {};
-  }
-  if (!type.isObject(components.config)) {
-    throw new Error('Config is not an object.');
-  }
-  if (type.isNone(components.config.auth)) {
-    components.config.auth = {};
-  }
-  if (type.isNone(components.config.auth.pages)) {
-    components.config.auth.pages = {};
-  }
-  if (
-    (components.config.auth.pages.protected === true &&
-      components.config.auth.pages.public === true) ||
-    (type.isArray(components.config.auth.pages.protected) &&
-      type.isArray(components.config.auth.pages.public))
-  ) {
-    throw new Error(
-      'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
-    );
-  }
-  if (components.config.auth.pages.protected === false) {
-    throw new Error('Protected pages can not be set to false.');
-  }
-  if (components.config.auth.pages.public === false) {
-    throw new Error('Public pages can not be set to false.');
-  }
+async function buildAuth({ components }) {
   components.auth = {};
   if (
     type.isArray(components.config.auth.pages.public) ||
@@ -70,4 +42,4 @@ async function buildConfig({ components }) {
   return components;
 }
 
-export default buildConfig;
+export default buildAuth;

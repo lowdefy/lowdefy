@@ -4,7 +4,7 @@
   "type": "object",
   "title": "Lowdefy App Schema",
   "definitions": {
-    "connection": {
+    "action": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "type"],
@@ -12,27 +12,134 @@
         "id": {
           "type": "string",
           "errorMessage": {
-            "type": "Connection \"id\" should be a string."
+            "type": "Action \"id\" should be a string."
           }
         },
         "type": {
           "type": "string",
           "errorMessage": {
-            "type": "Connection \"type\" should be a string."
+            "type": "Action \"type\" should be a string."
           }
         },
-        "properties": {
-          "type": "object",
-          "errorMessage": {
-            "type": "Connection \"properties\" should be an object."
-          }
-        }
+        "messages": {},
+        "skip": {},
+        "params": {}
       },
       "errorMessage": {
-        "type": "Connection should be an object.",
+        "type": "Action should be an object.",
         "required": {
-          "id": "Connection should have required property \"id\".",
-          "type": "Connection should have required property \"type\"."
+          "id": "Action should have required property \"id\".",
+          "type": "Action should have required property \"type\"."
+        }
+      }
+    },
+    "authConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "errorMessage": {
+        "type": "App \"config.auth\" should be an object."
+      },
+      "properties": {
+        "openId": {
+          "type": "object",
+          "additionalProperties": false,
+          "errorMessage": {
+            "type": "App \"config.auth.openId\" should be an object."
+          },
+          "properties": {
+            "logoutFromProvider": {
+              "type": "boolean",
+              "default": false,
+              "description": "If true, the user will be directed to OpenID Connect provider's logout URL. This will log the user out of the provider.",
+              "errorMessage": {
+                "type": "App \"config.auth.openId.logoutFromProvider\" should be a boolean."
+              }
+            },
+            "logoutRedirectUri": {
+              "type": "string",
+              "description": "The URI to redirect the user to after logout.",
+              "errorMessage": {
+                "type": "App \"config.auth.openId.logoutRedirectUri\" should be a string."
+              }
+            },
+            "scope": {
+              "type": "string",
+              "description": "The OpenID Connect scope to request.",
+              "default": "openid profile email",
+              "errorMessage": {
+                "type": "App \"config.auth.openId.scope\" should be a string."
+              }
+            }
+          }
+        },
+        "pages": {
+          "type": "object",
+          "additionalProperties": false,
+          "errorMessage": {
+            "type": "App \"config.auth.pages\" should be an object."
+          },
+          "properties": {
+            "protected": {
+              "type": ["array", "boolean"],
+              "errorMessage": {
+                "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
+              },
+              "items": {
+                "type": "string",
+                "description": "Page ids for which authentication is required. When specified, all unspecified pages will be public.",
+                "errorMessage": {
+                  "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
+                }
+              }
+            },
+            "public": {
+              "type": ["array", "boolean"],
+              "errorMessage": {
+                "type": "App \"config.auth.pages.public.$\" should be an array of strings."
+              },
+              "items": {
+                "type": "string",
+                "description": "Page ids for which authentication is not required. When specified, all unspecified pages will be protected.",
+                "errorMessage": {
+                  "type": "App \"config.auth.pages.public.$\" should be an array of strings."
+                }
+              }
+            },
+            "roles": {
+              "type": "object",
+              "patternProperties": {
+                "^.*$": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "errorMessage": {
+                    "type": "App \"config.auth.pages.roles.[role]\" should be an array of strings."
+                  }
+                }
+              },
+              "errorMessage": {
+                "type": "App \"config.auth.pages.roles\" should be an object."
+              }
+            }
+          }
+        },
+        "jwt": {
+          "type": "object",
+          "additionalProperties": false,
+          "errorMessage": {
+            "type": "App \"config.auth.jwt\" should be an object."
+          },
+          "properties": {
+            "expiresIn": {
+              "type": ["string", "number"],
+              "default": "4h",
+              "description": "The length of time a user token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)",
+              "errorMessage": {
+                "type": "App \"config.auth.jwt.expiresIn\" should be a string or number."
+              }
+            }
+          }
         }
       }
     },
@@ -160,46 +267,7 @@
         }
       }
     },
-    "request": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "type", "connectionId"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Request \"id\" should be a string."
-          }
-        },
-        "type": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Request \"type\" should be a string."
-          }
-        },
-        "connectionId": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Request \"connectionId\" should be a string."
-          }
-        },
-        "properties": {
-          "type": "object",
-          "errorMessage": {
-            "type": "Request \"properties\" should be an object."
-          }
-        }
-      },
-      "errorMessage": {
-        "type": "Request should be an object.",
-        "required": {
-          "id": "Request should have required property \"id\".",
-          "type": "Request should have required property \"type\".",
-          "connectionId": "Request should have required property \"connectionId\"."
-        }
-      }
-    },
-    "menuLink": {
+    "connection": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "type"],
@@ -207,39 +275,61 @@
         "id": {
           "type": "string",
           "errorMessage": {
-            "type": "MenuLink \"id\" should be a string."
+            "type": "Connection \"id\" should be a string."
           }
         },
         "type": {
           "type": "string",
           "errorMessage": {
-            "type": "MenuLink \"type\" should be a string."
-          }
-        },
-        "pageId": {
-          "type": "string",
-          "errorMessage": {
-            "type": "MenuLink \"pageId\" should be a string."
-          }
-        },
-        "url": {
-          "type": "string",
-          "errorMessage": {
-            "type": "MenuLink \"url\" should be a string."
+            "type": "Connection \"type\" should be a string."
           }
         },
         "properties": {
           "type": "object",
           "errorMessage": {
-            "type": "MenuLink \"properties\" should be an object."
+            "type": "Connection \"properties\" should be an object."
           }
         }
       },
       "errorMessage": {
-        "type": "MenuLink should be an object.",
+        "type": "Connection should be an object.",
         "required": {
-          "id": "MenuLink should have required property \"id\".",
-          "type": "MenuLink should have required property \"type\"."
+          "id": "Connection should have required property \"id\".",
+          "type": "Connection should have required property \"type\"."
+        }
+      }
+    },
+    "menu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Menu \"id\" should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Menu \"properties\" should be an object."
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/menuItem"
+          },
+          "errorMessage": {
+            "type": "Menu \"links\" should be an array."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Menu should be an object.",
+        "required": {
+          "id": "Menu should have required property \"id\"."
         }
       }
     },
@@ -294,41 +384,7 @@
         }
       ]
     },
-    "menu": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "errorMessage": {
-            "type": "Menu \"id\" should be a string."
-          }
-        },
-        "properties": {
-          "type": "object",
-          "errorMessage": {
-            "type": "Menu \"properties\" should be an object."
-          }
-        },
-        "links": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/menuItem"
-          },
-          "errorMessage": {
-            "type": "Menu \"links\" should be an array."
-          }
-        }
-      },
-      "errorMessage": {
-        "type": "Menu should be an object.",
-        "required": {
-          "id": "Menu should have required property \"id\"."
-        }
-      }
-    },
-    "action": {
+    "menuLink": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "type"],
@@ -336,27 +392,82 @@
         "id": {
           "type": "string",
           "errorMessage": {
-            "type": "Action \"id\" should be a string."
+            "type": "MenuLink \"id\" should be a string."
           }
         },
         "type": {
           "type": "string",
           "errorMessage": {
-            "type": "Action \"type\" should be a string."
+            "type": "MenuLink \"type\" should be a string."
           }
         },
-        "messages": {},
-        "skip": {},
-        "params": {}
+        "pageId": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink \"pageId\" should be a string."
+          }
+        },
+        "url": {
+          "type": "string",
+          "errorMessage": {
+            "type": "MenuLink \"url\" should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "MenuLink \"properties\" should be an object."
+          }
+        }
       },
       "errorMessage": {
-        "type": "Action should be an object.",
+        "type": "MenuLink should be an object.",
         "required": {
-          "id": "Action should have required property \"id\".",
-          "type": "Action should have required property \"type\"."
+          "id": "MenuLink should have required property \"id\".",
+          "type": "MenuLink should have required property \"type\"."
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "connectionId"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request \"id\" should be a string."
+          }
+        },
+        "type": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request \"type\" should be a string."
+          }
+        },
+        "connectionId": {
+          "type": "string",
+          "errorMessage": {
+            "type": "Request \"connectionId\" should be a string."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "errorMessage": {
+            "type": "Request \"properties\" should be an object."
+          }
+        }
+      },
+      "errorMessage": {
+        "type": "Request should be an object.",
+        "required": {
+          "id": "Request should have required property \"id\".",
+          "type": "Request should have required property \"type\".",
+          "connectionId": "Request should have required property \"connectionId\"."
         }
       }
     }
+
   },
   "additionalProperties": false,
   "required": ["lowdefy"],
@@ -400,97 +511,7 @@
           }
         },
         "auth": {
-          "type": "object",
-          "additionalProperties": false,
-          "errorMessage": {
-            "type": "App \"config.auth\" should be an object."
-          },
-          "properties": {
-            "openId": {
-              "type": "object",
-              "additionalProperties": false,
-              "errorMessage": {
-                "type": "App \"config.auth.openId\" should be an object."
-              },
-              "properties": {
-                "logoutFromProvider": {
-                  "type": "boolean",
-                  "default": false,
-                  "description": "If true, the user will be directed to OpenID Connect provider's logout URL. This will log the user out of the provider.",
-                  "errorMessage": {
-                    "type": "App \"config.auth.openId.logoutFromProvider\" should be a boolean."
-                  }
-                },
-                "logoutRedirectUri": {
-                  "type": "string",
-                  "description": "The URI to redirect the user to after logout.",
-                  "errorMessage": {
-                    "type": "App \"config.auth.openId.logoutRedirectUri\" should be a string."
-                  }
-                },
-                "scope": {
-                  "type": "string",
-                  "description": "The OpenID Connect scope to request.",
-                  "default": "openid profile email",
-                  "errorMessage": {
-                    "type": "App \"config.auth.openId.scope\" should be a string."
-                  }
-                }
-              }
-            },
-            "pages": {
-              "type": "object",
-              "additionalProperties": false,
-              "errorMessage": {
-                "type": "App \"config.auth.pages\" should be an object."
-              },
-              "properties": {
-                "protected": {
-                  "type": ["array", "boolean"],
-                  "errorMessage": {
-                    "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Page ids for which authentication is required. When specified, all unspecified pages will be public.",
-                    "errorMessage": {
-                      "type": "App \"config.auth.pages.protected.$\" should be an array of strings."
-                    }
-                  }
-                },
-                "public": {
-                  "type": ["array", "boolean"],
-                  "errorMessage": {
-                    "type": "App \"config.auth.pages.public.$\" should be an array of strings."
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Page ids for which authentication is not required. When specified, all unspecified pages will be protected.",
-                    "errorMessage": {
-                      "type": "App \"config.auth.pages.public.$\" should be an array of strings."
-                    }
-                  }
-                }
-              }
-            },
-            "jwt": {
-              "type": "object",
-              "additionalProperties": false,
-              "errorMessage": {
-                "type": "App \"config.auth.jwt\" should be an object."
-              },
-              "properties": {
-                "expiresIn": {
-                  "type": ["string", "number"],
-                  "default": "4h",
-                  "description": "The length of time a user token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)",
-                  "errorMessage": {
-                    "type": "App \"config.auth.jwt.expiresIn\" should be a string or number."
-                  }
-                }
-              }
-            }
-          }
+          "$ref": "#/definitions/authConfig"
         }
       }
     },
