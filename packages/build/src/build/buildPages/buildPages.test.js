@@ -15,7 +15,7 @@
 */
 import { get } from '@lowdefy/helpers';
 import buildPages from './buildPages';
-import testContext from '../test/testContext';
+import testContext from '../../test/testContext';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();
