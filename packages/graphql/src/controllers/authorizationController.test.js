@@ -88,5 +88,6 @@ test('invalid auth config', async () => {
   const authController = createAuthorizationController(context);
   expect(() => authController.authorize({ auth: { other: 'value' } })).toThrow(ServerError);
   expect(() => authController.authorize({ auth: {} })).toThrow(ServerError);
-  expect(() => authController.authorize({})).toThrow(ServerError);
+  expect(() => authController.authorize({})).toThrow();
+  expect(() => authController.authorize()).toThrow();
 });

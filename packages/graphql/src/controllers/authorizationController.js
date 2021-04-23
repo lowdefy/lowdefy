@@ -24,9 +24,6 @@ class AuthorizationController {
   }
 
   authorize({ auth }) {
-    if (!type.isObject(auth)) {
-      throw new ServerError('Invalid auth configuration');
-    }
     if (auth.public === true) return true;
     if (auth.public === false) {
       if (auth.roles) {
