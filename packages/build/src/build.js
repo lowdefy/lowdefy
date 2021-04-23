@@ -20,7 +20,7 @@ import createFileLoader from './loaders/fileLoader';
 import createFileSetter from './loaders/fileSetter';
 import createMetaLoader from './loaders/metaLoader';
 
-import buildAuth from './build/buildAuth';
+import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
 import buildPages from './build/buildPages/buildPages';
