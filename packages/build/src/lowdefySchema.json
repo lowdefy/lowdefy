@@ -47,6 +47,13 @@
             "type": "App \"config.auth.openId\" should be an object."
           },
           "properties": {
+            "rolesField": {
+              "type": "string",
+              "description": ".",
+              "errorMessage": {
+                "type": "App \"config.auth.openId.rolesField\" should be a string."
+              }
+            },
             "logoutFromProvider": {
               "type": "boolean",
               "default": false,
