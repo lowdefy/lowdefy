@@ -19,7 +19,14 @@
 import { get } from '@lowdefy/helpers';
 import cookie from 'cookie';
 
-async function verifyAccessToken({ development, headers, getController, gqlUri, setHeader }) {
+async function verifyAccessToken({
+  development,
+  headers,
+  getController,
+  getLoader,
+  gqlUri,
+  setHeader,
+}) {
   const cookieHeader = get(headers, 'Cookie') || get(headers, 'cookie') || '';
   const { authorization } = cookie.parse(cookieHeader);
   if (!authorization) return {};
@@ -33,7 +40,14 @@ async function verifyAccessToken({ development, headers, getController, gqlUri, 
       lowdefy_access_token,
       ...user
     } = await tokenController.verifyAccessToken(authorization);
-    return user;
+    const componentLoader = getLoader('component');
+    const appConfig = await componentLoader.load('config');
+    const rolesField = get(appConfig, 'auth.openId.rolesField');
+    let roles = [];
+    if (rolesField) {
+      roles = get(user, rolesField);
+    }
+    return { user, roles };
   } catch (error) {
     const setCookieHeader = cookie.serialize('authorization', '', {
       httpOnly: true,

@@ -25,26 +25,68 @@ test('authenticated true', async () => {
   expect(authController.authenticated).toBe(true);
 });
 
-test('authenticated true', async () => {
+test('authenticated false', async () => {
   const context = testBootstrapContext({});
   const authController = createAuthorizationController(context);
   expect(authController.authenticated).toBe(false);
 });
 
-test('authorize with user', async () => {
-  const context = testBootstrapContext({ user: { sub: 'sub' } });
-  const authController = createAuthorizationController(context);
-  expect(authController.authorize({ auth: 'protected' })).toBe(true);
-  expect(authController.authorize({ auth: 'public' })).toBe(true);
-  expect(() => authController.authorize({ auth: 'other' })).toThrow(ServerError);
-  expect(() => authController.authorize({})).toThrow(ServerError);
+test('authorize public object', async () => {
+  const auth = { public: true };
+
+  let context = testBootstrapContext({});
+  let authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(true);
+
+  context = testBootstrapContext({ user: { sub: 'sub' } });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(true);
 });
 
-test('authorize without user', async () => {
-  const context = testBootstrapContext({ user: {} });
+test('authorize protected object, no roles', async () => {
+  const auth = { public: false };
+
+  let context = testBootstrapContext({});
+  let authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(false);
+
+  context = testBootstrapContext({ user: { sub: 'sub' } });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(true);
+});
+
+test('authorize role protected object', async () => {
+  const auth = { public: false, roles: ['role1'] };
+
+  let context = testBootstrapContext({});
+  let authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(false);
+
+  context = testBootstrapContext({ user: { sub: 'sub' } });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(false);
+
+  context = testBootstrapContext({ user: { sub: 'sub' }, roles: [] });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(false);
+
+  context = testBootstrapContext({ user: { sub: 'sub' }, roles: ['role2'] });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(false);
+
+  context = testBootstrapContext({ user: { sub: 'sub' }, roles: ['role1'] });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(true);
+
+  context = testBootstrapContext({ user: { sub: 'sub' }, roles: ['role1', 'role2'] });
+  authController = createAuthorizationController(context);
+  expect(authController.authorize({ auth })).toBe(true);
+});
+
+test('invalid auth config', async () => {
+  const context = testBootstrapContext({});
   const authController = createAuthorizationController(context);
-  expect(authController.authorize({ auth: 'protected' })).toBe(false);
-  expect(authController.authorize({ auth: 'public' })).toBe(true);
-  expect(() => authController.authorize({ auth: 'other' })).toThrow(ServerError);
+  expect(() => authController.authorize({ auth: { other: 'value' } })).toThrow(ServerError);
+  expect(() => authController.authorize({ auth: {} })).toThrow(ServerError);
   expect(() => authController.authorize({})).toThrow(ServerError);
 });

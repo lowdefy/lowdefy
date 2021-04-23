@@ -111,7 +111,7 @@ const defaultLoadRequestImp = ({ pageId, contextId, requestId }) => {
       type: 'TestRequest',
       requestId: 'requestId',
       connectionId: 'testConnection',
-      auth: 'public',
+      auth: { public: true },
       properties: {
         requestProperty: 'requestProperty',
       },
@@ -161,7 +161,7 @@ test('call request, protected auth with user', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'protected',
+        auth: { public: false },
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -198,7 +198,7 @@ test('call request, protected auth without user', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'protected',
+        auth: { public: false },
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -233,7 +233,7 @@ test('request does not have a connectionId', async () => {
         id: 'request:pageId:contextId:requestId',
         type: 'TestRequest',
         requestId: 'requestId',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -258,7 +258,7 @@ test('request is not a valid request type', async () => {
         type: 'InvalidType',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           requestProperty: 'requestProperty',
         },
@@ -317,7 +317,7 @@ test('deserialize inputs', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           event: { _event: true },
           input: { _input: true },
@@ -389,7 +389,7 @@ test('parse request properties for operators', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           input: { _input: 'value' },
           event: { _event: 'value' },
@@ -539,7 +539,7 @@ test('parse secrets', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           secret: { _secret: 'REQUEST' },
         },
@@ -574,7 +574,7 @@ test('request properties default value', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
       };
     }
     return null;
@@ -632,7 +632,7 @@ test('request properties operator error', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           willError: { _state: [] },
         },
@@ -655,7 +655,7 @@ test('connection properties operator error', async () => {
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           willError: { _state: [] },
         },
@@ -735,7 +735,7 @@ test('request properties schema error', async () => {
         type: 'TestRequest',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {
           schemaPropString: true,
         },
@@ -770,7 +770,7 @@ test('checkRead, read explicitly true', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -813,7 +813,7 @@ test('checkRead, read explicitly false', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -834,7 +834,7 @@ test('checkRead, read not set', async () => {
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -847,7 +847,7 @@ test('checkRead, read not set', async () => {
         type: 'TestRequestCheckRead',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -888,7 +888,7 @@ test('checkWrite, write explicitly true', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -931,7 +931,7 @@ test('checkWrite, write explicitly false', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
@@ -964,7 +964,7 @@ test('checkWrite, write not set', async () => {
         type: 'TestRequestCheckWrite',
         requestId: 'requestId',
         connectionId: 'testConnection',
-        auth: 'public',
+        auth: { public: true },
         properties: {},
       };
     }
