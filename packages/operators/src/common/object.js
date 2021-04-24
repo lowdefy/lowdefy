@@ -16,16 +16,43 @@
 
 import runInstance from '../runInstance';
 import runClass from '../runClass';
+import { type } from '@lowdefy/helpers';
+
+const prep = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = {};
+  }
+  return args;
+};
+
+const prepDescriptor = (args) => {
+  const descriptor = args[2] || {};
+  if (type.isNone(descriptor.enumerable)) {
+    descriptor.enumerable = true;
+  }
+  if (type.isNone(descriptor.configurable)) {
+    descriptor.configurable = true;
+  }
+  args[2] = descriptor;
+  if (type.isNone(args[0])) {
+    args[0] = {};
+  }
+  return args;
+};
 
 const metaInstance = {
-  hasOwnProperty: { namedArgs: ['on', 'prop'], validTypes: ['array', 'object'] },
+  hasOwnProperty: { namedArgs: ['on', 'prop'], validTypes: ['array', 'object'], prep },
 };
 
 const metaClass = {
   keys: { singleArg: true, validTypes: ['object'] },
   values: { singleArg: true, validTypes: ['object'] },
   assign: { spreadArgs: true, validTypes: ['array'] },
-  defineProperty: { namedArgs: ['on', 'key', 'descriptor'], validTypes: ['array', 'object'] },
+  defineProperty: {
+    namedArgs: ['on', 'key', 'descriptor'],
+    validTypes: ['array', 'object'],
+    prep: prepDescriptor,
+  },
 };
 
 function _object({ params, location, methodName }) {
