@@ -14,16 +14,21 @@
   limitations under the License.
 */
 
+import { get, type } from '@lowdefy/helpers';
 import { ServerError } from '../context/errors';
 
 class AuthorizationController {
-  constructor({ user }) {
-    this.authenticated = !!user.sub;
+  constructor({ user, roles }) {
+    this.authenticated = type.isString(get(user, 'sub'));
+    this.roles = roles || [];
   }
 
   authorize({ auth }) {
-    if (auth === 'public') return true;
-    if (auth === 'protected') {
+    if (auth.public === true) return true;
+    if (auth.public === false) {
+      if (auth.roles) {
+        return this.authenticated && auth.roles.some((role) => this.roles.includes(role));
+      }
       return this.authenticated;
     }
     throw new ServerError('Invalid auth configuration');

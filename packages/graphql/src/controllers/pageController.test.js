@@ -35,7 +35,9 @@ test('getPage, public', async () => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
-        auth: 'public',
+        auth: {
+          public: true,
+        },
       };
     }
     return null;
@@ -44,7 +46,9 @@ test('getPage, public', async () => {
   const res = await controller.getPage({ pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: 'public',
+    auth: {
+      public: true,
+    },
   });
 });
 
@@ -53,7 +57,9 @@ test('getPage, protected, no user', async () => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
-        auth: 'protected',
+        auth: {
+          public: false,
+        },
       };
     }
     return null;
@@ -68,7 +74,9 @@ test('getPage, protected, with user', async () => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
-        auth: 'protected',
+        auth: {
+          public: false,
+        },
       };
     }
     return null;
@@ -77,7 +85,9 @@ test('getPage, protected, with user', async () => {
   const res = await controller.getPage({ pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: 'protected',
+    auth: {
+      public: false,
+    },
   });
 });
 
@@ -86,7 +96,9 @@ test('getPage, page does not exist', async () => {
     if (id === 'pageId') {
       return {
         id: 'page:pageId',
-        auth: 'public',
+        auth: {
+          public: true,
+        },
       };
     }
     return null;

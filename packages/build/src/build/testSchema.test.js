@@ -31,15 +31,15 @@ beforeEach(() => {
 
 test('empty components', async () => {
   const components = {
-    version: '1.0.0',
+    lowdefy: '1.0.0',
   };
   await testSchema({ components, context });
-  expect().toBe();
+  expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
 test('page auth config', async () => {
   const components = {
-    version: '1.0.0',
+    lowdefy: '1.0.0',
     config: {
       auth: {
         pages: {
@@ -50,12 +50,12 @@ test('page auth config', async () => {
     },
   };
   await testSchema({ components, context });
-  expect().toBe();
+  expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
 test('app schema', async () => {
   const components = {
-    version: '1.0.0',
+    lowdefy: '1.0.0',
     connections: [
       {
         id: 'postman',
@@ -86,7 +86,7 @@ test('app schema', async () => {
     ],
   };
   testSchema({ components, context });
-  expect().toBe();
+  expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
 test('invalid schema', async () => {
