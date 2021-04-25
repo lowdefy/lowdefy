@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
-import { type, get } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-tools';
 
 const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
