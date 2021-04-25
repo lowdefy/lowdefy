@@ -66,12 +66,12 @@ test('buildMenu menus exist', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
-        auth: 'protected',
+        auth: { public: false },
       },
     ],
   };
@@ -90,7 +90,7 @@ test('buildMenu menus exist', async () => {
             },
             type: 'MenuLink',
             pageId: 'page_1',
-            auth: 'public',
+            auth: { public: true },
           },
           {
             id: 'menuitem:my_menu:menu_page_2',
@@ -100,7 +100,7 @@ test('buildMenu menus exist', async () => {
             },
             type: 'MenuLink',
             pageId: 'page_2',
-            auth: 'protected',
+            auth: { public: false },
           },
           {
             id: 'menuitem:my_menu:menu_external',
@@ -110,7 +110,7 @@ test('buildMenu menus exist', async () => {
             },
             type: 'MenuLink',
             url: 'www.lowdefy.com',
-            auth: 'public',
+            auth: { public: true },
           },
         ],
       },
@@ -119,12 +119,12 @@ test('buildMenu menus exist', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
-        auth: 'protected',
+        auth: { public: false },
       },
     ],
   });
@@ -157,7 +157,7 @@ test('buildMenu nested menus', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
     ],
   };
@@ -172,7 +172,7 @@ test('buildMenu nested menus', async () => {
             id: 'menuitem:my_menu:group',
             menuItemId: 'group',
             type: 'MenuGroup',
-            auth: 'public',
+            auth: { public: true },
             links: [
               {
                 id: 'menuitem:my_menu:menu_page_1',
@@ -182,7 +182,7 @@ test('buildMenu nested menus', async () => {
                 },
                 type: 'MenuLink',
                 pageId: 'page_1',
-                auth: 'public',
+                auth: { public: true },
               },
             ],
           },
@@ -193,7 +193,7 @@ test('buildMenu nested menus', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
     ],
   });
@@ -205,17 +205,17 @@ test('buildMenu default menu', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_3',
         pageId: 'page_3',
-        auth: 'public',
+        auth: { public: true },
       },
     ],
   };
@@ -231,21 +231,21 @@ test('buildMenu default menu', async () => {
             menuItemId: '0',
             type: 'MenuLink',
             pageId: 'page_1',
-            auth: 'public',
+            auth: { public: true },
           },
           {
             id: 'menuitem:default:1',
             menuItemId: '1',
             type: 'MenuLink',
             pageId: 'page_2',
-            auth: 'public',
+            auth: { public: true },
           },
           {
             id: 'menuitem:default:2',
             menuItemId: '2',
             type: 'MenuLink',
             pageId: 'page_3',
-            auth: 'public',
+            auth: { public: true },
           },
         ],
       },
@@ -254,17 +254,17 @@ test('buildMenu default menu', async () => {
       {
         id: 'page:page_1',
         pageId: 'page_1',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_2',
         pageId: 'page_2',
-        auth: 'public',
+        auth: { public: true },
       },
       {
         id: 'page:page_3',
         pageId: 'page_3',
-        auth: 'public',
+        auth: { public: true },
       },
     ],
   });
@@ -366,20 +366,20 @@ test('buildMenu page does not exist, nested', async () => {
             id: 'menuitem:my_menu:MenuGroup1',
             menuItemId: 'MenuGroup1',
             type: 'MenuGroup',
-            auth: 'public',
+            auth: { public: true },
             links: [],
           },
           {
             id: 'menuitem:my_menu:MenuGroup2',
             menuItemId: 'MenuGroup2',
             type: 'MenuGroup',
-            auth: 'public',
+            auth: { public: true },
             links: [
               {
                 id: 'menuitem:my_menu:MenuGroup3',
                 menuItemId: 'MenuGroup3',
                 type: 'MenuGroup',
-                auth: 'public',
+                auth: { public: true },
                 links: [],
               },
             ],
@@ -429,7 +429,7 @@ test('buildMenu pages not array, menu exists', async () => {
             },
             type: 'MenuLink',
             url: 'www.lowdefy.com',
-            auth: 'public',
+            auth: { public: true },
           },
         ],
       },

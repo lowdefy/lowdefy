@@ -54,11 +54,11 @@ function loopItems(parent, menuId, pages, missingPageWarnings) {
             menuItem.auth = page.auth;
           }
         } else {
-          menuItem.auth = 'public';
+          menuItem.auth = { public: true };
         }
       }
       if (menuItem.type === 'MenuGroup') {
-        menuItem.auth = 'public';
+        menuItem.auth = { public: true };
       }
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;

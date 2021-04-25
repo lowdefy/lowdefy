@@ -20,13 +20,14 @@ import createFileLoader from './loaders/fileLoader';
 import createFileSetter from './loaders/fileSetter';
 import createMetaLoader from './loaders/metaLoader';
 
-import buildConfig from './build/buildConfig';
+import buildAuth from './build/buildAuth/buildAuth';
 import buildConnections from './build/buildConnections';
 import buildMenu from './build/buildMenu';
-import buildPages from './build/buildPages';
+import buildPages from './build/buildPages/buildPages';
 import buildRefs from './build/buildRefs';
 import cleanOutputDirectory from './build/cleanOutputDirectory';
 import testSchema from './build/testSchema';
+import validateConfig from './build/validateConfig';
 import writeConfig from './build/writeConfig';
 import writeConnections from './build/writeConnections';
 import writeGlobal from './build/writeGlobal';
@@ -53,7 +54,8 @@ async function build(options) {
     let components = await buildRefs({ context });
     await testSchema({ components, context });
     context.metaLoader = createMetaLoader({ components, context });
-    await buildConfig({ components, context });
+    await validateConfig({ components, context });
+    await buildAuth({ components, context });
     await buildConnections({ components, context });
     await buildPages({ components, context });
     await buildMenu({ components, context });

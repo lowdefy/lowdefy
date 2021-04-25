@@ -35,10 +35,13 @@ function createContext(config) {
     bootstrapContext.setHeader = (key, value) => res.set(key, value);
     bootstrapContext.headers = req.headers;
     bootstrapContext.host =
+      // TODO: Might not be necessary if all apps are express based
       get(bootstrapContext.headers, 'Host') || get(bootstrapContext.headers, 'host');
     bootstrapContext.getLoader = createGetLoader(bootstrapContext);
     bootstrapContext.getController = createGetController(bootstrapContext);
-    bootstrapContext.user = await verifyAccessToken(bootstrapContext);
+    const { user, roles } = await verifyAccessToken(bootstrapContext);
+    bootstrapContext.user = user;
+    bootstrapContext.roles = roles;
     return {
       getController: bootstrapContext.getController,
       logger,

@@ -24,6 +24,7 @@ function testBootstrapContext({
   host,
   loaders,
   setHeader,
+  roles,
   user,
 } = {}) {
   const bootstrapContext = {
@@ -37,7 +38,8 @@ function testBootstrapContext({
     host: host || 'host',
     logger: { log: () => {} },
     setHeader: setHeader || (() => {}),
-    user: user || {},
+    roles: roles,
+    user: user,
   };
   bootstrapContext.getController = createGetController(bootstrapContext);
   return bootstrapContext;
