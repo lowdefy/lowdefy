@@ -95,6 +95,20 @@ describe('_string.concat', () => {
     ).toEqual('abcdef12');
     expect(
       string({
+        params: [null, 12, 'abc'],
+        methodName,
+        location,
+      })
+    ).toEqual('12abc');
+    expect(
+      string({
+        params: ['', 12, 'abc'],
+        methodName,
+        location,
+      })
+    ).toEqual('12abc');
+    expect(
+      string({
         params: ['abcdef', true],
         methodName,
         location,
@@ -418,6 +432,15 @@ describe('_string.match', () => {
         })
       )
     ).toEqual(JSON.stringify(['e']));
+    expect(
+      JSON.stringify(
+        string({
+          params: [null, 'e'],
+          methodName,
+          location,
+        })
+      )
+    ).toEqual(JSON.stringify(null));
     expect(
       string({
         params: ['abcdefe', '/e/g'],

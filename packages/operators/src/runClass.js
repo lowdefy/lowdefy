@@ -84,6 +84,10 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
     }
   }
 
+  if (type.isFunction(meta[methodName].prep)) {
+    args = meta[methodName].prep(args);
+  }
+
   // for property
   if (meta[methodName].property) {
     return functions[methodName];

@@ -15,64 +15,83 @@
 */
 
 import runInstance from '../runInstance';
+import { type } from '@lowdefy/helpers';
+
+const prep = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = [];
+  }
+  return args;
+};
 
 const meta = {
-  concat: { validTypes: ['array'] },
+  concat: { prep, validTypes: ['array'] },
   copyWithin: {
     namedArgs: ['on', 'target', 'start', 'end'],
+    prep,
     validTypes: ['array', 'object'],
   },
   every: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
   fill: {
     namedArgs: ['on', 'value', 'start', 'end'],
+    prep,
     validTypes: ['array', 'object'],
   },
   filter: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
   find: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
   findIndex: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
-  flat: { namedArgs: ['on', 'depth'], validTypes: ['array', 'object'] },
-  includes: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
-  indexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
-  join: { namedArgs: ['on', 'separator'], validTypes: ['array', 'object'] },
-  lastIndexOf: { namedArgs: ['on', 'value'], validTypes: ['array', 'object'] },
+  flat: { namedArgs: ['on', 'depth'], prep, validTypes: ['array', 'object'] },
+  includes: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
+  indexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
+  join: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] },
+  lastIndexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
   map: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
   reduce: {
     namedArgs: ['on', 'callback', 'initialValue'],
+    prep,
     validTypes: ['array', 'object'],
   },
   reduceRight: {
     namedArgs: ['on', 'callback', 'initialValue'],
+    prep,
     validTypes: ['array', 'object'],
   },
-  reverse: { validTypes: ['array'], singleArg: true },
-  slice: { namedArgs: ['on', 'start', 'end'], validTypes: ['array', 'object'] },
+  reverse: { prep, validTypes: ['array'], singleArg: true },
+  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
   some: {
     namedArgs: ['on', 'callback'],
+    prep,
     validTypes: ['array', 'object'],
   },
-  sort: { namedArgs: ['on'], validTypes: ['array'] },
+  sort: { namedArgs: ['on'], prep, validTypes: ['array'] },
   splice: {
     namedArgs: ['on', 'start', 'deleteCount'],
     spreadArgs: 'insert',
     returnInstance: true,
+    prep,
     validTypes: ['array', 'object'],
   },
-  length: { validTypes: ['array'], property: true },
+  length: { validTypes: ['array'], prep, property: true },
   // some,
   // forEach,
   // pop: { namedArgs: ['on'] },
