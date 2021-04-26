@@ -45,8 +45,10 @@ const ErrorPage = ({ code, description, message, name }) => (
         borderLeft: '1px solid #aeaeae',
       }}
     >
-      <div style={{ fontSize: '1.3em', fontWeight: '300', paddingBottom: 10 }}>{name}</div>
-      <div style={{ fontSize: '0.9em' }}>{message}</div>
+      <div style={{ fontSize: '1.3em', fontWeight: '300', paddingBottom: 10 }}>
+        {name || 'Error'}
+      </div>
+      <div style={{ fontSize: '0.9em' }}>{message || 'An error has occurred.'}</div>
       <div style={{ fontSize: '0.9em' }}>{description}</div>
       <div style={{ paddingTop: 20 }}>
         <a href="/">Return to home page</a>

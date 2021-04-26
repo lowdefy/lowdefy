@@ -69,14 +69,18 @@ test('default', () => {
               "paddingBottom": 10,
             }
           }
-        />
+        >
+          Error
+        </div>
         <div
           style={
             Object {
               "fontSize": "0.9em",
             }
           }
-        />
+        >
+          An error has occurred.
+        </div>
         <div
           style={
             Object {
