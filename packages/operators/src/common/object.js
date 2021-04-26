@@ -45,9 +45,9 @@ const metaInstance = {
 };
 
 const metaClass = {
-  keys: { singleArg: true, validTypes: ['object'] },
-  values: { singleArg: true, validTypes: ['object'] },
-  assign: { spreadArgs: true, validTypes: ['array'] },
+  keys: { singleArg: true, validTypes: ['object'], prep },
+  values: { singleArg: true, validTypes: ['object'], prep },
+  assign: { spreadArgs: true, validTypes: ['array'], prep },
   defineProperty: {
     namedArgs: ['on', 'key', 'descriptor'],
     validTypes: ['array', 'object'],

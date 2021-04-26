@@ -201,17 +201,15 @@ describe('_object.assign', () => {
         location,
       })
     ).toEqual({ 0: 'a', a: 1, b: 3 });
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       object({
         params: [],
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _object.assign - Cannot convert undefined or null to object Received: {\\"_object.assign\\":[]} at locationId."`
-    );
+    ).toEqual({});
+  });
+  test('throw', () => {
     expect(() =>
       object({
         params: 'x',
