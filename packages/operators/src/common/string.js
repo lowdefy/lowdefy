@@ -17,44 +17,83 @@
 import runInstance from '../runInstance';
 import { type } from '@lowdefy/helpers';
 
+const prepRegex = (regexIndex, flagsIndex) => (args) => {
+  if (args[regexIndex]) {
+    args[regexIndex] = new RegExp(args[regexIndex], args[flagsIndex]);
+  }
+  if (type.isNone(args[0])) {
+    args[0] = '';
+  }
+  return args;
+};
+
+const prep = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = '';
+  }
+  return args;
+};
+
 const meta = {
-  charAt: { namedArgs: ['on', 'index'], validTypes: ['array', 'object'] },
+  charAt: { namedArgs: ['on', 'index'], prep, validTypes: ['array', 'object'] },
   // 'charCodeAt',
-  concat: { validTypes: ['array'] },
-  endsWith: { namedArgs: ['on', 'searchString', 'length'], validTypes: ['array', 'object'] },
-  includes: { namedArgs: ['on', 'searchString', 'position'], validTypes: ['array', 'object'] },
-  indexOf: { namedArgs: ['on', 'searchValue', 'fromIndex'], validTypes: ['array', 'object'] },
-  lastIndexOf: { namedArgs: ['on', 'searchValue', 'fromIndex'], validTypes: ['array', 'object'] },
-  // 'localeCompare',
-  match: { namedArgs: ['on', 'regex', 'regexFlags'], validTypes: ['array', 'object'] },
-  // 'matchAll',
-  normalize: { namedArgs: ['on', 'form'], validTypes: ['array', 'object'] },
-  padEnd: { namedArgs: ['on', 'targetLength', 'padString'], validTypes: ['array', 'object'] },
-  padStart: { namedArgs: ['on', 'targetLength', 'padString'], validTypes: ['array', 'object'] },
-  repeat: { namedArgs: ['on', 'count'], validTypes: ['array', 'object'] },
-  replace: {
-    namedArgs: ['on', 'regex', 'newSubstr', 'regexFlags'],
+  concat: { prep, validTypes: ['array'] },
+  endsWith: { namedArgs: ['on', 'searchString', 'length'], prep, validTypes: ['array', 'object'] },
+  includes: {
+    namedArgs: ['on', 'searchString', 'position'],
+    prep,
     validTypes: ['array', 'object'],
   },
-  search: { namedArgs: ['on', 'regex', 'regexFlags'], validTypes: ['array', 'object'] },
-  slice: { namedArgs: ['on', 'start', 'end'], validTypes: ['array', 'object'] },
-  split: { namedArgs: ['on', 'separator'], validTypes: ['array', 'object'] },
-  startsWith: { namedArgs: ['on', 'searchString', 'position'], validTypes: ['array', 'object'] },
-  substring: { namedArgs: ['on', 'start', 'end'], validTypes: ['array', 'object'] },
+  indexOf: { namedArgs: ['on', 'searchValue', 'fromIndex'], prep, validTypes: ['array', 'object'] },
+  lastIndexOf: {
+    namedArgs: ['on', 'searchValue', 'fromIndex'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  // 'localeCompare',
+  match: {
+    namedArgs: ['on', 'regex', 'regexFlags'],
+    prep: prepRegex(1, 2),
+    validTypes: ['array', 'object'],
+  },
+  // 'matchAll',
+  normalize: { namedArgs: ['on', 'form'], prep, validTypes: ['array', 'object'] },
+  padEnd: { namedArgs: ['on', 'targetLength', 'padString'], prep, validTypes: ['array', 'object'] },
+  padStart: {
+    namedArgs: ['on', 'targetLength', 'padString'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  repeat: { namedArgs: ['on', 'count'], prep, validTypes: ['array', 'object'] },
+  replace: {
+    namedArgs: ['on', 'regex', 'newSubstr', 'regexFlags'],
+    prep: prepRegex(1, 3),
+    validTypes: ['array', 'object'],
+  },
+  search: {
+    namedArgs: ['on', 'regex', 'regexFlags'],
+    prep: prepRegex(1, 2),
+    validTypes: ['array', 'object'],
+  },
+  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
+  split: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] },
+  startsWith: {
+    namedArgs: ['on', 'searchString', 'position'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  substring: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
   // toLocaleLowerCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
   // toLocaleUpperCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
-  toLowerCase: { validTypes: ['string'], singleArg: true },
-  toUpperCase: { validTypes: ['string'], singleArg: true },
-  trim: { validTypes: ['string'], singleArg: true },
-  trimEnd: { validTypes: ['string'], singleArg: true },
-  trimStart: { validTypes: ['string'], singleArg: true },
-  length: { validTypes: ['string'], property: true },
+  toLowerCase: { validTypes: ['string'], singleArg: true, prep },
+  toUpperCase: { validTypes: ['string'], singleArg: true, prep },
+  trim: { validTypes: ['string'], singleArg: true, prep },
+  trimEnd: { validTypes: ['string'], singleArg: true, prep },
+  trimStart: { validTypes: ['string'], singleArg: true, prep },
+  length: { validTypes: ['string'], property: true, prep },
 };
 
 function _string({ params, location, methodName }) {
-  if (type.isObject(params) && params.regex) {
-    params.regex = new RegExp(params.regex, params.regexFlags);
-  }
   return runInstance({
     location,
     meta,

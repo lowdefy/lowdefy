@@ -30,6 +30,13 @@ describe('_object.hasOwnProperty', () => {
     ).toEqual(true);
     expect(
       object({
+        params: [null, 'a'],
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      object({
         params: { on: { a: 1 }, prop: 'a' },
         methodName,
         location,
@@ -42,18 +49,15 @@ describe('_object.hasOwnProperty', () => {
         location,
       })
     ).toEqual(false);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       object({
         params: { value: 'x', start: 1, end: 2 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _object.hasOwnProperty must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-          Received: {\\"_object.hasOwnProperty\\":{\\"value\\":\\"x\\",\\"start\\":1,\\"end\\":2}} at locationId."
-    `);
+    ).toEqual(false);
+  });
+  test('throw', () => {
     expect(() =>
       object({
         params: [1, { a: 1 }],
@@ -197,17 +201,15 @@ describe('_object.assign', () => {
         location,
       })
     ).toEqual({ 0: 'a', a: 1, b: 3 });
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       object({
         params: [],
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _object.assign - Cannot convert undefined or null to object Received: {\\"_object.assign\\":[]} at locationId."`
-    );
+    ).toEqual({});
+  });
+  test('throw', () => {
     expect(() =>
       object({
         params: 'x',
@@ -244,25 +246,32 @@ describe('_object.defineProperty', () => {
       methodName,
       location,
     });
-    expect(obj.new).toEqual(6);
+    expect(obj).toEqual({ a: 1, new: 6 });
+    expect(Object.keys(obj)).toEqual(['a', 'new']);
     obj = { a: 2 };
     object({
       params: [obj, 'newer', { value: 6 }],
       methodName,
       location,
     });
-    expect(obj.newer).toEqual(6);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(obj).toEqual({ a: 2, newer: 6 });
+    obj = { a: 3 };
+    object({
+      params: [obj, 'x', { value: 6, enumerable: false, configurable: false }],
+      methodName,
+      location,
+    });
+    expect(obj).toEqual({ a: 3 });
+    expect(obj.x).toEqual(6);
+    expect(
       object({
         params: [],
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _object.defineProperty - Object.defineProperty called on non-object Received: {\\"_object.defineProperty\\":[]} at locationId."`
-    );
+    ).toEqual({});
+  });
+  test('throw', () => {
     expect(() =>
       object({
         params: 'x',
