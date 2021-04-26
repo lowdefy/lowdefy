@@ -17,11 +17,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-const BindHelmet = ({ pageProperties }) => {
+const BindHelmet = ({ properties }) => {
   return (
     <Helmet>
-      <meta charSet="utf-8" />
-      <title>{pageProperties.title}</title>
+      <title>{properties.title}</title>
     </Helmet>
   );
 };

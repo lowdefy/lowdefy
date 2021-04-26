@@ -40,6 +40,13 @@ describe('_array.concat', () => {
     ).toEqual([1, 2, 3, 4, 5, 6]);
     expect(
       array({
+        params: [null, null, null],
+        methodName,
+        location,
+      })
+    ).toEqual([null, null]);
+    expect(
+      array({
         params: [
           ['b', 'c', 'a'],
           [1, 2, 3],
@@ -101,18 +108,15 @@ describe('_array.copyWithin', () => {
         location,
       })
     ).toEqual(['c', 'b', 'c', 'd', 'e']);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { target: 0 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.copyWithin must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.copyWithin\\":{\\"target\\":0}} at locationId."
-    `);
+    ).toEqual([]);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: { on: 1 },
@@ -225,18 +229,15 @@ describe('_array.fill', () => {
         location,
       })
     ).toEqual([6, 6, 6, 6]);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { value: 'x', start: 1, end: 2 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.fill must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.fill\\":{\\"value\\":\\"x\\",\\"start\\":1,\\"end\\":2}} at locationId."
-    `);
+    ).toEqual([]);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: 'x',
@@ -442,18 +443,15 @@ describe('_array.flat', () => {
         location,
       })
     ).toEqual(['b', 'c', 'a', 'c', ['v']]);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { depth: 1 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.flat must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.flat\\":{\\"depth\\":1}} at locationId."
-    `);
+    ).toEqual([]);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: [1, 2, 3],
@@ -501,18 +499,15 @@ describe('_array.includes', () => {
         location,
       })
     ).toEqual(false);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { value: 1 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.includes must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.includes\\":{\\"value\\":1}} at locationId."
-    `);
+    ).toEqual(false);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: [1, 2, 3],
@@ -560,18 +555,15 @@ describe('_array.indexOf', () => {
         location,
       })
     ).toEqual(-1);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { value: 1 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.indexOf must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.indexOf\\":{\\"value\\":1}} at locationId."
-    `);
+    ).toEqual(-1);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: [1, 2, 3],
@@ -612,18 +604,15 @@ describe('_array.join', () => {
         location,
       })
     ).toEqual('a. b. c');
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { separator: '.' },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.join must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.join\\":{\\"separator\\":\\".\\"}} at locationId."
-    `);
+    ).toEqual('');
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: [1, 2, 3],
@@ -671,18 +660,15 @@ describe('_array.lastIndexOf', () => {
         location,
       })
     ).toEqual(-1);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { value: 1 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.lastIndexOf must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.lastIndexOf\\":{\\"value\\":1}} at locationId."
-    `);
+    ).toEqual(-1);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: [1, 2, 3],
@@ -955,18 +941,15 @@ describe('_array.slice', () => {
         location,
       })
     ).toEqual(['c', 'a']);
-  });
-  test('throw', () => {
-    expect(() =>
+    expect(
       array({
         params: { start: 1 },
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.slice must be evaluated on an array instance. For named args provide an array instance to the \\"on\\" property, for listed args provide and array instance as the first element in the operator argument array.
-          Received: {\\"_array.slice\\":{\\"start\\":1}} at locationId."
-    `);
+    ).toEqual([]);
+  });
+  test('throw', () => {
     expect(() =>
       array({
         params: 1,

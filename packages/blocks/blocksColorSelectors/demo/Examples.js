@@ -49,7 +49,7 @@ const Examples = ({ type, Component }) => {
           noRefs: true,
         });
         return (
-          <div key key={`${block.id}`}>
+          <div key={`${block.id}`}>
             {values.map((initialValue, v) => {
               const props = stubBlockProps({
                 block,

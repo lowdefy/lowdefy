@@ -24,7 +24,14 @@ import { AuthenticationError, TokenExpiredError } from '../context/errors';
 const setHeader = jest.fn();
 const getSecrets = () => ({ JWT_SECRET: 'JWT_SECRET' });
 
-const createCookieHeader = async ({ expired } = {}) => {
+const mockLoadComponent = jest.fn();
+const loaders = {
+  component: {
+    load: mockLoadComponent,
+  },
+};
+
+const createCookieHeader = async ({ expired, customRoles } = {}) => {
   const tokenController = createTokenController({
     getSecrets,
     host: 'host',
@@ -36,7 +43,11 @@ const createCookieHeader = async ({ expired } = {}) => {
       }),
     }),
   });
-  const accessToken = await tokenController.issueAccessToken({ sub: 'sub', email: 'email' });
+  const accessToken = await tokenController.issueAccessToken({
+    sub: 'sub',
+    email: 'email',
+    customRoles,
+  });
   return cookie.serialize('authorization', accessToken, {
     httpOnly: true,
     path: '/api/graphql',
@@ -67,19 +78,49 @@ test('empty cookie header', async () => {
 });
 
 test('valid authorization cookie', async () => {
+  mockLoadComponent.mockImplementation(() => ({}));
   const cookie = await createCookieHeader();
   let bootstrapContext = testBootstrapContext({
     headers: { cookie },
     getSecrets,
+    loaders,
   });
-  let user = await verifyAccessToken(bootstrapContext);
-  expect(user).toEqual({ sub: 'sub', email: 'email' });
+  let res = await verifyAccessToken(bootstrapContext);
+  expect(res).toEqual({ user: { sub: 'sub', email: 'email' }, roles: [] });
   bootstrapContext = testBootstrapContext({
     headers: { Cookie: cookie },
     getSecrets,
+    loaders,
   });
-  user = await verifyAccessToken(bootstrapContext);
-  expect(user).toEqual({ sub: 'sub', email: 'email' });
+  res = await verifyAccessToken(bootstrapContext);
+  expect(res).toEqual({ user: { sub: 'sub', email: 'email' }, roles: [] });
+});
+
+test('valid authorization cookie with roles', async () => {
+  mockLoadComponent.mockImplementation(() => ({
+    auth: { openId: { rolesField: 'customRoles' } },
+  }));
+  const cookie = await createCookieHeader({ customRoles: ['role1', 'role2'] });
+  let bootstrapContext = testBootstrapContext({
+    headers: { cookie },
+    getSecrets,
+    loaders,
+  });
+  let res = await verifyAccessToken(bootstrapContext);
+  expect(res).toEqual({
+    user: { sub: 'sub', email: 'email', customRoles: ['role1', 'role2'] },
+    roles: ['role1', 'role2'],
+  });
+  bootstrapContext = testBootstrapContext({
+    headers: { Cookie: cookie },
+    getSecrets,
+    loaders,
+  });
+  res = await verifyAccessToken(bootstrapContext);
+  expect(res).toEqual({
+    user: { sub: 'sub', email: 'email', customRoles: ['role1', 'role2'] },
+    roles: ['role1', 'role2'],
+  });
 });
 
 test('invalid authorization cookie', async () => {

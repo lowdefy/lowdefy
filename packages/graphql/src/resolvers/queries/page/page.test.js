@@ -25,7 +25,7 @@ const mockLoadPage = jest.fn((id) => {
       type: 'PageHeaderMenu',
       pageId: 'pageId',
       blockId: 'pageId',
-      auth: 'public',
+      auth: { public: true },
     };
   }
   return null;
@@ -58,7 +58,7 @@ test('page resolver', async () => {
     type: 'PageHeaderMenu',
     pageId: 'pageId',
     blockId: 'pageId',
-    auth: 'public',
+    auth: { public: true },
   });
 });
 
@@ -75,7 +75,7 @@ test('page graphql', async () => {
       type: 'PageHeaderMenu',
       pageId: 'pageId',
       blockId: 'pageId',
-      auth: 'public',
+      auth: { public: true },
     },
   });
 });

@@ -19,7 +19,7 @@ import blockDefaultProps from '../blockDefaultProps';
 import Skeleton from './Skeleton';
 
 const SkeletonButton = ({ properties, methods }) => {
-  let height = properties.height || 32;
+  let height;
   switch (properties.size) {
     case 'small':
       height = 24;

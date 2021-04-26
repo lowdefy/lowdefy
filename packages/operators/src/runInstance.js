@@ -34,6 +34,7 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
       Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`
     );
   }
+
   let instance;
   let args = [];
   if (meta[methodName].singleArg || meta[methodName].property) {
@@ -62,9 +63,12 @@ const runInstance = ({ location, meta, methodName, operator, params, instanceTyp
       args.push(...(params[meta[methodName].spreadArgs] || []));
     }
   }
-  // console.log(instance);
-  // console.log(type.typeOf(instance));
-  if (!instance || type.typeOf(instance) !== instanceType) {
+
+  if (type.isFunction(meta[methodName].prep)) {
+    [instance, ...args] = meta[methodName].prep([instance, ...args]);
+  }
+
+  if (type.typeOf(instance) !== instanceType) {
     throw new Error(`Operator Error: ${operator}.${methodName} must be evaluated on an ${instanceType} instance. For named args provide an ${instanceType} instance to the "on" property, for listed args provide and ${instanceType} instance as the first element in the operator argument array.
     Received: {"${operator}.${methodName}":${JSON.stringify(params)}} at ${location}.`);
   }

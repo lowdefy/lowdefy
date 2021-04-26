@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+
+### Bug Fixes
+
+* **docs:** Fix typo in docs. ([343553a](https://github.com/lowdefy/lowdefy/commit/343553ac4a94fd5fb867346628c8f3ea10341f06))
+
+
+
+
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 

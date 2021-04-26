@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+
+### Bug Fixes
+
+* **blockTools:** Add full error page. ([9baf5ad](https://github.com/lowdefy/lowdefy/commit/9baf5adba218f93fa257d46cf0e3bbfa0ed6b85b))
+* **blockTools:** Update error defaults. ([cc02a89](https://github.com/lowdefy/lowdefy/commit/cc02a89571d260dd08b0cfdbd486f1f4c0c9841c))
+* Make lgtm corrections. ([ef20857](https://github.com/lowdefy/lowdefy/commit/ef2085781aa245bf0d027ddec3511d949403bed9))
+
+
+
+
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 

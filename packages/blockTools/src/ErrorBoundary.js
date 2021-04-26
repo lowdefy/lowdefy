@@ -15,6 +15,7 @@
 */
 
 import React, { Component } from 'react';
+import ErrorPage from './ErrorPage';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -30,19 +31,20 @@ class ErrorBoundary extends Component {
   }
 
   render() {
-    const { description, message, renderError, fallback, children } = this.props;
+    const { children, description, fallback, fullPage, message, name } = this.props;
     const { hasError, error } = this.state;
     if (hasError) {
       if (fallback) {
         return fallback(error);
       }
-      if (renderError) {
+      if (fullPage) {
         return (
-          <div>
-            {`Error: ${message || error.message}`}
-            {description && <br />}
-            {description}
-          </div>
+          <ErrorPage
+            code={error.number}
+            description={description || error.description}
+            message={message || error.message}
+            name={name || error.name}
+          />
         );
       }
       // Throw to console but fail silently to user?

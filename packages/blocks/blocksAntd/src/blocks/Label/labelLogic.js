@@ -66,7 +66,7 @@ const labelLogic = ({
       overflow: properties.inline && 'inherit', // wrap label content below input
       whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
       marginBottom: properties.size === 'small' ? 0 : 8,
-      overflow: 'visible',
+      // overflow: 'visible',
     })]: true,
   });
 

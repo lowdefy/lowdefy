@@ -125,7 +125,7 @@ const Root = ({ gqlUri }) => {
   };
   lowdefy.user = {};
   return (
-    <ErrorBoundary>
+    <ErrorBoundary fullPage>
       <ApolloProvider client={lowdefy.client}>
         <RootQuery lowdefy={lowdefy}>
           <DisplayMessage
@@ -143,9 +143,7 @@ const Root = ({ gqlUri }) => {
               <OpenIdCallback lowdefy={lowdefy} />
             </Route>
             <Route exact path="/:pageId">
-              <ErrorBoundary>
-                <Page lowdefy={lowdefy} />
-              </ErrorBoundary>
+              <Page lowdefy={lowdefy} />
             </Route>
           </Switch>
         </RootQuery>

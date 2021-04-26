@@ -17,8 +17,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { validate } from '@lowdefy/ajv';
+import lowdefySchema from '../lowdefySchema.json';
 
-async function buildConfig({ components }) {
+async function validateConfig({ components }) {
   if (type.isNone(components.config)) {
     components.config = {};
   }
@@ -31,6 +33,13 @@ async function buildConfig({ components }) {
   if (type.isNone(components.config.auth.pages)) {
     components.config.auth.pages = {};
   }
+  if (type.isNone(components.config.auth.pages.roles)) {
+    components.config.auth.pages.roles = {};
+  }
+  validate({
+    schema: lowdefySchema.definitions.authConfig,
+    data: components.config.auth,
+  });
   if (
     (components.config.auth.pages.protected === true &&
       components.config.auth.pages.public === true) ||
@@ -47,27 +56,7 @@ async function buildConfig({ components }) {
   if (components.config.auth.pages.public === false) {
     throw new Error('Public pages can not be set to false.');
   }
-  components.auth = {};
-  if (
-    type.isArray(components.config.auth.pages.public) ||
-    components.config.auth.pages.protected === true
-  ) {
-    components.auth.include = components.config.auth.pages.public || [];
-    components.auth.set = 'public';
-    components.auth.default = 'protected';
-  } else if (
-    type.isArray(components.config.auth.pages.protected) ||
-    components.config.auth.pages.public === true
-  ) {
-    components.auth.include = components.config.auth.pages.protected || [];
-    components.auth.set = 'protected';
-    components.auth.default = 'public';
-  } else {
-    components.auth.include = [];
-    components.auth.set = 'public';
-    components.auth.default = 'public';
-  }
   return components;
 }
 
-export default buildConfig;
+export default validateConfig;

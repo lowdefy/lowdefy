@@ -8,6 +8,8 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/maintainability)](https://codeclimate.com/github/lowdefy/lowdefy/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/test_coverage)](https://codeclimate.com/github/lowdefy/lowdefy/test_coverage)
 [![Codecov](https://codecov.io/gh/lowdefy/lowdefy/branch/main/graph/badge.svg?token=U2AEEH9K1W)](https://codecov.io/gh/lowdefy/lowdefy)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/context:javascript)
 
 Lowdefy is an open-source (Apache-2.0) low-code framework that lets you build web apps with YAML configuration files. It is great for building admin panels, BI dashboards, workflows, and CRUD apps.
 

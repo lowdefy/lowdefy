@@ -97,12 +97,12 @@ _ref:
         - `path: string`: __Required__ - The file path to the referenced file, from the root of the project directory.
         - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
         - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
-        _ `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
+        - `eval: string`: The file path to a JavaScript file which to evaluate, from the root of the project directory.
     examples: |
       ###### Reference pages:
       ```yaml
       # lowdefy.yaml
-      lowdefy: '3.13.0'
+      lowdefy: '3.14.0'
       pages:
         - _ref: pages/page1.yaml
         - _ref: pages/page2.yaml
@@ -123,7 +123,7 @@ _ref:
       ```
       Returns:
       ```
-      lowdefy: '3.13.0'
+      lowdefy: '3.14.0'
       pages:
         - id: page1
           type: PageHeaderMenu

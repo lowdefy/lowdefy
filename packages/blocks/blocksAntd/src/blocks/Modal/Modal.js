@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-tools';
-import { get, type } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
 const triggerSetOpen = ({ state, setOpen, methods }) => {

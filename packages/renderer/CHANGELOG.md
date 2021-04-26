@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+
+### Bug Fixes
+
+* **renderer:** Catch render error with full page. ([9775e24](https://github.com/lowdefy/lowdefy/commit/9775e242735a2c19eb8595131596a0961e7545eb))
+* **renderer:** Remove extra root context and pass page properties to Helmet. ([f17b412](https://github.com/lowdefy/lowdefy/commit/f17b41238d97f1b6d6bd4eb8996a5ea8e3d790c4))
+
+
+
+
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 
