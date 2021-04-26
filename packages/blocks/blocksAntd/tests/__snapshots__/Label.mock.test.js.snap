@@ -8,7 +8,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -85,7 +85,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -152,7 +152,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -219,7 +219,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}"
           flex="0 1 auto"
         >
           <label
@@ -286,7 +286,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -363,7 +363,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -440,7 +440,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -517,7 +517,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -651,7 +651,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -734,7 +734,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -799,7 +799,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -864,7 +864,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":0}}"
           flex="0 1 auto"
         >
           <label
@@ -929,7 +929,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -990,7 +990,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -1072,7 +1072,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -1154,7 +1154,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -1236,7 +1236,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"inherit\\",\\"whiteSpace\\":false,\\"marginBottom\\":8}}"
           flex="0 1 auto"
         >
           <label
@@ -1295,7 +1295,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 2,
@@ -1382,7 +1382,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 2,
@@ -1469,7 +1469,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -1546,7 +1546,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label ant-form-item-label-left {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           sm={
             Object {
               "span": 24,
@@ -1625,7 +1625,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 8,
@@ -1720,7 +1720,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 8,
@@ -1815,7 +1815,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}"
           md={
             Object {
               "span": 8,
@@ -1910,7 +1910,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 8,
@@ -2005,7 +2005,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":8}}"
           md={
             Object {
               "span": 8,
@@ -2100,7 +2100,7 @@ Array [
     Object {
       "children": Array [
         <mockConstructor
-          className="ant-form-item-label {\\"style\\":{\\"overflow\\":\\"visible\\",\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}"
+          className="ant-form-item-label {\\"style\\":{\\"whiteSpace\\":\\"normal\\",\\"marginBottom\\":0}}"
           md={
             Object {
               "span": 8,

@@ -24,7 +24,7 @@ const applyArrayIndices = (arrayIndices, name) => {
   const index = copy.shift();
   let newName;
   if (name.includes('$')) {
-    newName = name.replace('$', index.toString());
+    newName = name.replace('$', index.toString()); // lgtm [js/incomplete-sanitization]
   } else {
     newName = name;
   }

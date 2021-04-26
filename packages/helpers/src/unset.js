@@ -107,7 +107,7 @@ const unset = (obj, prop) => {
     while (segs.length && segs[segs.length - 1].slice(-1) === '\\') {
       last = `${segs.pop().slice(0, -1)}.${last}`;
     }
-    while (segs.length) obj = obj[(prop = segs.shift())];
+    while (segs.length) obj = obj[segs.shift()];
     return delete obj[last];
   }
   return true;
