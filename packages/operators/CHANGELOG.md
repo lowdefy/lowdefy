@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+
+### Bug Fixes
+
+* **operators:** Add prep to object. ([24f6188](https://github.com/lowdefy/lowdefy/commit/24f6188e555ef7ac4284b5a0693aaba80bfa065f))
+* **operators:** Fix stringify bug and allow for dates and console.log in _js. ([0e7fe34](https://github.com/lowdefy/lowdefy/commit/0e7fe340cb1eee2eb982914b2f0d65ca3638ecb4))
+* **operators:** Prep operator args to handle void instance. Closes [#519](https://github.com/lowdefy/lowdefy/issues/519) , Closes [#511](https://github.com/lowdefy/lowdefy/issues/511) ([5980f87](https://github.com/lowdefy/lowdefy/commit/5980f8799f8b0ddb3f6f412d801410c6aebc351f))
+
+
+
+
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 

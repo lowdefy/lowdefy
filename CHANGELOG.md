@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+## Changes
+
+### Features
+
+- Role based authorization for pages.
+- Handle dates in `_js` operator.
+- Enable console.log in `_js` operator.
+
+### Fixes
+
+- The `_array`, `_object`, and `_string` operators no longer throw errors on null values.
+- Operators in page title are now evaluated correctly.
+- Improved error pages.
+- Fix an error when serializing data for `_js` operator.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Update snapshots. ([ed6b6e7](https://github.com/lowdefy/lowdefy/commit/ed6b6e76a7d8a2c3c81dc86c7ede82b2908e0fed))
+- **blocksColorSelector:** Fix tests for Label. ([f2e6bc1](https://github.com/lowdefy/lowdefy/commit/f2e6bc193a50a6229b1ab2dbefbb3e46e2ab3130))
+- **blockTools:** Add full error page. ([9baf5ad](https://github.com/lowdefy/lowdefy/commit/9baf5adba218f93fa257d46cf0e3bbfa0ed6b85b))
+- **blockTools:** Update error defaults. ([cc02a89](https://github.com/lowdefy/lowdefy/commit/cc02a89571d260dd08b0cfdbd486f1f4c0c9841c))
+- **build:** Fix build import. ([307d0ce](https://github.com/lowdefy/lowdefy/commit/307d0ce152bae7a5327f0488e8ac23f0b592cc8b))
+- **cli:** Fix webpack config mode, should be production. ([86d7f38](https://github.com/lowdefy/lowdefy/commit/86d7f38129e4f400299a5999e9f7fad0cb30451a))
+- **docs:** Fix typo in docs. ([343553a](https://github.com/lowdefy/lowdefy/commit/343553ac4a94fd5fb867346628c8f3ea10341f06))
+- **graphql:** Simplify auth check ([cfb4d7f](https://github.com/lowdefy/lowdefy/commit/cfb4d7f4d0240526afef1afa6dc05e59d2d91eeb))
+- **operators:** Add prep to object. ([24f6188](https://github.com/lowdefy/lowdefy/commit/24f6188e555ef7ac4284b5a0693aaba80bfa065f))
+- **renderer:** Catch render error with full page. ([9775e24](https://github.com/lowdefy/lowdefy/commit/9775e242735a2c19eb8595131596a0961e7545eb))
+- Add lgtm badges. ([62af825](https://github.com/lowdefy/lowdefy/commit/62af825d11b5eeb62636ed2f4c8a898ea9b0e432))
+- Fix yarn lock ([b161786](https://github.com/lowdefy/lowdefy/commit/b161786d10cf3817fc93c26150524c0e5642223f))
+- Make lgtm corrections. ([ef20857](https://github.com/lowdefy/lowdefy/commit/ef2085781aa245bf0d027ddec3511d949403bed9))
+- **operators:** Fix stringify bug and allow for dates and console.log in \_js. ([0e7fe34](https://github.com/lowdefy/lowdefy/commit/0e7fe340cb1eee2eb982914b2f0d65ca3638ecb4))
+- **operators:** Prep operator args to handle void instance. Closes [#519](https://github.com/lowdefy/lowdefy/issues/519) , Closes [#511](https://github.com/lowdefy/lowdefy/issues/511) ([5980f87](https://github.com/lowdefy/lowdefy/commit/5980f8799f8b0ddb3f6f412d801410c6aebc351f))
+- **renderer:** Remove extra root context and pass page properties to Helmet. ([f17b412](https://github.com/lowdefy/lowdefy/commit/f17b41238d97f1b6d6bd4eb8996a5ea8e3d790c4))
+
+### Features
+
+- **build:** Build auth objects for role bases authorization. ([5fa6436](https://github.com/lowdefy/lowdefy/commit/5fa643643dc4ef5a04737228c87acf76c23e3135))
+- **build:** Build correct auth object for menus ([2145033](https://github.com/lowdefy/lowdefy/commit/21450334159b216b833bc8e8cd6656269b380746))
+- **build:** Update lowdefy app schema to include rolesField. ([3f1e06b](https://github.com/lowdefy/lowdefy/commit/3f1e06b38d9f1590a1ed275b138c358d5e252283))
+- **graphql:** Add role based authorization. ([4e15ed3](https://github.com/lowdefy/lowdefy/commit/4e15ed3a08544bafd7cbb34e74ce89ffb08b527d))
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 ## Changes

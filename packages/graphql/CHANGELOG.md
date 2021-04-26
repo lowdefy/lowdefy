@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/lowdefy/lowdefy/compare/v3.13.0...v3.14.0) (2021-04-26)
+
+
+### Bug Fixes
+
+* **graphql:** Simplify auth check ([cfb4d7f](https://github.com/lowdefy/lowdefy/commit/cfb4d7f4d0240526afef1afa6dc05e59d2d91eeb))
+
+
+### Features
+
+* **graphql:** Add role based authorization. ([4e15ed3](https://github.com/lowdefy/lowdefy/commit/4e15ed3a08544bafd7cbb34e74ce89ffb08b527d))
+
+
+
+
+
 # [3.13.0](https://github.com/lowdefy/lowdefy/compare/v3.12.6...v3.13.0) (2021-04-16)
 
 
