@@ -42,11 +42,11 @@ const FallbackComp = ({ name, error }) => (
 );
 const Demo = () => (
   <div id="page">
-    <h4>ErrorBoundary with renderError=true :</h4>
-    <ErrorBoundary renderError>
+    <h4>ErrorBoundary with fullPage=true :</h4>
+    <ErrorBoundary fullPage>
       <ErrorComp />
     </ErrorBoundary>
-    <h4>ErrorBoundary with renderError=false :</h4>
+    <h4>ErrorBoundary with fullPage=false :</h4>
     <ErrorBoundary>
       <ErrorComp />
     </ErrorBoundary>
