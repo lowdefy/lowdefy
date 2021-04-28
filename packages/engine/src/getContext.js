@@ -30,6 +30,7 @@ const blockData = ({
   id,
   layout,
   meta,
+  operators,
   pageId,
   properties,
   requests,
@@ -47,6 +48,7 @@ const blockData = ({
   id,
   layout,
   meta,
+  operators,
   pageId,
   properties,
   requests,
@@ -69,12 +71,13 @@ const getContext = async ({ block, contextId, lowdefy }) => {
   if (!lowdefy.inputs[contextId]) {
     lowdefy.inputs[contextId] = {};
   }
+  const operatorsSet = new Set([...block.operators, '_not', '_type']);
   lowdefy.contexts[contextId] = {
     id: contextId,
     blockId: block.blockId,
     eventLog: [],
     requests: {},
-    operators: block.operators || [],
+    operators: [...operatorsSet],
     lowdefy,
     pageId: lowdefy.pageId,
     rootBlock: blockData(block), // filter block to prevent circular structure
