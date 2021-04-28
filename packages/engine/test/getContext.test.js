@@ -46,6 +46,7 @@ test('memoize context', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const c1 = await getContext({ block, contextId: 'c1', lowdefy });
   const c2 = await getContext({ block, contextId: 'c1', lowdefy });
@@ -71,6 +72,7 @@ test('create context', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const context = await getContext({ block, contextId: 'contextId', lowdefy });
   expect(context.Actions).toBeDefined();
@@ -81,6 +83,7 @@ test('create context', async () => {
   expect(context.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);
   expect(context.id).toEqual('contextId');
+  expect(context.operators).toBeInstanceOf(Array);
   expect(context.lowdefy.pageId).toEqual('pageId');
   expect(context.parser).toBeDefined();
   expect(context.requests).toEqual({});
@@ -111,6 +114,7 @@ test('create context, initialize input', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const context = await getContext({ block, contextId: 'contextId', lowdefy });
   expect(context.lowdefy.inputs.contextId).toEqual({});
@@ -129,12 +133,14 @@ test('call update for listening contexts', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const block2 = {
     blockId: 'block2',
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const mockUpdate = jest.fn();
   const c1 = await getContext({ block: block1, contextId: 'c1', lowdefy });
@@ -158,6 +164,7 @@ test('remove contextId from updateListeners if not found', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const c1 = await getContext({ block, contextId: 'c1', lowdefy });
 
@@ -180,6 +187,7 @@ test('remove contextId from updateListeners if equal to own contextId', async ()
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const c1 = await getContext({ block, contextId: 'c1', lowdefy });
 
@@ -202,6 +210,7 @@ test('update memoized context', async () => {
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const mockUpdate = jest.fn();
   const c1 = await getContext({ block, contextId: 'c1', lowdefy });
@@ -223,6 +232,7 @@ test('call update for nested contexts and prevent circular loop structure', asyn
     meta: {
       type: 'context',
     },
+    operators: [],
   };
   const block1 = {
     blockId: 'block1',
@@ -234,6 +244,7 @@ test('call update for nested contexts and prevent circular loop structure', asyn
         blocks: block2,
       },
     },
+    operators: [],
   };
   const c1 = await getContext({ block: block1, contextId: 'c1', lowdefy });
   const getC2 = () =>
@@ -243,4 +254,23 @@ test('call update for nested contexts and prevent circular loop structure', asyn
       lowdefy,
     });
   await expect(getC2()).resolves.not.toThrow();
+});
+
+test('Add operators for required validation', async () => {
+  const lowdefy = {
+    client,
+    contexts: {},
+    inputs: {},
+    pageId,
+    updateBlock,
+  };
+  const block = {
+    blockId: 'blockId',
+    meta: {
+      type: 'context',
+    },
+    operators: [],
+  };
+  const context = await getContext({ block, contextId: 'contextId', lowdefy });
+  expect(context.operators).toEqual(expect.arrayContaining(['_not', '_type']));
 });
