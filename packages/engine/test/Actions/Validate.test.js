@@ -46,6 +46,116 @@ afterAll(() => {
   global.Date = RealDate;
 });
 
+test('Validate required field', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'context',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'text1',
+            type: 'TextInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            required: true,
+          },
+          {
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'validate',
+                  type: 'Validate',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const { button, text1 } = context.RootBlocks.map;
+  expect(text1.validationEval.output).toEqual({
+    errors: ['This field is required'],
+    status: null,
+    warnings: [],
+  });
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+        error: new Error('Your input has 1 validation error.'),
+      },
+    ],
+    success: false,
+    timestamp: {
+      date: 0,
+    },
+  });
+  expect(text1.validationEval.output).toEqual({
+    errors: ['This field is required'],
+    status: 'error',
+    warnings: [],
+  });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "content": "Your input has 1 validation error.",
+          "duration": 6,
+          "status": "error",
+        },
+      ],
+    ]
+  `);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
+  text1.setValue('text1');
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    event: undefined,
+    eventName: 'onClick',
+    responses: [
+      {
+        actionId: 'validate',
+        actionType: 'Validate',
+        response: undefined,
+      },
+    ],
+    success: true,
+    timestamp: {
+      date: 0,
+    },
+  });
+  expect(text1.validationEval.output).toEqual({
+    errors: [],
+    status: 'success',
+    warnings: [],
+  });
+  expect(displayMessage.mock.calls).toEqual([]);
+  displayMessage.mockReset();
+  displayMessage.mockImplementation(() => closeLoader);
+});
+
 test('Validate all fields', async () => {
   const rootBlock = {
     blockId: 'root',
