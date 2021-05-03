@@ -419,11 +419,11 @@
         - id: MySQL
           type: MenuLink
           pageId: MySQL
-        - id: OracleDB
-          type: MenuLink
-          pageId: OracleDB
-          properties:
-            title: Oracle Database
+        # - id: OracleDB
+        #   type: MenuLink
+        #   pageId: OracleDB
+        #   properties:
+        #     title: Oracle Database
         - id: PostgreSQL
           type: MenuLink
           pageId: PostgreSQL

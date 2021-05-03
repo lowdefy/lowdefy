@@ -24,13 +24,14 @@ const GET_LOGIN = gql`
 `;
 
 function createLogin({ client, window }) {
-  async function login({ input, pageId, urlQuery } = {}) {
+  async function login({ authUrlQueryParams, input, pageId, urlQuery } = {}) {
     try {
       const { data } = await client.query({
         query: GET_LOGIN,
         fetchPolicy: 'network-only',
         variables: {
           openIdAuthorizationUrlInput: {
+            authUrlQueryParams,
             input,
             pageId,
             urlQuery,

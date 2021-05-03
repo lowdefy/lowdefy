@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { Issuer } from 'openid-client';
 import cookie from 'cookie';
 
@@ -22,13 +23,12 @@ import { AuthenticationError, ConfigurationError } from '../context/errors';
 
 class OpenIdController {
   constructor({ development, getController, getLoader, getSecrets, gqlUri, host, setHeader }) {
-    const httpPrefix = development ? 'http' : 'https';
-
+    this.httpPrefix = development ? 'http' : 'https';
     this.development = development;
     this.componentLoader = getLoader('component');
     this.getSecrets = getSecrets;
     this.host = host;
-    this.redirectUri = `${httpPrefix}://${host}/auth/openid-callback`;
+    this.redirectUri = `${this.httpPrefix}://${this.host}/auth/openid-callback`;
     this.gqlUri = gqlUri || '/api/graphql';
     this.setHeader = setHeader;
     this.tokenController = getController('token');
@@ -63,7 +63,7 @@ class OpenIdController {
     });
   }
 
-  async authorizationUrl({ input, pageId, urlQuery }) {
+  async authorizationUrl({ authUrlQueryParams, input, pageId, urlQuery }) {
     try {
       const config = await this.getOpenIdConfig();
       if (!config) return null;
@@ -73,15 +73,16 @@ class OpenIdController {
         pageId,
         urlQuery,
       });
-      return this.getAuthorizationUrl({ config, state });
+      return this.getAuthorizationUrl({ authUrlQueryParams, config, state });
     } catch (error) {
       throw new ConfigurationError(error);
     }
   }
 
-  async getAuthorizationUrl({ config, state }) {
+  async getAuthorizationUrl({ authUrlQueryParams, config, state }) {
     const client = await this.getClient({ config });
     const url = client.authorizationUrl({
+      ...authUrlQueryParams,
       redirect_uri: this.redirectUri,
       response_type: 'code',
       scope: config.scope || 'openid profile email',
@@ -137,6 +138,17 @@ class OpenIdController {
     };
   }
 
+  parseLogoutUrlNunjucks({ config, idToken }) {
+    const template = nunjucksFunction(config.logoutRedirectUri);
+    const templateData = {
+      id_token_hint: idToken,
+      client_id: config.clientId,
+      openid_domain: config.domain,
+      host: encodeURIComponent(`${this.httpPrefix}://${this.host}`),
+    };
+    return template(templateData);
+  }
+
   async logoutUrl({ idToken }) {
     try {
       const setCookieHeader = cookie.serialize('authorization', '', {
@@ -149,18 +161,8 @@ class OpenIdController {
       this.setHeader('Set-Cookie', setCookieHeader);
 
       const config = await this.getOpenIdConfig();
-      if (!config) return null;
-
-      if (config.logoutFromProvider !== true) {
-        return config.logoutRedirectUri || null;
-      }
-
-      const client = await this.getClient({ config });
-
-      return client.endSessionUrl({
-        id_token_hint: idToken,
-        post_logout_redirect_uri: config.logoutRedirectUri,
-      });
+      if (!config || !type.isString(config.logoutRedirectUri)) return null;
+      return this.parseLogoutUrlNunjucks({ config, idToken });
     } catch (error) {
       throw new AuthenticationError(error);
     }

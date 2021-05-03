@@ -71,6 +71,7 @@ const typeDefs = gql`
   }
 
   input OpenIdAuthorizationUrlInput {
+    authUrlQueryParams: JSON
     input: JSON
     pageId: String
     urlQuery: JSON
