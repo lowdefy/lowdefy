@@ -1,6 +1,6 @@
 - id: default
   type: PageSiderMenu
-- id: "properties.menu"
+- id: 'properties.menu'
   type: PageSiderMenu
   properties:
     menu:
@@ -17,11 +17,11 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.logo.src"
+- id: 'properties.logo.src'
   type: PageHeaderMenu
   properties:
     logo:
-      src: "https://lowdefy.com/logos/name_250.png"
+      src: 'https://lowdefy.com/logos/name_250.png'
     menu:
       links:
         - id: Introduction
@@ -36,11 +36,11 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.logo.alt"
+- id: 'properties.logo.alt'
   type: PageHeaderMenu
   properties:
     logo:
-      alt: "Header logo alt text"
+      alt: 'Header logo alt text'
     menu:
       links:
         - id: Introduction
@@ -55,17 +55,55 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.logo.style"
+- id: 'properties.logo.style'
   type: PageHeaderMenu
   properties:
     logo:
-      style: 
+      style:
         border: 5px solid blue
-- id: "properties.header.color"
+- id: 'properties.logo.srcset'
+  type: PageHeaderMenu
+  properties:
+    logo:
+      srcset: 'https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w'
+    menu:
+      links:
+        - id: Introduction
+          type: MenuLink
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          type: MenuLink
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: 'properties.logo.size'
+  type: PageHeaderMenu
+  properties:
+    logo:
+      srcset: '(max-width: 767px) 40px, 768px'
+    menu:
+      links:
+        - id: Introduction
+          type: MenuLink
+          pageId: introduction
+          properties:
+            icon: RocketOutlined
+            title: Introduction
+        - id: alert
+          type: MenuLink
+          pageId: Alert
+          properties:
+            icon: ExclamationCircleOutlined
+            title: Alert
+- id: 'properties.header.color'
   type: PageSiderMenu
   properties:
     header:
-      color: "#3f51b5"
+      color: '#3f51b5'
     menu:
       links:
         - id: Introduction
@@ -80,11 +118,11 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.sider.color"
+- id: 'properties.sider.color'
   type: PageSiderMenu
   properties:
     sider:
-      color: "#faf7a5"
+      color: '#faf7a5'
     menu:
       links:
         - id: Introduction
@@ -99,13 +137,13 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.menu.selectedColor"
+- id: 'properties.menu.selectedColor'
   type: PageSiderMenu
   properties:
     sider:
-      color: "#faf7a5"
+      color: '#faf7a5'
     menu:
-      selectedColor: "#a30331"
+      selectedColor: '#a30331'
       links:
         - id: Introduction
           type: MenuLink
@@ -119,7 +157,7 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.header.theme: light"
+- id: 'properties.header.theme: light'
   type: PageSiderMenu
   properties:
     header:
@@ -138,41 +176,41 @@
           properties:
             icon: ExclamationCircleOutlined
             title: Alert
-- id: "properties.breadcrumb.list"
+- id: 'properties.breadcrumb.list'
   type: PageHeaderMenu
   properties:
     breadcrumb:
-      list: 
+      list:
         - Link one
         - Link two
-- id: "properties.footer.style"
+- id: 'properties.footer.style'
   type: PageHeaderMenu
   properties:
     footer:
-      style: 
+      style:
         border: 5px solid blue
   areas:
     footer:
       blocks: []
-- id: "properties.content.style"
+- id: 'properties.content.style'
   type: PageHeaderMenu
   properties:
     content:
-      style: 
+      style:
         border: 5px solid blue
   areas:
     content:
       blocks: []
-- id: "properties.sider.style"
+- id: 'properties.sider.style'
   type: PageHeaderMenu
   properties:
     sider:
-      style: 
+      style:
         border: 5px solid blue
   areas:
     sider:
       blocks: []
-- id: "properties.sider.initialCollapsed"
+- id: 'properties.sider.initialCollapsed'
   type: PageHeaderMenu
   properties:
     sider:
@@ -180,12 +218,12 @@
   areas:
     sider:
       blocks: []
-- id: "properties.sider.theme: dark"
+- id: 'properties.sider.theme: dark'
   type: PageHeaderMenu
   properties:
     sider:
       theme: dark
-- id: "properties.toggleSiderButton.type"
+- id: 'properties.toggleSiderButton.type'
   type: PageHeaderMenu
   properties:
     toggleSiderButton:
@@ -193,7 +231,7 @@
   areas:
     sider:
       blocks: []
-- id: "properties.toggleSiderButton.hide"
+- id: 'properties.toggleSiderButton.hide'
   type: PageHeaderMenu
   properties:
     toggleSiderButton:
@@ -201,17 +239,17 @@
   areas:
     sider:
       blocks: []
-- id: "properties.header.style"
+- id: 'properties.header.style'
   type: PageHeaderMenu
   properties:
     header:
-      style: 
+      style:
         border: 5px solid blue
   areas:
     header:
       blocks: []
-- id: "properties.style"
+- id: 'properties.style'
   type: PageHeaderMenu
   properties:
-    style: 
+    style:
       border: 5px solid blue
