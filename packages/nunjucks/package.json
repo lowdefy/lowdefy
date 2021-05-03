@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "3.14.1",
-    "nunjucks": "3.2.3",
-    "nunjucks-date-filter": "0.1.1"
+    "moment": "2.29.1",
+    "nunjucks": "3.2.3"
   },
   "devDependencies": {
     "@babel/cli": "7.13.14",
