@@ -163,17 +163,17 @@ describe('dateFilter - edge cases', () => {
   test('strings', () => {
     expect(dateFilter('')).toEqual('Invalid date');
     expect(dateFilter('x')).toEqual('Invalid date');
-    expect(dateFilter('2020-01-02')).toEqual('2020-01-02T00:00:00+02:00');
+    expect(dateFilter('2020-01-02')).toEqual(moment('2020-01-02').format());
   });
   test('arrays and objects', () => {
     expect(dateFilter([])).toEqual('Invalid date');
     expect(dateFilter({})).toEqual('Invalid date');
   });
   test('numbers', () => {
-    expect(dateFilter(0)).toEqual('1970-01-01T02:00:00+02:00');
-    expect(dateFilter(1)).toEqual('1970-01-01T02:00:00+02:00');
-    expect(dateFilter(-1)).toEqual('1970-01-01T01:59:59+02:00');
-    expect(dateFilter(0.1)).toEqual('1970-01-01T02:00:00+02:00');
-    expect(dateFilter(-0.1)).toEqual('1970-01-01T02:00:00+02:00');
+    expect(dateFilter(0)).toEqual(moment(0).format());
+    expect(dateFilter(1)).toEqual(moment(1).format());
+    expect(dateFilter(-1)).toEqual(moment(-1).format());
+    expect(dateFilter(0.1)).toEqual(moment(0.1).format());
+    expect(dateFilter(-0.1)).toEqual(moment(-0.1).format());
   });
 });
