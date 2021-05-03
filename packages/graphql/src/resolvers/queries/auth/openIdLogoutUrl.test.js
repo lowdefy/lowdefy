@@ -17,7 +17,6 @@
 // eslint-disable-next-line no-unused-vars
 import { gql } from 'apollo-server';
 import runTestQuery from '../../../test/runTestQuery';
-import { Issuer } from 'openid-client';
 
 import openIdLogoutUrl from './openIdLogoutUrl';
 
@@ -33,19 +32,6 @@ const getController = jest.fn((name) => {
   }
 });
 
-// OpenID mocks
-const mockEndSessionUrl = jest.fn(
-  ({ id_token_hint, post_logout_redirect_uri }) => `${id_token_hint}:${post_logout_redirect_uri}`
-);
-
-const mockClient = jest.fn(() => ({
-  endSessionUrl: mockEndSessionUrl,
-}));
-
-Issuer.discover = jest.fn(() => ({
-  Client: mockClient,
-}));
-
 const secrets = {
   OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
   OPENID_CLIENT_SECRET: 'OPENID_CLIENT_SECRET',
@@ -56,8 +42,8 @@ const secrets = {
 const mockLoadComponent = jest.fn(() => ({
   auth: {
     openId: {
-      logoutFromProvider: true,
-      logoutRedirectUri: 'logoutRedirectUri',
+      logoutRedirectUri:
+        '{{ openid_domain }}/logout/?id_token_hint={{ id_token_hint }}&client_id={{ client_id }}&return_to={{ host }}%2Flogged-out',
     },
   },
 }));
@@ -97,7 +83,8 @@ test('openIdLogoutUrl graphql', async () => {
   });
   expect(res.errors).toBe(undefined);
   expect(res.data).toEqual({
-    openIdLogoutUrl: 'idToken:logoutRedirectUri',
+    openIdLogoutUrl:
+      'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=https%3A%2F%2Fhost%2Flogged-out',
   });
   expect(setHeader.mock.calls).toEqual([
     ['Set-Cookie', 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax'],

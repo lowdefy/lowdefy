@@ -33,14 +33,9 @@ const mockOpenIdCallback = jest.fn(() => ({
   id_token: 'id_token',
 }));
 
-const mockEndSessionUrl = jest.fn(
-  ({ id_token_hint, post_logout_redirect_uri }) => `${id_token_hint}:${post_logout_redirect_uri}`
-);
-
 const mockClient = jest.fn(() => ({
   authorizationUrl: mockOpenIdAuthorizationUrl,
   callback: mockOpenIdCallback,
-  endSessionUrl: mockEndSessionUrl,
 }));
 
 // eslint-disable-next-line no-undef
@@ -389,7 +384,7 @@ describe('callback', () => {
 });
 
 describe('logout', () => {
-  test('callback, no openId config', async () => {
+  test('logout, no openId config', async () => {
     getSecrets.mockImplementation(() => ({}));
     const openIdController = createOpenIdController(context);
     const url = await openIdController.logoutUrl(logoutUrlInput);
@@ -402,144 +397,48 @@ describe('logout', () => {
     ]);
   });
 
-  test('callback, logoutFromProvider !== true, no logoutRedirectUri', async () => {
-    getSecrets.mockImplementation(() => secrets);
-    const openIdController = createOpenIdController(context);
-    const url = await openIdController.logoutUrl(logoutUrlInput);
-    expect(url).toEqual(null);
-    expect(mockEndSessionUrl.mock.calls).toEqual([]);
-    expect(setHeader.mock.calls).toEqual([
-      [
-        'Set-Cookie',
-        'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-      ],
-    ]);
-  });
-
-  test('callback, logoutFromProvider !== true, with logoutRedirectUri', async () => {
+  test('logout with logoutRedirectUri', async () => {
     getSecrets.mockImplementation(() => secrets);
     mockLoadComponent.mockImplementation(() => ({
       auth: {
         openId: {
-          logoutRedirectUri: 'logoutRedirectUri',
+          logoutRedirectUri:
+            '{{ openid_domain }}/logout/?id_token_hint={{ id_token_hint }}&client_id={{ client_id }}&return_to={{ host }}%2Flogged-out',
         },
       },
     }));
     const openIdController = createOpenIdController(context);
     const url = await openIdController.logoutUrl(logoutUrlInput);
-    expect(url).toEqual('logoutRedirectUri');
-    expect(mockEndSessionUrl.mock.calls).toEqual([]);
-    expect(setHeader.mock.calls).toEqual([
-      [
-        'Set-Cookie',
-        'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-      ],
-    ]);
-  });
-
-  test('callback, logoutFromProvider, no logoutRedirectUri', async () => {
-    getSecrets.mockImplementation(() => secrets);
-    mockLoadComponent.mockImplementation(() => ({
-      auth: {
-        openId: {
-          logoutFromProvider: true,
-        },
-      },
-    }));
-    const openIdController = createOpenIdController(context);
-    const url = await openIdController.logoutUrl(logoutUrlInput);
-    expect(mockClient.mock.calls).toEqual([
-      [
-        {
-          client_id: 'OPENID_CLIENT_ID',
-          client_secret: 'OPENID_CLIENT_SECRET',
-          redirect_uris: ['https://host/auth/openid-callback'],
-        },
-      ],
-    ]);
-    expect(url).toEqual('idToken:undefined');
-    expect(mockEndSessionUrl.mock.calls).toEqual([
-      [
-        {
-          id_token_hint: 'idToken',
-        },
-      ],
-    ]);
-    expect(setHeader.mock.calls).toEqual([
-      [
-        'Set-Cookie',
-        'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-      ],
-    ]);
-  });
-
-  test('callback, logoutFromProvider, with logoutRedirectUri', async () => {
-    getSecrets.mockImplementation(() => secrets);
-    mockLoadComponent.mockImplementation(() => ({
-      auth: {
-        openId: {
-          logoutFromProvider: true,
-          logoutRedirectUri: 'logoutRedirectUri',
-        },
-      },
-    }));
-    const openIdController = createOpenIdController(context);
-    const url = await openIdController.logoutUrl(logoutUrlInput);
-    expect(mockClient.mock.calls).toEqual([
-      [
-        {
-          client_id: 'OPENID_CLIENT_ID',
-          client_secret: 'OPENID_CLIENT_SECRET',
-          redirect_uris: ['https://host/auth/openid-callback'],
-        },
-      ],
-    ]);
-    expect(url).toEqual('idToken:logoutRedirectUri');
-    expect(mockEndSessionUrl.mock.calls).toEqual([
-      [
-        {
-          id_token_hint: 'idToken',
-          post_logout_redirect_uri: 'logoutRedirectUri',
-        },
-      ],
-    ]);
-    expect(setHeader.mock.calls).toEqual([
-      [
-        'Set-Cookie',
-        'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-      ],
-    ]);
-  });
-
-  test('callback, logoutFromProvider, error', async () => {
-    getSecrets.mockImplementation(() => secrets);
-    mockLoadComponent.mockImplementation(() => ({
-      auth: {
-        openId: {
-          logoutFromProvider: true,
-        },
-      },
-    }));
-    const openIdController = createOpenIdController(context);
-    mockEndSessionUrl.mockImplementationOnce(() => {
-      throw new Error('OpenId End Session Error');
-    });
-    await expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(AuthenticationError);
-    mockEndSessionUrl.mockImplementationOnce(() => {
-      throw new Error('OpenId End Session Error');
-    });
-    await expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(
-      'Error: OpenId End Session Error'
+    expect(url).toEqual(
+      'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=https%3A%2F%2Fhost%2Flogged-out'
     );
     expect(setHeader.mock.calls).toEqual([
       [
         'Set-Cookie',
         'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
       ],
-      [
-        'Set-Cookie',
-        'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; Secure; SameSite=Lax',
-      ],
+    ]);
+  });
+
+  test('logout with logoutRedirectUri, development true', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutRedirectUri:
+            '{{ openid_domain }}/logout/?id_token_hint={{ id_token_hint }}&client_id={{ client_id }}&return_to={{ host }}%2Flogged-out',
+        },
+      },
+    }));
+    const devOpenIdController = createOpenIdController(
+      testBootstrapContext({ getSecrets, host: 'host', loaders, development: true, setHeader })
+    );
+    const url = await devOpenIdController.logoutUrl(logoutUrlInput);
+    expect(url).toEqual(
+      'OPENID_DOMAIN/logout/?id_token_hint=idToken&client_id=OPENID_CLIENT_ID&return_to=http%3A%2F%2Fhost%2Flogged-out'
+    );
+    expect(setHeader.mock.calls).toEqual([
+      ['Set-Cookie', 'authorization=; Max-Age=0; Path=/api/graphql; HttpOnly; SameSite=Lax'],
     ]);
   });
 
@@ -560,5 +459,19 @@ describe('logout', () => {
         'authorization=; Max-Age=0; Path=/custom/graphql; HttpOnly; Secure; SameSite=Lax',
       ],
     ]);
+  });
+
+  test('logout with logoutRedirectUri, invalid template', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    mockLoadComponent.mockImplementation(() => ({
+      auth: {
+        openId: {
+          logoutRedirectUri: '{{ openid_domain ',
+        },
+      },
+    }));
+    const openIdController = createOpenIdController(context);
+    expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow(AuthenticationError);
+    expect(openIdController.logoutUrl(logoutUrlInput)).rejects.toThrow('Template render error');
   });
 });
