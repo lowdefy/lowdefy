@@ -24,8 +24,8 @@ jest.mock('openid-client');
 
 const mockOpenIdAuthorizationUrl = jest.fn(
   // eslint-disable-next-line camelcase
-  ({ redirect_uri, response_type, scope, state }) =>
-    `${redirect_uri}:${response_type}:${scope}:${state}`
+  ({ redirect_uri, response_type, scope, state, ...additional }) =>
+    `${redirect_uri}:${response_type}:${scope}:${state}:${JSON.stringify(additional)}`
 );
 
 const mockOpenIdCallback = jest.fn(() => ({
@@ -189,7 +189,7 @@ describe('authorizationUrl', () => {
       ],
     ]);
     expect(url).toEqual(
-      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI'
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI:{}'
     );
   });
 
@@ -205,7 +205,7 @@ describe('authorizationUrl', () => {
     const openIdController = createOpenIdController(context);
     const url = await openIdController.authorizationUrl(authorizationUrlInput);
     expect(url).toEqual(
-      'https://host/auth/openid-callback:code:custom scope:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI'
+      'https://host/auth/openid-callback:code:custom scope:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6eyJpIjp0cnVlfSwibG93ZGVmeV9vcGVuaWRfc3RhdGVfdG9rZW4iOnRydWUsInBhZ2VJZCI6InBhZ2VJZCIsInVybFF1ZXJ5Ijp7InUiOnRydWV9LCJpYXQiOjEsImV4cCI6MzAxLCJhdWQiOiJob3N0IiwiaXNzIjoiaG9zdCJ9.-GLdtCspyagMhdx9z1VootZXXbIdLY3cbzpn5UK8eGI:{}'
     );
   });
 
@@ -228,6 +228,51 @@ describe('authorizationUrl', () => {
     const openIdController = createOpenIdController(context);
     await expect(openIdController.authorizationUrl(authorizationUrlInput)).rejects.toThrow(
       ConfigurationError
+    );
+  });
+
+  test('authorizationUrl, additional query params', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.authorizationUrl({
+      authUrlQueryParams: { screen_hint: 'sign-up' },
+    });
+    expect(mockClient.mock.calls).toEqual([
+      [
+        {
+          client_id: 'OPENID_CLIENT_ID',
+          client_secret: 'OPENID_CLIENT_SECRET',
+          redirect_uris: ['https://host/auth/openid-callback'],
+        },
+      ],
+    ]);
+    expect(url).toEqual(
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{"screen_hint":"sign-up"}'
+    );
+  });
+
+  test('authorizationUrl, additional query do not overwrite fiexed params', async () => {
+    getSecrets.mockImplementation(() => secrets);
+    const openIdController = createOpenIdController(context);
+    const url = await openIdController.authorizationUrl({
+      authUrlQueryParams: {
+        redirect_uri: 'overwritten',
+        response_type: 'overwritten',
+        scope: 'overwritten',
+        state: 'overwritten',
+      },
+    });
+    expect(mockClient.mock.calls).toEqual([
+      [
+        {
+          client_id: 'OPENID_CLIENT_ID',
+          client_secret: 'OPENID_CLIENT_SECRET',
+          redirect_uris: ['https://host/auth/openid-callback'],
+        },
+      ],
+    ]);
+    expect(url).toEqual(
+      'https://host/auth/openid-callback:code:openid profile email:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb3dkZWZ5X29wZW5pZF9zdGF0ZV90b2tlbiI6dHJ1ZSwiaWF0IjoxLCJleHAiOjMwMSwiYXVkIjoiaG9zdCIsImlzcyI6Imhvc3QifQ.-UtxdTFvQW6pFFFHTO0EtmubPbkDl8EJQwBQA2pp_M4:{}'
     );
   });
 });

@@ -63,7 +63,7 @@ class OpenIdController {
     });
   }
 
-  async authorizationUrl({ input, pageId, urlQuery }) {
+  async authorizationUrl({ authUrlQueryParams, input, pageId, urlQuery }) {
     try {
       const config = await this.getOpenIdConfig();
       if (!config) return null;
@@ -73,15 +73,16 @@ class OpenIdController {
         pageId,
         urlQuery,
       });
-      return this.getAuthorizationUrl({ config, state });
+      return this.getAuthorizationUrl({ authUrlQueryParams, config, state });
     } catch (error) {
       throw new ConfigurationError(error);
     }
   }
 
-  async getAuthorizationUrl({ config, state }) {
+  async getAuthorizationUrl({ authUrlQueryParams, config, state }) {
     const client = await this.getClient({ config });
     const url = client.authorizationUrl({
+      ...authUrlQueryParams,
       redirect_uri: this.redirectUri,
       response_type: 'code',
       scope: config.scope || 'openid profile email',
