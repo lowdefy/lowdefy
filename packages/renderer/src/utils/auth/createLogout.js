@@ -26,17 +26,17 @@ function createLogout(lowdefy) {
   async function logout() {
     try {
       lowdefy.user = {};
+      const idToken = lowdefy.localStorage.getItem('idToken');
       lowdefy.localStorage.setItem(`idToken`, '');
       const { data } = await lowdefy.client.query({
         query: GET_LOGOUT,
         fetchPolicy: 'network-only',
         variables: {
           openIdLogoutUrlInput: {
-            idToken: '',
+            idToken,
           },
         },
       });
-      // TODO: should we call link??
       lowdefy.window.location.href = data.openIdLogoutUrl || lowdefy.window.location.origin;
     } catch (error) {
       throw new Error(error);

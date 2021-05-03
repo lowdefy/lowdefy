@@ -56,12 +56,10 @@ const PageHeaderMenu = ({
       justifyContent: 'flex-end',
     },
     logo: {
-      width: 130,
       margin: '0px 30px',
       flex: '0 1 auto',
       sm: { margin: '0 10px' },
       md: { margin: '0 15px' },
-      lg: { margin: '0 30px' },
     },
     lgMenu: {
       flex: '1 1 auto',
@@ -124,8 +122,28 @@ const PageHeaderMenu = ({
                             ? '/public/logo-light-theme.png'
                             : '/public/logo-dark-theme.png')
                         }
+                        srcset={
+                          (properties.logo && (properties.logo.srcset || properties.logo.src)) ||
+                          (get(properties, 'header.theme') === 'light'
+                            ? '/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 768w'
+                            : '/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 768w')
+                        }
+                        sizes={
+                          (properties.logo && properties.logo.sizes) ||
+                          '(max-width: 767px) 40px, 768px'
+                        }
                         alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
                         className={methods.makeCssClass([
+                          {
+                            width: 130,
+                            sm: {
+                              width:
+                                properties.logo && properties.logo.src && !properties.logo.srcset
+                                  ? 130
+                                  : 40,
+                            },
+                            md: { width: 130 },
+                          },
                           styles.logo,
                           properties.logo && properties.logo.style,
                         ])}
