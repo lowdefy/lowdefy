@@ -20,7 +20,6 @@
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
-- _ref: concepts/deployment.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/deployment.yaml
 - _ref: concepts/lists.yaml
