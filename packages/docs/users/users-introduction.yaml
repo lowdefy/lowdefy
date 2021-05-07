@@ -1,0 +1,51 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: users-introduction
+    pageTitle: Introduction
+    section: User Authentication
+    filePath: concepts/users-introduction.yaml
+    content:
+      - id: introduction
+        type: Markdown
+        properties:
+          content: |
+            To add users to a Lowdefy app, you need to do the following:
+            - Configure an OpenID Connect provider
+            - Configure which pages should be public and protected (only available to logged in users).
+            - Add the `Login` and `Logout` actions to your app, to allow users to log in and out.
+
+            Optionally, you can also:
+            - Use role based authorization to make certain pages available only to users with the correct roles.
+
+            An example app implementing OpenID Connect can be found [here](https://github.com/lowdefy/lowdefy-example-openid-connect).
+
+      - id: jwt_session_warning
+        type: Alert
+        properties:
+          type: warning
+          icon: WarningFilled
+          message: Stateful JSON Web Tokens are used for authentication
+          description: Lowdefy uses stateful JSON Web Tokens for user authentication, since the Lowdefy server is stateless and does not maintain a database of user sessions. This means that once a token is issued, it is valid until the token expires. Any changes to the user's access will only reflect after the token has expired, and the user obtains (or fails to obtain) a new token from the OpenID Connect provider. We recommend making sure tokens have a relatively short expiry time (the default is 4 hours), and evaluating if the security provided by this system is appropriate for your use case.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Overview
+            previous_page_id: overview
+            next_page_title: OpenID Connect
+            next_page_id: openid-connect

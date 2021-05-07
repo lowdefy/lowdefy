@@ -160,3 +160,10 @@ _ref:
             The easiest way to host your custom block is the deploy the custom block to [npm](https://www.npmjs.com/) and [Unpkg](https://unpkg.com/) will automatically host your block for you on their CDN. Although this option is easy, the cache settings for Unpkg can result in longer load times in some cases which can result in a unreliable user experience. It is thus best to deploy you blocks to your own static file servers.
 
             We are working on a Lowdefy blocks CDN to improve this developer experience in the future.
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Lists
+            previous_page_id: lists
+            next_page_title: User authentication
+            next_page_id: users-introduction

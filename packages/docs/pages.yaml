@@ -25,6 +25,10 @@
 - _ref: concepts/lists.yaml
 - _ref: concepts/custom-blocks.yaml
 
+- _ref: users/users-introduction.yaml
+- _ref: users/openid-connect.yaml
+- _ref: users/login-and-logout.yaml
+
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml

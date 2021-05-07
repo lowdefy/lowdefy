@@ -119,6 +119,28 @@
           properties:
             title: Custom Blocks
 
+    - id: users_group
+      type: MenuGroup
+      properties:
+        title: User Authentication
+        icon: TeamOutlined
+      links:
+        - id: users
+          type: MenuLink
+          pageId: users-introduction
+          properties:
+            title: Introduction
+        - id: openid-connect
+          type: MenuLink
+          pageId: openid-connect
+          properties:
+            title: OpenID Connect
+        - id: login-and-logout
+          type: MenuLink
+          pageId: login-and-logout
+          properties:
+            title: Login and Logout
+
     - id: blocks_input
       type: MenuGroup
       properties:
