@@ -28,6 +28,7 @@
 - _ref: users/users-introduction.yaml
 - _ref: users/openid-connect.yaml
 - _ref: users/login-and-logout.yaml
+- _ref: users/protected-pages.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml

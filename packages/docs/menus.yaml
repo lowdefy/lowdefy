@@ -140,6 +140,11 @@
           pageId: login-and-logout
           properties:
             title: Login and Logout
+        - id: protected-pages
+          type: MenuLink
+          pageId: protected-pages
+          properties:
+            title: Protected pages
 
     - id: blocks_input
       type: MenuGroup
