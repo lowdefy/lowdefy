@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            To add users to a Lowdefy app, you need to do the following:
+            To add user authentication and authorization to a Lowdefy app, you need to do the following:
             - Configure an OpenID Connect provider
             - Configure which pages should be public and protected (only available to logged in users).
             - Add the `Login` and `Logout` actions to your app, to allow users to log in and out.

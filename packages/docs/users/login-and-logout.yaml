@@ -28,13 +28,17 @@ _ref:
 
             ## Login
 
-            The `Login` action requests the OpenID provider's authorization URL from the Lowdefy server. The user is redirected to this URL, which normally hosts a login page. After the user has logged in successfully, the user is redirected to the `auth/openid-callback` route in the Lowdefy app, where the rest of the OpenID authorization code flow is completed.
+            The `Login` action requests the OpenID provider's authorization URL from the Lowdefy server. The user is redirected to this URL, which normally hosts a login page. If the user is already logged in at the provider, the provider might redirect the user back without requiring a password again.
+
+            After the user has logged in successfully, the user is redirected to the `auth/openid-callback` route in the Lowdefy app, where the rest of the OpenID authorization code flow is completed.
 
             The parameters of the Login action specify where the user is redirected after login is complete. If the pageId is not set, the user is redirected to the homepage. The parameters are:
             - `authUrlQueryParams: object`: Query parameters to set for the authorization URL.
             - `pageId: string`: The pageId of the page to redirect to after the login flow is complete
             - `input: object`: The input to set for the page the user is redirected to after login.
             - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+
+            The `Login` action can be used to update the `user` object, for example to update the user profile after it has been edited, or to make sure the user token is still valid before editing or creating a record in a database.
 
             #### Examples
 

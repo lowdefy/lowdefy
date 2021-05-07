@@ -33,7 +33,7 @@ _ref:
             - [Okta](https://www.okta.com)
             - [Ory Hydra](https://www.ory.sh)
             - [Ping Identity](https://www.pingidentity.com)
-            - [Sign In With Google](https://developers.google.com/identity)
+            - [Sign In With Google](https://developers.google.com/identity) (Google Workspace is also supported)
 
             A full list of OpenID Connect providers can be found [here](https://openid.net/developers/certified/).
 
@@ -57,7 +57,7 @@ _ref:
             - `logoutRedirectUri: string`: _Optional_ - The URL to redirect to after logout. See more [here](/login-and-logout).
 
 
-            Details to configure specific OpenID Connect providers are given [here](/openid-example-configurations).
+            Details to configure specific OpenID Connect providers are given [here](/openid-provider-configuration).
 
             # JSON Web Tokens
 

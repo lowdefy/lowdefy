@@ -145,6 +145,11 @@
           pageId: protected-pages
           properties:
             title: Protected pages
+        - id: user-object
+          type: MenuLink
+          pageId: user-object
+          properties:
+            title: User object
 
     - id: blocks_input
       type: MenuGroup
