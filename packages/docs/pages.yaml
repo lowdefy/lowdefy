@@ -128,6 +128,8 @@
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/Link.yaml
+- _ref: actions/Login.yaml
+- _ref: actions/Logout.yaml
 - _ref: actions/Message.yaml
 - _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
@@ -185,6 +187,7 @@
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml
+- _ref: operators/_user.yaml
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml

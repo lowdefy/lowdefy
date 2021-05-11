@@ -484,6 +484,12 @@
         - id: Link
           type: MenuLink
           pageId: Link
+        - id: Login
+          type: MenuLink
+          pageId: Login
+        - id: Logout
+          type: MenuLink
+          pageId: Logout
         - id: MessageAction
           type: MenuLink
           pageId: MessageAction # Clash with Message block
@@ -662,6 +668,9 @@
         - id: _url_query
           type: MenuLink
           pageId: _url_query
+        - id: _user
+          type: MenuLink
+          pageId: _user
         - id: _uuid
           type: MenuLink
           pageId: _uuid
