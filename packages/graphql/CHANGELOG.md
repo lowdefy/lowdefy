@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
+
+
+### Bug Fixes
+
+* Remove support for oracle db due to lack of apple silicon support. ([0a1ca68](https://github.com/lowdefy/lowdefy/commit/0a1ca687607e4d49bc6a0a46e6784eb9a957cd09))
+
+
+### Features
+
+* Allow custom openid authorization url parameters. ([427b3a1](https://github.com/lowdefy/lowdefy/commit/427b3a10036ea77cef0a04335b3dc3bbf9b6e286)), closes [#546](https://github.com/lowdefy/lowdefy/issues/546)
+* Remove logoutFromProvider config, and nunjucks template logout url ([111d3da](https://github.com/lowdefy/lowdefy/commit/111d3da83f4d132e4243583dabbdd7cdaae69fe7)), closes [#563](https://github.com/lowdefy/lowdefy/issues/563)
+
+
+
+
+
 ## [3.14.1](https://github.com/lowdefy/lowdefy/compare/v3.14.0...v3.14.1) (2021-04-28)
 
 **Note:** Version bump only for package @lowdefy/graphql

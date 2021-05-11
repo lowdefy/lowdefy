@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
+
+
+### Bug Fixes
+
+* **nunjucks:** Fix tests. ([f60f00e](https://github.com/lowdefy/lowdefy/commit/f60f00ea131b26dc6aa70ad1d927c38dd71308be))
+* **nunjucks:** Replace nunjucks-date-filter dependancy with dateFilter function. ([f876c5b](https://github.com/lowdefy/lowdefy/commit/f876c5bc1fef68c8b7459678f1e4f5ce50cf9b73))
+
+
+
+
+
 ## [3.14.1](https://github.com/lowdefy/lowdefy/compare/v3.14.0...v3.14.1) (2021-04-28)
 
 **Note:** Version bump only for package @lowdefy/nunjucks
