@@ -49,6 +49,21 @@ _ref:
                 _user: picture
             ````
 
+            ###### Insert user name and id (sub) when inserting a document in MongoDB:
+            ```yaml
+            id: insert_data
+            type: MongoDBInsertOne
+            properties:
+              doc:
+                field:
+                  _state: field
+                inserted_by:
+                  name:
+                    _user: name
+                  id:
+                    _user: sub
+            ````
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

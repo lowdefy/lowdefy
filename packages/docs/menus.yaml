@@ -150,6 +150,11 @@
           pageId: user-object
           properties:
             title: User object
+        - id: roles
+          type: MenuLink
+          pageId: roles
+          properties:
+            title: Roles
 
     - id: blocks_input
       type: MenuGroup

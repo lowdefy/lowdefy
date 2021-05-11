@@ -58,6 +58,8 @@ _ref:
 
             More than one menu can be configured in an app. As an example, this can be used when two logically different sections in the app need different menus.
 
+            If OpenID Connect authentication and role based authentication is configured, pages that the user is restricted from seeing are filtered from the menu object.
+
             The schema for a menu object is:
 
             - `id: string`: __Required__ - A identifier for the menu. If it is `default`, it will be used as default by pages.
