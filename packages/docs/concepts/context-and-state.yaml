@@ -71,6 +71,8 @@ _ref:
 
             - [`_media`](/_media): The `media` object contains some information about the client screen size etc. This is useful in order to add additional responsive logic to a page.
 
+            - [`_user`](/user-object): The `user` object contains the data in the user idToken if OpenID Connect authentication is configured and a user is logged in.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

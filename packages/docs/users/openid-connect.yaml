@@ -1,0 +1,83 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: openid-connect
+    pageTitle: OpenID Connect
+    section: User Authentication
+    filePath: users/openid-connect.yaml
+    content:
+      - id: open_id_connect_content
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Lowdefy supports the OpenID Connect standard as a user authorization mechanism. This means to add users to your app, you should setup a OpenID Connect provider. Some popular providers are:
+
+            - [Auth0](https://auth0.com)
+            - [Gluu](https://gluu.org)
+            - [Keycloak](https://www.keycloak.org)
+            - [Microsoft identity platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview) (Active Directory)
+            - [Okta](https://www.okta.com)
+            - [Ory Hydra](https://www.ory.sh)
+            - [Ping Identity](https://www.pingidentity.com)
+            - [Sign In With Google](https://developers.google.com/identity) (Google Workspace is also supported)
+
+            A full list of OpenID Connect providers can be found [here](https://openid.net/developers/certified/).
+
+            ## Configuring an OpenID Connect provider
+
+            To configure an OpenID Connect provider, you need to set the following lowdefy [secrets](/secrets): `OPENID_CLIENT_ID`, `OPENID_CLIENT_SECRET`, `OPENID_DOMAIN`, and `JWT_SECRET`. The can be set by setting the following environment variables:
+            ```
+            LOWDEFY_SECRET_OPENID_CLIENT_ID = YOUR_CLIENT_ID
+            LOWDEFY_SECRET_OPENID_CLIENT_SECRET = YOUR_CLIENT_SECRET
+            LOWDEFY_SECRET_OPENID_DOMAIN = YOUR_OPENID_DOMAIN
+            LOWDEFY_SECRET_JWT_SECRET = YOUR_SECRET_KEY
+            ```
+
+            See the section on JSON Web Tokens below for information about the `JWT_SECRET`.
+
+            If these are not set, the `Login` and `Logout` actions won't work, so users won't be able to log in. However, protected pages will not be served to public users.
+
+            Optional configuration can also be set in the Lowdefy configuration, at the path `config.auth.openId`. The following fields can be set:
+
+            - `scope: string`: _Optional_ - The OpenID Connect scope to request. The default is `openid profile email`. Should contain at least `openid`.
+            - `logoutRedirectUri: string`: _Optional_ - The URL to redirect to after logout. See more [here](/login-and-logout).
+
+
+            Details to configure specific OpenID Connect providers are given [here](/openid-provider-configuration).
+
+            # JSON Web Tokens
+
+            The app will use the `JWT_SECRET` to sign the JSON web tokens (with HS256) used to authorize users. This secret should be a long randomly generated string.
+
+            You can run the following command in the command console to generate the key:
+            ```bash
+            node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
+            ```
+
+            We recommend using a different key in your development and production environments.
+
+            Optional configuration can also be set in the Lowdefy configuration, at the path `config.auth.jwt`. The following fields can be set:
+
+            - `expiresIn: string | number`: The length of time a user token should be valid. The default is 4 hours. Can be expressed as a number in seconds, or a [vercel/ms string](https://github.com/vercel/ms).
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Introduction
+            previous_page_id: introduction
+            next_page_title: Login and Logout
+            next_page_id: login-and-logout

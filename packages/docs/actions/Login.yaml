@@ -1,0 +1,123 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: Login
+    pageTitle: Login
+    filePath: actions/Login.yaml
+    types: |
+      ```
+      (pageId: string): void
+      (params: {
+        authUrlQueryParams?: object
+        pageId?: string,
+        input?: object,
+        urlQuery? object
+      }): void
+      ```
+    description: |
+      The `Login` action requests the OpenID provider's authorization URL from the Lowdefy server. The user is redirected to this URL, which normally hosts a login page. If the user is already logged in at the provider, the provider might redirect the user back without requiring a password again.
+
+      The `Login` action can be used to update the `user` object, for example to update the user profile after it has been edited, or to make sure the user token is still valid before editing or creating a record in a database.
+
+      See [here](/login-and-logout) for information on logging in.
+    params: |
+      ###### object
+      - `authUrlQueryParams: object`: Query parameters to set for the authorization URL.
+      - `pageId: string`: The pageId of the page to redirect to after the login flow is complete
+      - `input: object`: The input to set for the page the user is redirected to after login.
+      - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+
+    examples: |
+      ###### Login and redirect to home:
+      ```yaml
+      - id: login
+        type: Login
+      ```
+
+      ###### Login, with input, pageId and urlQuery:
+      ```yaml
+      - id: login
+        type: Login
+        params:
+          input:
+            input1: value
+          pageId: page1
+          urlQuery:
+            url1: value
+      ```
+
+      ###### Only login if user is not logged in:
+      ```yaml
+      - id: login
+        type: Login
+        skip:
+          _ne:
+            - _user: sub
+            - null
+      ```
+
+      ###### Request the signup page from the provider:
+      ```yaml
+      - id: Signup
+        type: Button
+        events:
+          onClick:
+            - id: login
+              type: Login
+              params:
+                authUrlQueryParams:
+                  screen_hint: signup
+      ```
+
+      ###### Link to an external url:
+      ```yaml
+      - id: link_url
+        type: Link
+        params:
+          url: www.lowdefy.com
+      ```
+
+      ###### Open a link in a new tab:
+      ```yaml
+      - id: link_new_tab
+        type: Link
+        params:
+          pageId: my_page_id
+          newTab: true
+      ```
+
+      ###### Set the urlQuery of the page that is linked to:
+      ```yaml
+      - id: link_url_query
+        type: Link
+        params:
+          pageId: my_page_id
+          urlQuery:
+            id:
+              _state: id
+      ```
+
+      ###### Set the input of the page that is linked to:
+      ```yaml
+      - id: link_input
+        type: Link
+        params:
+          pageId: my_page_id
+          input:
+            id:
+              _args: row.id
+      ```
