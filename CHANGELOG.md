@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
+
+## Changes
+
+### BREAKING
+
+- Remove `logoutFromProvider` option in `config.auth.openId`.
+- Remove OracleDB support.
+
+### Features
+
+- Allow custom OpenID Connect authorization url parameters.
+- Add nunjucks template logout url.
+- Use square logo for `PageHeaderMenu` and `PageSiderMenu` on mobile media sizes.
+- Docs for user authentication and authorization.
+
+### Fixes
+
+- Show warning message before validation error message.
+- Replace nunjucks-date-filter dependency with dateFilter function that does not default to utc time.
+- Do not filter OPENID_CLIENT_ID and OPENID_DOMAIN from secrets.
+- Id token was not sent with openIdLogoutUrlInput request.
+
+## Commits
+
+### Bug Fixes
+
+- **blocksAntd:** Add square logo for mobile menu. Closes [#545](https://github.com/lowdefy/lowdefy/issues/545) ([296c7ec](https://github.com/lowdefy/lowdefy/commit/296c7ecb1ba4ad92684e64816d55cc2863014152))
+- **blocksAntd:** Show warning before validation. Closes [#562](https://github.com/lowdefy/lowdefy/issues/562) ([7b4909b](https://github.com/lowdefy/lowdefy/commit/7b4909b07dd4560329aff6515d53c1f283fc9116))
+- **docs:** Add users object, general fixes. ([72c0e25](https://github.com/lowdefy/lowdefy/commit/72c0e25632061f90176e2e235ac06cc6a24b3f38))
+- **docs:** Add user authorization docs. ([9f259fd](https://github.com/lowdefy/lowdefy/commit/9f259fdb90bf5e6160c86343ae3ad64ce58b959a))
+- **docs:** Add user object and roles docs. ([ccc8138](https://github.com/lowdefy/lowdefy/commit/ccc8138d402e485fd05944436d9c52f661c9cae2))
+- **docs:** Document protected pages. ([7a338b9](https://github.com/lowdefy/lowdefy/commit/7a338b9e96e331bf5aa3cb81977d264fc45eaf84))
+- **docs:** Generate sitemap for docs. ([5a2e0cd](https://github.com/lowdefy/lowdefy/commit/5a2e0cdffbf9f03769dc32674a5b4e957c524428))
+- **docs:** Remove OracleDB. ([0672aa8](https://github.com/lowdefy/lowdefy/commit/0672aa8486daf7a43a7cb004606e682ecc52339c))
+- **nunjucks:** Fix tests. ([f60f00e](https://github.com/lowdefy/lowdefy/commit/f60f00ea131b26dc6aa70ad1d927c38dd71308be))
+- **nunjucks:** Replace nunjucks-date-filter dependancy with dateFilter function. ([f876c5b](https://github.com/lowdefy/lowdefy/commit/f876c5bc1fef68c8b7459678f1e4f5ce50cf9b73))
+- **operators:** Do not filter OPENID_CLIENT_ID and OPENID_DOMAIN from secrets. ([3c56737](https://github.com/lowdefy/lowdefy/commit/3c56737cc2b654382e6635b472ae371a2a46cdc8))
+- Remove support for oracle db due to lack of apple silicon support. ([0a1ca68](https://github.com/lowdefy/lowdefy/commit/0a1ca687607e4d49bc6a0a46e6784eb9a957cd09))
+- **renderer:** Id token was not sent with openIdLogoutUrlInput request. ([e636c79](https://github.com/lowdefy/lowdefy/commit/e636c7976724fc8e767e6fac3e1c22c617952ae2))
+
+### Features
+
+- Allow custom openid authorization url parameters. ([427b3a1](https://github.com/lowdefy/lowdefy/commit/427b3a10036ea77cef0a04335b3dc3bbf9b6e286)), closes [#546](https://github.com/lowdefy/lowdefy/issues/546)
+- Remove logoutFromProvider config, and nunjucks template logout url ([111d3da](https://github.com/lowdefy/lowdefy/commit/111d3da83f4d132e4243583dabbdd7cdaae69fe7)), closes [#563](https://github.com/lowdefy/lowdefy/issues/563)
+
 ## [3.14.1](https://github.com/lowdefy/lowdefy/compare/v3.14.0...v3.14.1) (2021-04-28)
 
 ## Changes

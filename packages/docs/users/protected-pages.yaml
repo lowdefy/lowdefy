@@ -1,0 +1,67 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: protected-pages
+    pageTitle: Protected pages
+    section: User Authentication
+    filePath: concepts/protected-pages.yaml
+    content:
+      - id: introduction
+        type: MarkdownWithCode
+        properties:
+          content: |
+            By default, all the pages in a Lowdefy app are public. Protected pages are pages that can only be accessed by a logged in user. If a user that is not logged in tries to access a protected page, the user will be redirected to the 404 page. Pages that a user is not allowed to see will be filtered from the app menus.
+
+            The config can either be set to protect all pages, except for a list of public pages, or vise-versa, all pages are public except for a a list of protected pages.
+
+            Protected and public pages can be configured at the path `config.auth.pages` in the Lowdefy configuration. Here the fields `protected` and `public` fields can be set to true, or a list of pageIds. You cannot set `protected` or `public` to `false`, and both can't be an array or `true`.
+
+            When protecting all pages in the app, you will need to set at least one as public, to allow users to log in to the app.
+
+            #### Examples
+
+            ###### List specific public pages:
+            ```yaml
+            lowdefy: 3.15.0
+            config:
+              auth:
+                pages:
+                  protected: true
+                  public:
+                    - '404'
+                    - login
+                    - public-page
+            ````
+            ###### List specific protected pages:
+            ```yaml
+            lowdefy: 3.15.0
+            config:
+              auth:
+                pages:
+                  public: true
+                  protected:
+                    - admin
+                    - users
+            ````
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Login and Logout
+            previous_page_id: login-and-logout
+            next_page_title: User object
+            next_page_id: user-object

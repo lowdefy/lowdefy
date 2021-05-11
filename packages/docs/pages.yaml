@@ -20,11 +20,17 @@
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
-- _ref: concepts/deployment.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/deployment.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/custom-blocks.yaml
+
+- _ref: users/users-introduction.yaml
+- _ref: users/openid-connect.yaml
+- _ref: users/login-and-logout.yaml
+- _ref: users/protected-pages.yaml
+- _ref: users/user-object.yaml
+- _ref: users/roles.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
@@ -115,13 +121,15 @@
 - _ref: connections/MongoDB.yaml
 - _ref: connections/MSSQL.yaml
 - _ref: connections/MySQL.yaml
-- _ref: connections/OracleDB.yaml
+# - _ref: connections/OracleDB.yaml
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SQLite.yaml
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/Link.yaml
+- _ref: actions/Login.yaml
+- _ref: actions/Logout.yaml
 - _ref: actions/Message.yaml
 - _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
@@ -179,6 +187,7 @@
 - _ref: operators/_type.yaml
 - _ref: operators/_uri.yaml
 - _ref: operators/_url_query.yaml
+- _ref: operators/_user.yaml
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml

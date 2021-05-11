@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: '3.14.1'
+lowdefy: '3.15.0'
 licence: Apache-2.0
 
 global:
@@ -50,4 +50,8 @@ menus:
   _ref: menus.yaml
 
 pages:
-  _ref: pages.yaml
+  _ref:
+    path: pages.yaml
+    # Commented out because it loops
+    # Use to generate new sitemap if pages are added
+    # transformer: templates/generateSitemap.js

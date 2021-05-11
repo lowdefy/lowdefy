@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
+
+
+### Bug Fixes
+
+* **docs:**  Add users object, general fixes. ([72c0e25](https://github.com/lowdefy/lowdefy/commit/72c0e25632061f90176e2e235ac06cc6a24b3f38))
+* **docs:** Add user authorization docs. ([9f259fd](https://github.com/lowdefy/lowdefy/commit/9f259fdb90bf5e6160c86343ae3ad64ce58b959a))
+* **docs:** Add user object and roles docs. ([ccc8138](https://github.com/lowdefy/lowdefy/commit/ccc8138d402e485fd05944436d9c52f661c9cae2))
+* **docs:** Document protected pages. ([7a338b9](https://github.com/lowdefy/lowdefy/commit/7a338b9e96e331bf5aa3cb81977d264fc45eaf84))
+* **docs:** Generate sitemap for docs. ([5a2e0cd](https://github.com/lowdefy/lowdefy/commit/5a2e0cdffbf9f03769dc32674a5b4e957c524428))
+* **docs:** Remove OracleDB. ([0672aa8](https://github.com/lowdefy/lowdefy/commit/0672aa8486daf7a43a7cb004606e682ecc52339c))
+
+
+
+
+
 ## [3.14.1](https://github.com/lowdefy/lowdefy/compare/v3.14.0...v3.14.1) (2021-04-28)
 
 **Note:** Version bump only for package @lowdefy/docs

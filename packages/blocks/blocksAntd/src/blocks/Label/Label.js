@@ -39,6 +39,10 @@ const iconMap = {
   error: CloseCircleFilled,
   validating: LoadingOutlined,
 };
+const validationKeyMap = {
+  warning: 'warnings',
+  error: 'errors',
+};
 
 const Label = ({ blockId, content, methods, properties, required, validation }) => {
   const {
@@ -80,11 +84,9 @@ const Label = ({ blockId, content, methods, properties, required, validation }) 
         <CSSMotion visible={showFeedback} motionName="show-help" motionAppear removeOnLeave>
           {({ className: motionClassName }) => (
             <div className={classNames(feedbackClassName, motionClassName)}>
-              {validation.errors.length > 0
-                ? validation.errors[0]
-                : validation.warnings.length > 0
-                ? validation.warnings[0]
-                : ''}
+              {validation[validationKeyMap[validation.status]] &&
+                validation[validationKeyMap[validation.status]].length > 0 &&
+                validation[validationKeyMap[validation.status]][0]}
             </div>
           )}
         </CSSMotion>

@@ -1,0 +1,70 @@
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: roles
+    pageTitle: Roles
+    section: User Authentication
+    filePath: concepts/roles.yaml
+    content:
+      - id: introduction
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Roles can be used to limit user access to certain pages. Only users with the role will be able to see the page, and the page will be filtered from menus if the user does not have the role.
+
+            Roles can be read from a custom claim on the OpenID Connect `idToken`. This should be an array of strings which are the role names. This needs to be configured at the OpenID Connect provider. The field that contains the roles array is configured in the `config.auth.openId` field in the Lowdefy configuration.
+
+            ```yaml
+            lowdefy: 3.15.0
+            config:
+              auth:
+                openId:
+                  # Field in the user idToken that contains the roles array.
+                  rolesField: [string]
+            ```
+
+            The pages that are protected by roles are configured in the `config.auth.roles` field in the Lowdefy configuration. This should be an object, where the keys are the role names, and the values are an array of pageIds that are protected by that role.
+
+            #### Examples
+
+            ###### Protect pages using roles:
+            ```yaml
+            lowdefy: 3.15.0
+            config:
+              auth:
+                openId:
+                  rolesField: custom_roles
+                roles:
+                  user-admin:
+                    - users
+                    - new-user
+                    - edit-user
+                  sales:
+                    - customers
+                    - new-customer
+                    - edit-customer
+                  reports:
+                    - sales-report
+                    - operations-report
+            ````
+      # - _ref:
+      #     path: templates/navigation_buttons.yaml
+      #     vars:
+      #       previous_page_title: User object
+      #       previous_page_id: user-object
+      #       next_page_title: Provider configuration
+      #       next_page_id: openid-provider-configuration

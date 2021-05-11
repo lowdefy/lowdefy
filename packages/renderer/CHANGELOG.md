@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/lowdefy/lowdefy/compare/v3.14.1...v3.15.0) (2021-05-11)
+
+
+### Bug Fixes
+
+* **renderer:** Id token was not sent with openIdLogoutUrlInput request. ([e636c79](https://github.com/lowdefy/lowdefy/commit/e636c7976724fc8e767e6fac3e1c22c617952ae2))
+
+
+### Features
+
+* Allow custom openid authorization url parameters. ([427b3a1](https://github.com/lowdefy/lowdefy/commit/427b3a10036ea77cef0a04335b3dc3bbf9b6e286)), closes [#546](https://github.com/lowdefy/lowdefy/issues/546)
+
+
+
+
+
 ## [3.14.1](https://github.com/lowdefy/lowdefy/compare/v3.14.0...v3.14.1) (2021-04-28)
 
 **Note:** Version bump only for package @lowdefy/renderer
