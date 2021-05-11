@@ -26,7 +26,7 @@ function _secret({ env, location, params, secrets = {} }) {
   }
   // Filter out OpenID Connect and JSON web token secrets
   // eslint-disable-next-line no-unused-vars
-  const { OPENID_CLIENT_ID, OPENID_CLIENT_SECRET, OPENID_DOMAIN, JWT_SECRET, ...rest } = secrets;
+  const { OPENID_CLIENT_SECRET, JWT_SECRET, ...rest } = secrets;
   return getFromObject({
     env,
     location,

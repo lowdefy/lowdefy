@@ -96,6 +96,8 @@ test('secret OpenID Connect and JSON web token secrets are filtered out', () => 
         env: 'env',
         location: 'location',
         object: {
+          OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
+          OPENID_DOMAIN: 'OPENID_DOMAIN',
           OTHER: 'OTHER',
         },
         operator: '_secret',
