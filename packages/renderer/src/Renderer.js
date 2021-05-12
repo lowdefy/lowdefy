@@ -31,11 +31,15 @@ import parseJwt from './utils/auth/parseJwt';
 
 const lowdefy = {
   contexts: {},
+  customActions: window.lowdefy.customActions,
   displayMessage: () => () => undefined,
   document,
   inputs: {},
+  jsOperators: window.lowdefy.jsOperators,
   link: () => {},
   localStorage,
+  registerCustomAction: window.lowdefy.registerCustomAction,
+  registerJsOperator: window.lowdefy.registerJsOperator,
   updaters: {},
   window,
 };
