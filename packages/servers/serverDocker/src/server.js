@@ -42,6 +42,7 @@ app.use(express.static('dist/shell'));
 // Redirect all 404 to index.html with status 200
 // This should always be the last route
 app.use((req, res) => {
+  if (req.originalUrl === '/public/body.html' || req.originalUrl === '/public/head.html') return;
   res.sendFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
 });
 

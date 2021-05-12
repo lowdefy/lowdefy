@@ -24,7 +24,39 @@
     <link rel="icon" type="image/svg+xml" href="/public/icon.svg">
     <link rel="icon" type="image/png" href="/public/icon-32.png">
     <link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
-
+    <script type="text/javascript">
+      const appendElement = (data, key) => {
+        if (!data) return;
+        try {
+          const element = document.createRange().createContextualFragment(data);
+          document[key].appendChild(element);
+        } catch(error) { 
+          console.error(error);
+        }
+      }
+      const getMethodLoader = (scope) =>
+        (name, method) => {
+          if (typeof name !== 'string') {
+            throw new Error(`${scope} requires a string for the first argument.`)
+          }
+          if (typeof method !== 'function') {
+            throw new Error(`${scope} requires a function for the second argument.`)
+          }
+          window.lowdefy[scope][name] = method;
+        }
+      fetch("/public/head.html")
+        .then(response => response.text())
+        .then(data => appendElement(data, 'head'));
+      fetch("/public/body.html")
+        .then(response => response.text())
+        .then(data => appendElement(data, 'body'));
+      window.lowdefy = {
+        customActions: {},
+        registerCustomAction: getMethodLoader('registerCustomAction'),
+        jsOperators: {},
+        registerJsOperator: getMethodLoader('registerJsOperator')
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
