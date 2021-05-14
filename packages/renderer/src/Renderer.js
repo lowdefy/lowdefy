@@ -31,19 +31,22 @@ import parseJwt from './utils/auth/parseJwt';
 
 const lowdefy = {
   contexts: {},
-  customActions: window.lowdefy.customActions,
   displayMessage: () => () => undefined,
   document,
+  imports: {
+    jsActions: window.lowdefy.imports.jsActions,
+    jsOperators: window.lowdefy.imports.jsOperators,
+  },
   inputs: {},
-  jsOperators: window.lowdefy.jsOperators,
   link: () => {},
   localStorage,
-  registerCustomAction: window.lowdefy.registerCustomAction,
+  registerJsAction: window.lowdefy.registerJsAction,
   registerJsOperator: window.lowdefy.registerJsOperator,
   updaters: {},
   window,
 };
 
+delete window.lowdefy.imports;
 if (window.location.origin.includes('http://localhost')) {
   window.lowdefy = lowdefy;
 }
