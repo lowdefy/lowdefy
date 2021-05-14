@@ -31,7 +31,6 @@ export default {
   _if: 'common/if',
   _index: 'common/_index',
   _input: 'common/input',
-  _js: 'common/js',
   _json: 'common/json',
   _log: 'common/log',
   _lt: 'common/lt',

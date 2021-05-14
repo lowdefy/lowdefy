@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-export default {
-  _actions: 'web/actions',
-  _event_log: 'web/event_log',
-  _base64: 'web/base64',
-  _format: 'web/format',
-  _list_contexts: 'web/list_contexts',
-  _js: 'web/js',
-  _media: 'web/media',
-  _menu: 'web/menu',
-  _request_details: 'web/request_details',
-  _request: 'web/request',
-};
+import getFromObject from '../getFromObject';
+
+function _actions({ actions, arrayIndices, env, location, params }) {
+  return getFromObject({
+    arrayIndices,
+    env,
+    location,
+    object: actions,
+    operator: '_actions',
+    params,
+  });
+}
+
+export default _actions;

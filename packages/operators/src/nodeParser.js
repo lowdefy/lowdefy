@@ -48,7 +48,7 @@ class NodeParser {
     );
   }
 
-  parse({ args, event, input, location }) {
+  parse({ actions, args, event, input, location }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -69,6 +69,7 @@ class NodeParser {
         try {
           if (!type.isUndefined(this.operations[op])) {
             const res = this.operations[op]({
+              actions,
               args,
               arrayIndices: this.arrayIndices,
               env: 'node',

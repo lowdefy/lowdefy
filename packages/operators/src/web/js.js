@@ -14,9 +14,13 @@
   limitations under the License.
 */
 
-import { getQuickJS, shouldInterruptAfterDeadline } from 'quickjs-emscripten';
-import { type, serializer } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+// ! ---------------
+// ! DEPRECATED
+// ! ---------------
+import { serializer } from '@lowdefy/helpers';
+import { getQuickJS, shouldInterruptAfterDeadline } from 'quickjs-emscripten';
 let QuickJsVm;
 
 function createFunction({ params, location, methodName }) {
@@ -90,18 +94,10 @@ function evaluate({ params, location, methodName }) {
 
 const methods = { evaluate, function: createFunction };
 
-function _js({ params, location, methodName }) {
+function _DEPRECATED_js({ params, location, methodName }) {
   if (!QuickJsVm) {
     throw new Error(
       `Operator Error: _js is not initialized. Received: ${JSON.stringify(params)} at ${location}.`
-    );
-  }
-  if (!type.isObject(params)) {
-    throw new Error(`Operator Error: _js.${methodName} takes an object as input at ${location}.`);
-  }
-  if (!methods[methodName]) {
-    throw new Error(
-      `Operator Error: _js.${methodName} is not supported at ${location}. Use one of the following: evaluate, function.`
     );
   }
 
@@ -118,5 +114,28 @@ async function clear() {
 
 _js.init = init;
 _js.clear = clear;
+// ! ---------------
+
+function _js({ context, params, location, methodName }) {
+  // ! DEPRECATED methods
+  if (!type.isFunction(context.lowdefy.imports.jsOperators[methodName]) && !methods[methodName]) {
+    throw new Error(`Operator Error: _js.${methodName} is not a function.`);
+  }
+  if (context.lowdefy.imports.jsOperators[methodName]) {
+    if (!type.isArray(params)) {
+      throw new Error(`Operator Error: _js.${methodName} takes an array as input at ${location}.`);
+    }
+    return context.lowdefy.imports.jsOperators[methodName](...params);
+  }
+  // ! DEPRECATED ---------------
+  console.warn(
+    'WARNING: _js.evaluate and _js.function will has been deprecated and will be removed in the next version. Please see: https://docs.lowdefy.com/_js for more details.'
+  );
+  if (type.isObject(params)) {
+    throw new Error(`Operator Error: _js.${methodName} takes an object as input at ${location}.`);
+  }
+  return _DEPRECATED_js({ params, location, methodName });
+  // ! ---------------
+}
 
 export default _js;
