@@ -33,6 +33,32 @@
         }
       }
     },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "html": {
+          "type": "object",
+          "errorMessage": {
+            "type": "App \"app.html\" should be an object."
+          },
+          "properties": {
+            "appendBody": {
+              "type": "string",
+              "errorMessage": {
+                "type": "App \"app.html.appendBody\" should be a string."
+              }
+            },
+            "appendHeader": {
+              "type": "string",
+              "errorMessage": {
+                "type": "App \"app.html.appendHeader\" should be a string."
+              }
+            }
+          }
+        }
+      }
+    },
     "authConfig": {
       "type": "object",
       "additionalProperties": false,
@@ -466,7 +492,6 @@
         }
       }
     }
-
   },
   "additionalProperties": false,
   "required": ["lowdefy"],
@@ -488,6 +513,9 @@
       "errorMessage": {
         "type": "App \"licence\" should be a string."
       }
+    },
+    "app": {
+      "$ref": "#/definitions/app"
     },
     "cli": {
       "type": "object",
