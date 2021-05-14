@@ -17,6 +17,7 @@
 import path from 'path';
 import { spawnSync } from 'child_process';
 import fse from 'fs-extra';
+import { readFile, writeFile } from '@lowdefy/node-utils';
 
 import checkChildProcessError from '../../utils/checkChildProcessError';
 import startUp from '../../utils/startUp';
@@ -24,7 +25,7 @@ import getFederatedModule from '../../utils/getFederatedModule';
 import fetchNpmTarball from '../../utils/fetchNpmTarball';
 
 async function fetchNetlifyServer({ context, netlifyDir }) {
-  context.print.spin('Fetching Lowdefy Netlify server.');
+  context.print.log('Fetching Lowdefy Netlify server.');
   await fetchNpmTarball({
     packageName: '@lowdefy/server-netlify',
     version: context.lowdefyVersion,
@@ -39,7 +40,7 @@ async function npmInstall({ context, netlifyDir }) {
   await fse.remove(path.resolve('./package-lock.json'));
   await fse.emptyDir(path.resolve('./node_modules'));
 
-  context.print.spin('npm install production.');
+  context.print.log('npm install production.');
   let processOutput = spawnSync('npm', ['install', '--production', '--legacy-peer-deps']);
   checkChildProcessError({
     context,
@@ -51,7 +52,7 @@ async function npmInstall({ context, netlifyDir }) {
 }
 
 async function fetchBuildScript({ context }) {
-  context.print.spin('Fetching Lowdefy build script.');
+  context.print.log('Fetching Lowdefy build script.');
   const { default: buildScript } = await getFederatedModule({
     module: 'build',
     packageName: '@lowdefy/build',
@@ -63,7 +64,7 @@ async function fetchBuildScript({ context }) {
 }
 
 async function build({ context, buildScript, netlifyDir }) {
-  context.print.spin('Starting Lowdefy build.');
+  context.print.log('Starting Lowdefy build.');
   const outputDirectory = path.resolve(netlifyDir, './package/dist/functions/graphql/build');
   await buildScript({
     logger: context.print,
@@ -72,6 +73,21 @@ async function build({ context, buildScript, netlifyDir }) {
     outputDirectory,
   });
   context.print.log(`Build artifacts saved at ${outputDirectory}.`);
+}
+
+async function buildIndexHtml({ context }) {
+  context.print.log('Starting Lowdefy index.html build.');
+  let appConfig = await readFile(path.resolve('./.lowdefy/functions/graphql/build/app.json'));
+  appConfig = JSON.parse(appConfig);
+  const indexHtmlPath = path.resolve('./.lowdefy/publish/index.html');
+  let indexHtml = await readFile(indexHtmlPath);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHeader);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
+  await writeFile({
+    filePath: indexHtmlPath,
+    content: indexHtml,
+  });
+  context.print.log('Lowdefy index.html build complete.');
 }
 
 async function moveBuildArtifacts({ context, netlifyDir }) {
@@ -116,6 +132,9 @@ async function buildNetlify({ context, options }) {
   await moveBuildArtifacts({ context, netlifyDir });
   await moveFunctions({ context, netlifyDir });
   await movePublicAssets({ context });
+
+  context.print.log(`Build artifacts.`);
+  await buildIndexHtml({ context });
 
   await context.sendTelemetry({
     data: {
