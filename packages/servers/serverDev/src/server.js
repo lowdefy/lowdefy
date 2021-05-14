@@ -19,7 +19,7 @@ import path from 'path';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers, createContext } from '@lowdefy/graphql';
-import { createGetSecretsFromEnv } from '@lowdefy/node-utils';
+import { createGetSecretsFromEnv, readFile } from '@lowdefy/node-utils';
 
 dotenv.config({ silent: true });
 const config = {
@@ -44,9 +44,13 @@ app.use(express.static('dist/shell'));
 
 // Redirect all 404 to index.html with status 200
 // This should always be the last route
-app.use((req, res) => {
-  if (req.originalUrl === '/public/body.html' || req.originalUrl === '/public/head.html') return;
-  res.sendFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
+app.use(async (req, res) => {
+  let indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
+  let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
+  appConfig = JSON.parse(appConfig);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHeader);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
+  res.send(indexHtml);
 });
 
 app.listen({ port: 3000 }, () => console.log(`🚀 Server ready at http://localhost:3000`));

@@ -25,16 +25,9 @@
     <link rel="icon" type="image/png" href="/public/icon-32.png">
     <link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
     <script type="text/javascript">
-      const appendElement = (data, key) => {
-        if (!data) return;
-        try {
-          const element = document.createRange().createContextualFragment(data);
-          document[key].appendChild(element);
-        } catch(error) { 
-          console.error(error);
-        }
-      }
-      const getMethodLoader = (scope) =>
+      const jsActions = {}
+      const jsOperators = {}
+      const getMethodLoader = (scope, reference) =>
         (name, method) => {
           if (typeof name !== 'string') {
             throw new Error(`${scope} requires a string for the first argument.`)
@@ -42,25 +35,23 @@
           if (typeof method !== 'function') {
             throw new Error(`${scope} requires a function for the second argument.`)
           }
-          window.lowdefy[scope][name] = method;
+          reference[name] = method;
         }
-      fetch("/public/head.html")
-        .then(response => response.text())
-        .then(data => appendElement(data, 'head'));
-      fetch("/public/body.html")
-        .then(response => response.text())
-        .then(data => appendElement(data, 'body'));
       window.lowdefy = {
-        customActions: {},
-        registerCustomAction: getMethodLoader('registerCustomAction'),
-        jsOperators: {},
-        registerJsOperator: getMethodLoader('registerJsOperator')
+        imports: {
+          jsActions,
+          jsOperators,
+        },
+        registerJsAction: getMethodLoader('registerJsAction', jsActions),
+        registerJsOperator: getMethodLoader('registerJsOperator', jsOperators)
       }
-    </script>
+    </script> 
+  <!-- __LOWDEFY_APP_HEAD_HTML__ -->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="emotion"></div>
     <div id="root"></div>
+    <!-- __LOWDEFY_APP_BODY_HTML__ -->
   </body>
 </html>
