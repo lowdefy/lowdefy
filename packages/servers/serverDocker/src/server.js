@@ -45,7 +45,7 @@ app.use(async (req, res) => {
   let indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
   let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
   appConfig = JSON.parse(appConfig);
-  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHeader);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
   indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
   res.send(indexHtml);
 });

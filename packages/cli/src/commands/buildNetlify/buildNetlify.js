@@ -81,7 +81,7 @@ async function buildIndexHtml({ context }) {
   appConfig = JSON.parse(appConfig);
   const indexHtmlPath = path.resolve('./.lowdefy/publish/index.html');
   let indexHtml = await readFile(indexHtmlPath);
-  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHeader);
+  indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHead);
   indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
   await writeFile({
     filePath: indexHtmlPath,

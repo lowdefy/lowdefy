@@ -49,10 +49,10 @@
                 "type": "App \"app.html.appendBody\" should be a string."
               }
             },
-            "appendHeader": {
+            "appendHead": {
               "type": "string",
               "errorMessage": {
-                "type": "App \"app.html.appendHeader\" should be a string."
+                "type": "App \"app.html.appendHead\" should be a string."
               }
             }
           }

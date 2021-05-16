@@ -33,8 +33,8 @@ async function validateApp({ components }) {
   if (type.isNone(components.app.html.appendBody)) {
     components.app.html.appendBody = '';
   }
-  if (type.isNone(components.app.html.appendHeader)) {
-    components.app.html.appendHeader = '';
+  if (type.isNone(components.app.html.appendHead)) {
+    components.app.html.appendHead = '';
   }
   validate({
     schema: lowdefySchema.definitions.app,

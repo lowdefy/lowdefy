@@ -24,27 +24,27 @@ test('validateApp success', async () => {
     app: {
       html: {
         appendBody: 'abc',
-        appendHeader: 'abc',
+        appendHead: 'abc',
       },
     },
   };
   let result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: 'abc', appendHeader: 'abc' } } });
+  expect(result).toEqual({ app: { html: { appendBody: 'abc', appendHead: 'abc' } } });
   components = {};
   result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHeader: '' } } });
+  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
   components = {
     app: {},
   };
   result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHeader: '' } } });
+  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
   components = {
     app: {
       html: {},
     },
   };
   result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHeader: '' } } });
+  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
 });
 
 test('validateApp app not an object', async () => {
