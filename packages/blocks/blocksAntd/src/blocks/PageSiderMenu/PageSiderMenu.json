@@ -44,9 +44,9 @@
               "type": "string",
               "description": "Header logo source url."
             },
-            "srcset": {
+            "srcSet": {
               "type": "string",
-              "description": "Header logo srcset for logo img element."
+              "description": "Header logo srcSet for logo img element."
             },
             "size": {
               "type": "string",
