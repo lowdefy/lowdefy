@@ -181,21 +181,17 @@ areas:
             required:
               _state: block.required
             properties:
-              _js.evaluate:
-                code:
-                  _ref: 
-                    eval: templates/blocks/filterDefaultValue.js
-                args:
-                  - _ref:
-                          path:
-                            _var: schema
-                          vars:
-                            block_type: {{ block_type }}
-                          transformer: templates/blocks/propertiesGetterTransformer.js
-                  - _ref:
-                      path:
-                        _var: schema
-                      transformer: templates/blocks/defaultValueTransformer.js
+              _js.filterDefaultValue:
+                - _ref:
+                        path:
+                          _var: schema
+                        vars:
+                          block_type: {{ block_type }}
+                        transformer: templates/blocks/propertiesGetterTransformer.js
+                - _ref:
+                    path:
+                      _var: schema
+                    transformer: templates/blocks/defaultValueTransformer.js
 
             {% if areas %}
             areas:
@@ -302,41 +298,37 @@ areas:
                         options:
                           sortKeys: false
                         on:
-                          _js.evaluate:
-                            code:
-                              _ref: 
-                                eval: templates/blocks/filterDefaultValue.js
-                            args:
-                              - id: block_id
-                                type: {{ block_type }}
-                                required:
-                                  _state: block.required
-                                visible:
-                                  _state: block.visible
-                                layout:
-                                  _state: block.layout
-                                style:
-                                  _yaml.parse:
-                                    _if_none:
-                                      - _state: style_block_input
-                                      - ''
-                                properties:
-                                  _ref:
-                                    path:
-                                      _var: schema
-                                    vars:
-                                      block_type: {{ block_type }}
-                                    transformer: templates/blocks/propertiesGetterTransformer.js
-                              - required: false
-                                visible: true
-                                layout:
-                                  align: top
-                                  span: 24
-                                properties:
-                                  _ref:
-                                    path:
-                                      _var: schema
-                                    transformer: templates/blocks/defaultValueTransformer.js
+                          _js.filterDefaultValue:
+                            - id: block_id
+                              type: {{ block_type }}
+                              required:
+                                _state: block.required
+                              visible:
+                                _state: block.visible
+                              layout:
+                                _state: block.layout
+                              style:
+                                _yaml.parse:
+                                  _if_none:
+                                    - _state: style_block_input
+                                    - ''
+                              properties:
+                                _ref:
+                                  path:
+                                    _var: schema
+                                  vars:
+                                    block_type: {{ block_type }}
+                                  transformer: templates/blocks/propertiesGetterTransformer.js
+                            - required: false
+                              visible: true
+                              layout:
+                                align: top
+                                span: 24
+                              properties:
+                                _ref:
+                                  path:
+                                    _var: schema
+                                  transformer: templates/blocks/defaultValueTransformer.js
 
       - id: right_column
         type: Box
