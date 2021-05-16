@@ -15,11 +15,11 @@
 */
 import { type, serializer } from '@lowdefy/helpers';
 
-async function JsAction({ context, params = {} }) {
+async function JsAction({ context, params }) {
   if (!type.isString(params.name)) {
     throw new Error(`JsAction requires a string for 'params.name'.`);
   }
-  if (!type.isArray(params.args)) {
+  if (!type.isNone(params.args) && !type.isArray(params.args)) {
     throw new Error(`JsAction requires a array for 'params.args'.`);
   }
   if (!type.isFunction(context.lowdefy.imports.jsActions[params.name])) {
@@ -38,7 +38,7 @@ async function JsAction({ context, params = {} }) {
       pageId: context.pageId,
       requests: { ...context.requests },
     },
-    ...params.args
+    ...(params.args || [])
   );
 }
 

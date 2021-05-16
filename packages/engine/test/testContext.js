@@ -28,6 +28,10 @@ const testContext = async ({ lowdefy, rootBlock, initState = {} }) => {
     pageId: rootBlock.blockId,
     updateBlock: () => {},
     urlQuery: {},
+    imports: {
+      jsActions: {},
+      jsOperators: {},
+    },
     ...lowdefy,
   };
   const ctx = {
