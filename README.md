@@ -1,5 +1,7 @@
 ![Lowdefy](https://lowdefy.com/banner.png)
 
+![Discord](https://img.shields.io/discord/729696747261263962?label=Discord%20Chat&logo=discord&logoColor=white)
+
 [![Tweet](https://img.shields.io/twitter/url?logo=twitter&style=flat-square&url=https%3A%2F%2Flowdefy.com)](https://twitter.com/intent/tweet?text=Build%20web%20apps%2C%20admin%20panels%2C%20BI%20dashboards%2C%20and%20CRUD%20apps%20with%20ease%21%20Try%20&url=https://lowdefy.com&via=lowdefy&hashtags=lowcode,lowdefy,internaltools,developers,opensource)
 [![Follow](https://img.shields.io/twitter/follow/lowdefy?logo=twitter&style=flat-square)](https://twitter.com/intent/follow?screen_name=lowdefy)
 
