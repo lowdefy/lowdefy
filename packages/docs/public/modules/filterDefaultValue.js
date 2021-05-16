@@ -45,4 +45,4 @@ function filterDefaultValue(value, defaultValue) {
   return filterObject({ obj: value, path: [] });
 }
 
-window.lowdefy.registerJsOperator('filterDefaultValue', filterDefaultValue);
+export default filterDefaultValue;
