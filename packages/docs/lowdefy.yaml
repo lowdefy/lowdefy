@@ -27,7 +27,11 @@ global:
 app:
   html:
     appendHead:
-      _ref: header.html
+      _ref: head.html
+
+types:
+  PageSiderMenu:
+    url: http://localhost:3002/meta/PageSiderMenu.json
 
 connections:
   - id: discord_channel
