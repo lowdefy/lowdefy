@@ -86,15 +86,14 @@ test('CallMethod with no args, synchronous method', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'CallMethod',
         response: {
           args: [],
         },
       },
-    ],
+    },
     success: true,
     timestamp: new Date(),
   });
@@ -161,15 +160,14 @@ test('CallMethod method return a promise', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'CallMethod',
         response: {
           args: ['arg'],
         },
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -230,15 +228,14 @@ test('CallMethod with args not an array', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'CallMethod',
         error: new Error(
           'Failed to call method "blockMethod" on block "textInput": "args" should be an array.'
         ),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -299,15 +296,14 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'CallMethod',
         response: {
           args: ['arg1', 'arg2'],
         },
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,

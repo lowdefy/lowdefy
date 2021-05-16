@@ -98,13 +98,12 @@ test('Validate required field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Your input has 1 validation error.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -134,13 +133,12 @@ test('Validate required field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -227,13 +225,12 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Your input has 2 validation errors.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -268,13 +265,12 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Your input has 1 validation error.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -309,13 +305,12 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -406,13 +401,12 @@ test('Validate only one field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Your input has 1 validation error.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -447,13 +441,12 @@ test('Validate only one field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -569,13 +562,12 @@ test('Validate list of fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Your input has 1 validation error.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -615,13 +607,12 @@ test('Validate list of fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -674,13 +665,12 @@ test('Invalid Validate params', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
         error: new Error('Invalid validate params.'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -757,12 +747,11 @@ test('Validate does not fail on warnings', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'validate',
+    responses: {
+      validate: {
         actionType: 'Validate',
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,

@@ -79,13 +79,12 @@ test('call a synchronous action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionSync',
         response: 'params',
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -117,13 +116,12 @@ test('call a asynchronous action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionAsync',
         response: 'params',
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -158,18 +156,16 @@ test('call 2 actions', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test1',
+    responses: {
+      test1: {
         actionType: 'ActionSync',
         response: 'params1',
       },
-      {
-        actionId: 'test2',
+      test2: {
         actionType: 'ActionAsync',
         response: 'params2',
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -275,13 +271,12 @@ test('skip a action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionSync',
         skipped: true,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -313,13 +308,12 @@ test('action throws a error', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionError',
         error: new Error('Test error'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -354,13 +348,12 @@ test('actions after a error are not called throws a error', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionError',
         error: new Error('Test error'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -393,13 +386,12 @@ test('Invalid action type', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'Invalid',
         error: new Error('Invalid action type "Invalid" at "blockId".'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -430,15 +422,14 @@ test('Parser error in action', async () => {
     blockId: 'blockId',
     event: {},
     eventName: 'eventName',
-    responses: [
-      {
-        actionId: 'test',
+    responses: {
+      test: {
         actionType: 'ActionSync',
         error: new Error(
           'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
         ),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,

@@ -187,13 +187,12 @@ test('triggerEvent x1', async () => {
       x: 1,
     },
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'SetState',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -238,7 +237,7 @@ test('triggerEvent, 2 actions', async () => {
   const { button } = context.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
-  expect(button.Events.events.onClick.history[0].responses.length).toEqual(2);
+  expect(Object.keys(button.Events.events.onClick.history[0].responses).length).toEqual(2);
   expect(button.Events.events.onClick.loading).toEqual(false);
 });
 
@@ -284,13 +283,12 @@ test('triggerEvent error', async () => {
       x: 1,
     },
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'e',
+    responses: {
+      e: {
         actionType: 'Error',
         error: new Error('Invalid action type "Error" at "button".'),
       },
-    ],
+    },
     success: false,
     timestamp: {
       date: 0,
@@ -342,13 +340,12 @@ test('registerEvent then triggerEvent x1', async () => {
       x: 1,
     },
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'SetState',
         response: undefined,
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -407,13 +404,12 @@ test('triggerEvent skip', async () => {
               "x": 1,
             },
             "eventName": "onClick",
-            "responses": Array [
-              Object {
-                "actionId": "a",
+            "responses": Object {
+              "a": Object {
                 "actionType": "SetState",
                 "skipped": true,
               },
-            ],
+            },
             "success": true,
             "timestamp": Object {
               "date": 0,
@@ -432,13 +428,12 @@ test('triggerEvent skip', async () => {
           "x": 1,
         },
         "eventName": "onClick",
-        "responses": Array [
-          Object {
-            "actionId": "a",
+        "responses": Object {
+          "a": Object {
             "actionType": "SetState",
             "skipped": true,
           },
-        ],
+        },
         "success": true,
         "timestamp": Object {
           "date": 0,
@@ -499,13 +494,12 @@ test('triggerEvent skip tests === true', async () => {
               "x": 1,
             },
             "eventName": "onClick",
-            "responses": Array [
-              Object {
-                "actionId": "a",
+            "responses": Object {
+              "a": Object {
                 "actionType": "SetState",
                 "response": undefined,
               },
-            ],
+            },
             "success": true,
             "timestamp": Object {
               "date": 0,
@@ -524,13 +518,12 @@ test('triggerEvent skip tests === true', async () => {
           "x": 1,
         },
         "eventName": "onClick",
-        "responses": Array [
-          Object {
-            "actionId": "a",
+        "responses": Object {
+          "a": Object {
             "actionType": "SetState",
             "response": undefined,
           },
-        ],
+        },
         "success": true,
         "timestamp": Object {
           "date": 0,

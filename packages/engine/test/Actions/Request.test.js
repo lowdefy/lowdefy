@@ -142,13 +142,12 @@ test('Request call one request', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'Request',
         response: [1],
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -223,13 +222,12 @@ test('Request call all requests', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'Request',
         response: [1, 2],
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -304,13 +302,12 @@ test('Request call array of requests', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'Request',
         response: [1, 2],
       },
-    ],
+    },
     success: true,
     timestamp: {
       date: 0,
@@ -404,13 +401,12 @@ test('Request call request error', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'Request',
         error: new Error('Request error'),
       },
-    ],
+    },
     success: false,
     timestamp: { date: 0 },
   });
@@ -460,13 +456,12 @@ test('Request call request graphql error', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
-    responses: [
-      {
-        actionId: 'a',
+    responses: {
+      a: {
         actionType: 'Request',
         error: new Error('displayTitle: displayMessage'),
       },
-    ],
+    },
     success: false,
     timestamp: { date: 0 },
   });
