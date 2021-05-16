@@ -33,11 +33,14 @@ async function getExpress({ context, gqlServer, options }) {
   app.use('/api/dev/version', (req, res) => {
     res.json(context.lowdefyVersion);
   });
-  app.use((req, res) => {
+  app.use(async (req, res) => {
     let indexHtml = await readFile(path.resolve(__dirname, 'shell/index.html'));
     let appConfig = await readFile(path.resolve(context.outputDirectory, 'app.json'));
     appConfig = JSON.parse(appConfig);
-    indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_HEAD_HTML__ -->', appConfig.html.appendHeader);
+    indexHtml = indexHtml.replace(
+      '<!-- __LOWDEFY_APP_HEAD_HTML__ -->',
+      appConfig.html.appendHeader
+    );
     indexHtml = indexHtml.replace('<!-- __LOWDEFY_APP_BODY_HTML__ -->', appConfig.html.appendBody);
     res.send(indexHtml);
   });

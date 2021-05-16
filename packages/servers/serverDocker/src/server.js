@@ -41,7 +41,7 @@ app.use(express.static('dist/shell'));
 
 // Redirect all 404 to index.html with status 200
 // This should always be the last route
-app.use((req, res) => {
+app.use(async (req, res) => {
   let indexHtml = await readFile(path.resolve(process.cwd(), 'dist/shell/index.html'));
   let appConfig = await readFile(path.resolve(config.CONFIGURATION_BASE_PATH, 'app.json'));
   appConfig = JSON.parse(appConfig);
