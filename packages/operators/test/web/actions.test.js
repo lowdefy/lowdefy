@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import actions from '../../src/common/actions';
+import actions from '../../src/web/actions';
 import getFromObject from '../../src/getFromObject';
 
 jest.mock('../../src/getFromObject');

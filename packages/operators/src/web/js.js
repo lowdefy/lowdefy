@@ -122,16 +122,16 @@ function _js({ context, params, location, methodName }) {
     throw new Error(`Operator Error: _js.${methodName} is not a function.`);
   }
   if (context.lowdefy.imports.jsOperators[methodName]) {
-    if (!type.isArray(params)) {
+    if (!type.isNone(params) && !type.isArray(params)) {
       throw new Error(`Operator Error: _js.${methodName} takes an array as input at ${location}.`);
     }
-    return context.lowdefy.imports.jsOperators[methodName](...params);
+    return context.lowdefy.imports.jsOperators[methodName](...(params || []));
   }
   // ! DEPRECATED ---------------
   console.warn(
     'WARNING: _js.evaluate and _js.function will has been deprecated and will be removed in the next version. Please see: https://docs.lowdefy.com/_js for more details.'
   );
-  if (type.isObject(params)) {
+  if (!type.isObject(params)) {
     throw new Error(`Operator Error: _js.${methodName} takes an object as input at ${location}.`);
   }
   return _DEPRECATED_js({ params, location, methodName });
