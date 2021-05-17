@@ -81,12 +81,14 @@ test('JsAction with no args, synchronous fn', async () => {
     eventName: 'onClick',
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         response: 'js_fn',
       },
     },
     success: true,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(mockFn).toHaveBeenCalledTimes(1);
 });
@@ -145,12 +147,14 @@ test('JsAction with no args, async fn', async () => {
     eventName: 'onClick',
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         response: 'js_fn',
       },
     },
     success: true,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(mockFn).toHaveBeenCalledTimes(1);
 });
@@ -203,7 +207,8 @@ test('JsAction with args, synchronous fn', async () => {
     eventName: 'onClick',
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         response: [
           {
             contextId: 'test',
@@ -222,7 +227,8 @@ test('JsAction with args, synchronous fn', async () => {
       },
     },
     success: true,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(mockFn).toHaveBeenCalledTimes(1);
 });
@@ -269,14 +275,30 @@ test('JsAction name not a string', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          name: 1,
+        },
+        type: 'JsAction',
+      },
+      error: {
+        error: new Error(`JsAction requires a string for 'params.name'.`),
+        index: 0,
+        type: 'JsAction',
+      },
+    },
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         error: new Error(`JsAction requires a string for 'params.name'.`),
       },
     },
     success: false,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -324,14 +346,33 @@ test('JsAction args not an array', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          args: {
+            a: 1,
+          },
+          name: 'js_fn',
+        },
+        type: 'JsAction',
+      },
+      error: {
+        error: new Error(`JsAction requires a array for 'params.args'.`),
+        index: 0,
+        type: 'JsAction',
+      },
+    },
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         error: new Error(`JsAction requires a array for 'params.args'.`),
       },
     },
     success: false,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -378,13 +419,29 @@ test('JsAction args not a function', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          name: 'js_not_fn',
+        },
+        type: 'JsAction',
+      },
+      error: {
+        error: new Error(`JsAction js_not_fn is not a function.`),
+        index: 0,
+        type: 'JsAction',
+      },
+    },
     responses: {
       a: {
-        actionType: 'JsAction',
+        type: 'JsAction',
+        index: 0,
         error: new Error(`JsAction js_not_fn is not a function.`),
       },
     },
     success: false,
-    timestamp: new Date(),
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });

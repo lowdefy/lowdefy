@@ -189,14 +189,14 @@ test('triggerEvent x1', async () => {
     eventName: 'onClick',
     responses: {
       a: {
-        actionType: 'SetState',
+        type: 'SetState',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 
   expect(button.Events.events.onClick.loading).toEqual(false);
@@ -283,16 +283,30 @@ test('triggerEvent error', async () => {
       x: 1,
     },
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'e',
+        params: {
+          a: 'a',
+        },
+        type: 'Error',
+      },
+      error: {
+        error: new Error('Invalid action type "Error" at "button".'),
+        index: 0,
+        type: 'Error',
+      },
+    },
     responses: {
       e: {
-        actionType: 'Error',
+        type: 'Error',
+        index: 0,
         error: new Error('Invalid action type "Error" at "button".'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -342,14 +356,14 @@ test('registerEvent then triggerEvent x1', async () => {
     eventName: 'onClick',
     responses: {
       a: {
-        actionType: 'SetState',
+        type: 'SetState',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
 
@@ -400,20 +414,24 @@ test('triggerEvent skip', async () => {
         "history": Array [
           Object {
             "blockId": "button",
+            "endTimestamp": Object {
+              "date": 0,
+            },
             "event": Object {
               "x": 1,
             },
             "eventName": "onClick",
             "responses": Object {
               "a": Object {
-                "actionType": "SetState",
+                "index": 0,
                 "skipped": true,
+                "type": "SetState",
               },
             },
-            "success": true,
-            "timestamp": Object {
+            "startTimestamp": Object {
               "date": 0,
             },
+            "success": true,
           },
         ],
         "loading": false,
@@ -424,20 +442,24 @@ test('triggerEvent skip', async () => {
     Array [
       Object {
         "blockId": "button",
+        "endTimestamp": Object {
+          "date": 0,
+        },
         "event": Object {
           "x": 1,
         },
         "eventName": "onClick",
         "responses": Object {
           "a": Object {
-            "actionType": "SetState",
+            "index": 0,
             "skipped": true,
+            "type": "SetState",
           },
         },
-        "success": true,
-        "timestamp": Object {
+        "startTimestamp": Object {
           "date": 0,
         },
+        "success": true,
       },
     ]
   `);
@@ -490,20 +512,24 @@ test('triggerEvent skip tests === true', async () => {
         "history": Array [
           Object {
             "blockId": "button",
+            "endTimestamp": Object {
+              "date": 0,
+            },
             "event": Object {
               "x": 1,
             },
             "eventName": "onClick",
             "responses": Object {
               "a": Object {
-                "actionType": "SetState",
+                "index": 0,
                 "response": undefined,
+                "type": "SetState",
               },
             },
-            "success": true,
-            "timestamp": Object {
+            "startTimestamp": Object {
               "date": 0,
             },
+            "success": true,
           },
         ],
         "loading": false,
@@ -514,20 +540,24 @@ test('triggerEvent skip tests === true', async () => {
     Array [
       Object {
         "blockId": "button",
+        "endTimestamp": Object {
+          "date": 0,
+        },
         "event": Object {
           "x": 1,
         },
         "eventName": "onClick",
         "responses": Object {
           "a": Object {
-            "actionType": "SetState",
+            "index": 0,
             "response": undefined,
+            "type": "SetState",
           },
         },
-        "success": true,
-        "timestamp": Object {
+        "startTimestamp": Object {
           "date": 0,
         },
+        "success": true,
       },
     ]
   `);

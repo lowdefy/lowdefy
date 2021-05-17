@@ -27,12 +27,19 @@ class Actions {
   }
 
   async callActions({ actions, arrayIndices, block, event, eventName }) {
+    const startTimestamp = new Date();
     const responses = {};
-    let success = true;
     try {
-      for (const action of actions) {
+      for (const [index, action] of actions.entries()) {
         try {
-          const response = await this.callAction({ action, arrayIndices, block, event, responses });
+          const response = await this.callAction({
+            action,
+            arrayIndices,
+            block,
+            event,
+            index,
+            responses,
+          });
           responses[action.id] = response;
         } catch (error) {
           throw {
@@ -44,23 +51,34 @@ class Actions {
     } catch (error) {
       responses[error.action.id] = error.error;
       console.error(error);
-      success = false;
+      return {
+        blockId: block.blockId,
+        error,
+        event,
+        eventName,
+        responses,
+        endTimestamp: new Date(),
+        startTimestamp,
+        success: false,
+      };
     }
     return {
       blockId: block.blockId,
       event,
       eventName,
       responses,
-      timestamp: new Date(),
-      success,
+      endTimestamp: new Date(),
+      startTimestamp,
+      success: true,
     };
   }
 
-  async callAction({ action, arrayIndices, block, event, responses }) {
+  async callAction({ action, arrayIndices, block, event, index, responses }) {
     if (!actions[action.type]) {
       throw {
-        actionType: action.type,
         error: new Error(`Invalid action type "${action.type}" at "${block.blockId}".`),
+        type: action.type,
+        index,
       };
     }
     const { output: parsedAction, errors: parserErrors } = this.context.parser.parse({
@@ -71,13 +89,10 @@ class Actions {
       location: block.blockId,
     });
     if (parserErrors.length > 0) {
-      throw {
-        actionType: action.type,
-        error: parserErrors[0],
-      };
+      throw { error: parserErrors[0], type: action.type, index };
     }
     if (parsedAction.skip === true) {
-      return { actionType: action.type, skipped: true };
+      return { type: action.type, skipped: true, index };
     }
     const messages = parsedAction.messages || {};
     let response;
@@ -104,8 +119,9 @@ class Actions {
         status: 'error',
       });
       throw {
-        actionType: action.type,
+        type: action.type,
         error,
+        index,
       };
     }
     closeLoading();
@@ -114,7 +130,7 @@ class Actions {
       message: messages.success,
       status: 'success',
     });
-    return { actionType: action.type, response };
+    return { type: action.type, response, index };
   }
 
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {

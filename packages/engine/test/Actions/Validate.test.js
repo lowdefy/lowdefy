@@ -98,16 +98,27 @@ test('Validate required field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Your input has 1 validation error.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: ['This field is required'],
@@ -135,14 +146,14 @@ test('Validate required field', async () => {
     eventName: 'onClick',
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: [],
@@ -225,16 +236,27 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Your input has 2 validation errors.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Your input has 2 validation errors.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: ['text1 does not match pattern "text1"'],
@@ -265,16 +287,27 @@ test('Validate all fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Your input has 1 validation error.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: [],
@@ -307,14 +340,14 @@ test('Validate all fields', async () => {
     eventName: 'onClick',
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: [],
@@ -401,16 +434,28 @@ test('Validate only one field', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        params: 'text1',
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Your input has 1 validation error.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: ['text1 does not match pattern "text1"'],
@@ -443,14 +488,14 @@ test('Validate only one field', async () => {
     eventName: 'onClick',
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text1.validationEval.output).toEqual({
     errors: [],
@@ -562,16 +607,28 @@ test('Validate list of fields', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        params: ['text1', 'text2'],
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Your input has 1 validation error.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Your input has 1 validation error.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
     Array [
@@ -609,14 +666,14 @@ test('Validate list of fields', async () => {
     eventName: 'onClick',
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         response: undefined,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(text3.validationEval.output).toEqual({
     errors: ['text3 does not match pattern "text3"'],
@@ -665,16 +722,30 @@ test('Invalid Validate params', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'validate',
+        params: {
+          invalid: true,
+        },
+        type: 'Validate',
+      },
+      error: {
+        error: new Error('Invalid validate params.'),
+        index: 0,
+        type: 'Validate',
+      },
+    },
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
         error: new Error('Invalid validate params.'),
       },
     },
     success: false,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
     Array [
@@ -749,12 +820,12 @@ test('Validate does not fail on warnings', async () => {
     eventName: 'onClick',
     responses: {
       validate: {
-        actionType: 'Validate',
+        type: 'Validate',
+        index: 0,
       },
     },
     success: true,
-    timestamp: {
-      date: 0,
-    },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });

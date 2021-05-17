@@ -164,13 +164,29 @@ test('Link error', async () => {
     blockId: 'button',
     event: undefined,
     eventName: 'onClick',
+    error: {
+      action: {
+        id: 'a',
+        params: {
+          invalid: true,
+        },
+        type: 'Link',
+      },
+      error: {
+        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+        index: 0,
+        type: 'Link',
+      },
+    },
     responses: {
       a: {
-        actionType: 'Link',
+        type: 'Link',
         error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+        index: 0,
       },
     },
     success: false,
-    timestamp: { date: 0 },
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
   });
 });
